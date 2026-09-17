@@ -2230,6 +2230,15 @@ write('EXTRACTION_STATUS.md', `# Agent 产品独立状态
 
 真实 Windows 彩排已完成：Docker 环境检查通过；97 条迁移成功部署且重复执行无待处理项；演示数据幂等生成；稳定后端与 Vite 前端成功启动；启动器内验证和独立 \`local:verify\` 均返回 pass；停止后 3100/5190 无监听残留。彩排过程中修复了带空格 Node 路径被 shell 截断、旧 backend watcher 自重启导致健康超时两项问题。
 
+## 已完成：Phase 5B alpha.3 发布验收
+
+- 从候选提交 \`6f5904f\` 创建无硬链接干净克隆，不复用现有依赖、构建产物或工作区状态；
+- 根、后端和前端三段 \`npm ci\` 全部成功，安装与独立安全审计均报告 0 个已知漏洞；
+- 本地交付静态契约、完整 \`ci:contracts\` 和发布身份检查全部通过；
+- 学生训练、做题不中断的教学联动、独立 Authoring 发布三条浏览器黄金路径全部通过；
+- 已创建不可变标签 \`v0.1.0-alpha.3\`，指向 \`6f5904f\`；
+- 标签纳入一键 Windows 本地交付、隔离基础设施、幂等演示数据与运行验证能力；未配置远程仓库、未推送，也未连接真实业务数据库。
+
 ## 已完成验证
 
 - 根、后端和前端依赖均在本目录独立安装；
@@ -2249,7 +2258,7 @@ write('EXTRACTION_STATUS.md', `# Agent 产品独立状态
 - \`npm run audit:environment-contract\` 和 \`npm run release:check\` 通过；
 - 构建链已固定跨包题目引擎产物位置，生产入口为 \`backend/dist/backend/src/main.js\`。
 
-依赖安装报告仍包含上游 npm audit 风险，尚未执行可能引入破坏性升级的自动修复；应在 Phase 2 单独评估和升级。
+当前后端与前端锁文件安全审计均为 0 个已知漏洞；动态注册表门禁仍需在每个候选版本重新运行。
 `);
 
 write('PRODUCT_BOUNDARIES.md', `# Moodlelike 产品代码边界
@@ -2687,6 +2696,10 @@ This gate proves repository and lockfile reproducibility for the core contract s
 ## Alpha.2 acceptance
 
 Commit \`973ff57\` was independently cloned and passed deterministic installation, zero-vulnerability dependency auditing, the complete core contract suite, and all three browser golden paths. It is tagged \`v0.1.0-alpha.2\`.
+
+## Alpha.3 acceptance
+
+Commit \`6f5904f\` was independently cloned without hardlinks and passed all three locked installations, the local-delivery contract, zero-vulnerability dependency auditing, the complete core contract suite, and all three browser golden paths. It is tagged \`v0.1.0-alpha.3\`.
 `);
 
 write('SUPPLY_CHAIN_STATUS.md', `# Supply-chain security status
@@ -2700,7 +2713,7 @@ On 2026-09-17 the committed dependency graph was upgraded without forced major-v
 | Backend | 10 findings | 0 findings | Nest 11.2.5, Express 4.22.3 |
 | Frontend | 8 findings | 0 findings | Vite 7.3.6 |
 
-Accepted release tag: \`v0.1.0-alpha.2\` at commit \`973ff57\`.
+Latest accepted release tag: \`v0.1.0-alpha.3\` at commit \`6f5904f\`. The dependency graph remains the zero-known-vulnerability baseline accepted at alpha.2.
 
 Important remediated transitive versions include Multer 2.4.0, body-parser 1.20.8, qs 6.16.0, fast-uri 3.1.8, js-yaml 4.3.2, browserslist 4.29.0, brace-expansion 1.1.21, esbuild 0.28.2, PostCSS 8.5.28, nanoid 3.3.19, Babel Core 7.29.7 and fflate 0.8.3.
 

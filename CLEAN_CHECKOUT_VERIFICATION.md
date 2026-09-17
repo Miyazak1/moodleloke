@@ -41,3 +41,7 @@ This gate proves repository and lockfile reproducibility for the core contract s
 ## Alpha.2 acceptance
 
 Commit `973ff57` was independently cloned and passed deterministic installation, zero-vulnerability dependency auditing, the complete core contract suite, and all three browser golden paths. It is tagged `v0.1.0-alpha.2`.
+
+## Alpha.3 acceptance
+
+Commit `6f5904f` was independently cloned without hardlinks and passed all three locked installations, the local-delivery contract, zero-vulnerability dependency auditing, the complete core contract suite, and all three browser golden paths. It is tagged `v0.1.0-alpha.3`.
