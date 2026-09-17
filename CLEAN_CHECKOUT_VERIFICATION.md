@@ -32,6 +32,8 @@ The installation audit reported 10 backend dependency findings (4 moderate, 6 hi
 
 Before a public or production release, classify each finding by reachable production path, patch non-breaking items, explicitly document accepted exceptions with expiry, and rerun this clean-checkout gate.
 
+Phase 4B subsequently resolved these observed findings through same-major direct upgrades and lockfile-compatible transitive updates. Current backend and frontend audits report zero known vulnerabilities; see `SUPPLY_CHAIN_STATUS.md`.
+
 ## Scope limit
 
 This gate proves repository and lockfile reproducibility for the core contract suite. Browser golden paths, live providers, production credentials, and real-data migration remain separate gates.

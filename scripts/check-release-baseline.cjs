@@ -4,7 +4,7 @@ const root = path.resolve(__dirname, '..');
 const expected = ['LICENSE', 'SECURITY.md', 'RELEASE_BASELINE.md', 'ENVIRONMENT_CONTRACT.md', 'SOURCE_PROVENANCE.md', 'VERSION', '.gitattributes', '.gitignore', '.env.example', '.env.production.example', 'artifacts/environment-contract.json'];
 for (const item of expected) if (!fs.existsSync(path.join(root, item))) throw new Error('Release baseline file missing: ' + item);
 const packages = [['package.json', 'moodlelike-agent'], ['backend/package.json', '@moodlelike/backend'], ['frontend/package.json', '@moodlelike/frontend'], ['question-engine/package.json', '@moodlelike/question-engine']];
-for (const [file, name] of packages) { const value = JSON.parse(fs.readFileSync(path.join(root, file), 'utf8')); if (value.name !== name || value.version !== '0.1.0-alpha.1' || value.private !== true) throw new Error('Package identity mismatch: ' + file); if (value.engines?.node !== '>=22 <23') throw new Error('Node engine missing: ' + file); }
+for (const [file, name] of packages) { const value = JSON.parse(fs.readFileSync(path.join(root, file), 'utf8')); if (value.name !== name || value.version !== '0.1.0-alpha.2' || value.private !== true) throw new Error('Package identity mismatch: ' + file); if (value.engines?.node !== '>=22 <23') throw new Error('Node engine missing: ' + file); }
 const ignore = fs.readFileSync(path.join(root, '.gitignore'), 'utf8');
 for (const marker of ['node_modules/', '.env', '.local/', 'dist/', '*.log']) if (!ignore.includes(marker)) throw new Error('.gitignore missing: ' + marker);
 const prohibited = [];
@@ -15,4 +15,4 @@ const provenance = fs.readFileSync(path.join(root, 'SOURCE_PROVENANCE.md'), 'utf
 if (/[A-Z]:\\/i.test(provenance)) throw new Error('Source provenance must not expose a local absolute path.');
 const envReport = JSON.parse(fs.readFileSync(path.join(root, 'artifacts/environment-contract.json'), 'utf8'));
 if (envReport.missingRequiredDevelopment.length || envReport.missingRequiredProduction.length || envReport.unsafeExampleValues.length) throw new Error('Environment contract has release blockers.');
-console.log(JSON.stringify({ version: '0.1.0-alpha.1', packages: packages.length, environmentVariables: envReport.runtimeVariableCount, prohibitedFiles: 0 }));
+console.log(JSON.stringify({ version: '0.1.0-alpha.2', packages: packages.length, environmentVariables: envReport.runtimeVariableCount, prohibitedFiles: 0 }));

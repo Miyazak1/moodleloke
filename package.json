@@ -1,7 +1,7 @@
 {
   "name": "moodlelike-agent",
   "private": true,
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.2",
   "scripts": {
     "dev": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-agent-dev.ps1",
     "frontend:dev": "npm --prefix frontend run dev:force -- --port 5190",
@@ -323,6 +323,7 @@
     "data:rehearsal:apply": "node scripts/phase3b-data-rehearsal.cjs --apply",
     "data:preflight": "node scripts/standalone-data-preflight.cjs",
     "audit:environment-contract": "node scripts/audit-standalone-environment.cjs",
+    "security:audit-dependencies": "npm audit --prefix backend --audit-level=high && npm audit --prefix frontend --audit-level=high",
     "release:check": "node scripts/check-release-baseline.cjs",
     "ci:contracts": "npm run agent:build && npm --prefix backend run test:agent-runtime && npm --prefix frontend run test:minimal && npm --prefix frontend run test:standalone-shell && npm run test:teaching-assets && npm run test:authoring-boundary && npm run test:ci-contract && npm run test:data-migration-policy && npm run test:data-preflight-policy && npm --prefix frontend run audit:standalone-reachability && npm run audit:product-boundaries && npm run audit:prisma-retention && npm run audit:environment-contract && npm run release:check",
     "ci:golden": "npm --prefix frontend run test:e2e:golden"

@@ -1,4 +1,4 @@
-# Release baseline 0.1.0-alpha.1
+# Release baseline 0.1.0-alpha.2
 
 This prerelease establishes the first independently buildable Moodlelike Agent repository baseline.
 
@@ -11,10 +11,13 @@ This prerelease establishes the first independently buildable Moodlelike Agent r
 - contract CI and three browser golden paths;
 - Prisma retention matrix, safe migration/rollback tooling, disposable migration rehearsal and read-only data preflight;
 - environment inventory, secret hygiene gate and source provenance.
+- zero-known-vulnerability backend/frontend lockfiles at the Phase 4B audit point and a high/critical CI dependency gate.
 
 ## Required release gates
 
 `npm run ci:contracts`
+
+`npm run security:audit-dependencies`
 
 `npm run ci:golden`
 

@@ -135,6 +135,17 @@
 
 详细证据和复现命令见 `CLEAN_CHECKOUT_VERIFICATION.md`。
 
+## 已完成：Phase 4B 非破坏性供应链修复
+
+- 后端 Nest 保持 11.x、Express 保持 4.x，前端 Vite 保持 7.x，不采用强制主版本升级；
+- 直接依赖升级到 Nest 11.2.5、Express 4.22.3、Vite 7.3.6，并刷新锁文件允许范围内的传递依赖；
+- Multer、body-parser、qs、fast-uri、js-yaml、brace-expansion、Babel、PostCSS、esbuild、nanoid 等风险链均更新到修复版本；
+- 后端和前端 `npm audit` 均由非零风险降至 0；
+- 新增 `npm run security:audit-dependencies`，GitHub CI 在构建与浏览器测试前阻断新增 high/critical 风险；
+- 动态注册表审计不并入本地离线 `ci:contracts`，以保持核心契约可离线复现。
+
+详细矩阵见 `SUPPLY_CHAIN_STATUS.md`。
+
 ## 已完成验证
 
 - 根、后端和前端依赖均在本目录独立安装；

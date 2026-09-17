@@ -14,4 +14,4 @@ Do not open a public issue containing credentials, database URLs, private studen
 
 ## Supported baseline
 
-The current supported prerelease is `0.1.0-alpha.1` on Node.js 22 and PostgreSQL 16. This is not yet a public production support commitment.
+The current supported prerelease is `0.1.0-alpha.2` on Node.js 22 and PostgreSQL 16. This is not yet a public production support commitment.

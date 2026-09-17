@@ -86,7 +86,7 @@ function updateJson(relativePath, mutate) {
 
 updateJson('package.json', (pkg) => {
   pkg.name = 'moodlelike-agent';
-  pkg.version = '0.1.0-alpha.1';
+  pkg.version = '0.1.0-alpha.2';
   pkg.private = true;
   pkg.description = 'AI-native training and teaching Agent extracted from CSCALite';
   pkg.engines = { node: '>=22 <23' };
@@ -109,6 +109,7 @@ updateJson('package.json', (pkg) => {
   pkg.scripts['data:rehearsal:apply'] = 'node scripts/phase3b-data-rehearsal.cjs --apply';
   pkg.scripts['data:preflight'] = 'node scripts/standalone-data-preflight.cjs';
   pkg.scripts['audit:environment-contract'] = 'node scripts/audit-standalone-environment.cjs';
+  pkg.scripts['security:audit-dependencies'] = 'npm audit --prefix backend --audit-level=high && npm audit --prefix frontend --audit-level=high';
   pkg.scripts['release:check'] = 'node scripts/check-release-baseline.cjs';
   pkg.scripts['ci:contracts'] = 'npm run agent:build && npm --prefix backend run test:agent-runtime && npm --prefix frontend run test:minimal && npm --prefix frontend run test:standalone-shell && npm run test:teaching-assets && npm run test:authoring-boundary && npm run test:ci-contract && npm run test:data-migration-policy && npm run test:data-preflight-policy && npm --prefix frontend run audit:standalone-reachability && npm run audit:product-boundaries && npm run audit:prisma-retention && npm run audit:environment-contract && npm run release:check';
   pkg.scripts['ci:golden'] = 'npm --prefix frontend run test:e2e:golden';
@@ -116,8 +117,8 @@ updateJson('package.json', (pkg) => {
 
 updateJson('package-lock.json', (lock) => {
   lock.name = 'moodlelike-agent';
-  lock.version = '0.1.0-alpha.1';
-  if (lock.packages?.['']) Object.assign(lock.packages[''], { name: 'moodlelike-agent', version: '0.1.0-alpha.1' });
+  lock.version = '0.1.0-alpha.2';
+  if (lock.packages?.['']) Object.assign(lock.packages[''], { name: 'moodlelike-agent', version: '0.1.0-alpha.2' });
   for (const item of Object.values(lock.packages || {})) {
     if (item?.name === '@cscalite/backend') item.name = '@moodlelike/backend';
     if (item?.name === '@cscalite/frontend') item.name = '@moodlelike/frontend';
@@ -127,7 +128,7 @@ updateJson('package-lock.json', (lock) => {
 
 updateJson('backend/package.json', (pkg) => {
   pkg.name = '@moodlelike/backend';
-  pkg.version = '0.1.0-alpha.1';
+  pkg.version = '0.1.0-alpha.2';
   pkg.private = true;
   pkg.engines = { node: '>=22 <23' };
   pkg.scripts.build = 'node scripts/clean-dist.cjs && npm run prisma:generate && nest build';
@@ -135,14 +136,14 @@ updateJson('backend/package.json', (pkg) => {
 });
 updateJson('backend/package-lock.json', (lock) => {
   lock.name = '@moodlelike/backend';
-  lock.version = '0.1.0-alpha.1';
-  if (lock.packages?.['']) Object.assign(lock.packages[''], { name: '@moodlelike/backend', version: '0.1.0-alpha.1' });
+  lock.version = '0.1.0-alpha.2';
+  if (lock.packages?.['']) Object.assign(lock.packages[''], { name: '@moodlelike/backend', version: '0.1.0-alpha.2' });
   for (const item of Object.values(lock.packages || {})) { if (item?.name === 'cscalite-rebuild') item.name = 'moodlelike-agent'; if (item?.name === '@cscalite/frontend') item.name = '@moodlelike/frontend'; }
 });
 
 updateJson('frontend/package.json', (pkg) => {
   pkg.name = '@moodlelike/frontend';
-  pkg.version = '0.1.0-alpha.1';
+  pkg.version = '0.1.0-alpha.2';
   pkg.private = true;
   pkg.engines = { node: '>=22 <23' };
   pkg.scripts['test:minimal'] = 'node scripts/test-standalone-minimal.cjs';
@@ -155,14 +156,14 @@ updateJson('frontend/package.json', (pkg) => {
 });
 updateJson('frontend/package-lock.json', (lock) => {
   lock.name = '@moodlelike/frontend';
-  lock.version = '0.1.0-alpha.1';
-  if (lock.packages?.['']) Object.assign(lock.packages[''], { name: '@moodlelike/frontend', version: '0.1.0-alpha.1' });
+  lock.version = '0.1.0-alpha.2';
+  if (lock.packages?.['']) Object.assign(lock.packages[''], { name: '@moodlelike/frontend', version: '0.1.0-alpha.2' });
   for (const item of Object.values(lock.packages || {})) { if (item?.name === 'cscalite-rebuild') item.name = 'moodlelike-agent'; if (item?.name === '@cscalite/backend') item.name = '@moodlelike/backend'; }
 });
 
 updateJson('question-engine/package.json', (pkg) => {
   pkg.name = '@moodlelike/question-engine';
-  pkg.version = '0.1.0-alpha.1';
+  pkg.version = '0.1.0-alpha.2';
   pkg.private = true;
   pkg.engines = { node: '>=22 <23' };
 });
@@ -739,6 +740,7 @@ jobs:
       - run: npm ci
       - run: npm ci --prefix backend
       - run: npm ci --prefix frontend
+      - run: npm run security:audit-dependencies
       - run: npm exec --prefix frontend -- playwright install --with-deps chromium
       - run: npm run ci:contracts
       - run: npm run ci:golden
@@ -1097,13 +1099,13 @@ const root = path.resolve(__dirname, '..');
 const workflow = fs.readFileSync(path.join(root, '.github/workflows/standalone-ci.yml'), 'utf8');
 const frontendPackage = JSON.parse(fs.readFileSync(path.join(root, 'frontend/package.json'), 'utf8'));
 const rootPackage = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
-for (const marker of ['npm run ci:contracts', 'npm run ci:golden', 'playwright install --with-deps chromium', 'actions/upload-artifact@v4']) {
+for (const marker of ['npm run security:audit-dependencies', 'npm run ci:contracts', 'npm run ci:golden', 'playwright install --with-deps chromium', 'actions/upload-artifact@v4']) {
   if (!workflow.includes(marker)) throw new Error('Standalone CI is missing: ' + marker);
 }
 for (const script of ['test:e2e:golden:student', 'test:e2e:golden:teaching', 'test:e2e:golden:authoring', 'test:e2e:golden']) {
   if (!frontendPackage.scripts[script]) throw new Error('Frontend golden-path script is missing: ' + script);
 }
-for (const script of ['ci:contracts', 'ci:golden', 'test:teaching-assets', 'test:authoring-boundary']) {
+for (const script of ['ci:contracts', 'ci:golden', 'security:audit-dependencies', 'test:teaching-assets', 'test:authoring-boundary']) {
   if (!rootPackage.scripts[script]) throw new Error('Root CI gate is missing: ' + script);
 }
 if (/DATABASE_URL:\s*postgres/i.test(workflow) || /OPENAI_API_KEY:\s*\S+/i.test(workflow)) throw new Error('CI workflow must not embed service credentials.');
@@ -1147,7 +1149,7 @@ const root = path.resolve(__dirname, '..');
 const expected = ['LICENSE', 'SECURITY.md', 'RELEASE_BASELINE.md', 'ENVIRONMENT_CONTRACT.md', 'SOURCE_PROVENANCE.md', 'VERSION', '.gitattributes', '.gitignore', '.env.example', '.env.production.example', 'artifacts/environment-contract.json'];
 for (const item of expected) if (!fs.existsSync(path.join(root, item))) throw new Error('Release baseline file missing: ' + item);
 const packages = [['package.json', 'moodlelike-agent'], ['backend/package.json', '@moodlelike/backend'], ['frontend/package.json', '@moodlelike/frontend'], ['question-engine/package.json', '@moodlelike/question-engine']];
-for (const [file, name] of packages) { const value = JSON.parse(fs.readFileSync(path.join(root, file), 'utf8')); if (value.name !== name || value.version !== '0.1.0-alpha.1' || value.private !== true) throw new Error('Package identity mismatch: ' + file); if (value.engines?.node !== '>=22 <23') throw new Error('Node engine missing: ' + file); }
+for (const [file, name] of packages) { const value = JSON.parse(fs.readFileSync(path.join(root, file), 'utf8')); if (value.name !== name || value.version !== '0.1.0-alpha.2' || value.private !== true) throw new Error('Package identity mismatch: ' + file); if (value.engines?.node !== '>=22 <23') throw new Error('Node engine missing: ' + file); }
 const ignore = fs.readFileSync(path.join(root, '.gitignore'), 'utf8');
 for (const marker of ['node_modules/', '.env', '.local/', 'dist/', '*.log']) if (!ignore.includes(marker)) throw new Error('.gitignore missing: ' + marker);
 const prohibited = [];
@@ -1158,7 +1160,7 @@ const provenance = fs.readFileSync(path.join(root, 'SOURCE_PROVENANCE.md'), 'utf
 if (/[A-Z]:\\\\/i.test(provenance)) throw new Error('Source provenance must not expose a local absolute path.');
 const envReport = JSON.parse(fs.readFileSync(path.join(root, 'artifacts/environment-contract.json'), 'utf8'));
 if (envReport.missingRequiredDevelopment.length || envReport.missingRequiredProduction.length || envReport.unsafeExampleValues.length) throw new Error('Environment contract has release blockers.');
-console.log(JSON.stringify({ version: '0.1.0-alpha.1', packages: packages.length, environmentVariables: envReport.runtimeVariableCount, prohibitedFiles: 0 }));
+console.log(JSON.stringify({ version: '0.1.0-alpha.2', packages: packages.length, environmentVariables: envReport.runtimeVariableCount, prohibitedFiles: 0 }));
 `);
 
 write('scripts/lib/standalone-data-migration-policy.cjs', `const path = require('node:path');
@@ -2000,6 +2002,17 @@ write('EXTRACTION_STATUS.md', `# Agent 产品独立状态
 
 详细证据和复现命令见 \`CLEAN_CHECKOUT_VERIFICATION.md\`。
 
+## 已完成：Phase 4B 非破坏性供应链修复
+
+- 后端 Nest 保持 11.x、Express 保持 4.x，前端 Vite 保持 7.x，不采用强制主版本升级；
+- 直接依赖升级到 Nest 11.2.5、Express 4.22.3、Vite 7.3.6，并刷新锁文件允许范围内的传递依赖；
+- Multer、body-parser、qs、fast-uri、js-yaml、brace-expansion、Babel、PostCSS、esbuild、nanoid 等风险链均更新到修复版本；
+- 后端和前端 \`npm audit\` 均由非零风险降至 0；
+- 新增 \`npm run security:audit-dependencies\`，GitHub CI 在构建与浏览器测试前阻断新增 high/critical 风险；
+- 动态注册表审计不并入本地离线 \`ci:contracts\`，以保持核心契约可离线复现。
+
+详细矩阵见 \`SUPPLY_CHAIN_STATUS.md\`。
+
 ## 已完成验证
 
 - 根、后端和前端依赖均在本目录独立安装；
@@ -2307,7 +2320,7 @@ write('DATA_CUTOVER_CHECKLIST.md', `# 数据切换与回退清单
 - 不使用生产凭据填充 Issue、聊天记录或版本库文件。
 `);
 
-write('VERSION', `0.1.0-alpha.1
+write('VERSION', `0.1.0-alpha.2
 `);
 
 write('.nvmrc', `22
@@ -2356,7 +2369,7 @@ Do not open a public issue containing credentials, database URLs, private studen
 
 ## Supported baseline
 
-The current supported prerelease is \`0.1.0-alpha.1\` on Node.js 22 and PostgreSQL 16. This is not yet a public production support commitment.
+The current supported prerelease is \`0.1.0-alpha.2\` on Node.js 22 and PostgreSQL 16. This is not yet a public production support commitment.
 `);
 
 write('ENVIRONMENT_CONTRACT.md', `# Environment contract
@@ -2378,7 +2391,7 @@ The machine-generated inventory at \`artifacts/environment-contract.md\` lists e
 Legacy \`CSCA_*\`, \`CSCALITE_*\` and \`CSC_ENV\` names remain versioned compatibility contracts. They should be renamed only through an explicit alias/deprecation migration, never by a broad search-and-replace.
 `);
 
-write('RELEASE_BASELINE.md', `# Release baseline 0.1.0-alpha.1
+write('RELEASE_BASELINE.md', `# Release baseline 0.1.0-alpha.2
 
 This prerelease establishes the first independently buildable Moodlelike Agent repository baseline.
 
@@ -2391,10 +2404,13 @@ This prerelease establishes the first independently buildable Moodlelike Agent r
 - contract CI and three browser golden paths;
 - Prisma retention matrix, safe migration/rollback tooling, disposable migration rehearsal and read-only data preflight;
 - environment inventory, secret hygiene gate and source provenance.
+- zero-known-vulnerability backend/frontend lockfiles at the Phase 4B audit point and a high/critical CI dependency gate.
 
 ## Required release gates
 
 \`npm run ci:contracts\`
+
+\`npm run security:audit-dependencies\`
 
 \`npm run ci:golden\`
 
@@ -2444,9 +2460,35 @@ The installation audit reported 10 backend dependency findings (4 moderate, 6 hi
 
 Before a public or production release, classify each finding by reachable production path, patch non-breaking items, explicitly document accepted exceptions with expiry, and rerun this clean-checkout gate.
 
+Phase 4B subsequently resolved these observed findings through same-major direct upgrades and lockfile-compatible transitive updates. Current backend and frontend audits report zero known vulnerabilities; see \`SUPPLY_CHAIN_STATUS.md\`.
+
 ## Scope limit
 
 This gate proves repository and lockfile reproducibility for the core contract suite. Browser golden paths, live providers, production credentials, and real-data migration remain separate gates.
+`);
+
+write('SUPPLY_CHAIN_STATUS.md', `# Supply-chain security status
+
+## Phase 4B result
+
+On 2026-09-17 the committed dependency graph was upgraded without forced major-version changes:
+
+| Area | Before | After | Direct baseline |
+| --- | ---: | ---: | --- |
+| Backend | 10 findings | 0 findings | Nest 11.2.5, Express 4.22.3 |
+| Frontend | 8 findings | 0 findings | Vite 7.3.6 |
+
+Important remediated transitive versions include Multer 2.4.0, body-parser 1.20.8, qs 6.16.0, fast-uri 3.1.8, js-yaml 4.3.2, browserslist 4.29.0, brace-expansion 1.1.21, esbuild 0.28.2, PostCSS 8.5.28, nanoid 3.3.19, Babel Core 7.29.7 and fflate 0.8.3.
+
+## Gate
+
+Run:
+
+\`npm run security:audit-dependencies\`
+
+The command audits backend and frontend lockfiles and fails for high or critical findings. The standalone GitHub workflow runs it after deterministic installation and before browser setup/build verification.
+
+The dynamic registry audit remains separate from \`ci:contracts\` so the local core contract suite stays reproducible when offline. A new advisory may fail CI without a source change; triage it by production reachability, apply the smallest compatible update, rerun all contracts and golden paths, and document any time-limited exception rather than using \`npm audit fix --force\`.
 `);
 
 write('SOURCE_PROVENANCE.md', `# Source provenance

@@ -235,3 +235,17 @@
 - 验证方法、范围和后续要求沉淀在 `CLEAN_CHECKOUT_VERIFICATION.md`。
 
 下一阶段优先处理 Phase 4B：对生产可达依赖做漏洞可达性分类和非破坏性升级，然后在干净副本补跑浏览器黄金路径。真实数据迁移仍需另行授权。
+
+## 18. Phase 4B：供应链风险收口
+
+2026-09-17 已完成不跨主版本的依赖安全升级：
+
+- 后端从 10 项风险降至 0，保持 Nest 11 和 Express 4；
+- 前端从 8 项风险降至 0，保持 Vite 7；
+- 直接依赖升级为 Nest 11.2.5、Express 4.22.3、Vite 7.3.6，并通过 lockfile-compatible 更新修复其余传递依赖；
+- 未执行 `npm audit fix --force`，未引入 Nest 12、Express 5、Vite 8 或其他强制主版本迁移；
+- 新增 `security:audit-dependencies`，GitHub CI 在核心契约和浏览器黄金路径前执行 high/critical 阻断；
+- 本地 `ci:contracts` 保持不依赖外网，动态 advisory 检查作为联网安全门禁独立执行；
+- 版本与处置原则记录在 `SUPPLY_CHAIN_STATUS.md`。
+
+下一步是用更新后的锁文件重新做 clean checkout，并补跑三个浏览器黄金路径；通过后形成 `0.1.0-alpha.2` 候选基线。

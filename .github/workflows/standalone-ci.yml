@@ -21,6 +21,7 @@ jobs:
       - run: npm ci
       - run: npm ci --prefix backend
       - run: npm ci --prefix frontend
+      - run: npm run security:audit-dependencies
       - run: npm exec --prefix frontend -- playwright install --with-deps chromium
       - run: npm run ci:contracts
       - run: npm run ci:golden
