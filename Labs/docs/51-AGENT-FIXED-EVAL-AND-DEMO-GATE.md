@@ -11,9 +11,8 @@
 命令：
 
 ```powershell
-cd E:\CODE\CSCALITE\backend
-npm run build
-npm run eval:agent:fixed
+npm --prefix backend run build
+npm --prefix backend run eval:agent:fixed
 ```
 
 聚合验收命令：
@@ -56,10 +55,9 @@ npm run verify:agent:pr11c
 
 ## 4. 本地黄金路径 Gate
 
-先用 `start-cscalite-dev.bat` 启动正式本地环境，再执行：
+先在一个终端从 Moodlelike 仓库根目录执行 `npm run local:start`，再在另一个终端执行：
 
 ```powershell
-cd E:\CODE\CSCALITE
 node scripts\agent-demo-gate.cjs
 ```
 

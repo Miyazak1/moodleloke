@@ -29,7 +29,7 @@ PR7A 交付网页 Agent 的私有附件底座，目标是让学生在 Composer �
 
 ## 3. 存储与数据模型
 
-本地演示默认存放于仓库内 `.local/agent-attachments`。`start-cscalite-dev.bat` 显式把 `AGENT_PRIVATE_UPLOADS_DIR` 指向当前 E 盘仓库，因此不会写入 C 盘。生产环境必须将该变量指向私有对象存储适配层或受保护持久卷，不得放进公开静态目录。
+本地演示默认存放于仓库内 `.local/agent-attachments`。`npm run local:start` 把 `AGENT_PRIVATE_UPLOADS_DIR` 限定在当前 Moodlelike 仓库，因此不会依赖其他工作区。生产环境必须将该变量指向私有对象存储适配层或受保护持久卷，不得放进公开静态目录。
 
 迁移 `0075_agent_private_attachments` 新增：
 
@@ -81,13 +81,14 @@ PR7A 只建立输入资产，不把提取内容自动写入掌握度、错题或
 验证命令：
 
 ```powershell
-cd E:\CODE\CSCALITE\backend
+cd backend
 npx nest build
 node scripts/agent-attachment-test.cjs
 node scripts/agent-runtime-today-plan-test.cjs
 
-cd E:\CODE\CSCALITE\frontend
+cd ..\frontend
 npm run build
+cd ..
 ```
 
 自动测试覆盖签名校验、私有归属、内容读取、拒绝状态、删除，以及既有 Agent 消息/运行幂等回归。

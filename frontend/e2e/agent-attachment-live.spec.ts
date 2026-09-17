@@ -16,7 +16,7 @@ function fixture(name: string) {
 
 async function authenticate(page: Page) {
   if (!fs.existsSync(credentialsPath)) throw new Error('Missing local demo credentials. Run the demo seed first.');
-  const backendUrl = process.env.AGENT_LIVE_BACKEND_URL || 'http://localhost:3000';
+  const backendUrl = process.env.AGENT_LIVE_BACKEND_URL || 'http://localhost:3100';
   let token = process.env.AGENT_DEMO_ACCESS_TOKEN;
   if (!token) {
     const credentials = JSON.parse(fs.readFileSync(credentialsPath, 'utf8')) as DemoCredentials;

@@ -14,7 +14,7 @@ function requestId() {
 
 async function authenticate(page: Page) {
   if (!fs.existsSync(credentialsPath) || !fs.existsSync(handwritingFixture)) throw new Error('Run node scripts/agent-demo-seed.cjs --apply first.');
-  const backendUrl = process.env.AGENT_LIVE_BACKEND_URL || 'http://localhost:3000';
+  const backendUrl = process.env.AGENT_LIVE_BACKEND_URL || 'http://localhost:3100';
   let token = process.env.AGENT_DEMO_ACCESS_TOKEN;
   if (!token) {
     const credentials = JSON.parse(fs.readFileSync(credentialsPath, 'utf8')) as DemoCredentials;

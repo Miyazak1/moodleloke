@@ -320,6 +320,7 @@
     "test:ci-contract": "node scripts/check-standalone-ci.cjs",
     "test:local-delivery": "node scripts/check-local-delivery.cjs",
     "test:repository-ownership": "node scripts/check-repository-ownership.cjs",
+    "test:live-golden-path-contract": "node scripts/check-live-golden-path-contract.cjs",
     "test:data-migration-policy": "node scripts/standalone-data-migration-policy-test.cjs",
     "test:data-preflight-policy": "node scripts/standalone-data-preflight-policy-test.cjs",
     "audit:prisma-retention": "node scripts/generate-prisma-retention-matrix.cjs",
@@ -333,7 +334,7 @@
     "audit:environment-contract": "node scripts/audit-standalone-environment.cjs",
     "security:audit-dependencies": "npm audit --prefix backend --audit-level=high && npm audit --prefix frontend --audit-level=high",
     "release:check": "node scripts/check-release-baseline.cjs",
-    "ci:contracts": "npm run agent:build && npm --prefix backend run test:agent-runtime && npm --prefix frontend run test:minimal && npm --prefix frontend run test:standalone-shell && npm run test:teaching-assets && npm run test:authoring-boundary && npm run test:ci-contract && npm run test:local-delivery && npm run test:repository-ownership && npm run test:data-migration-policy && npm run test:data-preflight-policy && npm --prefix frontend run audit:standalone-reachability && npm run audit:product-boundaries && npm run audit:prisma-retention && npm run audit:environment-contract && npm run release:check",
+    "ci:contracts": "npm run agent:build && npm --prefix backend run test:agent-runtime && npm --prefix frontend run test:minimal && npm --prefix frontend run test:standalone-shell && npm run test:teaching-assets && npm run test:authoring-boundary && npm run test:ci-contract && npm run test:local-delivery && npm run test:repository-ownership && npm run test:live-golden-path-contract && npm run test:data-migration-policy && npm run test:data-preflight-policy && npm --prefix frontend run audit:standalone-reachability && npm run audit:product-boundaries && npm run audit:prisma-retention && npm run audit:environment-contract && npm run release:check",
     "ci:golden": "npm --prefix frontend run test:e2e:golden"
   },
   "dependencies": {

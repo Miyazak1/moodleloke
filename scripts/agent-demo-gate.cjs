@@ -5,8 +5,8 @@ const { loadEnv } = require('./load-env.cjs');
 
 loadEnv();
 
-const backendUrl = process.env.AGENT_DEMO_BACKEND_URL || 'http://localhost:3000';
-const frontendUrl = process.env.AGENT_DEMO_FRONTEND_URL || 'http://localhost:5187';
+const backendUrl = process.env.AGENT_DEMO_BACKEND_URL || 'http://localhost:3100';
+const frontendUrl = process.env.AGENT_DEMO_FRONTEND_URL || 'http://localhost:5190';
 const live = process.argv.includes('--live');
 
 function assert(condition, message) {

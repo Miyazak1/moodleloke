@@ -23,7 +23,7 @@ async function authenticate(page: Page) {
     path.join(repositoryRoot, '.local', 'agent-demo-credentials.json'),
     'Missing demo credentials. Run node scripts/agent-teaching-browser-demo-prepare.cjs --apply from the repository root.'
   );
-  const backendUrl = process.env.AGENT_LIVE_BACKEND_URL || 'http://localhost:3000';
+  const backendUrl = process.env.AGENT_LIVE_BACKEND_URL || 'http://localhost:3100';
   const response = await page.request.post(`${backendUrl}/api/v1/auth/login`, { data: credentials });
   expect(response.ok(), `Demo login failed with HTTP ${response.status()}`).toBeTruthy();
   const result = await response.json();

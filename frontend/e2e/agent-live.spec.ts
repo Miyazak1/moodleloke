@@ -15,7 +15,7 @@ function readCredentials(): DemoCredentials {
 }
 
 async function authenticate(page: Page) {
-  const backendUrl = process.env.AGENT_LIVE_BACKEND_URL || 'http://localhost:3000';
+  const backendUrl = process.env.AGENT_LIVE_BACKEND_URL || 'http://localhost:3100';
   let token = process.env.AGENT_DEMO_ACCESS_TOKEN;
   if (!token) {
     const response = await page.request.post(`${backendUrl}/api/v1/auth/login`, { data: readCredentials() });

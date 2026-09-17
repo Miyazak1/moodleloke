@@ -185,6 +185,14 @@
 - 新增 `test:repository-ownership` 并纳入 `ci:contracts`，阻止提取器、旧工作区绝对路径或提取身份重新进入活动运行面；
 - 历史设计记录可继续提及 CSCALite，现有 `CSCA_*` 环境名与数据库类型作为显式兼容债务保留，不在本阶段破坏性重命名。
 
+## 已完成：Phase 6B 独立黄金路径入口收口
+
+- Demo Gate、Agent Live、附件 Live、教学 Live 与手写引导 Live 的默认地址统一到前端 `5190`、后端 `3100`；
+- 四份仍用于复现的 Agent 操作文档不再要求进入旧 CSCALite 目录或运行旧启动器；
+- 新增 `LIVE_GOLDEN_PATH.md` 作为独立仓库当前真实接口验收入口，明确真实 Provider 成本与确定性 `ci:golden` 的边界；
+- 新增 `test:live-golden-path-contract` 并纳入 `ci:contracts`，阻止旧端口、旧绝对路径和旧启动命令重新进入活动验收面；
+- 历史架构记录中的旧路径继续作为事实证据保留，不被当作当前操作说明。
+
 ## 已完成验证
 
 - 根、后端和前端依赖均在本目录独立安装；

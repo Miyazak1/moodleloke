@@ -19,8 +19,7 @@ PR11E 把 PR11D 已通过的 API 黄金路径推进到真实浏览器：页面�
 快速回归：
 
 ```powershell
-cd E:\CODE\CSCALITE\frontend
-npm run test:e2e:agent
+npm --prefix frontend run test:e2e:agent
 ```
 
 它自动启动 5197 临时 Vite 服务，所有账号、Agent API 与 SSE 均为 mock，不调用模型、不产生费用。配置显式绕过本地地址代理，Windows 使用 `npm.cmd`，其他平台使用 `npm`。
@@ -28,21 +27,20 @@ npm run test:e2e:agent
 真实浏览器黄金路径：
 
 ```powershell
-cd E:\CODE\CSCALITE
-node scripts\agent-demo-seed.cjs --apply
-start-cscalite-dev.bat
+# 终端 1（仓库根目录）
+npm run local:start
 
-cd frontend
-npm run test:e2e:agent:live
+# 终端 2（仓库根目录）
+npm --prefix frontend run test:e2e:agent:live
 ```
 
-Live 测试固定访问 `http://localhost:5187` 和 `http://localhost:3000`，读取 Git 已忽略的 `.local/agent-demo-credentials.json`。它不会自动启动服务，也不会在缺少隔离账号时回退到真实用户。该命令会产生真实模型 API 调用和少量费用。
+Live 测试默认访问 `http://localhost:5190` 和 `http://localhost:3100`，读取 Git 已忽略的 `.local/agent-demo-credentials.json`。它不会自动启动服务，也不会在缺少隔离账号时回退到真实用户。该命令会产生真实模型 API 调用和少量费用；可通过 `AGENT_LIVE_FRONTEND_URL` 与 `AGENT_LIVE_BACKEND_URL` 显式覆盖地址。
 
 可选保存稳定态截图：
 
 ```powershell
 $env:AGENT_LIVE_CAPTURE_PATH='..\.local\agent-live.png'
-npm run test:e2e:agent:live
+npm --prefix frontend run test:e2e:agent:live
 ```
 
 ## 3. Live 验收步骤

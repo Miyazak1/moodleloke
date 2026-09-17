@@ -27,16 +27,15 @@ PR11F 在 PR11E 真实浏览器基础上，冻结“上传学生作答 → 识�
 ## 3. 复现命令
 
 ```powershell
-cd E:\CODE\CSCALITE
-node scripts\agent-demo-seed.cjs --apply
-start-cscalite-dev.bat
+# 终端 1（仓库根目录）
+npm run local:start
 
-cd frontend
+# 终端 2（仓库根目录）
 $env:AGENT_ATTACHMENT_LIVE_CAPTURE_PATH='..\.local\agent-attachment-live.png'
-npm run test:e2e:agent:attachment:live
+npm --prefix frontend run test:e2e:agent:attachment:live
 ```
 
-真实测试使用 `http://localhost:5187` 和 `http://localhost:3000`，会调用真实 Provider 并产生少量费用。彩排时不要修改后端源码；Nest 热重启会中断当时的进程内 Worker，任务需等租约恢复。
+真实测试默认使用 `http://localhost:5190` 和 `http://localhost:3100`，会调用真实 Provider 并产生少量费用；可通过 `AGENT_LIVE_FRONTEND_URL` 与 `AGENT_LIVE_BACKEND_URL` 显式覆盖地址。本地交付使用稳定编译后端，不依赖旧的 Nest 热重启链。
 
 ## 4. 实测修正
 

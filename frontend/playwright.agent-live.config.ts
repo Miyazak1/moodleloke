@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const baseURL = process.env.AGENT_LIVE_FRONTEND_URL || 'http://localhost:5187';
+const baseURL = process.env.AGENT_LIVE_FRONTEND_URL || 'http://localhost:5190';
 
 export default defineConfig({
   testDir: './e2e',
