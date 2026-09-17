@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-PHYSICS-2007",
+  "reviewerTaskId": "01a0a489-caf4-75e3-8c3a-a92ea323f53c",
+  "derivedAnswer": "B",
+  "optionTruthTable": {
+    "A": false,
+    "B": true,
+    "C": false,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "basic",
+  "caseNecessary": false,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "按给定恒加速度条件，a=(6-2)/4=1 m/s^2，数值上只有 B 正确。",
+    "反查 B 可得末速度 6 m/s；A、C、D 分别给 10、2、14 m/s。",
+    "案例缺陷：医院无菌物资直廊内配送机器人在 4 s 内加速至 6 m/s（21.6 km/h）明显不符合人员共用病区走廊的安全运行常识；把该计算用于“安排物资交接”也缺少真实决策联系。"
+  ],
+  "verdictBeforeReveal": "reject",
+  "reasonCodes": [
+    "scenario_implausible",
+    "contrived_operational_use"
+  ],
+  "reviewedAt": "2026-09-15T18:11:48.7966294+08:00"
+}

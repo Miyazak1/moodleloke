@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-PHYSICS-0009",
+  "reviewerTaskId": "pilot-30-independent-blind-review",
+  "derivedAnswer": "A",
+  "optionTruthTable": {
+    "A": true,
+    "B": false,
+    "C": false,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "basic",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "v=v0+at=3+1×12=15 m/s。",
+    "量纲与SI单位一致；逐项反代其余三个数值均不满足题干运动学关系，未发现第二正确选项。"
+  ],
+  "verdictBeforeReveal": "pass",
+  "reasonCodes": [],
+  "reviewedAt": "2026-09-15T09:29:16.058Z"
+}

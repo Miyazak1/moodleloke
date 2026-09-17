@@ -1,0 +1,610 @@
+{
+  "schemaVersion": "codex-question-candidate-v1",
+  "candidateId": "CQ-PHYSICS-0004",
+  "subject": "physics",
+  "topicCode": "P-MECH-001",
+  "topicTitle": "直线运动学",
+  "designedDifficulty": "basic",
+  "questionType": "single_choice",
+  "prompt": "在水平直轨实验中，实验小车沿直线做匀速运动，位移为 270 m，用时为 10 s，求其速度大小。",
+  "options": [
+    {
+      "id": "A",
+      "text": "速度大小：30 m/s"
+    },
+    {
+      "id": "B",
+      "text": "速度大小：24 m/s"
+    },
+    {
+      "id": "C",
+      "text": "速度大小：33 m/s"
+    },
+    {
+      "id": "D",
+      "text": "速度大小：27 m/s"
+    }
+  ],
+  "correctAnswer": "D",
+  "explanation": "对实验小车使用匀速关系 v=s/t；代入 s=270 m、t=10 s，可得速度大小为 27 m/s，因此唯一匹配的选项正确。",
+  "knowledgeTags": [
+    "运动学",
+    "直线运动",
+    "uniform_speed"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "physics",
+    "topicId": 78,
+    "topicTitle": "运动学",
+    "productionCellId": 24,
+    "targetDifficulty": "basic",
+    "taskFamily": "kinematics_basic_direct_relation",
+    "planTemplate": "physics_kinematics_basic_relation_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "requirePhysicsSituation": true,
+      "requireUnitOrGraphEvidence": true,
+      "exactPhysicsKinematicsScope": "uniform_speed",
+      "maxIndependentRelations": 1,
+      "forbidMultiStageModelChain": true,
+      "finalAnswerShape": "one_direct_kinematics_value_direction_or_graph_fact",
+      "preferredPromptSkeletons": [
+        "给出位移、时间、速度或加速度中的两个直接量，求第三个量并保留单位",
+        "用文字完整描述一段 s-t 或 v-t 直线图像，判断斜率、方向或速度中的一个事实"
+      ]
+    },
+    "budget": {
+      "maxPlanRepairs": 2,
+      "maxCandidateRepairs": 1
+    },
+    "scenarioContract": {
+      "schemaVersion": "subject-practice-scenario-contract-v1",
+      "policyVersion": "subject-practice-scenario-diversity-shadow-v2-multi-evidence-status",
+      "stage": "shadow_only_thresholds_not_frozen",
+      "scenarioMode": "experimental",
+      "scenarioFamilyId": "physics_lab_cart_track",
+      "scenarioDomain": "mechanics_laboratory",
+      "scenarioEntity": "wheeled_vehicle",
+      "scenarioAction": "uniform_speed",
+      "informationForm": "numeric_text",
+      "scenarioFingerprint": "scenario-72a47cb0cabbe65d50a2",
+      "contextNecessity": "required_for_solution",
+      "requiredInformationFields": [
+        "scenarioAction",
+        "motion_or_reaction_condition",
+        "quantities_with_units"
+      ],
+      "solverRelevantFields": [
+        "scenarioAction",
+        "motion_or_reaction_condition",
+        "quantities_with_units"
+      ],
+      "surface": {
+        "zhEntity": "实验小车",
+        "enEntity": "laboratory cart",
+        "zhSetting": "水平直轨实验",
+        "enSetting": "a horizontal straight-track experiment",
+        "cueTokens": [
+          "实验小车",
+          "laboratory cart"
+        ]
+      },
+      "plausibility": {
+        "straightLineMotion": true,
+        "siUnitsRequired": true,
+        "signedVelocityAndAccelerationAllowed": true
+      },
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "controlled_catalog_and_sealed_ordinal_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "physical_situation",
+        "role": "one_self_contained_kinematics_object_or_motion_segment",
+        "independentGroup": "k1"
+      },
+      {
+        "id": "e2",
+        "type": "quantity_or_graph_relation",
+        "role": "one_displacement_time_velocity_acceleration_or_graph_slope_relation_with_units",
+        "independentGroup": "k1"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "identify_direct_kinematics_relation",
+        "inputs": [
+          "e1",
+          "e2"
+        ],
+        "output": "selected_relation"
+      },
+      {
+        "id": "r2",
+        "operation": "derive_one_value_direction_or_graph_fact",
+        "inputs": [
+          "selected_relation"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "kinematics_unit_or_graph_round_trip",
+        "expression": "displacement/time/velocity/acceleration relation or graph slope checks the answer",
+        "variables": [
+          "s",
+          "t",
+          "v",
+          "a"
+        ],
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "confuse displacement with distance",
+      "confuse graph slope with graph height",
+      "omit or mismatch units"
+    ],
+    "answerDerivation": [
+      "apply exactly one visible kinematics relation or one graph-slope interpretation"
+    ],
+    "uniquenessConditions": [
+      "only one option matches the stated motion relation and units"
+    ]
+  },
+  "localizations": {
+    "zh": {
+      "prompt": "在水平直轨实验中，实验小车沿直线做匀速运动，位移为 270 m，用时为 10 s，求其速度大小。",
+      "options": [
+        {
+          "id": "A",
+          "text": "速度大小：30 m/s"
+        },
+        {
+          "id": "B",
+          "text": "速度大小：24 m/s"
+        },
+        {
+          "id": "C",
+          "text": "速度大小：33 m/s"
+        },
+        {
+          "id": "D",
+          "text": "速度大小：27 m/s"
+        }
+      ],
+      "explanation": "对实验小车使用匀速关系 v=s/t；代入 s=270 m、t=10 s，可得速度大小为 27 m/s，因此唯一匹配的选项正确。",
+      "knowledgeTags": [
+        "运动学",
+        "直线运动"
+      ]
+    },
+    "en": {
+      "prompt": "During a horizontal straight-track experiment, the laboratory cart moves uniformly in a straight line through 270 m in 10 s. Find its speed.",
+      "options": [
+        {
+          "id": "A",
+          "text": "Speed magnitude: 30 m/s"
+        },
+        {
+          "id": "B",
+          "text": "Speed magnitude: 24 m/s"
+        },
+        {
+          "id": "C",
+          "text": "Speed magnitude: 33 m/s"
+        },
+        {
+          "id": "D",
+          "text": "Speed magnitude: 27 m/s"
+        }
+      ],
+      "explanation": "For the laboratory cart, apply the uniform-motion relation v=s/t. Substituting s=270 m and t=10 s gives a speed magnitude of 27 m/s, identifying the unique matching option.",
+      "knowledgeTags": [
+        "Kinematics",
+        "Linear motion"
+      ]
+    }
+  },
+  "generationMetadata": {
+    "origin": "codex_dual_session_pilot",
+    "generatorTaskId": "pilot-30-generator-task-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v1",
+    "createdAt": "2026-09-15T10:00:00.000Z",
+    "family": "kinematics_uniform_speed",
+    "seed": 283,
+    "generatorVersion": "physics-kinematics-local-generator-v3-semantic-options",
+    "scopeId": "physics-basic-kinematics-v2:uniform_speed",
+    "deterministicVerification": {
+      "solver": {
+        "solverVersion": "physics-basic-kinematics-solver-v4",
+        "taskFamily": "kinematics_basic_direct_relation",
+        "status": "verified",
+        "parsed": true,
+        "relationKind": "uniform_speed",
+        "expectedDimension": "speed",
+        "expectedSiValue": 27,
+        "canonicalTask": {
+          "relationKind": "uniform_speed",
+          "dimension": "speed",
+          "expectedSiValue": 27,
+          "inputs": {
+            "distanceMeters": 270,
+            "durationSeconds": 10
+          }
+        },
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "false",
+            "parsedDimension": "speed",
+            "normalizedSiValue": 30,
+            "reasonCode": "physics_solver_quantity_mismatch"
+          },
+          {
+            "optionId": "B",
+            "verdict": "false",
+            "parsedDimension": "speed",
+            "normalizedSiValue": 24,
+            "reasonCode": "physics_solver_quantity_mismatch"
+          },
+          {
+            "optionId": "C",
+            "verdict": "false",
+            "parsedDimension": "speed",
+            "normalizedSiValue": 33,
+            "reasonCode": "physics_solver_quantity_mismatch"
+          },
+          {
+            "optionId": "D",
+            "verdict": "true",
+            "parsedDimension": "speed",
+            "normalizedSiValue": 27,
+            "reasonCode": "physics_solver_quantity_matches"
+          }
+        ],
+        "trueOptionIds": [
+          "D"
+        ],
+        "selectedOptionId": "D",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": [],
+        "verificationScope": {
+          "scopeVersion": "physics-basic-kinematics-verification-scope-v2",
+          "scopeId": "physics-basic-kinematics-v2:uniform_speed",
+          "status": "matched",
+          "matched": true,
+          "relationKind": "uniform_speed",
+          "reasonCodes": []
+        }
+      },
+      "oracle": {
+        "oracleVersion": "physics-kinematics-independent-oracle-v3",
+        "status": "verified",
+        "relationKind": "uniform_speed",
+        "expectedValue": 27,
+        "expectedUnit": "m/s",
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "false",
+            "value": 30,
+            "unit": "m/s"
+          },
+          {
+            "optionId": "B",
+            "verdict": "false",
+            "value": 24,
+            "unit": "m/s"
+          },
+          {
+            "optionId": "C",
+            "verdict": "false",
+            "value": 33,
+            "unit": "m/s"
+          },
+          {
+            "optionId": "D",
+            "verdict": "true",
+            "value": 27,
+            "unit": "m/s"
+          }
+        ],
+        "trueOptionIds": [
+          "D"
+        ],
+        "selectedOptionId": "D",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "scopeId": "physics-basic-kinematics-v2:uniform_speed",
+        "scopeMatched": true,
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      },
+      "explanation": {
+        "verifierVersion": "physics-kinematics-explanation-verifier-v1",
+        "status": "verified",
+        "solverEvidence": {
+          "solverVersion": "physics-basic-kinematics-solver-v4",
+          "taskFamily": "kinematics_basic_direct_relation",
+          "status": "verified",
+          "parsed": true,
+          "relationKind": "uniform_speed",
+          "expectedDimension": "speed",
+          "expectedSiValue": 27,
+          "canonicalTask": {
+            "relationKind": "uniform_speed",
+            "dimension": "speed",
+            "expectedSiValue": 27,
+            "inputs": {
+              "distanceMeters": 270,
+              "durationSeconds": 10
+            }
+          },
+          "optionVerdicts": [
+            {
+              "optionId": "A",
+              "verdict": "false",
+              "parsedDimension": "speed",
+              "normalizedSiValue": 30,
+              "reasonCode": "physics_solver_quantity_mismatch"
+            },
+            {
+              "optionId": "B",
+              "verdict": "false",
+              "parsedDimension": "speed",
+              "normalizedSiValue": 24,
+              "reasonCode": "physics_solver_quantity_mismatch"
+            },
+            {
+              "optionId": "C",
+              "verdict": "false",
+              "parsedDimension": "speed",
+              "normalizedSiValue": 33,
+              "reasonCode": "physics_solver_quantity_mismatch"
+            },
+            {
+              "optionId": "D",
+              "verdict": "true",
+              "parsedDimension": "speed",
+              "normalizedSiValue": 27,
+              "reasonCode": "physics_solver_quantity_matches"
+            }
+          ],
+          "trueOptionIds": [
+            "D"
+          ],
+          "selectedOptionId": "D",
+          "uniqueAnswer": true,
+          "agreesWithGenerator": true,
+          "evidenceBoundary": "prompt_and_visible_options_only",
+          "providerImpact": "none_no_provider_call",
+          "productionGateImpact": "none_shadow_only",
+          "reasonCodes": [],
+          "verificationScope": {
+            "scopeVersion": "physics-basic-kinematics-verification-scope-v2",
+            "scopeId": "physics-basic-kinematics-v2:uniform_speed",
+            "status": "matched",
+            "matched": true,
+            "relationKind": "uniform_speed",
+            "reasonCodes": []
+          }
+        },
+        "recomputedWithoutGeneratorExplanation": true,
+        "formulaInputsUnitsAndConclusionChecked": true,
+        "checks": [
+          {
+            "language": "zh",
+            "formulaMatched": true,
+            "promptInputsCovered": true,
+            "conclusionMatched": true,
+            "conclusionValue": 27,
+            "conclusionUnit": "m/s",
+            "reasonCodes": []
+          },
+          {
+            "language": "en",
+            "formulaMatched": true,
+            "promptInputsCovered": true,
+            "conclusionMatched": true,
+            "conclusionValue": 27,
+            "conclusionUnit": "m/s",
+            "reasonCodes": []
+          }
+        ],
+        "mismatchCount": 0,
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      }
+    },
+    "questionPlanAdherence": {
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "validPlan": true,
+      "adheres": true,
+      "planTemplate": "physics_kinematics_basic_relation_v1",
+      "taskFamily": "kinematics_basic_direct_relation",
+      "failureCodes": [],
+      "features": {
+        "operationWords": 0,
+        "observationWords": 0,
+        "hypothesisMarkers": 0,
+        "reasoningConnectors": 2,
+        "quantitativeMarkers": 0,
+        "reactionClues": 4,
+        "gasSpeciesMarkers": 0,
+        "gasControlMarkers": 0,
+        "redoxReactionMarkers": 0,
+        "redoxConceptMarkers": 0,
+        "redoxQuantitativeChainMarkers": 0,
+        "mathPropertySignals": 0,
+        "mathStatementMarkers": 5,
+        "mathTransformationSignals": 1,
+        "mathOrderingSignals": 6,
+        "mathParameterConstraintSignals": 1,
+        "mathProbabilitySignals": 0,
+        "mathProbabilityEventLabelCount": 0,
+        "mathProbabilityNormalHardInteractionCueCount": 0,
+        "mathProbabilityHardInteractionCueCount": 0,
+        "mathProbabilityConcreteFrameSignals": 0,
+        "mathProbabilityNormalMediumNoEventRisk": false,
+        "mathProbabilityNormalReferenceTableRisk": false,
+        "mathProbabilityConceptOnlyRisk": false,
+        "mathProbabilitySingleResultRisk": false,
+        "mathProbabilityEventListOnlyRisk": false,
+        "mathDerivativeSignals": 0,
+        "mathDerivativeMediumDefinitionOnlyRisk": false,
+        "mathDerivativeHardCoefficientSolveOnlyRisk": false,
+        "mathDerivativeBasicAdvancedOperationRisk": false,
+        "mathVectorComplexSignals": 0,
+        "mathVectorComplexBasicDefinitionOnlyRisk": false,
+        "mathGeometrySignals": 1,
+        "mathAnalyticGeometryDefinitionOnlyRisk": false,
+        "mathAnalyticGeometryBasicGeneralCircleRisk": false,
+        "mathAnalyticGeometryHardConicRelationOnlyRisk": false,
+        "mathElementaryFunctionSignals": 0,
+        "mathElementaryFunctionGenericClassificationRisk": false,
+        "mathElementaryFunctionBasicEquationSolveRisk": false,
+        "mathElementaryFunctionBasicMultipleObjectRisk": false,
+        "mathSequenceSignals": 0,
+        "mathSequenceGenericClassificationRisk": false,
+        "mathStatisticsSignals": 0,
+        "mathStatisticsBasicMultiStatisticComparisonRisk": false,
+        "mathStatisticsMediumPureLinearTransformRisk": false,
+        "mathStatisticsHardDirectCombinedVarianceRisk": false,
+        "mathSpatialSignals": 0,
+        "mathSpatialMediumMultiPropositionOvercomplexRisk": false,
+        "mathSpatialHardConceptOnlyRisk": false,
+        "mathSpatialHardDirectCoordinateOnlyRisk": false,
+        "mathParameterInferenceRisk": false,
+        "mathOptionJudgement": true,
+        "mathEnumeratedConditionCount": 0,
+        "mathFunctionPropertyStackCount": 0,
+        "mathFunctionDistinctPropertyCount": 0,
+        "mathStudentFacingDistinctPropertyCount": 0,
+        "mathStudentFacingFunctionPropertyOverComplex": false,
+        "mathFunctionObjectSignals": 0,
+        "mathFunctionPointValueCount": 0,
+        "mathFunctionNamedPointCount": 0,
+        "mathFunctionMultipleNamedPointsRisk": false,
+        "mathBasicFunctionSolutionScaffoldRisk": false,
+        "mathFunctionBasicMultiConstraintDomainRisk": false,
+        "mathPureFunctionExternalContextRisk": true,
+        "mathHardFunctionGenericConceptRisk": false,
+        "mathMediumFunctionPropertyOverComplex": false,
+        "mathDerivativeBasicDomainTrapRisk": false,
+        "mathDerivativeBasicOverComplexRisk": false,
+        "mathVectorComplexObjectCount": 0,
+        "mathVectorComplexRelationCount": 0,
+        "mathVectorComplexCoordinateGeometryDriftRisk": false,
+        "mathVectorComplexLocusParameterChainRisk": false,
+        "mathVectorComplexOneStepFormulaRisk": false,
+        "mathVectorComplexHardDirectMetricRisk": false,
+        "physicsKinematicsSignals": 9,
+        "physicsGraphSignals": 0,
+        "physicsUnitSignals": 9,
+        "physicsEquationSignals": 3,
+        "physicsOpticsSignals": 0,
+        "physicsOpticsRelationSignals": 0,
+        "physicsUnseenDiagramRisk": false,
+        "chemistryClassificationSignals": 0,
+        "chemistryStateChangeEvidenceSignals": 0,
+        "chemistryDefinitionOnlyClassificationRisk": false,
+        "chemistryPhConceptSignals": 0,
+        "chemistryPhOperationErrorSignals": 0,
+        "chemistryPhDirectionSignals": 0,
+        "chemistryPhDirectCalculationRisk": false
+      },
+      "productionImpact": "none_audit_or_gate_scaffold",
+      "providerImpact": "none_no_provider_call"
+    },
+    "generatorSelfVerification": {
+      "solverVersion": "physics-basic-kinematics-solver-v4",
+      "taskFamily": "kinematics_basic_direct_relation",
+      "status": "verified",
+      "parsed": true,
+      "relationKind": "uniform_speed",
+      "expectedDimension": "speed",
+      "expectedSiValue": 27,
+      "canonicalTask": {
+        "relationKind": "uniform_speed",
+        "dimension": "speed",
+        "expectedSiValue": 27,
+        "inputs": {
+          "distanceMeters": 270,
+          "durationSeconds": 10
+        }
+      },
+      "optionVerdicts": [
+        {
+          "optionId": "A",
+          "verdict": "false",
+          "parsedDimension": "speed",
+          "normalizedSiValue": 30,
+          "reasonCode": "physics_solver_quantity_mismatch"
+        },
+        {
+          "optionId": "B",
+          "verdict": "false",
+          "parsedDimension": "speed",
+          "normalizedSiValue": 24,
+          "reasonCode": "physics_solver_quantity_mismatch"
+        },
+        {
+          "optionId": "C",
+          "verdict": "false",
+          "parsedDimension": "speed",
+          "normalizedSiValue": 33,
+          "reasonCode": "physics_solver_quantity_mismatch"
+        },
+        {
+          "optionId": "D",
+          "verdict": "true",
+          "parsedDimension": "speed",
+          "normalizedSiValue": 27,
+          "reasonCode": "physics_solver_quantity_matches"
+        }
+      ],
+      "trueOptionIds": [
+        "D"
+      ],
+      "selectedOptionId": "D",
+      "uniqueAnswer": true,
+      "agreesWithGenerator": true,
+      "evidenceBoundary": "prompt_and_visible_options_only",
+      "providerImpact": "none_no_provider_call",
+      "productionGateImpact": "none_shadow_only",
+      "reasonCodes": [],
+      "verificationScope": {
+        "scopeVersion": "physics-basic-kinematics-verification-scope-v2",
+        "scopeId": "physics-basic-kinematics-v2:uniform_speed",
+        "status": "matched",
+        "matched": true,
+        "relationKind": "uniform_speed",
+        "reasonCodes": []
+      }
+    }
+  }
+}

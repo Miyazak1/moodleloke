@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-CHEMISTRY-0015",
+  "reviewerTaskId": "pilot-30-independent-blind-review",
+  "derivedAnswer": "C",
+  "optionTruthTable": {
+    "A": false,
+    "B": false,
+    "C": true,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "basic",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "n(HCl)=0.040×0.05=0.00200 mol，n(NaOH)=0.015×0.25=0.00375 mol，OH-过量0.00175 mol，故混合液呈碱性。",
+    "强酸强碱按1:1中和；两者不等量，排除中性，且给定量足以判断。"
+  ],
+  "verdictBeforeReveal": "reject",
+  "reasonCodes": [
+    "declared_difficulty_mismatch"
+  ],
+  "reviewedAt": "2026-09-15T09:29:16.058Z"
+}

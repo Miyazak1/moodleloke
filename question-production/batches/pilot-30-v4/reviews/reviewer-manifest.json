@@ -1,0 +1,169 @@
+{
+  "schemaVersion": "codex-blind-review-manifest-v1",
+  "batch": "pilot-30-v4",
+  "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+  "languageReviewed": "zh",
+  "scope": {
+    "itemCount": 60,
+    "subjects": [
+      "math",
+      "physics",
+      "chemistry"
+    ],
+    "blindOnly": true
+  },
+  "subjectStatistics": [
+    {
+      "subject": "math",
+      "total": 20,
+      "pass": 17,
+      "reject": 2,
+      "abstain": 1,
+      "difficultyDeviations": [
+        "CQ-MATH-3015",
+        "CQ-MATH-3016"
+      ],
+      "nonPassItems": [
+        {
+          "candidateId": "CQ-MATH-3015",
+          "verdict": "reject",
+          "reasonCodes": [
+            "DIFFICULTY_OVERSTATED"
+          ]
+        },
+        {
+          "candidateId": "CQ-MATH-3016",
+          "verdict": "reject",
+          "reasonCodes": [
+            "DIFFICULTY_OVERSTATED"
+          ]
+        },
+        {
+          "candidateId": "CQ-MATH-3018",
+          "verdict": "abstain",
+          "reasonCodes": [
+            "AMBIGUOUS_NOTATION",
+            "NONSTANDARD_DOUBLE_MINUS"
+          ]
+        }
+      ]
+    },
+    {
+      "subject": "physics",
+      "total": 20,
+      "pass": 18,
+      "reject": 2,
+      "abstain": 0,
+      "difficultyDeviations": [
+        "CQ-PHYSICS-3009",
+        "CQ-PHYSICS-3010"
+      ],
+      "nonPassItems": [
+        {
+          "candidateId": "CQ-PHYSICS-3009",
+          "verdict": "reject",
+          "reasonCodes": [
+            "DIFFICULTY_OVERSTATED"
+          ]
+        },
+        {
+          "candidateId": "CQ-PHYSICS-3010",
+          "verdict": "reject",
+          "reasonCodes": [
+            "DIFFICULTY_OVERSTATED"
+          ]
+        }
+      ]
+    },
+    {
+      "subject": "chemistry",
+      "total": 20,
+      "pass": 15,
+      "reject": 5,
+      "abstain": 0,
+      "difficultyDeviations": [
+        "CQ-CHEMISTRY-3015"
+      ],
+      "nonPassItems": [
+        {
+          "candidateId": "CQ-CHEMISTRY-3003",
+          "verdict": "reject",
+          "reasonCodes": [
+            "MISSING_MOLAR_MASS_DATA",
+            "CONDITIONS_INSUFFICIENT"
+          ]
+        },
+        {
+          "candidateId": "CQ-CHEMISTRY-3004",
+          "verdict": "reject",
+          "reasonCodes": [
+            "MISSING_MOLAR_MASS_DATA",
+            "CONDITIONS_INSUFFICIENT"
+          ]
+        },
+        {
+          "candidateId": "CQ-CHEMISTRY-3005",
+          "verdict": "reject",
+          "reasonCodes": [
+            "MISSING_ATOMIC_MASS_DATA",
+            "CONDITIONS_INSUFFICIENT"
+          ]
+        },
+        {
+          "candidateId": "CQ-CHEMISTRY-3006",
+          "verdict": "reject",
+          "reasonCodes": [
+            "MISSING_ATOMIC_MASS_DATA",
+            "CONDITIONS_INSUFFICIENT"
+          ]
+        },
+        {
+          "candidateId": "CQ-CHEMISTRY-3015",
+          "verdict": "reject",
+          "reasonCodes": [
+            "DIFFICULTY_OVERSTATED"
+          ]
+        }
+      ]
+    }
+  ],
+  "majorDefects": [
+    {
+      "code": "CONDITIONS_INSUFFICIENT",
+      "items": [
+        "CQ-CHEMISTRY-3003",
+        "CQ-CHEMISTRY-3004",
+        "CQ-CHEMISTRY-3005",
+        "CQ-CHEMISTRY-3006"
+      ],
+      "observation": "题面在声明无外部语境的同时遗漏完成定量计算所需的摩尔质量或相对原子质量。"
+    },
+    {
+      "code": "AMBIGUOUS_NOTATION",
+      "items": [
+        "CQ-MATH-3018"
+      ],
+      "observation": "连续双减号 x--1 不是规范数学表达，未以括号明确负数。"
+    },
+    {
+      "code": "DIFFICULTY_OVERSTATED",
+      "items": [
+        "CQ-MATH-3015",
+        "CQ-MATH-3016",
+        "CQ-PHYSICS-3009",
+        "CQ-PHYSICS-3010",
+        "CQ-CHEMISTRY-3015"
+      ],
+      "observation": "均为标准公式/单方程的常规两步推理，更符合 medium。"
+    }
+  ],
+  "structuralClusterObservations": [
+    "60 题由 30 个结构簇组成，每簇恰有 2 题，簇内 structureFingerprint、任务骨架、措辞和干扰项角色高度一致，仅替换参数。",
+    "数学、物理、化学各 10 个结构簇；这种成对模板化使覆盖面表面为 20 题/科，但独立结构仅 10 个/科，存在明显同质化风险。",
+    "所有题均为纯文本且不依赖缺失图像；除数学 3018 外，没有发现必须依赖未说明图形约定才能作答的题。",
+    "现实/假设场景中的数值总体量级合理，题干给出的场景参数均参与计算；多数题仍是参数替换型，情境较薄但非纯装饰。",
+    "干扰项总体可对应常见错误（漏步骤、错比例、错单位或混淆中间量）；少数长小数干扰项显得机械，但未造成第二正确答案。"
+  ],
+  "prohibitedAccessDeclaration": "评审过程中仅读取 question-production/batches/pilot-30-v4/blind/、question-production/schemas/blind-review.schema.json，并为确认必要 schema 文件名列出 question-production/schemas/；未访问 Git 历史、其他分支、sealed、V1-V3、旧 reviews、生成任务、accepted/audit、官方语料、数据库题文或工作区其他题。答案目录未被访问。",
+  "reviewedAt": "2026-09-15T18:46:01.1890259+08:00"
+}

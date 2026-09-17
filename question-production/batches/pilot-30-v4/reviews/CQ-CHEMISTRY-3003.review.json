@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-CHEMISTRY-3003",
+  "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+  "derivedAnswer": "C",
+  "optionTruthTable": {
+    "A": false,
+    "B": false,
+    "C": true,
+    "D": false
+  },
+  "conditionsSufficient": false,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "medium",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "若采用常用 M(CaCO3)=100 g/mol，则纯 CaCO3 为 8 g、0.08 mol，生成 CO2 0.08 mol，即 1.792 L（C）。但题面未给 CaCO3 摩尔质量/相对原子质量，且声明不允许外部语境，条件不自足。",
+    "已逐项对照 A/B/C/D；真值表只标记由题干独立推出的选项，未采用任何题面或元数据自报答案。"
+  ],
+  "verdictBeforeReveal": "reject",
+  "reasonCodes": [
+    "MISSING_MOLAR_MASS_DATA",
+    "CONDITIONS_INSUFFICIENT"
+  ],
+  "reviewedAt": "2026-09-15T18:46:01.1890259+08:00"
+}

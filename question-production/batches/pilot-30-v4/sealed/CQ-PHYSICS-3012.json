@@ -1,0 +1,207 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-PHYSICS-3012",
+  "subject": "physics",
+  "topicCode": "P-MECH-BUOY",
+  "topicTitle": "浮力",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "一均匀实心物块漂浮在水面上，露出水面的体积占总体积的 40%。水的密度取 1000 kg/m³，求物块密度。",
+  "options": [
+    {
+      "id": "A",
+      "text": "400 kg/m³"
+    },
+    {
+      "id": "B",
+      "text": "1666.6667 kg/m³"
+    },
+    {
+      "id": "C",
+      "text": "600 kg/m³"
+    },
+    {
+      "id": "D",
+      "text": "1000 kg/m³"
+    }
+  ],
+  "knowledgeTags": [
+    "浮力",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "physics",
+    "topicCode": "P-MECH-BUOY",
+    "topicTitle": "浮力",
+    "targetDifficulty": "medium",
+    "taskFamily": "floating_density_from_exposed_fraction",
+    "planTemplate": "pilot_v4_floating_density_from_exposed_fraction_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "b5a2626f5bb325417dfbfb10",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "above"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "above",
+        "independentGroup": "g1"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "exposed fraction",
+        "inputs": [
+          "e1"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "submerged volume",
+        "inputs": [
+          "r1"
+        ],
+        "output": "intermediate_2"
+      },
+      {
+        "id": "r3",
+        "operation": "floating balance",
+        "inputs": [
+          "r2"
+        ],
+        "output": "intermediate_3"
+      },
+      {
+        "id": "r4",
+        "operation": "density",
+        "inputs": [
+          "r3"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "Vsub/V=1-fabove",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "rho_object V=rho_water Vsub",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "把露出比例当浸没比例",
+      "漏用漂浮平衡"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "above": 0.4
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 2
+  },
+  "correctAnswer": "C",
+  "explanation": "浸入水中的体积分数为 1-0.4=0.6。漂浮时重力等于浮力，所以 ρ物Vg=ρ水V浸g，得 ρ物=600 kg/m³。",
+  "generationMetadata": {
+    "origin": "codex_local_deterministic_v4",
+    "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v4",
+    "createdAt": "2026-09-15T16:00:00.000Z",
+    "languageScope": "zh_primary_only",
+    "providerCalls": 0,
+    "sourceIsolation": {
+      "officialQuestionContentRead": false,
+      "databaseQuestionTextRead": false,
+      "priorReviewTextRead": false
+    },
+    "deterministicVerification": {
+      "solver": {
+        "version": "pilot-v4-batch-local-solver-v1",
+        "status": "verified",
+        "taskFamily": "floating_density_from_exposed_fraction",
+        "evidenceBoundary": "prompt_options_and_question_plan",
+        "expectedCanonical": 600,
+        "selectedOptionId": "C",
+        "uniqueAnswer": true
+      },
+      "oracle": {
+        "version": "pilot-v4-independent-oracle-v1",
+        "status": "verified",
+        "implementation": "fresh_family_evaluation_from_canonical_inputs",
+        "expectedCanonical": 600,
+        "agreesWithSolver": true
+      },
+      "optionTruthTable": [
+        {
+          "optionId": "A",
+          "verdict": false,
+          "canonicalValue": 400
+        },
+        {
+          "optionId": "B",
+          "verdict": false,
+          "canonicalValue": 1666.6666666666667
+        },
+        {
+          "optionId": "C",
+          "verdict": true,
+          "canonicalValue": 600
+        },
+        {
+          "optionId": "D",
+          "verdict": false,
+          "canonicalValue": 1000
+        }
+      ],
+      "explanationReplay": {
+        "version": "pilot-v4-explanation-replay-v1",
+        "status": "verified",
+        "requiredEvidenceTokens": [
+          "浸入",
+          "600 kg/m³"
+        ],
+        "allRequiredTokensPresent": true,
+        "conclusionMatchesAnswer": true
+      }
+    }
+  }
+}

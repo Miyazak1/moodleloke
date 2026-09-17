@@ -1,0 +1,17 @@
+{
+  "reviewerTaskId": "repair2-independent-blind-reviewer",
+  "reviewSchemaVersion": "codex-blind-review-v1",
+  "batch": "pilot-30-v4-repair2",
+  "reviewedCandidates": [
+    "CQ-CHEMISTRY-5001",
+    "CQ-CHEMISTRY-5002"
+  ],
+  "counts": {
+    "total": 2,
+    "pass": 2,
+    "reject": 0,
+    "abstain": 0
+  },
+  "reviewedAt": "2026-09-15T19:32:19+08:00",
+  "accessDeclaration": "仅读取本批次 blind 目录中的两道候选题与 question-production/schemas/blind-review.schema.json；未访问 Git 历史或分支、sealed、其他批次、旧 reviews、生成任务、accepted/audit、官方语料、数据库题文或其他题。"
+}

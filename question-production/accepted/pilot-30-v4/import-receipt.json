@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "codex-supervised-pack-import-receipt-v1",
+  "packId": "pilot-30-v4-2026-09-15",
+  "questionsSha256": "215ade3178b3fa9c343407c7def4c3f9504a2c84babec63939d1b11a20aee685",
+  "databaseImportDate": "2026-09-16",
+  "transactionStatus": "committed",
+  "counts": {
+    "total": 30,
+    "math": 10,
+    "physics": 10,
+    "chemistry": 10
+  },
+  "cscaQuestionIds": {
+    "first": 916,
+    "last": 945,
+    "count": 30
+  },
+  "specialPracticeQuestionIds": {
+    "first": 1027,
+    "last": 1056,
+    "count": 30
+  },
+  "postImportVerification": {
+    "approved": 30,
+    "published": 30,
+    "linked": 30,
+    "errors": [],
+    "idempotentExistingOnReplay": 30,
+    "exactDuplicatesOnReplay": 0,
+    "approximateDuplicatesOnReplay": 0,
+    "missingTopicMappingsOnReplay": 0
+  },
+  "evidence": {
+    "acceptanceNamespace": "dualSessionSupervisedAcceptance",
+    "sourceType": "manual_supervised_pack",
+    "verificationCommand": "node question-production/tools/verify-imported-pack.cjs question-production/accepted/pilot-30-v4"
+  }
+}

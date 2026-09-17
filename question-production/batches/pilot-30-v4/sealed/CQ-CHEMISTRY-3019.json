@@ -1,0 +1,223 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-CHEMISTRY-3019",
+  "subject": "chemistry",
+  "topicCode": "C-SOL-MOLAR",
+  "topicTitle": "物质的量浓度",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "某溶液密度为 1.2 g/mL，溶质质量分数为 20%，溶质摩尔质量为 60 g/mol。求该溶液的物质的量浓度。",
+  "options": [
+    {
+      "id": "A",
+      "text": "0.004 mol/L"
+    },
+    {
+      "id": "B",
+      "text": "40 mol/L"
+    },
+    {
+      "id": "C",
+      "text": "4 mol/L"
+    },
+    {
+      "id": "D",
+      "text": "5 mol/L"
+    }
+  ],
+  "knowledgeTags": [
+    "物质的量浓度",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "chemistry",
+    "topicCode": "C-SOL-MOLAR",
+    "topicTitle": "物质的量浓度",
+    "targetDifficulty": "medium",
+    "taskFamily": "molarity_from_mass_fraction_density",
+    "planTemplate": "pilot_v4_molarity_from_mass_fraction_density_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "8a167b871a1ce146ec699598",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "M",
+        "density",
+        "w"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "M",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "density",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "w",
+        "independentGroup": "g3"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "one-liter solution mass from density",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "solute mass",
+        "inputs": [
+          "r1"
+        ],
+        "output": "intermediate_2"
+      },
+      {
+        "id": "r3",
+        "operation": "amount concentration",
+        "inputs": [
+          "r2"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "m_solution=1000 rho",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "m_solute=w m_solution",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q3",
+        "type": "deterministic_relation",
+        "expression": "c=(m_solute/M)/1L",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "把毫升与升混用",
+      "把质量分数当物质的量分数"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "density": 1.2,
+      "w": 0.2,
+      "M": 60
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 1
+  },
+  "correctAnswer": "C",
+  "explanation": "取 1.00 L 溶液，其质量为 1000×1.2=1200 g，含溶质 1200×0.2=240 g，即 4 mol。因此浓度为 4 mol/L。",
+  "generationMetadata": {
+    "origin": "codex_local_deterministic_v4",
+    "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v4",
+    "createdAt": "2026-09-15T16:00:00.000Z",
+    "languageScope": "zh_primary_only",
+    "providerCalls": 0,
+    "sourceIsolation": {
+      "officialQuestionContentRead": false,
+      "databaseQuestionTextRead": false,
+      "priorReviewTextRead": false
+    },
+    "deterministicVerification": {
+      "solver": {
+        "version": "pilot-v4-batch-local-solver-v1",
+        "status": "verified",
+        "taskFamily": "molarity_from_mass_fraction_density",
+        "evidenceBoundary": "prompt_options_and_question_plan",
+        "expectedCanonical": 4,
+        "selectedOptionId": "C",
+        "uniqueAnswer": true
+      },
+      "oracle": {
+        "version": "pilot-v4-independent-oracle-v1",
+        "status": "verified",
+        "implementation": "fresh_family_evaluation_from_canonical_inputs",
+        "expectedCanonical": 4,
+        "agreesWithSolver": true
+      },
+      "optionTruthTable": [
+        {
+          "optionId": "A",
+          "verdict": false,
+          "canonicalValue": 0.004
+        },
+        {
+          "optionId": "B",
+          "verdict": false,
+          "canonicalValue": 40
+        },
+        {
+          "optionId": "C",
+          "verdict": true,
+          "canonicalValue": 4
+        },
+        {
+          "optionId": "D",
+          "verdict": false,
+          "canonicalValue": 5
+        }
+      ],
+      "explanationReplay": {
+        "version": "pilot-v4-explanation-replay-v1",
+        "status": "verified",
+        "requiredEvidenceTokens": [
+          "1.00 L",
+          "4 mol/L"
+        ],
+        "allRequiredTokensPresent": true,
+        "conclusionMatchesAnswer": true
+      }
+    }
+  }
+}

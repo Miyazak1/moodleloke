@@ -1,0 +1,324 @@
+.momentum-page {
+  width:min(1240px,calc(100vw - 48px))
+}
+
+.momentum-card {
+  display:grid;
+  grid-template-columns:300px minmax(0,1fr);
+  gap:18px;
+  padding:18px;
+  border:1px solid rgba(79,70,229,.16);
+  border-radius:20px;
+  background:#fff;
+  box-shadow:0 16px 42px #0f172a12
+}
+
+.momentum-side,.momentum-main {
+  display:grid;
+  align-content:start;
+  gap:14px;
+  min-width:0
+}
+
+.momentum-side article,.momentum-stage,.momentum-chart-card,.momentum-insight-card {
+  border:1px solid rgba(79,70,229,.14);
+  border-radius:16px;
+  background:#fff
+}
+
+.momentum-side article,.momentum-chart-card,.momentum-insight-card {
+  padding:16px
+}
+
+.momentum-side h2,.momentum-chart-card h2,.momentum-insight-card h2 {
+  margin:0 0 12px;
+  color:#312e81;
+  font-size:15px;
+  font-weight:950
+}
+
+.momentum-formula-card,.momentum-data-card,.momentum-control-card,.momentum-slider-stack {
+  display:grid;
+  gap:10px
+}
+
+.momentum-formula-card .math-content {
+  justify-content:center;
+  padding:16px 10px;
+  border:1px solid rgba(79,70,229,.18);
+  border-radius:12px;
+  background:#e9efff
+}
+
+.momentum-data-card p {
+  margin:6px 0 0;
+  color:#5f6f69;
+  font-size:12px;
+  font-weight:950
+}
+
+.momentum-readout {
+  display:grid;
+  grid-template-columns:12px minmax(0,1fr) 68px 62px;
+  gap:8px;
+  align-items:center;
+  color:#475569;
+  font-size:12px;
+  font-weight:900
+}
+
+.momentum-readout i {
+  width:10px;
+  height:10px;
+  border-radius:3px
+}
+
+.momentum-readout strong,.momentum-readout em,.momentum-slider-stack strong {
+  color:#0f172a;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-style:normal;
+  font-variant-numeric:tabular-nums;
+  text-align:right
+}
+
+.momentum-slider-stack label {
+  display:grid;
+  grid-template-columns:58px minmax(0,1fr) 92px;
+  gap:10px;
+  align-items:center;
+  color:#475569;
+  font-size:13px;
+  font-weight:900
+}
+
+.momentum-slider-stack input[type=range] {
+  width:100%;
+  accent-color:#315dff
+}
+
+.momentum-slider-stack select {
+  grid-column:2 / -1;
+  min-height:38px;
+  border:1px solid var(--public-line);
+  border-radius:10px;
+  background:#fff;
+  color:var(--public-ink);
+  font-weight:850
+}
+
+.momentum-stage {
+  padding:12px;
+  background:#f8fbff
+}
+
+.momentum-collision-svg {
+  display:block;
+  width:100%;
+  min-height:330px
+}
+
+.momentum-collision-svg .stage-title,.momentum-collision-svg .impact-label {
+  fill:#5f6f69;
+  font-size:13px;
+  font-weight:950
+}
+
+.momentum-collision-svg .collision-mode-label {
+  fill:#315dff;
+  font-size:13px;
+  font-weight:950;
+  text-anchor:end
+}
+
+.momentum-collision-svg .track {
+  stroke:#dbe4f2;
+  stroke-width:8;
+  stroke-linecap:round
+}
+
+.momentum-collision-svg .tick {
+  stroke:#94a3b8;
+  stroke-width:1.5
+}
+
+.momentum-collision-svg .impact-guide {
+  stroke:#5f6f6933;
+  stroke-width:2;
+  stroke-dasharray:5 6
+}
+
+.momentum-collision-svg .impact-label {
+  text-anchor:middle
+}
+
+.momentum-collision-svg .momentum-velocity line {
+  stroke-width:4
+}
+
+.momentum-collision-svg .momentum-velocity.purple line,.momentum-collision-svg .momentum-velocity.purple text {
+  stroke:#315dff;
+  fill:#315dff
+}
+
+.momentum-collision-svg .momentum-velocity.orange line,.momentum-collision-svg .momentum-velocity.orange text {
+  stroke:#f1a826;
+  fill:#d97706
+}
+
+.momentum-collision-svg .momentum-velocity text {
+  stroke:none;
+  font-size:12px;
+  font-weight:950
+}
+
+.momentum-collision-svg .block-one {
+  fill:#6366f1;
+  filter:drop-shadow(0 10px 18px rgba(79,70,229,.24))
+}
+
+.momentum-collision-svg .block-two {
+  fill:#f1a826;
+  filter:drop-shadow(0 10px 18px rgba(217,119,6,.22))
+}
+
+.momentum-collision-svg .block-text {
+  fill:#fff;
+  font-size:13px;
+  font-weight:950;
+  text-anchor:middle
+}
+
+.momentum-collision-svg .m1-label,.momentum-collision-svg .m2-label {
+  font-size:12px;
+  font-weight:950;
+  text-anchor:middle
+}
+
+.momentum-collision-svg .m1-label {
+  fill:#315dff
+}
+
+.momentum-collision-svg .m2-label {
+  fill:#d97706
+}
+
+.momentum-collision-svg .impact-flash path {
+  fill:#fde68a;
+  stroke:#f1a826;
+  stroke-width:2
+}
+
+.momentum-collision-svg .impact-flash text {
+  fill:#d97706;
+  font-size:12px;
+  font-weight:950;
+  text-anchor:middle
+}
+
+.momentum-collision-svg .watermark {
+  fill:#cbd5e1;
+  font-size:12px;
+  font-weight:900
+}
+
+.momentum-chart-card {
+  display:grid;
+  gap:8px;
+  background:#f8fafc
+}
+
+.momentum-chart-head {
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center
+}
+
+.momentum-chart-head h2 {
+  margin-right:auto
+}
+
+.momentum-chart-head span {
+  display:inline-flex;
+  gap:6px;
+  align-items:center;
+  color:#5f6f69;
+  font-size:12px;
+  font-weight:900
+}
+
+.momentum-chart-head i {
+  width:14px;
+  height:8px;
+  border-radius:999px
+}
+
+.momentum-chart-head i.before {
+  background:#315dff
+}
+
+.momentum-chart-head i.after {
+  background:#a5b4fc
+}
+
+.momentum-chart-card h3 {
+  margin:8px 0 2px;
+  color:#315dff;
+  font-size:12px;
+  font-weight:950
+}
+
+.momentum-bar-row {
+  display:grid;
+  grid-template-columns:68px minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+  color:#5f6f69;
+  font-size:12px;
+  font-weight:900
+}
+
+.momentum-bar-track {
+  display:grid;
+  gap:4px
+}
+
+.momentum-bar-track i {
+  display:flex;
+  justify-content:flex-end;
+  min-width:2px;
+  height:13px;
+  border-radius:999px;
+  opacity:.95
+}
+
+.momentum-bar-track i.after {
+  opacity:.48
+}
+
+.momentum-bar-track b {
+  padding-right:4px;
+  color:#312e81;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:10px;
+  font-weight:950;
+  font-variant-numeric:tabular-nums
+}
+
+.momentum-insight-card p {
+  margin:0 0 10px;
+  color:#334155;
+  font-weight:800;
+  line-height:1.65
+}
+
+.momentum-insight-card strong {
+  display:inline-flex;
+  padding:8px 10px;
+  border-radius:999px;
+  background:#e9efff;
+  color:#2448d8;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:12px;
+  font-variant-numeric:tabular-nums
+}

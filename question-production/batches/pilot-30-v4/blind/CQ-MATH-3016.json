@@ -1,0 +1,151 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-MATH-3016",
+  "subject": "math",
+  "topicCode": "M-TRIG-HALF",
+  "topicTitle": "三角函数",
+  "designedDifficulty": "hard",
+  "questionType": "single_choice",
+  "prompt": "已知角 α 在第三象限，且 sin α=-5/13。求 tan(α/2)。",
+  "options": [
+    {
+      "id": "A",
+      "text": "-0.2"
+    },
+    {
+      "id": "B",
+      "text": "5"
+    },
+    {
+      "id": "C",
+      "text": "-5"
+    },
+    {
+      "id": "D",
+      "text": "-4"
+    }
+  ],
+  "knowledgeTags": [
+    "三角函数",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "math",
+    "topicCode": "M-TRIG-HALF",
+    "topicTitle": "三角函数",
+    "targetDifficulty": "hard",
+    "taskFamily": "trig_quadrant_half_angle",
+    "planTemplate": "pilot_v4_trig_quadrant_half_angle_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "f66c5dbf9f5c2881273df4da",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "cos",
+        "quad",
+        "sin"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "cos",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "quad",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "sin",
+        "independentGroup": "g3"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "signed trig value+quadrant",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "companion value",
+        "inputs": [
+          "r1"
+        ],
+        "output": "intermediate_2"
+      },
+      {
+        "id": "r3",
+        "operation": "half-angle ratio",
+        "inputs": [
+          "r2"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "sin^2 α+cos^2 α=1 with quadrant sign",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "tan(α/2)=sin α/(1+cos α)",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "忽略象限符号",
+      "套用二倍角而非半角公式"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "quad": "第三象限",
+      "sin": -0.38461538461538464,
+      "cos": -0.9230769230769231
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 2
+  }
+}

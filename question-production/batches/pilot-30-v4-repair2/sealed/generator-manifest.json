@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "codex-repair-generator-manifest-v1",
+  "batchId": "pilot-30-v4-repair2-2026-09-15",
+  "providerCalls": 0,
+  "count": 2,
+  "taskFamilyCount": 2,
+  "verificationSummary": {
+    "solverVerified": 2,
+    "oracleVerified": 2,
+    "uniqueAnswerVerified": 2,
+    "optionTruthTablesVerified": 2,
+    "explanationReplayVerified": 2,
+    "failures": 0
+  },
+  "items": [
+    {
+      "candidateId": "CQ-CHEMISTRY-5001",
+      "correctAnswer": "B",
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "optionTruthTableStatus": "verified",
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "a64155d3a1c9414823e63446e0f03597bf8d977908b05830dafcedb9c452d6a2"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-5002",
+      "correctAnswer": "B",
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "optionTruthTableStatus": "verified",
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "5070dd9fb82e230833753cc66524e79837e7fef67e35fa909755f96a0c03a26f"
+    }
+  ]
+}

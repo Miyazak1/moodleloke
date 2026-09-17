@@ -1,0 +1,7 @@
+@import './mock-exam-subject.part-01.css';
+@import './mock-exam-subject.part-02.css';
+
+.brand-page.mock-exam-page .mock-product-card::before {
+  content: none;
+  display: none;
+}

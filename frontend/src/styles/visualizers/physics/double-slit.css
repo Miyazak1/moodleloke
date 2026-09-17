@@ -1,0 +1,329 @@
+.double-slit-page {
+  width: min(1240px, calc(100vw - 48px));
+}
+
+.double-slit-card {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid rgba(49, 93, 255, .16);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 16px 42px rgba(15, 23, 42, .07);
+}
+
+.double-slit-side,
+.double-slit-main {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  min-width: 0;
+}
+
+.double-slit-side article,
+.double-slit-stage,
+.double-slit-explain-card article {
+  border: 1px solid rgba(49, 93, 255, .14);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.double-slit-side article,
+.double-slit-explain-card article {
+  padding: 16px;
+}
+
+.double-slit-side h2,
+.double-slit-explain-card h2 {
+  margin: 0 0 12px;
+  color: #312e81;
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.double-slit-formula-card,
+.double-slit-data-card,
+.double-slit-control-card,
+.double-slit-slider-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.double-slit-formula-card .math-content {
+  justify-content: center;
+  padding: 16px 10px;
+  border: 1px solid rgba(49, 93, 255, .18);
+  border-radius: 12px;
+  background: #e9efff;
+}
+
+.double-slit-metric {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr) 88px;
+  gap: 8px;
+  align-items: center;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.double-slit-metric i {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.double-slit-metric strong,
+.double-slit-slider-stack strong {
+  justify-self: end;
+  color: #0f172a;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.double-slit-slider-stack label {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr) 92px;
+  gap: 10px;
+  align-items: center;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.double-slit-slider-stack input[type="range"] {
+  width: 100%;
+  accent-color: #315dff;
+}
+
+.double-slit-slider-stack strong i {
+  display: inline-block;
+  width: 24px;
+  height: 12px;
+  margin-left: 6px;
+  border: 1px solid rgba(15, 23, 42, .12);
+  border-radius: 4px;
+  vertical-align: -1px;
+}
+
+.double-slit-stage {
+  padding: 12px;
+  overflow: hidden;
+  background: #f8fbff;
+}
+
+.double-slit-svg {
+  display: block;
+  width: 100%;
+  min-height: 450px;
+  border-radius: 10px;
+  background: #111827;
+}
+
+.double-slit-svg .experiment-bg {
+  fill: #111827;
+}
+
+.double-slit-svg .stage-title,
+.double-slit-svg text {
+  fill: #94a3b8;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.double-slit-svg .light-source text {
+  fill: #94a3b8;
+}
+
+.double-slit-svg .double-slit-barrier rect:first-child {
+  fill: #5f6f69;
+}
+
+.double-slit-svg .double-slit-barrier rect:not(:first-child) {
+  fill: #84cc16;
+}
+
+.double-slit-svg .double-slit-barrier line,
+.double-slit-svg .distance-line {
+  stroke: #5f6f69;
+  stroke-width: 2;
+  stroke-dasharray: 4 5;
+}
+
+.double-slit-svg .slit-rays line {
+  stroke: #84cc16;
+  stroke-width: 2;
+  opacity: .22;
+}
+
+.double-slit-svg .slit-rays .central {
+  opacity: .62;
+}
+
+.double-slit-svg .slit-rays .incoming {
+  opacity: .34;
+}
+
+.double-slit-svg .screen rect:first-child {
+  fill: #334155;
+}
+
+.double-slit-svg .screen text {
+  fill: #cbd5e1;
+}
+
+.double-slit-svg .screen g text {
+  font-size: 11px;
+}
+
+.double-slit-svg .fringe-spacing line {
+  stroke: #facc15;
+  stroke-width: 2;
+}
+
+.double-slit-svg .fringe-spacing text {
+  fill: #facc15;
+}
+
+.double-slit-svg .intensity-chart path {
+  fill: none;
+  stroke: #84cc16;
+  stroke-width: 2.5;
+}
+
+.double-slit-svg .intensity-chart text {
+  fill: #94a3b8;
+  text-anchor: middle;
+}
+
+.double-slit-svg .watermark {
+  fill: rgba(203, 213, 225, .42);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.double-slit-explain-card {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.double-slit-explain-card p {
+  margin: 0;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.7;
+}
+@media (max-width: 720px) {
+  .magnetic-card,
+  .magnetic-explain-card,
+  .double-slit-card,
+  .double-slit-explain-card {
+    grid-template-columns: 1fr;
+  }
+
+  .magnetic-card {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .magnetic-field-svg {
+    min-height: 360px;
+  }
+
+  .magnetic-slider-stack label {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .magnetic-slider-stack strong,
+  .magnetic-metric strong {
+    justify-self: start;
+  }
+
+  .magnetic-metric {
+    grid-template-columns: 12px minmax(0, 1fr);
+  }
+
+  .double-slit-card {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .double-slit-svg {
+    min-height: 320px;
+  }
+
+  .double-slit-slider-stack label {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .double-slit-slider-stack strong,
+  .double-slit-metric strong {
+    justify-self: start;
+  }
+
+  .double-slit-metric {
+    grid-template-columns: 12px minmax(0, 1fr);
+  }
+}
+@media (max-width: 720px) {
+  .ideal-gas-card,
+  .ideal-gas-explain-card,
+  .thermo-card,
+  .thermo-explain-card {
+    grid-template-columns: 1fr;
+  }
+
+  .ideal-gas-card {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .ideal-gas-svg {
+    min-height: 340px;
+  }
+
+  .ideal-gas-select,
+  .ideal-gas-slider-stack label {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .ideal-gas-slider-stack strong,
+  .gas-metric strong {
+    justify-self: start;
+  }
+
+  .gas-metric {
+    grid-template-columns: 12px minmax(0, 1fr);
+  }
+
+  .thermo-card {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .thermo-svg {
+    min-height: 350px;
+  }
+
+  .thermo-select,
+  .thermo-slider-stack label {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .thermo-slider-stack strong,
+  .thermo-metric strong {
+    justify-self: start;
+  }
+
+  .thermo-metric {
+    grid-template-columns: 12px minmax(0, 1fr);
+  }
+}

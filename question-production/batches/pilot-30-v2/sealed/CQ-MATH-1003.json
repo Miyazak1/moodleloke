@@ -1,0 +1,396 @@
+{
+  "schemaVersion": "codex-question-candidate-v1",
+  "candidateId": "CQ-MATH-1003",
+  "subject": "math",
+  "topicCode": "M-CALC-001",
+  "topicTitle": "导数与微积分初步",
+  "designedDifficulty": "basic",
+  "questionType": "single_choice",
+  "prompt": "已知 f(x)=-3x^3-4x+2，求 f'(-2) 的值。",
+  "options": [
+    {
+      "id": "A",
+      "text": "-39"
+    },
+    {
+      "id": "B",
+      "text": "-41"
+    },
+    {
+      "id": "C",
+      "text": "-40"
+    },
+    {
+      "id": "D",
+      "text": "40"
+    }
+  ],
+  "correctAnswer": "C",
+  "explanation": "逐项求导得 f'(x)=-9x^2-4，代入 x=-2，所以 f'(-2)=-40。",
+  "knowledgeTags": [
+    "导数",
+    "多项式求导",
+    "函数值"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "math",
+    "topicId": null,
+    "topicTitle": "导数与微积分初步",
+    "productionCellId": 10,
+    "targetDifficulty": "basic",
+    "taskFamily": "derivative_direct_evaluation",
+    "planTemplate": "math_derivative_condition_chain_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "exactDerivativeScope": "direct_polynomial_value",
+      "forbidBasicDerivativeComplexity": true,
+      "forbidBasicDerivativeDomainTrap": true,
+      "forbidBasicDerivativeTargetProfileInflation": true,
+      "maxBasicDerivativeReasoningMoves": 1,
+      "forbidMediumDerivativeDefinitionOnly": false,
+      "minDerivativeLinkedMoves": 1,
+      "forbidPiecewiseParameterContinuityChain": true,
+      "forbidDerivativeOneStepOnly": false,
+      "requireVisibleDerivativeConditionChain": false,
+      "preferredPromptSkeletons": [
+        "已知 f(x)=...，求 f'(a) 的值",
+        "已知 f(x)=...，判断 f(x) 在一个给定区间上的单调性"
+      ],
+      "finalAnswerShape": "single_derivative_value_slope_or_sign_fact_no_domain_trap"
+    },
+    "budget": {
+      "maxPlanRepairs": 2,
+      "maxCandidateRepairs": 1
+    },
+    "scenarioContract": {
+      "schemaVersion": "subject-practice-scenario-contract-v1",
+      "policyVersion": "subject-practice-scenario-diversity-shadow-v2-multi-evidence-status",
+      "stage": "shadow_only_thresholds_not_frozen",
+      "scenarioMode": "abstract",
+      "scenarioFamilyId": "math_abstract_derivative_function_object",
+      "scenarioDomain": "pure_mathematics",
+      "scenarioEntity": "derivative_function_object",
+      "scenarioAction": "direct_polynomial_value",
+      "informationForm": "symbolic_text",
+      "scenarioFingerprint": "scenario-16ae128384d1e72b4b3f",
+      "contextNecessity": "not_applicable",
+      "requiredInformationFields": [],
+      "solverRelevantFields": [],
+      "surface": {
+        "zhEntity": "",
+        "enEntity": "",
+        "zhSetting": "",
+        "enSetting": "",
+        "cueTokens": []
+      },
+      "plausibility": {
+        "externalContextForbidden": true
+      },
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "controlled_catalog_and_sealed_ordinal_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "function_or_derivative_object",
+        "role": "function_derivative_tangent_or_interval_definition",
+        "independentGroup": "d1"
+      },
+      {
+        "id": "e2",
+        "type": "condition",
+        "role": "tangent_slope_monotonicity_extremum_or_parameter_condition",
+        "independentGroup": "d1"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "differentiate_or_read_derivative_condition",
+        "inputs": [
+          "e1"
+        ],
+        "output": "derivative_relation"
+      },
+      {
+        "id": "r2",
+        "operation": "apply_tangent_monotonicity_or_parameter_condition",
+        "inputs": [
+          "derivative_relation",
+          "e2"
+        ],
+        "output": "intermediate_constraint"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "derivative_condition_round_trip",
+        "expression": "derivative, tangent, monotonicity, extremum, interval, or parameter condition",
+        "variables": [
+          "x",
+          "f(x)",
+          "f'(x)",
+          "parameter"
+        ],
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "single derivative value labelled medium/hard",
+      "basic derivative inflated into piecewise, parameter, continuity, or undefined-domain trap",
+      "raw tangent slope without checking the tangent point or interval",
+      "medium derivative target reduced to f'(a) or one-step substitution",
+      "hard derivative target without sign chart, interval conclusion, and parameter/extremum/tangent constraint",
+      "parameter answer without derivative sign or extremum evidence"
+    ],
+    "answerDerivation": [
+      "differentiate or read exactly one derivative value, tangent slope, or one-interval sign fact; do not use piecewise, parameter, continuity, or undefined-domain trap shells"
+    ],
+    "uniquenessConditions": [
+      "only one option satisfies the derivative/tangent/interval condition when checked back"
+    ]
+  },
+  "localizations": {
+    "zh": {
+      "prompt": "已知 f(x)=-3x^3-4x+2，求 f'(-2) 的值。",
+      "options": [
+        {
+          "id": "A",
+          "text": "-39"
+        },
+        {
+          "id": "B",
+          "text": "-41"
+        },
+        {
+          "id": "C",
+          "text": "-40"
+        },
+        {
+          "id": "D",
+          "text": "40"
+        }
+      ],
+      "explanation": "逐项求导得 f'(x)=-9x^2-4，代入 x=-2，所以 f'(-2)=-40。",
+      "knowledgeTags": [
+        "导数",
+        "多项式求导"
+      ]
+    },
+    "en": {
+      "prompt": "Given f(x)=-3x^3-4x+2, find the value of f'(-2).",
+      "options": [
+        {
+          "id": "A",
+          "text": "-39"
+        },
+        {
+          "id": "B",
+          "text": "-41"
+        },
+        {
+          "id": "C",
+          "text": "-40"
+        },
+        {
+          "id": "D",
+          "text": "40"
+        }
+      ],
+      "explanation": "Differentiate term by term to obtain f'(x)=-9x^2-4. Substituting x=-2 gives f'(-2)=-40.",
+      "knowledgeTags": [
+        "Derivative",
+        "Polynomial differentiation"
+      ]
+    }
+  },
+  "generationMetadata": {
+    "origin": "codex_dual_session_pilot",
+    "generatorTaskId": "pilot-30-v2-generator-task-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v1",
+    "createdAt": "2026-09-15T10:45:00.000Z",
+    "family": "derivative_direct_evaluation",
+    "seed": 510,
+    "generatorVersion": "subject-practice-math-derivative-local-generator-v1-direct-polynomial-value",
+    "scopeId": "math-basic-derivative-v1:direct_polynomial_value",
+    "deterministicVerification": {
+      "solver": {
+        "solverVersion": "subject-practice-math-derivative-solver-v1-direct-polynomial-value",
+        "status": "verified",
+        "taskFamily": "derivative_direct_evaluation",
+        "scopeId": "math-basic-derivative-v1:direct_polynomial_value",
+        "canonicalTask": {
+          "kind": "direct_polynomial_value",
+          "expression": "-3x^3-4x+2",
+          "point": "-2",
+          "expectedValue": "-40"
+        },
+        "selectedOptionId": "C",
+        "trueOptionIds": [
+          "C"
+        ],
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "verificationScope": {
+          "scopeVersion": "subject-practice-math-derivative-scope-v1",
+          "scopeId": "math-basic-derivative-v1:direct_polynomial_value",
+          "matched": true,
+          "exactScope": "direct_polynomial_value",
+          "reasonCodes": []
+        },
+        "evidenceBoundary": "visible_prompt_and_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      },
+      "oracle": {
+        "oracleVersion": "subject-practice-math-derivative-independent-oracle-v1-integer-polynomial",
+        "status": "verified",
+        "scopeId": "math-basic-derivative-v1:direct_polynomial_value",
+        "scopeMatched": true,
+        "canonicalTask": {
+          "kind": "direct_polynomial_value",
+          "expression": "-3x^3-4x+2",
+          "point": "-2",
+          "expectedValue": "-40"
+        },
+        "selectedOptionId": "C",
+        "trueOptionIds": [
+          "C"
+        ],
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "method": "independent_integer_polynomial_coefficient_accumulation",
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      },
+      "explanation": {
+        "verifierVersion": "subject-practice-math-derivative-explanation-verifier-v1",
+        "status": "verified",
+        "scopeId": "math-basic-derivative-v1:direct_polynomial_value",
+        "evidenceBoundary": "candidate_explanation_checked_against_visible_prompt_solution",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      }
+    },
+    "questionPlanAdherence": {
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "validPlan": true,
+      "adheres": true,
+      "planTemplate": "math_derivative_condition_chain_v1",
+      "taskFamily": "derivative_direct_evaluation",
+      "failureCodes": [],
+      "features": {
+        "operationWords": 0,
+        "observationWords": 0,
+        "hypothesisMarkers": 0,
+        "reasoningConnectors": 0,
+        "quantitativeMarkers": 0,
+        "reactionClues": 4,
+        "gasSpeciesMarkers": 0,
+        "gasControlMarkers": 0,
+        "redoxReactionMarkers": 0,
+        "redoxConceptMarkers": 0,
+        "redoxQuantitativeChainMarkers": 0,
+        "mathPropertySignals": 0,
+        "mathStatementMarkers": 4,
+        "mathTransformationSignals": 3,
+        "mathOrderingSignals": 2,
+        "mathParameterConstraintSignals": 0,
+        "mathProbabilitySignals": 0,
+        "mathProbabilityEventLabelCount": 0,
+        "mathProbabilityNormalHardInteractionCueCount": 0,
+        "mathProbabilityHardInteractionCueCount": 0,
+        "mathProbabilityConcreteFrameSignals": 0,
+        "mathProbabilityNormalMediumNoEventRisk": false,
+        "mathProbabilityNormalReferenceTableRisk": false,
+        "mathProbabilityConceptOnlyRisk": false,
+        "mathProbabilitySingleResultRisk": false,
+        "mathProbabilityEventListOnlyRisk": false,
+        "mathDerivativeSignals": 4,
+        "mathDerivativeMediumDefinitionOnlyRisk": false,
+        "mathDerivativeHardCoefficientSolveOnlyRisk": false,
+        "mathDerivativeBasicAdvancedOperationRisk": false,
+        "mathVectorComplexSignals": 0,
+        "mathVectorComplexBasicDefinitionOnlyRisk": false,
+        "mathGeometrySignals": 0,
+        "mathAnalyticGeometryDefinitionOnlyRisk": false,
+        "mathAnalyticGeometryBasicGeneralCircleRisk": false,
+        "mathAnalyticGeometryHardConicRelationOnlyRisk": false,
+        "mathElementaryFunctionSignals": 0,
+        "mathElementaryFunctionGenericClassificationRisk": false,
+        "mathElementaryFunctionBasicEquationSolveRisk": false,
+        "mathElementaryFunctionBasicMultipleObjectRisk": false,
+        "mathSequenceSignals": 0,
+        "mathSequenceGenericClassificationRisk": false,
+        "mathStatisticsSignals": 0,
+        "mathStatisticsBasicMultiStatisticComparisonRisk": false,
+        "mathStatisticsMediumPureLinearTransformRisk": false,
+        "mathStatisticsHardDirectCombinedVarianceRisk": false,
+        "mathSpatialSignals": 0,
+        "mathSpatialMediumMultiPropositionOvercomplexRisk": false,
+        "mathSpatialHardConceptOnlyRisk": false,
+        "mathSpatialHardDirectCoordinateOnlyRisk": false,
+        "mathParameterInferenceRisk": false,
+        "mathOptionJudgement": true,
+        "mathEnumeratedConditionCount": 0,
+        "mathFunctionPropertyStackCount": 0,
+        "mathFunctionDistinctPropertyCount": 0,
+        "mathStudentFacingDistinctPropertyCount": 0,
+        "mathStudentFacingFunctionPropertyOverComplex": false,
+        "mathFunctionObjectSignals": 3,
+        "mathFunctionPointValueCount": 1,
+        "mathFunctionNamedPointCount": 0,
+        "mathFunctionMultipleNamedPointsRisk": false,
+        "mathBasicFunctionSolutionScaffoldRisk": false,
+        "mathFunctionBasicMultiConstraintDomainRisk": false,
+        "mathPureFunctionExternalContextRisk": false,
+        "mathHardFunctionGenericConceptRisk": false,
+        "mathMediumFunctionPropertyOverComplex": false,
+        "mathDerivativeBasicDomainTrapRisk": false,
+        "mathDerivativeBasicOverComplexRisk": false,
+        "mathVectorComplexObjectCount": 0,
+        "mathVectorComplexRelationCount": 0,
+        "mathVectorComplexCoordinateGeometryDriftRisk": false,
+        "mathVectorComplexLocusParameterChainRisk": false,
+        "mathVectorComplexOneStepFormulaRisk": false,
+        "mathVectorComplexHardDirectMetricRisk": false,
+        "physicsKinematicsSignals": 0,
+        "physicsGraphSignals": 0,
+        "physicsUnitSignals": 0,
+        "physicsEquationSignals": 4,
+        "physicsOpticsSignals": 0,
+        "physicsOpticsRelationSignals": 0,
+        "physicsUnseenDiagramRisk": false,
+        "chemistryClassificationSignals": 0,
+        "chemistryStateChangeEvidenceSignals": 0,
+        "chemistryDefinitionOnlyClassificationRisk": false,
+        "chemistryPhConceptSignals": 0,
+        "chemistryPhOperationErrorSignals": 0,
+        "chemistryPhDirectionSignals": 0,
+        "chemistryPhDirectCalculationRisk": false
+      },
+      "productionImpact": "none_audit_or_gate_scaffold",
+      "providerImpact": "none_no_provider_call"
+    },
+    "scenarioRenderMode": "abstract_math",
+    "provisionalScenarioContract": null,
+    "v1Correction": null
+  }
+}

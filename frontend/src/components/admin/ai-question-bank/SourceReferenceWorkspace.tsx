@@ -1,0 +1,165 @@
+import { SourceQuestionManagerPanel, type SourceQuestionManagerPanelProps } from './SourceQuestionManagerPanel';
+import { SourceReferenceLibraryPanel, type SourceReferenceLibraryPanelProps } from './SourceReferenceLibraryPanel';
+import { StyleProfilePanel, type StyleProfilePanelProps } from './StyleProfilePanel';
+
+export type SourceReferenceWorkspaceProps =
+  SourceReferenceLibraryPanelProps &
+  StyleProfilePanelProps &
+  SourceQuestionManagerPanelProps;
+
+export function SourceReferenceWorkspace({
+  subject,
+  onSubjectChange,
+  sourceDocuments,
+  sourceDocumentProfileVisualizations,
+  sourceReferenceSummary,
+  sourceAutoProfileTasks,
+  sourceImportJson,
+  sourceImportMessage,
+  sourceImportFileInputRef,
+  canGenerateStyleProfile,
+  styleProfileBlockedReason,
+  sourceReferenceWorkflowTone,
+  isImportBusy,
+  isStyleProfileBusy,
+  onGenerateStyleProfile,
+  onChangeImportJson,
+  onLoadImportFile,
+  onChooseImportFile,
+  onFillImportTemplate,
+  onValidateImportJson,
+  onImportJson,
+  onClearImportJson,
+  onSelectSourceDocument,
+  onReprocessSourceDocument,
+  onDeleteSourceDocument,
+  onCleanupCurrentSubjectSourceDocuments,
+  isSourceDocumentBusy,
+  isSourceDocumentDeleteBusy,
+  isSourceDocumentsCleanupBusy,
+  onRebuildSourceProfilePipeline,
+  isSourceProfilePipelineBusy,
+  onLoadSourceDocumentProfileVisualization,
+  isSourceDocumentVisualizationBusy,
+  onRefreshSourceReference,
+  styleProfiles,
+  examSeriesProfiles,
+  generationProfiles,
+  approvedQuestionCount,
+  onGenerateExamSeriesProfile,
+  onGenerateGenerationProfiles,
+  onRefreshQuestionVersionGovernance,
+  onActivateExamSeriesProfile,
+  onActivateGenerationProfile,
+  isExamSeriesProfileBusy,
+  isGenerationProfileBusy,
+  isQuestionVersionGovernanceBusy,
+  isExamSeriesProfileActivateBusy,
+  isGenerationProfileActivateBusy,
+  documents,
+  sourceQuestions,
+  sourceQuestionsTotal,
+  sourceTopicTasks,
+  page,
+  pageSize,
+  pageStart,
+  pageEnd,
+  canGoPrevious,
+  canGoNext,
+  sourceQuestionDocumentId,
+  sourceQuestionReviewStatus,
+  sourceReferenceControlsBusy,
+  isActionBusy,
+  onDocumentChange,
+  onReviewStatusChange,
+  onStartAutoProfile,
+  onRetryAutoProfile,
+  onAutoMapAndApprove,
+  onPreviousPage,
+  onNextPage
+}: SourceReferenceWorkspaceProps) {
+  return (
+    <section className="admin-question-bank-references-section">
+      <div className="admin-work-grid two">
+        <SourceReferenceLibraryPanel
+          subject={subject}
+          onSubjectChange={onSubjectChange}
+          sourceDocuments={sourceDocuments}
+          sourceDocumentProfileVisualizations={sourceDocumentProfileVisualizations}
+          sourceReferenceSummary={sourceReferenceSummary}
+          sourceAutoProfileTasks={sourceAutoProfileTasks}
+          sourceImportJson={sourceImportJson}
+          sourceImportMessage={sourceImportMessage}
+          sourceImportFileInputRef={sourceImportFileInputRef}
+          canGenerateStyleProfile={canGenerateStyleProfile}
+          styleProfileBlockedReason={styleProfileBlockedReason}
+          sourceReferenceWorkflowTone={sourceReferenceWorkflowTone}
+          isImportBusy={isImportBusy}
+          isStyleProfileBusy={isStyleProfileBusy}
+          onGenerateStyleProfile={onGenerateStyleProfile}
+          onChangeImportJson={onChangeImportJson}
+          onLoadImportFile={onLoadImportFile}
+          onChooseImportFile={onChooseImportFile}
+          onFillImportTemplate={onFillImportTemplate}
+          onValidateImportJson={onValidateImportJson}
+          onImportJson={onImportJson}
+          onClearImportJson={onClearImportJson}
+          onSelectSourceDocument={onSelectSourceDocument}
+          onReprocessSourceDocument={onReprocessSourceDocument}
+          onDeleteSourceDocument={onDeleteSourceDocument}
+          onCleanupCurrentSubjectSourceDocuments={onCleanupCurrentSubjectSourceDocuments}
+          isSourceDocumentBusy={isSourceDocumentBusy}
+          isSourceDocumentDeleteBusy={isSourceDocumentDeleteBusy}
+          isSourceDocumentsCleanupBusy={isSourceDocumentsCleanupBusy}
+          onRebuildSourceProfilePipeline={onRebuildSourceProfilePipeline}
+          isSourceProfilePipelineBusy={isSourceProfilePipelineBusy}
+          onLoadSourceDocumentProfileVisualization={onLoadSourceDocumentProfileVisualization}
+          isSourceDocumentVisualizationBusy={isSourceDocumentVisualizationBusy}
+          onRefreshSourceReference={onRefreshSourceReference}
+        />
+
+        <StyleProfilePanel
+          styleProfiles={styleProfiles}
+          examSeriesProfiles={examSeriesProfiles}
+          generationProfiles={generationProfiles}
+          approvedQuestionCount={approvedQuestionCount}
+          onGenerateExamSeriesProfile={onGenerateExamSeriesProfile}
+          onGenerateGenerationProfiles={onGenerateGenerationProfiles}
+          onRefreshQuestionVersionGovernance={onRefreshQuestionVersionGovernance}
+          onActivateExamSeriesProfile={onActivateExamSeriesProfile}
+          onActivateGenerationProfile={onActivateGenerationProfile}
+          isExamSeriesProfileBusy={isExamSeriesProfileBusy}
+          isGenerationProfileBusy={isGenerationProfileBusy}
+          isQuestionVersionGovernanceBusy={isQuestionVersionGovernanceBusy}
+          isExamSeriesProfileActivateBusy={isExamSeriesProfileActivateBusy}
+          isGenerationProfileActivateBusy={isGenerationProfileActivateBusy}
+        />
+      </div>
+
+      <SourceQuestionManagerPanel
+        documents={documents}
+        sourceQuestions={sourceQuestions}
+        sourceQuestionsTotal={sourceQuestionsTotal}
+        sourceAutoProfileTasks={sourceAutoProfileTasks}
+        sourceTopicTasks={sourceTopicTasks}
+        page={page}
+        pageSize={pageSize}
+        pageStart={pageStart}
+        pageEnd={pageEnd}
+        canGoPrevious={canGoPrevious}
+        canGoNext={canGoNext}
+        sourceQuestionDocumentId={sourceQuestionDocumentId}
+        sourceQuestionReviewStatus={sourceQuestionReviewStatus}
+        sourceReferenceControlsBusy={sourceReferenceControlsBusy}
+        isActionBusy={isActionBusy}
+        onDocumentChange={onDocumentChange}
+        onReviewStatusChange={onReviewStatusChange}
+        onStartAutoProfile={onStartAutoProfile}
+        onRetryAutoProfile={onRetryAutoProfile}
+        onAutoMapAndApprove={onAutoMapAndApprove}
+        onPreviousPage={onPreviousPage}
+        onNextPage={onNextPage}
+      />
+    </section>
+  );
+}

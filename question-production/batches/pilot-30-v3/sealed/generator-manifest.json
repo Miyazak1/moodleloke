@@ -1,0 +1,823 @@
+{
+  "schemaVersion": "codex-generator-manifest-v3",
+  "batchId": "pilot-30-v3-2026-09-15",
+  "generatorTaskId": "pilot-30-v3-generator-task-2026-09-15",
+  "generatedAt": "2026-09-15T12:15:00.000Z",
+  "candidateCount": 30,
+  "counts": {
+    "chemistry": {
+      "strong_acid_dilution": 5,
+      "strong_base_dilution": 5,
+      "strong_acid_base_neutralization": 5
+    },
+    "physics": {
+      "kinematics_uniform_speed": 4,
+      "kinematics_acceleration": 4,
+      "kinematics_final_velocity": 4,
+      "kinematics_displacement": 3
+    }
+  },
+  "validationSummary": {
+    "languageScope": "zh_primary_only",
+    "localizationsFieldCount": 0,
+    "allFourUniqueOptions": true,
+    "allSolverVerified": true,
+    "allIndependentOracleVerified": true,
+    "allExplanationVerified": true,
+    "allQuestionPlansAdhere": true,
+    "explanationVerifierCompatibilityAdapter": "ephemeral_zh_mirror_not_serialized",
+    "allNonUniformPhysicsStateConstantAcceleration": true,
+    "chemistryNumericalPhTargetCount": 15,
+    "duplicateSurfaceCount": 0,
+    "officialSourceBodiesRead": false
+  },
+  "items": [
+    {
+      "candidateId": "CQ-CHEMISTRY-2001",
+      "parentCandidateId": "CQ-CHEMISTRY-1001",
+      "subject": "chemistry",
+      "family": "strong_acid_dilution",
+      "correctAnswer": "A",
+      "scenario": {
+        "scenarioFamily": "仪器参比液配制",
+        "entity": "仪器参比液",
+        "environment": "传感器校准配制台",
+        "action": "配制校准用液",
+        "informationForm": "校准工作单",
+        "questionPurpose": "确认仪器准备状态"
+      },
+      "sourceCandidateSha256": "507a77faed02d199723f4b94d094a209b6d12c105e8d22f53e458f22a692abfc",
+      "blindContentSha256": "73443c9e81cddfb9b27cafabc266cd3ba2d0af7844edd6156f8ed44b7df5a675",
+      "sealedCandidateSha256": "0246c2b2cbb60add15d68e82d765570b84d4e7dc3a6a4cee563da60d5ddcaa09",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-2002",
+      "parentCandidateId": "CQ-CHEMISTRY-1002",
+      "subject": "chemistry",
+      "family": "strong_acid_dilution",
+      "correctAnswer": "B",
+      "scenario": {
+        "scenarioFamily": "排放水样筛查",
+        "entity": "排放水样",
+        "environment": "工艺排放筛查台",
+        "action": "处理待检水样",
+        "informationForm": "筛查记录",
+        "questionPurpose": "完成排放前检查"
+      },
+      "sourceCandidateSha256": "cc7d8d9bf4ea00e83aee84afb876858965beb372a460fc5957c38c5e3f73d5f6",
+      "blindContentSha256": "23d5651380539661c4867486aca84887a50e5764266de5dcb22c0aa3b7d87cad",
+      "sealedCandidateSha256": "88fa7ba2e15138e06f7085ad22dce2f40972dcca5eea6ad9e57042c82cbb68e0",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-2003",
+      "parentCandidateId": "CQ-CHEMISTRY-1003",
+      "subject": "chemistry",
+      "family": "strong_acid_dilution",
+      "correctAnswer": "C",
+      "scenario": {
+        "scenarioFamily": "设备冲洗准备",
+        "entity": "清洗工作液",
+        "environment": "设备冲洗准备区",
+        "action": "配制冲洗用液",
+        "informationForm": "设备维护单",
+        "questionPurpose": "放行冲洗作业"
+      },
+      "sourceCandidateSha256": "91042d3d991651e5efb58aaaef065181ecbd89b42c3a877f123f38c4214760c1",
+      "blindContentSha256": "32b4beec9dbb1da1b8289843a9d5f440b8da31f5aef6f40cee09087841c0ed50",
+      "sealedCandidateSha256": "769638fd6e38113cfe44b8eb5ceee87fb01712b330502c81ec3728d98ac792b5",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-2004",
+      "parentCandidateId": "CQ-CHEMISTRY-1004",
+      "subject": "chemistry",
+      "family": "strong_acid_dilution",
+      "correctAnswer": "D",
+      "scenario": {
+        "scenarioFamily": "冷却回路监测",
+        "entity": "冷却水样",
+        "environment": "冷却回路分析室",
+        "action": "处理监测水样",
+        "informationForm": "回路分析报告",
+        "questionPurpose": "支持运行控制"
+      },
+      "sourceCandidateSha256": "a6213408572d5f163d3c3730b642a97330c81fdc1dafbc558078ef0f8e0eea4e",
+      "blindContentSha256": "9680ae6b774b50dfc62fd5d073b0c1c7f0945383ebdc8a89d59099e3c447625a",
+      "sealedCandidateSha256": "d78bca17bab38e9ff20415e6fe1060a8a61c34eed972019daecd685891cc0bc8",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-2005",
+      "parentCandidateId": "CQ-CHEMISTRY-1005",
+      "subject": "chemistry",
+      "family": "strong_acid_dilution",
+      "correctAnswer": "A",
+      "scenario": {
+        "scenarioFamily": "镀液回收评估",
+        "entity": "镀液样品",
+        "environment": "电镀液回收工位",
+        "action": "处理回收样品",
+        "informationForm": "回收作业单",
+        "questionPurpose": "判断后续工序条件"
+      },
+      "sourceCandidateSha256": "4eaaffc2587fb580c370cd60dcabd0103da2ba432d3c01f01b409324b1f10f46",
+      "blindContentSha256": "90aac9e4795de2c38423551079646f32156f705f02a9fd5f6f1dddd07540ff9a",
+      "sealedCandidateSha256": "54e6690d09492c759a3d7cb18d8ecc4f26e01b5ea0add2472b7cd32d248d9299",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-2006",
+      "parentCandidateId": "CQ-CHEMISTRY-1006",
+      "subject": "chemistry",
+      "family": "strong_base_dilution",
+      "correctAnswer": "B",
+      "scenario": {
+        "scenarioFamily": "配方液放行",
+        "entity": "配方工作液",
+        "environment": "产品放行分析室",
+        "action": "配制待检液体",
+        "informationForm": "放行分析单",
+        "questionPurpose": "完成放行复核"
+      },
+      "sourceCandidateSha256": "70a414b8f8850db9a7d57ad0c0d82e4484d65caec82cc1e5f4b3b625dbf9e81e",
+      "blindContentSha256": "03af0edcef5eab2f1602bd3ce38704c340d86ee60e16a565608121c83725de61",
+      "sealedCandidateSha256": "668196fe565ac5e05ee46952e8dea86fce2ea0903ae6d7ffe3490460478b603d",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-2007",
+      "parentCandidateId": "CQ-CHEMISTRY-1007",
+      "subject": "chemistry",
+      "family": "strong_base_dilution",
+      "correctAnswer": "C",
+      "scenario": {
+        "scenarioFamily": "教学试剂配制",
+        "entity": "教学试剂液",
+        "environment": "化学实验教学配制台",
+        "action": "完成规范配制",
+        "informationForm": "实验教学工作单",
+        "questionPurpose": "复核课堂操作"
+      },
+      "sourceCandidateSha256": "54f707e9951462d476d119b3e27f1ec42d2e4865d394f536c72465c7655f223a",
+      "blindContentSha256": "0b7cbdd66f70eae173edc29c0ec724b0a6ed65a192cd186a7756f6f38c89d889",
+      "sealedCandidateSha256": "b66cb816cc6eeebebf59c30bbd078f582c9c48e4cb1c670e64901b8814e74ec6",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-2008",
+      "parentCandidateId": "CQ-CHEMISTRY-1008",
+      "subject": "chemistry",
+      "family": "strong_base_dilution",
+      "correctAnswer": "D",
+      "scenario": {
+        "scenarioFamily": "保存液入库",
+        "entity": "保存处理液",
+        "environment": "受控保存分析室",
+        "action": "处理待存液体",
+        "informationForm": "保存记录",
+        "questionPurpose": "确认储存条件"
+      },
+      "sourceCandidateSha256": "d615e2bcf596f3c5f15513fa2f6e0bbe9fc2a8fc24e4ecbc7d6bbf43e62be25d",
+      "blindContentSha256": "a708140300f395fc315454684171aebd828dd6f8bd8090101b24dc42084f3ee8",
+      "sealedCandidateSha256": "631999cb61f540c45049768af81bbe98b40030517e80ef454bbc4a7fc5850757",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-2009",
+      "parentCandidateId": "CQ-CHEMISTRY-1009",
+      "subject": "chemistry",
+      "family": "strong_base_dilution",
+      "correctAnswer": "A",
+      "scenario": {
+        "scenarioFamily": "发酵过程转序",
+        "entity": "发酵过程样",
+        "environment": "发酵转序检测台",
+        "action": "处理转序样品",
+        "informationForm": "转序检测报告",
+        "questionPurpose": "支持容器转移判断"
+      },
+      "sourceCandidateSha256": "0ad63385c3b106ade3221e653ab0d454e3c0936278a0ca4724d618b2b7589a30",
+      "blindContentSha256": "f4e281489e5ccfdc41185ecab7f95e41691ae7819fca938b02d13f8e538543be",
+      "sealedCandidateSha256": "f7dd43dbc698479de5850248cb3f99a38df6c6934efab49f1537c1ae72f40961",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-2010",
+      "parentCandidateId": "CQ-CHEMISTRY-1010",
+      "subject": "chemistry",
+      "family": "strong_base_dilution",
+      "correctAnswer": "B",
+      "scenario": {
+        "scenarioFamily": "暗房工作液准备",
+        "entity": "显影工作液",
+        "environment": "暗房工艺准备台",
+        "action": "配制工艺用液",
+        "informationForm": "暗房工艺卡",
+        "questionPurpose": "放行后续操作"
+      },
+      "sourceCandidateSha256": "68b2f3e62a14243810d536fedc695ae9958b50cb90727aafa32d9d1ed7dee2c8",
+      "blindContentSha256": "cc923f84d7fe28989bb4732df207d3a548ae6b6ca8d0fb2218e7ac5235bdaa49",
+      "sealedCandidateSha256": "fa52efc26c2d037bed10a450a41346d1cb4d12709d7b8fb8709a8613899877a8",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-2011",
+      "parentCandidateId": "CQ-CHEMISTRY-1011",
+      "subject": "chemistry",
+      "family": "strong_acid_base_neutralization",
+      "correctAnswer": "C",
+      "scenario": {
+        "scenarioFamily": "废水中和小试",
+        "entity": "模拟废水",
+        "environment": "废水处理实验台",
+        "action": "模拟投加处理",
+        "informationForm": "小试操作记录",
+        "questionPurpose": "判断能否进入下一净化单元"
+      },
+      "sourceCandidateSha256": "0dd2151c0df19126216fd4ae4bd08dbabe552552a1f1cf076f04c1aaaab973e2",
+      "blindContentSha256": "bee7e83a1c228593b6e6adf6f067a545e90937511eaebca54d7cf30e6f883cb3",
+      "sealedCandidateSha256": "30558963258981b80e8379d06b64023c26be87458df647ea80ccd0ba8b39cbbb",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-2012",
+      "parentCandidateId": "CQ-CHEMISTRY-1012",
+      "subject": "chemistry",
+      "family": "strong_acid_base_neutralization",
+      "correctAnswer": "D",
+      "scenario": {
+        "scenarioFamily": "漂洗废水复核",
+        "entity": "漂洗废水样",
+        "environment": "电镀水质审核室",
+        "action": "模拟中和处理",
+        "informationForm": "质量审核单",
+        "questionPurpose": "完成工艺审核"
+      },
+      "sourceCandidateSha256": "964aea8e13c7dd7c546a973a26d553a3b82cadcb1a50a526fa7483301f91c621",
+      "blindContentSha256": "6a95594d28b59d5c508b1bbc3b37b08c446b9b25484660b74feaedf06463c4ef",
+      "sealedCandidateSha256": "185cc3df0b59542e9f4afce485966e4443d3ea52a5752519975fb4d645abc2ac",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-2013",
+      "parentCandidateId": "CQ-CHEMISTRY-1013",
+      "subject": "chemistry",
+      "family": "strong_acid_base_neutralization",
+      "correctAnswer": "A",
+      "scenario": {
+        "scenarioFamily": "染整废水转序",
+        "entity": "染整废水样",
+        "environment": "染整转序准备台",
+        "action": "进行中和小试",
+        "informationForm": "转序复核记录",
+        "questionPurpose": "协调后续处理工序"
+      },
+      "sourceCandidateSha256": "0d72411aaa90660a8ccd329dca1442607c565fbff329cbb62ee421839de17957",
+      "blindContentSha256": "bb5a2dd7fa92c000fa5c5b6e0fda572bb140e40cdda66140c266ed2308a760b9",
+      "sealedCandidateSha256": "7e0df26d4d8f530a7029455111ad50471f655ff07f96f23431c9ee4c53b9c817",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-2014",
+      "parentCandidateId": "CQ-CHEMISTRY-1014",
+      "subject": "chemistry",
+      "family": "strong_acid_base_neutralization",
+      "correctAnswer": "B",
+      "scenario": {
+        "scenarioFamily": "制药清洗水放行",
+        "entity": "清洗废水样",
+        "environment": "制药放行检测室",
+        "action": "模拟净化处理",
+        "informationForm": "制药放行报告",
+        "questionPurpose": "完成处理放行"
+      },
+      "sourceCandidateSha256": "6953c5aa857a093c0944f7011ab17c6a00ac9aa3bcc85844d95b4f07102aa44b",
+      "blindContentSha256": "ed11802498901a73304cc229854d85e2f674a5cb9bd9510ea1a8329a09c500a2",
+      "sealedCandidateSha256": "4e171cff2503b4ae72e855c7b97c67858e3d2808d01250ac76396d1f61f2d4dc",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-2015",
+      "parentCandidateId": "CQ-CHEMISTRY-1015",
+      "subject": "chemistry",
+      "family": "strong_acid_base_neutralization",
+      "correctAnswer": "C",
+      "scenario": {
+        "scenarioFamily": "食品车间废水处理",
+        "entity": "卫生清洗水样",
+        "environment": "食品卫生准备台",
+        "action": "开展中和验证",
+        "informationForm": "卫生准备单",
+        "questionPurpose": "批准后续卫生作业"
+      },
+      "sourceCandidateSha256": "c60fcb0887146a518ab368df0807d15eb988ee24dc46efe27d0d540aaacfa00b",
+      "blindContentSha256": "97223236f71b9b0d609f3f39cf0db2aa23966186d4142c32013188e42f4e8746",
+      "sealedCandidateSha256": "badc061241ab8783975a132eb57e3b331a621901c50b5670e3040fe62cdb95c2",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-2001",
+      "parentCandidateId": "CQ-PHYSICS-1001",
+      "subject": "physics",
+      "family": "kinematics_uniform_speed",
+      "correctAnswer": "A",
+      "scenario": {
+        "scenarioFamily": "港区转运",
+        "entity": "自动运输车",
+        "environment": "港区直线装卸通道",
+        "action": "执行货物转运",
+        "informationForm": "闸门通行记录",
+        "questionPurpose": "核对泊位调度节拍"
+      },
+      "sourceCandidateSha256": "2bd4ab2e088390425e912b215b8457d7201208ec8685904f4039e07f96974b2c",
+      "blindContentSha256": "fe347a7583fb0196e6dc6951a5bf52f69717a02e2fba66ab11a6e434249f06f5",
+      "sealedCandidateSha256": "43fae588d28645dd2429f2bb81d69013ef2107a82952713eee6df1c7d0c870b2",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-2002",
+      "parentCandidateId": "CQ-PHYSICS-1002",
+      "subject": "physics",
+      "family": "kinematics_uniform_speed",
+      "correctAnswer": "B",
+      "scenario": {
+        "scenarioFamily": "果园巡检",
+        "entity": "田间巡检车",
+        "environment": "笔直作物巡检通道",
+        "action": "巡查栽培行",
+        "informationForm": "行端传感器记录",
+        "questionPurpose": "安排巡检覆盖"
+      },
+      "sourceCandidateSha256": "8237155ee93ecebdc46bcb2172027b29e87fe0752aad0ba63e4055e29e1766b9",
+      "blindContentSha256": "ba0210f0cd6d98f913b719914ae3aa900b13bf892e3f4282a77d1030c56b3f1d",
+      "sealedCandidateSha256": "3b9711242e3d5757686b4736d26e3d4eae8bef97fbbda17a79f0affda013ef44",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-2003",
+      "parentCandidateId": "CQ-PHYSICS-1003",
+      "subject": "physics",
+      "family": "kinematics_uniform_speed",
+      "correctAnswer": "C",
+      "scenario": {
+        "scenarioFamily": "仓储分拣",
+        "entity": "分拣穿梭车",
+        "environment": "自动仓储直线巷道",
+        "action": "输送料箱",
+        "informationForm": "两端扫码事件",
+        "questionPurpose": "核对分拣节拍"
+      },
+      "sourceCandidateSha256": "0f53d1de45b0542e32eccf9b81b69d0993a4a48323e562ce54742a6fa34d2f16",
+      "blindContentSha256": "759b7ba81d57499cf25d233dc60641a6a93afed841c3f80ce17afa012a6d684c",
+      "sealedCandidateSha256": "c242e57409a7506ff43a1c0e85e4ef320f2390494aefe826566ea79bd4fc9578",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-2004",
+      "parentCandidateId": "CQ-PHYSICS-1004",
+      "subject": "physics",
+      "family": "kinematics_uniform_speed",
+      "correctAnswer": "D",
+      "scenario": {
+        "scenarioFamily": "机场行李转运",
+        "entity": "行李牵引车",
+        "environment": "机场地勤直线通道",
+        "action": "转运行李",
+        "informationForm": "地勤调度记录",
+        "questionPurpose": "协调地勤衔接"
+      },
+      "sourceCandidateSha256": "c8379e1f01d79357e1aecd1e5cf0f988f97a20b0f765f640695a5994a8feace2",
+      "blindContentSha256": "0a7ab0250b3430f25f4f8ba4193c8f1e57627e57a5d7b6ed2cd8ff654e24784e",
+      "sealedCandidateSha256": "c65f0b8ea9612dc84be7cfa993123f9e84b42cbd3995c82e49f7e51a019e021d",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-2005",
+      "parentCandidateId": "CQ-PHYSICS-1005",
+      "subject": "physics",
+      "family": "kinematics_acceleration",
+      "correctAnswer": "B",
+      "scenario": {
+        "scenarioFamily": "矿区运输",
+        "entity": "矿石运输车",
+        "environment": "矿区直线运输巷道",
+        "action": "驶向卸载点",
+        "informationForm": "巷道信标日志",
+        "questionPurpose": "检查卸载安排"
+      },
+      "sourceCandidateSha256": "c1db76746a09955cb5aca1115a4bdc56d80ee6da258c2f08b8283c94f15f1af3",
+      "blindContentSha256": "c140e56965b74931b81064ad514012acd20af179d9aacde05691c795cd3da858",
+      "sealedCandidateSha256": "b8adf71ba832da7bd4362eb2a1364961549445385c7d5574791b689d89dc80eb",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-2006",
+      "parentCandidateId": "CQ-PHYSICS-1006",
+      "subject": "physics",
+      "family": "kinematics_acceleration",
+      "correctAnswer": "D",
+      "scenario": {
+        "scenarioFamily": "体育转播跟拍",
+        "entity": "轨道摄像车",
+        "environment": "体育场边线直轨",
+        "action": "完成跟拍镜头",
+        "informationForm": "转播导播单",
+        "questionPurpose": "对齐镜头段落"
+      },
+      "sourceCandidateSha256": "d035294d72335598951b2f916ea36a87fe50d71e324beba12e0261fe7371f9e0",
+      "blindContentSha256": "ec158c9e94b867017a23a151ca95b42b976cf4bada8c6daa6ba80d30cfa23e9f",
+      "sealedCandidateSha256": "58ee20f9587d7f779c2fa0cc1117b56724127d4f816c55637086e3f050f3a97d",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-2007",
+      "parentCandidateId": "CQ-PHYSICS-1007",
+      "subject": "physics",
+      "family": "kinematics_acceleration",
+      "correctAnswer": "B",
+      "scenario": {
+        "scenarioFamily": "医院物资配送",
+        "entity": "配送机器人",
+        "environment": "医院无菌物资直廊",
+        "action": "运送密封物资",
+        "informationForm": "门禁通行记录",
+        "questionPurpose": "安排物资交接"
+      },
+      "sourceCandidateSha256": "1f0c23c53bc5bf1476df4c3b09eb4f5d40327b71b04beef45abf8afe82ca7ce9",
+      "blindContentSha256": "6ec9530cd44c8102f2c77d542755cb4246c712bcc0b52fda4f8d0b489efbe23b",
+      "sealedCandidateSha256": "69ef35d67a8417dac0bac87302441a1a0be48f8689567ac4135381e4ada53023",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-2008",
+      "parentCandidateId": "CQ-PHYSICS-1008",
+      "subject": "physics",
+      "family": "kinematics_acceleration",
+      "correctAnswer": "C",
+      "scenario": {
+        "scenarioFamily": "温室喷雾作业",
+        "entity": "轨道喷雾机",
+        "environment": "温室直线栽培行",
+        "action": "完成处理作业",
+        "informationForm": "控制器运行记录",
+        "questionPurpose": "设置处理批次"
+      },
+      "sourceCandidateSha256": "5b4140423a93308f5aa95df9a93ccb4cdaa0d725c492a2474d7e2ccc8de71073",
+      "blindContentSha256": "4783ff83ee7aa793db2a0a707aefdd871dc5142afb6af3e0875e450817bf32ec",
+      "sealedCandidateSha256": "e6b88555b0d4e026beeda579e73ce9647a0561bc57e59432f4557c65e66330f6",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-2009",
+      "parentCandidateId": "CQ-PHYSICS-1009",
+      "subject": "physics",
+      "family": "kinematics_final_velocity",
+      "correctAnswer": "A",
+      "scenario": {
+        "scenarioFamily": "工厂构件定位",
+        "entity": "装配桁车",
+        "environment": "工厂直线装配轨道",
+        "action": "输送构件",
+        "informationForm": "工位事件记录",
+        "questionPurpose": "协调构件定位"
+      },
+      "sourceCandidateSha256": "2c177d3d4e1bec7b1175654b17820bb72a2764a0f156f7eb6afb1e7b561dcb19",
+      "blindContentSha256": "a5be107e07222f7d235489e2b2362fdc4464a6c8db9587e5539c2330149ab6f3",
+      "sealedCandidateSha256": "6aecc7eede84c9d04eeee159fd61d5b6e9bf917a8118263bf89a9c393782ebcf",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-2010",
+      "parentCandidateId": "CQ-PHYSICS-1010",
+      "subject": "physics",
+      "family": "kinematics_final_velocity",
+      "correctAnswer": "B",
+      "scenario": {
+        "scenarioFamily": "游乐轨道测试",
+        "entity": "测试座舱",
+        "environment": "室内游乐设施直线测试轨道",
+        "action": "完成座舱测试段",
+        "informationForm": "设施控制日志",
+        "questionPurpose": "核验测试流程"
+      },
+      "sourceCandidateSha256": "de0b64e77165f1ef7bd04d7f4ed74937d00263406397ada9e62afc433fca73e6",
+      "blindContentSha256": "b2df9c1acb7b76b33d98179fc3e15a869ee700efded7c33b935be26ce11822dc",
+      "sealedCandidateSha256": "0023b8081ad950f24ad2e8ddf8be8d29aabd7ace0880860ca8c485f5b20d2650",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-2011",
+      "parentCandidateId": "CQ-PHYSICS-1011",
+      "subject": "physics",
+      "family": "kinematics_final_velocity",
+      "correctAnswer": "C",
+      "scenario": {
+        "scenarioFamily": "封闭道路巡检",
+        "entity": "场区巡检车",
+        "environment": "封闭车辆测试道",
+        "action": "完成加速巡检",
+        "informationForm": "车辆测试日志",
+        "questionPurpose": "校验巡检安排"
+      },
+      "sourceCandidateSha256": "1680da551c9172f1341045a61ebd59df87b20ba88de44d56d22b276762350531",
+      "blindContentSha256": "a26956f2208b1a0ae1f77b8a1c8d38bf8f51d6f7f7a3067327d7585e126d435b",
+      "sealedCandidateSha256": "c4f9ac88d15328d70e1005319a3fd239a8fe65898b74565ecd07169afe1ad7e2",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-2012",
+      "parentCandidateId": "CQ-PHYSICS-1012",
+      "subject": "physics",
+      "family": "kinematics_final_velocity",
+      "correctAnswer": "D",
+      "scenario": {
+        "scenarioFamily": "铁路检测",
+        "entity": "轨道检测平台",
+        "environment": "铁路直线试验段",
+        "action": "勘测试验段",
+        "informationForm": "轨旁信标报告",
+        "questionPurpose": "核验勘测安排"
+      },
+      "sourceCandidateSha256": "8630ea53952c4778b71c10a6da6b13ef3547cf7dde4d864c3b91babb89d71d8b",
+      "blindContentSha256": "e996e3bd90863aa7ad620df3fa406fa491d7d4b6d5f1d8a16403f5295081ca02",
+      "sealedCandidateSha256": "01b8989400d45e346f6c52404e3b397815c03d9532033c1134e25ace47e58ebd",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-2013",
+      "parentCandidateId": "CQ-PHYSICS-1013",
+      "subject": "physics",
+      "family": "kinematics_displacement",
+      "correctAnswer": "D",
+      "scenario": {
+        "scenarioFamily": "水下声呐扫描",
+        "entity": "水下检测滑架",
+        "environment": "水池直线导向索",
+        "action": "扫描池壁",
+        "informationForm": "声呐检查点轨迹",
+        "questionPurpose": "对齐扫描条带"
+      },
+      "sourceCandidateSha256": "b05ea733a84ee8dcc1be14766a466cef51ffcea9f1b52ab18d8faba0c774adee",
+      "blindContentSha256": "cdc82e79e7ec2cd8609a34efa32d400a714df45d40bf6fc87502b73baa867945",
+      "sealedCandidateSha256": "a924d5e383b42e5fd5a585c2ac07fc41c7449479624b754219a78a1285d035ac",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-2014",
+      "parentCandidateId": "CQ-PHYSICS-1014",
+      "subject": "physics",
+      "family": "kinematics_displacement",
+      "correctAnswer": "C",
+      "scenario": {
+        "scenarioFamily": "雪场救援演练",
+        "entity": "救援雪橇",
+        "environment": "雪场直线训练道",
+        "action": "完成演练区段",
+        "informationForm": "训练道标记记录",
+        "questionPurpose": "复盘救援交接"
+      },
+      "sourceCandidateSha256": "2b943f90a7c249e8af57e27d5f187e4aebb4b2b07bd845a56ea084507c900db5",
+      "blindContentSha256": "954680f98fafe95ec4477fab07a797a028d377437edf2e02000878c40f89d009",
+      "sealedCandidateSha256": "ef2110e5d2ce6334849598fda60a44e1d0e31bac49decab502aeab56b645cbb3",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-2015",
+      "parentCandidateId": "CQ-PHYSICS-1015",
+      "subject": "physics",
+      "family": "kinematics_displacement",
+      "correctAnswer": "D",
+      "scenario": {
+        "scenarioFamily": "运河检修支援",
+        "entity": "牵引机器人",
+        "environment": "运河岸边直线检修道",
+        "action": "运送检修设备",
+        "informationForm": "检修标记日志",
+        "questionPurpose": "安排检修支援"
+      },
+      "sourceCandidateSha256": "49eeab5cf92a4ce93495bd7a4a071a4a6930b9d64605a5f27050a297c480f610",
+      "blindContentSha256": "62c6812cb233d634c226f5ef8e2f09cc2862ab4e2575c0f32cf1b762730f03d6",
+      "sealedCandidateSha256": "425d96b1a64f9e55b1566705fe1aa31f50cfef07571dfc8782d8ecd5b4321630",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    }
+  ],
+  "limitations": [
+    "Generator-side evidence does not replace independent blind review.",
+    "Math is intentionally absent and remains sourced from pilot-30-v2.",
+    "Explanation-verifier v1 requires a second localization slot; an ephemeral exact Chinese mirror was used only during verification and was not serialized.",
+    "Official-source leakage and corpus-wide duplicate checks remain supervisor-owned.",
+    "No database import, approval, publication, or blueprint promotion is authorized."
+  ]
+}

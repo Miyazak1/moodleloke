@@ -1,0 +1,178 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-MATH-3019",
+  "subject": "math",
+  "topicCode": "M-STAT-COMB",
+  "topicTitle": "统计",
+  "designedDifficulty": "hard",
+  "questionType": "single_choice",
+  "prompt": "甲组有 10 个数据，均值为 6、方差为 4；乙组有 20 个数据，均值为 9、方差为 1。把两组合并后，按“各数据与总体均值的离差平方的平均数”定义方差，求合并数据的方差。",
+  "options": [
+    {
+      "id": "A",
+      "text": "2"
+    },
+    {
+      "id": "B",
+      "text": "5"
+    },
+    {
+      "id": "C",
+      "text": "4"
+    },
+    {
+      "id": "D",
+      "text": "6"
+    }
+  ],
+  "knowledgeTags": [
+    "统计",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "math",
+    "topicCode": "M-STAT-COMB",
+    "topicTitle": "统计",
+    "targetDifficulty": "hard",
+    "taskFamily": "combined_variance_with_between_group_shift",
+    "planTemplate": "pilot_v4_combined_variance_with_between_group_shift_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "a69ac84fd73774db2c8a78ab",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "m1",
+        "m2",
+        "n1",
+        "n2",
+        "v1",
+        "v2"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "m1",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "m2",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "n1",
+        "independentGroup": "g3"
+      },
+      {
+        "id": "e4",
+        "type": "visible_parameter",
+        "role": "n2",
+        "independentGroup": "g4"
+      },
+      {
+        "id": "e5",
+        "type": "visible_parameter",
+        "role": "v1",
+        "independentGroup": "g5"
+      },
+      {
+        "id": "e6",
+        "type": "visible_parameter",
+        "role": "v2",
+        "independentGroup": "g6"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "group summaries",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3",
+          "e4",
+          "e5",
+          "e6"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "combined mean",
+        "inputs": [
+          "r1"
+        ],
+        "output": "intermediate_2"
+      },
+      {
+        "id": "r3",
+        "operation": "within+between variance",
+        "inputs": [
+          "r2"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "m=(n1m1+n2m2)/(n1+n2)",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "V=[n1(V1+(m1-m)^2)+n2(V2+(m2-m)^2)]/(n1+n2)",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "只加权组内方差",
+      "把标准差当方差"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "n1": 10,
+      "m1": 6,
+      "v1": 4,
+      "n2": 20,
+      "m2": 9,
+      "v2": 1
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 1
+  }
+}

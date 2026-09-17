@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-CHEMISTRY-2002",
+  "reviewerTaskId": "01a0a489-caf4-75e3-8c3a-a92ea323f53c",
+  "derivedAnswer": "B",
+  "optionTruthTable": {
+    "A": false,
+    "B": true,
+    "C": false,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "basic",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "稀释后 [H+]=0.2×20/1000=0.004 mol/L，pH=2.39794，按一位小数约为 2.4，只有 B 符合。",
+    "物质的量 0.004 mol 除以终体积 1.000 L 得 0.004 mol/L；选项精度一致。"
+  ],
+  "verdictBeforeReveal": "pass",
+  "reasonCodes": [],
+  "reviewedAt": "2026-09-15T18:11:48.7966294+08:00"
+}

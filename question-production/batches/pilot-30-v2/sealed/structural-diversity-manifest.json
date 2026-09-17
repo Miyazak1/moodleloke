@@ -1,0 +1,79 @@
+{
+  "schemaVersion": "codex-structural-diversity-manifest-v1",
+  "batchId": "pilot-30-v2-2026-09-15",
+  "rules": {
+    "minimumScenarioFamiliesPerSubject": 8,
+    "maximumItemsPerScenarioFamily": 2,
+    "renameOnlyAccepted": false,
+    "requiredDimensions": [
+      "scenarioEntity",
+      "environment",
+      "contextAction",
+      "informationForm",
+      "questionPurpose"
+    ]
+  },
+  "subjects": {
+    "physics": {
+      "itemCount": 15,
+      "scenarioFamilyCount": 15,
+      "maximumFamilyOccupancy": 1,
+      "familyCounts": {
+        "harbor_transfer": 1,
+        "orchard_inspection": 1,
+        "warehouse_sorting": 1,
+        "airport_baggage": 1,
+        "mine_haulage": 1,
+        "camera_tracking": 1,
+        "hospital_delivery": 1,
+        "greenhouse_sprayer": 1,
+        "assembly_trolley": 1,
+        "museum_patrol": 1,
+        "solar_cleaning": 1,
+        "rail_inspection": 1,
+        "pool_sonar": 1,
+        "rescue_drill": 1,
+        "canal_service": 1
+      },
+      "uniqueDimensionCounts": {
+        "scenarioEntity": 15,
+        "environment": 15,
+        "contextAction": 15,
+        "informationForm": 15,
+        "questionPurpose": 15
+      },
+      "allProvisionalContractsValidated": true
+    },
+    "chemistry": {
+      "itemCount": 15,
+      "scenarioFamilyCount": 15,
+      "maximumFamilyOccupancy": 1,
+      "familyCounts": {
+        "instrument_reference": 1,
+        "discharge_screening": 1,
+        "rinse_preparation": 1,
+        "cooling_monitor": 1,
+        "plating_reuse": 1,
+        "formulation_release": 1,
+        "teaching_reagent": 1,
+        "preservation_storage": 1,
+        "fermentation_transfer": 1,
+        "photo_processing": 1,
+        "hydroponic_monitor": 1,
+        "rinse_water_audit": 1,
+        "textile_transfer": 1,
+        "pharma_release": 1,
+        "food_sanitation": 1
+      },
+      "uniqueDimensionCounts": {
+        "scenarioEntity": 14,
+        "environment": 15,
+        "contextAction": 15,
+        "informationForm": 15,
+        "questionPurpose": 15
+      },
+      "allProvisionalContractsValidated": true
+    }
+  },
+  "verdict": "pass"
+}

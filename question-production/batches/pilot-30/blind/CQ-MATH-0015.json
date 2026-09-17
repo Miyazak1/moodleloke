@@ -1,0 +1,190 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-MATH-0015",
+  "subject": "math",
+  "topicCode": "M-ANALYTIC-001",
+  "topicTitle": "解析几何中的直线关系",
+  "designedDifficulty": "basic",
+  "questionType": "single_choice",
+  "prompt": "已知两点 P(0,-3) 和 Q(5,-1)，求直线 PQ 的斜率。",
+  "options": [
+    {
+      "id": "A",
+      "text": "5/2"
+    },
+    {
+      "id": "B",
+      "text": "-2/5"
+    },
+    {
+      "id": "C",
+      "text": "2/5"
+    },
+    {
+      "id": "D",
+      "text": "7/5"
+    }
+  ],
+  "knowledgeTags": [
+    "解析几何",
+    "直线关系",
+    "slope_from_two_distinct_points"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "math",
+    "topicId": null,
+    "topicTitle": "直线关系",
+    "productionCellId": "line-relation-shadow-v1",
+    "targetDifficulty": "basic",
+    "taskFamily": "math_line_relation_direct",
+    "planTemplate": "math_line_relation_direct_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "exactLineRelationScope": "slope_from_two_distinct_points",
+      "forbidFigureDependency": true,
+      "forbidMultiStageIntersection": true,
+      "forbidVerticalLineUndefinedSlope": true,
+      "forbidCoincidentOrMultipleCorrectOptions": true,
+      "canonicalLineForm": "integer_primitive_ax_plus_by_plus_c_equals_zero_sign_fixed",
+      "finalAnswerShape": "one_unique_slope_exact_angle_relation_or_line_equation"
+    },
+    "budget": {
+      "maxPlanRepairs": 2,
+      "maxCandidateRepairs": 1
+    },
+    "scenarioContract": {
+      "schemaVersion": "subject-practice-scenario-contract-v1",
+      "policyVersion": "subject-practice-scenario-diversity-shadow-v2-multi-evidence-status",
+      "stage": "shadow_only_thresholds_not_frozen",
+      "scenarioMode": "abstract",
+      "scenarioFamilyId": "math_abstract_line_object",
+      "scenarioDomain": "pure_mathematics",
+      "scenarioEntity": "line_object",
+      "scenarioAction": "slope_from_two_distinct_points",
+      "informationForm": "symbolic_text",
+      "scenarioFingerprint": "scenario-c2de398f441d79c9c400",
+      "contextNecessity": "not_applicable",
+      "requiredInformationFields": [],
+      "solverRelevantFields": [],
+      "surface": {
+        "zhEntity": "",
+        "enEntity": "",
+        "zhSetting": "",
+        "enSetting": "",
+        "cueTokens": []
+      },
+      "plausibility": {
+        "externalContextForbidden": true
+      },
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "controlled_catalog_and_sealed_ordinal_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "explicit_line_data",
+        "role": "two_points_line_equation_or_point_and_slope",
+        "independentGroup": "l1"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "apply_exact_line_relation",
+        "inputs": [
+          "e1"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "line_relation_round_trip",
+        "expression": "direction or normal vector relation checks every visible option",
+        "variables": [
+          "x",
+          "y",
+          "a",
+          "b",
+          "c"
+        ],
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "delta x and delta y reversed",
+      "reciprocal used instead of negative reciprocal",
+      "coincident line accepted as distinct parallel line",
+      "constant sign error"
+    ],
+    "answerDerivation": [
+      "apply exactly one explicit slope, inclination, parallel/perpendicular, or point-slope relation"
+    ],
+    "uniquenessConditions": [
+      "all visible options are parsed and exactly one satisfies the selected exact scope"
+    ]
+  },
+  "localizations": {
+    "zh": {
+      "prompt": "已知两点 P(0,-3) 和 Q(5,-1)，求直线 PQ 的斜率。",
+      "options": [
+        {
+          "id": "A",
+          "text": "5/2"
+        },
+        {
+          "id": "B",
+          "text": "-2/5"
+        },
+        {
+          "id": "C",
+          "text": "2/5"
+        },
+        {
+          "id": "D",
+          "text": "7/5"
+        }
+      ],
+      "knowledgeTags": [
+        "解析几何",
+        "直线关系"
+      ]
+    },
+    "en": {
+      "prompt": "Given points P(0,-3) and Q(5,-1), find the slope of line PQ.",
+      "options": [
+        {
+          "id": "A",
+          "text": "5/2"
+        },
+        {
+          "id": "B",
+          "text": "-2/5"
+        },
+        {
+          "id": "C",
+          "text": "2/5"
+        },
+        {
+          "id": "D",
+          "text": "7/5"
+        }
+      ],
+      "knowledgeTags": [
+        "Analytic geometry",
+        "Line relations"
+      ]
+    }
+  }
+}

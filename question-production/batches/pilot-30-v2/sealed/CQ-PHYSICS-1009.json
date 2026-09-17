@@ -1,0 +1,600 @@
+{
+  "schemaVersion": "codex-question-candidate-v1",
+  "candidateId": "CQ-PHYSICS-1009",
+  "subject": "physics",
+  "topicCode": "P-MECH-001",
+  "topicTitle": "直线运动学",
+  "designedDifficulty": "basic",
+  "questionType": "single_choice",
+  "prompt": "工位事件记录描述装配桁车输送构件的一段过程。在工厂直线装配轨道中，装配桁车沿直线运动，初速度为 3 m/s，加速度为 1 m/s^2，运动 4 s，求最终速度。计算结果用于协调构件定位。",
+  "options": [
+    {
+      "id": "A",
+      "text": "末速度：7 m/s"
+    },
+    {
+      "id": "B",
+      "text": "末速度：8 m/s"
+    },
+    {
+      "id": "C",
+      "text": "末速度：6 m/s"
+    },
+    {
+      "id": "D",
+      "text": "末速度：9 m/s"
+    }
+  ],
+  "correctAnswer": "A",
+  "explanation": "对装配桁车使用 v=u+at；代入 u=3 m/s、a=1 m/s^2、t=4 s，计算结果为 7 m/s（末速度），因此唯一匹配的选项正确。",
+  "knowledgeTags": [
+    "运动学",
+    "直线运动",
+    "final_velocity_from_initial_acceleration_time"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "physics",
+    "topicId": 78,
+    "topicTitle": "运动学",
+    "productionCellId": 24,
+    "targetDifficulty": "basic",
+    "taskFamily": "kinematics_basic_direct_relation",
+    "planTemplate": "physics_kinematics_basic_relation_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "requirePhysicsSituation": true,
+      "requireUnitOrGraphEvidence": true,
+      "exactPhysicsKinematicsScope": "final_velocity_from_initial_acceleration_time",
+      "maxIndependentRelations": 1,
+      "forbidMultiStageModelChain": true,
+      "finalAnswerShape": "one_direct_kinematics_value_direction_or_graph_fact",
+      "preferredPromptSkeletons": [
+        "给出位移、时间、速度或加速度中的两个直接量，求第三个量并保留单位",
+        "用文字完整描述一段 s-t 或 v-t 直线图像，判断斜率、方向或速度中的一个事实"
+      ]
+    },
+    "budget": {
+      "maxPlanRepairs": 2,
+      "maxCandidateRepairs": 1
+    },
+    "scenarioContract": {
+      "schemaVersion": "subject-practice-scenario-contract-v1",
+      "policyVersion": "subject-practice-scenario-diversity-shadow-v2-multi-evidence-status",
+      "stage": "shadow_only_thresholds_not_frozen",
+      "scenarioMode": "experimental",
+      "scenarioFamilyId": "physics_lab_cart_track",
+      "scenarioDomain": "mechanics_laboratory",
+      "scenarioEntity": "wheeled_vehicle",
+      "scenarioAction": "final_velocity_from_initial_acceleration_time",
+      "informationForm": "numeric_text",
+      "scenarioFingerprint": "scenario-834a061d826b69a03409",
+      "contextNecessity": "required_for_solution",
+      "requiredInformationFields": [
+        "scenarioAction",
+        "motion_or_reaction_condition",
+        "quantities_with_units"
+      ],
+      "solverRelevantFields": [
+        "scenarioAction",
+        "motion_or_reaction_condition",
+        "quantities_with_units"
+      ],
+      "surface": {
+        "zhEntity": "实验小车",
+        "enEntity": "laboratory cart",
+        "zhSetting": "水平直轨实验",
+        "enSetting": "a horizontal straight-track experiment",
+        "cueTokens": [
+          "实验小车",
+          "laboratory cart"
+        ]
+      },
+      "plausibility": {
+        "straightLineMotion": true,
+        "siUnitsRequired": true,
+        "signedVelocityAndAccelerationAllowed": true
+      },
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "controlled_catalog_and_sealed_ordinal_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "physical_situation",
+        "role": "one_self_contained_kinematics_object_or_motion_segment",
+        "independentGroup": "k1"
+      },
+      {
+        "id": "e2",
+        "type": "quantity_or_graph_relation",
+        "role": "one_displacement_time_velocity_acceleration_or_graph_slope_relation_with_units",
+        "independentGroup": "k1"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "identify_direct_kinematics_relation",
+        "inputs": [
+          "e1",
+          "e2"
+        ],
+        "output": "selected_relation"
+      },
+      {
+        "id": "r2",
+        "operation": "derive_one_value_direction_or_graph_fact",
+        "inputs": [
+          "selected_relation"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "kinematics_unit_or_graph_round_trip",
+        "expression": "displacement/time/velocity/acceleration relation or graph slope checks the answer",
+        "variables": [
+          "s",
+          "t",
+          "v",
+          "a"
+        ],
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "confuse displacement with distance",
+      "confuse graph slope with graph height",
+      "omit or mismatch units"
+    ],
+    "answerDerivation": [
+      "apply exactly one visible kinematics relation or one graph-slope interpretation"
+    ],
+    "uniquenessConditions": [
+      "only one option matches the stated motion relation and units"
+    ]
+  },
+  "localizations": {
+    "zh": {
+      "prompt": "工位事件记录描述装配桁车输送构件的一段过程。在工厂直线装配轨道中，装配桁车沿直线运动，初速度为 3 m/s，加速度为 1 m/s^2，运动 4 s，求最终速度。计算结果用于协调构件定位。",
+      "options": [
+        {
+          "id": "A",
+          "text": "末速度：7 m/s"
+        },
+        {
+          "id": "B",
+          "text": "末速度：8 m/s"
+        },
+        {
+          "id": "C",
+          "text": "末速度：6 m/s"
+        },
+        {
+          "id": "D",
+          "text": "末速度：9 m/s"
+        }
+      ],
+      "explanation": "对装配桁车使用 v=u+at；代入 u=3 m/s、a=1 m/s^2、t=4 s，计算结果为 7 m/s（末速度），因此唯一匹配的选项正确。",
+      "knowledgeTags": [
+        "运动学",
+        "直线运动"
+      ]
+    },
+    "en": {
+      "prompt": "factory assembly records frame this operational task. During a straight factory assembly rail, the gantry trolley moves in a straight line with initial velocity 3 m/s and acceleration 1 m/s^2 for 4 s. Find its final velocity. The result supports coordinate component placement.",
+      "options": [
+        {
+          "id": "A",
+          "text": "Final velocity: 7 m/s"
+        },
+        {
+          "id": "B",
+          "text": "Final velocity: 8 m/s"
+        },
+        {
+          "id": "C",
+          "text": "Final velocity: 6 m/s"
+        },
+        {
+          "id": "D",
+          "text": "Final velocity: 9 m/s"
+        }
+      ],
+      "explanation": "For the gantry trolley, apply v=u+at. Substituting u=3 m/s, a=1 m/s^2, and t=4 s gives the result 7 m/s as the final velocity, identifying the unique matching option.",
+      "knowledgeTags": [
+        "Kinematics",
+        "Linear motion"
+      ]
+    }
+  },
+  "generationMetadata": {
+    "origin": "codex_dual_session_pilot",
+    "generatorTaskId": "pilot-30-v2-generator-task-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v1",
+    "createdAt": "2026-09-15T10:45:00.000Z",
+    "family": "kinematics_final_velocity",
+    "seed": 24,
+    "generatorVersion": "physics-kinematics-local-generator-v3-semantic-options",
+    "scopeId": "physics-basic-kinematics-v2:final_velocity_from_initial_acceleration_time",
+    "deterministicVerification": {
+      "solver": {
+        "solverVersion": "physics-basic-kinematics-solver-v4",
+        "taskFamily": "kinematics_basic_direct_relation",
+        "status": "verified",
+        "parsed": true,
+        "relationKind": "final_velocity_from_initial_acceleration_time",
+        "expectedDimension": "speed",
+        "expectedSiValue": 7,
+        "canonicalTask": {
+          "relationKind": "final_velocity_from_initial_acceleration_time",
+          "dimension": "speed",
+          "expectedSiValue": 7,
+          "inputs": {
+            "initialSpeedMetersPerSecond": 3,
+            "accelerationMetersPerSecondSquared": 1,
+            "durationSeconds": 4
+          }
+        },
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "true",
+            "parsedDimension": "speed",
+            "normalizedSiValue": 7,
+            "reasonCode": "physics_solver_quantity_matches"
+          },
+          {
+            "optionId": "B",
+            "verdict": "false",
+            "parsedDimension": "speed",
+            "normalizedSiValue": 8,
+            "reasonCode": "physics_solver_quantity_mismatch"
+          },
+          {
+            "optionId": "C",
+            "verdict": "false",
+            "parsedDimension": "speed",
+            "normalizedSiValue": 6,
+            "reasonCode": "physics_solver_quantity_mismatch"
+          },
+          {
+            "optionId": "D",
+            "verdict": "false",
+            "parsedDimension": "speed",
+            "normalizedSiValue": 9,
+            "reasonCode": "physics_solver_quantity_mismatch"
+          }
+        ],
+        "trueOptionIds": [
+          "A"
+        ],
+        "selectedOptionId": "A",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": [],
+        "verificationScope": {
+          "scopeVersion": "physics-basic-kinematics-verification-scope-v2",
+          "scopeId": "physics-basic-kinematics-v2:final_velocity_from_initial_acceleration_time",
+          "status": "matched",
+          "matched": true,
+          "relationKind": "final_velocity_from_initial_acceleration_time",
+          "reasonCodes": []
+        }
+      },
+      "oracle": {
+        "oracleVersion": "physics-kinematics-independent-oracle-v3",
+        "status": "verified",
+        "relationKind": "final_velocity_from_initial_acceleration_time",
+        "expectedValue": 7,
+        "expectedUnit": "m/s",
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "true",
+            "value": 7,
+            "unit": "m/s"
+          },
+          {
+            "optionId": "B",
+            "verdict": "false",
+            "value": 8,
+            "unit": "m/s"
+          },
+          {
+            "optionId": "C",
+            "verdict": "false",
+            "value": 6,
+            "unit": "m/s"
+          },
+          {
+            "optionId": "D",
+            "verdict": "false",
+            "value": 9,
+            "unit": "m/s"
+          }
+        ],
+        "trueOptionIds": [
+          "A"
+        ],
+        "selectedOptionId": "A",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "scopeId": "physics-basic-kinematics-v2:final_velocity_from_initial_acceleration_time",
+        "scopeMatched": true,
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      },
+      "explanation": {
+        "verifierVersion": "physics-kinematics-explanation-verifier-v1",
+        "status": "verified",
+        "solverEvidence": {
+          "solverVersion": "physics-basic-kinematics-solver-v4",
+          "taskFamily": "kinematics_basic_direct_relation",
+          "status": "verified",
+          "parsed": true,
+          "relationKind": "final_velocity_from_initial_acceleration_time",
+          "expectedDimension": "speed",
+          "expectedSiValue": 7,
+          "canonicalTask": {
+            "relationKind": "final_velocity_from_initial_acceleration_time",
+            "dimension": "speed",
+            "expectedSiValue": 7,
+            "inputs": {
+              "initialSpeedMetersPerSecond": 3,
+              "accelerationMetersPerSecondSquared": 1,
+              "durationSeconds": 4
+            }
+          },
+          "optionVerdicts": [
+            {
+              "optionId": "A",
+              "verdict": "true",
+              "parsedDimension": "speed",
+              "normalizedSiValue": 7,
+              "reasonCode": "physics_solver_quantity_matches"
+            },
+            {
+              "optionId": "B",
+              "verdict": "false",
+              "parsedDimension": "speed",
+              "normalizedSiValue": 8,
+              "reasonCode": "physics_solver_quantity_mismatch"
+            },
+            {
+              "optionId": "C",
+              "verdict": "false",
+              "parsedDimension": "speed",
+              "normalizedSiValue": 6,
+              "reasonCode": "physics_solver_quantity_mismatch"
+            },
+            {
+              "optionId": "D",
+              "verdict": "false",
+              "parsedDimension": "speed",
+              "normalizedSiValue": 9,
+              "reasonCode": "physics_solver_quantity_mismatch"
+            }
+          ],
+          "trueOptionIds": [
+            "A"
+          ],
+          "selectedOptionId": "A",
+          "uniqueAnswer": true,
+          "agreesWithGenerator": true,
+          "evidenceBoundary": "prompt_and_visible_options_only",
+          "providerImpact": "none_no_provider_call",
+          "productionGateImpact": "none_shadow_only",
+          "reasonCodes": [],
+          "verificationScope": {
+            "scopeVersion": "physics-basic-kinematics-verification-scope-v2",
+            "scopeId": "physics-basic-kinematics-v2:final_velocity_from_initial_acceleration_time",
+            "status": "matched",
+            "matched": true,
+            "relationKind": "final_velocity_from_initial_acceleration_time",
+            "reasonCodes": []
+          }
+        },
+        "recomputedWithoutGeneratorExplanation": true,
+        "formulaInputsUnitsAndConclusionChecked": true,
+        "checks": [
+          {
+            "language": "zh",
+            "formulaMatched": true,
+            "promptInputsCovered": true,
+            "conclusionMatched": true,
+            "conclusionValue": 7,
+            "conclusionUnit": "m/s",
+            "reasonCodes": []
+          },
+          {
+            "language": "en",
+            "formulaMatched": true,
+            "promptInputsCovered": true,
+            "conclusionMatched": true,
+            "conclusionValue": 7,
+            "conclusionUnit": "m/s",
+            "reasonCodes": []
+          }
+        ],
+        "mismatchCount": 0,
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      }
+    },
+    "questionPlanAdherence": {
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "validPlan": true,
+      "adheres": true,
+      "planTemplate": "physics_kinematics_basic_relation_v1",
+      "taskFamily": "kinematics_basic_direct_relation",
+      "failureCodes": [],
+      "features": {
+        "operationWords": 0,
+        "observationWords": 0,
+        "hypothesisMarkers": 0,
+        "reasoningConnectors": 1,
+        "quantitativeMarkers": 0,
+        "reactionClues": 4,
+        "gasSpeciesMarkers": 0,
+        "gasControlMarkers": 0,
+        "redoxReactionMarkers": 0,
+        "redoxConceptMarkers": 0,
+        "redoxQuantitativeChainMarkers": 0,
+        "mathPropertySignals": 0,
+        "mathStatementMarkers": 5,
+        "mathTransformationSignals": 1,
+        "mathOrderingSignals": 2,
+        "mathParameterConstraintSignals": 1,
+        "mathProbabilitySignals": 1,
+        "mathProbabilityEventLabelCount": 0,
+        "mathProbabilityNormalHardInteractionCueCount": 0,
+        "mathProbabilityHardInteractionCueCount": 0,
+        "mathProbabilityConcreteFrameSignals": 0,
+        "mathProbabilityNormalMediumNoEventRisk": false,
+        "mathProbabilityNormalReferenceTableRisk": false,
+        "mathProbabilityConceptOnlyRisk": false,
+        "mathProbabilitySingleResultRisk": false,
+        "mathProbabilityEventListOnlyRisk": false,
+        "mathDerivativeSignals": 0,
+        "mathDerivativeMediumDefinitionOnlyRisk": false,
+        "mathDerivativeHardCoefficientSolveOnlyRisk": false,
+        "mathDerivativeBasicAdvancedOperationRisk": false,
+        "mathVectorComplexSignals": 0,
+        "mathVectorComplexBasicDefinitionOnlyRisk": false,
+        "mathGeometrySignals": 2,
+        "mathAnalyticGeometryDefinitionOnlyRisk": false,
+        "mathAnalyticGeometryBasicGeneralCircleRisk": false,
+        "mathAnalyticGeometryHardConicRelationOnlyRisk": false,
+        "mathElementaryFunctionSignals": 0,
+        "mathElementaryFunctionGenericClassificationRisk": false,
+        "mathElementaryFunctionBasicEquationSolveRisk": false,
+        "mathElementaryFunctionBasicMultipleObjectRisk": false,
+        "mathSequenceSignals": 0,
+        "mathSequenceGenericClassificationRisk": false,
+        "mathStatisticsSignals": 0,
+        "mathStatisticsBasicMultiStatisticComparisonRisk": false,
+        "mathStatisticsMediumPureLinearTransformRisk": false,
+        "mathStatisticsHardDirectCombinedVarianceRisk": false,
+        "mathSpatialSignals": 0,
+        "mathSpatialMediumMultiPropositionOvercomplexRisk": false,
+        "mathSpatialHardConceptOnlyRisk": false,
+        "mathSpatialHardDirectCoordinateOnlyRisk": false,
+        "mathParameterInferenceRisk": false,
+        "mathOptionJudgement": true,
+        "mathEnumeratedConditionCount": 0,
+        "mathFunctionPropertyStackCount": 0,
+        "mathFunctionDistinctPropertyCount": 0,
+        "mathStudentFacingDistinctPropertyCount": 0,
+        "mathStudentFacingFunctionPropertyOverComplex": false,
+        "mathFunctionObjectSignals": 0,
+        "mathFunctionPointValueCount": 0,
+        "mathFunctionNamedPointCount": 0,
+        "mathFunctionMultipleNamedPointsRisk": false,
+        "mathBasicFunctionSolutionScaffoldRisk": false,
+        "mathFunctionBasicMultiConstraintDomainRisk": false,
+        "mathPureFunctionExternalContextRisk": false,
+        "mathHardFunctionGenericConceptRisk": false,
+        "mathMediumFunctionPropertyOverComplex": false,
+        "mathDerivativeBasicDomainTrapRisk": false,
+        "mathDerivativeBasicOverComplexRisk": false,
+        "mathVectorComplexObjectCount": 0,
+        "mathVectorComplexRelationCount": 0,
+        "mathVectorComplexCoordinateGeometryDriftRisk": false,
+        "mathVectorComplexLocusParameterChainRisk": false,
+        "mathVectorComplexOneStepFormulaRisk": false,
+        "mathVectorComplexHardDirectMetricRisk": false,
+        "physicsKinematicsSignals": 8,
+        "physicsGraphSignals": 1,
+        "physicsUnitSignals": 11,
+        "physicsEquationSignals": 4,
+        "physicsOpticsSignals": 0,
+        "physicsOpticsRelationSignals": 0,
+        "physicsUnseenDiagramRisk": false,
+        "chemistryClassificationSignals": 0,
+        "chemistryStateChangeEvidenceSignals": 0,
+        "chemistryDefinitionOnlyClassificationRisk": false,
+        "chemistryPhConceptSignals": 0,
+        "chemistryPhOperationErrorSignals": 0,
+        "chemistryPhDirectionSignals": 0,
+        "chemistryPhDirectCalculationRisk": false
+      },
+      "productionImpact": "none_audit_or_gate_scaffold",
+      "providerImpact": "none_no_provider_call"
+    },
+    "scenarioRenderMode": "provisional_blueprint_shadow",
+    "provisionalScenarioContract": {
+      "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+      "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+      "stage": "provisional_shadow_only",
+      "subject": "physics",
+      "taskFamily": "kinematics_basic_direct_relation",
+      "planTemplate": "physics_kinematics_basic_relation_v1",
+      "scenarioFamilyId": "provisional_physics_f3589209ca9a01ce52e5ec27",
+      "scenarioMode": "real_world",
+      "scenarioDomain": "factory assembly",
+      "scenarioEntity": "gantry trolley",
+      "environment": "straight assembly rail",
+      "contextAction": "position a component at a station",
+      "solverAction": "final_velocity_from_initial_acceleration_time",
+      "informationForm": "station event record",
+      "questionPurpose": "coordinate component placement",
+      "contextNecessity": "required_for_solution",
+      "requiredInformationFields": [
+        "contextAction",
+        "motionCondition",
+        "quantitiesWithSiUnits"
+      ],
+      "solverRelevantFields": [
+        "solverAction",
+        "motionCondition",
+        "quantitiesWithSiUnits"
+      ],
+      "plausibility": {
+        "straightLineMotion": true,
+        "siUnitsRequired": true,
+        "signedVelocityAndAccelerationAllowed": true,
+        "exactKinematicsScope": "final_velocity_from_initial_acceleration_time"
+      },
+      "surface": {
+        "zhEntity": "装配桁车",
+        "enEntity": "gantry trolley",
+        "zhSetting": "工厂直线装配轨道",
+        "enSetting": "a straight factory assembly rail"
+      },
+      "blueprintBinding": {
+        "blueprintDigest": "b7466b08f5c3e43ce773e4485ad77197f38f6412929fec4fc0e4a0808751dd68",
+        "blueprintFingerprint": "blueprint-f3589209ca9a01ce52e5ec27",
+        "renameInvariantFingerprint": "blueprint-structure-0dc169eb90c9c9ec43ad62e6",
+        "ideationCycleEvidenceDigest": "1d9bd0dc94fd4525d77e9fdc666a4b1b498461dc48cd46b883a002cbff56b0f0"
+      },
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "validated_blueprint_cycle_only"
+      },
+      "scenarioContractDigest": "9fd284a25fed4255848529b4caa701022d22ea12698f2ace416ee23083804215"
+    },
+    "v1Correction": null
+  }
+}

@@ -1,0 +1,261 @@
+.ideal-gas-page {
+  width: min(1240px, calc(100vw - 48px));
+}
+
+.ideal-gas-card {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid rgba(49, 93, 255, .16);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 16px 42px rgba(15, 23, 42, .07);
+}
+
+.ideal-gas-side,
+.ideal-gas-main {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  min-width: 0;
+}
+
+.ideal-gas-side article,
+.ideal-gas-stage,
+.ideal-gas-explain-card article {
+  border: 1px solid rgba(49, 93, 255, .14);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.ideal-gas-side article,
+.ideal-gas-explain-card article {
+  padding: 16px;
+}
+
+.ideal-gas-side h2,
+.ideal-gas-explain-card h2 {
+  margin: 0 0 12px;
+  color: #312e81;
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.ideal-gas-formula-card,
+.ideal-gas-data-card,
+.ideal-gas-control-card,
+.ideal-gas-slider-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.ideal-gas-formula-card .math-content {
+  justify-content: center;
+  padding: 18px 10px;
+  border: 1px solid rgba(49, 93, 255, .18);
+  border-radius: 12px;
+  background: #e9efff;
+}
+
+.gas-metric {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr) 112px;
+  gap: 8px;
+  align-items: center;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.gas-metric i {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.gas-metric strong,
+.ideal-gas-slider-stack strong {
+  justify-self: end;
+  color: #0f172a;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ideal-gas-select,
+.ideal-gas-slider-stack label {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr) 82px;
+  gap: 10px;
+  align-items: center;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.ideal-gas-select {
+  grid-template-columns: 82px minmax(0, 1fr);
+}
+
+.ideal-gas-select select {
+  min-width: 0;
+  min-height: 38px;
+  border: 1px solid rgba(49, 93, 255, .18);
+  border-radius: 10px;
+  background: #fff;
+  color: #0f172a;
+  font-weight: 900;
+}
+
+.ideal-gas-slider-stack input[type="range"] {
+  width: 100%;
+  accent-color: #315dff;
+}
+
+.ideal-gas-slider-stack input:disabled {
+  opacity: .42;
+}
+
+.ideal-gas-lock {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(49, 93, 255, .16);
+  border-radius: 12px;
+  background: #f8fafc;
+  color: #315dff;
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.ideal-gas-stage {
+  padding: 12px;
+  overflow: hidden;
+  background: #f8fbff;
+}
+
+.ideal-gas-svg {
+  display: block;
+  width: 100%;
+  min-height: 520px;
+  border-radius: 10px;
+  background: #f8fbff;
+}
+
+.ideal-gas-svg .gas-bg {
+  fill: #eef4ff;
+}
+
+.ideal-gas-svg text {
+  fill: #5f6f69;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.ideal-gas-svg .stage-title {
+  fill: #5f6f69;
+  text-anchor: start;
+}
+
+.ideal-gas-svg .gas-process-label {
+  fill: #315dff;
+  text-anchor: end;
+}
+
+.ideal-gas-svg .gas-cylinder path,
+.ideal-gas-svg .piston-rod {
+  fill: none;
+  stroke: #5f6f69;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.ideal-gas-svg .gas-cylinder rect:first-child {
+  stroke: #94a3b8;
+  stroke-width: 2;
+}
+
+.ideal-gas-svg .piston {
+  fill: #475569;
+}
+
+.ideal-gas-svg .gas-particles circle {
+  fill: #315dff;
+  opacity: .72;
+  animation: ideal-gas-particle 1s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.ideal-gas-svg .gas-pressure-hits line {
+  stroke: #ef4444;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.ideal-gas-svg .gas-speed-plot path {
+  fill: none;
+  stroke: #818cf8;
+  stroke-width: 2.5;
+}
+
+.ideal-gas-svg .gas-speed-plot text {
+  text-anchor: middle;
+}
+
+.ideal-gas-svg .gas-pv-chart line {
+  stroke: #94a3b8;
+  stroke-width: 1.5;
+}
+
+.ideal-gas-svg .gas-pv-chart text {
+  fill: #5f6f69;
+  font-size: 11px;
+  text-anchor: middle;
+}
+
+.ideal-gas-svg .gas-process-path {
+  fill: none;
+  stroke: #ef4444;
+  stroke-width: 2.5;
+}
+
+.ideal-gas-svg .gas-state-point {
+  fill: #315dff;
+  stroke: #fff;
+  stroke-width: 3;
+}
+
+.ideal-gas-svg .watermark {
+  fill: #cbd5e1;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.ideal-gas-explain-card {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.ideal-gas-explain-card p {
+  margin: 0;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.7;
+}
+
+.ideal-gas-explain-card strong {
+  display: block;
+  color: #315dff;
+}
+
+@keyframes ideal-gas-particle {
+  from {
+    transform: translate(-2px, 1px);
+  }
+  to {
+    transform: translate(3px, -2px);
+  }
+}

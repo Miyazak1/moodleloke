@@ -1,0 +1,319 @@
+.redox-cell-card {
+  display:grid;
+  grid-template-columns:280px minmax(0,1fr) 300px;
+  gap:16px;
+  align-items:stretch;
+  padding:18px;
+  background:#fffdf9
+}
+
+.redox-cell-controls,.redox-cell-stage,.redox-cell-analysis {
+  min-width:0;
+  border:1px solid var(--public-line);
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 14px 36px #1720330f
+}
+
+.redox-cell-controls {
+  display:grid;
+  align-content:start;
+  gap:14px;
+  padding:16px
+}
+
+.redox-cell-conclusion {
+  display:grid;
+  gap:6px;
+  padding:14px;
+  border:1px solid rgba(66,107,146,.2);
+  border-radius:12px;
+  background:var(--public-soft)
+}
+
+.redox-cell-conclusion span,.redox-toggle span,.redox-speed-control span,.redox-cell-analysis span {
+  color:var(--public-muted);
+  font-size:12px;
+  font-weight:900
+}
+
+.redox-cell-conclusion strong {
+  color:var(--public-ink);
+  line-height:1.5
+}
+
+.redox-cell-picker {
+  display:grid;
+  gap:8px
+}
+
+.redox-cell-picker button {
+  min-height:54px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:8px;
+  align-items:center;
+  padding:10px 12px;
+  border:1px solid var(--public-line);
+  border-radius:12px;
+  background:#fff;
+  color:var(--public-ink);
+  text-align:left;
+  font-weight:900
+}
+
+.redox-cell-picker button.active {
+  border-color:var(--public-orange);
+  background:var(--public-soft);
+  color:var(--public-orange-dark)
+}
+
+.redox-cell-picker strong {
+  color:var(--public-orange);
+  white-space:nowrap
+}
+
+.redox-toggle {
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  min-height:40px;
+  padding:10px 12px;
+  border:1px solid var(--public-line);
+  border-radius:999px;
+  background:#fff
+}
+
+.redox-toggle input,.redox-speed-control input {
+  accent-color:var(--public-orange)
+}
+
+.redox-speed-control {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:8px
+}
+
+.redox-speed-control input {
+  grid-column:1 / -1;
+  width:100%
+}
+
+.redox-actions {
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px
+}
+
+.redox-actions button {
+  min-height:42px;
+  display:inline-flex;
+  gap:7px;
+  align-items:center;
+  justify-content:center;
+  padding:10px 14px;
+  border:1px solid var(--public-orange);
+  border-radius:999px;
+  background:var(--public-orange);
+  color:#fff;
+  font-weight:900;
+  box-shadow:0 12px 24px #315dff24
+}
+
+.redox-actions button.ghost {
+  border-color:var(--public-line);
+  background:#fff;
+  color:var(--public-ink);
+  box-shadow:none
+}
+
+.redox-cell-stage {
+  display:grid;
+  place-items:center;
+  padding:16px;
+  background:linear-gradient(180deg,#fffefa,#f8fbff)
+}
+
+.redox-cell-svg {
+  width:100%;
+  max-width:760px;
+  height:auto;
+  min-height:430px
+}
+
+.redox-cell-svg .wire {
+  fill:none;
+  stroke:#475569;
+  stroke-width:4;
+  stroke-linecap:round;
+  stroke-linejoin:round
+}
+
+.redox-cell-svg .voltmeter {
+  fill:#fff;
+  stroke:#475569;
+  stroke-width:3
+}
+
+.redox-cell-svg .meter-v {
+  fill:#dc2626;
+  font-size:18px;
+  font-weight:950;
+  text-anchor:middle
+}
+
+.redox-cell-svg .meter-value {
+  fill:var(--public-ink);
+  font-size:13px;
+  font-weight:900;
+  text-anchor:middle
+}
+
+.redox-cell-svg .electron {
+  fill:#f1a826;
+  stroke:#9b6a00;
+  stroke-width:1.4
+}
+
+.redox-cell-svg .electron-label,.redox-cell-svg .salt-label,.redox-cell-svg .solution-label,.redox-cell-svg .metal-label {
+  fill:#5f6f69;
+  font-size:12px;
+  font-weight:900;
+  text-anchor:middle
+}
+
+.redox-cell-svg .salt-bridge {
+  fill:none;
+  stroke:#94a3b8;
+  stroke-width:5;
+  stroke-linecap:round;
+  stroke-linejoin:round
+}
+
+.redox-cell-svg .salt-ion.pos {
+  fill:#10b981
+}
+
+.redox-cell-svg .salt-ion.neg {
+  fill:#8b5cf6
+}
+
+.redox-cell-svg .beaker-glass {
+  fill:transparent;
+  stroke:#5f6f69;
+  stroke-width:3
+}
+
+.redox-cell-svg .solution {
+  fill:url(#redox-solution);
+  opacity:.86
+}
+
+.redox-cell-svg .electrode {
+  stroke:#475569;
+  stroke-width:2
+}
+
+.redox-cell-svg .anode-label {
+  fill:#dc2626;
+  font-size:14px;
+  font-weight:950;
+  text-anchor:middle
+}
+
+.redox-cell-svg .cathode-label {
+  fill:#315dff;
+  font-size:14px;
+  font-weight:950;
+  text-anchor:middle
+}
+
+.redox-cell-svg .oxidation-bubble {
+  fill:#f87171;
+  opacity:.82;
+  animation:redox-bubble 1.9s ease-in-out infinite alternate
+}
+
+.redox-cell-svg .reduction-bubble {
+  fill:#f87171;
+  opacity:.72;
+  animation:redox-bubble 2.2s ease-in-out infinite alternate-reverse
+}
+
+.redox-cell-svg .solution-ion.blue {
+  fill:#60a5fa;
+  opacity:.78
+}
+
+@keyframes redox-bubble {
+  0% {
+    transform:translateY(0);
+    opacity:.55
+  }
+
+  to {
+    transform:translateY(-10px);
+    opacity:.95
+  }
+}
+
+.redox-cell-analysis {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  align-content:start;
+  padding:16px
+}
+
+.redox-cell-analysis article {
+  display:grid;
+  gap:6px;
+  padding:14px;
+  border:1px solid var(--public-line);
+  border-radius:12px;
+  background:#fffefa
+}
+
+.redox-cell-analysis strong,.redox-cell-analysis b {
+  color:var(--public-ink);
+  font-size:16px;
+  line-height:1.45;
+  overflow-wrap:anywhere
+}
+
+.redox-voltage-card strong {
+  color:var(--public-orange);
+  font-size:34px;
+  line-height:1
+}
+
+.redox-cell-analysis p {
+  margin:0;
+  color:var(--public-muted);
+  font-weight:850;
+  overflow-wrap:anywhere
+}
+
+.redox-oxidation-card div {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px
+}
+
+.redox-oxidation-card b {
+  width:fit-content;
+  padding:6px 9px;
+  border-radius:999px;
+  background:var(--public-soft);
+  color:var(--public-orange-dark);
+  font-size:13px
+}
+
+.redox-cell-support article {
+  min-width:0
+}
+
+.ph-titration-hero .special-visualizer-metrics span:last-child {
+  width:88px;
+  box-sizing:border-box
+}

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-PHYSICS-3009",
+  "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+  "derivedAnswer": "A",
+  "optionTruthTable": {
+    "A": true,
+    "B": false,
+    "C": false,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "medium",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "设零场点距左电荷 x，则 kq/x^2=4kq/(6-x)^2；区间内取正长度得 6-x=2x，x=2 m。仅 A 正确，但属单方程常规模型，hard 标注偏高。",
+    "已逐项对照 A/B/C/D；真值表只标记由题干独立推出的选项，未采用任何题面或元数据自报答案。"
+  ],
+  "verdictBeforeReveal": "reject",
+  "reasonCodes": [
+    "DIFFICULTY_OVERSTATED"
+  ],
+  "reviewedAt": "2026-09-15T18:46:01.1890259+08:00"
+}

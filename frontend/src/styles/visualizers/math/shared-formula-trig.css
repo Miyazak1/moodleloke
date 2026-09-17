@@ -1,0 +1,340 @@
+/* Special practice visualizer pages. Imported after the core practice flow styles. */
+.special-visualizer-page,
+.special-formula-page {
+  width: min(1240px, calc(100vw - 48px));
+}
+
+.special-visualizer-hero,
+.special-formula-hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 22px;
+  align-items: center;
+  padding: 26px;
+}
+
+.special-visualizer-hero > div,
+.special-formula-hero > div {
+  min-width: 0;
+}
+
+.special-visualizer-hero h1,
+.special-formula-hero h1 {
+  margin: 0;
+  color: var(--public-ink);
+  font-size: clamp(26px, 3vw, 38px);
+  line-height: 1.14;
+}
+
+.special-visualizer-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.special-visualizer-metrics span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 5px 10px;
+  border: 1px solid rgba(49, 93, 255, .18);
+  border-radius: 999px;
+  background: rgba(247, 238, 242, .84);
+  color: var(--public-muted);
+  font-size: 12px;
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+}
+
+.special-visualizer-metrics b {
+  margin-right: 4px;
+  color: var(--public-orange);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.special-visualizer-hero > button:not(.ghost),
+.special-visualizer-support button:not(.ghost),
+.special-formula-page .special-mock-cta button {
+  min-height: 42px;
+  padding: 10px 16px;
+  border: 1px solid var(--public-orange);
+  border-radius: 999px;
+  background: var(--public-orange);
+  color: #fff;
+  font-weight: 900;
+  box-shadow: 0 12px 26px rgba(49, 93, 255, .18);
+}
+
+.special-visualizer-card {
+  position: relative;
+  display: grid;
+  gap: 18px;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.special-trig-value-card {
+  justify-self: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--public-line);
+  border-radius: 12px;
+  background: rgba(255,253,250,.92);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.special-trig-value-card span {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.special-trig-value-card .sin { color: #315dff; }
+.special-trig-value-card .cos { color: #df2b2b; }
+.special-trig-value-card .tan { color: #9a5b00; }
+
+.special-visualizer-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+  gap: 18px;
+  align-items: center;
+}
+
+.special-unit-circle,
+.special-trig-graph {
+  width: 100%;
+  min-width: 0;
+  height: auto;
+}
+
+.special-unit-circle .axis,
+.special-trig-graph .axis {
+  stroke: #9aa8bb;
+  stroke-width: 1.4;
+}
+
+.special-unit-circle .circle {
+  fill: none;
+  stroke: #62748f;
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+
+.special-unit-circle .terminal,
+.special-unit-circle .tan-ray {
+  stroke: #172033;
+  stroke-width: 2.5;
+}
+
+.special-unit-circle .sin-line,
+.special-trig-graph .sin-curve {
+  stroke: #315dff;
+  stroke-width: 3;
+  fill: none;
+}
+
+.special-unit-circle .cos-line,
+.special-trig-graph .cos-curve {
+  stroke: #df2b2b;
+  stroke-width: 3;
+  fill: none;
+}
+
+.special-unit-circle .tan-line,
+.special-trig-graph .tan-curve {
+  stroke: #b7791f;
+  stroke-width: 3;
+  fill: none;
+}
+
+.special-unit-circle .tan-axis,
+.special-trig-graph .tan-asymptote,
+.special-trig-graph .angle-marker {
+  stroke: #f1a826;
+  stroke-width: 1.5;
+  stroke-dasharray: 4 5;
+}
+
+.special-unit-circle .angle-arc {
+  fill: none;
+  stroke: #f1a826;
+  stroke-width: 2;
+}
+
+.special-unit-circle .point,
+.special-trig-graph .tan-dot {
+  fill: #f1a826;
+}
+
+.special-trig-graph .sin-dot {
+  fill: #315dff;
+}
+
+.special-trig-graph .cos-dot {
+  fill: #df2b2b;
+}
+
+.special-unit-circle .axis-label,
+.special-trig-graph .axis-label,
+.special-unit-circle .angle-label,
+.special-unit-circle .sin-text,
+.special-unit-circle .cos-text,
+.special-unit-circle .tan-text {
+  font-size: 13px;
+  font-weight: 900;
+  fill: #7b8da6;
+}
+
+.special-unit-circle .angle-label,
+.special-unit-circle .tan-text { fill: #b7791f; }
+.special-unit-circle .sin-text { fill: #315dff; }
+.special-unit-circle .cos-text { fill: #df2b2b; }
+.special-trig-graph .tick { stroke: #9aa8bb; stroke-width: 1; }
+
+.special-visualizer-controls {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid rgba(91, 139, 255, .22);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.special-visualizer-controls > label {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 8px 12px;
+  align-items: center;
+  color: var(--public-muted);
+  font-weight: 850;
+}
+
+.special-visualizer-controls > label strong {
+  justify-self: end;
+  color: var(--public-ink);
+}
+
+.special-visualizer-controls input[type="range"] {
+  grid-column: 1 / -1;
+  width: 100%;
+  accent-color: #f1a826;
+}
+
+.special-trig-switches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.special-trig-switches label {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 30px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--public-panel);
+  color: var(--public-ink);
+  font-weight: 850;
+}
+
+.special-trig-switches input {
+  width: 34px;
+  height: 20px;
+  accent-color: var(--public-orange);
+}
+
+.special-trig-switches .sin input { accent-color: #315dff; }
+.special-trig-switches .cos input { accent-color: #df2b2b; }
+.special-trig-switches .tan input { accent-color: #b7791f; }
+
+.special-tan-warning {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(183, 121, 31, .28);
+  border-radius: 12px;
+  background: #fff8e8;
+  color: #8a560d;
+  font-weight: 850;
+}
+
+.special-visualizer-support {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.special-visualizer-support article {
+  display: grid;
+  gap: 12px;
+  padding: 22px;
+}
+
+.special-visualizer-support h2,
+.special-formula-section h2 {
+  margin: 0;
+  color: var(--public-ink);
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.special-visualizer-support p {
+  margin: 0;
+  color: var(--public-muted);
+  line-height: 1.75;
+}
+
+.special-formula-list {
+  display: grid;
+  gap: 18px;
+}
+
+.special-formula-section {
+  scroll-margin-top: 92px;
+  display: grid;
+  gap: 14px;
+  padding: 22px;
+}
+
+.special-formula-table {
+  display: grid;
+  border: 1px solid var(--public-line);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.special-formula-table div {
+  display: grid;
+  grid-template-columns: 160px minmax(220px, 1fr) minmax(180px, .9fr);
+  gap: 14px;
+  align-items: center;
+  padding: 13px 14px;
+  background: #fff;
+}
+
+.special-formula-table div:nth-child(odd) {
+  background: var(--public-panel);
+}
+
+.special-formula-table strong {
+  color: var(--public-ink);
+  font-weight: 900;
+}
+
+.special-formula-table code {
+  white-space: normal;
+  color: #2454c6;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-weight: 850;
+}
+
+.special-formula-table span {
+  color: var(--public-muted);
+  line-height: 1.6;
+}

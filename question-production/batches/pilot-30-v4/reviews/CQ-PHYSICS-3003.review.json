@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-PHYSICS-3003",
+  "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+  "derivedAnswer": "C",
+  "optionTruthTable": {
+    "A": false,
+    "B": false,
+    "C": true,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "medium",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "合功 (10-2)×4=32 J；由 32=mv^2/2=v^2 得 v=4sqrt(2) m/s。仅 C 正确；A 对应忽略摩擦且数值还有轻微舍入偏差。",
+    "已逐项对照 A/B/C/D；真值表只标记由题干独立推出的选项，未采用任何题面或元数据自报答案。"
+  ],
+  "verdictBeforeReveal": "pass",
+  "reasonCodes": [],
+  "reviewedAt": "2026-09-15T18:46:01.1890259+08:00"
+}

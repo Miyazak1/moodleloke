@@ -1,0 +1,5980 @@
+{
+  "document": {
+    "subject": "math",
+    "syllabusVersion": "2025",
+    "sourceType": "past_paper",
+    "documentFamilyId": "math|past_paper|2025|2025-12",
+    "title": "CSCA Mathematics Past Paper - December 2025 - English",
+    "examYear": 2025,
+    "examSession": "2025-12",
+    "language": "en",
+    "sourceLabel": "December 2025 CSCA Mathematics Exam English paper",
+    "licenseScope": "internal_analysis",
+    "usagePolicy": {
+      "allowStyleExtraction": true,
+      "allowQuestionDisplay": true,
+      "allowPromptRawText": true,
+      "allowSimilarityCheck": true
+    },
+    "status": "active",
+    "sourceFiles": [
+      "December 2025 数学 中文.pdf",
+      "CSCA Math Past Paper Question-EN.pdf",
+      "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf"
+    ],
+    "sourceHash": "9877bcece3307c94dda563ec2914af7295021fb23610c290363b4f3ae55364ac",
+    "notes": "Generated from the December 2025 English paper text copied through Edge PDF viewer. Topic codes are intentionally empty so the platform can auto-map and profile. Rebuilt 2026-07-15 using Chinese paper as the primary visual source and English/errata files as auxiliary references; PDF text-layer artifacts were removed before import.",
+    "sourceQualityPolicy": {
+      "primaryVisualSource": "December 2025 Chinese paper; English paper and English solution used as auxiliary references.",
+      "excludedArtifacts": [
+        "watermark",
+        "purchase_account",
+        "pdf_private_font_glyphs",
+        "lost_superscript_text_layer"
+      ],
+      "mathNotationPolicy": "Use caret notation such as x^2 when source PDF text-layer loses superscripts."
+    },
+    "sourceRepairPolicy": {
+      "version": "math-source-repair-v1",
+      "generatedBy": "scripts/repair-csca-math-source-json.cjs",
+      "strategy": [
+        "Fill missing topicCodes only when deterministic syllabus keyword evidence is available.",
+        "Fill missing analysis.readingLoad from prompt/option complexity.",
+        "Exclude questions that still need human review from the repaired import draft.",
+        "Do not overwrite source JSON files; repaired drafts are emitted under artifacts."
+      ]
+    },
+    "excludedQuestions": [
+      {
+        "questionNumber": "15",
+        "reason": "source_repair_unusable_without_human_check",
+        "details": {
+          "needsReview": [
+            "source_text_quality"
+          ],
+          "issues": [
+            "source_watermark_cleanup_needed",
+            "question_text_typo_suspected"
+          ]
+        }
+      },
+      {
+        "questionNumber": "26",
+        "reason": "source_repair_unusable_without_human_check",
+        "details": {
+          "needsReview": [
+            "source_text_quality"
+          ],
+          "issues": [
+            "question_text_typo_suspected"
+          ]
+        }
+      },
+      {
+        "questionNumber": "31",
+        "reason": "source_repair_unusable_without_human_check",
+        "details": {
+          "needsReview": [
+            "source_text_quality"
+          ],
+          "issues": [
+            "question_text_typo_suspected"
+          ]
+        }
+      },
+      {
+        "questionNumber": "32",
+        "reason": "source_repair_unusable_without_human_check",
+        "details": {
+          "needsReview": [
+            "source_text_quality"
+          ],
+          "issues": [
+            "source_watermark_cleanup_needed",
+            "question_text_typo_suspected"
+          ]
+        }
+      },
+      {
+        "questionNumber": "42",
+        "reason": "source_repair_unusable_without_human_check",
+        "details": {
+          "needsReview": [
+            "source_text_quality"
+          ],
+          "issues": [
+            "source_watermark_cleanup_needed",
+            "question_text_typo_suspected"
+          ]
+        }
+      },
+      {
+        "questionNumber": "43",
+        "reason": "source_repair_unusable_without_human_check",
+        "details": {
+          "needsReview": [
+            "source_text_quality"
+          ],
+          "issues": [
+            "question_text_typo_suspected"
+          ]
+        }
+      },
+      {
+        "questionNumber": "2",
+        "reason": "source_repair_unresolved_analysis_issues",
+        "details": {
+          "needsReview": [],
+          "issues": [
+            "source_option_extraction_ambiguous"
+          ]
+        }
+      },
+      {
+        "questionNumber": "6",
+        "reason": "source_repair_unresolved_analysis_issues",
+        "details": {
+          "needsReview": [],
+          "issues": [
+            "solution_answer_copy_error_fixed_to_D"
+          ]
+        }
+      },
+      {
+        "questionNumber": "7",
+        "reason": "source_repair_unresolved_analysis_issues",
+        "details": {
+          "needsReview": [],
+          "issues": [
+            "source_watermark_cleanup_needed"
+          ]
+        }
+      },
+      {
+        "questionNumber": "10",
+        "reason": "source_repair_unresolved_analysis_issues",
+        "details": {
+          "needsReview": [],
+          "issues": [
+            "source_watermark_cleanup_needed"
+          ]
+        }
+      },
+      {
+        "questionNumber": "12",
+        "reason": "source_repair_unresolved_analysis_issues",
+        "details": {
+          "needsReview": [],
+          "issues": [
+            "source_watermark_cleanup_needed"
+          ]
+        }
+      },
+      {
+        "questionNumber": "17",
+        "reason": "source_repair_unresolved_analysis_issues",
+        "details": {
+          "needsReview": [],
+          "issues": [
+            "source_watermark_cleanup_needed"
+          ]
+        }
+      },
+      {
+        "questionNumber": "20",
+        "reason": "source_repair_unresolved_analysis_issues",
+        "details": {
+          "needsReview": [],
+          "issues": [
+            "source_watermark_cleanup_needed"
+          ]
+        }
+      },
+      {
+        "questionNumber": "22",
+        "reason": "source_repair_unresolved_analysis_issues",
+        "details": {
+          "needsReview": [],
+          "issues": [
+            "source_watermark_cleanup_needed"
+          ]
+        }
+      },
+      {
+        "questionNumber": "25",
+        "reason": "source_repair_unresolved_analysis_issues",
+        "details": {
+          "needsReview": [],
+          "issues": [
+            "source_watermark_cleanup_needed"
+          ]
+        }
+      },
+      {
+        "questionNumber": "27",
+        "reason": "source_repair_unresolved_analysis_issues",
+        "details": {
+          "needsReview": [],
+          "issues": [
+            "source_watermark_cleanup_needed"
+          ]
+        }
+      },
+      {
+        "questionNumber": "28",
+        "reason": "source_repair_unresolved_analysis_issues",
+        "details": {
+          "needsReview": [],
+          "issues": [
+            "solution_chunk_missing_answer_reconstructed"
+          ]
+        }
+      },
+      {
+        "questionNumber": "30",
+        "reason": "source_repair_unresolved_analysis_issues",
+        "details": {
+          "needsReview": [],
+          "issues": [
+            "source_watermark_cleanup_needed"
+          ]
+        }
+      },
+      {
+        "questionNumber": "35",
+        "reason": "source_repair_unresolved_analysis_issues",
+        "details": {
+          "needsReview": [],
+          "issues": [
+            "source_watermark_cleanup_needed"
+          ]
+        }
+      },
+      {
+        "questionNumber": "37",
+        "reason": "source_repair_unresolved_analysis_issues",
+        "details": {
+          "needsReview": [],
+          "issues": [
+            "source_watermark_cleanup_needed"
+          ]
+        }
+      },
+      {
+        "questionNumber": "40",
+        "reason": "source_repair_unresolved_analysis_issues",
+        "details": {
+          "needsReview": [],
+          "issues": [
+            "source_watermark_cleanup_needed"
+          ]
+        }
+      },
+      {
+        "questionNumber": "48",
+        "reason": "source_repair_unresolved_analysis_issues",
+        "details": {
+          "needsReview": [],
+          "issues": [
+            "source_watermark_cleanup_needed"
+          ]
+        }
+      }
+    ]
+  },
+  "questions": [
+    {
+      "questionNumber": "1",
+      "language": "en",
+      "promptText": "If sets A={1,2} and B={1,2,3}, then:",
+      "options": [
+        {
+          "id": "A",
+          "text": "B⊆AB⊆A"
+        },
+        {
+          "id": "B",
+          "text": "A∈BA∈B"
+        },
+        {
+          "id": "C",
+          "text": "A⊆BA⊆B"
+        },
+        {
+          "id": "D",
+          "text": "A=BA=B"
+        }
+      ],
+      "correctAnswer": "C",
+      "explanation": "Answer: C Steps: All elements of set A are contained in set B, so A is a subset of B, i.e., A ⊆ B.",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-SET-001"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "set"
+      ],
+      "analysis": {
+        "difficulty": "basic",
+        "cognitiveSkill": "concept_discrimination",
+        "difficultyEvidence": "Direct application or concept identification with low calculation load.",
+        "questionForm": "calculation_application",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 6,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "calculation_application",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 1,
+        "calculationLoad": "light",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "concept_confusion"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "calculation_application",
+          "light",
+          "source_text_quality_flagged"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.95,
+          "evidence": [
+            {
+              "code": "M-SET-001",
+              "title": "集合的定义、运算及表示方法",
+              "score": 8
+            },
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 1
+            },
+            {
+              "code": "M-SEQ-001",
+              "title": "数列",
+              "score": 1
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.213Z",
+          "candidateTopicCodes": [
+            "M-SET-001"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-SET-001",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 36,
+          "optionCharCount": 27,
+          "formulaCount": 6,
+          "operationCount": 1,
+          "requiresAlgebraTransform": false,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-SET-001",
+          "set",
+          "subset",
+          "element",
+          "intersection",
+          "union",
+          "complement",
+          "empty_set",
+          "interval",
+          "set_operation",
+          "sequence"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "calculation_application",
+          "cognitiveSkill": "concept_discrimination",
+          "difficultyBand": "basic",
+          "readingLoad": "medium",
+          "calculationLoad": "light",
+          "reasoningStepCount": 1,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 6,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "calculation_application",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "concept_confusion"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 36,
+            "optionCharCount": 27,
+            "formulaCount": 6,
+            "operationCount": 1,
+            "requiresAlgebraTransform": false,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "calculation_application",
+            "light",
+            "source_text_quality_flagged"
+          ],
+          "profileConfidence": "high",
+          "profileIssues": []
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-SET-001"
+          ],
+          "qualityFlags": [],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "1",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "3",
+      "language": "en",
+      "promptText": "The solution set of the quadratic inequality x^2−5x+4<0x2−5x+4<0 is:",
+      "options": [
+        {
+          "id": "A",
+          "text": "(1,4)(1,4)"
+        },
+        {
+          "id": "B",
+          "text": "(−∞,−4)∪(−1,+∞)"
+        },
+        {
+          "id": "C",
+          "text": "(−4,−1)"
+        },
+        {
+          "id": "D",
+          "text": "(−∞,1)∪(4,+∞)"
+        }
+      ],
+      "correctAnswer": "A",
+      "explanation": "Answer: A Steps: The inequality x²−5x+4<0 can be factored as (x−1)(x−4)<0. Solving yields 1<x<4, i.e., the interval (1,4).",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-INEQ-001"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "set"
+      ],
+      "analysis": {
+        "difficulty": "medium",
+        "cognitiveSkill": "concept_discrimination",
+        "difficultyEvidence": "Requires standard formula selection and one to two calculation steps.",
+        "questionForm": "calculation_application",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 1,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "calculation_application",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 1,
+        "calculationLoad": "light",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "concept_confusion"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "calculation_application",
+          "light",
+          "source_text_quality_flagged"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.95,
+          "evidence": [
+            {
+              "code": "M-INEQ-001",
+              "title": "不等式的基本性质与解法",
+              "score": 8
+            },
+            {
+              "code": "M-SET-001",
+              "title": "集合的定义、运算及表示方法",
+              "score": 2
+            },
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 1
+            }
+          ]
+        },
+        "readingLoad": "low",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.214Z",
+          "candidateTopicCodes": [
+            "M-INEQ-001"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-INEQ-001",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 68,
+          "optionCharCount": 48,
+          "formulaCount": 14,
+          "operationCount": 1,
+          "requiresAlgebraTransform": false,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-INEQ-001",
+          "inequality",
+          "solution_set",
+          "interval",
+          "quadratic_inequality",
+          "rational_inequality",
+          "absolute_value",
+          "set_operation",
+          "inequality_solving",
+          "sequence"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "calculation_application",
+          "cognitiveSkill": "concept_discrimination",
+          "difficultyBand": "medium",
+          "readingLoad": "low",
+          "calculationLoad": "light",
+          "reasoningStepCount": 1,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 1,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "calculation_application",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "concept_confusion"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 68,
+            "optionCharCount": 48,
+            "formulaCount": 14,
+            "operationCount": 1,
+            "requiresAlgebraTransform": false,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "calculation_application",
+            "light",
+            "source_text_quality_flagged"
+          ],
+          "profileConfidence": "medium",
+          "profileIssues": [
+            "formula_duplicate_or_latex_loss"
+          ]
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-INEQ-001"
+          ],
+          "qualityFlags": [
+            "formula_duplicate_or_latex_loss"
+          ],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "3",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "4",
+      "language": "en",
+      "promptText": "The domain of the function y=1x+1y=x+1 1 is:",
+      "options": [
+        {
+          "id": "A",
+          "text": "(0,+∞)"
+        },
+        {
+          "id": "B",
+          "text": "[−1,+∞)"
+        },
+        {
+          "id": "C",
+          "text": "(−1,+∞)"
+        },
+        {
+          "id": "D",
+          "text": "(−∞,−1)"
+        }
+      ],
+      "correctAnswer": "C",
+      "explanation": "Answer: C Steps: For the function y = 1/(x + 1), x + 1 > 0 implies x > −1. The domain is (−1, +∞).",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-FUNC-001"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "function"
+      ],
+      "analysis": {
+        "difficulty": "basic",
+        "cognitiveSkill": "concept_discrimination",
+        "difficultyEvidence": "Direct application or concept identification with low calculation load.",
+        "questionForm": "calculation_application",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 1,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "calculation_application",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 2,
+        "calculationLoad": "light",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "calculation_application",
+          "light",
+          "source_text_quality_flagged"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.87,
+          "evidence": [
+            {
+              "code": "M-FUNC-001",
+              "title": "函数的概念与性质",
+              "score": 4
+            },
+            {
+              "code": "M-INEQ-001",
+              "title": "不等式的基本性质与解法",
+              "score": 1
+            },
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 1
+            }
+          ]
+        },
+        "readingLoad": "low",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.214Z",
+          "candidateTopicCodes": [
+            "M-FUNC-001"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-FUNC-001",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 44,
+          "optionCharCount": 30,
+          "formulaCount": 14,
+          "operationCount": 1,
+          "requiresAlgebraTransform": false,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-FUNC-001",
+          "function",
+          "domain",
+          "range",
+          "monotonicity",
+          "parity",
+          "inverse_function",
+          "piecewise_function",
+          "inequality_solving",
+          "domain_restriction",
+          "function_property",
+          "sequence"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "calculation_application",
+          "cognitiveSkill": "concept_discrimination",
+          "difficultyBand": "basic",
+          "readingLoad": "low",
+          "calculationLoad": "light",
+          "reasoningStepCount": 2,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 1,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "calculation_application",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 44,
+            "optionCharCount": 30,
+            "formulaCount": 14,
+            "operationCount": 1,
+            "requiresAlgebraTransform": false,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "calculation_application",
+            "light",
+            "source_text_quality_flagged"
+          ],
+          "profileConfidence": "medium",
+          "profileIssues": [
+            "formula_duplicate_or_latex_loss"
+          ]
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-FUNC-001"
+          ],
+          "qualityFlags": [
+            "formula_duplicate_or_latex_loss"
+          ],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "4",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "5",
+      "language": "en",
+      "promptText": "If {an}{an } is an arithmetic sequence with first term a1=2a1 =2 and common difference d=3d=3, then a100=a100 =",
+      "options": [
+        {
+          "id": "A",
+          "text": "299"
+        },
+        {
+          "id": "B",
+          "text": "305"
+        },
+        {
+          "id": "C",
+          "text": "302"
+        },
+        {
+          "id": "D",
+          "text": "298"
+        }
+      ],
+      "correctAnswer": "A",
+      "explanation": "Answer: A Step: Common Term Formula for Arithmetic Sequences Substituting yields: a₁₀₀ = 2 + 99 × 3 = 299 a_n = a₁ + (n−1)d",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-SEQ-001"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "sequence"
+      ],
+      "analysis": {
+        "difficulty": "medium",
+        "cognitiveSkill": "standard_application",
+        "difficultyEvidence": "Requires standard formula selection and one to two calculation steps.",
+        "questionForm": "calculation_application",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 4,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "calculation_application",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 2,
+        "calculationLoad": "medium",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "calculation_application",
+          "medium",
+          "source_text_quality_flagged"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.95,
+          "evidence": [
+            {
+              "code": "M-SEQ-001",
+              "title": "数列",
+              "score": 9
+            },
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 2
+            },
+            {
+              "code": "M-GEO-002",
+              "title": "空间几何",
+              "score": 1
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.214Z",
+          "candidateTopicCodes": [
+            "M-SEQ-001"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-SEQ-001",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 111,
+          "optionCharCount": 15,
+          "formulaCount": 11,
+          "operationCount": 4,
+          "requiresAlgebraTransform": true,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-SEQ-001",
+          "sequence",
+          "arithmetic_sequence",
+          "geometric_sequence",
+          "common_difference",
+          "common_ratio",
+          "sum_formula"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "calculation_application",
+          "cognitiveSkill": "standard_application",
+          "difficultyBand": "medium",
+          "readingLoad": "medium",
+          "calculationLoad": "medium",
+          "reasoningStepCount": 2,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 4,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "calculation_application",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 111,
+            "optionCharCount": 15,
+            "formulaCount": 11,
+            "operationCount": 4,
+            "requiresAlgebraTransform": true,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "calculation_application",
+            "medium",
+            "source_text_quality_flagged"
+          ],
+          "profileConfidence": "medium",
+          "profileIssues": [
+            "formula_duplicate_or_latex_loss"
+          ]
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-SEQ-001"
+          ],
+          "qualityFlags": [
+            "formula_duplicate_or_latex_loss"
+          ],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "5",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "8",
+      "language": "en",
+      "promptText": "Which of the following functions is odda",
+      "options": [
+        {
+          "id": "A",
+          "text": "y=cos⁡xy=cosx"
+        },
+        {
+          "id": "B",
+          "text": "y=x+x3y=x+x^3"
+        },
+        {
+          "id": "C",
+          "text": "y=x4y=x^4"
+        },
+        {
+          "id": "D",
+          "text": "y=xsin⁡xy=xsinx"
+        }
+      ],
+      "correctAnswer": "B",
+      "explanation": "Answer: B Steps: An odd function satisfies f(−x) = −f(x). Testing shows y = x + x³ is an odd function.",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-FUNC-001"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "function"
+      ],
+      "analysis": {
+        "difficulty": "basic",
+        "cognitiveSkill": "concept_discrimination",
+        "difficultyEvidence": "Direct application or concept identification with low calculation load.",
+        "questionForm": "concept_judgement",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 1,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "concept_judgement",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 2,
+        "calculationLoad": "none",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "concept_judgement",
+          "none",
+          "source_text_quality_flagged"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.87,
+          "evidence": [
+            {
+              "code": "M-FUNC-001",
+              "title": "函数的概念与性质",
+              "score": 4
+            },
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 2
+            },
+            {
+              "code": "M-SEQ-001",
+              "title": "数列",
+              "score": 1
+            }
+          ]
+        },
+        "readingLoad": "low",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.215Z",
+          "candidateTopicCodes": [
+            "M-FUNC-001"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-FUNC-001",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 40,
+          "optionCharCount": 53,
+          "formulaCount": 16,
+          "operationCount": 0,
+          "requiresAlgebraTransform": false,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-FUNC-001",
+          "function",
+          "domain",
+          "range",
+          "monotonicity",
+          "parity",
+          "inverse_function",
+          "piecewise_function",
+          "function_property",
+          "trigonometry",
+          "sequence"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "concept_judgement",
+          "cognitiveSkill": "concept_discrimination",
+          "difficultyBand": "basic",
+          "readingLoad": "low",
+          "calculationLoad": "none",
+          "reasoningStepCount": 2,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 1,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "concept_judgement",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 40,
+            "optionCharCount": 53,
+            "formulaCount": 16,
+            "operationCount": 0,
+            "requiresAlgebraTransform": false,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "concept_judgement",
+            "none",
+            "source_text_quality_flagged"
+          ],
+          "profileConfidence": "medium",
+          "profileIssues": [
+            "ocr_spacing_or_suffix_artifact"
+          ]
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-FUNC-001"
+          ],
+          "qualityFlags": [
+            "ocr_spacing_or_suffix_artifact"
+          ],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "8",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "9",
+      "language": "en",
+      "promptText": "The inverse function of y=x3y=x^3 is:",
+      "options": [
+        {
+          "id": "A",
+          "text": "y=xy=x"
+        },
+        {
+          "id": "B",
+          "text": "y=3xxy=3xx"
+        },
+        {
+          "id": "C",
+          "text": "y=x/3y=x/3"
+        },
+        {
+          "id": "D",
+          "text": "y=x3y=x^3"
+        }
+      ],
+      "correctAnswer": "A",
+      "explanation": "Answer: A (assuming √x denotes the cube root) Step: The inverse function of y = x³ is y = 3x, that is, y = x¹/³.",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-FUNC-001"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "function"
+      ],
+      "analysis": {
+        "difficulty": "medium",
+        "cognitiveSkill": "concept_discrimination",
+        "difficultyEvidence": "Requires standard formula selection and one to two calculation steps.",
+        "questionForm": "calculation_application",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 1,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "calculation_application",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 2,
+        "calculationLoad": "light",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "calculation_application",
+          "light",
+          "source_text_quality_flagged"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.87,
+          "evidence": [
+            {
+              "code": "M-FUNC-001",
+              "title": "函数的概念与性质",
+              "score": 4
+            },
+            {
+              "code": "M-GEO-002",
+              "title": "空间几何",
+              "score": 2
+            },
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 1
+            }
+          ]
+        },
+        "readingLoad": "low",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.215Z",
+          "candidateTopicCodes": [
+            "M-FUNC-001"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-FUNC-001",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 37,
+          "optionCharCount": 38,
+          "formulaCount": 19,
+          "operationCount": 1,
+          "requiresAlgebraTransform": false,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-FUNC-001",
+          "function",
+          "domain",
+          "range",
+          "monotonicity",
+          "parity",
+          "inverse_function",
+          "piecewise_function",
+          "function_property",
+          "sequence"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "calculation_application",
+          "cognitiveSkill": "concept_discrimination",
+          "difficultyBand": "medium",
+          "readingLoad": "low",
+          "calculationLoad": "light",
+          "reasoningStepCount": 2,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 1,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "calculation_application",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 37,
+            "optionCharCount": 38,
+            "formulaCount": 19,
+            "operationCount": 1,
+            "requiresAlgebraTransform": false,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "calculation_application",
+            "light",
+            "source_text_quality_flagged"
+          ],
+          "profileConfidence": "high",
+          "profileIssues": []
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-FUNC-001"
+          ],
+          "qualityFlags": [],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "9",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "11",
+      "language": "en",
+      "promptText": "Which point lies in the third quadranta",
+      "options": [
+        {
+          "id": "A",
+          "text": "(−1,2)"
+        },
+        {
+          "id": "B",
+          "text": "(1,2)(1,2)"
+        },
+        {
+          "id": "C",
+          "text": "(1,−2)"
+        },
+        {
+          "id": "D",
+          "text": "(−1,−2)"
+        }
+      ],
+      "correctAnswer": "D",
+      "explanation": "Answer: D Steps: The third quadrant requires x < 0 and y < 0. The point (-1, -2) satisfies these conditions.",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-GEO-001"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "geometry"
+      ],
+      "analysis": {
+        "difficulty": "basic",
+        "cognitiveSkill": "standard_application",
+        "difficultyEvidence": "Direct application or concept identification with low calculation load.",
+        "questionForm": "concept_judgement",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 1,
+          "hasScenario": true,
+          "hasFormula": false,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "concept_judgement",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 2,
+        "calculationLoad": "medium",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "concept_judgement",
+          "medium",
+          "source_text_quality_flagged"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.87,
+          "evidence": [
+            {
+              "code": "M-GEO-001",
+              "title": "平面解析几何",
+              "score": 4
+            },
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 2
+            },
+            {
+              "code": "M-INEQ-001",
+              "title": "不等式的基本性质与解法",
+              "score": 1
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.215Z",
+          "candidateTopicCodes": [
+            "M-GEO-001"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-GEO-001",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 39,
+          "optionCharCount": 32,
+          "formulaCount": 4,
+          "operationCount": 2,
+          "requiresAlgebraTransform": true,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-GEO-001",
+          "analytic_geometry",
+          "line_equation",
+          "slope",
+          "circle_equation",
+          "parabola",
+          "hyperbola",
+          "distance_formula",
+          "inequality_solving",
+          "sequence"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "concept_judgement",
+          "cognitiveSkill": "standard_application",
+          "difficultyBand": "basic",
+          "readingLoad": "medium",
+          "calculationLoad": "medium",
+          "reasoningStepCount": 2,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 1,
+            "hasScenario": true,
+            "hasFormula": false,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "concept_judgement",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 39,
+            "optionCharCount": 32,
+            "formulaCount": 4,
+            "operationCount": 2,
+            "requiresAlgebraTransform": true,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "concept_judgement",
+            "medium",
+            "source_text_quality_flagged"
+          ],
+          "profileConfidence": "medium",
+          "profileIssues": [
+            "ocr_spacing_or_suffix_artifact"
+          ]
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-GEO-001"
+          ],
+          "qualityFlags": [
+            "ocr_spacing_or_suffix_artifact"
+          ],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "11",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "13",
+      "language": "en",
+      "promptText": "If aa, bb, and cc form an arithmetic sequence and satisfy a+c=20, then b=b=",
+      "options": [
+        {
+          "id": "A",
+          "text": "20"
+        },
+        {
+          "id": "B",
+          "text": "10"
+        },
+        {
+          "id": "C",
+          "text": "5"
+        },
+        {
+          "id": "D",
+          "text": "0"
+        }
+      ],
+      "correctAnswer": "B",
+      "explanation": "Answer: B Steps: Since a, b, c form an arithmetic sequence, we have 2b = a + c = 20. Thus, b = 10.",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-SEQ-001"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "sequence"
+      ],
+      "analysis": {
+        "difficulty": "medium",
+        "cognitiveSkill": "standard_application",
+        "difficultyEvidence": "Requires standard formula selection and one to two calculation steps.",
+        "questionForm": "calculation_application",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 6,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "calculation_application",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 2,
+        "calculationLoad": "medium",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "calculation_application",
+          "medium",
+          "source_text_quality_flagged"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.95,
+          "evidence": [
+            {
+              "code": "M-SEQ-001",
+              "title": "数列",
+              "score": 5
+            },
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 2
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.215Z",
+          "candidateTopicCodes": [
+            "M-SEQ-001"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-SEQ-001",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 75,
+          "optionCharCount": 9,
+          "formulaCount": 8,
+          "operationCount": 3,
+          "requiresAlgebraTransform": true,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-SEQ-001",
+          "sequence",
+          "arithmetic_sequence",
+          "geometric_sequence",
+          "common_difference",
+          "common_ratio",
+          "sum_formula",
+          "trigonometry"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "calculation_application",
+          "cognitiveSkill": "standard_application",
+          "difficultyBand": "medium",
+          "readingLoad": "medium",
+          "calculationLoad": "medium",
+          "reasoningStepCount": 2,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 6,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "calculation_application",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 75,
+            "optionCharCount": 9,
+            "formulaCount": 8,
+            "operationCount": 3,
+            "requiresAlgebraTransform": true,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "calculation_application",
+            "medium",
+            "source_text_quality_flagged"
+          ],
+          "profileConfidence": "high",
+          "profileIssues": []
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-SEQ-001"
+          ],
+          "qualityFlags": [],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "13",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "14",
+      "language": "en",
+      "promptText": "The inclination angle of the line y=3x+10y=3 x+10 is:",
+      "options": [
+        {
+          "id": "A",
+          "text": "45∘ 45∘"
+        },
+        {
+          "id": "B",
+          "text": "30∘ 30∘"
+        },
+        {
+          "id": "C",
+          "text": "120∘ 120∘"
+        },
+        {
+          "id": "D",
+          "text": "60∘ 60∘"
+        }
+      ],
+      "correctAnswer": "D",
+      "explanation": "Answer: D Steps: The slope of the line is k=3. The angle θ satisfies tanθ=3, yielding θ=60°.",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-GEO-001"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "geometry"
+      ],
+      "analysis": {
+        "difficulty": "medium",
+        "cognitiveSkill": "standard_application",
+        "difficultyEvidence": "Requires standard formula selection and one to two calculation steps.",
+        "questionForm": "calculation_application",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 1,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "calculation_application",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 2,
+        "calculationLoad": "medium",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "calculation_application",
+          "medium",
+          "source_text_quality_flagged"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.87,
+          "evidence": [
+            {
+              "code": "M-GEO-001",
+              "title": "平面解析几何",
+              "score": 4
+            },
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 2
+            },
+            {
+              "code": "M-SEQ-001",
+              "title": "数列",
+              "score": 1
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.215Z",
+          "candidateTopicCodes": [
+            "M-GEO-001"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-GEO-001",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 53,
+          "optionCharCount": 33,
+          "formulaCount": 8,
+          "operationCount": 3,
+          "requiresAlgebraTransform": true,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-GEO-001",
+          "analytic_geometry",
+          "line_equation",
+          "slope",
+          "circle_equation",
+          "parabola",
+          "hyperbola",
+          "distance_formula",
+          "trigonometry",
+          "sequence",
+          "vector"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "calculation_application",
+          "cognitiveSkill": "standard_application",
+          "difficultyBand": "medium",
+          "readingLoad": "medium",
+          "calculationLoad": "medium",
+          "reasoningStepCount": 2,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 1,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "calculation_application",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 53,
+            "optionCharCount": 33,
+            "formulaCount": 8,
+            "operationCount": 3,
+            "requiresAlgebraTransform": true,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "calculation_application",
+            "medium",
+            "source_text_quality_flagged"
+          ],
+          "profileConfidence": "high",
+          "profileIssues": []
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-GEO-001"
+          ],
+          "qualityFlags": [],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "14",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "16",
+      "language": "en",
+      "promptText": "If point P(1,y) lies on the terminal side of angle αα and tan⁡α=2tanα=2, then y=y=",
+      "options": [
+        {
+          "id": "A",
+          "text": "2"
+        },
+        {
+          "id": "B",
+          "text": "33"
+        },
+        {
+          "id": "C",
+          "text": "1221"
+        },
+        {
+          "id": "D",
+          "text": "1"
+        }
+      ],
+      "correctAnswer": "A",
+      "explanation": "Answer: A Steps: tanα = y/x = y/1 = 2 tanα = x/y = 1 y/2, so y = 2.",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-FUNC-002"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "geometry"
+      ],
+      "analysis": {
+        "difficulty": "basic",
+        "cognitiveSkill": "standard_application",
+        "difficultyEvidence": "Direct application or concept identification with low calculation load.",
+        "questionForm": "calculation_application",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 4,
+          "hasScenario": true,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "calculation_application",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 2,
+        "calculationLoad": "heavy",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "calculation_application",
+          "heavy",
+          "source_text_quality_flagged"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.71,
+          "evidence": [
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 2
+            },
+            {
+              "code": "M-SEQ-001",
+              "title": "数列",
+              "score": 1
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.215Z",
+          "candidateTopicCodes": [
+            "M-FUNC-002"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-FUNC-002",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 82,
+          "optionCharCount": 11,
+          "formulaCount": 23,
+          "operationCount": 8,
+          "requiresAlgebraTransform": true,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-FUNC-002",
+          "exponential_function",
+          "logarithmic_function",
+          "trigonometric_function",
+          "power_function",
+          "identity_transform",
+          "trigonometry",
+          "sequence"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "calculation_application",
+          "cognitiveSkill": "standard_application",
+          "difficultyBand": "basic",
+          "readingLoad": "medium",
+          "calculationLoad": "heavy",
+          "reasoningStepCount": 2,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 4,
+            "hasScenario": true,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "calculation_application",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 82,
+            "optionCharCount": 11,
+            "formulaCount": 23,
+            "operationCount": 8,
+            "requiresAlgebraTransform": true,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "calculation_application",
+            "heavy",
+            "source_text_quality_flagged"
+          ],
+          "profileConfidence": "high",
+          "profileIssues": []
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-FUNC-002"
+          ],
+          "qualityFlags": [],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "16",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "18",
+      "language": "en",
+      "promptText": "A circle has center (−3,2) and radius 44. Its equation is:",
+      "options": [
+        {
+          "id": "A",
+          "text": "(x+3)2+(y−2)2=16"
+        },
+        {
+          "id": "B",
+          "text": "(x−3)2+(y+2)2=16"
+        },
+        {
+          "id": "C",
+          "text": "(x−3)2+(y+2)2=4"
+        },
+        {
+          "id": "D",
+          "text": "(x+3)2+(y−2)2=4"
+        }
+      ],
+      "correctAnswer": "A",
+      "explanation": "Answer: A Steps: Center (−3,2), radius 4, equation of circle (x+3)²+(y−2)²=16.",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-GEO-001"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "geometry"
+      ],
+      "analysis": {
+        "difficulty": "basic",
+        "cognitiveSkill": "standard_application",
+        "difficultyEvidence": "Direct application or concept identification with low calculation load.",
+        "questionForm": "calculation_application",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 4,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "calculation_application",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 2,
+        "calculationLoad": "heavy",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "calculation_application",
+          "heavy"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.95,
+          "evidence": [
+            {
+              "code": "M-GEO-001",
+              "title": "平面解析几何",
+              "score": 6
+            },
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 2
+            },
+            {
+              "code": "M-SEQ-001",
+              "title": "数列",
+              "score": 1
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.215Z",
+          "candidateTopicCodes": [
+            "M-GEO-001"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-GEO-001",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 58,
+          "optionCharCount": 65,
+          "formulaCount": 15,
+          "operationCount": 8,
+          "requiresAlgebraTransform": true,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-GEO-001",
+          "analytic_geometry",
+          "line_equation",
+          "slope",
+          "circle_equation",
+          "parabola",
+          "hyperbola",
+          "distance_formula",
+          "sequence"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "calculation_application",
+          "cognitiveSkill": "standard_application",
+          "difficultyBand": "basic",
+          "readingLoad": "medium",
+          "calculationLoad": "heavy",
+          "reasoningStepCount": 2,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 4,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "calculation_application",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 58,
+            "optionCharCount": 65,
+            "formulaCount": 15,
+            "operationCount": 8,
+            "requiresAlgebraTransform": true,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "calculation_application",
+            "heavy"
+          ],
+          "profileConfidence": "high",
+          "profileIssues": []
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-GEO-001"
+          ],
+          "qualityFlags": [],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "18",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "19",
+      "language": "en",
+      "promptText": "The distance from P(−1,−1) to Q(1,1) is:",
+      "options": [
+        {
+          "id": "A",
+          "text": "2222"
+        },
+        {
+          "id": "B",
+          "text": "2"
+        },
+        {
+          "id": "C",
+          "text": "22"
+        },
+        {
+          "id": "D",
+          "text": "4"
+        }
+      ],
+      "correctAnswer": "A",
+      "explanation": "Answer: A Steps: Distance formula: (1−(−1))² + (1−(−1))² = 4 + 4 = 22.",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-FUNC-002"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "geometry"
+      ],
+      "analysis": {
+        "difficulty": "medium",
+        "cognitiveSkill": "standard_application",
+        "difficultyEvidence": "Requires standard formula selection and one to two calculation steps.",
+        "questionForm": "calculation_application",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 3,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "calculation_application",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 2,
+        "calculationLoad": "medium",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "calculation_application",
+          "medium"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.71,
+          "evidence": [
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 2
+            },
+            {
+              "code": "M-SEQ-001",
+              "title": "数列",
+              "score": 1
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.215Z",
+          "candidateTopicCodes": [
+            "M-FUNC-002"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-FUNC-002",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 40,
+          "optionCharCount": 11,
+          "formulaCount": 4,
+          "operationCount": 2,
+          "requiresAlgebraTransform": true,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-FUNC-002",
+          "exponential_function",
+          "logarithmic_function",
+          "trigonometric_function",
+          "power_function",
+          "identity_transform",
+          "trigonometry",
+          "sequence",
+          "analytic_geometry"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "calculation_application",
+          "cognitiveSkill": "standard_application",
+          "difficultyBand": "medium",
+          "readingLoad": "medium",
+          "calculationLoad": "medium",
+          "reasoningStepCount": 2,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 3,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "calculation_application",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 40,
+            "optionCharCount": 11,
+            "formulaCount": 4,
+            "operationCount": 2,
+            "requiresAlgebraTransform": true,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "calculation_application",
+            "medium"
+          ],
+          "profileConfidence": "high",
+          "profileIssues": []
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-FUNC-002"
+          ],
+          "qualityFlags": [],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "19",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "21",
+      "language": "en",
+      "promptText": "Given the circle’s equation x^2+y^2+2x−2y=0x2+y^2+2x−2y=0, its radius is:",
+      "options": [
+        {
+          "id": "A",
+          "text": "22"
+        },
+        {
+          "id": "B",
+          "text": "1"
+        },
+        {
+          "id": "C",
+          "text": "2"
+        },
+        {
+          "id": "D",
+          "text": "1221"
+        }
+      ],
+      "correctAnswer": "A",
+      "explanation": "Answer: A Steps: The equation of the circle is given by the formula (x+1)² + (y−1)² = 2, so the radius is r = 2.",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-GEO-001"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "geometry"
+      ],
+      "analysis": {
+        "difficulty": "basic",
+        "cognitiveSkill": "standard_application",
+        "difficultyEvidence": "Direct application or concept identification with low calculation load.",
+        "questionForm": "calculation_application",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 2,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "calculation_application",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 2,
+        "calculationLoad": "heavy",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "calculation_application",
+          "heavy",
+          "source_text_quality_flagged"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.87,
+          "evidence": [
+            {
+              "code": "M-GEO-001",
+              "title": "平面解析几何",
+              "score": 4
+            },
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 2
+            },
+            {
+              "code": "M-SEQ-001",
+              "title": "数列",
+              "score": 1
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.215Z",
+          "candidateTopicCodes": [
+            "M-GEO-001"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-GEO-001",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 73,
+          "optionCharCount": 11,
+          "formulaCount": 13,
+          "operationCount": 7,
+          "requiresAlgebraTransform": true,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-GEO-001",
+          "analytic_geometry",
+          "line_equation",
+          "slope",
+          "circle_equation",
+          "parabola",
+          "hyperbola",
+          "distance_formula",
+          "sequence"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "calculation_application",
+          "cognitiveSkill": "standard_application",
+          "difficultyBand": "basic",
+          "readingLoad": "medium",
+          "calculationLoad": "heavy",
+          "reasoningStepCount": 2,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 2,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "calculation_application",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 73,
+            "optionCharCount": 11,
+            "formulaCount": 13,
+            "operationCount": 7,
+            "requiresAlgebraTransform": true,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "calculation_application",
+            "heavy",
+            "source_text_quality_flagged"
+          ],
+          "profileConfidence": "medium",
+          "profileIssues": [
+            "formula_duplicate_or_latex_loss"
+          ]
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-GEO-001"
+          ],
+          "qualityFlags": [
+            "formula_duplicate_or_latex_loss"
+          ],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "21",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "23",
+      "language": "en",
+      "promptText": "Given the first three terms of a geometric sequence are 1,2,41,2,4, the general term formula is:",
+      "options": [
+        {
+          "id": "A",
+          "text": "an=2nan =2n"
+        },
+        {
+          "id": "B",
+          "text": "an=2n−1an =2n−1"
+        },
+        {
+          "id": "C",
+          "text": "an=θan =θ"
+        },
+        {
+          "id": "D",
+          "text": "an=2nan =2n"
+        }
+      ],
+      "correctAnswer": "B",
+      "explanation": "Answer: B Steps: For a geometric sequence, the first term ratio a₁ = 1, common q=2, General term an=1⋅ 2n−1=2n−1.",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-SEQ-001"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "sequence"
+      ],
+      "analysis": {
+        "difficulty": "basic",
+        "cognitiveSkill": "standard_application",
+        "difficultyEvidence": "Direct application or concept identification with low calculation load.",
+        "questionForm": "calculation_application",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 6,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "calculation_application",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 2,
+        "calculationLoad": "medium",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "calculation_application",
+          "medium"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.95,
+          "evidence": [
+            {
+              "code": "M-SEQ-001",
+              "title": "数列",
+              "score": 5
+            },
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 2
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.216Z",
+          "candidateTopicCodes": [
+            "M-SEQ-001"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-SEQ-001",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 96,
+          "optionCharCount": 49,
+          "formulaCount": 12,
+          "operationCount": 4,
+          "requiresAlgebraTransform": true,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-SEQ-001",
+          "sequence",
+          "arithmetic_sequence",
+          "geometric_sequence",
+          "common_difference",
+          "common_ratio",
+          "sum_formula"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "calculation_application",
+          "cognitiveSkill": "standard_application",
+          "difficultyBand": "basic",
+          "readingLoad": "medium",
+          "calculationLoad": "medium",
+          "reasoningStepCount": 2,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 6,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "calculation_application",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 96,
+            "optionCharCount": 49,
+            "formulaCount": 12,
+            "operationCount": 4,
+            "requiresAlgebraTransform": true,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "calculation_application",
+            "medium"
+          ],
+          "profileConfidence": "high",
+          "profileIssues": []
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-SEQ-001"
+          ],
+          "qualityFlags": [],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "23",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "24",
+      "language": "en",
+      "promptText": "Given a>ba>b, which of the following is truea",
+      "options": [
+        {
+          "id": "A",
+          "text": "5a>5b5a>5b"
+        },
+        {
+          "id": "B",
+          "text": "1a<1ba1 <b1"
+        },
+        {
+          "id": "C",
+          "text": "a^2>b2a2>b^2"
+        },
+        {
+          "id": "D",
+          "text": "sin⁡a>sin⁡bsina>sinb"
+        }
+      ],
+      "correctAnswer": "A",
+      "explanation": "Answer: A Step: The exponential function y = 5x^y increases. Since a > b, we have 5^a > 5^b. The other options may not hold true.",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-FUNC-002"
+      ],
+      "blueprintLikeTags": [
+        "single_choice"
+      ],
+      "analysis": {
+        "difficulty": "basic",
+        "cognitiveSkill": "standard_application",
+        "difficultyEvidence": "Direct application or concept identification with low calculation load.",
+        "questionForm": "concept_judgement",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 1,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "concept_judgement",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 2,
+        "calculationLoad": "light",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "concept_judgement",
+          "light",
+          "source_text_quality_flagged"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.87,
+          "evidence": [
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 4
+            },
+            {
+              "code": "M-SEQ-001",
+              "title": "数列",
+              "score": 3
+            },
+            {
+              "code": "M-INEQ-001",
+              "title": "不等式的基本性质与解法",
+              "score": 2
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.216Z",
+          "candidateTopicCodes": [
+            "M-FUNC-002"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-FUNC-002",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 45,
+          "optionCharCount": 56,
+          "formulaCount": 20,
+          "operationCount": 1,
+          "requiresAlgebraTransform": false,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-FUNC-002",
+          "exponential_function",
+          "logarithmic_function",
+          "trigonometric_function",
+          "power_function",
+          "identity_transform",
+          "inequality_solving",
+          "function_property",
+          "exponential_logarithmic",
+          "trigonometry",
+          "sequence",
+          "vector"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "concept_judgement",
+          "cognitiveSkill": "standard_application",
+          "difficultyBand": "basic",
+          "readingLoad": "medium",
+          "calculationLoad": "light",
+          "reasoningStepCount": 2,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 1,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "concept_judgement",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 45,
+            "optionCharCount": 56,
+            "formulaCount": 20,
+            "operationCount": 1,
+            "requiresAlgebraTransform": false,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "concept_judgement",
+            "light",
+            "source_text_quality_flagged"
+          ],
+          "profileConfidence": "medium",
+          "profileIssues": [
+            "ocr_spacing_or_suffix_artifact"
+          ]
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-FUNC-002"
+          ],
+          "qualityFlags": [
+            "ocr_spacing_or_suffix_artifact"
+          ],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "24",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "29",
+      "language": "en",
+      "promptText": "The coordinates of the foci of the hyperbola x^2−y^2=1x2−y^2=1 are:",
+      "options": [
+        {
+          "id": "A",
+          "text": "(0,±2)(0,±2 )"
+        },
+        {
+          "id": "B",
+          "text": "(±2,0)"
+        },
+        {
+          "id": "C",
+          "text": "(±2,0)(±2 ,0)"
+        },
+        {
+          "id": "D",
+          "text": "(0,±2)"
+        }
+      ],
+      "correctAnswer": "C",
+      "explanation": "Answer: C Solve Solve Solve Steps: For the hyperbola x²−y²=1, where a²=b²=1, we have c²=2. The foci are the points (±2,0). are (±2,0).",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-GEO-001"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "geometry"
+      ],
+      "analysis": {
+        "difficulty": "medium",
+        "cognitiveSkill": "standard_application",
+        "difficultyEvidence": "Requires standard formula selection and one to two calculation steps.",
+        "questionForm": "calculation_application",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 1,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "calculation_application",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 2,
+        "calculationLoad": "medium",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "calculation_application",
+          "medium",
+          "source_text_quality_flagged"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.95,
+          "evidence": [
+            {
+              "code": "M-GEO-001",
+              "title": "平面解析几何",
+              "score": 8
+            },
+            {
+              "code": "M-INEQ-001",
+              "title": "不等式的基本性质与解法",
+              "score": 2
+            },
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 2
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.216Z",
+          "candidateTopicCodes": [
+            "M-GEO-001"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-GEO-001",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 67,
+          "optionCharCount": 41,
+          "formulaCount": 9,
+          "operationCount": 3,
+          "requiresAlgebraTransform": true,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-GEO-001",
+          "analytic_geometry",
+          "line_equation",
+          "slope",
+          "circle_equation",
+          "parabola",
+          "hyperbola",
+          "distance_formula",
+          "sequence"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "calculation_application",
+          "cognitiveSkill": "standard_application",
+          "difficultyBand": "medium",
+          "readingLoad": "medium",
+          "calculationLoad": "medium",
+          "reasoningStepCount": 2,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 1,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "calculation_application",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 67,
+            "optionCharCount": 41,
+            "formulaCount": 9,
+            "operationCount": 3,
+            "requiresAlgebraTransform": true,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "calculation_application",
+            "medium",
+            "source_text_quality_flagged"
+          ],
+          "profileConfidence": "medium",
+          "profileIssues": [
+            "formula_duplicate_or_latex_loss"
+          ]
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-GEO-001"
+          ],
+          "qualityFlags": [
+            "formula_duplicate_or_latex_loss"
+          ],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "29",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "33",
+      "language": "en",
+      "promptText": "Which line is perpendicular to the line l:x+y+3=0a",
+      "options": [
+        {
+          "id": "A",
+          "text": "y=x+3y=x+3"
+        },
+        {
+          "id": "B",
+          "text": "y=−2x+1"
+        },
+        {
+          "id": "C",
+          "text": "y=1−xy=1−x"
+        },
+        {
+          "id": "D",
+          "text": "y=2x+1"
+        }
+      ],
+      "correctAnswer": "A",
+      "explanation": "Answer: A Steps: The slope of line ll is k1 = −1. The perpendicular line has a slope k2 = 1. Option A with slope 11 is correct.",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-GEO-001"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "geometry"
+      ],
+      "analysis": {
+        "difficulty": "medium",
+        "cognitiveSkill": "standard_application",
+        "difficultyEvidence": "Requires standard formula selection and one to two calculation steps.",
+        "questionForm": "concept_judgement",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 1,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "concept_judgement",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 2,
+        "calculationLoad": "heavy",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "concept_judgement",
+          "heavy"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.95,
+          "evidence": [
+            {
+              "code": "M-GEO-001",
+              "title": "平面解析几何",
+              "score": 6
+            },
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 2
+            },
+            {
+              "code": "M-SEQ-001",
+              "title": "数列",
+              "score": 1
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.216Z",
+          "candidateTopicCodes": [
+            "M-GEO-001"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-GEO-001",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 50,
+          "optionCharCount": 36,
+          "formulaCount": 15,
+          "operationCount": 8,
+          "requiresAlgebraTransform": true,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-GEO-001",
+          "analytic_geometry",
+          "line_equation",
+          "slope",
+          "circle_equation",
+          "parabola",
+          "hyperbola",
+          "distance_formula",
+          "sequence",
+          "vector"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "concept_judgement",
+          "cognitiveSkill": "standard_application",
+          "difficultyBand": "medium",
+          "readingLoad": "medium",
+          "calculationLoad": "heavy",
+          "reasoningStepCount": 2,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 1,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "concept_judgement",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 50,
+            "optionCharCount": 36,
+            "formulaCount": 15,
+            "operationCount": 8,
+            "requiresAlgebraTransform": true,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "concept_judgement",
+            "heavy"
+          ],
+          "profileConfidence": "high",
+          "profileIssues": []
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-GEO-001"
+          ],
+          "qualityFlags": [],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "33",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "34",
+      "language": "en",
+      "promptText": "Given cos⁡α=−12cosα=−21 and α∈(π2,π)α∈(2π ,π), then sin⁡α2=sin2α =",
+      "options": [
+        {
+          "id": "A",
+          "text": "−32−23"
+        },
+        {
+          "id": "B",
+          "text": "3223"
+        },
+        {
+          "id": "C",
+          "text": "1221"
+        },
+        {
+          "id": "D",
+          "text": "−12−21"
+        }
+      ],
+      "correctAnswer": "B",
+      "explanation": "Answer: B Step : : By half angle Formula sin(α/2) = 1 − cosα² = 1 + 1/2² = = 3² sin(α/2) = 2¹ − cosα = 2¹ + = = 2³ (Positive value).",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-FUNC-002"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "trigonometry"
+      ],
+      "analysis": {
+        "difficulty": "hard",
+        "cognitiveSkill": "standard_application",
+        "difficultyEvidence": "Requires multi-step reasoning or combining formula, algebra and interpretation.",
+        "questionForm": "calculation_application",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 5,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "calculation_application",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 3,
+        "calculationLoad": "heavy",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "calculation_application",
+          "heavy",
+          "source_text_quality_flagged"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.95,
+          "evidence": [
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 5
+            },
+            {
+              "code": "M-SET-001",
+              "title": "集合的定义、运算及表示方法",
+              "score": 1
+            },
+            {
+              "code": "M-SEQ-001",
+              "title": "数列",
+              "score": 1
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.216Z",
+          "candidateTopicCodes": [
+            "M-FUNC-002"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-FUNC-002",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 66,
+          "optionCharCount": 23,
+          "formulaCount": 39,
+          "operationCount": 8,
+          "requiresAlgebraTransform": true,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-FUNC-002",
+          "exponential_function",
+          "logarithmic_function",
+          "trigonometric_function",
+          "power_function",
+          "identity_transform",
+          "trigonometry",
+          "sequence"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "calculation_application",
+          "cognitiveSkill": "standard_application",
+          "difficultyBand": "hard",
+          "readingLoad": "medium",
+          "calculationLoad": "heavy",
+          "reasoningStepCount": 3,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 5,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "calculation_application",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 66,
+            "optionCharCount": 23,
+            "formulaCount": 39,
+            "operationCount": 8,
+            "requiresAlgebraTransform": true,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "calculation_application",
+            "heavy",
+            "source_text_quality_flagged"
+          ],
+          "profileConfidence": "medium",
+          "profileIssues": [
+            "formula_duplicate_or_latex_loss"
+          ]
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-FUNC-002"
+          ],
+          "qualityFlags": [
+            "formula_duplicate_or_latex_loss"
+          ],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "34",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "36",
+      "language": "en",
+      "promptText": "Which function is identical to y=∣x∣y=∣x∣a",
+      "options": [
+        {
+          "id": "A",
+          "text": "y=x2y=x^2"
+        },
+        {
+          "id": "B",
+          "text": "y=(x)2y=(x )2"
+        },
+        {
+          "id": "C",
+          "text": "y=3x3y=3x3"
+        },
+        {
+          "id": "D",
+          "text": "y=xy=x"
+        }
+      ],
+      "correctAnswer": "A",
+      "explanation": "Answer: A Step: y = x² = |x|, identical to y = |x|; other options differ in domain or range.",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-FUNC-001"
+      ],
+      "blueprintLikeTags": [
+        "single_choice"
+      ],
+      "analysis": {
+        "difficulty": "basic",
+        "cognitiveSkill": "standard_application",
+        "difficultyEvidence": "Direct application or concept identification with low calculation load.",
+        "questionForm": "concept_judgement",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 1,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "concept_judgement",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 2,
+        "calculationLoad": "light",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "concept_judgement",
+          "light",
+          "source_text_quality_flagged"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.95,
+          "evidence": [
+            {
+              "code": "M-FUNC-001",
+              "title": "函数的概念与性质",
+              "score": 6
+            },
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 2
+            },
+            {
+              "code": "M-SEQ-001",
+              "title": "数列",
+              "score": 1
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.216Z",
+          "candidateTopicCodes": [
+            "M-FUNC-001"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-FUNC-001",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 42,
+          "optionCharCount": 41,
+          "formulaCount": 14,
+          "operationCount": 1,
+          "requiresAlgebraTransform": false,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-FUNC-001",
+          "function",
+          "domain",
+          "range",
+          "monotonicity",
+          "parity",
+          "inverse_function",
+          "piecewise_function",
+          "domain_restriction",
+          "function_property",
+          "sequence",
+          "vector"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "concept_judgement",
+          "cognitiveSkill": "standard_application",
+          "difficultyBand": "basic",
+          "readingLoad": "medium",
+          "calculationLoad": "light",
+          "reasoningStepCount": 2,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 1,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "concept_judgement",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 42,
+            "optionCharCount": 41,
+            "formulaCount": 14,
+            "operationCount": 1,
+            "requiresAlgebraTransform": false,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "concept_judgement",
+            "light",
+            "source_text_quality_flagged"
+          ],
+          "profileConfidence": "medium",
+          "profileIssues": [
+            "formula_duplicate_or_latex_loss"
+          ]
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-FUNC-001"
+          ],
+          "qualityFlags": [
+            "formula_duplicate_or_latex_loss"
+          ],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "36",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "38",
+      "language": "en",
+      "promptText": "Regarding trigonometric reduction formulas, which of the following is incorrecta",
+      "options": [
+        {
+          "id": "A",
+          "text": "tan⁡(π+α)=−tan⁡αtan(π+α)=−tanα"
+        },
+        {
+          "id": "B",
+          "text": "cos⁡(2π−α)=cos⁡αcos(2π−α)=cosα"
+        },
+        {
+          "id": "C",
+          "text": "sin⁡(π−α)=sin⁡αsin(π−α)=sinα"
+        },
+        {
+          "id": "D",
+          "text": "sin⁡(π2−α)=cos⁡αsin(2π −α)=cosα"
+        }
+      ],
+      "correctAnswer": "A",
+      "explanation": "Answer: A Steps: By the trigonometric identity tan(π+α) = tanα, option A is incorrect.",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-FUNC-002"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "trigonometry"
+      ],
+      "analysis": {
+        "difficulty": "basic",
+        "cognitiveSkill": "standard_application",
+        "difficultyEvidence": "Direct application or concept identification with low calculation load.",
+        "questionForm": "concept_judgement",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 1,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "concept_judgement",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 2,
+        "calculationLoad": "heavy",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "concept_judgement",
+          "heavy"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.95,
+          "evidence": [
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 5
+            },
+            {
+              "code": "M-SEQ-001",
+              "title": "数列",
+              "score": 1
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.216Z",
+          "candidateTopicCodes": [
+            "M-FUNC-002"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-FUNC-002",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 80,
+          "optionCharCount": 122,
+          "formulaCount": 57,
+          "operationCount": 8,
+          "requiresAlgebraTransform": true,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-FUNC-002",
+          "exponential_function",
+          "logarithmic_function",
+          "trigonometric_function",
+          "power_function",
+          "identity_transform",
+          "trigonometry",
+          "sequence",
+          "vector"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "concept_judgement",
+          "cognitiveSkill": "standard_application",
+          "difficultyBand": "basic",
+          "readingLoad": "medium",
+          "calculationLoad": "heavy",
+          "reasoningStepCount": 2,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 1,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "concept_judgement",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 80,
+            "optionCharCount": 122,
+            "formulaCount": 57,
+            "operationCount": 8,
+            "requiresAlgebraTransform": true,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "concept_judgement",
+            "heavy"
+          ],
+          "profileConfidence": "high",
+          "profileIssues": []
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-FUNC-002"
+          ],
+          "qualityFlags": [],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "38",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "39",
+      "language": "en",
+      "promptText": "The directrix of the parabola y^2=−xy2=−x is:",
+      "options": [
+        {
+          "id": "A",
+          "text": "x=12x=21"
+        },
+        {
+          "id": "B",
+          "text": "x=14x=41"
+        },
+        {
+          "id": "C",
+          "text": "x=−14x=−41"
+        },
+        {
+          "id": "D",
+          "text": "x=−12x=−21"
+        }
+      ],
+      "correctAnswer": "B",
+      "explanation": "Answer: B Steps: Parabola y² = −x y² = −x equation is x=p=1/4x=p= .",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-GEO-001"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "geometry"
+      ],
+      "analysis": {
+        "difficulty": "hard",
+        "cognitiveSkill": "standard_application",
+        "difficultyEvidence": "Requires multi-step reasoning or combining formula, algebra and interpretation.",
+        "questionForm": "calculation_application",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 1,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "calculation_application",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 3,
+        "calculationLoad": "heavy",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "calculation_application",
+          "heavy",
+          "source_text_quality_flagged"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.87,
+          "evidence": [
+            {
+              "code": "M-GEO-001",
+              "title": "平面解析几何",
+              "score": 4
+            },
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 2
+            },
+            {
+              "code": "M-SEQ-001",
+              "title": "数列",
+              "score": 1
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.217Z",
+          "candidateTopicCodes": [
+            "M-GEO-001"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-GEO-001",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 45,
+          "optionCharCount": 39,
+          "formulaCount": 18,
+          "operationCount": 8,
+          "requiresAlgebraTransform": true,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-GEO-001",
+          "analytic_geometry",
+          "line_equation",
+          "slope",
+          "circle_equation",
+          "parabola",
+          "hyperbola",
+          "distance_formula",
+          "sequence"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "calculation_application",
+          "cognitiveSkill": "standard_application",
+          "difficultyBand": "hard",
+          "readingLoad": "medium",
+          "calculationLoad": "heavy",
+          "reasoningStepCount": 3,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 1,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "calculation_application",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 45,
+            "optionCharCount": 39,
+            "formulaCount": 18,
+            "operationCount": 8,
+            "requiresAlgebraTransform": true,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "calculation_application",
+            "heavy",
+            "source_text_quality_flagged"
+          ],
+          "profileConfidence": "medium",
+          "profileIssues": [
+            "formula_duplicate_or_latex_loss"
+          ]
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-GEO-001"
+          ],
+          "qualityFlags": [
+            "formula_duplicate_or_latex_loss"
+          ],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "39",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "41",
+      "language": "en",
+      "promptText": "Given a sequence {an}{an } such that a1=1a1 =1 and an=nan =n for n≥2n≥2, then a100=a100 =",
+      "options": [
+        {
+          "id": "A",
+          "text": "1"
+        },
+        {
+          "id": "B",
+          "text": "11001001"
+        },
+        {
+          "id": "C",
+          "text": "100"
+        },
+        {
+          "id": "D",
+          "text": "50"
+        }
+      ],
+      "correctAnswer": "C",
+      "explanation": "Answer: C Step: Given the conditions a₁ = 1 and a_n = n, we obtain a₁₀₀ = 100.",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-SEQ-001"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "sequence"
+      ],
+      "analysis": {
+        "difficulty": "basic",
+        "cognitiveSkill": "standard_application",
+        "difficultyEvidence": "Direct application or concept identification with low calculation load.",
+        "questionForm": "calculation_application",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 4,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "calculation_application",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 2,
+        "calculationLoad": "medium",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "calculation_application",
+          "medium",
+          "source_text_quality_flagged"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.95,
+          "evidence": [
+            {
+              "code": "M-SEQ-001",
+              "title": "数列",
+              "score": 5
+            },
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 2
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.217Z",
+          "candidateTopicCodes": [
+            "M-SEQ-001"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-SEQ-001",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 89,
+          "optionCharCount": 17,
+          "formulaCount": 11,
+          "operationCount": 4,
+          "requiresAlgebraTransform": true,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-SEQ-001",
+          "sequence",
+          "arithmetic_sequence",
+          "geometric_sequence",
+          "common_difference",
+          "common_ratio",
+          "sum_formula",
+          "inequality_solving"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "calculation_application",
+          "cognitiveSkill": "standard_application",
+          "difficultyBand": "basic",
+          "readingLoad": "medium",
+          "calculationLoad": "medium",
+          "reasoningStepCount": 2,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 4,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "calculation_application",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 89,
+            "optionCharCount": 17,
+            "formulaCount": 11,
+            "operationCount": 4,
+            "requiresAlgebraTransform": true,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "calculation_application",
+            "medium",
+            "source_text_quality_flagged"
+          ],
+          "profileConfidence": "medium",
+          "profileIssues": [
+            "formula_duplicate_or_latex_loss"
+          ]
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-SEQ-001"
+          ],
+          "qualityFlags": [
+            "formula_duplicate_or_latex_loss"
+          ],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "41",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "44",
+      "language": "en",
+      "promptText": "A line ll is parallel to l1:x+2y+4=0l1 :x+2y+4=0 and passes through the intersection of l2:x+y+1=0l2 :x+y+1=0 and l3:2x+y−1=0l3 :2x+y−1=0. The equation of ll is:",
+      "options": [
+        {
+          "id": "A",
+          "text": "x+y−7=0"
+        },
+        {
+          "id": "B",
+          "text": "x+y−5=0"
+        },
+        {
+          "id": "C",
+          "text": "x−2y−1=0"
+        },
+        {
+          "id": "D",
+          "text": "x+2y−3=0"
+        }
+      ],
+      "correctAnswer": "D",
+      "explanation": "Answer: D (Assuming line l is parallel to l1, and only option D is in the form x + 2y) Steps: l₁ slope − − . The line parallel to l₂ passing through the intersection point (2,−3) of l₂ and l₃ is x + 2y + 4 = 0x + 2y + 4 = 0. However, option D is x + 2y − 3 = 0x + 2y − 3 = 0, which may be an approximation or a printing error.",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-GEO-001"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "set"
+      ],
+      "analysis": {
+        "difficulty": "hard",
+        "cognitiveSkill": "concept_discrimination",
+        "difficultyEvidence": "Requires multi-step reasoning or combining formula, algebra and interpretation.",
+        "questionForm": "calculation_application",
+        "stemPattern": {
+          "textLengthBand": "medium",
+          "conditionCount": 10,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "calculation_application",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 1,
+        "calculationLoad": "heavy",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "concept_confusion"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "calculation_application",
+          "heavy",
+          "source_text_quality_flagged"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.95,
+          "evidence": [
+            {
+              "code": "M-GEO-001",
+              "title": "平面解析几何",
+              "score": 8
+            },
+            {
+              "code": "M-SET-001",
+              "title": "集合的定义、运算及表示方法",
+              "score": 3
+            },
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 1
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.217Z",
+          "candidateTopicCodes": [
+            "M-GEO-001"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-GEO-001",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 161,
+          "optionCharCount": 33,
+          "formulaCount": 34,
+          "operationCount": 8,
+          "requiresAlgebraTransform": true,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-GEO-001",
+          "analytic_geometry",
+          "line_equation",
+          "slope",
+          "circle_equation",
+          "parabola",
+          "hyperbola",
+          "distance_formula",
+          "set_operation",
+          "trigonometry",
+          "sequence",
+          "vector"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "calculation_application",
+          "cognitiveSkill": "concept_discrimination",
+          "difficultyBand": "hard",
+          "readingLoad": "medium",
+          "calculationLoad": "heavy",
+          "reasoningStepCount": 1,
+          "stemPattern": {
+            "textLengthBand": "medium",
+            "conditionCount": 10,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "calculation_application",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "concept_confusion"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 161,
+            "optionCharCount": 33,
+            "formulaCount": 34,
+            "operationCount": 8,
+            "requiresAlgebraTransform": true,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "calculation_application",
+            "heavy",
+            "source_text_quality_flagged"
+          ],
+          "profileConfidence": "medium",
+          "profileIssues": [
+            "formula_duplicate_or_latex_loss"
+          ]
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-GEO-001"
+          ],
+          "qualityFlags": [
+            "formula_duplicate_or_latex_loss"
+          ],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "44",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "45",
+      "language": "en",
+      "promptText": "Let OO be the origin, and AA and BB be two points in the plane. If PP is the midpoint of segment ABAB, then the vector OP→OP can be expressed as:",
+      "options": [
+        {
+          "id": "A",
+          "text": "OB→−OA→OB−OA"
+        },
+        {
+          "id": "B",
+          "text": "OA→+OB→OA+OB"
+        },
+        {
+          "id": "C",
+          "text": "12(OA→+OB→)21 (OA+OB)"
+        },
+        {
+          "id": "D",
+          "text": "OB→−OA→OB−OA"
+        }
+      ],
+      "correctAnswer": "B",
+      "explanation": "Answer: B (Assuming option B represents OA→ + OB→ + OA + OB, denoting twice the midpoint vector) Step: If O is the origin, the midpoint P of AB satisfies OP→=12(OA→+OB→) and OP=21 (OA+OB). Therefore, OA→+OB→OA+OB equals 2OP→2OP.",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-GEO-001"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "geometry"
+      ],
+      "analysis": {
+        "difficulty": "hard",
+        "cognitiveSkill": "standard_application",
+        "difficultyEvidence": "Requires multi-step reasoning or combining formula, algebra and interpretation.",
+        "questionForm": "calculation_application",
+        "stemPattern": {
+          "textLengthBand": "medium",
+          "conditionCount": 8,
+          "hasScenario": true,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "calculation_application",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 3,
+        "calculationLoad": "heavy",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "calculation_application",
+          "heavy",
+          "source_text_quality_flagged"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.87,
+          "evidence": [
+            {
+              "code": "M-GEO-001",
+              "title": "平面解析几何",
+              "score": 4
+            },
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 2
+            },
+            {
+              "code": "M-ALG-001",
+              "title": "向量与复数",
+              "score": 2
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.217Z",
+          "candidateTopicCodes": [
+            "M-GEO-001"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-GEO-001",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 145,
+          "optionCharCount": 60,
+          "formulaCount": 13,
+          "operationCount": 7,
+          "requiresAlgebraTransform": true,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-GEO-001",
+          "analytic_geometry",
+          "line_equation",
+          "slope",
+          "circle_equation",
+          "parabola",
+          "hyperbola",
+          "distance_formula",
+          "sequence",
+          "vector"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "calculation_application",
+          "cognitiveSkill": "standard_application",
+          "difficultyBand": "hard",
+          "readingLoad": "medium",
+          "calculationLoad": "heavy",
+          "reasoningStepCount": 3,
+          "stemPattern": {
+            "textLengthBand": "medium",
+            "conditionCount": 8,
+            "hasScenario": true,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "calculation_application",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 145,
+            "optionCharCount": 60,
+            "formulaCount": 13,
+            "operationCount": 7,
+            "requiresAlgebraTransform": true,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "calculation_application",
+            "heavy",
+            "source_text_quality_flagged"
+          ],
+          "profileConfidence": "high",
+          "profileIssues": []
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-GEO-001"
+          ],
+          "qualityFlags": [],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "45",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "46",
+      "language": "en",
+      "promptText": "If a complex number zz satisfies z^3=1z3=1 and z≠1z =1, then 1+z+z^2+…+z999=",
+      "options": [
+        {
+          "id": "A",
+          "text": "ii"
+        },
+        {
+          "id": "B",
+          "text": "1±3i221±3 i"
+        },
+        {
+          "id": "C",
+          "text": "1"
+        },
+        {
+          "id": "D",
+          "text": "−1±3i22−1±3 i"
+        }
+      ],
+      "correctAnswer": "C",
+      "explanation": "Answer: C Steps: Let z be a non-real cube root of 1 satisfying 1 + z + z² = 0. The sum of the first 999 terms is 0, and the 1000th term z⁹⁹⁹ = 1. Therefore, the total sum is 1.",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-SEQ-001"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "complex_number"
+      ],
+      "analysis": {
+        "difficulty": "hard",
+        "cognitiveSkill": "multi_step_reasoning",
+        "difficultyEvidence": "Requires multi-step reasoning or combining formula, algebra and interpretation.",
+        "questionForm": "calculation_application",
+        "stemPattern": {
+          "textLengthBand": "short",
+          "conditionCount": 3,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "calculation_application",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 3,
+        "calculationLoad": "heavy",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "calculation_application",
+          "heavy",
+          "source_text_quality_flagged"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.79,
+          "evidence": [
+            {
+              "code": "M-SEQ-001",
+              "title": "数列",
+              "score": 3
+            },
+            {
+              "code": "M-ALG-001",
+              "title": "向量与复数",
+              "score": 2
+            },
+            {
+              "code": "M-GEO-002",
+              "title": "空间几何",
+              "score": 2
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.217Z",
+          "candidateTopicCodes": [
+            "M-SEQ-001"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-SEQ-001",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 76,
+          "optionCharCount": 30,
+          "formulaCount": 15,
+          "operationCount": 8,
+          "requiresAlgebraTransform": true,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-SEQ-001",
+          "sequence",
+          "arithmetic_sequence",
+          "geometric_sequence",
+          "common_difference",
+          "common_ratio",
+          "sum_formula",
+          "vector"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "calculation_application",
+          "cognitiveSkill": "multi_step_reasoning",
+          "difficultyBand": "hard",
+          "readingLoad": "medium",
+          "calculationLoad": "heavy",
+          "reasoningStepCount": 3,
+          "stemPattern": {
+            "textLengthBand": "short",
+            "conditionCount": 3,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "calculation_application",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 76,
+            "optionCharCount": 30,
+            "formulaCount": 15,
+            "operationCount": 8,
+            "requiresAlgebraTransform": true,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "calculation_application",
+            "heavy",
+            "source_text_quality_flagged"
+          ],
+          "profileConfidence": "medium",
+          "profileIssues": [
+            "formula_duplicate_or_latex_loss"
+          ]
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-SEQ-001"
+          ],
+          "qualityFlags": [
+            "formula_duplicate_or_latex_loss"
+          ],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "46",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    },
+    {
+      "questionNumber": "47",
+      "language": "en",
+      "promptText": "In an arithmetic sequence {an}{an }, if 3(a^2+a6)+2(a6+a10+a14)=243(a^2 +a6 )+2(a6 +a10 +a14 )=24, then the sum of the first 13 terms S13=S13 =",
+      "options": [
+        {
+          "id": "A",
+          "text": "104"
+        },
+        {
+          "id": "B",
+          "text": "39"
+        },
+        {
+          "id": "C",
+          "text": "52"
+        },
+        {
+          "id": "D",
+          "text": "26"
+        }
+      ],
+      "correctAnswer": "D",
+      "explanation": "Answer: D Steps: Let be an arithmetic sequence. From the condition, we have a₄ + a₁₀ = 4, i.e., 2a₇ = 4 . Thus, a₇ = 2. Therefore, S₁₃ = 13a₇ = 26.",
+      "syllabusVersion": "2025",
+      "topicCodes": [
+        "M-SEQ-001"
+      ],
+      "blueprintLikeTags": [
+        "single_choice",
+        "sequence"
+      ],
+      "analysis": {
+        "difficulty": "hard",
+        "cognitiveSkill": "standard_application",
+        "difficultyEvidence": "Requires multi-step reasoning or combining formula, algebra and interpretation.",
+        "questionForm": "calculation_application",
+        "stemPattern": {
+          "textLengthBand": "medium",
+          "conditionCount": 4,
+          "hasScenario": false,
+          "hasFormula": true,
+          "hasDiagram": false,
+          "hasTable": false,
+          "hasUnitConversion": false,
+          "hasIrrelevantCondition": false,
+          "type": "calculation_application",
+          "source": "math_source_json_profile_enhancement"
+        },
+        "reasoningSteps": 2,
+        "calculationLoad": "heavy",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "calculation_error"
+          ],
+          "commonMisconceptions": [],
+          "source": "math_source_json_profile_enhancement"
+        },
+        "styleNotes": [
+          "single-choice",
+          "formula-based",
+          "math_source_profile_enhanced_from_original_stem",
+          "calculation_application",
+          "heavy",
+          "source_text_quality_flagged"
+        ],
+        "doNotCopySignals": [
+          "Do not reuse the original stem wording verbatim.",
+          "Do not reuse the same numeric values and option ordering."
+        ],
+        "topicInference": {
+          "method": "keyword_syllabus_match",
+          "confidence": 0.95,
+          "evidence": [
+            {
+              "code": "M-SEQ-001",
+              "title": "数列",
+              "score": 10
+            },
+            {
+              "code": "M-FUNC-002",
+              "title": "基本初等函数",
+              "score": 2
+            }
+          ]
+        },
+        "readingLoad": "medium",
+        "profileConfidence": "high",
+        "topicConfidence": "high",
+        "aiTopicMapping": {
+          "agent": {
+            "role": "topic_mapper",
+            "name": "math-source-repair-trusted-profile-v1",
+            "provider": "source-repair",
+            "model": "deterministic-topic-code"
+          },
+          "provider": "source-repair",
+          "model": "math-source-repair-v1",
+          "status": "success_repaired_source_profile",
+          "generatedAt": "2026-07-20T08:25:26.217Z",
+          "candidateTopicCodes": [
+            "M-SEQ-001"
+          ],
+          "suggestions": [
+            {
+              "topicCode": "M-SEQ-001",
+              "confidence": 0.92,
+              "reason": "Trusted repaired math source JSON profile from csca-math-past-paper-2025-12-en-source.json."
+            }
+          ],
+          "topConfidence": 0.92
+        },
+        "loadEvidence": {
+          "stemCharCount": 143,
+          "optionCharCount": 12,
+          "formulaCount": 20,
+          "operationCount": 8,
+          "requiresAlgebraTransform": true,
+          "requiresGraphReading": false,
+          "requiresTableReading": false,
+          "crossTopicCount": 1
+        },
+        "keyConcepts": [
+          "M-SEQ-001",
+          "sequence",
+          "arithmetic_sequence",
+          "geometric_sequence",
+          "common_difference",
+          "common_ratio",
+          "sum_formula"
+        ],
+        "profile": {
+          "subject": "math",
+          "syllabusVersion": "2025",
+          "questionForm": "calculation_application",
+          "cognitiveSkill": "standard_application",
+          "difficultyBand": "hard",
+          "readingLoad": "medium",
+          "calculationLoad": "heavy",
+          "reasoningStepCount": 2,
+          "stemPattern": {
+            "textLengthBand": "medium",
+            "conditionCount": 4,
+            "hasScenario": false,
+            "hasFormula": true,
+            "hasDiagram": false,
+            "hasTable": false,
+            "hasUnitConversion": false,
+            "hasIrrelevantCondition": false,
+            "type": "calculation_application",
+            "source": "math_source_json_profile_enhancement"
+          },
+          "optionPattern": {
+            "optionStyle": "four_option_single_choice",
+            "distractorTypes": [
+              "calculation_error"
+            ],
+            "commonMisconceptions": [],
+            "source": "math_source_json_profile_enhancement"
+          },
+          "loadEvidence": {
+            "stemCharCount": 143,
+            "optionCharCount": 12,
+            "formulaCount": 20,
+            "operationCount": 8,
+            "requiresAlgebraTransform": true,
+            "requiresGraphReading": false,
+            "requiresTableReading": false,
+            "crossTopicCount": 1
+          },
+          "styleNotes": [
+            "single-choice",
+            "formula-based",
+            "math_source_profile_enhanced_from_original_stem",
+            "calculation_application",
+            "heavy",
+            "source_text_quality_flagged"
+          ],
+          "profileConfidence": "medium",
+          "profileIssues": [
+            "formula_duplicate_or_latex_loss"
+          ]
+        },
+        "mathSourceNotes": {
+          "preservesOriginalStemOptionsAnswerExplanation": true,
+          "topicCodes": [
+            "M-SEQ-001"
+          ],
+          "qualityFlags": [
+            "formula_duplicate_or_latex_loss"
+          ],
+          "enhancementPolicy": "Only metadata/profile hints derived from the original question, options, and explanation were added; prompt/options/answer/explanation were not rewritten."
+        }
+      },
+      "analysisConfidence": 0.92,
+      "analysisStatus": "human_confirmed",
+      "analysisIssues": [],
+      "reviewStatus": "mapped",
+      "sourceExtraction": {
+        "sourceFile": "CSCA Math Past Paper Question-EN.pdf",
+        "solutionFile": "CSCA_MATH_PAST_PAPER-SOLUTION_ZH_en.pdf",
+        "extractionMethod": "edge_pdf_viewer_copy_text",
+        "needsHumanCheck": false
+      },
+      "sourceRepair": {
+        "version": "math-source-repair-v1",
+        "sourceFile": "csca-math-past-paper-2025-12-en-source.json",
+        "questionNumber": "47",
+        "changes": [
+          "mark_trusted_import_profile"
+        ],
+        "needsReview": []
+      }
+    }
+  ]
+}

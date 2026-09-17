@@ -1,0 +1,144 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-MATH-4001",
+  "subject": "math",
+  "topicCode": "M-TRIG-HALF",
+  "topicTitle": "三角函数",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "已知角 α 在第二象限，且 sin α=3/5。求 tan(α/2)。",
+  "options": [
+    {
+      "id": "A",
+      "text": "0.3333"
+    },
+    {
+      "id": "B",
+      "text": "-3"
+    },
+    {
+      "id": "C",
+      "text": "3"
+    },
+    {
+      "id": "D",
+      "text": "4"
+    }
+  ],
+  "knowledgeTags": [
+    "三角函数",
+    "修订题"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "math",
+    "topicCode": "M-TRIG-HALF",
+    "topicTitle": "三角函数",
+    "targetDifficulty": "medium",
+    "taskFamily": "trig_quadrant_half_angle",
+    "planTemplate": "pilot_v4_repair_trig_quadrant_half_angle_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "f66c5dbf9f5c2881273df4da",
+      "scenarioDataMustAffectSolution": true,
+      "selfContainedConstantsRequired": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "quadrant",
+        "sinNumerator",
+        "sinDenominator"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "databaseQuestionTextUsed": false,
+        "priorReviewBodyUsed": false,
+        "selectionBasis": "specified_v4_candidate_repair_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "quadrant",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "sinNumerator",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "sinDenominator",
+        "independentGroup": "g3"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "由象限和正弦值确定余弦符号及数值",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3"
+        ],
+        "output": "cos α"
+      },
+      {
+        "id": "r2",
+        "operation": "代入半角正切恒等式",
+        "inputs": [
+          "r1"
+        ],
+        "output": "tan(α/2)"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "sin²α+cos²α=1",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "tan(α/2)=sinα/(1+cosα)",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "遗漏题干常数或条件",
+      "未完成中间量复核"
+    ],
+    "answerDerivation": [
+      "仅使用题干和 QuestionPlan 中的可见输入独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项逐一代入后恰有一个满足全部关系"
+    ],
+    "canonicalInputs": {
+      "quadrant": "第二象限",
+      "sinNumerator": 3,
+      "sinDenominator": 5
+    },
+    "verificationContract": {
+      "version": "pilot-v4-repair-local-verifier-v1",
+      "independentSolverRequired": true,
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    }
+  }
+}

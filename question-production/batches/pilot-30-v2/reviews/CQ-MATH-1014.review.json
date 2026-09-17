@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-MATH-1014",
+  "reviewerTaskId": "01a0a477-1ae5-7880-93e0-6f44c2e06294",
+  "derivedAnswer": "B",
+  "optionTruthTable": {
+    "A": false,
+    "B": true,
+    "C": false,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "basic",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "Slope 1/2 through (-1,-1) gives y+1=(x+1)/2, or x-2y-1=0. Only B both has the required slope and contains P."
+  ],
+  "verdictBeforeReveal": "pass",
+  "reasonCodes": [],
+  "reviewedAt": "2026-09-15T09:54:16.101Z"
+}

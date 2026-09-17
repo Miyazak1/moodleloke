@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "codex-question-production-batch-v1",
+  "batchId": "pilot-30-v3-2026-09-15",
+  "purpose": "Chinese-primary revision of the physics and chemistry candidates after supervisor review.",
+  "reusesMathFromBatch": "pilot-30-v2-2026-09-15",
+  "candidateCount": { "physics": 15, "chemistry": 15 },
+  "language": "zh_primary_only",
+  "questionType": "single_choice",
+  "publicationPolicy": "no_direct_publish_import_as_draft_and_replay_current_gates",
+  "officialSourceIsolation": {
+    "generatorMayReadPastPaperBodies": false,
+    "reviewerMayReadPastPaperBodies": false,
+    "postGenerationLeakCheckerMayReadPastPaperBodies": true
+  },
+  "families": {
+    "physics": [
+      { "family": "kinematics_uniform_speed", "count": 4 },
+      { "family": "kinematics_acceleration", "count": 4 },
+      { "family": "kinematics_final_velocity", "count": 4 },
+      { "family": "kinematics_displacement", "count": 3 }
+    ],
+    "chemistry": [
+      { "family": "strong_acid_dilution", "count": 5 },
+      { "family": "strong_base_dilution", "count": 5 },
+      { "family": "strong_acid_base_neutralization", "count": 5 }
+    ]
+  },
+  "structuralDiversityRules": {
+    "minimumScenarioFamiliesPerSubject": 8,
+    "maximumItemsPerScenarioFamily": 2,
+    "renameOnlyVariationAccepted": false,
+    "contextMustParticipateNaturally": true
+  },
+  "physicsConditionRules": [
+    "all acceleration, final-velocity and displacement prompts must explicitly state constant acceleration or uniformly accelerated straight-line motion",
+    "a prompt asking for average acceleration must explicitly use the term average acceleration",
+    "scenario magnitudes must be credible for the named entity"
+  ],
+  "chemistryConditionRules": [
+    "all candidates require numerical pH calculation",
+    "operational purposes must be credible and naturally integrated",
+    "no templated purpose suffix may be appended after the question"
+  ],
+  "hardAcceptanceRules": [
+    "blind reviewer derives exactly one correct option",
+    "conditions are sufficient and no material ambiguity is found",
+    "deterministic Solver and independent Oracle agree",
+    "explanation verifier and QuestionPlan adherence pass",
+    "structural diversity rules pass",
+    "no localizations or unverified English auxiliary rendering is present",
+    "unknown, abstain, missing evidence or disagreement always quarantines"
+  ]
+}

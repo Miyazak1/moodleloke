@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-CHEMISTRY-5002",
+  "reviewerTaskId": "repair2-independent-blind-reviewer",
+  "derivedAnswer": "B",
+  "optionTruthTable": {
+    "A": false,
+    "B": true,
+    "C": false,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "medium",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "40 s 内 SO2 浓度减少 1.00-0.40=0.60 mol/L。",
+    "由 2SO2+O2→2SO3 的计量关系，O2 浓度减少量为 0.60×(1/2)=0.30 mol/L。",
+    "用 O2 浓度变化表示的平均消耗速率为 0.30 mol/L÷40 s=0.0075 mol/(L·s)，因此 B 为真。",
+    "逐项检查：A=0.00375、C=0.015、D=0.030 mol/(L·s) 均不等于按计量关系所得速率，故 A、C、D 为假且答案唯一。",
+    "恒容且无物质进出排除了由体积变化或进出料导致浓度改变的替代解释；题干条件足以把 SO2 的净消耗量按反应计量数换算为 O2 的净消耗量。",
+    "反例检查涵盖忽略计量系数得到 0.015 mol/(L·s)，以及重复除以 2 得到 0.00375 mol/(L·s)；这些分别对应 C、A，但都不符合定义。",
+    "量纲复核为 (mol/L)/s=mol/(L·s)；题目要求消耗速率，按正值报告，不存在符号歧义。"
+  ],
+  "verdictBeforeReveal": "pass",
+  "reasonCodes": [],
+  "reviewedAt": "2026-09-15T19:32:19+08:00"
+}

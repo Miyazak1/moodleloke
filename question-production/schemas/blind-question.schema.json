@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cscalite.local/schemas/codex-blind-question-v1.json",
+  "title": "CodexBlindQuestionV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "candidateId", "subject", "topicCode", "topicTitle",
+    "designedDifficulty", "questionType", "prompt", "options", "knowledgeTags",
+    "syllabusVersion", "questionPlan"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "codex-blind-question-v1" },
+    "candidateId": { "type": "string", "pattern": "^CQ-(MATH|PHYSICS|CHEMISTRY)-[0-9]{4}$" },
+    "subject": { "enum": ["math", "physics", "chemistry"] },
+    "topicCode": { "type": "string", "minLength": 1 },
+    "topicTitle": { "type": "string", "minLength": 1 },
+    "designedDifficulty": { "enum": ["basic", "medium", "hard"] },
+    "questionType": { "const": "single_choice" },
+    "prompt": { "type": "string", "minLength": 12 },
+    "options": {
+      "type": "array", "minItems": 4, "maxItems": 4,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "text"],
+        "properties": {
+          "id": { "enum": ["A", "B", "C", "D"] },
+          "text": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "knowledgeTags": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+    "syllabusVersion": { "type": "string", "minLength": 1 },
+    "questionPlan": { "type": "object" },
+    "localizations": { "type": "object" }
+  }
+}
+

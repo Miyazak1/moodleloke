@@ -1,0 +1,2513 @@
+{
+  "schemaVersion": "codex-generator-manifest-v2",
+  "batchId": "pilot-30-v2-2026-09-15",
+  "generatorTaskId": "pilot-30-v2-generator-task-2026-09-15",
+  "generatedAt": "2026-09-15T10:45:00.000Z",
+  "candidateCount": 45,
+  "counts": {
+    "math": {
+      "derivative_direct_evaluation": 5,
+      "elementary_bounded": 5,
+      "line_relation": 5
+    },
+    "physics": {
+      "kinematics_uniform_speed": 4,
+      "kinematics_acceleration": 4,
+      "kinematics_final_velocity": 4,
+      "kinematics_displacement": 3
+    },
+    "chemistry": {
+      "strong_acid_dilution": 5,
+      "strong_base_dilution": 5,
+      "strong_acid_base_neutralization": 5
+    }
+  },
+  "validationSummary": {
+    "allGeneratedBySupportedLocalGenerators": true,
+    "allFourUniqueOptions": true,
+    "allSolverVerified": true,
+    "allIndependentOracleVerified": true,
+    "allExplanationVerified": true,
+    "allQuestionPlansAdhere": true,
+    "duplicateSurfaceCount": 0,
+    "officialSourceBodiesRead": false,
+    "v1MathAmbiguityPatternsRemoved": true,
+    "chemistryCharacterOnlyTargets": 0,
+    "deterministicLanguageScope": "zh_primary_all_45_en_auxiliary_not_uniformly_oracle_supported"
+  },
+  "rejectionReplacementHistory": [
+    {
+      "sourceBatch": "pilot-30-2026-09-15",
+      "reason": "supervisor_rejected_surface_and_structural_concentration",
+      "action": "full_v2_regeneration"
+    }
+  ],
+  "items": [
+    {
+      "candidateId": "CQ-MATH-1001",
+      "subject": "math",
+      "family": "derivative_direct_evaluation",
+      "seed": 404,
+      "correctAnswer": "A",
+      "blindContentSha256": "dab2bc8be7c65f3fccaa72f9328a86303e5d1c71945eb17bb1da2cf6174dcd20",
+      "sealedCandidateSha256": "5c09ae173c709a14313fb8a46419d277f2633280e4ce75ec4424127a83b1b702",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": null
+    },
+    {
+      "candidateId": "CQ-MATH-1002",
+      "subject": "math",
+      "family": "derivative_direct_evaluation",
+      "seed": 457,
+      "correctAnswer": "B",
+      "blindContentSha256": "719056eb487923ed532ee3de0b83ace00f7c1bd72f6db7f7d210a7cd54361406",
+      "sealedCandidateSha256": "bffaa6b21825cceabd008cbd708afcae67d52b19fe46c45f90c85a4c52e80fb2",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": null
+    },
+    {
+      "candidateId": "CQ-MATH-1003",
+      "subject": "math",
+      "family": "derivative_direct_evaluation",
+      "seed": 510,
+      "correctAnswer": "C",
+      "blindContentSha256": "693eeac497c3df9dc1b5e10dd0b22bf657914c1de28d7b56d73116cdcaa9fdfc",
+      "sealedCandidateSha256": "2c587b4e7ca359c70cd8bc53f9b894ce67ac21bab12b78ef1920e399519d3299",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": null
+    },
+    {
+      "candidateId": "CQ-MATH-1004",
+      "subject": "math",
+      "family": "derivative_direct_evaluation",
+      "seed": 563,
+      "correctAnswer": "D",
+      "blindContentSha256": "f53a450424717d92fa4eaca34baec508dc7e1d8356a764ccc2ba47dc0ea5b429",
+      "sealedCandidateSha256": "adbd3fd90230949fbc4c0cbd3aa994e66420f8b6f1df1600b8f76a88c092b3b6",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": null
+    },
+    {
+      "candidateId": "CQ-MATH-1005",
+      "subject": "math",
+      "family": "derivative_direct_evaluation",
+      "seed": 616,
+      "correctAnswer": "A",
+      "blindContentSha256": "4e771379416ca92d1b814d8055205755b75954ec4784cb7d22c5d96a2218a639",
+      "sealedCandidateSha256": "5950ea64a8d053e3d9151f04511d7689b7f8178b80b1d41480b90afa018029fc",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": null
+    },
+    {
+      "candidateId": "CQ-MATH-1006",
+      "subject": "math",
+      "family": "elementary_bounded",
+      "seed": 640,
+      "correctAnswer": "A",
+      "blindContentSha256": "97b42518b3d12f4adc46be05f358b8b6a63be03837993d2482637bb2edd6f514",
+      "sealedCandidateSha256": "116501795c87b31bd3ad2af579b3b21927c5d69377f7b75bec44814ec4fe3a38",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": null
+    },
+    {
+      "candidateId": "CQ-MATH-1007",
+      "subject": "math",
+      "family": "elementary_bounded",
+      "seed": 693,
+      "correctAnswer": "B",
+      "blindContentSha256": "05090f0cf79ffb7cd8c24e7d198c571951cebe0721524d356516a92f1a604c6b",
+      "sealedCandidateSha256": "d0468d2bc5a665b5a62435f58afb4021326e90180711ec3e52a6ed453a6bec6e",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": null
+    },
+    {
+      "candidateId": "CQ-MATH-1008",
+      "subject": "math",
+      "family": "elementary_bounded",
+      "seed": 746,
+      "correctAnswer": "C",
+      "blindContentSha256": "b6697e73accf875951b381810b9b0402b83d01bb3f13edab0c571807bd121518",
+      "sealedCandidateSha256": "7c2bf1679017468c6f5a5447918b7b5c9b09eae00294308fa703e7a5d9a27d63",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": null
+    },
+    {
+      "candidateId": "CQ-MATH-1009",
+      "subject": "math",
+      "family": "elementary_bounded",
+      "seed": 799,
+      "correctAnswer": "D",
+      "blindContentSha256": "5c34126e9dc80db99c0169f9d5d5055731d0151118584bdcf5f7df2f8d05c2b4",
+      "sealedCandidateSha256": "9f58e7e4d99dcd782667aea7a99b0e4c34303e224f1c337180de6c03c4bcc52a",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": null
+    },
+    {
+      "candidateId": "CQ-MATH-1010",
+      "subject": "math",
+      "family": "elementary_bounded",
+      "seed": 852,
+      "correctAnswer": "A",
+      "blindContentSha256": "22b2197eb54eb81e9b6620064bb9b5aa3bab3c247002b30b48ddfa7d3faefd26",
+      "sealedCandidateSha256": "1ffa3c6eb8056d7b173e7c766a049874feefbadf508053f4e13e2d4c7f15ba31",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": null
+    },
+    {
+      "candidateId": "CQ-MATH-1011",
+      "subject": "math",
+      "family": "line_relation",
+      "seed": 882,
+      "correctAnswer": "C",
+      "blindContentSha256": "b6f7fb95085f46ec2f144d0d56bb7b0be3d6cc213441f52aab815896543479ad",
+      "sealedCandidateSha256": "092a8c63a964aaa53da02f6c5206e73c1f31358771193e8df7f682d35a975f7a",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": null
+    },
+    {
+      "candidateId": "CQ-MATH-1012",
+      "subject": "math",
+      "family": "line_relation",
+      "seed": 935,
+      "correctAnswer": "D",
+      "blindContentSha256": "4675fd0f9fcc526835d3de45a5cf24fdd4a573c6a9aaa718ec75815c68cd8982",
+      "sealedCandidateSha256": "11ee66355734de52c85372f694e01c22cfd94a4937a4de50bf692a2458c51cb8",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": null
+    },
+    {
+      "candidateId": "CQ-MATH-1013",
+      "subject": "math",
+      "family": "line_relation",
+      "seed": 988,
+      "correctAnswer": "A",
+      "blindContentSha256": "7b9fae0e8cfba04c14d1c65aa44cdeb619ca70f7d40f6c58f9b08497e700f93d",
+      "sealedCandidateSha256": "edf7e954005dcf1b28ffc20378dca924f7a96d336e0c5f5f5467139561d6fb49",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": null
+    },
+    {
+      "candidateId": "CQ-MATH-1014",
+      "subject": "math",
+      "family": "line_relation",
+      "seed": 1041,
+      "correctAnswer": "B",
+      "blindContentSha256": "b9da30fcd3c8023eb85293d998481fbaf5615df2c37b8b45c10ab5949f20d050",
+      "sealedCandidateSha256": "3d3beac3724d0bba7841893dc722103a34b12de4d133df55a2772aac591139e4",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": null
+    },
+    {
+      "candidateId": "CQ-MATH-1015",
+      "subject": "math",
+      "family": "line_relation",
+      "seed": 1094,
+      "correctAnswer": "C",
+      "blindContentSha256": "af7f24484f8dda7b68f33adbfd50088ccbd0f646fa066ef326320a2ca709e9f2",
+      "sealedCandidateSha256": "6b49f09abd6ebe96547977760c94178536f41fa1de931cd55301b0cd8145090b",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": null
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1001",
+      "subject": "physics",
+      "family": "kinematics_uniform_speed",
+      "seed": 36,
+      "correctAnswer": "A",
+      "blindContentSha256": "e03da0a768199bac1c93361c7f23ed4dbda618c804d985ff243ec553a83aeb76",
+      "sealedCandidateSha256": "2bd4ab2e088390425e912b215b8457d7201208ec8685904f4039e07f96974b2c",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "harbor_transfer",
+        "scenarioFamilyId": "provisional_physics_be92ab6d9c0d3efd25fd5ad6",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "physics",
+          "taskFamily": "kinematics_basic_direct_relation",
+          "planTemplate": "physics_kinematics_basic_relation_v1",
+          "scenarioFamilyId": "provisional_physics_be92ab6d9c0d3efd25fd5ad6",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "harbor logistics",
+          "scenarioEntity": "autonomous carrier",
+          "environment": "straight loading lane",
+          "contextAction": "transport cargo along a marked route",
+          "solverAction": "uniform_speed",
+          "informationForm": "gate checkpoint log",
+          "questionPurpose": "confirm berth dispatch rhythm",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "plausibility": {
+            "straightLineMotion": true,
+            "siUnitsRequired": true,
+            "signedVelocityAndAccelerationAllowed": true,
+            "exactKinematicsScope": "uniform_speed"
+          },
+          "surface": {
+            "zhEntity": "自动运输车",
+            "enEntity": "autonomous carrier",
+            "zhSetting": "港区直线装卸通道",
+            "enSetting": "a straight loading lane in a harbor"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "8abcdb63d7ea6835086cb0d2b11f5aa3ef783acc588adf2b4bfeb9bee305b969",
+            "blueprintFingerprint": "blueprint-be92ab6d9c0d3efd25fd5ad6",
+            "renameInvariantFingerprint": "blueprint-structure-6b340bf257627a7d96821ec2",
+            "ideationCycleEvidenceDigest": "3b1ad363a5a0433ec66c16acc06d5e72a6aad6086113d1f923481856f7a53e1e"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "fd18d8a1a015343f2d0fe810496a0b84ec44b9213fa0aac34105ed68641c470b"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1002",
+      "subject": "physics",
+      "family": "kinematics_uniform_speed",
+      "seed": 45,
+      "correctAnswer": "B",
+      "blindContentSha256": "3c9ef8070d2a371d4cda75d7e66eadc5c86fd1580622e26f29b3ec342cc0d050",
+      "sealedCandidateSha256": "8237155ee93ecebdc46bcb2172027b29e87fe0752aad0ba63e4055e29e1766b9",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "orchard_inspection",
+        "scenarioFamilyId": "provisional_physics_41c36cce34c921826c021333",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "physics",
+          "taskFamily": "kinematics_basic_direct_relation",
+          "planTemplate": "physics_kinematics_basic_relation_v1",
+          "scenarioFamilyId": "provisional_physics_41c36cce34c921826c021333",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "agricultural monitoring",
+          "scenarioEntity": "field rover",
+          "environment": "straight crop inspection lane",
+          "contextAction": "inspect a marked crop row",
+          "solverAction": "uniform_speed",
+          "informationForm": "sensor checkpoint record",
+          "questionPurpose": "schedule crop coverage",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "plausibility": {
+            "straightLineMotion": true,
+            "siUnitsRequired": true,
+            "signedVelocityAndAccelerationAllowed": true,
+            "exactKinematicsScope": "uniform_speed"
+          },
+          "surface": {
+            "zhEntity": "田间巡检车",
+            "enEntity": "field rover",
+            "zhSetting": "笔直作物巡检通道",
+            "enSetting": "a straight crop inspection lane"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "b38edab1b24ea579da9b07eaa168c8b22e9cfbf4f16c53de1f5bbc64db149eec",
+            "blueprintFingerprint": "blueprint-41c36cce34c921826c021333",
+            "renameInvariantFingerprint": "blueprint-structure-56407af87ba72516c4184422",
+            "ideationCycleEvidenceDigest": "cea84b1f3bc8af6334d98a2820d888609cf7679045b0b6044a76544b126bc89f"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "a579c177824d304b6c3caebe8ab04b3e79b83c0784aadb7e2cd426a10f185425"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1003",
+      "subject": "physics",
+      "family": "kinematics_uniform_speed",
+      "seed": 58,
+      "correctAnswer": "C",
+      "blindContentSha256": "c311d6ecf8fbada2774a5b156e3696775e59169296b0a658f2502f8d1e9dde89",
+      "sealedCandidateSha256": "0f53d1de45b0542e32eccf9b81b69d0993a4a48323e562ce54742a6fa34d2f16",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "warehouse_sorting",
+        "scenarioFamilyId": "provisional_physics_be32a9a199acec14f06439dd",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "physics",
+          "taskFamily": "kinematics_basic_direct_relation",
+          "planTemplate": "physics_kinematics_basic_relation_v1",
+          "scenarioFamilyId": "provisional_physics_be32a9a199acec14f06439dd",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "warehouse operations",
+          "scenarioEntity": "sorting shuttle",
+          "environment": "automated storage aisle",
+          "contextAction": "deliver a tote between stations",
+          "solverAction": "uniform_speed",
+          "informationForm": "scanner event log",
+          "questionPurpose": "verify sorting cadence",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "plausibility": {
+            "straightLineMotion": true,
+            "siUnitsRequired": true,
+            "signedVelocityAndAccelerationAllowed": true,
+            "exactKinematicsScope": "uniform_speed"
+          },
+          "surface": {
+            "zhEntity": "分拣穿梭车",
+            "enEntity": "sorting shuttle",
+            "zhSetting": "自动仓储直线巷道",
+            "enSetting": "an automated storage aisle"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "dfc068e3783d04e1ad7eff33d92a3d9a2245e15d34283ae651389e37a5d1fb9e",
+            "blueprintFingerprint": "blueprint-be32a9a199acec14f06439dd",
+            "renameInvariantFingerprint": "blueprint-structure-d38e68d5993613edfb598e38",
+            "ideationCycleEvidenceDigest": "4d1593499f69d8719986d4571dfdb16561c7d2ab7a78805b5692536ff08f3c0c"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "e72cdc21c4a41726e50c00f22d72b82c24be3edbabe6444bdc92f54636281b9a"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1004",
+      "subject": "physics",
+      "family": "kinematics_uniform_speed",
+      "seed": 71,
+      "correctAnswer": "D",
+      "blindContentSha256": "b1c7cc5228ba082abff5f9723731dbd5d5b9122e36ba86462de24743777c1b7f",
+      "sealedCandidateSha256": "c8379e1f01d79357e1aecd1e5cf0f988f97a20b0f765f640695a5994a8feace2",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "airport_baggage",
+        "scenarioFamilyId": "provisional_physics_b75afc632ba36f95c744ae5d",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "physics",
+          "taskFamily": "kinematics_basic_direct_relation",
+          "planTemplate": "physics_kinematics_basic_relation_v1",
+          "scenarioFamilyId": "provisional_physics_b75afc632ba36f95c744ae5d",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "airport ground service",
+          "scenarioEntity": "baggage tug",
+          "environment": "marked service corridor",
+          "contextAction": "transfer baggage to the assigned stand",
+          "solverAction": "uniform_speed",
+          "informationForm": "dispatch checkpoint sheet",
+          "questionPurpose": "coordinate ground handling",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "plausibility": {
+            "straightLineMotion": true,
+            "siUnitsRequired": true,
+            "signedVelocityAndAccelerationAllowed": true,
+            "exactKinematicsScope": "uniform_speed"
+          },
+          "surface": {
+            "zhEntity": "行李牵引车",
+            "enEntity": "baggage tug",
+            "zhSetting": "机场地勤直线通道",
+            "enSetting": "a marked airport service corridor"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "90b7290b665ed457581d2b77f5524d1c0373b7f9eeb9dc3475445c706a187781",
+            "blueprintFingerprint": "blueprint-b75afc632ba36f95c744ae5d",
+            "renameInvariantFingerprint": "blueprint-structure-9e41fc2fa3bacb8c72ba809e",
+            "ideationCycleEvidenceDigest": "98928279a473fea23aaae85b4ef5410cdb0ae646b16cb7988fd82af61ff4b895"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "88bde961df15540bb32cfd081bb711dcaa3939cb287dd35783707d1f9e876374"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1005",
+      "subject": "physics",
+      "family": "kinematics_acceleration",
+      "seed": 61,
+      "correctAnswer": "B",
+      "blindContentSha256": "2463c5b43f030f81ce63aa0d136346df160f7892eba2cba95bc14347d12b8a7e",
+      "sealedCandidateSha256": "c1db76746a09955cb5aca1115a4bdc56d80ee6da258c2f08b8283c94f15f1af3",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "mine_haulage",
+        "scenarioFamilyId": "provisional_physics_51f1362c2fe530db9fa5e8ed",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "physics",
+          "taskFamily": "kinematics_basic_direct_relation",
+          "planTemplate": "physics_kinematics_basic_relation_v1",
+          "scenarioFamilyId": "provisional_physics_51f1362c2fe530db9fa5e8ed",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "underground haulage",
+          "scenarioEntity": "ore carrier",
+          "environment": "straight haulage tunnel",
+          "contextAction": "carry ore to the unloading bay",
+          "solverAction": "acceleration_from_velocity_change",
+          "informationForm": "tunnel beacon log",
+          "questionPurpose": "check unloading sequence",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "plausibility": {
+            "straightLineMotion": true,
+            "siUnitsRequired": true,
+            "signedVelocityAndAccelerationAllowed": true,
+            "exactKinematicsScope": "acceleration_from_velocity_change"
+          },
+          "surface": {
+            "zhEntity": "矿石运输车",
+            "enEntity": "ore carrier",
+            "zhSetting": "矿区直线运输巷道",
+            "enSetting": "a straight underground haulage tunnel"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "1710443fffb934d5ae99d482138a68627e97ac6ad50bde9d195fb5d9eb8ab2ca",
+            "blueprintFingerprint": "blueprint-51f1362c2fe530db9fa5e8ed",
+            "renameInvariantFingerprint": "blueprint-structure-1805d767595c7b8b40ea51ab",
+            "ideationCycleEvidenceDigest": "4f6b719ae5f4b5b68be3801157147e3cef35b0dde2c3e22a856271168b884b6c"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "8431fb6d26ee6968f40f4c84379b28b689096a3e2391ccca83fbedbf1cc1dd7f"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1006",
+      "subject": "physics",
+      "family": "kinematics_acceleration",
+      "seed": 35,
+      "correctAnswer": "D",
+      "blindContentSha256": "8363979dbc9b97b1beb2c14e64031403ae0c4bde5ed0cf2fb8bc25ca86c58bd9",
+      "sealedCandidateSha256": "d035294d72335598951b2f916ea36a87fe50d71e324beba12e0261fe7371f9e0",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "camera_tracking",
+        "scenarioFamilyId": "provisional_physics_f43a01312fe5195e4b8743fd",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "physics",
+          "taskFamily": "kinematics_basic_direct_relation",
+          "planTemplate": "physics_kinematics_basic_relation_v1",
+          "scenarioFamilyId": "provisional_physics_f43a01312fe5195e4b8743fd",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "sports broadcasting",
+          "scenarioEntity": "camera dolly",
+          "environment": "sideline rail",
+          "contextAction": "track an athlete for a broadcast shot",
+          "solverAction": "acceleration_from_velocity_change",
+          "informationForm": "production cue sheet",
+          "questionPurpose": "align the filming segment",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "plausibility": {
+            "straightLineMotion": true,
+            "siUnitsRequired": true,
+            "signedVelocityAndAccelerationAllowed": true,
+            "exactKinematicsScope": "acceleration_from_velocity_change"
+          },
+          "surface": {
+            "zhEntity": "轨道摄像车",
+            "enEntity": "camera dolly",
+            "zhSetting": "体育场边线直轨",
+            "enSetting": "a sideline camera rail"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "c77412b42e67d84023f442bd99fbb49469f9e08dc2b2a3068bcc552074621e48",
+            "blueprintFingerprint": "blueprint-f43a01312fe5195e4b8743fd",
+            "renameInvariantFingerprint": "blueprint-structure-1b9690a48b1d74365e3d1510",
+            "ideationCycleEvidenceDigest": "aa88980693ee771bd1189e470445bff1e36462f899cfce3cfa8c1412420db5ab"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "2a42a776e1ae1c192048ecb8157ec7c0ca6a659b056bc6662a0a1169dc87a5d8"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1007",
+      "subject": "physics",
+      "family": "kinematics_acceleration",
+      "seed": 13,
+      "correctAnswer": "B",
+      "blindContentSha256": "774b2a3d3fa587f11491fd799efa316de1cdb67bf60d74b96872e422ed225fbc",
+      "sealedCandidateSha256": "1f0c23c53bc5bf1476df4c3b09eb4f5d40327b71b04beef45abf8afe82ca7ce9",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "hospital_delivery",
+        "scenarioFamilyId": "provisional_physics_40a72f92af77067ecf671c66",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "physics",
+          "taskFamily": "kinematics_basic_direct_relation",
+          "planTemplate": "physics_kinematics_basic_relation_v1",
+          "scenarioFamilyId": "provisional_physics_40a72f92af77067ecf671c66",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "hospital logistics",
+          "scenarioEntity": "delivery robot",
+          "environment": "sterile supply corridor",
+          "contextAction": "deliver a sealed pack to a ward",
+          "solverAction": "acceleration_from_velocity_change",
+          "informationForm": "door access record",
+          "questionPurpose": "coordinate supply handoff",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "plausibility": {
+            "straightLineMotion": true,
+            "siUnitsRequired": true,
+            "signedVelocityAndAccelerationAllowed": true,
+            "exactKinematicsScope": "acceleration_from_velocity_change"
+          },
+          "surface": {
+            "zhEntity": "配送机器人",
+            "enEntity": "delivery robot",
+            "zhSetting": "医院无菌物资直廊",
+            "enSetting": "a sterile hospital supply corridor"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "a5faaa35c06a87b7e6417a891c588a52d926702ec65678a0739c412f132e9c9f",
+            "blueprintFingerprint": "blueprint-40a72f92af77067ecf671c66",
+            "renameInvariantFingerprint": "blueprint-structure-2c14dc92358da08628b6a0b5",
+            "ideationCycleEvidenceDigest": "bf541656b63c502b3f1e751bfea34a59c2492689d6e6a7b99a99e2c349ab5d82"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "92ba077bde24f8c51676ca489b8222a793b8d4eeb075705bba3b098ca0c26502"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1008",
+      "subject": "physics",
+      "family": "kinematics_acceleration",
+      "seed": 26,
+      "correctAnswer": "C",
+      "blindContentSha256": "8f3e0ea7fd441421ad686618a89800412e7d5c7fef87935126d916ea73a913ac",
+      "sealedCandidateSha256": "5b4140423a93308f5aa95df9a93ccb4cdaa0d725c492a2474d7e2ccc8de71073",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "greenhouse_sprayer",
+        "scenarioFamilyId": "provisional_physics_489e27e7f3b30e4bb4c606af",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "physics",
+          "taskFamily": "kinematics_basic_direct_relation",
+          "planTemplate": "physics_kinematics_basic_relation_v1",
+          "scenarioFamilyId": "provisional_physics_489e27e7f3b30e4bb4c606af",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "greenhouse operations",
+          "scenarioEntity": "rail sprayer",
+          "environment": "straight greenhouse row",
+          "contextAction": "treat crops along a guide rail",
+          "solverAction": "acceleration_from_velocity_change",
+          "informationForm": "controller checkpoint report",
+          "questionPurpose": "set the treatment pass",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "plausibility": {
+            "straightLineMotion": true,
+            "siUnitsRequired": true,
+            "signedVelocityAndAccelerationAllowed": true,
+            "exactKinematicsScope": "acceleration_from_velocity_change"
+          },
+          "surface": {
+            "zhEntity": "轨道喷雾机",
+            "enEntity": "rail sprayer",
+            "zhSetting": "温室直线栽培行",
+            "enSetting": "a straight greenhouse row"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "467d68a3ec4b786a12b3dade8a26ec80a7a015734e0d2c65b67a52278f3b391d",
+            "blueprintFingerprint": "blueprint-489e27e7f3b30e4bb4c606af",
+            "renameInvariantFingerprint": "blueprint-structure-abd26b3a9c09ad6ff5e86e08",
+            "ideationCycleEvidenceDigest": "67222adbe6ba32a5952f6911410207030a167552807182b49a18910fc5ee5851"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "60c21d6fcb6b4fdbd401464e55f35a7840e1911f43735cb9118ebcdb4074f155"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1009",
+      "subject": "physics",
+      "family": "kinematics_final_velocity",
+      "seed": 24,
+      "correctAnswer": "A",
+      "blindContentSha256": "38dbdfa60eb0e043831812c8912d7cc43d21800a1b9ebb521e6c068749ffd4c8",
+      "sealedCandidateSha256": "2c177d3d4e1bec7b1175654b17820bb72a2764a0f156f7eb6afb1e7b561dcb19",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "assembly_trolley",
+        "scenarioFamilyId": "provisional_physics_f3589209ca9a01ce52e5ec27",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "physics",
+          "taskFamily": "kinematics_basic_direct_relation",
+          "planTemplate": "physics_kinematics_basic_relation_v1",
+          "scenarioFamilyId": "provisional_physics_f3589209ca9a01ce52e5ec27",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "factory assembly",
+          "scenarioEntity": "gantry trolley",
+          "environment": "straight assembly rail",
+          "contextAction": "position a component at a station",
+          "solverAction": "final_velocity_from_initial_acceleration_time",
+          "informationForm": "station event record",
+          "questionPurpose": "coordinate component placement",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "plausibility": {
+            "straightLineMotion": true,
+            "siUnitsRequired": true,
+            "signedVelocityAndAccelerationAllowed": true,
+            "exactKinematicsScope": "final_velocity_from_initial_acceleration_time"
+          },
+          "surface": {
+            "zhEntity": "装配桁车",
+            "enEntity": "gantry trolley",
+            "zhSetting": "工厂直线装配轨道",
+            "enSetting": "a straight factory assembly rail"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "b7466b08f5c3e43ce773e4485ad77197f38f6412929fec4fc0e4a0808751dd68",
+            "blueprintFingerprint": "blueprint-f3589209ca9a01ce52e5ec27",
+            "renameInvariantFingerprint": "blueprint-structure-0dc169eb90c9c9ec43ad62e6",
+            "ideationCycleEvidenceDigest": "1d9bd0dc94fd4525d77e9fdc666a4b1b498461dc48cd46b883a002cbff56b0f0"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "9fd284a25fed4255848529b4caa701022d22ea12698f2ace416ee23083804215"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1010",
+      "subject": "physics",
+      "family": "kinematics_final_velocity",
+      "seed": 13,
+      "correctAnswer": "B",
+      "blindContentSha256": "951dedc05f9e55e0afa202ef88a8de66394864d5129a2e4fdf1589fc6eedf30a",
+      "sealedCandidateSha256": "de0b64e77165f1ef7bd04d7f4ed74937d00263406397ada9e62afc433fca73e6",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "museum_patrol",
+        "scenarioFamilyId": "provisional_physics_bf26abbdc782e8b4f2e84340",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "physics",
+          "taskFamily": "kinematics_basic_direct_relation",
+          "planTemplate": "physics_kinematics_basic_relation_v1",
+          "scenarioFamilyId": "provisional_physics_bf26abbdc782e8b4f2e84340",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "museum operations",
+          "scenarioEntity": "guide robot",
+          "environment": "linear gallery corridor",
+          "contextAction": "patrol between exhibit zones",
+          "solverAction": "final_velocity_from_initial_acceleration_time",
+          "informationForm": "gallery checkpoint log",
+          "questionPurpose": "plan visitor guidance",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "plausibility": {
+            "straightLineMotion": true,
+            "siUnitsRequired": true,
+            "signedVelocityAndAccelerationAllowed": true,
+            "exactKinematicsScope": "final_velocity_from_initial_acceleration_time"
+          },
+          "surface": {
+            "zhEntity": "导览机器人",
+            "enEntity": "guide robot",
+            "zhSetting": "博物馆直线展廊",
+            "enSetting": "a linear museum gallery corridor"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "0488afa33c2cc7b2bf7a08e9c59b4d433133386da524fff99f638159da943a17",
+            "blueprintFingerprint": "blueprint-bf26abbdc782e8b4f2e84340",
+            "renameInvariantFingerprint": "blueprint-structure-ee28bc3912e0813d853bdd5d",
+            "ideationCycleEvidenceDigest": "799dbbd17343085b909884f4e5e5228d42b62b5317dfe6b4b4a090a5bfff9815"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "6556e36bfb2df1ad16aa5b539ce03d0660abe820f4776d39aa41fec2d59ea6e5"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1011",
+      "subject": "physics",
+      "family": "kinematics_final_velocity",
+      "seed": 26,
+      "correctAnswer": "C",
+      "blindContentSha256": "51d65793d17137fc502a9341aeb91b22b567283ad0e8b64d1a2255f630020b13",
+      "sealedCandidateSha256": "1680da551c9172f1341045a61ebd59df87b20ba88de44d56d22b276762350531",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "solar_cleaning",
+        "scenarioFamilyId": "provisional_physics_038a52cc0d1b61fb1fca6752",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "physics",
+          "taskFamily": "kinematics_basic_direct_relation",
+          "planTemplate": "physics_kinematics_basic_relation_v1",
+          "scenarioFamilyId": "provisional_physics_038a52cc0d1b61fb1fca6752",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "solar farm maintenance",
+          "scenarioEntity": "cleaning robot",
+          "environment": "straight panel lane",
+          "contextAction": "service a row of panels",
+          "solverAction": "final_velocity_from_initial_acceleration_time",
+          "informationForm": "maintenance checkpoint record",
+          "questionPurpose": "organize the cleaning pass",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "plausibility": {
+            "straightLineMotion": true,
+            "siUnitsRequired": true,
+            "signedVelocityAndAccelerationAllowed": true,
+            "exactKinematicsScope": "final_velocity_from_initial_acceleration_time"
+          },
+          "surface": {
+            "zhEntity": "清洁机器人",
+            "enEntity": "cleaning robot",
+            "zhSetting": "光伏场直线板列通道",
+            "enSetting": "a straight solar-panel lane"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "b70e7b93a1cebbb70a95da1faa2b18f92c1db34e6c798cc12262b2b44c949547",
+            "blueprintFingerprint": "blueprint-038a52cc0d1b61fb1fca6752",
+            "renameInvariantFingerprint": "blueprint-structure-798d637d01880d058c919c1d",
+            "ideationCycleEvidenceDigest": "98733c776e0b9f5de00810d0dd70ed919aa4d2c8aa9d09496708e0f5a0f5aab0"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "743ccf494565fbbf9bded850cdf6ef1b112c4eafa6f6fe769fb51891c2e29efc"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1012",
+      "subject": "physics",
+      "family": "kinematics_final_velocity",
+      "seed": 39,
+      "correctAnswer": "D",
+      "blindContentSha256": "8a655572510fe22bda9ca85d5afbc1746f5692e6d6d4d189ef01f21fc73641a1",
+      "sealedCandidateSha256": "8630ea53952c4778b71c10a6da6b13ef3547cf7dde4d864c3b91babb89d71d8b",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "rail_inspection",
+        "scenarioFamilyId": "provisional_physics_67414da8b190480fd7434e54",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "physics",
+          "taskFamily": "kinematics_basic_direct_relation",
+          "planTemplate": "physics_kinematics_basic_relation_v1",
+          "scenarioFamilyId": "provisional_physics_67414da8b190480fd7434e54",
+          "scenarioMode": "experimental",
+          "scenarioDomain": "rail maintenance",
+          "scenarioEntity": "inspection platform",
+          "environment": "straight test track",
+          "contextAction": "survey a rail segment",
+          "solverAction": "final_velocity_from_initial_acceleration_time",
+          "informationForm": "trackside beacon report",
+          "questionPurpose": "validate the survey run",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "plausibility": {
+            "straightLineMotion": true,
+            "siUnitsRequired": true,
+            "signedVelocityAndAccelerationAllowed": true,
+            "exactKinematicsScope": "final_velocity_from_initial_acceleration_time"
+          },
+          "surface": {
+            "zhEntity": "轨道检测平台",
+            "enEntity": "inspection platform",
+            "zhSetting": "铁路直线试验段",
+            "enSetting": "a straight railway test track"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "a427a74dd68d05e2f10491871b87bb602d50c68b8d24cefa8031beda55ad2de5",
+            "blueprintFingerprint": "blueprint-67414da8b190480fd7434e54",
+            "renameInvariantFingerprint": "blueprint-structure-1c3444ae49feb55713e39f54",
+            "ideationCycleEvidenceDigest": "68b51dbf419cd935fd2b19135e88adaf097cd5dd468b588bd7e6fef543866c7f"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "40ace319d06d3bb9b68e7f9e308d31ac6b5f2bdb576f635d235e2626e0a0a040"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1013",
+      "subject": "physics",
+      "family": "kinematics_displacement",
+      "seed": 11,
+      "correctAnswer": "D",
+      "blindContentSha256": "6e7c96dc3a2d9d452b358f4813dfcaa4f82d3df8aacd79417ffa1a39fb5fa784",
+      "sealedCandidateSha256": "b05ea733a84ee8dcc1be14766a466cef51ffcea9f1b52ab18d8faba0c774adee",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "pool_sonar",
+        "scenarioFamilyId": "provisional_physics_2f560baa3e7611a96fe9b39d",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "physics",
+          "taskFamily": "kinematics_basic_direct_relation",
+          "planTemplate": "physics_kinematics_basic_relation_v1",
+          "scenarioFamilyId": "provisional_physics_2f560baa3e7611a96fe9b39d",
+          "scenarioMode": "experimental",
+          "scenarioDomain": "aquatic robotics",
+          "scenarioEntity": "inspection sled",
+          "environment": "straight pool guide",
+          "contextAction": "scan a submerged wall section",
+          "solverAction": "displacement_from_initial_acceleration_time",
+          "informationForm": "sonar checkpoint trace",
+          "questionPurpose": "align the scan strip",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "plausibility": {
+            "straightLineMotion": true,
+            "siUnitsRequired": true,
+            "signedVelocityAndAccelerationAllowed": true,
+            "exactKinematicsScope": "displacement_from_initial_acceleration_time"
+          },
+          "surface": {
+            "zhEntity": "水下检测滑架",
+            "enEntity": "inspection sled",
+            "zhSetting": "水池直线导向索",
+            "enSetting": "a straight guide in a test pool"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "9c3561c84b48fcf59edc3a1257168ffd0f6f39ae2863a46a1eeba5708704b916",
+            "blueprintFingerprint": "blueprint-2f560baa3e7611a96fe9b39d",
+            "renameInvariantFingerprint": "blueprint-structure-d691ec75a46b40a649069b41",
+            "ideationCycleEvidenceDigest": "e0f436b063d385aa7b68a7a9f1379c56b1c84027e53d3bb544e397be06d4c31f"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "befc286b26ee50330f77242df2dd56f07ec868daf7725b66221781e61ef5d69b"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1014",
+      "subject": "physics",
+      "family": "kinematics_displacement",
+      "seed": 34,
+      "correctAnswer": "C",
+      "blindContentSha256": "c23bcd04e2abc7a6c00df0af4eab019046327973f859ec2646accbf0943f1174",
+      "sealedCandidateSha256": "2b943f90a7c249e8af57e27d5f187e4aebb4b2b07bd845a56ea084507c900db5",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "rescue_drill",
+        "scenarioFamilyId": "provisional_physics_bec4026150b05dd4b4bd15fd",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "physics",
+          "taskFamily": "kinematics_basic_direct_relation",
+          "planTemplate": "physics_kinematics_basic_relation_v1",
+          "scenarioFamilyId": "provisional_physics_bec4026150b05dd4b4bd15fd",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "mountain rescue training",
+          "scenarioEntity": "rescue sled",
+          "environment": "straight training course",
+          "contextAction": "complete a rescue drill segment",
+          "solverAction": "displacement_from_initial_acceleration_time",
+          "informationForm": "course marker record",
+          "questionPurpose": "review the drill handoff",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "plausibility": {
+            "straightLineMotion": true,
+            "siUnitsRequired": true,
+            "signedVelocityAndAccelerationAllowed": true,
+            "exactKinematicsScope": "displacement_from_initial_acceleration_time"
+          },
+          "surface": {
+            "zhEntity": "救援雪橇",
+            "enEntity": "rescue sled",
+            "zhSetting": "雪场直线训练道",
+            "enSetting": "a straight rescue training course"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "01c587af7788e56555442afecafc0bb29fb7ddf7fd18b3eb817b283b82263bb5",
+            "blueprintFingerprint": "blueprint-bec4026150b05dd4b4bd15fd",
+            "renameInvariantFingerprint": "blueprint-structure-dd90451092084a8362b99748",
+            "ideationCycleEvidenceDigest": "1afb7b69b02397ee6aed489a9573132be23830196fbf5128bfb35dca231414f8"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "5960a69917c924777cbbe538ae1aaac12f9e1efe5bee9c01f6b0b57efe750d12"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1015",
+      "subject": "physics",
+      "family": "kinematics_displacement",
+      "seed": 23,
+      "correctAnswer": "D",
+      "blindContentSha256": "bcdfa9263eeb2be45f37d348e385eee1793b20312d8e10d05e2693d59324dc03",
+      "sealedCandidateSha256": "49eeab5cf92a4ce93495bd7a4a071a4a6930b9d64605a5f27050a297c480f610",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "canal_service",
+        "scenarioFamilyId": "provisional_physics_56c407de7da7d384f76f32c3",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "physics",
+          "taskFamily": "kinematics_basic_direct_relation",
+          "planTemplate": "physics_kinematics_basic_relation_v1",
+          "scenarioFamilyId": "provisional_physics_56c407de7da7d384f76f32c3",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "canal maintenance",
+          "scenarioEntity": "tow robot",
+          "environment": "straight service path",
+          "contextAction": "pull equipment beside the canal",
+          "solverAction": "displacement_from_initial_acceleration_time",
+          "informationForm": "service marker log",
+          "questionPurpose": "schedule maintenance support",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "motionCondition",
+            "quantitiesWithSiUnits"
+          ],
+          "plausibility": {
+            "straightLineMotion": true,
+            "siUnitsRequired": true,
+            "signedVelocityAndAccelerationAllowed": true,
+            "exactKinematicsScope": "displacement_from_initial_acceleration_time"
+          },
+          "surface": {
+            "zhEntity": "牵引机器人",
+            "enEntity": "tow robot",
+            "zhSetting": "运河岸边直线检修道",
+            "enSetting": "a straight canal service path"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "a72f9482215e96d3ea7444c75b9c9822f3d7fd5d3e0ee0d847aba215864fdca9",
+            "blueprintFingerprint": "blueprint-56c407de7da7d384f76f32c3",
+            "renameInvariantFingerprint": "blueprint-structure-18c022d849f0ae7693d3086e",
+            "ideationCycleEvidenceDigest": "1f18d728759ae00403f675ba80b675e1a934e8129311ddfd2b59d4dcb83ae966"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "45d3a80876cdec9ca9befa135b416f11023ff2eb025231ce7db14cc6640338c6"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1001",
+      "subject": "chemistry",
+      "family": "strong_acid_dilution",
+      "seed": 2200,
+      "correctAnswer": "A",
+      "blindContentSha256": "aeac26dc73d28013245800fdd022805275fce31acf41552d4d059ca3fcc60622",
+      "sealedCandidateSha256": "507a77faed02d199723f4b94d094a209b6d12c105e8d22f53e458f22a692abfc",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "instrument_reference",
+        "scenarioFamilyId": "provisional_chemistry_ab76cc3fc1f2555ff28b24bf",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "chemistry",
+          "taskFamily": "ph_dilution_strong_acid_base_neutralization",
+          "planTemplate": "chemistry_strong_acid_base_single_relation_v1",
+          "scenarioFamilyId": "provisional_chemistry_ab76cc3fc1f2555ff28b24bf",
+          "scenarioMode": "experimental",
+          "scenarioDomain": "sensor calibration",
+          "scenarioEntity": "reference solution",
+          "environment": "instrument preparation bench",
+          "contextAction": "prepare a reference liquid for instrument readiness",
+          "solverAction": "strong_acid_dilution",
+          "informationForm": "calibration worksheet",
+          "questionPurpose": "confirm instrument readiness",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "plausibility": {
+            "temperatureC": 25,
+            "completeDissociationOnly": true,
+            "visibleConcentrationAndVolumeUnits": true,
+            "exactChemistryScope": "strong_acid_dilution"
+          },
+          "surface": {
+            "zhEntity": "仪器参比液",
+            "enEntity": "reference solution",
+            "zhSetting": "传感器校准配制台",
+            "enSetting": "a sensor calibration bench"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "2c16df8d3fa7bac5a2516be25ca8da460bab6832b2adeb07fa9df233b3a114e5",
+            "blueprintFingerprint": "blueprint-ab76cc3fc1f2555ff28b24bf",
+            "renameInvariantFingerprint": "blueprint-structure-20cb7681da4f3eeaa1ea5459",
+            "ideationCycleEvidenceDigest": "aa5aa2a939ae3a8abbae315344f70005f8e5fbf4bc82a820939705a4760c45c8"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "b8df968816e96c909fb3323631e11dfa793e3cc0295a13964e99bfa65301acce"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1002",
+      "subject": "chemistry",
+      "family": "strong_acid_dilution",
+      "seed": 2253,
+      "correctAnswer": "B",
+      "blindContentSha256": "e06143163e066ea2dc95f4429e2245dce4d38c58821c946f8b90714972f08414",
+      "sealedCandidateSha256": "cc7d8d9bf4ea00e83aee84afb876858965beb372a460fc5957c38c5e3f73d5f6",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "discharge_screening",
+        "scenarioFamilyId": "provisional_chemistry_298e913ec7d9ca233d2de6fd",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "chemistry",
+          "taskFamily": "ph_dilution_strong_acid_base_neutralization",
+          "planTemplate": "chemistry_strong_acid_base_single_relation_v1",
+          "scenarioFamilyId": "provisional_chemistry_298e913ec7d9ca233d2de6fd",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "process water quality",
+          "scenarioEntity": "process water sample",
+          "environment": "discharge screening station",
+          "contextAction": "inspect a process sample before discharge",
+          "solverAction": "strong_acid_dilution",
+          "informationForm": "screening record",
+          "questionPurpose": "authorize the discharge check",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "plausibility": {
+            "temperatureC": 25,
+            "completeDissociationOnly": true,
+            "visibleConcentrationAndVolumeUnits": true,
+            "exactChemistryScope": "strong_acid_dilution"
+          },
+          "surface": {
+            "zhEntity": "排放水样",
+            "enEntity": "process water sample",
+            "zhSetting": "工艺排放筛查台",
+            "enSetting": "a process discharge screening station"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "04248bfaff8cda7ae68e6464c50fead1657462449860d2964155b2e1093140f1",
+            "blueprintFingerprint": "blueprint-298e913ec7d9ca233d2de6fd",
+            "renameInvariantFingerprint": "blueprint-structure-f73b0f5ff1bac335b888d5f7",
+            "ideationCycleEvidenceDigest": "76dcf1f4d8671c49bf723f781ce4421bfab66d31afa800baa827cf18af994cd6"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "ae913e0f86b3b61f0dc47488d55f54050c60316a7b5e2afbd09319d998672f83"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1003",
+      "subject": "chemistry",
+      "family": "strong_acid_dilution",
+      "seed": 2306,
+      "correctAnswer": "C",
+      "blindContentSha256": "f02b4469ad7cffbb185cd27d26a743621b710362ecea3be4a510600707bb6fd7",
+      "sealedCandidateSha256": "91042d3d991651e5efb58aaaef065181ecbd89b42c3a877f123f38c4214760c1",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "rinse_preparation",
+        "scenarioFamilyId": "provisional_chemistry_420413a3a86a88bed1b9294b",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "chemistry",
+          "taskFamily": "ph_dilution_strong_acid_base_neutralization",
+          "planTemplate": "chemistry_strong_acid_base_single_relation_v1",
+          "scenarioFamilyId": "provisional_chemistry_420413a3a86a88bed1b9294b",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "equipment cleaning process",
+          "scenarioEntity": "cleaning reagent",
+          "environment": "equipment rinse station",
+          "contextAction": "adjust a cleaning reagent for equipment rinse",
+          "solverAction": "strong_acid_dilution",
+          "informationForm": "rinse preparation sheet",
+          "questionPurpose": "release the rinse operation",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "plausibility": {
+            "temperatureC": 25,
+            "completeDissociationOnly": true,
+            "visibleConcentrationAndVolumeUnits": true,
+            "exactChemistryScope": "strong_acid_dilution"
+          },
+          "surface": {
+            "zhEntity": "清洗工作液",
+            "enEntity": "cleaning reagent",
+            "zhSetting": "设备冲洗准备区",
+            "enSetting": "an equipment rinse station"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "a6ea11cabc5188a96fe2990100e589e24c7f0e60c91f44e6c977452edc633b67",
+            "blueprintFingerprint": "blueprint-420413a3a86a88bed1b9294b",
+            "renameInvariantFingerprint": "blueprint-structure-514dc3ca45432f9a6189419c",
+            "ideationCycleEvidenceDigest": "46fd2a6ddcc5befe13c7f3edd062fd4f958a1d1021997ac0c0549cefdca83624"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "c771d2fef2ccbb9d5445963bf76adc98e21cde2cb289049bc24f261ce285aaf3"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1004",
+      "subject": "chemistry",
+      "family": "strong_acid_dilution",
+      "seed": 2359,
+      "correctAnswer": "D",
+      "blindContentSha256": "99493618fc98377408ab40f2e11b6c0b83a52bbe16e441162f3cbf1675087a37",
+      "sealedCandidateSha256": "a6213408572d5f163d3c3730b642a97330c81fdc1dafbc558078ef0f8e0eea4e",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "cooling_monitor",
+        "scenarioFamilyId": "provisional_chemistry_b190f368d00ad3cc1eccdadb",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "chemistry",
+          "taskFamily": "ph_dilution_strong_acid_base_neutralization",
+          "planTemplate": "chemistry_strong_acid_base_single_relation_v1",
+          "scenarioFamilyId": "provisional_chemistry_b190f368d00ad3cc1eccdadb",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "industrial process monitoring",
+          "scenarioEntity": "cooling water sample",
+          "environment": "cooling loop laboratory",
+          "contextAction": "analyze a cooling water sample for process control",
+          "solverAction": "strong_acid_dilution",
+          "informationForm": "analytical report",
+          "questionPurpose": "support cooling loop control",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "plausibility": {
+            "temperatureC": 25,
+            "completeDissociationOnly": true,
+            "visibleConcentrationAndVolumeUnits": true,
+            "exactChemistryScope": "strong_acid_dilution"
+          },
+          "surface": {
+            "zhEntity": "冷却水样",
+            "enEntity": "cooling water sample",
+            "zhSetting": "冷却回路分析室",
+            "enSetting": "a cooling-loop laboratory"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "e9427c7c4bed8dde4d45f3f19401eab424bc033c421f2786ce0560d3a10dad78",
+            "blueprintFingerprint": "blueprint-b190f368d00ad3cc1eccdadb",
+            "renameInvariantFingerprint": "blueprint-structure-80ab7b67b78ba48701ad3ec3",
+            "ideationCycleEvidenceDigest": "10b10d0c30a017cec11f44b3bb68a47f5ee6b32071a4a84bdcd61e97cb5f6dd5"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "c5a1c878d368f43aff645c9b326a1e788dc12cd0967afe51a5c026dce2cbfdd8"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1005",
+      "subject": "chemistry",
+      "family": "strong_acid_dilution",
+      "seed": 2412,
+      "correctAnswer": "A",
+      "blindContentSha256": "e96de892b775f026ddba70d3dbe4a9fe88c72ee39fcb5abf2695e5f4ffd66b8d",
+      "sealedCandidateSha256": "4eaaffc2587fb580c370cd60dcabd0103da2ba432d3c01f01b409324b1f10f46",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "plating_reuse",
+        "scenarioFamilyId": "provisional_chemistry_88a7bc44d5e2ea57892ddb8d",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "chemistry",
+          "taskFamily": "ph_dilution_strong_acid_base_neutralization",
+          "planTemplate": "chemistry_strong_acid_base_single_relation_v1",
+          "scenarioFamilyId": "provisional_chemistry_88a7bc44d5e2ea57892ddb8d",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "plating process control",
+          "scenarioEntity": "plating liquid sample",
+          "environment": "plating recovery station",
+          "contextAction": "treat a plating sample before reuse",
+          "solverAction": "strong_acid_dilution",
+          "informationForm": "recovery worksheet",
+          "questionPurpose": "approve process reuse",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "plausibility": {
+            "temperatureC": 25,
+            "completeDissociationOnly": true,
+            "visibleConcentrationAndVolumeUnits": true,
+            "exactChemistryScope": "strong_acid_dilution"
+          },
+          "surface": {
+            "zhEntity": "镀液样品",
+            "enEntity": "plating liquid sample",
+            "zhSetting": "电镀液回收工位",
+            "enSetting": "a plating recovery station"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "8a3d6920db6238269073d84fea05838b5056811d6431896350a40e3deda6118f",
+            "blueprintFingerprint": "blueprint-88a7bc44d5e2ea57892ddb8d",
+            "renameInvariantFingerprint": "blueprint-structure-f2864765b146fb254ca5c55f",
+            "ideationCycleEvidenceDigest": "e9d998f6554de2b3c82206b5c4583737c2058d84e77e36c0001c8e64bd676902"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "9f507ca0be83851b9f5ec7bc434cca94e947e63b506e83d6577263aa09cb9519"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1006",
+      "subject": "chemistry",
+      "family": "strong_base_dilution",
+      "seed": 2465,
+      "correctAnswer": "B",
+      "blindContentSha256": "d3241a16638821e7110dd2c9e29a1519ea057f847d19b236b90a43d163e4460d",
+      "sealedCandidateSha256": "70a414b8f8850db9a7d57ad0c0d82e4484d65caec82cc1e5f4b3b625dbf9e81e",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "formulation_release",
+        "scenarioFamilyId": "provisional_chemistry_715fc53a935e380bca16f0a9",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "chemistry",
+          "taskFamily": "ph_dilution_strong_acid_base_neutralization",
+          "planTemplate": "chemistry_strong_acid_base_single_relation_v1",
+          "scenarioFamilyId": "provisional_chemistry_715fc53a935e380bca16f0a9",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "formulation process",
+          "scenarioEntity": "formulation liquid",
+          "environment": "product release laboratory",
+          "contextAction": "measure a formulation liquid for release",
+          "solverAction": "strong_base_dilution",
+          "informationForm": "release analysis sheet",
+          "questionPurpose": "complete the release review",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "plausibility": {
+            "temperatureC": 25,
+            "completeDissociationOnly": true,
+            "visibleConcentrationAndVolumeUnits": true,
+            "exactChemistryScope": "strong_base_dilution"
+          },
+          "surface": {
+            "zhEntity": "配方工作液",
+            "enEntity": "formulation liquid",
+            "zhSetting": "产品放行分析室",
+            "enSetting": "a product release laboratory"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "de83a334d4fccf5877cbcf745edcefd5522c3dc28c2ad6072764f865335669c8",
+            "blueprintFingerprint": "blueprint-715fc53a935e380bca16f0a9",
+            "renameInvariantFingerprint": "blueprint-structure-de58acda6f34bf40e88744f6",
+            "ideationCycleEvidenceDigest": "f2a178fe941f0a4c389e7acf6e2b9370c1a92775d830c132f1957dee24f1f8ae"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "fd097a0f4b5239d0f09ecc13ea4f4d33bc78ca5c05f054519a9c091d1d621c64"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1007",
+      "subject": "chemistry",
+      "family": "strong_base_dilution",
+      "seed": 2518,
+      "correctAnswer": "C",
+      "blindContentSha256": "6d2fed67ab5890173302a2ba9b306fe92aa0263d0ab701c359ca12b4bcb88aa5",
+      "sealedCandidateSha256": "54f707e9951462d476d119b3e27f1ec42d2e4865d394f536c72465c7655f223a",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "teaching_reagent",
+        "scenarioFamilyId": "provisional_chemistry_657bf54171f8d8884bf466a9",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "chemistry",
+          "taskFamily": "ph_dilution_strong_acid_base_neutralization",
+          "planTemplate": "chemistry_strong_acid_base_single_relation_v1",
+          "scenarioFamilyId": "provisional_chemistry_657bf54171f8d8884bf466a9",
+          "scenarioMode": "experimental",
+          "scenarioDomain": "teaching laboratory",
+          "scenarioEntity": "teaching reagent",
+          "environment": "student preparation bench",
+          "contextAction": "monitor a teaching reagent during preparation",
+          "solverAction": "strong_base_dilution",
+          "informationForm": "laboratory worksheet",
+          "questionPurpose": "verify the classroom preparation",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "plausibility": {
+            "temperatureC": 25,
+            "completeDissociationOnly": true,
+            "visibleConcentrationAndVolumeUnits": true,
+            "exactChemistryScope": "strong_base_dilution"
+          },
+          "surface": {
+            "zhEntity": "教学试剂液",
+            "enEntity": "teaching reagent",
+            "zhSetting": "化学实验教学配制台",
+            "enSetting": "a chemistry teaching laboratory bench"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "c22a98c12d422d68033085023d6648673c636b5e4b06060f4528d313e6f84a3b",
+            "blueprintFingerprint": "blueprint-657bf54171f8d8884bf466a9",
+            "renameInvariantFingerprint": "blueprint-structure-96f927a4ed03bc66d11ebb53",
+            "ideationCycleEvidenceDigest": "27e6a19b1509fec269a0e51f4fccc84319dcec1a719df4d6188df6d358413b37"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "f64985ffccb7beeb06bbcd3d129ae83e017cefea8d9f636f271cbf4bdf84791e"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1008",
+      "subject": "chemistry",
+      "family": "strong_base_dilution",
+      "seed": 2571,
+      "correctAnswer": "D",
+      "blindContentSha256": "5deee22d8949f76421429e9e80f8300716ecf7e3c1194a796262399e6e181319",
+      "sealedCandidateSha256": "d615e2bcf596f3c5f15513fa2f6e0bbe9fc2a8fc24e4ecbc7d6bbf43e62be25d",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "preservation_storage",
+        "scenarioFamilyId": "provisional_chemistry_505a2875fc4155a3a5e7fdc2",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "chemistry",
+          "taskFamily": "ph_dilution_strong_acid_base_neutralization",
+          "planTemplate": "chemistry_strong_acid_base_single_relation_v1",
+          "scenarioFamilyId": "provisional_chemistry_505a2875fc4155a3a5e7fdc2",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "preservation process",
+          "scenarioEntity": "preservation solution",
+          "environment": "controlled storage laboratory",
+          "contextAction": "document a preservation liquid before storage",
+          "solverAction": "strong_base_dilution",
+          "informationForm": "storage preparation record",
+          "questionPurpose": "approve controlled storage",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "plausibility": {
+            "temperatureC": 25,
+            "completeDissociationOnly": true,
+            "visibleConcentrationAndVolumeUnits": true,
+            "exactChemistryScope": "strong_base_dilution"
+          },
+          "surface": {
+            "zhEntity": "保存处理液",
+            "enEntity": "preservation solution",
+            "zhSetting": "受控保存分析室",
+            "enSetting": "a controlled storage laboratory"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "d1ceaf3401c12e2d288c07379fbf8a171af22e9193faf6d6fb0f3e98764b1808",
+            "blueprintFingerprint": "blueprint-505a2875fc4155a3a5e7fdc2",
+            "renameInvariantFingerprint": "blueprint-structure-f0b9a5529d3c1f7bd318b277",
+            "ideationCycleEvidenceDigest": "d99235393b1702f61e4671a7c31cd7a44133b0a8a61616216e506a1e794deded"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "416591898a1f3290916a0445bdd1cdbf3869259071dda829f4b77c221cc6fbd4"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1009",
+      "subject": "chemistry",
+      "family": "strong_base_dilution",
+      "seed": 2624,
+      "correctAnswer": "A",
+      "blindContentSha256": "800bdb76ce68ff28860bb370b4611d56c809f9d2e9263392c2d0514571567b64",
+      "sealedCandidateSha256": "0ad63385c3b106ade3221e653ab0d454e3c0936278a0ca4724d618b2b7589a30",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "fermentation_transfer",
+        "scenarioFamilyId": "provisional_chemistry_4c32970c90739eca226e3da7",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "chemistry",
+          "taskFamily": "ph_dilution_strong_acid_base_neutralization",
+          "planTemplate": "chemistry_strong_acid_base_single_relation_v1",
+          "scenarioFamilyId": "provisional_chemistry_4c32970c90739eca226e3da7",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "fermentation process",
+          "scenarioEntity": "process sample",
+          "environment": "transfer quality station",
+          "contextAction": "test a process sample before transfer",
+          "solverAction": "strong_base_dilution",
+          "informationForm": "transfer test report",
+          "questionPurpose": "authorize vessel transfer",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "plausibility": {
+            "temperatureC": 25,
+            "completeDissociationOnly": true,
+            "visibleConcentrationAndVolumeUnits": true,
+            "exactChemistryScope": "strong_base_dilution"
+          },
+          "surface": {
+            "zhEntity": "发酵过程样",
+            "enEntity": "process sample",
+            "zhSetting": "发酵转序检测台",
+            "enSetting": "a fermentation transfer station"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "636b39045f9f545897b08bee8b06ecee533365d17cc272d800cb0b0ccae130de",
+            "blueprintFingerprint": "blueprint-4c32970c90739eca226e3da7",
+            "renameInvariantFingerprint": "blueprint-structure-fb902d4ab3a205677e7a5f1f",
+            "ideationCycleEvidenceDigest": "4b99234c441f7eec429fddca3bca5153074c3e4beb205549bbb997890fe372e3"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "aee342d0438da590fbfe3be8049d54952baa195661d21fa9800983c1fd032b41"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1010",
+      "subject": "chemistry",
+      "family": "strong_base_dilution",
+      "seed": 2677,
+      "correctAnswer": "B",
+      "blindContentSha256": "c433583b5bc1569c000fb32e2f237822bf58c493e49d63c0d9e0bb438fafb617",
+      "sealedCandidateSha256": "68b2f3e62a14243810d536fedc695ae9958b50cb90727aafa32d9d1ed7dee2c8",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "photo_processing",
+        "scenarioFamilyId": "provisional_chemistry_ea9a89c851d4d48aed6fac4b",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "chemistry",
+          "taskFamily": "ph_dilution_strong_acid_base_neutralization",
+          "planTemplate": "chemistry_strong_acid_base_single_relation_v1",
+          "scenarioFamilyId": "provisional_chemistry_ea9a89c851d4d48aed6fac4b",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "photographic process",
+          "scenarioEntity": "processing liquid",
+          "environment": "darkroom process station",
+          "contextAction": "assess a processing liquid before use",
+          "solverAction": "strong_base_dilution",
+          "informationForm": "process preparation card",
+          "questionPurpose": "release the darkroom operation",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "plausibility": {
+            "temperatureC": 25,
+            "completeDissociationOnly": true,
+            "visibleConcentrationAndVolumeUnits": true,
+            "exactChemistryScope": "strong_base_dilution"
+          },
+          "surface": {
+            "zhEntity": "显影工作液",
+            "enEntity": "processing liquid",
+            "zhSetting": "暗房工艺准备台",
+            "enSetting": "a darkroom process station"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "524e5c9273f93d8607cf392246a3572434710d39558f56451bcc72b3aec1e444",
+            "blueprintFingerprint": "blueprint-ea9a89c851d4d48aed6fac4b",
+            "renameInvariantFingerprint": "blueprint-structure-2ba0f899f616a9a1685b4037",
+            "ideationCycleEvidenceDigest": "7a30093a0066966b2b7185b11311334c40db6e843cccba1ae3dee0eba6da49dc"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "ac7f7bbd80f8cf03d183eaba5e3d64eca635bf74388961edf971e808b85dd3bf"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1011",
+      "subject": "chemistry",
+      "family": "strong_acid_base_neutralization",
+      "seed": 2730,
+      "correctAnswer": "C",
+      "blindContentSha256": "597d30f623d43f1c152e519f7382ad0abec70a5f8ab5895dcc9be644c7d3507f",
+      "sealedCandidateSha256": "0dd2151c0df19126216fd4ae4bd08dbabe552552a1f1cf076f04c1aaaab973e2",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "hydroponic_monitor",
+        "scenarioFamilyId": "provisional_chemistry_bd0f6890c44c6ebedcb4d6ee",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "chemistry",
+          "taskFamily": "ph_dilution_strong_acid_base_neutralization",
+          "planTemplate": "chemistry_strong_acid_base_single_relation_v1",
+          "scenarioFamilyId": "provisional_chemistry_bd0f6890c44c6ebedcb4d6ee",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "hydroponic process monitoring",
+          "scenarioEntity": "nutrient solution",
+          "environment": "greenhouse analysis station",
+          "contextAction": "prepare a nutrient liquid for monitoring",
+          "solverAction": "strong_acid_base_neutralization",
+          "informationForm": "greenhouse laboratory record",
+          "questionPurpose": "support crop system monitoring",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "plausibility": {
+            "temperatureC": 25,
+            "completeDissociationOnly": true,
+            "visibleConcentrationAndVolumeUnits": true,
+            "exactChemistryScope": "strong_acid_base_neutralization"
+          },
+          "surface": {
+            "zhEntity": "营养工作液",
+            "enEntity": "nutrient solution",
+            "zhSetting": "温室分析工位",
+            "enSetting": "a greenhouse analysis station"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "4ae5f6388c66fb27416480e0851c62553e70b9587ddfec831725d031c81a41d7",
+            "blueprintFingerprint": "blueprint-bd0f6890c44c6ebedcb4d6ee",
+            "renameInvariantFingerprint": "blueprint-structure-dfcb50e3d22484153cb63111",
+            "ideationCycleEvidenceDigest": "81ad6ee459d02a5b4be5a2442d3a1ed1561d8c673384d74c3022deb007cfe7e0"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "1723b94a04a8c59bf2f9ca0615a170c7e0575ae87ffc07fe6a7c1dc1c37e00b1"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1012",
+      "subject": "chemistry",
+      "family": "strong_acid_base_neutralization",
+      "seed": 2783,
+      "correctAnswer": "D",
+      "blindContentSha256": "b84d5b3525173abc58ac72395ad2fd37934c785263f5f0eff637e3495ba80264",
+      "sealedCandidateSha256": "964aea8e13c7dd7c546a973a26d553a3b82cadcb1a50a526fa7483301f91c621",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "rinse_water_audit",
+        "scenarioFamilyId": "provisional_chemistry_b1244e5bf980f51a2abf7074",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "chemistry",
+          "taskFamily": "ph_dilution_strong_acid_base_neutralization",
+          "planTemplate": "chemistry_strong_acid_base_single_relation_v1",
+          "scenarioFamilyId": "provisional_chemistry_b1244e5bf980f51a2abf7074",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "electroplating water quality",
+          "scenarioEntity": "rinse water sample",
+          "environment": "quality audit laboratory",
+          "contextAction": "inspect a rinse water sample for audit",
+          "solverAction": "strong_acid_base_neutralization",
+          "informationForm": "audit analysis sheet",
+          "questionPurpose": "complete the quality audit",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "plausibility": {
+            "temperatureC": 25,
+            "completeDissociationOnly": true,
+            "visibleConcentrationAndVolumeUnits": true,
+            "exactChemistryScope": "strong_acid_base_neutralization"
+          },
+          "surface": {
+            "zhEntity": "漂洗水样",
+            "enEntity": "rinse water sample",
+            "zhSetting": "电镀水质审核室",
+            "enSetting": "an electroplating quality laboratory"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "a00b93f00ba1c26d16f96b8684e3c561c408d6a00efc35909750bdd9808d8c69",
+            "blueprintFingerprint": "blueprint-b1244e5bf980f51a2abf7074",
+            "renameInvariantFingerprint": "blueprint-structure-25e43cb5473ed5815c2d7ad0",
+            "ideationCycleEvidenceDigest": "423566099dc18b2ab7abe9c9ffd19354ea0505a5f60ce441bd0cb3fb17b16274"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "320843cf681c9ffeacfb9f399087edf7143e9d732365ff0559c73c41cd5881ee"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1013",
+      "subject": "chemistry",
+      "family": "strong_acid_base_neutralization",
+      "seed": 2836,
+      "correctAnswer": "A",
+      "blindContentSha256": "3959d2b1dd252404b715bc173f6ac7237823e9a0d9c4f6dc9cc3417a4df044e0",
+      "sealedCandidateSha256": "0d72411aaa90660a8ccd329dca1442607c565fbff329cbb62ee421839de17957",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "textile_transfer",
+        "scenarioFamilyId": "provisional_chemistry_be5ed90387d89d92055c8444",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "chemistry",
+          "taskFamily": "ph_dilution_strong_acid_base_neutralization",
+          "planTemplate": "chemistry_strong_acid_base_single_relation_v1",
+          "scenarioFamilyId": "provisional_chemistry_be5ed90387d89d92055c8444",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "textile process control",
+          "scenarioEntity": "textile process liquid",
+          "environment": "dyeing transfer station",
+          "contextAction": "adjust a textile liquid before transfer",
+          "solverAction": "strong_acid_base_neutralization",
+          "informationForm": "transfer preparation record",
+          "questionPurpose": "coordinate the dyeing stage",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "plausibility": {
+            "temperatureC": 25,
+            "completeDissociationOnly": true,
+            "visibleConcentrationAndVolumeUnits": true,
+            "exactChemistryScope": "strong_acid_base_neutralization"
+          },
+          "surface": {
+            "zhEntity": "染整工作液",
+            "enEntity": "textile process liquid",
+            "zhSetting": "染整转序准备台",
+            "enSetting": "a textile transfer station"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "ab53b13273551a1e790a4b9ccfdc40249d3086499b0a88404d2592a060fecb56",
+            "blueprintFingerprint": "blueprint-be5ed90387d89d92055c8444",
+            "renameInvariantFingerprint": "blueprint-structure-a34d3714d02151affeca9d37",
+            "ideationCycleEvidenceDigest": "f8c6b7d3835049155d2fc0b337998b586adf0aa46efb8d2ef32299e15ea3c76a"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "45deb057cd2e9393fdf4558e3000f252f5839750e45fdc263ec0865e326af7d1"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1014",
+      "subject": "chemistry",
+      "family": "strong_acid_base_neutralization",
+      "seed": 2889,
+      "correctAnswer": "B",
+      "blindContentSha256": "9c7d09c416ed96e02839dddc91b25ee6d134c582b0655622122c287a29ececa0",
+      "sealedCandidateSha256": "6953c5aa857a093c0944f7011ab17c6a00ac9aa3bcc85844d95b4f07102aa44b",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "pharma_release",
+        "scenarioFamilyId": "provisional_chemistry_7f82b3f96a3f50cfd9ad916e",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "chemistry",
+          "taskFamily": "ph_dilution_strong_acid_base_neutralization",
+          "planTemplate": "chemistry_strong_acid_base_single_relation_v1",
+          "scenarioFamilyId": "provisional_chemistry_7f82b3f96a3f50cfd9ad916e",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "pharmaceutical process",
+          "scenarioEntity": "process sample",
+          "environment": "release testing laboratory",
+          "contextAction": "analyze a process sample before release",
+          "solverAction": "strong_acid_base_neutralization",
+          "informationForm": "release laboratory report",
+          "questionPurpose": "complete process release",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "plausibility": {
+            "temperatureC": 25,
+            "completeDissociationOnly": true,
+            "visibleConcentrationAndVolumeUnits": true,
+            "exactChemistryScope": "strong_acid_base_neutralization"
+          },
+          "surface": {
+            "zhEntity": "制程样液",
+            "enEntity": "process sample",
+            "zhSetting": "制药放行检测室",
+            "enSetting": "a pharmaceutical release laboratory"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "b012bb016e0710d7c0412a5a121aeb2ebe69e5fec77f845b5fb1f4beaa09133b",
+            "blueprintFingerprint": "blueprint-7f82b3f96a3f50cfd9ad916e",
+            "renameInvariantFingerprint": "blueprint-structure-f962c0a8374fafdfc2c39094",
+            "ideationCycleEvidenceDigest": "c3daa2e22f47fb7da126b91754d742aaedb33ae63274e467d6b82f909f59a09a"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "5af02de2657e13d0c48ddc11ff50d18750c3dd3b76a28a22329ae3eeb61395c5"
+        }
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1015",
+      "subject": "chemistry",
+      "family": "strong_acid_base_neutralization",
+      "seed": 2942,
+      "correctAnswer": "C",
+      "blindContentSha256": "cdb1777759264e043b052b5185c90f75bb1b7e6427ba63f7e8cc19972b25be97",
+      "sealedCandidateSha256": "c60fcb0887146a518ab368df0807d15eb988ee24dc46efe27d0d540aaacfa00b",
+      "calculationEvidence": {
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      },
+      "scenario": {
+        "scenarioFamilyKey": "food_sanitation",
+        "scenarioFamilyId": "provisional_chemistry_7746b8581189f2aa070a95b8",
+        "dimensions": {
+          "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+          "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+          "stage": "provisional_shadow_only",
+          "subject": "chemistry",
+          "taskFamily": "ph_dilution_strong_acid_base_neutralization",
+          "planTemplate": "chemistry_strong_acid_base_single_relation_v1",
+          "scenarioFamilyId": "provisional_chemistry_7746b8581189f2aa070a95b8",
+          "scenarioMode": "real_world",
+          "scenarioDomain": "food sanitation process",
+          "scenarioEntity": "cleaning solution",
+          "environment": "sanitation preparation station",
+          "contextAction": "measure a cleaning liquid before use",
+          "solverAction": "strong_acid_base_neutralization",
+          "informationForm": "sanitation preparation sheet",
+          "questionPurpose": "approve sanitation work",
+          "contextNecessity": "required_for_solution",
+          "requiredInformationFields": [
+            "contextAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "solverRelevantFields": [
+            "solverAction",
+            "reactionOrDilutionCondition",
+            "concentrationsAndVolumesWithUnits"
+          ],
+          "plausibility": {
+            "temperatureC": 25,
+            "completeDissociationOnly": true,
+            "visibleConcentrationAndVolumeUnits": true,
+            "exactChemistryScope": "strong_acid_base_neutralization"
+          },
+          "surface": {
+            "zhEntity": "食品清洁工作液",
+            "enEntity": "cleaning solution",
+            "zhSetting": "食品卫生准备台",
+            "enSetting": "a food sanitation station"
+          },
+          "blueprintBinding": {
+            "blueprintDigest": "52880d82715ac7f9279dd441eb933e7fd1d6fc66e8c4fc7f56b0f29e29e40abd",
+            "blueprintFingerprint": "blueprint-7746b8581189f2aa070a95b8",
+            "renameInvariantFingerprint": "blueprint-structure-969701f9e70ac4bfbe72b9a3",
+            "ideationCycleEvidenceDigest": "324957042e773fe69b14f24d6d6290290ac9a8cd557454da9f1e067a5e38f27a"
+          },
+          "sourceIsolation": {
+            "officialQuestionContentUsed": false,
+            "reversibleSourceFieldsUsed": false,
+            "selectionBasis": "validated_blueprint_cycle_only"
+          },
+          "scenarioContractDigest": "6a33d0a78fabe53b01de4fc8b07761719047a4d699a5a990794959de8f3ae65c"
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Generator-side checks do not replace independent blind review.",
+    "Official-source leakage and corpus-wide duplicate gates remain supervisor-owned.",
+    "English localizations are auxiliary because current independent Oracles do not uniformly parse every dynamic English surface; all reported 45-of-45 deterministic results refer to the primary Chinese rendering.",
+    "No import, approval, publication, or blueprint promotion is authorized."
+  ]
+}

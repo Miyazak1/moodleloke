@@ -1,0 +1,25 @@
+{
+  "manifestVersion": "subject-practice-post-freeze-random-manifest-v1",
+  "createdAt": "2026-09-13T00:00:00+08:00",
+  "casesPerScope": 128,
+  "subjects": {
+    "math": {
+      "solverPath": "backend/src/ai-questioning/subject-practice-math-solver.ts",
+      "solverSha256": "cb28ae12a6ed737d1d760be779cb55a918bbfb86595342580386653183762163",
+      "seedNamespace": "csca-math-elementary-post-freeze-random-v1",
+      "seedCommitmentSha256": "8958c8e0dccfecd0abb1e73f9f19e4d1abb5d8ee84ed940d8b23bf739b0cf611"
+    },
+    "physics": {
+      "solverPath": "backend/src/ai-questioning/subject-practice-physics-kinematics-solver.ts",
+      "solverSha256": "e631b6585163cd347fb71e2180df4c0ae5e19327bce1b051cefbeaf072d508d5",
+      "seedNamespace": "csca-physics-kinematics-post-freeze-random-v1",
+      "seedCommitmentSha256": "c045273096843fae8a9d819db265bd94a1ef13df8bb409292f6336540f932050"
+    },
+    "chemistry": {
+      "solverPath": "backend/src/ai-questioning/subject-practice-chemistry-acid-base-solver.ts",
+      "solverSha256": "31c3adf1285fa38c0c02982bc01c41b3019818b9f4f332fd09fd0fd5b8821c5c",
+      "seedNamespace": "csca-chemistry-acid-base-post-freeze-random-v1",
+      "seedCommitmentSha256": "0c28d304b3b0d6771db0ea8d888502188c6c76fdd051cce319906447d508e3a9"
+    }
+  }
+}

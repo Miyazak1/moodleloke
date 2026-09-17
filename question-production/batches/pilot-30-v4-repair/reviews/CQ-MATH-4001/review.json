@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-MATH-4001",
+  "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+  "derivedAnswer": "C",
+  "optionTruthTable": {
+    "A": false,
+    "B": false,
+    "C": true,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "medium",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "独立求解：α在第二象限且sin α=3/5，所以cos α=-4/5；tan(α/2)=sin α/(1+cos α)=(3/5)/(1/5)=3。",
+    "半角符号复核：若按通常角的象限定义取α∈(π/2,π)，则α/2∈(π/4,π/2)，正切为正且大于1，与3一致。",
+    "选项核验：A=0.3333并非精确值3，B=-3符号错误，D=4数值错误，只有C成立。",
+    "条件与表述：第二象限消除了cos α的正负分支，也确定半角所在区间；已知量足够，无单位问题和文字歧义。",
+    "难度与考纲：必须结合象限判定余弦符号并正确使用半角恒等式，存在符号与倒数干扰，medium标注合理；属于三角函数考纲。",
+    "反例检查：分别尝试cos α=+4/5及误取半角负号，会得到1/3或负值，但均与α在第二象限不相容。"
+  ],
+  "verdictBeforeReveal": "pass",
+  "reasonCodes": [],
+  "reviewedAt": "2026-09-15T18:56:29+08:00"
+}

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "codex-repair-blind-manifest-v1",
+  "batchId": "pilot-30-v4-repair-2026-09-15",
+  "languageScope": "zh_primary_only",
+  "providerCalls": 0,
+  "count": 4,
+  "items": [
+    {
+      "candidateId": "CQ-MATH-4001",
+      "subject": "math",
+      "topicCode": "M-TRIG-HALF",
+      "designedDifficulty": "medium",
+      "taskFamily": "trig_quadrant_half_angle",
+      "structureFingerprint": "f66c5dbf9f5c2881273df4da",
+      "supersedes": "CQ-MATH-3015",
+      "revisionReason": "difficulty_normalization",
+      "blindSha256": "156285a22fcfcabeddf8a485e666eed552785478dbcdfee9c56b930121787f72"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-4001",
+      "subject": "physics",
+      "topicCode": "P-ELEC-FIELD",
+      "designedDifficulty": "medium",
+      "taskFamily": "electrostatic_zero_field_between_charges",
+      "structureFingerprint": "d2ccc1087320046f73003014",
+      "supersedes": "CQ-PHYSICS-3009",
+      "revisionReason": "difficulty_normalization",
+      "blindSha256": "ab37bb7ef1ddd634a63023640eff333e14b441e5c84a539c6fa143e42923ca79"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-4001",
+      "subject": "chemistry",
+      "topicCode": "C-STOICH-PURITY",
+      "designedDifficulty": "medium",
+      "taskFamily": "carbonate_purity_from_gas_volume",
+      "structureFingerprint": "4b0a23942fb701cd97e7286b",
+      "supersedes": "CQ-CHEMISTRY-3003",
+      "revisionReason": "self_containment_constants_added",
+      "blindSha256": "9c809dde8397080f914d1f674426b112552098ebe7c4e25ebfc50dfc927c1cae"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-4002",
+      "subject": "chemistry",
+      "topicCode": "C-ORG-EMP",
+      "designedDifficulty": "hard",
+      "taskFamily": "empirical_formula_from_combustion",
+      "structureFingerprint": "e73189a79742925f2618f83f",
+      "supersedes": "CQ-CHEMISTRY-3005",
+      "revisionReason": "self_containment_constants_added",
+      "blindSha256": "e1926544457c68e8c26a83fdb60c6782c190efc4284241848f391a667223ff2a"
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "codex-blind-review-manifest-v1",
+  "reviewerTaskId": "01a0a489-caf4-75e3-8c3a-a92ea323f53c",
+  "batchId": "pilot-30-v3",
+  "scope": {
+    "language": "zh-CN",
+    "total": 30,
+    "physics": 15,
+    "chemistry": 15
+  },
+  "summary": {
+    "physics": {
+      "pass": 12,
+      "reject": 3,
+      "abstain": 0
+    },
+    "chemistry": {
+      "pass": 12,
+      "reject": 3,
+      "abstain": 0
+    },
+    "total": {
+      "pass": 24,
+      "reject": 6,
+      "abstain": 0
+    }
+  },
+  "rejected": [
+    {
+      "candidateId": "CQ-PHYSICS-2007",
+      "reason": "医院病区直廊配送机器人加速至 6 m/s，作业速度与安全场景明显不相称，计算用途牵强。"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-2008",
+      "reason": "温室轨道喷雾机加速至 9 m/s，违背喷雾覆盖和温室作业常见尺度，计算用途牵强。"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-2009",
+      "reason": "装配桁车输送构件时达到 7 m/s，与精确定位和工业安全场景明显不相称。"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-2011",
+      "reason": "碱过量体系求数值 pH 未给温度，pKw(T) 不确定；25°C 答案不能由题面独立推出。"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-2013",
+      "reason": "碱过量体系求数值 pH 未给温度，pKw(T) 不确定；25°C 答案不能由题面独立推出。"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-2015",
+      "reason": "碱过量体系求数值 pH 未给温度，pKw(T) 不确定；25°C 答案不能由题面独立推出。"
+    }
+  ],
+  "abstained": [],
+  "majorIssues": [
+    {
+      "code": "scenario_implausible",
+      "count": 3,
+      "detail": "部分物理题给出的设备速度显著超出相应医院、温室或装配定位场景的合理作业尺度。"
+    },
+    {
+      "code": "missing_temperature",
+      "count": 3,
+      "detail": "三道碱过量中和题未声明 25°C，却要求两位小数的 pH；pH 依赖 pKw(T)。"
+    },
+    {
+      "code": "difficulty_calibration",
+      "count": 10,
+      "detail": "化学 2001-2010 为单次稀释加一次对数换算，独立评估更接近 basic，而非标注的 medium；不影响唯一性，未据此拒绝。"
+    }
+  ],
+  "integrityDeclaration": {
+    "answersAccessed": false,
+    "gitHistoryAccessed": false,
+    "sealedDirectoryAccessed": false,
+    "priorReviewsAccessed": false,
+    "officialQuestionCorpusAccessed": false,
+    "englishVersionReviewed": false
+  },
+  "reviewedAt": "2026-09-15T18:11:48.7966294+08:00"
+}

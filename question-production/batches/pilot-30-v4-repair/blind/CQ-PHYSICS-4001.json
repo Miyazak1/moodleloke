@@ -1,0 +1,144 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-PHYSICS-4001",
+  "subject": "physics",
+  "topicCode": "P-ELEC-FIELD",
+  "topicTitle": "静电场",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "相距 6 m 的两个正点电荷固定在同一直线上，左侧电荷量为 q，右侧为 4q。两电荷之间距左侧电荷多远处的合场强为零？",
+  "options": [
+    {
+      "id": "A",
+      "text": "2 m"
+    },
+    {
+      "id": "B",
+      "text": "4 m"
+    },
+    {
+      "id": "C",
+      "text": "1.2 m"
+    },
+    {
+      "id": "D",
+      "text": "3 m"
+    }
+  ],
+  "knowledgeTags": [
+    "静电场",
+    "修订题"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "physics",
+    "topicCode": "P-ELEC-FIELD",
+    "topicTitle": "静电场",
+    "targetDifficulty": "medium",
+    "taskFamily": "electrostatic_zero_field_between_charges",
+    "planTemplate": "pilot_v4_repair_electrostatic_zero_field_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "d2ccc1087320046f73003014",
+      "scenarioDataMustAffectSolution": true,
+      "selfContainedConstantsRequired": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "distanceMeters",
+        "leftChargeRatio",
+        "rightChargeRatio"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "databaseQuestionTextUsed": false,
+        "priorReviewBodyUsed": false,
+        "selectionBasis": "specified_v4_candidate_repair_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "distanceMeters",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "leftChargeRatio",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "rightChargeRatio",
+        "independentGroup": "g3"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "判断两正电荷之间的场强方向相反",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3"
+        ],
+        "output": "零场点区间"
+      },
+      {
+        "id": "r2",
+        "operation": "令两侧场强大小相等并解距离",
+        "inputs": [
+          "r1"
+        ],
+        "output": "x"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "kq₁/x²=kq₂/(d-x)²",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "x=d√q₁/(√q₁+√q₂)",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "遗漏题干常数或条件",
+      "未完成中间量复核"
+    ],
+    "answerDerivation": [
+      "仅使用题干和 QuestionPlan 中的可见输入独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项逐一代入后恰有一个满足全部关系"
+    ],
+    "canonicalInputs": {
+      "distanceMeters": 6,
+      "leftChargeRatio": 1,
+      "rightChargeRatio": 4
+    },
+    "verificationContract": {
+      "version": "pilot-v4-repair-local-verifier-v1",
+      "independentSolverRequired": true,
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    }
+  }
+}

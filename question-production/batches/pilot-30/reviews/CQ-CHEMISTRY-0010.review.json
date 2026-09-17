@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-CHEMISTRY-0010",
+  "reviewerTaskId": "pilot-30-independent-blind-review",
+  "derivedAnswer": "A",
+  "optionTruthTable": {
+    "A": true,
+    "B": false,
+    "C": false,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "basic",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "NaOH稀释后[OH-]=0.04×20/2000=4.0×10^-4 mol/L>10^-7 mol/L，故呈碱性。",
+    "水只稀释而不与NaOH发生中和；酸性、中性和无法判断均排除。"
+  ],
+  "verdictBeforeReveal": "reject",
+  "reasonCodes": [
+    "declared_difficulty_mismatch"
+  ],
+  "reviewedAt": "2026-09-15T09:29:16.058Z"
+}

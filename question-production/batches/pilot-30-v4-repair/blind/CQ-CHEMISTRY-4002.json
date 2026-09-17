@@ -1,0 +1,195 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-CHEMISTRY-4002",
+  "subject": "chemistry",
+  "topicCode": "C-ORG-EMP",
+  "topicTitle": "有机物组成",
+  "designedDifficulty": "hard",
+  "questionType": "single_choice",
+  "prompt": "某只含 C、H、O 三种元素的有机物样品 4.6 g 完全燃烧，得到 8.8 g CO₂ 和 5.4 g H₂O。已知 M(CO₂)=44 g/mol、M(H₂O)=18 g/mol，C、H、O 的相对原子质量分别为 12、1、16。求该有机物的实验式。",
+  "options": [
+    {
+      "id": "A",
+      "text": "C₂H₆O"
+    },
+    {
+      "id": "B",
+      "text": "CH₃O"
+    },
+    {
+      "id": "C",
+      "text": "CH₂"
+    },
+    {
+      "id": "D",
+      "text": "C₂H₆"
+    }
+  ],
+  "knowledgeTags": [
+    "有机物组成",
+    "修订题"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "chemistry",
+    "topicCode": "C-ORG-EMP",
+    "topicTitle": "有机物组成",
+    "targetDifficulty": "hard",
+    "taskFamily": "empirical_formula_from_combustion",
+    "planTemplate": "pilot_v4_repair_empirical_formula_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "e73189a79742925f2618f83f",
+      "scenarioDataMustAffectSolution": true,
+      "selfContainedConstantsRequired": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "sampleMassGrams",
+        "carbonDioxideMassGrams",
+        "waterMassGrams",
+        "carbonDioxideMolarMass",
+        "waterMolarMass",
+        "relativeAtomicMasses"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "databaseQuestionTextUsed": false,
+        "priorReviewBodyUsed": false,
+        "selectionBasis": "specified_v4_candidate_repair_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "sampleMassGrams",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "carbonDioxideMassGrams",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "waterMassGrams",
+        "independentGroup": "g3"
+      },
+      {
+        "id": "e4",
+        "type": "visible_parameter",
+        "role": "carbonDioxideMolarMass",
+        "independentGroup": "g4"
+      },
+      {
+        "id": "e5",
+        "type": "visible_parameter",
+        "role": "waterMolarMass",
+        "independentGroup": "g5"
+      },
+      {
+        "id": "e6",
+        "type": "visible_parameter",
+        "role": "relativeAtomicMasses",
+        "independentGroup": "g6"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "由燃烧产物求碳、氢原子的物质的量",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3",
+          "e4",
+          "e5",
+          "e6"
+        ],
+        "output": "n(C)、n(H)"
+      },
+      {
+        "id": "r2",
+        "operation": "用差量法求样品中氧的质量和物质的量",
+        "inputs": [
+          "r1"
+        ],
+        "output": "n(O)"
+      },
+      {
+        "id": "r3",
+        "operation": "约成最简整数原子比",
+        "inputs": [
+          "r2"
+        ],
+        "output": "实验式"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "n(C)=m(CO₂)/M(CO₂)",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "n(H)=2m(H₂O)/M(H₂O)",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q3",
+        "type": "deterministic_relation",
+        "expression": "m(O)=m样品-12n(C)-n(H)",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q4",
+        "type": "deterministic_relation",
+        "expression": "n(C):n(H):n(O)=最简整数比",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "遗漏题干常数或条件",
+      "未完成中间量复核"
+    ],
+    "answerDerivation": [
+      "仅使用题干和 QuestionPlan 中的可见输入独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项逐一代入后恰有一个满足全部关系"
+    ],
+    "canonicalInputs": {
+      "sampleMassGrams": 4.6,
+      "carbonDioxideMassGrams": 8.8,
+      "waterMassGrams": 5.4,
+      "carbonDioxideMolarMass": 44,
+      "waterMolarMass": 18,
+      "relativeAtomicMasses": {
+        "C": 12,
+        "H": 1,
+        "O": 16
+      }
+    },
+    "verificationContract": {
+      "version": "pilot-v4-repair-local-verifier-v1",
+      "independentSolverRequired": true,
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    }
+  }
+}

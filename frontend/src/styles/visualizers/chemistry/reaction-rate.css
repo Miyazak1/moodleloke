@@ -1,0 +1,317 @@
+.reaction-rate-card {
+  display:grid;
+  grid-template-columns:280px minmax(0,1fr) 250px;
+  gap:16px;
+  align-items:stretch;
+  padding:18px;
+  background:#fffdf9
+}
+
+.reaction-rate-controls,.reaction-rate-stage,.reaction-rate-metrics,.reaction-observation-panel {
+  min-width:0;
+  border:1px solid var(--public-line);
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 14px 36px #1720330f
+}
+
+.reaction-rate-controls {
+  display:grid;
+  align-content:start;
+  gap:14px;
+  padding:16px
+}
+
+.reaction-rate-conclusion {
+  display:grid;
+  gap:6px;
+  padding:14px;
+  border-radius:12px;
+  background:var(--public-soft);
+  border:1px solid rgba(66,107,146,.2)
+}
+
+.reaction-rate-conclusion span,.reaction-rate-controls label>span,.reaction-rate-metrics span {
+  color:var(--public-muted);
+  font-size:12px;
+  font-weight:900
+}
+
+.reaction-rate-conclusion strong {
+  color:var(--public-ink);
+  line-height:1.45
+}
+
+.reaction-rate-controls label:not(.reaction-rate-toggle) {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:8px 12px;
+  align-items:center
+}
+
+.reaction-rate-controls label:not(.reaction-rate-toggle) input {
+  grid-column:1 / -1;
+  width:100%;
+  accent-color:var(--public-orange)
+}
+
+.reaction-rate-controls label>strong {
+  color:var(--public-orange);
+  font-size:13px
+}
+
+.reaction-rate-toggle {
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  gap:6px 10px;
+  align-items:center;
+  padding:12px;
+  border:1px solid var(--public-line);
+  border-radius:12px;
+  background:#fff
+}
+
+.reaction-rate-toggle input {
+  accent-color:var(--public-orange)
+}
+
+.reaction-rate-toggle strong {
+  grid-column:2
+}
+
+.reaction-rate-actions {
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px
+}
+
+.reaction-rate-actions button,.reaction-observation-grid button {
+  min-height:42px;
+  display:inline-flex;
+  gap:7px;
+  align-items:center;
+  justify-content:center;
+  padding:10px 14px;
+  border:1px solid var(--public-orange);
+  border-radius:999px;
+  background:var(--public-orange);
+  color:#fff;
+  font-weight:900;
+  box-shadow:0 12px 24px #315dff24
+}
+
+.reaction-rate-actions button.ghost {
+  border-color:var(--public-line);
+  background:#fff;
+  color:var(--public-ink);
+  box-shadow:none
+}
+
+.reaction-rate-stage {
+  display:grid;
+  gap:14px;
+  padding:16px;
+  background:linear-gradient(180deg,#fffefa,#f8fbff)
+}
+
+.reaction-particle-panel {
+  position:relative;
+  min-height:230px;
+  overflow:hidden;
+  border:1px solid #dbe4ef;
+  border-radius:12px;
+  background:linear-gradient(90deg,rgba(148,163,184,.12) 1px,transparent 1px),linear-gradient(180deg,rgba(148,163,184,.12) 1px,transparent 1px),#fff;
+  background-size:42px 42px
+}
+
+.reaction-equation-chip {
+  position:absolute;
+  top:10px;
+  left:12px;
+  z-index:1;
+  padding:5px 9px;
+  border-radius:999px;
+  background:#fffe6;
+  color:var(--public-muted);
+  font-size:12px;
+  font-weight:900
+}
+
+.reaction-particle {
+  position:absolute;
+  width:22px;
+  height:22px;
+  display:grid;
+  place-items:center;
+  border:2px solid #fff;
+  border-radius:999px;
+  color:#fff;
+  font-size:10px;
+  font-weight:950;
+  transform:translate(-50%,-50%);
+  animation-name:reaction-drift;
+  animation-timing-function:ease-in-out;
+  animation-iteration-count:infinite;
+  box-shadow:0 5px 12px #1720331f
+}
+
+.reaction-particle.reactant {
+  background:#3b82f6
+}
+
+.reaction-particle.product {
+  background:#d97706
+}
+
+@keyframes reaction-drift {
+  0%,to {
+    transform:translate(-50%,-50%) translate(0)
+  }
+
+  35% {
+    transform:translate(-50%,-50%) translate(9px,-8px)
+  }
+
+  70% {
+    transform:translate(-50%,-50%) translate(-8px,7px)
+  }
+}
+
+.reaction-rate-chart {
+  width:100%;
+  height:auto;
+  min-height:260px;
+  border:1px solid var(--public-line);
+  border-radius:12px;
+  background:#fffaf0
+}
+
+.reaction-rate-chart .axis {
+  stroke:#8ea0ba;
+  stroke-width:1.6
+}
+
+.reaction-rate-chart .grid {
+  stroke:#cbd5e194;
+  stroke-width:1
+}
+
+.reaction-rate-chart .curve {
+  fill:none;
+  stroke-width:3.2;
+  stroke-linecap:round;
+  stroke-linejoin:round
+}
+
+.reaction-rate-chart .curve.reactant,.reaction-rate-chart .dot.reactant {
+  stroke:#3b82f6;
+  fill:#3b82f6
+}
+
+.reaction-rate-chart .curve.product,.reaction-rate-chart .dot.product {
+  stroke:#d97706;
+  fill:#d97706
+}
+
+.reaction-rate-chart .time-marker {
+  stroke:#0f172a4d;
+  stroke-dasharray:5 6
+}
+
+.reaction-rate-chart .dot {
+  stroke:#fff;
+  stroke-width:3
+}
+
+.reaction-rate-chart .axis-label,.reaction-rate-chart .legend {
+  fill:#8190a8;
+  font-size:12px;
+  font-weight:850
+}
+
+.reaction-rate-chart .axis-label.rotate {
+  transform-box:fill-box;
+  transform-origin:center;
+  transform:rotate(-90deg)
+}
+
+.reaction-rate-chart .legend.reactant {
+  fill:#3b82f6
+}
+
+.reaction-rate-chart .legend.product {
+  fill:#d97706
+}
+
+.reaction-rate-metrics {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  align-content:start;
+  padding:16px
+}
+
+.reaction-rate-metrics article {
+  display:grid;
+  gap:5px;
+  padding:14px;
+  border:1px solid var(--public-line);
+  border-radius:12px;
+  background:#fffefa
+}
+
+.reaction-rate-metrics strong {
+  color:var(--public-ink);
+  font-size:20px;
+  line-height:1.2;
+  overflow-wrap:anywhere
+}
+
+.reaction-observation-panel {
+  display:grid;
+  gap:14px;
+  padding:20px
+}
+
+.reaction-observation-panel h2 {
+  margin:0;
+  color:var(--public-ink);
+  font-size:22px
+}
+
+.reaction-observation-grid {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px
+}
+
+.reaction-observation-grid button {
+  min-height:58px;
+  border-color:var(--public-line);
+  border-radius:12px;
+  background:#fff;
+  color:var(--public-ink);
+  box-shadow:none;
+  line-height:1.45
+}
+
+.reaction-observation-grid button.active {
+  border-color:var(--public-orange);
+  background:var(--public-soft);
+  color:var(--public-orange-dark)
+}
+
+.reaction-observation-feedback {
+  margin:0;
+  padding:12px 14px;
+  border:1px solid rgba(47,140,91,.28);
+  border-radius:12px;
+  background:#effaf3;
+  color:#1f7a46;
+  font-weight:850;
+  line-height:1.6
+}
+
+.reaction-rate-support article {
+  min-width:0
+}

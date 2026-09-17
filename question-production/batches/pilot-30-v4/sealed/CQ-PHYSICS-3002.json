@@ -1,0 +1,215 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-PHYSICS-3002",
+  "subject": "physics",
+  "topicCode": "P-MECH-PROJ",
+  "topicTitle": "平抛运动",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "救援物资从距水平地面 45 m 高的平台边缘以 15 m/s 的水平初速度抛出，忽略空气阻力，取 g=10 m/s²。求物资落地瞬间的速度大小。",
+  "options": [
+    {
+      "id": "A",
+      "text": "15√5 m/s"
+    },
+    {
+      "id": "B",
+      "text": "30 m/s"
+    },
+    {
+      "id": "C",
+      "text": "15 m/s"
+    },
+    {
+      "id": "D",
+      "text": "45 m/s"
+    }
+  ],
+  "knowledgeTags": [
+    "平抛运动",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "physics",
+    "topicCode": "P-MECH-PROJ",
+    "topicTitle": "平抛运动",
+    "targetDifficulty": "medium",
+    "taskFamily": "horizontal_projectile_landing_speed",
+    "planTemplate": "pilot_v4_horizontal_projectile_landing_speed_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "095316a6b5228bfb48db9fce",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "g",
+        "h",
+        "u"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "g",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "h",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "u",
+        "independentGroup": "g3"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "derive vertical landing component",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "combine perpendicular velocity components",
+        "inputs": [
+          "r1"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "vy^2=2gh",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "vx=u",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q3",
+        "type": "deterministic_relation",
+        "expression": "v=sqrt(vx^2+vy^2)",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "把末速度等同水平速度",
+      "把分速度直接相加"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "u": 15,
+      "h": 45,
+      "g": 10
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 2
+  },
+  "correctAnswer": "A",
+  "explanation": "竖直方向由 v_y²=2gh 得 v_y=30 m/s；水平方向速度保持 15 m/s。两分速度垂直，故落地速度大小为 √(15²+30²)=15√5 m/s。",
+  "generationMetadata": {
+    "origin": "codex_local_deterministic_v4",
+    "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v4",
+    "createdAt": "2026-09-15T16:00:00.000Z",
+    "languageScope": "zh_primary_only",
+    "providerCalls": 0,
+    "sourceIsolation": {
+      "officialQuestionContentRead": false,
+      "databaseQuestionTextRead": false,
+      "priorReviewTextRead": false
+    },
+    "deterministicVerification": {
+      "solver": {
+        "version": "pilot-v4-batch-local-solver-v1",
+        "status": "verified",
+        "taskFamily": "horizontal_projectile_landing_speed",
+        "evidenceBoundary": "prompt_options_and_question_plan",
+        "expectedCanonical": 33.54101966249684,
+        "selectedOptionId": "A",
+        "uniqueAnswer": true
+      },
+      "oracle": {
+        "version": "pilot-v4-independent-oracle-v1",
+        "status": "verified",
+        "implementation": "fresh_family_evaluation_from_canonical_inputs",
+        "expectedCanonical": 33.54101966249685,
+        "agreesWithSolver": true
+      },
+      "optionTruthTable": [
+        {
+          "optionId": "A",
+          "verdict": true,
+          "canonicalValue": 33.54101966249684
+        },
+        {
+          "optionId": "B",
+          "verdict": false,
+          "canonicalValue": 30
+        },
+        {
+          "optionId": "C",
+          "verdict": false,
+          "canonicalValue": 15
+        },
+        {
+          "optionId": "D",
+          "verdict": false,
+          "canonicalValue": 45
+        }
+      ],
+      "explanationReplay": {
+        "version": "pilot-v4-explanation-replay-v1",
+        "status": "verified",
+        "requiredEvidenceTokens": [
+          "v_y=30",
+          "15√5"
+        ],
+        "allRequiredTokensPresent": true,
+        "conclusionMatchesAnswer": true
+      }
+    }
+  }
+}

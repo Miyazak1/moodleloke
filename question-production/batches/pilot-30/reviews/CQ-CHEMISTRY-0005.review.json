@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-CHEMISTRY-0005",
+  "reviewerTaskId": "pilot-30-independent-blind-review",
+  "derivedAnswer": "A",
+  "optionTruthTable": {
+    "A": true,
+    "B": false,
+    "C": false,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "basic",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "盐酸稀释后仍有正的过量[H+]：0.04×50/2500=8.0×10^-4 mol/L，因此呈酸性。",
+    "水只改变浓度，不消耗HCl；中性、碱性与“无法判断”均不成立。"
+  ],
+  "verdictBeforeReveal": "reject",
+  "reasonCodes": [
+    "declared_difficulty_mismatch"
+  ],
+  "reviewedAt": "2026-09-15T09:29:16.058Z"
+}

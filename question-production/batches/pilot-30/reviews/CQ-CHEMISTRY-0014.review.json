@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-CHEMISTRY-0014",
+  "reviewerTaskId": "pilot-30-independent-blind-review",
+  "derivedAnswer": "B",
+  "optionTruthTable": {
+    "A": false,
+    "B": true,
+    "C": false,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "medium",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "n(H+)−n(OH-)=0.00160000−0.00150000=0.000100000 mol；总体积=0.0350000 L。",
+    "过量[H+]=0.00285714 mol/L，pH=2.5441，与唯一选项吻合；反查其余选项均不满足物料衡算。"
+  ],
+  "verdictBeforeReveal": "pass",
+  "reasonCodes": [],
+  "reviewedAt": "2026-09-15T09:29:16.058Z"
+}

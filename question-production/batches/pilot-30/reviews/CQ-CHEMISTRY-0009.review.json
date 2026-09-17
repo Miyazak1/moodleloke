@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-CHEMISTRY-0009",
+  "reviewerTaskId": "pilot-30-independent-blind-review",
+  "derivedAnswer": "D",
+  "optionTruthTable": {
+    "A": false,
+    "B": false,
+    "C": false,
+    "D": true
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "medium",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "[OH-]=0.05×5/250=0.00100000 mol/L；25°C下pH=14-pOH=11.0000，按选项精度舍入。",
+    "逐一反查其余选项对应的[OH-]，均与稀释关系不符；未混淆pH与pOH。"
+  ],
+  "verdictBeforeReveal": "pass",
+  "reasonCodes": [],
+  "reviewedAt": "2026-09-15T09:29:16.058Z"
+}

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-MATH-0013",
+  "reviewerTaskId": "pilot-30-independent-blind-review",
+  "derivedAnswer": "A",
+  "optionTruthTable": {
+    "A": true,
+    "B": false,
+    "C": false,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "basic",
+  "caseNecessary": false,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "原直线斜率-3；垂线斜率1/3。A化为y=x/3，B、C斜率-3，D斜率2。",
+    "检查定义域、符号与所有四个选项后，只有一个选项满足题干。"
+  ],
+  "verdictBeforeReveal": "pass",
+  "reasonCodes": [],
+  "reviewedAt": "2026-09-15T09:29:16.058Z"
+}

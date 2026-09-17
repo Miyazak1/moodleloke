@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-CHEMISTRY-2008",
+  "reviewerTaskId": "01a0a489-caf4-75e3-8c3a-a92ea323f53c",
+  "derivedAnswer": "D",
+  "optionTruthTable": {
+    "A": false,
+    "B": false,
+    "C": false,
+    "D": true
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "basic",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "稀释后 [OH-]=0.1×40/800=0.005 mol/L，pOH=2.30103，25°C 下 pH=11.69897，约为 11.7，只有 D 符合。",
+    "20 倍稀释后的氢氧根浓度与 D 反算值一致；选项间隔足以排除舍入歧义。"
+  ],
+  "verdictBeforeReveal": "pass",
+  "reasonCodes": [],
+  "reviewedAt": "2026-09-15T18:11:48.7966294+08:00"
+}

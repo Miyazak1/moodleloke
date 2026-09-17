@@ -1,0 +1,219 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-PHYSICS-0008",
+  "subject": "physics",
+  "topicCode": "P-MECH-001",
+  "topicTitle": "直线运动学",
+  "designedDifficulty": "basic",
+  "questionType": "single_choice",
+  "prompt": "在水平直轨实验中，实验小车沿直线运动，初速度为 28 m/s，末速度为 40 m/s，用时为 12 s，求这段时间内的加速度。",
+  "options": [
+    {
+      "id": "A",
+      "text": "加速度：2 m/s^2"
+    },
+    {
+      "id": "B",
+      "text": "加速度：0 m/s^2"
+    },
+    {
+      "id": "C",
+      "text": "加速度：3 m/s^2"
+    },
+    {
+      "id": "D",
+      "text": "加速度：1 m/s^2"
+    }
+  ],
+  "knowledgeTags": [
+    "运动学",
+    "直线运动",
+    "acceleration_from_velocity_change"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "physics",
+    "topicId": 78,
+    "topicTitle": "运动学",
+    "productionCellId": 24,
+    "targetDifficulty": "basic",
+    "taskFamily": "kinematics_basic_direct_relation",
+    "planTemplate": "physics_kinematics_basic_relation_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "requirePhysicsSituation": true,
+      "requireUnitOrGraphEvidence": true,
+      "exactPhysicsKinematicsScope": "acceleration_from_velocity_change",
+      "maxIndependentRelations": 1,
+      "forbidMultiStageModelChain": true,
+      "finalAnswerShape": "one_direct_kinematics_value_direction_or_graph_fact",
+      "preferredPromptSkeletons": [
+        "给出位移、时间、速度或加速度中的两个直接量，求第三个量并保留单位",
+        "用文字完整描述一段 s-t 或 v-t 直线图像，判断斜率、方向或速度中的一个事实"
+      ]
+    },
+    "budget": {
+      "maxPlanRepairs": 2,
+      "maxCandidateRepairs": 1
+    },
+    "scenarioContract": {
+      "schemaVersion": "subject-practice-scenario-contract-v1",
+      "policyVersion": "subject-practice-scenario-diversity-shadow-v2-multi-evidence-status",
+      "stage": "shadow_only_thresholds_not_frozen",
+      "scenarioMode": "experimental",
+      "scenarioFamilyId": "physics_lab_cart_track",
+      "scenarioDomain": "mechanics_laboratory",
+      "scenarioEntity": "wheeled_vehicle",
+      "scenarioAction": "acceleration_from_velocity_change",
+      "informationForm": "numeric_text",
+      "scenarioFingerprint": "scenario-e373882ae39649c59bb4",
+      "contextNecessity": "required_for_solution",
+      "requiredInformationFields": [
+        "scenarioAction",
+        "motion_or_reaction_condition",
+        "quantities_with_units"
+      ],
+      "solverRelevantFields": [
+        "scenarioAction",
+        "motion_or_reaction_condition",
+        "quantities_with_units"
+      ],
+      "surface": {
+        "zhEntity": "实验小车",
+        "enEntity": "laboratory cart",
+        "zhSetting": "水平直轨实验",
+        "enSetting": "a horizontal straight-track experiment",
+        "cueTokens": [
+          "实验小车",
+          "laboratory cart"
+        ]
+      },
+      "plausibility": {
+        "straightLineMotion": true,
+        "siUnitsRequired": true,
+        "signedVelocityAndAccelerationAllowed": true
+      },
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "controlled_catalog_and_sealed_ordinal_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "physical_situation",
+        "role": "one_self_contained_kinematics_object_or_motion_segment",
+        "independentGroup": "k1"
+      },
+      {
+        "id": "e2",
+        "type": "quantity_or_graph_relation",
+        "role": "one_displacement_time_velocity_acceleration_or_graph_slope_relation_with_units",
+        "independentGroup": "k1"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "identify_direct_kinematics_relation",
+        "inputs": [
+          "e1",
+          "e2"
+        ],
+        "output": "selected_relation"
+      },
+      {
+        "id": "r2",
+        "operation": "derive_one_value_direction_or_graph_fact",
+        "inputs": [
+          "selected_relation"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "kinematics_unit_or_graph_round_trip",
+        "expression": "displacement/time/velocity/acceleration relation or graph slope checks the answer",
+        "variables": [
+          "s",
+          "t",
+          "v",
+          "a"
+        ],
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "confuse displacement with distance",
+      "confuse graph slope with graph height",
+      "omit or mismatch units"
+    ],
+    "answerDerivation": [
+      "apply exactly one visible kinematics relation or one graph-slope interpretation"
+    ],
+    "uniquenessConditions": [
+      "only one option matches the stated motion relation and units"
+    ]
+  },
+  "localizations": {
+    "zh": {
+      "prompt": "在水平直轨实验中，实验小车沿直线运动，初速度为 28 m/s，末速度为 40 m/s，用时为 12 s，求这段时间内的加速度。",
+      "options": [
+        {
+          "id": "A",
+          "text": "加速度：2 m/s^2"
+        },
+        {
+          "id": "B",
+          "text": "加速度：0 m/s^2"
+        },
+        {
+          "id": "C",
+          "text": "加速度：3 m/s^2"
+        },
+        {
+          "id": "D",
+          "text": "加速度：1 m/s^2"
+        }
+      ],
+      "knowledgeTags": [
+        "运动学",
+        "直线运动"
+      ]
+    },
+    "en": {
+      "prompt": "During a horizontal straight-track experiment, the laboratory cart moves in a straight line with initial velocity 28 m/s and reaches 40 m/s in 12 s. Find its acceleration.",
+      "options": [
+        {
+          "id": "A",
+          "text": "Acceleration: 2 m/s^2"
+        },
+        {
+          "id": "B",
+          "text": "Acceleration: 0 m/s^2"
+        },
+        {
+          "id": "C",
+          "text": "Acceleration: 3 m/s^2"
+        },
+        {
+          "id": "D",
+          "text": "Acceleration: 1 m/s^2"
+        }
+      ],
+      "knowledgeTags": [
+        "Kinematics",
+        "Linear motion"
+      ]
+    }
+  }
+}

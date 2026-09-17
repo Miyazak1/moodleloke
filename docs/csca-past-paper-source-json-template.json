@@ -1,0 +1,85 @@
+{
+  "document": {
+    "subject": "math",
+    "syllabusVersion": "2025",
+    "sourceType": "past_paper",
+    "title": "CSCA 数学真题参考",
+    "examYear": 2025,
+    "examSession": "sample",
+    "language": "zh",
+    "sourceLabel": "用户提供截图整理",
+    "licenseScope": "internal_analysis",
+    "usagePolicy": {
+      "allowStyleExtraction": true,
+      "allowQuestionDisplay": true,
+      "allowPromptRawText": true,
+      "allowSimilarityCheck": true
+    },
+    "status": "active"
+  },
+  "questions": [
+    {
+      "questionNumber": "1",
+      "pageNumber": 1,
+      "language": "zh",
+      "promptText": "题干文本",
+      "options": [
+        {
+          "id": "A",
+          "text": "选项 A"
+        },
+        {
+          "id": "B",
+          "text": "选项 B"
+        },
+        {
+          "id": "C",
+          "text": "选项 C"
+        },
+        {
+          "id": "D",
+          "text": "选项 D"
+        }
+      ],
+      "correctAnswer": "A",
+      "explanation": "解析文本。若截图没有解析，写人工简析。",
+      "syllabusVersion": "2025",
+      "topicCodes": [],
+      "blueprintLikeTags": [
+        "single_choice"
+      ],
+      "analysis": {
+        "cognitiveSkill": "concept_identification",
+        "difficulty": "basic",
+        "difficultyEvidence": "基础概念识别，计算量低。",
+        "questionForm": "concept_check",
+        "stemPattern": {
+          "hasScenario": false,
+          "hasFormula": false,
+          "hasDiagram": false,
+          "hasTable": false
+        },
+        "reasoningSteps": 1,
+        "calculationLoad": "none",
+        "optionPattern": {
+          "optionStyle": "four_option_single_choice",
+          "distractorTypes": [
+            "concept_confusion"
+          ],
+          "commonMisconceptions": []
+        },
+        "styleNotes": [
+          "题干短",
+          "单选",
+          "直接考查概念"
+        ],
+        "doNotCopySignals": [
+          "不要复用原题题干和选项顺序"
+        ]
+      },
+      "analysisConfidence": 0.8,
+      "analysisStatus": "ai_parsed",
+      "reviewStatus": "needs_review"
+    }
+  ]
+}

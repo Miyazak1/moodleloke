@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "codex-question-library-selection-v1",
+  "selectionId": "pilot-30-v4-2026-09-15",
+  "languageScope": "zh_primary_only",
+  "target": { "math": 10, "physics": 10, "chemistry": 10 },
+  "candidates": [
+    { "candidateId": "CQ-MATH-3001", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-MATH-3003", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-MATH-3005", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-MATH-3007", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-MATH-3009", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-MATH-3011", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-MATH-3013", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-MATH-4001", "batch": "pilot-30-v4-repair" },
+    { "candidateId": "CQ-MATH-3017", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-MATH-3019", "batch": "pilot-30-v4" },
+
+    { "candidateId": "CQ-PHYSICS-3001", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-PHYSICS-3003", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-PHYSICS-3005", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-PHYSICS-3007", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-PHYSICS-4001", "batch": "pilot-30-v4-repair" },
+    { "candidateId": "CQ-PHYSICS-3011", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-PHYSICS-3013", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-PHYSICS-3015", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-PHYSICS-3017", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-PHYSICS-3019", "batch": "pilot-30-v4" },
+
+    { "candidateId": "CQ-CHEMISTRY-3001", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-CHEMISTRY-3007", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-CHEMISTRY-3009", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-CHEMISTRY-3011", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-CHEMISTRY-3013", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-CHEMISTRY-5001", "batch": "pilot-30-v4-repair2" },
+    { "candidateId": "CQ-CHEMISTRY-3017", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-CHEMISTRY-3019", "batch": "pilot-30-v4" },
+    { "candidateId": "CQ-CHEMISTRY-4001", "batch": "pilot-30-v4-repair" },
+    { "candidateId": "CQ-CHEMISTRY-4002", "batch": "pilot-30-v4-repair" }
+  ],
+  "selectionRationale": {
+    "math": "十个结构各取一题；半角题使用已将难度规范化为 medium 并重新盲审通过的修订版本。",
+    "physics": "十个结构各取一题；静电场题使用已将难度规范化为 medium 并重新盲审通过的修订版本。",
+    "chemistry": "十个结构各取一题；原先条件不自足的纯度与燃烧分析题使用补齐常数并重新盲审通过的修订版本；无法映射正式专题的 Hess 定律题由已重新盲审通过的理想气体状态题替换。"
+  },
+  "usageConstraints": {
+    "sameFamilyPerStudentSessionMaximum": 1,
+    "chemistryRepeatedFamilies": []
+  },
+  "status": "selected_for_originality_and_database_collision_audit"
+}

@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "codex-structural-diversity-manifest-v1",
+  "batchId": "pilot-30-v3-2026-09-15",
+  "rules": {
+    "minimumScenarioFamiliesPerSubject": 8,
+    "maximumItemsPerScenarioFamily": 2,
+    "renameOnlyAccepted": false
+  },
+  "subjects": {
+    "physics": {
+      "itemCount": 15,
+      "scenarioFamilyCount": 15,
+      "maximumFamilyOccupancy": 1,
+      "familyCounts": {
+        "港区转运": 1,
+        "果园巡检": 1,
+        "仓储分拣": 1,
+        "机场行李转运": 1,
+        "矿区运输": 1,
+        "体育转播跟拍": 1,
+        "医院物资配送": 1,
+        "温室喷雾作业": 1,
+        "工厂构件定位": 1,
+        "游乐轨道测试": 1,
+        "封闭道路巡检": 1,
+        "铁路检测": 1,
+        "水下声呐扫描": 1,
+        "雪场救援演练": 1,
+        "运河检修支援": 1
+      },
+      "uniqueDimensionCounts": {
+        "entity": 15,
+        "environment": 15,
+        "action": 15,
+        "informationForm": 15,
+        "questionPurpose": 15
+      }
+    },
+    "chemistry": {
+      "itemCount": 15,
+      "scenarioFamilyCount": 15,
+      "maximumFamilyOccupancy": 1,
+      "familyCounts": {
+        "仪器参比液配制": 1,
+        "排放水样筛查": 1,
+        "设备冲洗准备": 1,
+        "冷却回路监测": 1,
+        "镀液回收评估": 1,
+        "配方液放行": 1,
+        "教学试剂配制": 1,
+        "保存液入库": 1,
+        "发酵过程转序": 1,
+        "暗房工作液准备": 1,
+        "废水中和小试": 1,
+        "漂洗废水复核": 1,
+        "染整废水转序": 1,
+        "制药清洗水放行": 1,
+        "食品车间废水处理": 1
+      },
+      "uniqueDimensionCounts": {
+        "entity": 15,
+        "environment": 15,
+        "action": 15,
+        "informationForm": 15,
+        "questionPurpose": 15
+      }
+    }
+  },
+  "verdict": "pass"
+}

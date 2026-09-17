@@ -1,0 +1,149 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-PHYSICS-3001",
+  "subject": "physics",
+  "topicCode": "P-MECH-PROJ",
+  "topicTitle": "平抛运动",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "救援物资从距水平地面 20 m 高的平台边缘以 10 m/s 的水平初速度抛出，忽略空气阻力，取 g=10 m/s²。求物资落地瞬间的速度大小。",
+  "options": [
+    {
+      "id": "A",
+      "text": "10√5 m/s"
+    },
+    {
+      "id": "B",
+      "text": "20 m/s"
+    },
+    {
+      "id": "C",
+      "text": "10 m/s"
+    },
+    {
+      "id": "D",
+      "text": "30 m/s"
+    }
+  ],
+  "knowledgeTags": [
+    "平抛运动",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "physics",
+    "topicCode": "P-MECH-PROJ",
+    "topicTitle": "平抛运动",
+    "targetDifficulty": "medium",
+    "taskFamily": "horizontal_projectile_landing_speed",
+    "planTemplate": "pilot_v4_horizontal_projectile_landing_speed_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "095316a6b5228bfb48db9fce",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "g",
+        "h",
+        "u"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "g",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "h",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "u",
+        "independentGroup": "g3"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "derive vertical landing component",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "combine perpendicular velocity components",
+        "inputs": [
+          "r1"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "vy^2=2gh",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "vx=u",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q3",
+        "type": "deterministic_relation",
+        "expression": "v=sqrt(vx^2+vy^2)",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "把末速度等同水平速度",
+      "把分速度直接相加"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "u": 10,
+      "h": 20,
+      "g": 10
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 1
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "codex-question-repair-batch-v1",
+  "batchId": "pilot-30-v4-repair-2026-09-15",
+  "candidateCount": 4,
+  "language": "zh_primary_only",
+  "questionType": "single_choice",
+  "providerCallsAllowed": false,
+  "sourceScope": [
+    "CQ-MATH-3015",
+    "CQ-PHYSICS-3009",
+    "CQ-CHEMISTRY-3003",
+    "CQ-CHEMISTRY-3005"
+  ],
+  "repairs": [
+    { "candidateId": "CQ-MATH-4001", "supersedes": "CQ-MATH-3015", "reason": "difficulty_normalization" },
+    { "candidateId": "CQ-PHYSICS-4001", "supersedes": "CQ-PHYSICS-3009", "reason": "difficulty_normalization" },
+    { "candidateId": "CQ-CHEMISTRY-4001", "supersedes": "CQ-CHEMISTRY-3003", "reason": "self_containment_constants_added" },
+    { "candidateId": "CQ-CHEMISTRY-4002", "supersedes": "CQ-CHEMISTRY-3005", "reason": "self_containment_constants_added" }
+  ],
+  "isolation": {
+    "officialQuestionContentRead": false,
+    "databaseQuestionTextRead": false,
+    "originalityPerItemHitsRead": false,
+    "priorReviewBodiesRead": false
+  }
+}

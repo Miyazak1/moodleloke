@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-CHEMISTRY-2004",
+  "reviewerTaskId": "01a0a489-caf4-75e3-8c3a-a92ea323f53c",
+  "derivedAnswer": "D",
+  "optionTruthTable": {
+    "A": false,
+    "B": false,
+    "C": false,
+    "D": true
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "basic",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "稀释后 [H+]=0.05×25/2500=5.0×10^-4 mol/L，pH=3.30103，约为 3.3，只有 D 符合。",
+    "稀释倍数 100，使初始 pH 1.301 增加 2；单位换算在体积比中相消。"
+  ],
+  "verdictBeforeReveal": "pass",
+  "reasonCodes": [],
+  "reviewedAt": "2026-09-15T18:11:48.7966294+08:00"
+}

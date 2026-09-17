@@ -1,0 +1,263 @@
+.lens-page {
+  width: min(1240px, calc(100vw - 48px));
+}
+
+.lens-card {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid rgba(49, 93, 255, .16);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 16px 42px rgba(15, 23, 42, .07);
+}
+
+.lens-side,
+.lens-main {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  min-width: 0;
+}
+
+.lens-side article,
+.lens-stage,
+.lens-rule-panel article {
+  border: 1px solid rgba(49, 93, 255, .14);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.lens-side article,
+.lens-rule-panel article {
+  padding: 16px;
+}
+
+.lens-side h2,
+.lens-rule-panel h2 {
+  margin: 0 0 12px;
+  color: #312e81;
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.lens-formula-card,
+.lens-result-card,
+.lens-control-card,
+.lens-slider-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.lens-formula-card .math-content {
+  justify-content: center;
+  padding: 18px 10px;
+  border: 1px solid rgba(49, 93, 255, .18);
+  border-radius: 12px;
+  background: #e9efff;
+}
+
+.lens-result-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(86px, auto);
+  gap: 10px;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(148, 163, 184, .18);
+  color: #5f6f69;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.lens-result-row:last-child {
+  border-bottom: 0;
+}
+
+.lens-result-row strong,
+.lens-slider-stack strong {
+  color: #315dff;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.lens-result-row:last-child strong {
+  color: #315dff;
+  white-space: normal;
+}
+
+.lens-control-card > span {
+  color: #5f6f69;
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.lens-segments {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 4px;
+  border-radius: 12px;
+  background: #eef2f7;
+}
+
+.lens-segments button {
+  min-height: 38px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #475569;
+  font-weight: 950;
+}
+
+.lens-segments button.active {
+  background: #315dff;
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(49, 93, 255, .18);
+}
+
+.lens-slider-stack label {
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr) 74px;
+  gap: 10px;
+  align-items: center;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.lens-slider-stack input[type="range"] {
+  width: 100%;
+  accent-color: #315dff;
+}
+
+.lens-stage {
+  padding: 12px;
+  overflow: hidden;
+  background: #f8fbff;
+}
+
+.lens-diagram-svg {
+  display: block;
+  width: 100%;
+  min-height: 430px;
+}
+
+.lens-diagram-svg .stage-title,
+.lens-diagram-svg .focus-label,
+.lens-diagram-svg .legend-label,
+.lens-diagram-svg .infinite-label {
+  fill: #5f6f69;
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.lens-diagram-svg .principal-axis {
+  stroke: #94a3b8;
+  stroke-width: 2;
+}
+
+.lens-diagram-svg .focus-dot {
+  fill: #94a3b8;
+}
+
+.lens-diagram-svg .focus-dot.main {
+  fill: #ef4444;
+}
+
+.lens-diagram-svg .focus-label {
+  text-anchor: middle;
+}
+
+.lens-diagram-svg .lens-shape path {
+  fill: none;
+  stroke: #315dff;
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.lens-diagram-svg .lens-shape.concave path {
+  stroke: #6366f1;
+}
+
+.lens-diagram-svg .lens-shape text {
+  fill: #315dff;
+  font-size: 12px;
+  font-weight: 950;
+  text-anchor: middle;
+}
+
+.lens-diagram-svg .object-arrow {
+  stroke: #3b82f6;
+  stroke-width: 4;
+}
+
+.lens-diagram-svg .object-label {
+  fill: #315dff;
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.lens-diagram-svg .real-image line {
+  stroke: #ef4444;
+  stroke-width: 4;
+}
+
+.lens-diagram-svg .virtual-image line {
+  stroke: #ef4444;
+  stroke-width: 4;
+  stroke-dasharray: 6 5;
+}
+
+.lens-diagram-svg .image-label {
+  fill: #ef4444;
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.lens-diagram-svg .ray,
+.lens-diagram-svg .legend-ray {
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+.lens-diagram-svg .parallel {
+  stroke: #22c55e;
+}
+
+.lens-diagram-svg .center {
+  stroke: #f1a826;
+}
+
+.lens-diagram-svg .focal {
+  stroke: #8b5cf6;
+}
+
+.lens-diagram-svg .extension {
+  fill: none;
+  stroke: #ef4444;
+  stroke-width: 2;
+  stroke-dasharray: 6 6;
+}
+
+.lens-diagram-svg .watermark {
+  fill: #cbd5e1;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.lens-rule-panel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.lens-rule-panel p {
+  margin: 0;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.7;
+}

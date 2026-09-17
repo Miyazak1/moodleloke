@@ -1,0 +1,316 @@
+.bonding-structure-card {
+  display:grid;
+  grid-template-columns:280px minmax(0,1fr) 260px;
+  gap:16px;
+  align-items:stretch;
+  padding:18px;
+  background:#fffdf9
+}
+
+.bonding-control-panel,.bonding-stage-panel,.bonding-analysis-panel {
+  min-width:0
+}
+
+.bonding-control-panel,.bonding-analysis-panel {
+  display:grid;
+  align-content:start;
+  gap:14px
+}
+
+.bonding-control-panel article,.bonding-analysis-panel article,.bonding-stage-panel {
+  border:1px solid var(--public-line);
+  border-radius:14px;
+  background:#fffefa;
+  box-shadow:0 14px 34px #1720330e
+}
+
+.bonding-kind-card {
+  display:grid;
+  gap:8px;
+  padding:16px
+}
+
+.bonding-kind-card span,.bonding-control-panel label span,.bonding-analysis-panel span {
+  color:var(--public-muted);
+  font-size:12px;
+  font-weight:900
+}
+
+.bonding-kind-card strong {
+  color:var(--public-ink);
+  font-size:26px
+}
+
+.bonding-kind-card p {
+  width:fit-content;
+  margin:0;
+  padding:7px 10px;
+  border-radius:999px;
+  background:#fff1db;
+  color:var(--public-orange);
+  font-weight:950
+}
+
+.bonding-kind-card.green p {
+  color:#047857;
+  background:#dcfce7
+}
+
+.bonding-kind-card.blue p {
+  color:#315dff;
+  background:#dbeafe
+}
+
+.bonding-kind-card.orange p {
+  color:#c2410c;
+  background:#ffedd5
+}
+
+.bonding-control-panel label {
+  display:grid;
+  gap:8px;
+  padding:13px 14px;
+  border:1px solid var(--public-line);
+  border-radius:14px;
+  background:#fffefa
+}
+
+.bonding-control-panel select {
+  min-height:38px;
+  width:100%;
+  border:1px solid var(--public-line);
+  border-radius:10px;
+  background:#fff;
+  color:var(--public-ink);
+  font-weight:850
+}
+
+.bonding-molecule-picker {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px
+}
+
+.bonding-molecule-picker button {
+  min-height:68px;
+  display:grid;
+  gap:4px;
+  justify-items:start;
+  padding:10px 11px;
+  border:1px solid var(--public-line);
+  border-radius:12px;
+  background:#fff;
+  color:var(--public-ink);
+  text-align:left
+}
+
+.bonding-molecule-picker button.active {
+  border-color:var(--public-orange);
+  background:var(--public-soft);
+  box-shadow:0 0 0 3px #315dff1a
+}
+
+.bonding-molecule-picker strong {
+  font-size:18px
+}
+
+.bonding-molecule-picker span {
+  color:var(--public-muted);
+  font-size:11px;
+  font-weight:850
+}
+
+.bonding-control-panel .bonding-toggle {
+  display:flex;
+  align-items:center;
+  justify-content:space-between
+}
+
+.bonding-toggle input {
+  width:36px;
+  height:20px;
+  accent-color:var(--public-orange)
+}
+
+.bonding-rule-card {
+  display:grid;
+  gap:10px;
+  padding:14px
+}
+
+.bonding-rule-card h2 {
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  margin:0;
+  color:#9a3412;
+  font-size:16px
+}
+
+.bonding-rule-card p {
+  margin:0;
+  padding:12px;
+  overflow-x:auto;
+  border:1px solid rgba(66,107,146,.22);
+  border-radius:10px;
+  background:#fff8e7
+}
+
+.bonding-rule-card span {
+  color:var(--public-muted);
+  font-size:12px;
+  font-weight:900
+}
+
+.bonding-stage-panel {
+  display:grid;
+  gap:12px;
+  padding:16px;
+  overflow:hidden;
+  background:linear-gradient(180deg,#f8fbff,#fffefa)
+}
+
+.bonding-stage-header {
+  display:flex;
+  gap:14px;
+  align-items:flex-start;
+  justify-content:space-between
+}
+
+.bonding-stage-header h2 {
+  margin:0;
+  color:var(--public-ink);
+  font-size:22px
+}
+
+.bonding-stage-header p {
+  max-width:620px;
+  margin:5px 0 0;
+  color:var(--public-muted);
+  line-height:1.55;
+  font-weight:850
+}
+
+.bonding-stage-header span {
+  flex:0 0 auto;
+  min-width:86px;
+  padding:8px 10px;
+  border-radius:999px;
+  background:#fff1db;
+  color:var(--public-orange);
+  font-weight:950;
+  text-align:center
+}
+
+.bonding-molecule-svg {
+  width:100%;
+  min-height:380px;
+  display:block;
+  border:1px solid #dbe4ef;
+  border-radius:12px;
+  background:radial-gradient(circle at 50% 42%,#fff 0,#f8fbff 72%)
+}
+
+.bonding-molecule-svg .bond {
+  stroke:#5f6f69;
+  stroke-width:7;
+  stroke-linecap:round
+}
+
+.bonding-molecule-svg .bond.ionic {
+  stroke:#94a3b8;
+  stroke-dasharray:8 8
+}
+
+.bonding-atom circle {
+  stroke:#dbe4ef;
+  stroke-width:2;
+  filter:drop-shadow(0 8px 12px rgba(15,23,42,.16))
+}
+
+.bonding-atom.light circle {
+  fill:#f8fafc
+}
+
+.bonding-atom.green circle {
+  fill:#bbf7d0
+}
+
+.bonding-atom.red circle {
+  fill:#fecaca
+}
+
+.bonding-atom.blue circle {
+  fill:#bfdbfe
+}
+
+.bonding-atom.dark circle {
+  fill:#cbd5e1
+}
+
+.bonding-atom.orange circle {
+  fill:#fed7aa
+}
+
+.bonding-atom text {
+  fill:var(--public-ink);
+  font-size:21px;
+  font-weight:950
+}
+
+.bonding-atom .bonding-charge {
+  fill:#ef4444;
+  font-size:14px;
+  font-weight:950
+}
+
+.bonding-atom .bonding-en,.bonding-transfer-label,.bonding-cancel-label {
+  fill:#5f6f69;
+  font-size:12px;
+  font-weight:900
+}
+
+.bond-electron-pair circle,.bonding-lone-pair circle {
+  fill:#315dff;
+  stroke:#fff;
+  stroke-width:1.5
+}
+
+.bonding-lone-pair text {
+  fill:#315dff;
+  font-size:11px;
+  font-weight:900
+}
+
+.bonding-dipole {
+  stroke:#315dff;
+  stroke-width:3;
+  stroke-linecap:round
+}
+
+.bonding-cancel-label {
+  fill:var(--public-orange)
+}
+
+.bonding-analysis-panel article {
+  display:grid;
+  gap:7px;
+  padding:14px
+}
+
+.bonding-analysis-panel strong {
+  color:var(--public-ink);
+  font-size:24px;
+  line-height:1.15
+}
+
+.bonding-analysis-panel p {
+  margin:0;
+  color:var(--public-muted);
+  line-height:1.55;
+  font-weight:850
+}
+
+.bonding-structure-support article {
+  min-width:0
+}

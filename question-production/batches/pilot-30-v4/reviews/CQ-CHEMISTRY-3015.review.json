@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-CHEMISTRY-3015",
+  "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+  "derivedAnswer": "C",
+  "optionTruthTable": {
+    "A": false,
+    "B": false,
+    "C": true,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "medium",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "目标反应=反应1+反应2的逆反应，ΔH=-394+283=-111 kJ/mol。仅 C 正确；只需一次反转相加，hard 标注明显偏高。",
+    "已逐项对照 A/B/C/D；真值表只标记由题干独立推出的选项，未采用任何题面或元数据自报答案。"
+  ],
+  "verdictBeforeReveal": "reject",
+  "reasonCodes": [
+    "DIFFICULTY_OVERSTATED"
+  ],
+  "reviewedAt": "2026-09-15T18:46:01.1890259+08:00"
+}

@@ -1,0 +1,232 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-PHYSICS-3008",
+  "subject": "physics",
+  "topicCode": "P-ELEC-CIRCUIT",
+  "topicTitle": "直流电路",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "电阻 R₁=12 Ω 与 R₂=4 Ω 并联后，再与 R₃=2 Ω 串联，接在电压为 15 V 的理想电源两端。求电路总电流。",
+  "options": [
+    {
+      "id": "A",
+      "text": "0.8333 A"
+    },
+    {
+      "id": "B",
+      "text": "5 A"
+    },
+    {
+      "id": "C",
+      "text": "3 A"
+    },
+    {
+      "id": "D",
+      "text": "7.5 A"
+    }
+  ],
+  "knowledgeTags": [
+    "直流电路",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "physics",
+    "topicCode": "P-ELEC-CIRCUIT",
+    "topicTitle": "直流电路",
+    "targetDifficulty": "medium",
+    "taskFamily": "series_parallel_circuit_current",
+    "planTemplate": "pilot_v4_series_parallel_circuit_current_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "f18419d67b1811a84927a4c9",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "U",
+        "r1",
+        "r2",
+        "r3"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "U",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "r1",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "r2",
+        "independentGroup": "g3"
+      },
+      {
+        "id": "e4",
+        "type": "visible_parameter",
+        "role": "r3",
+        "independentGroup": "g4"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "parallel equivalent",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3",
+          "e4"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "series total resistance",
+        "inputs": [
+          "r1"
+        ],
+        "output": "intermediate_2"
+      },
+      {
+        "id": "r3",
+        "operation": "total current",
+        "inputs": [
+          "r2"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "Rp=R1R2/(R1+R2)",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "Rtotal=Rp+R3",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q3",
+        "type": "deterministic_relation",
+        "expression": "I=U/Rtotal",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "把并联电阻直接相加",
+      "把电压全部加在并联支路"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "r1": 12,
+      "r2": 4,
+      "r3": 2,
+      "U": 15
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 2
+  },
+  "correctAnswer": "C",
+  "explanation": "并联部分等效电阻 R并=12×4/(12+4)=3 Ω；总电阻为 5 Ω，因此总电流 I=15/5=3 A。",
+  "generationMetadata": {
+    "origin": "codex_local_deterministic_v4",
+    "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v4",
+    "createdAt": "2026-09-15T16:00:00.000Z",
+    "languageScope": "zh_primary_only",
+    "providerCalls": 0,
+    "sourceIsolation": {
+      "officialQuestionContentRead": false,
+      "databaseQuestionTextRead": false,
+      "priorReviewTextRead": false
+    },
+    "deterministicVerification": {
+      "solver": {
+        "version": "pilot-v4-batch-local-solver-v1",
+        "status": "verified",
+        "taskFamily": "series_parallel_circuit_current",
+        "evidenceBoundary": "prompt_options_and_question_plan",
+        "expectedCanonical": 3,
+        "selectedOptionId": "C",
+        "uniqueAnswer": true
+      },
+      "oracle": {
+        "version": "pilot-v4-independent-oracle-v1",
+        "status": "verified",
+        "implementation": "fresh_family_evaluation_from_canonical_inputs",
+        "expectedCanonical": 3,
+        "agreesWithSolver": true
+      },
+      "optionTruthTable": [
+        {
+          "optionId": "A",
+          "verdict": false,
+          "canonicalValue": 0.8333333333333334
+        },
+        {
+          "optionId": "B",
+          "verdict": false,
+          "canonicalValue": 5
+        },
+        {
+          "optionId": "C",
+          "verdict": true,
+          "canonicalValue": 3
+        },
+        {
+          "optionId": "D",
+          "verdict": false,
+          "canonicalValue": 7.5
+        }
+      ],
+      "explanationReplay": {
+        "version": "pilot-v4-explanation-replay-v1",
+        "status": "verified",
+        "requiredEvidenceTokens": [
+          "并联部分",
+          "3 A"
+        ],
+        "allRequiredTokensPresent": true,
+        "conclusionMatchesAnswer": true
+      }
+    }
+  }
+}

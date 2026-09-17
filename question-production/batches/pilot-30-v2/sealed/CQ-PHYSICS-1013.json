@@ -1,0 +1,600 @@
+{
+  "schemaVersion": "codex-question-candidate-v1",
+  "candidateId": "CQ-PHYSICS-1013",
+  "subject": "physics",
+  "topicCode": "P-MECH-001",
+  "topicTitle": "直线运动学",
+  "designedDifficulty": "basic",
+  "questionType": "single_choice",
+  "prompt": "声呐检查点轨迹记录水下滑架扫描池壁的一段过程。在水池直线导向索中，水下检测滑架沿直线运动，初速度为 2 m/s，加速度为 1 m/s^2，运动 2 s，求这段时间内的位移。计算结果用于对齐扫描条带。",
+  "options": [
+    {
+      "id": "A",
+      "text": "位移：7 m"
+    },
+    {
+      "id": "B",
+      "text": "位移：5 m"
+    },
+    {
+      "id": "C",
+      "text": "位移：8 m"
+    },
+    {
+      "id": "D",
+      "text": "位移：6 m"
+    }
+  ],
+  "correctAnswer": "D",
+  "explanation": "对水下检测滑架使用 s=ut+1/2at^2；代入 u=2 m/s、a=1 m/s^2、t=2 s，计算结果为 6 m（位移），因此唯一匹配的选项正确。",
+  "knowledgeTags": [
+    "运动学",
+    "直线运动",
+    "displacement_from_initial_acceleration_time"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "physics",
+    "topicId": 78,
+    "topicTitle": "运动学",
+    "productionCellId": 24,
+    "targetDifficulty": "basic",
+    "taskFamily": "kinematics_basic_direct_relation",
+    "planTemplate": "physics_kinematics_basic_relation_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "requirePhysicsSituation": true,
+      "requireUnitOrGraphEvidence": true,
+      "exactPhysicsKinematicsScope": "displacement_from_initial_acceleration_time",
+      "maxIndependentRelations": 1,
+      "forbidMultiStageModelChain": true,
+      "finalAnswerShape": "one_direct_kinematics_value_direction_or_graph_fact",
+      "preferredPromptSkeletons": [
+        "给出位移、时间、速度或加速度中的两个直接量，求第三个量并保留单位",
+        "用文字完整描述一段 s-t 或 v-t 直线图像，判断斜率、方向或速度中的一个事实"
+      ]
+    },
+    "budget": {
+      "maxPlanRepairs": 2,
+      "maxCandidateRepairs": 1
+    },
+    "scenarioContract": {
+      "schemaVersion": "subject-practice-scenario-contract-v1",
+      "policyVersion": "subject-practice-scenario-diversity-shadow-v2-multi-evidence-status",
+      "stage": "shadow_only_thresholds_not_frozen",
+      "scenarioMode": "experimental",
+      "scenarioFamilyId": "physics_lab_cart_track",
+      "scenarioDomain": "mechanics_laboratory",
+      "scenarioEntity": "wheeled_vehicle",
+      "scenarioAction": "displacement_from_initial_acceleration_time",
+      "informationForm": "numeric_text",
+      "scenarioFingerprint": "scenario-d2905fb343511f7af881",
+      "contextNecessity": "required_for_solution",
+      "requiredInformationFields": [
+        "scenarioAction",
+        "motion_or_reaction_condition",
+        "quantities_with_units"
+      ],
+      "solverRelevantFields": [
+        "scenarioAction",
+        "motion_or_reaction_condition",
+        "quantities_with_units"
+      ],
+      "surface": {
+        "zhEntity": "实验小车",
+        "enEntity": "laboratory cart",
+        "zhSetting": "水平直轨实验",
+        "enSetting": "a horizontal straight-track experiment",
+        "cueTokens": [
+          "实验小车",
+          "laboratory cart"
+        ]
+      },
+      "plausibility": {
+        "straightLineMotion": true,
+        "siUnitsRequired": true,
+        "signedVelocityAndAccelerationAllowed": true
+      },
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "controlled_catalog_and_sealed_ordinal_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "physical_situation",
+        "role": "one_self_contained_kinematics_object_or_motion_segment",
+        "independentGroup": "k1"
+      },
+      {
+        "id": "e2",
+        "type": "quantity_or_graph_relation",
+        "role": "one_displacement_time_velocity_acceleration_or_graph_slope_relation_with_units",
+        "independentGroup": "k1"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "identify_direct_kinematics_relation",
+        "inputs": [
+          "e1",
+          "e2"
+        ],
+        "output": "selected_relation"
+      },
+      {
+        "id": "r2",
+        "operation": "derive_one_value_direction_or_graph_fact",
+        "inputs": [
+          "selected_relation"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "kinematics_unit_or_graph_round_trip",
+        "expression": "displacement/time/velocity/acceleration relation or graph slope checks the answer",
+        "variables": [
+          "s",
+          "t",
+          "v",
+          "a"
+        ],
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "confuse displacement with distance",
+      "confuse graph slope with graph height",
+      "omit or mismatch units"
+    ],
+    "answerDerivation": [
+      "apply exactly one visible kinematics relation or one graph-slope interpretation"
+    ],
+    "uniquenessConditions": [
+      "only one option matches the stated motion relation and units"
+    ]
+  },
+  "localizations": {
+    "zh": {
+      "prompt": "声呐检查点轨迹记录水下滑架扫描池壁的一段过程。在水池直线导向索中，水下检测滑架沿直线运动，初速度为 2 m/s，加速度为 1 m/s^2，运动 2 s，求这段时间内的位移。计算结果用于对齐扫描条带。",
+      "options": [
+        {
+          "id": "A",
+          "text": "位移：7 m"
+        },
+        {
+          "id": "B",
+          "text": "位移：5 m"
+        },
+        {
+          "id": "C",
+          "text": "位移：8 m"
+        },
+        {
+          "id": "D",
+          "text": "位移：6 m"
+        }
+      ],
+      "explanation": "对水下检测滑架使用 s=ut+1/2at^2；代入 u=2 m/s、a=1 m/s^2、t=2 s，计算结果为 6 m（位移），因此唯一匹配的选项正确。",
+      "knowledgeTags": [
+        "运动学",
+        "直线运动"
+      ]
+    },
+    "en": {
+      "prompt": "aquatic robotics records frame this operational task. During a straight guide in a test pool, the inspection sled moves in a straight line with initial velocity 2 m/s and acceleration 1 m/s^2 for 2 s. Find its displacement. The result supports align the scan strip.",
+      "options": [
+        {
+          "id": "A",
+          "text": "Displacement: 7 m"
+        },
+        {
+          "id": "B",
+          "text": "Displacement: 5 m"
+        },
+        {
+          "id": "C",
+          "text": "Displacement: 8 m"
+        },
+        {
+          "id": "D",
+          "text": "Displacement: 6 m"
+        }
+      ],
+      "explanation": "For the inspection sled, apply s=ut+1/2at^2. Substituting u=2 m/s, a=1 m/s^2, and t=2 s gives the result 6 m as the displacement, identifying the unique matching option.",
+      "knowledgeTags": [
+        "Kinematics",
+        "Linear motion"
+      ]
+    }
+  },
+  "generationMetadata": {
+    "origin": "codex_dual_session_pilot",
+    "generatorTaskId": "pilot-30-v2-generator-task-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v1",
+    "createdAt": "2026-09-15T10:45:00.000Z",
+    "family": "kinematics_displacement",
+    "seed": 11,
+    "generatorVersion": "physics-kinematics-local-generator-v3-semantic-options",
+    "scopeId": "physics-basic-kinematics-v2:displacement_from_initial_acceleration_time",
+    "deterministicVerification": {
+      "solver": {
+        "solverVersion": "physics-basic-kinematics-solver-v4",
+        "taskFamily": "kinematics_basic_direct_relation",
+        "status": "verified",
+        "parsed": true,
+        "relationKind": "displacement_from_initial_acceleration_time",
+        "expectedDimension": "distance",
+        "expectedSiValue": 6,
+        "canonicalTask": {
+          "relationKind": "displacement_from_initial_acceleration_time",
+          "dimension": "distance",
+          "expectedSiValue": 6,
+          "inputs": {
+            "initialSpeedMetersPerSecond": 2,
+            "accelerationMetersPerSecondSquared": 1,
+            "durationSeconds": 2
+          }
+        },
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "false",
+            "parsedDimension": "distance",
+            "normalizedSiValue": 7,
+            "reasonCode": "physics_solver_quantity_mismatch"
+          },
+          {
+            "optionId": "B",
+            "verdict": "false",
+            "parsedDimension": "distance",
+            "normalizedSiValue": 5,
+            "reasonCode": "physics_solver_quantity_mismatch"
+          },
+          {
+            "optionId": "C",
+            "verdict": "false",
+            "parsedDimension": "distance",
+            "normalizedSiValue": 8,
+            "reasonCode": "physics_solver_quantity_mismatch"
+          },
+          {
+            "optionId": "D",
+            "verdict": "true",
+            "parsedDimension": "distance",
+            "normalizedSiValue": 6,
+            "reasonCode": "physics_solver_quantity_matches"
+          }
+        ],
+        "trueOptionIds": [
+          "D"
+        ],
+        "selectedOptionId": "D",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": [],
+        "verificationScope": {
+          "scopeVersion": "physics-basic-kinematics-verification-scope-v2",
+          "scopeId": "physics-basic-kinematics-v2:displacement_from_initial_acceleration_time",
+          "status": "matched",
+          "matched": true,
+          "relationKind": "displacement_from_initial_acceleration_time",
+          "reasonCodes": []
+        }
+      },
+      "oracle": {
+        "oracleVersion": "physics-kinematics-independent-oracle-v3",
+        "status": "verified",
+        "relationKind": "displacement_from_initial_acceleration_time",
+        "expectedValue": 6,
+        "expectedUnit": "m",
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "false",
+            "value": 7,
+            "unit": "m"
+          },
+          {
+            "optionId": "B",
+            "verdict": "false",
+            "value": 5,
+            "unit": "m"
+          },
+          {
+            "optionId": "C",
+            "verdict": "false",
+            "value": 8,
+            "unit": "m"
+          },
+          {
+            "optionId": "D",
+            "verdict": "true",
+            "value": 6,
+            "unit": "m"
+          }
+        ],
+        "trueOptionIds": [
+          "D"
+        ],
+        "selectedOptionId": "D",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "scopeId": "physics-basic-kinematics-v2:displacement_from_initial_acceleration_time",
+        "scopeMatched": true,
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      },
+      "explanation": {
+        "verifierVersion": "physics-kinematics-explanation-verifier-v1",
+        "status": "verified",
+        "solverEvidence": {
+          "solverVersion": "physics-basic-kinematics-solver-v4",
+          "taskFamily": "kinematics_basic_direct_relation",
+          "status": "verified",
+          "parsed": true,
+          "relationKind": "displacement_from_initial_acceleration_time",
+          "expectedDimension": "distance",
+          "expectedSiValue": 6,
+          "canonicalTask": {
+            "relationKind": "displacement_from_initial_acceleration_time",
+            "dimension": "distance",
+            "expectedSiValue": 6,
+            "inputs": {
+              "initialSpeedMetersPerSecond": 2,
+              "accelerationMetersPerSecondSquared": 1,
+              "durationSeconds": 2
+            }
+          },
+          "optionVerdicts": [
+            {
+              "optionId": "A",
+              "verdict": "false",
+              "parsedDimension": "distance",
+              "normalizedSiValue": 7,
+              "reasonCode": "physics_solver_quantity_mismatch"
+            },
+            {
+              "optionId": "B",
+              "verdict": "false",
+              "parsedDimension": "distance",
+              "normalizedSiValue": 5,
+              "reasonCode": "physics_solver_quantity_mismatch"
+            },
+            {
+              "optionId": "C",
+              "verdict": "false",
+              "parsedDimension": "distance",
+              "normalizedSiValue": 8,
+              "reasonCode": "physics_solver_quantity_mismatch"
+            },
+            {
+              "optionId": "D",
+              "verdict": "true",
+              "parsedDimension": "distance",
+              "normalizedSiValue": 6,
+              "reasonCode": "physics_solver_quantity_matches"
+            }
+          ],
+          "trueOptionIds": [
+            "D"
+          ],
+          "selectedOptionId": "D",
+          "uniqueAnswer": true,
+          "agreesWithGenerator": true,
+          "evidenceBoundary": "prompt_and_visible_options_only",
+          "providerImpact": "none_no_provider_call",
+          "productionGateImpact": "none_shadow_only",
+          "reasonCodes": [],
+          "verificationScope": {
+            "scopeVersion": "physics-basic-kinematics-verification-scope-v2",
+            "scopeId": "physics-basic-kinematics-v2:displacement_from_initial_acceleration_time",
+            "status": "matched",
+            "matched": true,
+            "relationKind": "displacement_from_initial_acceleration_time",
+            "reasonCodes": []
+          }
+        },
+        "recomputedWithoutGeneratorExplanation": true,
+        "formulaInputsUnitsAndConclusionChecked": true,
+        "checks": [
+          {
+            "language": "zh",
+            "formulaMatched": true,
+            "promptInputsCovered": true,
+            "conclusionMatched": true,
+            "conclusionValue": 6,
+            "conclusionUnit": "m",
+            "reasonCodes": []
+          },
+          {
+            "language": "en",
+            "formulaMatched": true,
+            "promptInputsCovered": true,
+            "conclusionMatched": true,
+            "conclusionValue": 6,
+            "conclusionUnit": "m",
+            "reasonCodes": []
+          }
+        ],
+        "mismatchCount": 0,
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      }
+    },
+    "questionPlanAdherence": {
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "validPlan": true,
+      "adheres": true,
+      "planTemplate": "physics_kinematics_basic_relation_v1",
+      "taskFamily": "kinematics_basic_direct_relation",
+      "failureCodes": [],
+      "features": {
+        "operationWords": 0,
+        "observationWords": 0,
+        "hypothesisMarkers": 0,
+        "reasoningConnectors": 1,
+        "quantitativeMarkers": 0,
+        "reactionClues": 4,
+        "gasSpeciesMarkers": 0,
+        "gasControlMarkers": 0,
+        "redoxReactionMarkers": 0,
+        "redoxConceptMarkers": 0,
+        "redoxQuantitativeChainMarkers": 0,
+        "mathPropertySignals": 0,
+        "mathStatementMarkers": 5,
+        "mathTransformationSignals": 1,
+        "mathOrderingSignals": 3,
+        "mathParameterConstraintSignals": 1,
+        "mathProbabilitySignals": 0,
+        "mathProbabilityEventLabelCount": 0,
+        "mathProbabilityNormalHardInteractionCueCount": 0,
+        "mathProbabilityHardInteractionCueCount": 0,
+        "mathProbabilityConcreteFrameSignals": 0,
+        "mathProbabilityNormalMediumNoEventRisk": false,
+        "mathProbabilityNormalReferenceTableRisk": false,
+        "mathProbabilityConceptOnlyRisk": false,
+        "mathProbabilitySingleResultRisk": false,
+        "mathProbabilityEventListOnlyRisk": false,
+        "mathDerivativeSignals": 0,
+        "mathDerivativeMediumDefinitionOnlyRisk": false,
+        "mathDerivativeHardCoefficientSolveOnlyRisk": false,
+        "mathDerivativeBasicAdvancedOperationRisk": false,
+        "mathVectorComplexSignals": 1,
+        "mathVectorComplexBasicDefinitionOnlyRisk": false,
+        "mathGeometrySignals": 2,
+        "mathAnalyticGeometryDefinitionOnlyRisk": false,
+        "mathAnalyticGeometryBasicGeneralCircleRisk": false,
+        "mathAnalyticGeometryHardConicRelationOnlyRisk": false,
+        "mathElementaryFunctionSignals": 0,
+        "mathElementaryFunctionGenericClassificationRisk": false,
+        "mathElementaryFunctionBasicEquationSolveRisk": false,
+        "mathElementaryFunctionBasicMultipleObjectRisk": false,
+        "mathSequenceSignals": 0,
+        "mathSequenceGenericClassificationRisk": false,
+        "mathStatisticsSignals": 0,
+        "mathStatisticsBasicMultiStatisticComparisonRisk": false,
+        "mathStatisticsMediumPureLinearTransformRisk": false,
+        "mathStatisticsHardDirectCombinedVarianceRisk": false,
+        "mathSpatialSignals": 0,
+        "mathSpatialMediumMultiPropositionOvercomplexRisk": false,
+        "mathSpatialHardConceptOnlyRisk": false,
+        "mathSpatialHardDirectCoordinateOnlyRisk": false,
+        "mathParameterInferenceRisk": false,
+        "mathOptionJudgement": true,
+        "mathEnumeratedConditionCount": 0,
+        "mathFunctionPropertyStackCount": 0,
+        "mathFunctionDistinctPropertyCount": 0,
+        "mathStudentFacingDistinctPropertyCount": 0,
+        "mathStudentFacingFunctionPropertyOverComplex": false,
+        "mathFunctionObjectSignals": 0,
+        "mathFunctionPointValueCount": 0,
+        "mathFunctionNamedPointCount": 0,
+        "mathFunctionMultipleNamedPointsRisk": false,
+        "mathBasicFunctionSolutionScaffoldRisk": false,
+        "mathFunctionBasicMultiConstraintDomainRisk": false,
+        "mathPureFunctionExternalContextRisk": false,
+        "mathHardFunctionGenericConceptRisk": false,
+        "mathMediumFunctionPropertyOverComplex": false,
+        "mathDerivativeBasicDomainTrapRisk": false,
+        "mathDerivativeBasicOverComplexRisk": false,
+        "mathVectorComplexObjectCount": 0,
+        "mathVectorComplexRelationCount": 0,
+        "mathVectorComplexCoordinateGeometryDriftRisk": false,
+        "mathVectorComplexLocusParameterChainRisk": true,
+        "mathVectorComplexOneStepFormulaRisk": false,
+        "mathVectorComplexHardDirectMetricRisk": false,
+        "physicsKinematicsSignals": 8,
+        "physicsGraphSignals": 1,
+        "physicsUnitSignals": 11,
+        "physicsEquationSignals": 4,
+        "physicsOpticsSignals": 0,
+        "physicsOpticsRelationSignals": 0,
+        "physicsUnseenDiagramRisk": false,
+        "chemistryClassificationSignals": 0,
+        "chemistryStateChangeEvidenceSignals": 0,
+        "chemistryDefinitionOnlyClassificationRisk": false,
+        "chemistryPhConceptSignals": 0,
+        "chemistryPhOperationErrorSignals": 0,
+        "chemistryPhDirectionSignals": 0,
+        "chemistryPhDirectCalculationRisk": false
+      },
+      "productionImpact": "none_audit_or_gate_scaffold",
+      "providerImpact": "none_no_provider_call"
+    },
+    "scenarioRenderMode": "provisional_blueprint_shadow",
+    "provisionalScenarioContract": {
+      "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+      "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+      "stage": "provisional_shadow_only",
+      "subject": "physics",
+      "taskFamily": "kinematics_basic_direct_relation",
+      "planTemplate": "physics_kinematics_basic_relation_v1",
+      "scenarioFamilyId": "provisional_physics_2f560baa3e7611a96fe9b39d",
+      "scenarioMode": "experimental",
+      "scenarioDomain": "aquatic robotics",
+      "scenarioEntity": "inspection sled",
+      "environment": "straight pool guide",
+      "contextAction": "scan a submerged wall section",
+      "solverAction": "displacement_from_initial_acceleration_time",
+      "informationForm": "sonar checkpoint trace",
+      "questionPurpose": "align the scan strip",
+      "contextNecessity": "required_for_solution",
+      "requiredInformationFields": [
+        "contextAction",
+        "motionCondition",
+        "quantitiesWithSiUnits"
+      ],
+      "solverRelevantFields": [
+        "solverAction",
+        "motionCondition",
+        "quantitiesWithSiUnits"
+      ],
+      "plausibility": {
+        "straightLineMotion": true,
+        "siUnitsRequired": true,
+        "signedVelocityAndAccelerationAllowed": true,
+        "exactKinematicsScope": "displacement_from_initial_acceleration_time"
+      },
+      "surface": {
+        "zhEntity": "水下检测滑架",
+        "enEntity": "inspection sled",
+        "zhSetting": "水池直线导向索",
+        "enSetting": "a straight guide in a test pool"
+      },
+      "blueprintBinding": {
+        "blueprintDigest": "9c3561c84b48fcf59edc3a1257168ffd0f6f39ae2863a46a1eeba5708704b916",
+        "blueprintFingerprint": "blueprint-2f560baa3e7611a96fe9b39d",
+        "renameInvariantFingerprint": "blueprint-structure-d691ec75a46b40a649069b41",
+        "ideationCycleEvidenceDigest": "e0f436b063d385aa7b68a7a9f1379c56b1c84027e53d3bb544e397be06d4c31f"
+      },
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "validated_blueprint_cycle_only"
+      },
+      "scenarioContractDigest": "befc286b26ee50330f77242df2dd56f07ec868daf7725b66221781e61ef5d69b"
+    },
+    "v1Correction": null
+  }
+}

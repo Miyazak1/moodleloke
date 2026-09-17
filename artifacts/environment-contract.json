@@ -1,0 +1,1524 @@
+{
+  "schemaVersion": "1",
+  "generatedAt": "2026-09-17T11:50:20.611Z",
+  "reachableFilesScanned": 287,
+  "runtimeVariableCount": 156,
+  "requiredProduction": [
+    "DATABASE_URL",
+    "AUTH_SECRET",
+    "CORS_ORIGINS",
+    "PUBLIC_APP_ORIGIN",
+    "PUBLIC_API_ORIGIN"
+  ],
+  "missingRequiredDevelopment": [],
+  "missingRequiredProduction": [],
+  "undocumentedRuntimeVariables": [
+    "ADMIN_EMAIL",
+    "AGENT_ATTACHMENT_MAX_MB",
+    "AGENT_PRIVATE_UPLOADS_DIR",
+    "API_BASE_URL",
+    "AUTH_EMAIL_CAPTURE",
+    "CSCA_AI_QUESTION_GENERATOR_AGENT",
+    "CSCA_AI_QUESTION_GENERATOR_PROMPT_VERSION",
+    "CSCA_AI_QUESTION_REVIEW_PRO_MODEL",
+    "CSCA_AI_QUESTION_REVIEWER_AGENT",
+    "CSCA_AI_QUESTION_REVIEWER_PROMPT_VERSION",
+    "CSCA_AI_QUESTIONING_TASK_RECOVER_LIMIT",
+    "CSCA_AI_TOPIC_MAPPING_AGENT",
+    "CSCA_AI_TOPIC_MAPPING_API_KEY",
+    "CSCA_AI_TOPIC_MAPPING_BASE_URL",
+    "CSCA_AI_TOPIC_MAPPING_ENABLED",
+    "CSCA_AI_TOPIC_MAPPING_MODEL",
+    "CSCA_AI_TOPIC_MAPPING_PROMPT_VERSION",
+    "CSCA_AI_TOPIC_MAPPING_PROVIDER",
+    "CSCA_AI_TOPIC_MAPPING_TEMPERATURE",
+    "CSCA_AI_TOPIC_MAPPING_TIMEOUT_MS",
+    "CSCA_AI_UNLIMITED_EMAILS",
+    "CSCA_ALLOW_SMOKE_SUBJECTS",
+    "CSCA_ATTACHMENT_ANALYSIS_MAX_TOKENS",
+    "CSCA_ATTACHMENT_TEXT_MODEL",
+    "CSCA_ATTACHMENT_VISION_MODEL",
+    "CSCA_INTERVENTION_RETENTION_DELAY_HOURS",
+    "CSCA_INTERVENTION_RETENTION_DELAY_MINUTES",
+    "CSCA_LEARNING_SHADOW_PROJECTION_BATCH_SIZE",
+    "CSCA_LEARNING_SHADOW_PROJECTION_POLL_MS",
+    "CSCA_MOCK_EXAM_GENERATION_RECOVERY_AUTO_RESUME",
+    "CSCA_MOCK_EXAM_GENERATION_RECOVERY_DISABLED",
+    "CSCA_MOCK_EXAM_GENERATION_RECOVERY_LIMIT",
+    "CSCA_MOCK_EXAM_GENERATION_STALE_RUNNING_MS",
+    "CSCA_SOURCE_PROFILE_TASK_STALE_MINUTES",
+    "CSCA_SUBJECT_PRACTICE_ACTIVE_JOB_LIMIT",
+    "CSCA_SUBJECT_PRACTICE_MATH_DIVERSITY_SOFT_CAP_ENABLED",
+    "CSCA_SUBJECT_PRACTICE_PHYSICS_VISUAL_CURRENT_POLICY_ENABLED",
+    "CSCA_SUBJECT_PRACTICE_PRO_ESCALATION_ENABLED",
+    "CSCA_SUBJECT_PRACTICE_PRO_MODEL",
+    "CSCA_SUBJECT_PRACTICE_PRO_REVIEW_MODEL",
+    "DEV",
+    "PAST_PAPER_UPLOAD_LIMIT_MB",
+    "SUBJECT_PRACTICE_OBSERVATION_GLOBAL_COOLDOWN_MINUTES",
+    "SUBJECT_PRACTICE_OBSERVATION_NETWORK_PROBE_TIMEOUT_MS",
+    "SUBJECT_PRACTICE_QUESTION_PLAN_CELL_ALLOWLIST_FLAG",
+    "UPLOADS_DIR",
+    "VITE_AGENT_WEB_ENABLED"
+  ],
+  "unsafeExampleValues": [],
+  "variables": [
+    {
+      "key": "ADMIN_BOOTSTRAP_EMAIL",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/health/health.controller.ts"
+      ]
+    },
+    {
+      "key": "ADMIN_EMAIL",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/health/health.controller.ts"
+      ]
+    },
+    {
+      "key": "AGENT_ATTACHMENT_MAX_MB",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/agent/agent-attachment.service.ts"
+      ]
+    },
+    {
+      "key": "AGENT_PRIVATE_UPLOADS_DIR",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/agent/agent-attachment-storage.ts"
+      ]
+    },
+    {
+      "key": "AI_DEFAULT_PROVIDER",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/question-generator-provider.service.ts",
+        "backend/src/ai-questioning/question-reviewer-provider.service.ts",
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts",
+        "backend/src/csca-special-practice/ai-coach-provider.service.ts"
+      ]
+    },
+    {
+      "key": "AI_GATEWAY_BACKGROUND_CONCURRENCY",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning.service.ts"
+      ]
+    },
+    {
+      "key": "AI_GATEWAY_COST_CURRENCY",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-cost.service.ts"
+      ]
+    },
+    {
+      "key": "AI_GATEWAY_DISPLAY_CURRENCY",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-cost.service.ts"
+      ]
+    },
+    {
+      "key": "AI_GATEWAY_ENABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts"
+      ]
+    },
+    {
+      "key": "AI_GATEWAY_GLOBAL_CONCURRENCY",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning.service.ts"
+      ]
+    },
+    {
+      "key": "AI_GATEWAY_LEDGER_ENABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts"
+      ]
+    },
+    {
+      "key": "AI_GATEWAY_REALTIME_CONCURRENCY",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning.service.ts"
+      ]
+    },
+    {
+      "key": "API_BASE_URL",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/auth/auth.service.ts"
+      ]
+    },
+    {
+      "key": "APP_VERSION",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/common/ops-metrics.ts"
+      ]
+    },
+    {
+      "key": "AUTH_COOKIE_DOMAIN",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth.cookies.ts"
+      ]
+    },
+    {
+      "key": "AUTH_COOKIE_SECURE",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth.cookies.ts"
+      ]
+    },
+    {
+      "key": "AUTH_CSRF_COOKIE_NAME",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth.cookies.ts"
+      ]
+    },
+    {
+      "key": "AUTH_CSRF_HEADER_NAME",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth.cookies.ts"
+      ]
+    },
+    {
+      "key": "AUTH_EMAIL_CAPTURE",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/auth/auth-email.sender.ts"
+      ]
+    },
+    {
+      "key": "AUTH_GOOGLE_STATE_COOKIE_NAME",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth.cookies.ts"
+      ]
+    },
+    {
+      "key": "AUTH_LEGACY_REFRESH_FALLBACK_ENABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth.cookies.ts"
+      ]
+    },
+    {
+      "key": "AUTH_REFRESH_COOKIE_ENABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth.cookies.ts"
+      ]
+    },
+    {
+      "key": "AUTH_REFRESH_COOKIE_NAME",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth.cookies.ts"
+      ]
+    },
+    {
+      "key": "AUTH_SECRET",
+      "category": "secret",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth.service.ts",
+        "backend/src/csca-special-practice/ai-secret-store.ts",
+        "backend/src/health/health.controller.ts"
+      ]
+    },
+    {
+      "key": "CORS_ORIGINS",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth.cookies.ts",
+        "backend/src/health/health.controller.ts"
+      ]
+    },
+    {
+      "key": "CSC_ENV",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth.cookies.ts",
+        "backend/src/health/health.controller.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_API_KEY",
+      "category": "secret",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_BASE_URL",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts",
+        "backend/src/csca-special-practice/ai-coach-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_COACH_ENABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/csca-special-practice/ai-coach-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_COST_CURRENCY",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/csca-special-practice/ai-usage-meter.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_ENTITLEMENT_ENABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/csca-special-practice/ai-entitlement.service.ts",
+        "backend/src/me/me.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_MAX_OUTPUT_CHARS",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/csca-special-practice/ai-coach-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_MODEL",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts",
+        "backend/src/ai-questioning/question-generator-provider.service.ts",
+        "backend/src/ai-questioning/question-reviewer-provider.service.ts",
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts",
+        "backend/src/csca-special-practice/ai-coach-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_PROMPT_VERSION",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/csca-special-practice/ai-coach-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_PROVIDER",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/question-generator-provider.service.ts",
+        "backend/src/ai-questioning/question-reviewer-provider.service.ts",
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts",
+        "backend/src/csca-special-practice/ai-coach-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_BLIND_REVIEW_ENABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/question-reviewer-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_BLIND_REVIEW_MODEL",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/question-reviewer-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_BLIND_REVIEW_PROMPT_VERSION",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/question-reviewer-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_GENERATION_API_KEY",
+      "category": "secret",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_GENERATION_BASE_URL",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts",
+        "backend/src/ai-questioning/ai-questioning.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_GENERATION_ENABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/question-generator-provider.service.ts",
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_GENERATION_MODEL",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts",
+        "backend/src/ai-questioning/question-generator-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_GENERATION_PRO_MODEL",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/question-generator-provider.service.ts",
+        "backend/src/ai-questioning/question-reviewer-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_GENERATION_PROVIDER",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/question-generator-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_GENERATION_TEMPERATURE",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/question-generator-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_GENERATOR_AGENT",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/question-generator-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_GENERATOR_PROMPT_VERSION",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/question-generator-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_REVIEW_API_KEY",
+      "category": "secret",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_REVIEW_BASE_URL",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_REVIEW_ENABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/question-reviewer-provider.service.ts",
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_REVIEW_MODEL",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts",
+        "backend/src/ai-questioning/question-reviewer-provider.service.ts",
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_REVIEW_PRO_MODEL",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/question-reviewer-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_REVIEW_PROVIDER",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/question-reviewer-provider.service.ts",
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_REVIEW_TEMPERATURE",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/question-reviewer-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_REVIEW_TIMEOUT_MS",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/question-reviewer-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_REVIEWER_AGENT",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/question-reviewer-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTION_REVIEWER_PROMPT_VERSION",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/question-reviewer-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTIONING_SCHEDULER_BACKFILL_LIMIT",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning-scheduler.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTIONING_SCHEDULER_ENABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning-scheduler.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTIONING_SCHEDULER_INTERVAL_MINUTES",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning-scheduler.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTIONING_SCHEDULER_PER_TOPIC",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning-scheduler.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTIONING_SCHEDULER_PROCESS_LIMIT",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning-scheduler.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTIONING_SCHEDULER_RETRY_FAILED",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning-scheduler.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTIONING_SCHEDULER_RUN_ON_STARTUP",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning-scheduler.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTIONING_TASK_RECOVER_LIMIT",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning-scheduler.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_QUESTIONING_TASK_RECOVERY_DISABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning-scheduler.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_ROLLOUT_MIN_AVERAGE_RATING",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/csca-special-practice/ai-observability.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_ROLLOUT_PERCENT",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/csca-special-practice/ai-coach-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_TEMPERATURE",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/csca-special-practice/ai-coach-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_TIMEOUT_MS",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/csca-special-practice/ai-coach-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_TOPIC_MAPPING_AGENT",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_TOPIC_MAPPING_API_KEY",
+      "category": "secret",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_TOPIC_MAPPING_BASE_URL",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_TOPIC_MAPPING_ENABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_TOPIC_MAPPING_MODEL",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts",
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_TOPIC_MAPPING_PROMPT_VERSION",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_TOPIC_MAPPING_PROVIDER",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_TOPIC_MAPPING_TEMPERATURE",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_TOPIC_MAPPING_TIMEOUT_MS",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_AI_UNLIMITED_EMAILS",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/csca-special-practice/ai-entitlement.service.ts",
+        "backend/src/me/me.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_ALLOW_SMOKE_SUBJECTS",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning.service.ts",
+        "backend/src/ai-questioning/question-reviewer.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_ATTACHMENT_ANALYSIS_MAX_TOKENS",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/agent/agent-attachment-analysis.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_ATTACHMENT_TEXT_MODEL",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/agent/agent-attachment-analysis.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_ATTACHMENT_VISION_MODEL",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/agent/agent-attachment-analysis.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_INTERVENTION_RETENTION_DELAY_HOURS",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/agent/agent-intervention-verification.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_INTERVENTION_RETENTION_DELAY_MINUTES",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/agent/agent-intervention-verification.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_LEARNING_SHADOW_PROJECTION_BATCH_SIZE",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/learning-intelligence/projection/learning-state-projection-worker.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_LEARNING_SHADOW_PROJECTION_POLL_MS",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/learning-intelligence/projection/learning-state-projection-worker.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_MOCK_EXAM_AI_GENERATION_CONCURRENCY",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/csca-mock-exam/csca-mock-exam.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_MOCK_EXAM_GENERATION_RECOVERY_AUTO_RESUME",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/csca-mock-exam/csca-mock-exam.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_MOCK_EXAM_GENERATION_RECOVERY_DISABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/csca-mock-exam/csca-mock-exam.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_MOCK_EXAM_GENERATION_RECOVERY_LIMIT",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/csca-mock-exam/csca-mock-exam.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_MOCK_EXAM_GENERATION_STALE_RUNNING_MS",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/csca-mock-exam/csca-mock-exam.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_ORG_LLM_KEY_SECRET",
+      "category": "secret",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/csca-special-practice/ai-secret-store.ts"
+      ]
+    },
+    {
+      "key": "CSCA_PLANNER_ASSISTANT_AI_ENABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/csca-special-practice/planner-assistant.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_READINESS_HIGH_DIFFICULTY_THRESHOLD_MODE",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/csca-learning/csca-learning.service.ts",
+        "backend/src/csca-special-practice/training-event.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_READINESS_SAMPLED_THRESHOLD_MAX_IMPACT_USER_SUBJECTS",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/csca-special-practice/training-event.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_SOURCE_PROFILE_TASK_STALE_MINUTES",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning-scheduler.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_SUBJECT_PRACTICE_ACTIVE_JOB_LIMIT",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_SUBJECT_PRACTICE_LOCAL_GENERATOR_SHADOW_ENABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/question-generator-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_SUBJECT_PRACTICE_MATH_DIVERSITY_SOFT_CAP_ENABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_SUBJECT_PRACTICE_PHYSICS_VISUAL_CURRENT_POLICY_ENABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/subject-practice-task-family-policy.ts"
+      ]
+    },
+    {
+      "key": "CSCA_SUBJECT_PRACTICE_PRO_ESCALATION_ENABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_SUBJECT_PRACTICE_PRO_MODEL",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/question-generator-provider.service.ts",
+        "backend/src/ai-questioning/question-reviewer-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCA_SUBJECT_PRACTICE_PRO_REVIEW_MODEL",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/question-reviewer-provider.service.ts"
+      ]
+    },
+    {
+      "key": "CSCALITE_SPECIAL_PRACTICE_STUDENT_SESSIONS_ENABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/csca-special-practice/csca-special-practice.service.ts"
+      ]
+    },
+    {
+      "key": "CSP_MODE",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/common/ops-metrics.ts"
+      ]
+    },
+    {
+      "key": "DATABASE_URL",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning-scheduler.service.ts",
+        "backend/src/csca-mock-exam/csca-mock-exam.service.ts",
+        "backend/src/csca-special-practice/csca-special-practice.service.ts",
+        "backend/src/health/health.controller.ts",
+        "backend/src/prisma/prisma.service.ts"
+      ]
+    },
+    {
+      "key": "DEEPSEEK_API_KEYS",
+      "category": "secret",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts"
+      ]
+    },
+    {
+      "key": "DEEPSEEK_BACKGROUND_API_KEYS",
+      "category": "secret",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts",
+        "backend/src/ai-questioning/ai-questioning.service.ts"
+      ]
+    },
+    {
+      "key": "DEEPSEEK_BACKGROUND_BASE_URL",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts",
+        "backend/src/ai-questioning/ai-questioning.service.ts"
+      ]
+    },
+    {
+      "key": "DEEPSEEK_BACKGROUND_DEFAULT_MODEL",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts",
+        "backend/src/ai-questioning/question-generator-provider.service.ts",
+        "backend/src/ai-questioning/question-reviewer-provider.service.ts",
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts"
+      ]
+    },
+    {
+      "key": "DEEPSEEK_BACKGROUND_KEY_CONCURRENCY",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning.service.ts"
+      ]
+    },
+    {
+      "key": "DEEPSEEK_BASE_URL",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts",
+        "backend/src/ai-questioning/ai-questioning.service.ts",
+        "backend/src/csca-special-practice/ai-coach-provider.service.ts"
+      ]
+    },
+    {
+      "key": "DEEPSEEK_DEFAULT_MODEL",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts",
+        "backend/src/ai-questioning/question-generator-provider.service.ts",
+        "backend/src/ai-questioning/question-reviewer-provider.service.ts",
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts",
+        "backend/src/csca-special-practice/ai-coach-provider.service.ts"
+      ]
+    },
+    {
+      "key": "DEEPSEEK_KEY_CONCURRENCY",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning.service.ts"
+      ]
+    },
+    {
+      "key": "DEEPSEEK_PERSONAL_API_KEYS",
+      "category": "secret",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts"
+      ]
+    },
+    {
+      "key": "DEEPSEEK_PERSONAL_BASE_URL",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts",
+        "backend/src/csca-special-practice/ai-coach-provider.service.ts"
+      ]
+    },
+    {
+      "key": "DEEPSEEK_PERSONAL_DEFAULT_MODEL",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-gateway/ai-gateway-config.service.ts",
+        "backend/src/csca-special-practice/ai-coach-provider.service.ts"
+      ]
+    },
+    {
+      "key": "DEEPSEEK_PRO_MODEL",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/ai-questioning/question-generator-provider.service.ts",
+        "backend/src/ai-questioning/question-reviewer-provider.service.ts"
+      ]
+    },
+    {
+      "key": "DEV",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "frontend/src/lib/request.ts",
+        "frontend/src/pages/special-practice/adaptive/AdaptivePracticeViews.tsx"
+      ]
+    },
+    {
+      "key": "GOOGLE_CLIENT_ID",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth.service.ts"
+      ]
+    },
+    {
+      "key": "GOOGLE_CLIENT_SECRET",
+      "category": "secret",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth.service.ts"
+      ]
+    },
+    {
+      "key": "GOOGLE_OAUTH_REDIRECT_URI",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth.service.ts"
+      ]
+    },
+    {
+      "key": "GUMROAD_ACCESS_TOKEN",
+      "category": "secret",
+      "documentedDevelopment": false,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/health/health.controller.ts"
+      ]
+    },
+    {
+      "key": "GUMROAD_PRODUCT_URL",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/health/health.controller.ts"
+      ]
+    },
+    {
+      "key": "JWT_SECRET",
+      "category": "secret",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/csca-special-practice/ai-secret-store.ts",
+        "backend/src/health/health.controller.ts"
+      ]
+    },
+    {
+      "key": "NODE_ENV",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/agent/agent-intervention-verification.service.ts",
+        "backend/src/auth/auth-email.sender.ts",
+        "backend/src/auth/auth.cookies.ts",
+        "backend/src/health/health.controller.ts"
+      ]
+    },
+    {
+      "key": "OPS_HEALTH_DETAILS_ENABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/health/health.controller.ts"
+      ]
+    },
+    {
+      "key": "OPS_METRICS_ENABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/common/ops-metrics.ts"
+      ]
+    },
+    {
+      "key": "OPS_METRICS_TOKEN",
+      "category": "secret",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/health/health.controller.ts"
+      ]
+    },
+    {
+      "key": "OPS_READY_TOKEN",
+      "category": "secret",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/health/health.controller.ts"
+      ]
+    },
+    {
+      "key": "PAST_PAPER_UPLOAD_LIMIT_MB",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/past-papers/past-papers.controller.ts"
+      ]
+    },
+    {
+      "key": "PAYMENT_CALLBACK_SECRET",
+      "category": "secret",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/health/health.controller.ts"
+      ]
+    },
+    {
+      "key": "PUBLIC_API_ORIGIN",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth.service.ts"
+      ]
+    },
+    {
+      "key": "PUBLIC_APP_ORIGIN",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth.cookies.ts",
+        "backend/src/auth/auth.service.ts"
+      ]
+    },
+    {
+      "key": "RATE_LIMIT_REDIS_TIMEOUT_MS",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/common/rate-limit.ts"
+      ]
+    },
+    {
+      "key": "RATE_LIMIT_REDIS_URL",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/common/rate-limit.ts"
+      ]
+    },
+    {
+      "key": "RATE_LIMIT_STORE",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/common/rate-limit.ts"
+      ]
+    },
+    {
+      "key": "READY_DB_TIMEOUT_MS",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/prisma/prisma.service.ts"
+      ]
+    },
+    {
+      "key": "REDIS_URL",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/common/rate-limit.ts"
+      ]
+    },
+    {
+      "key": "SMTP_FROM",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth-email.sender.ts"
+      ]
+    },
+    {
+      "key": "SMTP_HOST",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth-email.sender.ts"
+      ]
+    },
+    {
+      "key": "SMTP_PASSWORD",
+      "category": "secret",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth-email.sender.ts"
+      ]
+    },
+    {
+      "key": "SMTP_PORT",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth-email.sender.ts"
+      ]
+    },
+    {
+      "key": "SMTP_SECURE",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth-email.sender.ts"
+      ]
+    },
+    {
+      "key": "SMTP_USER",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/auth/auth-email.sender.ts"
+      ]
+    },
+    {
+      "key": "SUBJECT_PRACTICE_OBSERVATION_GLOBAL_COOLDOWN_MINUTES",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning.service.ts"
+      ]
+    },
+    {
+      "key": "SUBJECT_PRACTICE_OBSERVATION_NETWORK_PROBE_TIMEOUT_MS",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning.service.ts"
+      ]
+    },
+    {
+      "key": "SUBJECT_PRACTICE_QUESTION_PLAN_CELL_ALLOWLIST_FLAG",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/ai-questioning/ai-questioning.service.ts"
+      ]
+    },
+    {
+      "key": "UPLOADS_DIR",
+      "category": "runtime-config",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "backend/src/past-papers/past-paper-storage.ts"
+      ]
+    },
+    {
+      "key": "VITE_AGENT_WEB_ENABLED",
+      "category": "frontend-public",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "frontend/src/lib/agent-feature.ts"
+      ]
+    },
+    {
+      "key": "VITE_API_BASE_URL",
+      "category": "frontend-public",
+      "documentedDevelopment": true,
+      "documentedProduction": false,
+      "sources": [
+        "frontend/src/lib/request.ts"
+      ]
+    },
+    {
+      "key": "VITE_AUTH_CSRF_COOKIE_NAME",
+      "category": "frontend-public",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "frontend/src/lib/request.ts"
+      ]
+    },
+    {
+      "key": "VITE_AUTH_CSRF_HEADER_NAME",
+      "category": "frontend-public",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "frontend/src/lib/request.ts"
+      ]
+    },
+    {
+      "key": "VITE_SHOW_AI_GENERATED_QUESTION_BADGE",
+      "category": "frontend-public",
+      "documentedDevelopment": true,
+      "documentedProduction": false,
+      "sources": [
+        "frontend/src/pages/special-practice/adaptive/AdaptivePracticeViews.tsx"
+      ]
+    }
+  ]
+}

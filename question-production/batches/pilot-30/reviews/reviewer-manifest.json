@@ -1,0 +1,336 @@
+{
+  "schemaVersion": "codex-blind-reviewer-manifest-v1",
+  "batchId": "pilot-30",
+  "reviewerTaskId": "pilot-30-independent-blind-review",
+  "reviewedAt": "2026-09-15T09:29:16.058Z",
+  "blindCandidateCount": 45,
+  "counts": {
+    "overall": {
+      "pass": 38,
+      "reject": 7,
+      "abstain": 0,
+      "total": 45
+    },
+    "bySubject": {
+      "chemistry": {
+        "pass": 12,
+        "reject": 3,
+        "abstain": 0,
+        "total": 15
+      },
+      "math": {
+        "pass": 11,
+        "reject": 4,
+        "abstain": 0,
+        "total": 15
+      },
+      "physics": {
+        "pass": 15,
+        "reject": 0,
+        "abstain": 0,
+        "total": 15
+      }
+    }
+  },
+  "reasonCodeCounts": {
+    "declared_difficulty_mismatch": 3,
+    "multiple_literal_true_options": 4,
+    "metacognitive_distractor_ambiguity": 4,
+    "missing_stated_interval": 1
+  },
+  "candidates": [
+    {
+      "candidateId": "CQ-CHEMISTRY-0001",
+      "derivedAnswer": "A",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0002",
+      "derivedAnswer": "B",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0003",
+      "derivedAnswer": "C",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0004",
+      "derivedAnswer": "D",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0005",
+      "derivedAnswer": "A",
+      "verdictBeforeReveal": "reject",
+      "reasonCodes": [
+        "declared_difficulty_mismatch"
+      ]
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0006",
+      "derivedAnswer": "A",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0007",
+      "derivedAnswer": "B",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0008",
+      "derivedAnswer": "C",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0009",
+      "derivedAnswer": "D",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0010",
+      "derivedAnswer": "A",
+      "verdictBeforeReveal": "reject",
+      "reasonCodes": [
+        "declared_difficulty_mismatch"
+      ]
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0011",
+      "derivedAnswer": "C",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0012",
+      "derivedAnswer": "D",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0013",
+      "derivedAnswer": "A",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0014",
+      "derivedAnswer": "B",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0015",
+      "derivedAnswer": "C",
+      "verdictBeforeReveal": "reject",
+      "reasonCodes": [
+        "declared_difficulty_mismatch"
+      ]
+    },
+    {
+      "candidateId": "CQ-MATH-0001",
+      "derivedAnswer": "A",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-0002",
+      "derivedAnswer": "B",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-0003",
+      "derivedAnswer": "C",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-0004",
+      "derivedAnswer": "D",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-0005",
+      "derivedAnswer": "A",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-0009",
+      "derivedAnswer": "D",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-0011",
+      "derivedAnswer": "C",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-0012",
+      "derivedAnswer": "D",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-0013",
+      "derivedAnswer": "A",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-0014",
+      "derivedAnswer": "B",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-0015",
+      "derivedAnswer": "C",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-0006",
+      "derivedAnswer": "A",
+      "verdictBeforeReveal": "reject",
+      "reasonCodes": [
+        "multiple_literal_true_options",
+        "metacognitive_distractor_ambiguity"
+      ]
+    },
+    {
+      "candidateId": "CQ-MATH-0007",
+      "derivedAnswer": "B",
+      "verdictBeforeReveal": "reject",
+      "reasonCodes": [
+        "multiple_literal_true_options",
+        "metacognitive_distractor_ambiguity"
+      ]
+    },
+    {
+      "candidateId": "CQ-MATH-0008",
+      "derivedAnswer": "C",
+      "verdictBeforeReveal": "reject",
+      "reasonCodes": [
+        "missing_stated_interval",
+        "multiple_literal_true_options",
+        "metacognitive_distractor_ambiguity"
+      ]
+    },
+    {
+      "candidateId": "CQ-MATH-0010",
+      "derivedAnswer": "A",
+      "verdictBeforeReveal": "reject",
+      "reasonCodes": [
+        "multiple_literal_true_options",
+        "metacognitive_distractor_ambiguity"
+      ]
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0001",
+      "derivedAnswer": "A",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0002",
+      "derivedAnswer": "B",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0003",
+      "derivedAnswer": "C",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0004",
+      "derivedAnswer": "D",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0005",
+      "derivedAnswer": "A",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0006",
+      "derivedAnswer": "B",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0007",
+      "derivedAnswer": "C",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0008",
+      "derivedAnswer": "D",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0009",
+      "derivedAnswer": "A",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0010",
+      "derivedAnswer": "B",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0011",
+      "derivedAnswer": "C",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0012",
+      "derivedAnswer": "D",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0013",
+      "derivedAnswer": "A",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0014",
+      "derivedAnswer": "B",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0015",
+      "derivedAnswer": "C",
+      "verdictBeforeReveal": "pass",
+      "reasonCodes": []
+    }
+  ],
+  "limitations": [
+    "Blind review only: no sealed answers, generator reasoning, official question bodies, repository history, other branches, or database state were consulted.",
+    "No cross-batch duplicate/leakage, answer-key comparison, or deterministic publication gate was performed; those remain supervisor-stage checks."
+  ]
+}

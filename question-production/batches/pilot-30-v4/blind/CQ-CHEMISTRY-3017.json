@@ -1,0 +1,143 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-CHEMISTRY-3017",
+  "subject": "chemistry",
+  "topicCode": "C-ORG-HC",
+  "topicTitle": "烃的组成",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "0.1 mol 某烃完全燃烧，生成 0.3 mol CO₂ 和 0.4 mol H₂O。求该烃的分子式。",
+  "options": [
+    {
+      "id": "A",
+      "text": "C₃H₈"
+    },
+    {
+      "id": "B",
+      "text": "C3H4"
+    },
+    {
+      "id": "C",
+      "text": "C6H8"
+    },
+    {
+      "id": "D",
+      "text": "CH₄"
+    }
+  ],
+  "knowledgeTags": [
+    "烃的组成",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "chemistry",
+    "topicCode": "C-ORG-HC",
+    "topicTitle": "烃的组成",
+    "targetDifficulty": "medium",
+    "taskFamily": "hydrocarbon_formula_from_combustion",
+    "planTemplate": "pilot_v4_hydrocarbon_formula_from_combustion_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "efe7cdce6f2184d5a1230150",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "co2",
+        "h2o",
+        "sample"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "co2",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "h2o",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "sample",
+        "independentGroup": "g3"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "product mole ratios per hydrocarbon mole",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "carbon and hydrogen subscripts",
+        "inputs": [
+          "r1"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "x=nCO2/nhydrocarbon",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "y=2nH2O/nhydrocarbon",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "把水的系数直接作氢原子数",
+      "忽略样品物质的量"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "sample": 0.1,
+      "co2": 0.3,
+      "h2o": 0.4
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 1
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-PHYSICS-2004",
+  "reviewerTaskId": "01a0a489-caf4-75e3-8c3a-a92ea323f53c",
+  "derivedAnswer": "D",
+  "optionTruthTable": {
+    "A": false,
+    "B": false,
+    "C": false,
+    "D": true
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "basic",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "匀速直线运动：v=56 m/7 s=8 m/s，只有 D 符合。",
+    "反查 D：8×7=56 m；其余选项不满足给定位移与时间。数值和单位无舍入问题。"
+  ],
+  "verdictBeforeReveal": "pass",
+  "reasonCodes": [],
+  "reviewedAt": "2026-09-15T18:11:48.7966294+08:00"
+}

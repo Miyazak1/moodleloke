@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-PHYSICS-2009",
+  "reviewerTaskId": "01a0a489-caf4-75e3-8c3a-a92ea323f53c",
+  "derivedAnswer": "A",
+  "optionTruthTable": {
+    "A": true,
+    "B": false,
+    "C": false,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "basic",
+  "caseNecessary": false,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "恒加速度运动：v=v0+at=3+1×4=7 m/s，数值上只有 A 正确。",
+    "反查 A 满足给定初速度、加速度和时间；B、C、D 均不满足。",
+    "案例缺陷：工厂装配轨道上输送构件的装配桁车达到 7 m/s（25.2 km/h）与精确定位和工业安全场景明显不相称，“协调构件定位”的用途表述因此显得为套公式而拼接。"
+  ],
+  "verdictBeforeReveal": "reject",
+  "reasonCodes": [
+    "scenario_implausible",
+    "contrived_operational_use"
+  ],
+  "reviewedAt": "2026-09-15T18:11:48.7966294+08:00"
+}

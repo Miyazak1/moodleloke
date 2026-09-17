@@ -1,0 +1,67 @@
+#!/usr/bin/env node
+'use strict';
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const { pack, inventory } = require('./fixtures/accepted-pack.fixture.cjs');
+const { approvedBridgePlan, compareWithInventory, ensureApprovedTopicBridges, fingerprints, lockedRevalidation, run, validatePack } = require('./import-accepted-pack.cjs');
+
+(async () => {
+  const valid = validatePack(pack);
+  assert.deepEqual(valid.errors, []); assert.equal(valid.prepared.length, 30);
+  const clean = compareWithInventory(valid.prepared, inventory);
+  assert.equal(clean.exact.length, 0); assert.equal(clean.approximate.length, 0); assert.equal(clean.missingTopics.length, 0);
+  const duplicateInventory = structuredClone(inventory);
+  duplicateInventory.cscaQuestions.push({ id: 999, prompt: pack.questions[0].prompt, options: pack.questions[0].options });
+  assert.equal(compareWithInventory(valid.prepared, duplicateInventory).exact.some((item) => item.candidateId === pack.questions[0].candidateId), true);
+  const idempotentInventory = structuredClone(inventory);
+  idempotentInventory.cscaQuestions.push({ id: 1000, sourceQuestionId: 2000, prompt: pack.questions[0].prompt, options: pack.questions[0].options, reviewMetadata: { dualSessionSupervisedAcceptance: { idempotencyKey: valid.prepared[0].idempotencyKey } } });
+  idempotentInventory.specialPracticeQuestions.push({ id: 2000, prompt: pack.questions[0].prompt, options: pack.questions[0].options });
+  const idempotent = compareWithInventory(valid.prepared, idempotentInventory);
+  assert.equal(idempotent.exact.length, 0); assert.equal(idempotent.idempotentExisting.length, 1);
+  const idempotentDecision = lockedRevalidation([valid.prepared[0]], idempotentInventory);
+  assert.equal(idempotentDecision.safe, true);
+  const racedApproximateInventory = structuredClone(inventory);
+  racedApproximateInventory.cscaQuestions.push({ id: 3000, prompt: `${pack.questions[0].prompt} extra`, options: [{ id: 'A', text: 'different' }] });
+  const racedApproximate = lockedRevalidation(valid.prepared, racedApproximateInventory);
+  assert.equal(racedApproximate.safe, false); assert.equal(racedApproximate.report.approximate.some((item) => item.id === 3000), true);
+  const racedTopicInventory = structuredClone(inventory);
+  racedTopicInventory.specialPracticeTopics[0].status = 'archived';
+  const racedTopic = lockedRevalidation(valid.prepared, racedTopicInventory);
+  assert.equal(racedTopic.safe, false); assert.equal(racedTopic.report.missingTopics.some((item) => item.subject === 'math'), true);
+  const racedMappingInventory = structuredClone(inventory);
+  racedMappingInventory.topicMappings = racedMappingInventory.topicMappings.filter((row) => row.topicId !== 1);
+  const racedMapping = lockedRevalidation(valid.prepared, racedMappingInventory);
+  assert.equal(racedMapping.safe, false); assert.equal(racedMapping.report.missingTopics.some((item) => item.subject === 'math'), true);
+  const brokenPack = structuredClone(pack); brokenPack.reviews[0].derivedAnswer = 'B'; brokenPack.audit.questions[0].status = 'blocked'; brokenPack.audit.summary.overall.blocked = 1;
+  const broken = validatePack(brokenPack);
+  assert.equal(broken.errors.some((item) => item.includes('differs from reviewer')), true); assert.equal(broken.errors.some((item) => item.includes('audit status must be clear')), true);
+  assert.match(valid.prepared[0].idempotencyKey, new RegExp(`^${pack.questions[0].candidateId}:[a-f0-9]{64}$`));
+  assert.equal(fingerprints(pack.questions[0]).contentHash, valid.prepared[0].fingerprints.contentHash);
+  const disclaimerPack = structuredClone(pack); disclaimerPack.audit.formalQualificationEligible = false;
+  const disclaimer = validatePack(disclaimerPack);
+  assert.deepEqual(disclaimer.errors, []); assert.equal(disclaimer.warnings.some((item) => item.includes('cannot authorize publication')), true);
+  const acceptedMappingPack = structuredClone(pack);
+  acceptedMappingPack.topicMappingProposalEvidence = { sha256: 'fixture-proposal-digest' };
+  const fixtureApprovedMappings = acceptedMappingPack.questions.map((question) => { const topic = inventory.cscaExamTopics.find((item) => item.subject === question.subject); const mapping = inventory.topicMappings.find((item) => item.topicId === topic.id); return { candidateId: question.candidateId, originalTopicCode: question.topicCode, mappingStatus: 'approved', mappedTopicCode: question.topicCode, mappedTopicId: topic.id, specialPracticeTopicId: mapping.sourceId, proposalDigest: 'fixture-proposal-digest', approvedAt: '2026-09-15T00:00:00.000Z', scope: 'fixture-scope' }; });
+  acceptedMappingPack.topicMappingProposal = { mappings: fixtureApprovedMappings.map(({ proposalDigest, approvedAt, scope, ...entry }) => ({ ...entry, mappingStatus: 'proposed' })) };
+  acceptedMappingPack.topicMapping = { packId: 'fixture-accepted-30', status: 'approved_by_supervisor', scope: 'fixture-scope', approvedAt: '2026-09-15T00:00:00.000Z', proposalSha256: 'fixture-proposal-digest', mappings: fixtureApprovedMappings };
+  const acceptedMapping = validatePack(acceptedMappingPack); assert.deepEqual(acceptedMapping.errors, []);
+  const inventoryWithoutBridges = structuredClone(inventory); inventoryWithoutBridges.topicMappings = [];
+  const acceptedMappingDecision = lockedRevalidation(acceptedMapping.prepared, inventoryWithoutBridges);
+  assert.equal(acceptedMappingDecision.safe, true); assert.equal(acceptedMapping.prepared.every((item) => item.mapping.source === 'approved_topic_mapping_file'), true); assert.equal(acceptedMappingDecision.report.bridgeWillBeCreated.length, 3); assert.equal(approvedBridgePlan(acceptedMapping.prepared).length, 3);
+  const bridgeSql = []; const mockTx = { $executeRawUnsafe: async (sql) => { bridgeSql.push(sql); return 1; }, $queryRawUnsafe: async () => [{ id: 1 }] };
+  assert.equal((await ensureApprovedTopicBridges(mockTx, acceptedMapping.prepared)).length, 3); assert.equal((await ensureApprovedTopicBridges(mockTx, acceptedMapping.prepared)).length, 3); assert.equal(bridgeSql.length, 6); assert.equal(bridgeSql.every((sql) => sql.includes('ON CONFLICT')), true);
+  const proposalOnlyPack = structuredClone(acceptedMappingPack); proposalOnlyPack.topicMapping.status = 'proposal_only_requires_supervisor_approval';
+  assert.equal(validatePack(proposalOnlyPack).errors.some((item) => item.includes('proposal-only')), true);
+  const tamperedPairPack = structuredClone(acceptedMappingPack); tamperedPairPack.topicMapping.mappings[0].mappedTopicId = 9999;
+  const tamperedPair = validatePack(tamperedPairPack); const tamperedDecision = lockedRevalidation(tamperedPair.prepared, inventoryWithoutBridges);
+  assert.equal(tamperedPair.errors.some((item) => item.includes('differs from the digested proposal')), true); assert.equal(tamperedDecision.safe, false); assert.equal(tamperedDecision.report.missingTopics.some((item) => item.candidateId === tamperedPair.prepared[0].candidateId), true);
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'cscalite-import-fixture-'));
+  const packFile = path.join(temp, 'pack.json'); const dbFile = path.join(temp, 'db.json');
+  fs.writeFileSync(packFile, JSON.stringify(pack)); fs.writeFileSync(dbFile, JSON.stringify(inventory));
+  try { assert.equal(await run(['--pack', packFile, '--db-fixture', dbFile]), 0); }
+  finally { fs.rmSync(temp, { recursive: true }); }
+  console.log('PASS import-accepted-pack self-test: CLI dry-run, locked-race duplicate/topic checks, blocking gates, and idempotency');
+})().catch((error) => { console.error(error); process.exitCode = 1; });

@@ -1,0 +1,223 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-MATH-3001",
+  "subject": "math",
+  "topicCode": "M-FUNC-QUAD",
+  "topicTitle": "二次函数",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "二次函数 f(x)=a[x-(1)][x-(5)] 的图像经过点 (0,10)。先确定 a，再求该函数的顶点纵坐标。",
+  "options": [
+    {
+      "id": "A",
+      "text": "-8"
+    },
+    {
+      "id": "B",
+      "text": "-4"
+    },
+    {
+      "id": "C",
+      "text": "2"
+    },
+    {
+      "id": "D",
+      "text": "-6"
+    }
+  ],
+  "knowledgeTags": [
+    "二次函数",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "math",
+    "topicCode": "M-FUNC-QUAD",
+    "topicTitle": "二次函数",
+    "targetDifficulty": "medium",
+    "taskFamily": "quadratic_scale_then_vertex",
+    "planTemplate": "pilot_v4_quadratic_scale_then_vertex_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "332864ea0791de78499c63f1",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "f0",
+        "r1",
+        "r2"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "f0",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "r1",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "r2",
+        "independentGroup": "g3"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "roots+point",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "scale",
+        "inputs": [
+          "r1"
+        ],
+        "output": "intermediate_2"
+      },
+      {
+        "id": "r3",
+        "operation": "axis-value",
+        "inputs": [
+          "r2"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "f(0)=a(0-r1)(0-r2)",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "x_v=(r1+r2)/2",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q3",
+        "type": "deterministic_relation",
+        "expression": "y_v=f(x_v)",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "忽略比例系数",
+      "把零点之一当成顶点"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "r1": 1,
+      "r2": 5,
+      "f0": 10
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 1
+  },
+  "correctAnswer": "A",
+  "explanation": "由 f(0)=10 得 a=2。对称轴为 x=(1+5)/2=3，代回得顶点纵坐标 -8。",
+  "generationMetadata": {
+    "origin": "codex_local_deterministic_v4",
+    "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v4",
+    "createdAt": "2026-09-15T16:00:00.000Z",
+    "languageScope": "zh_primary_only",
+    "providerCalls": 0,
+    "sourceIsolation": {
+      "officialQuestionContentRead": false,
+      "databaseQuestionTextRead": false,
+      "priorReviewTextRead": false
+    },
+    "deterministicVerification": {
+      "solver": {
+        "version": "pilot-v4-batch-local-solver-v1",
+        "status": "verified",
+        "taskFamily": "quadratic_scale_then_vertex",
+        "evidenceBoundary": "prompt_options_and_question_plan",
+        "expectedCanonical": -8,
+        "selectedOptionId": "A",
+        "uniqueAnswer": true
+      },
+      "oracle": {
+        "version": "pilot-v4-independent-oracle-v1",
+        "status": "verified",
+        "implementation": "fresh_family_evaluation_from_canonical_inputs",
+        "expectedCanonical": -8,
+        "agreesWithSolver": true
+      },
+      "optionTruthTable": [
+        {
+          "optionId": "A",
+          "verdict": true,
+          "canonicalValue": -8
+        },
+        {
+          "optionId": "B",
+          "verdict": false,
+          "canonicalValue": -4
+        },
+        {
+          "optionId": "C",
+          "verdict": false,
+          "canonicalValue": 2
+        },
+        {
+          "optionId": "D",
+          "verdict": false,
+          "canonicalValue": -6
+        }
+      ],
+      "explanationReplay": {
+        "version": "pilot-v4-explanation-replay-v1",
+        "status": "verified",
+        "requiredEvidenceTokens": [
+          "a=2",
+          "-8"
+        ],
+        "allRequiredTokensPresent": true,
+        "conclusionMatchesAnswer": true
+      }
+    }
+  }
+}

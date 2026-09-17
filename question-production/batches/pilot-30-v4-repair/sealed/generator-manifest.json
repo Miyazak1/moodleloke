@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "codex-repair-generator-manifest-v1",
+  "batchId": "pilot-30-v4-repair-2026-09-15",
+  "providerCalls": 0,
+  "count": 4,
+  "verificationSummary": {
+    "solverVerified": 4,
+    "oracleVerified": 4,
+    "uniqueAnswerVerified": 4,
+    "optionTruthTablesVerified": 4,
+    "explanationReplayVerified": 4,
+    "failures": 0
+  },
+  "items": [
+    {
+      "candidateId": "CQ-MATH-4001",
+      "supersedes": "CQ-MATH-3015",
+      "revisionReason": "difficulty_normalization",
+      "correctAnswer": "C",
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "optionTruthTableStatus": "verified",
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "31009fc2e11b18085d0269b9cad199dd85182dc657f74bd43f8562908c5acda5"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-4001",
+      "supersedes": "CQ-PHYSICS-3009",
+      "revisionReason": "difficulty_normalization",
+      "correctAnswer": "A",
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "optionTruthTableStatus": "verified",
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "c270aec340c09f662f2eecf77faae0b87d38c4fb48b664fbc0d00a4e7881a2f1"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-4001",
+      "supersedes": "CQ-CHEMISTRY-3003",
+      "revisionReason": "self_containment_constants_added",
+      "correctAnswer": "C",
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "optionTruthTableStatus": "verified",
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "d60ce48cbf57de9a6f60da47188e6ae19035a1cead96932fbdab7b6b790b381a"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-4002",
+      "supersedes": "CQ-CHEMISTRY-3005",
+      "revisionReason": "self_containment_constants_added",
+      "correctAnswer": "A",
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "optionTruthTableStatus": "verified",
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "08fb18e2e769ddc31a10c347b69fb9af682e084b28f6f5c654ce722472b5d922"
+    }
+  ]
+}

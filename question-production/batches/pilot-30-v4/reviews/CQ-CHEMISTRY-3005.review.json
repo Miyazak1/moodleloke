@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-CHEMISTRY-3005",
+  "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+  "derivedAnswer": "A",
+  "optionTruthTable": {
+    "A": true,
+    "B": false,
+    "C": false,
+    "D": false
+  },
+  "conditionsSufficient": false,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "hard",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "按常用原子量计算：n(C)=8.8/44=0.2，n(H)=2×5.4/18=0.6；样品中 O 质量=4.6-2.4-0.6=1.6 g，即 0.1 mol，原子比 2:6:1，A。题面未给 CO2/H2O 摩尔质量或 C/H/O 相对原子质量。",
+    "已逐项对照 A/B/C/D；真值表只标记由题干独立推出的选项，未采用任何题面或元数据自报答案。"
+  ],
+  "verdictBeforeReveal": "reject",
+  "reasonCodes": [
+    "MISSING_ATOMIC_MASS_DATA",
+    "CONDITIONS_INSUFFICIENT"
+  ],
+  "reviewedAt": "2026-09-15T18:46:01.1890259+08:00"
+}

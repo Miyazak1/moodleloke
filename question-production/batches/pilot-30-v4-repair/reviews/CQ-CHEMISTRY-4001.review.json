@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-CHEMISTRY-4001",
+  "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+  "derivedAnswer": "C",
+  "optionTruthTable": {
+    "A": false,
+    "B": false,
+    "C": true,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "medium",
+  "caseNecessary": false,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "题面自足性：样品质量、CaCO3质量分数、反应方程式、M(CaCO3)=100 g/mol及标准状况气体摩尔体积22.4 L/mol均已明示，无需外部常数。",
+    "独立计算：m(CaCO3)=10 g×80%=8 g，n(CaCO3)=8/100=0.08 mol；由方程式n(CO2)=0.08 mol，故V(CO2)=0.08×22.4=1.792 L。",
+    "选项核验：A=2.24 L、B=4.0727 L、D=2.792 L均不等于1.792 L，只有C成立，数值与单位唯一。",
+    "条件与表述：惰性杂质不反应、盐酸足量、CaCO3完全反应、气体处于标准状况，计量条件完整且无歧义。",
+    "难度与考纲：需依次处理纯度、物质的量、反应计量和气体摩尔体积，标为medium合理；内容属于物质的量与纯度的常规考纲范围。",
+    "反例检查：尝试忽略纯度会得到0.10 mol CO2及2.24 L，仅对应A且违反80%条件；其余选项无法满足全部已给关系。"
+  ],
+  "verdictBeforeReveal": "pass",
+  "reasonCodes": [],
+  "reviewedAt": "2026-09-15T18:56:29+08:00"
+}

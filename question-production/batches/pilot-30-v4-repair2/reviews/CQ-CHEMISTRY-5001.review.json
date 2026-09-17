@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-CHEMISTRY-5001",
+  "reviewerTaskId": "repair2-independent-blind-reviewer",
+  "derivedAnswer": "B",
+  "optionTruthTable": {
+    "A": false,
+    "B": true,
+    "C": false,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "medium",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "定量理想气体满足 P1V1/T1=P2V2/T2；温度必须使用绝对温标，27 ℃=300 K，127 ℃=400 K。",
+    "V2=2.40 L×(400/300)×(100 kPa/120 kPa)=2.666... L，按选项精度取 2.67 L，因此 B 为真。",
+    "逐项代回检查：A=2.00 L、C=3.20 L、D=1.50 L 均不满足联合气体定律，故 A、C、D 为假且答案唯一。",
+    "采用 273.15 换算时结果约为 2.666 L，仍唯一对应 B；温标近似不会造成选项歧义。",
+    "方向复核：升温使体积倾向增大，升压使体积倾向减小；两因素合并得到 V2/V1=(4/3)×(5/6)=10/9，与计算结果一致。",
+    "反例检查涵盖误把摄氏温度直接作比例量及只按压强反比计算，两者均不能得到另一个同样成立的选项。"
+  ],
+  "verdictBeforeReveal": "pass",
+  "reasonCodes": [],
+  "reviewedAt": "2026-09-15T19:32:19+08:00"
+}

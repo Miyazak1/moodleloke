@@ -1,0 +1,57 @@
+{
+  "name": "@moodlelike/frontend",
+  "private": true,
+  "version": "0.1.0-alpha.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --config vite.config.mjs",
+    "dev:force": "vite --config vite.config.mjs --force",
+    "build": "vite build --config vite.config.mjs",
+    "test:minimal": "node scripts/test-standalone-minimal.cjs",
+    "test:e2e": "playwright test --config playwright.config.ts",
+    "test:e2e:agent": "playwright test --config playwright.agent.config.ts",
+    "test:e2e:agent:live": "playwright test --config playwright.agent-live.config.ts",
+    "test:e2e:agent:attachment:live": "playwright test --config playwright.agent-attachment-live.config.ts",
+    "test:e2e:agent:handwriting:live": "playwright test --config playwright.agent-handwriting-live.config.ts",
+    "test:e2e:fixed-bank": "playwright test --config playwright.config.ts e2e/public-routes.spec.ts e2e/onboarding.spec.ts e2e/i18n-smoke.spec.ts e2e/interaction-stability.spec.ts e2e/style-primitives.spec.ts --workers=2",
+    "test:concurrency": "playwright test --config playwright.config.ts e2e/loading-concurrency.spec.ts e2e/interaction-stability.spec.ts --workers=1",
+    "test:i18n": "playwright test --config playwright.config.ts e2e/i18n-smoke.spec.ts",
+    "test:i18n-debt": "node scripts/check-i18n-debt.cjs",
+    "test:i18n-messages": "node scripts/check-i18n-message-parity.cjs",
+    "test:i18n-vi": "node scripts/check-i18n-vi-coverage.cjs",
+    "test:i18n-content": "node scripts/check-i18n-content-parity.cjs",
+    "test:organization-invites": "node --loader ../backend/node_modules/ts-node/esm.mjs scripts/check-organization-invite-export.mjs",
+    "test:organization-governance": "node --loader ../backend/node_modules/ts-node/esm.mjs scripts/check-organization-governance-summary.mjs",
+    "test:admin-audit-summaries": "node --loader ../backend/node_modules/ts-node/esm.mjs scripts/check-admin-audit-summaries.mjs",
+    "test:admin-mock-exam-ai-generation-ui": "node scripts/check-admin-mock-exam-ai-generation-ui.mjs",
+    "test:admin-source-profile-pipeline-ui": "node scripts/check-admin-source-profile-pipeline-ui.mjs",
+    "test:admin-source-profile-pipeline-browser": "node scripts/run-admin-source-profile-pipeline-browser.mjs",
+    "test:admin-console-parity": "node scripts/check-admin-console-parity.mjs",
+    "test:syllabus-imports": "node --loader ../backend/node_modules/ts-node/esm.mjs scripts/check-syllabus-import-export.mjs",
+    "test:css-architecture": "node scripts/check-css-architecture.cjs",
+    "test:standalone-shell": "node scripts/check-standalone-agent-shell.cjs",
+    "audit:standalone-reachability": "node scripts/audit-standalone-reachability.cjs",
+    "test:e2e:golden:student": "playwright test e2e/agent-runtime.spec.ts --config playwright.golden.config.ts --grep \"creates the recommended practice\"",
+    "test:e2e:golden:teaching": "playwright test e2e/agent-runtime.spec.ts --config playwright.golden.config.ts --grep \"keeps active practice mounted\"",
+    "test:e2e:golden:authoring": "playwright test e2e/authoring-golden.spec.ts --config playwright.golden.config.ts",
+    "test:e2e:golden": "npm run test:e2e:golden:student && npm run test:e2e:golden:teaching && npm run test:e2e:golden:authoring"
+  },
+  "dependencies": {
+    "katex": "^0.16.46",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "three": "^0.184.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@types/three": "^0.184.1",
+    "@vitejs/plugin-react": "^4.3.1",
+    "typescript": "^5.6.3",
+    "vite": "^7.3.3"
+  },
+  "engines": {
+    "node": ">=22 <23"
+  }
+}

@@ -1,0 +1,185 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-CHEMISTRY-2007",
+  "subject": "chemistry",
+  "topicCode": "C-BASIC-003",
+  "topicTitle": "强酸强碱稀释与中和",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "实验教学工作单记录试剂液的规范配制步骤，供课堂操作复核。本次稀释操作记录如下：目标终体积为 200 mL；取样体积为 10 mL，样品浓度为 0.05 mol/L 氢氧化钠。以水补足至目标刻度，假定 25°C 且溶质完全电离，pH 约为多少？",
+  "options": [
+    {
+      "id": "A",
+      "text": "所得溶液的 pH 为 11.9"
+    },
+    {
+      "id": "B",
+      "text": "所得溶液的 pH 为 10.9"
+    },
+    {
+      "id": "C",
+      "text": "所得溶液的 pH 为 11.4"
+    },
+    {
+      "id": "D",
+      "text": "所得溶液的 pH 为 12.4"
+    }
+  ],
+  "knowledgeTags": [
+    "溶液浓度与pH计算",
+    "强酸强碱",
+    "strong_base_dilution"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "chemistry",
+    "topicId": 51,
+    "topicTitle": "电解质溶液与酸碱平衡",
+    "productionCellId": 42,
+    "targetDifficulty": "medium",
+    "taskFamily": "ph_dilution_strong_acid_base_neutralization",
+    "planTemplate": "chemistry_strong_acid_base_single_relation_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "completeDissociationOnly": true,
+      "allowedSpecies": [
+        "HCl",
+        "HNO3",
+        "NaOH",
+        "KOH"
+      ],
+      "allowedRelationKinds": [
+        "strong_acid_dilution",
+        "strong_base_dilution",
+        "strong_acid_base_neutralization"
+      ],
+      "allowedAnswerTargets": [
+        "ph_value",
+        "acid_base_character"
+      ],
+      "exactChemistryRelationKind": "strong_base_dilution",
+      "exactChemistryAnswerTarget": "ph_value",
+      "requireVisibleQuantitiesAndUnits": true,
+      "requireTemperatureConvention25C": true,
+      "forbidWeakPolyproticBufferHydrolysisActivityAndTitration": true,
+      "maxIndependentRelations": 1,
+      "forbidMultiStageModelChain": true,
+      "finalAnswerShape": "one_numeric_ph_or_acidic_neutral_basic_judgement",
+      "preferredPromptSkeletons": [
+        "给出一元强酸或一元强碱的初始 pH 和稀释倍数，只求最终 pH 或酸碱性",
+        "给出强酸或强碱浓度、初始体积和稀释后总体积，只求最终 pH 或酸碱性",
+        "给出一元强酸与一元强碱各自浓度和体积，比较物质的量后只求混合液 pH 或酸碱性"
+      ]
+    },
+    "budget": {
+      "maxPlanRepairs": 2,
+      "maxCandidateRepairs": 1
+    },
+    "scenarioContract": {
+      "schemaVersion": "subject-practice-scenario-contract-v1",
+      "policyVersion": "subject-practice-scenario-diversity-shadow-v2-multi-evidence-status",
+      "stage": "shadow_only_thresholds_not_frozen",
+      "scenarioMode": "experimental",
+      "scenarioFamilyId": "chemistry_lab_solution_dilution",
+      "scenarioDomain": "chemistry_laboratory",
+      "scenarioEntity": "reagent_solution",
+      "scenarioAction": "strong_base_dilution",
+      "informationForm": "numeric_procedure_text",
+      "scenarioFingerprint": "scenario-ad364de78c891b849fe7",
+      "contextNecessity": "required_for_solution",
+      "requiredInformationFields": [
+        "scenarioAction",
+        "motion_or_reaction_condition",
+        "quantities_with_units"
+      ],
+      "solverRelevantFields": [
+        "scenarioAction",
+        "motion_or_reaction_condition",
+        "quantities_with_units"
+      ],
+      "surface": {
+        "zhEntity": "试剂溶液",
+        "enEntity": "reagent solution",
+        "zhSetting": "实验室稀释操作",
+        "enSetting": "a laboratory dilution",
+        "cueTokens": [
+          "试剂溶液",
+          "reagent solution"
+        ]
+      },
+      "plausibility": {
+        "temperatureC": 25,
+        "completeDissociationOnly": true,
+        "visibleConcentrationAndVolumeUnits": true
+      },
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "controlled_catalog_and_sealed_ordinal_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "strong_acid_base_quantity",
+        "role": "visible_initial_ph_or_concentration_and_volume",
+        "independentGroup": "ph1"
+      },
+      {
+        "id": "e2",
+        "type": "dilution_or_neutralization_relation",
+        "role": "one_complete_dissociation_relation",
+        "independentGroup": "ph1"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "compute_diluted_concentration_or_excess_moles",
+        "inputs": [
+          "e1",
+          "e2"
+        ],
+        "output": "final_h_or_oh_concentration"
+      },
+      {
+        "id": "r2",
+        "operation": "map_concentration_to_ph_or_character",
+        "inputs": [
+          "final_h_or_oh_concentration"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "strong_acid_base_ph_round_trip",
+        "expression": "dilution or excess-mole concentration maps to one pH/character",
+        "variables": [
+          "concentration",
+          "volume",
+          "pH"
+        ],
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "using initial pH as the requested result",
+      "ignoring total volume after neutralization",
+      "treating weak or polyprotic species as complete one-to-one dissociation"
+    ],
+    "answerDerivation": [
+      "one complete-dissociation dilution or neutralization relation determines one pH or acid-base character"
+    ],
+    "uniquenessConditions": [
+      "exactly one option matches the independently recomputed pH or character"
+    ]
+  }
+}

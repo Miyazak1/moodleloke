@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cscalite.local/schemas/codex-blind-review-v1.json",
+  "title": "CodexBlindReviewV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "candidateId", "reviewerTaskId", "derivedAnswer",
+    "optionTruthTable", "conditionsSufficient", "ambiguityFound", "syllabusAligned",
+    "difficultyAssessment", "caseNecessary", "counterexampleAttempted",
+    "verificationEvidence", "verdictBeforeReveal", "reasonCodes", "reviewedAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "codex-blind-review-v1" },
+    "candidateId": { "type": "string" },
+    "reviewerTaskId": { "type": "string", "minLength": 1 },
+    "derivedAnswer": { "enum": ["A", "B", "C", "D", "abstain"] },
+    "optionTruthTable": {
+      "type": "object", "additionalProperties": false,
+      "required": ["A", "B", "C", "D"],
+      "properties": { "A": { "type": "boolean" }, "B": { "type": "boolean" }, "C": { "type": "boolean" }, "D": { "type": "boolean" } }
+    },
+    "conditionsSufficient": { "type": "boolean" },
+    "ambiguityFound": { "type": "boolean" },
+    "syllabusAligned": { "type": "boolean" },
+    "difficultyAssessment": { "enum": ["basic", "medium", "hard", "uncertain"] },
+    "caseNecessary": { "type": "boolean" },
+    "counterexampleAttempted": { "type": "boolean" },
+    "verificationEvidence": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+    "verdictBeforeReveal": { "enum": ["pass", "reject", "abstain"] },
+    "reasonCodes": { "type": "array", "items": { "type": "string" } },
+    "reviewedAt": { "type": "string", "format": "date-time" }
+  }
+}
+

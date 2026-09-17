@@ -1,0 +1,206 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-MATH-3010",
+  "subject": "math",
+  "topicCode": "M-PROB-HYPER",
+  "topicTitle": "古典概率",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "袋中有 3 个红球和 5 个蓝球，球除颜色外完全相同。不放回地随机取出 2 个球，恰好取到 1 个红球的概率为多少？",
+  "options": [
+    {
+      "id": "A",
+      "text": "15/28"
+    },
+    {
+      "id": "B",
+      "text": "3/8"
+    },
+    {
+      "id": "C",
+      "text": "15/64"
+    },
+    {
+      "id": "D",
+      "text": "0.4643"
+    }
+  ],
+  "knowledgeTags": [
+    "古典概率",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "math",
+    "topicCode": "M-PROB-HYPER",
+    "topicTitle": "古典概率",
+    "targetDifficulty": "medium",
+    "taskFamily": "probability_exactly_one_red_without_replacement",
+    "planTemplate": "pilot_v4_probability_exactly_one_red_without_replacement_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "8a3f74d5dfce658d8d246d66",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "b",
+        "r"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "b",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "r",
+        "independentGroup": "g2"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "unordered two-draw sample",
+        "inputs": [
+          "e1",
+          "e2"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "favorable mixed pairs / all pairs",
+        "inputs": [
+          "r1"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "favorable=C(r,1)C(b,1)",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "total=C(r+b,2)",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q3",
+        "type": "deterministic_relation",
+        "expression": "P=favorable/total",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "误用有放回模型",
+      "只计算一种取出次序"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "r": 3,
+      "b": 5
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 2
+  },
+  "correctAnswer": "A",
+  "explanation": "用组合数计数：有利取法为 C(3,1)C(5,1)=15，全部取法为 C(8,2)。所以概率为 15/C(8,2)=15/28。",
+  "generationMetadata": {
+    "origin": "codex_local_deterministic_v4",
+    "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v4",
+    "createdAt": "2026-09-15T16:00:00.000Z",
+    "languageScope": "zh_primary_only",
+    "providerCalls": 0,
+    "sourceIsolation": {
+      "officialQuestionContentRead": false,
+      "databaseQuestionTextRead": false,
+      "priorReviewTextRead": false
+    },
+    "deterministicVerification": {
+      "solver": {
+        "version": "pilot-v4-batch-local-solver-v1",
+        "status": "verified",
+        "taskFamily": "probability_exactly_one_red_without_replacement",
+        "evidenceBoundary": "prompt_options_and_question_plan",
+        "expectedCanonical": 0.5357142857142857,
+        "selectedOptionId": "A",
+        "uniqueAnswer": true
+      },
+      "oracle": {
+        "version": "pilot-v4-independent-oracle-v1",
+        "status": "verified",
+        "implementation": "fresh_family_evaluation_from_canonical_inputs",
+        "expectedCanonical": 0.5357142857142857,
+        "agreesWithSolver": true
+      },
+      "optionTruthTable": [
+        {
+          "optionId": "A",
+          "verdict": true,
+          "canonicalValue": 0.5357142857142857
+        },
+        {
+          "optionId": "B",
+          "verdict": false,
+          "canonicalValue": 0.375
+        },
+        {
+          "optionId": "C",
+          "verdict": false,
+          "canonicalValue": 0.234375
+        },
+        {
+          "optionId": "D",
+          "verdict": false,
+          "canonicalValue": 0.4642857142857143
+        }
+      ],
+      "explanationReplay": {
+        "version": "pilot-v4-explanation-replay-v1",
+        "status": "verified",
+        "requiredEvidenceTokens": [
+          "组合数",
+          "15/28"
+        ],
+        "allRequiredTokensPresent": true,
+        "conclusionMatchesAnswer": true
+      }
+    }
+  }
+}

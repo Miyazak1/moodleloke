@@ -1,0 +1,257 @@
+{
+  "schemaVersion": "codex-question-candidate-v1",
+  "candidateId": "CQ-CHEMISTRY-5001",
+  "subject": "chemistry",
+  "topicCode": "C-BASIC-005",
+  "topicTitle": "理想气体状态方程应用",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "实验室用带刻度、可移动活塞的密闭气筒封存一定量气体。初态压强为 100 kPa、体积为 2.40 L、温度为 27 ℃；缓慢调节后，气体压强变为 120 kPa、温度变为 127 ℃。假设气体物质的量不变、可视为理想气体，且各状态均达到热平衡。求末态体积。",
+  "options": [
+    {
+      "id": "A",
+      "text": "2.00 L"
+    },
+    {
+      "id": "B",
+      "text": "2.67 L"
+    },
+    {
+      "id": "C",
+      "text": "3.20 L"
+    },
+    {
+      "id": "D",
+      "text": "1.50 L"
+    }
+  ],
+  "knowledgeTags": [
+    "理想气体状态方程应用",
+    "综合计算"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "chemistry",
+    "topicCode": "C-BASIC-005",
+    "topicTitle": "理想气体状态方程应用",
+    "targetDifficulty": "medium",
+    "taskFamily": "ideal_gas_combined_state_application",
+    "planTemplate": "pilot_v4_repair2_ideal_gas_combined_state_application_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "chem-ideal-gas-combined-state-v1",
+      "scenarioDataMustAffectSolution": true,
+      "selfContainedConstantsRequired": true,
+      "unitsRequired": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "initialPressureKPa",
+        "initialVolumeLiters",
+        "initialTemperatureCelsius",
+        "finalPressureKPa",
+        "finalTemperatureCelsius",
+        "kelvinOffset"
+      ],
+      "requiredAssumptionsPresent": true,
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "databaseQuestionTextUsed": false,
+        "reviewBodyUsed": false,
+        "selectionBasis": "formal_syllabus_topic_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "initialPressureKPa",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "initialVolumeLiters",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "initialTemperatureCelsius",
+        "independentGroup": "g3"
+      },
+      {
+        "id": "e4",
+        "type": "visible_parameter",
+        "role": "finalPressureKPa",
+        "independentGroup": "g4"
+      },
+      {
+        "id": "e5",
+        "type": "visible_parameter",
+        "role": "finalTemperatureCelsius",
+        "independentGroup": "g5"
+      },
+      {
+        "id": "e6",
+        "type": "visible_parameter",
+        "role": "kelvinOffset",
+        "independentGroup": "g6"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "把初、末摄氏温度转换为开尔文温度",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3",
+          "e4",
+          "e5",
+          "e6"
+        ],
+        "output": "T₁、T₂"
+      },
+      {
+        "id": "r2",
+        "operation": "对定量理想气体应用联合气体定律",
+        "inputs": [
+          "r1"
+        ],
+        "output": "V₂"
+      },
+      {
+        "id": "r3",
+        "operation": "核对压强、温度变化对体积的方向影响",
+        "inputs": [
+          "r2"
+        ],
+        "output": "结果复核"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "T(K)=t(℃)+273",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "P₁V₁/T₁=P₂V₂/T₂",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q3",
+        "type": "deterministic_relation",
+        "expression": "V₂=V₁(T₂/T₁)(P₁/P₂)",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "直接把摄氏温度代入状态方程",
+      "只考虑压强变化而忽略温度变化"
+    ],
+    "answerDerivation": [
+      "只使用题干与 QuestionPlan 中的可见条件独立计算并复核单位"
+    ],
+    "uniquenessConditions": [
+      "四个选项逐一按同一物理化学关系检验后恰有一个成立"
+    ],
+    "canonicalInputs": {
+      "initialPressureKPa": 100,
+      "initialVolumeLiters": 2.4,
+      "initialTemperatureCelsius": 27,
+      "finalPressureKPa": 120,
+      "finalTemperatureCelsius": 127,
+      "kelvinOffset": 273
+    },
+    "verificationContract": {
+      "version": "pilot-v4-repair2-local-verifier-v1",
+      "independentSolverRequired": true,
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    }
+  },
+  "correctAnswer": "B",
+  "explanation": "先把温度换算为开尔文温度：T₁=27+273=300 K，T₂=127+273=400 K。气体物质的量不变，由 P₁V₁/T₁=P₂V₂/T₂，得 V₂=2.40×(400/300)×(100/120)=2.67 L。",
+  "generationMetadata": {
+    "origin": "codex_local_deterministic_v4_repair2",
+    "generatorTaskId": "pilot-30-v4-repair2-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-repair2-v1",
+    "createdAt": "2026-09-15T18:00:00.000Z",
+    "languageScope": "zh_primary_only",
+    "providerCalls": 0,
+    "sourceIsolation": {
+      "officialQuestionContentRead": false,
+      "databaseQuestionTextRead": false,
+      "originalityPerItemHitsRead": false,
+      "reviewBodiesRead": false
+    },
+    "deterministicVerification": {
+      "solver": {
+        "version": "pilot-v4-repair2-independent-solver-v1",
+        "status": "verified",
+        "taskFamily": "ideal_gas_combined_state_application",
+        "evidenceBoundary": "prompt_options_and_question_plan",
+        "expectedCanonical": 2.6666666666666665,
+        "selectedOptionId": "B",
+        "uniqueAnswer": true,
+        "unitsChecked": true
+      },
+      "oracle": {
+        "version": "pilot-v4-repair2-independent-oracle-v1",
+        "status": "verified",
+        "implementation": "separate_equivalent_derivation",
+        "expectedCanonical": 2.6666666666666665,
+        "agreesWithSolver": true
+      },
+      "optionTruthTable": [
+        {
+          "optionId": "A",
+          "verdict": false,
+          "canonicalValue": 2
+        },
+        {
+          "optionId": "B",
+          "verdict": true,
+          "canonicalValue": 2.6666666666666665
+        },
+        {
+          "optionId": "C",
+          "verdict": false,
+          "canonicalValue": 3.2
+        },
+        {
+          "optionId": "D",
+          "verdict": false,
+          "canonicalValue": 1.5
+        }
+      ],
+      "explanationReplay": {
+        "version": "pilot-v4-repair2-explanation-replay-v1",
+        "status": "verified",
+        "requiredEvidenceTokens": [
+          "300 K",
+          "400 K",
+          "P₁V₁/T₁=P₂V₂/T₂",
+          "2.67 L"
+        ],
+        "allRequiredTokensPresent": true,
+        "conclusionMatchesAnswer": true
+      }
+    }
+  }
+}

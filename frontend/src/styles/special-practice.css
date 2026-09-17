@@ -1,0 +1,117 @@
+@import './special-practice.part-01.css';
+@import './special-practice.part-02.css';
+@import './special-practice.part-03.css';
+@import './special-practice.part-04.css';
+@import './special-practice.part-05.css';
+
+/* 2026-09-03 Calm Science Lab cleanup for subject practice pages. */
+.site-main-public.site-main-special-practice {
+  position: relative;
+  overflow: clip;
+  background:
+    linear-gradient(116deg, transparent 0 15%, rgba(183, 239, 67, .17) 15.1% 18.3%, transparent 18.4% 100%),
+    linear-gradient(152deg, transparent 0 68%, rgba(255, 113, 94, .11) 68.1% 71.1%, transparent 71.2% 100%),
+    linear-gradient(90deg, rgba(49, 93, 255, .052) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .052) 1px, transparent 1px),
+    linear-gradient(135deg, #fbfff9 0, #f6fbf6 44%, #eef8f7 100%);
+  background-size: auto, auto, 42px 42px, 42px 42px, auto;
+}
+
+.special-practice-page {
+  --special-blue: #315dff;
+  --special-blue-dark: #2448d8;
+  --special-blue-soft: #e9efff;
+  --special-mint: #13c7a3;
+  --special-mint-dark: #087c66;
+  --special-mint-soft: #dcfbf2;
+  --special-lime: #b7ef43;
+  --special-lime-soft: #f0ffd3;
+  --special-coral: #ff715e;
+  --special-coral-soft: #ffe9e4;
+  --special-card-tint: #eef8f7;
+  color: var(--public-ink);
+}
+
+.special-practice-page :where(
+  .special-hero,
+  .special-subject-hero,
+  .special-start-hero,
+  .special-start-card,
+  .special-complete-hero,
+  .special-report-grid article,
+  .special-review-panel,
+  .special-topic-panel,
+  .special-exam-overview,
+  .special-mock-cta,
+  .special-flow-strip article,
+  .special-resume-card,
+  .special-resource-strip,
+  .special-topic-visualizer,
+  .special-interactive-panel,
+  .special-status-card,
+  .special-subject-card,
+  .special-topic-card,
+  .special-question-card,
+  .special-review-explanation,
+  .special-ai-structured-explanation section,
+  .special-hint-loading
+) {
+  border-color: rgba(57, 95, 130, .16);
+  border-radius: 12px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .94), rgba(255, 255, 255, .78)),
+    linear-gradient(90deg, rgba(49, 93, 255, .03) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .03) 1px, transparent 1px);
+  background-size: auto, 34px 34px, 34px 34px;
+  box-shadow: 0 18px 44px rgba(32, 35, 55, .06);
+}
+
+.special-practice-page :where(
+  .special-hero-actions button:not(.ghost),
+  .special-subject-card button,
+  .special-topic-card button,
+  .special-start-aside button,
+  .special-taking-footer button:not(.ghost),
+  .special-complete-hero button:not(.ghost),
+  .special-mock-cta button,
+  .special-report-page button:not(.ghost),
+  .special-inline-cta
+) {
+  border-color: var(--special-blue);
+  border-radius: 8px;
+  background: var(--special-blue);
+  color: #fff;
+  box-shadow: 0 14px 28px rgba(49, 93, 255, .18);
+}
+
+.special-practice-page :where(
+  .special-hero-actions button.ghost,
+  .special-complete-hero button.ghost,
+  .special-report-page button.ghost,
+  .special-back-link,
+  .adaptive-language-choice button
+) {
+  border-color: rgba(57, 95, 130, .16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .86);
+  color: var(--special-blue);
+  box-shadow: none;
+}
+
+.special-practice-page :where(.special-hero, .special-subject-hero, .special-start-hero, .special-complete-hero) {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .96), rgba(251, 255, 249, .82)),
+    linear-gradient(120deg, rgba(220, 251, 242, .32), transparent 62%);
+}
+
+.special-practice-page :where(.special-ai-structured-explanation section, .special-hint-loading, .special-review-explanation.loading) {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .95), rgba(220, 251, 242, .42));
+}
+
+.special-practice-page :where(.special-explanation-loading-steps span) {
+  border-color: rgba(19, 199, 163, .18);
+  border-radius: 8px;
+  background: rgba(220, 251, 242, .64);
+  color: var(--special-mint-dark);
+}

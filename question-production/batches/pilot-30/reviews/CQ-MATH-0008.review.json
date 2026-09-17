@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-MATH-0008",
+  "reviewerTaskId": "pilot-30-independent-blind-review",
+  "derivedAnswer": "C",
+  "optionTruthTable": {
+    "A": true,
+    "B": true,
+    "C": true,
+    "D": true
+  },
+  "conditionsSufficient": false,
+  "ambiguityFound": true,
+  "syllabusAligned": true,
+  "difficultyAssessment": "basic",
+  "caseNecessary": false,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "-23x+1587≥0给出定义域(-∞,69]；平方根递增而内部一次函数递减，因此复合函数在定义域上递减。",
+    "题干声称“给定区间”却未给区间；A、B、D又以错误诊断/错误断言的叙述形式混入，无法形成干净的单选命题集合。"
+  ],
+  "verdictBeforeReveal": "reject",
+  "reasonCodes": [
+    "missing_stated_interval",
+    "multiple_literal_true_options",
+    "metacognitive_distractor_ambiguity"
+  ],
+  "reviewedAt": "2026-09-15T09:29:16.058Z"
+}

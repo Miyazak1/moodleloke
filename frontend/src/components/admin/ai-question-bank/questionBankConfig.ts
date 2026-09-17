@@ -1,0 +1,7 @@
+export const PAGE_SIZE = 25;
+export const CANDIDATE_PAGE_SIZE = 15;
+export const SOURCE_QUESTION_PAGE_SIZE = 12;
+export const GENERATION_QUEUE_HEALTH_LIMIT = 30;
+export const INITIAL_TOPIC_HEALTH_LIMIT = 50;
+export const CANDIDATE_BULK_ALL_LIMIT = 200;
+export const CANDIDATE_BULK_CHUNK_SIZE = 50;

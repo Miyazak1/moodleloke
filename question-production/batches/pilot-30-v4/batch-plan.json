@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "codex-question-production-batch-v1",
+  "batchId": "pilot-30-v4-2026-09-15",
+  "purpose": "Create a structurally new Chinese-only sixty-item elimination pool after originality collision rejection.",
+  "candidateCount": { "math": 20, "physics": 20, "chemistry": 20 },
+  "language": "zh_primary_only",
+  "questionType": "single_choice",
+  "publicationPolicy": "no_direct_publish_import_as_draft_and_replay_current_gates",
+  "officialSourceIsolation": {
+    "generatorMayReadPastPaperBodies": false,
+    "reviewerMayReadPastPaperBodies": false,
+    "postGenerationLeakCheckerMayReadPastPaperBodies": true
+  },
+  "diversityRules": {
+    "minimumTaskFamiliesPerSubject": 10,
+    "maximumItemsPerStructureSkeleton": 2,
+    "maximumItemsPerTopic": 3,
+    "scenarioMustParticipateInSolution": true,
+    "surfaceScenarioInformationAndErrorModelDiversityRequired": true
+  },
+  "forbiddenPriorSkeletons": [
+    "math_direct_polynomial_derivative_value",
+    "math_single_step_log_domain",
+    "math_direct_exponential_range_recognition",
+    "math_direct_power_substitution",
+    "math_two_point_direct_slope",
+    "math_direct_line_inclination",
+    "math_direct_perpendicular_line_identification",
+    "math_direct_point_slope_substitution",
+    "physics_uniform_speed_s_over_t_only",
+    "physics_acceleration_delta_v_over_t_only",
+    "physics_final_velocity_u_plus_at_only",
+    "physics_displacement_ut_plus_half_at2_only",
+    "chemistry_direct_strong_acid_or_base_dilution_ph",
+    "chemistry_direct_strong_acid_base_mix_ph"
+  ],
+  "verificationPolicy": {
+    "providerCallsAllowed": false,
+    "solverBoundary": "visible_question_plan_inputs_and_prompt",
+    "independentOracleRequired": true,
+    "optionTruthTableRequired": true,
+    "explanationReplayRequired": true,
+    "batchLocalVerifierAllowedWithoutCoreModification": true
+  }
+}

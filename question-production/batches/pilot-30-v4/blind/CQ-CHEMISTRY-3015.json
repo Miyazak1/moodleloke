@@ -1,0 +1,157 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-CHEMISTRY-3015",
+  "subject": "chemistry",
+  "topicCode": "C-THERMO-HESS",
+  "topicTitle": "反应热与盖斯定律",
+  "designedDifficulty": "hard",
+  "questionType": "single_choice",
+  "prompt": "已知：C(s)+O₂(g)→CO₂(g)，ΔH₁=-394 kJ/mol；CO(g)+1/2O₂(g)→CO₂(g)，ΔH₂=-283 kJ/mol。用盖斯定律求反应 C(s)+1/2O₂(g)→CO(g) 的焓变。",
+  "options": [
+    {
+      "id": "A",
+      "text": "111 kJ/mol"
+    },
+    {
+      "id": "B",
+      "text": "-394 kJ/mol"
+    },
+    {
+      "id": "C",
+      "text": "-111 kJ/mol"
+    },
+    {
+      "id": "D",
+      "text": "172 kJ/mol"
+    }
+  ],
+  "knowledgeTags": [
+    "反应热与盖斯定律",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "chemistry",
+    "topicCode": "C-THERMO-HESS",
+    "topicTitle": "反应热与盖斯定律",
+    "targetDifficulty": "hard",
+    "taskFamily": "hess_law_target_enthalpy",
+    "planTemplate": "pilot_v4_hess_law_target_enthalpy_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "fcba26f3a4f8b9bc3093bef2",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "given",
+        "kind",
+        "target"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "given",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "kind",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "target",
+        "independentGroup": "g3"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "combine combustion equations",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "cancel common products",
+        "inputs": [
+          "r1"
+        ],
+        "output": "intermediate_2"
+      },
+      {
+        "id": "r3",
+        "operation": "target enthalpy",
+        "inputs": [
+          "r2"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "reverse equation changes sign",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "multiply equation multiplies enthalpy",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q3",
+        "type": "deterministic_relation",
+        "expression": "add equations and cancel species",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "反应倒置后未改变符号",
+      "化学计量倍乘时漏乘焓变"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "kind": "CO",
+      "given": "C(s)+O₂(g)→CO₂(g)，ΔH₁=-394 kJ/mol；CO(g)+1/2O₂(g)→CO₂(g)，ΔH₂=-283 kJ/mol",
+      "target": "C(s)+1/2O₂(g)→CO(g)"
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 1
+  }
+}

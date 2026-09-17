@@ -1,0 +1,329 @@
+.chem-nomenclature-card {
+  display:grid;
+  grid-template-columns:260px minmax(0,1fr) 340px;
+  gap:16px;
+  align-items:stretch;
+  padding:18px;
+  background:#fffdf9
+}
+
+.chem-nomenclature-controls,.chem-nomenclature-workspace,.chem-nomenclature-reference {
+  min-width:0;
+  border:1px solid var(--public-line);
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 14px 36px #1720330f
+}
+
+.chem-nomenclature-controls {
+  display:grid;
+  align-content:start;
+  gap:18px;
+  padding:16px
+}
+
+.chem-nomenclature-controls>div {
+  display:grid;
+  gap:10px
+}
+
+.chem-nomenclature-controls span,.chem-nomenclature-input span {
+  color:var(--public-muted);
+  font-size:12px;
+  font-weight:900
+}
+
+.chem-nomenclature-segments,.chem-nomenclature-filter {
+  display:grid;
+  gap:8px
+}
+
+.chem-nomenclature-segments button,.chem-nomenclature-filter button,.chem-nomenclature-actions button,.chem-category-choice-grid button,.chem-nomenclature-score button {
+  min-height:40px;
+  display:inline-flex;
+  gap:7px;
+  align-items:center;
+  justify-content:center;
+  padding:9px 12px;
+  border:1px solid var(--public-line);
+  border-radius:999px;
+  background:#fff;
+  color:var(--public-ink);
+  font-weight:900
+}
+
+.chem-nomenclature-segments button.active,.chem-nomenclature-filter button.active,.chem-nomenclature-actions button:not(.ghost) {
+  border-color:var(--public-orange);
+  background:var(--public-orange);
+  color:#fff;
+  box-shadow:0 12px 24px #315dff24
+}
+
+.chem-nomenclature-actions button:disabled {
+  cursor:not-allowed;
+  border-color:var(--public-line);
+  background:#f3f6fa;
+  color:var(--public-muted);
+  box-shadow:none
+}
+
+.chem-nomenclature-score {
+  padding:14px;
+  border-radius:12px;
+  background:var(--public-soft)
+}
+
+.chem-nomenclature-score strong {
+  color:var(--public-orange);
+  font-size:30px;
+  line-height:1
+}
+
+.chem-nomenclature-workspace {
+  display:grid;
+  grid-template-rows:auto auto minmax(0,1fr);
+  gap:14px;
+  padding:16px;
+  background:linear-gradient(180deg,#fffefa,#f8fbff)
+}
+
+.chem-nomenclature-question {
+  position:relative;
+  display:grid;
+  justify-items:center;
+  gap:10px;
+  padding:24px 18px;
+  border:1px solid rgba(66,107,146,.22);
+  border-radius:16px;
+  background:var(--public-soft);
+  text-align:center
+}
+
+.chem-nomenclature-category-tag {
+  display:inline-flex;
+  gap:6px;
+  align-items:center;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900
+}
+
+.chem-nomenclature-category-tag.tone-blue,.chem-reference-table em.tone-blue {
+  background:#dbeafe;
+  color:#315dff
+}
+
+.chem-nomenclature-category-tag.tone-rose,.chem-reference-table em.tone-rose {
+  background:#fce7f3;
+  color:#be185d
+}
+
+.chem-nomenclature-category-tag.tone-green,.chem-reference-table em.tone-green {
+  background:#dff5e8;
+  color:#1f7a46
+}
+
+.chem-nomenclature-category-tag.tone-indigo,.chem-reference-table em.tone-indigo {
+  background:#dceaf3;
+  color:#315dff
+}
+
+.chem-nomenclature-question p,.chem-nomenclature-question small {
+  margin:0;
+  color:var(--public-muted);
+  line-height:1.55;
+  font-weight:850
+}
+
+.chem-nomenclature-question strong {
+  color:var(--public-ink);
+  font-size:clamp(34px,5vw,56px);
+  line-height:1.05;
+  letter-spacing:0
+}
+
+.chem-nomenclature-answer {
+  display:grid;
+  gap:12px;
+  padding:14px;
+  border:1px solid var(--public-line);
+  border-radius:14px;
+  background:#fff
+}
+
+.chem-nomenclature-input {
+  display:grid;
+  gap:8px
+}
+
+.chem-nomenclature-input input {
+  width:100%;
+  min-height:54px;
+  padding:12px 14px;
+  border:1px solid #dce4ef;
+  border-radius:12px;
+  background:#fff;
+  color:var(--public-ink);
+  font-size:20px;
+  font-weight:900;
+  outline:0
+}
+
+.chem-nomenclature-input input:focus {
+  border-color:var(--public-orange);
+  box-shadow:0 0 0 3px #315dff1f
+}
+
+.chem-category-choice-grid {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px
+}
+
+.chem-category-choice-grid button {
+  min-height:74px;
+  flex-direction:column;
+  border-radius:14px
+}
+
+.chem-category-choice-grid button.active {
+  border-color:#315dff73;
+  background:var(--public-soft)
+}
+
+.chem-category-choice-grid button.correct {
+  border-color:#2f8c5b6b;
+  background:#effaf3
+}
+
+.chem-category-choice-grid button.wrong {
+  border-color:#b84a3a5c;
+  background:#fff2ee
+}
+
+.chem-nomenclature-actions {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px
+}
+
+.chem-nomenclature-actions button.ghost,.chem-nomenclature-score button.ghost {
+  background:#fff;
+  color:var(--public-ink);
+  box-shadow:none
+}
+
+.chem-nomenclature-explanation {
+  display:grid;
+  gap:12px;
+  align-content:start;
+  padding:16px;
+  border:1px solid var(--public-line);
+  border-radius:14px;
+  background:#fffefa
+}
+
+.chem-nomenclature-explanation.correct {
+  border-color:#2f8c5b57;
+  background:#effaf3
+}
+
+.chem-nomenclature-explanation.wrong {
+  border-color:#b84a3a52;
+  background:#fff2ee
+}
+
+.chem-nomenclature-explanation>div:first-child {
+  display:grid;
+  gap:4px
+}
+
+.chem-nomenclature-explanation span {
+  color:var(--public-muted);
+  font-size:12px;
+  font-weight:900
+}
+
+.chem-nomenclature-explanation strong {
+  color:var(--public-ink);
+  font-size:24px;
+  line-height:1.25
+}
+
+.chem-nomenclature-explanation p {
+  margin:0;
+  color:var(--public-ink);
+  line-height:1.7
+}
+
+.chem-nomenclature-breakdown {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px
+}
+
+.chem-nomenclature-breakdown span {
+  width:fit-content;
+  padding:6px 9px;
+  border-radius:999px;
+  background:#fff;
+  color:var(--public-ink)
+}
+
+.chem-nomenclature-reference {
+  display:grid;
+  align-content:start;
+  gap:12px;
+  padding:16px
+}
+
+.chem-reference-table {
+  display:grid;
+  max-height:620px;
+  overflow:auto;
+  border:1px solid var(--public-line);
+  border-radius:12px
+}
+
+.chem-reference-table .head,.chem-reference-table button {
+  display:grid;
+  grid-template-columns:minmax(72px,.8fr) minmax(90px,1fr) 74px;
+  gap:10px;
+  align-items:center;
+  min-height:40px;
+  padding:8px 10px;
+  border:0;
+  border-bottom:1px solid #edf1f6;
+  background:#fff;
+  color:var(--public-ink);
+  text-align:left;
+  font-weight:850
+}
+
+.chem-reference-table .head {
+  position:sticky;
+  top:0;
+  z-index:1;
+  background:#fff8e7;
+  color:var(--public-orange-dark);
+  font-size:12px;
+  font-weight:950
+}
+
+.chem-reference-table button.active {
+  background:var(--public-soft)
+}
+
+.chem-reference-table em {
+  width:fit-content;
+  padding:4px 8px;
+  border-radius:999px;
+  font-size:12px;
+  font-style:normal;
+  font-weight:900
+}
+
+.chem-nomenclature-support article {
+  min-width:0
+}

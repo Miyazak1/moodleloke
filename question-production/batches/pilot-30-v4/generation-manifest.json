@@ -1,0 +1,655 @@
+{
+  "schemaVersion": "codex-question-generation-manifest-v1",
+  "batchId": "pilot-30-v4-2026-09-15",
+  "languageScope": "zh_primary_only",
+  "providerCalls": 0,
+  "counts": {
+    "math": 20,
+    "physics": 20,
+    "chemistry": 20,
+    "total": 60
+  },
+  "diversity": {
+    "math": {
+      "taskFamilyCount": 10,
+      "topicCount": 10,
+      "maxItemsPerTaskFamily": 2,
+      "maxItemsPerTopic": 2,
+      "taskFamilies": [
+        "quadratic_scale_then_vertex",
+        "arithmetic_sequence_two_terms_then_sum",
+        "geometric_sequence_nonadjacent_then_sum",
+        "inclusion_exclusion_exactly_one",
+        "probability_exactly_one_red_without_replacement",
+        "vector_parameter_then_norm",
+        "circle_line_chord_length",
+        "trig_quadrant_half_angle",
+        "logarithmic_product_equation_with_domain",
+        "combined_variance_with_between_group_shift"
+      ],
+      "topics": [
+        "M-FUNC-QUAD",
+        "M-SEQ-ARITH",
+        "M-SEQ-GEO",
+        "M-SET-IE",
+        "M-PROB-HYPER",
+        "M-VEC-DOT",
+        "M-GEO-CIRCLE",
+        "M-TRIG-HALF",
+        "M-FUNC-LOGEQ",
+        "M-STAT-COMB"
+      ]
+    },
+    "physics": {
+      "taskFamilyCount": 10,
+      "topicCount": 10,
+      "maxItemsPerTaskFamily": 2,
+      "maxItemsPerTopic": 2,
+      "taskFamilies": [
+        "horizontal_projectile_landing_speed",
+        "work_energy_with_friction",
+        "perfectly_inelastic_momentum",
+        "series_parallel_circuit_current",
+        "electrostatic_zero_field_between_charges",
+        "floating_density_from_exposed_fraction",
+        "thin_lens_magnification",
+        "standing_wave_speed",
+        "calorimetry_equilibrium",
+        "magnetic_circular_radius"
+      ],
+      "topics": [
+        "P-MECH-PROJ",
+        "P-MECH-ENERGY",
+        "P-MECH-MOM",
+        "P-ELEC-CIRCUIT",
+        "P-ELEC-FIELD",
+        "P-MECH-BUOY",
+        "P-OPT-LENS",
+        "P-WAVE-STAND",
+        "P-THERM-CAL",
+        "P-MAG-LORENTZ"
+      ]
+    },
+    "chemistry": {
+      "taskFamilyCount": 10,
+      "topicCount": 10,
+      "maxItemsPerTaskFamily": 2,
+      "maxItemsPerTopic": 2,
+      "taskFamilies": [
+        "limiting_reagent_product_mass",
+        "carbonate_purity_from_gas_volume",
+        "empirical_formula_from_combustion",
+        "redox_electron_stoichiometry",
+        "equilibrium_constant_from_composition",
+        "crystallization_from_solubility_change",
+        "electrolysis_faraday_deposition",
+        "hess_law_target_enthalpy",
+        "hydrocarbon_formula_from_combustion",
+        "molarity_from_mass_fraction_density"
+      ],
+      "topics": [
+        "C-STOICH-LIMIT",
+        "C-STOICH-PURITY",
+        "C-ORG-EMP",
+        "C-REDOX-E",
+        "C-EQ-KC",
+        "C-SOL-CRYS",
+        "C-ELEC-FAR",
+        "C-THERMO-HESS",
+        "C-ORG-HC",
+        "C-SOL-MOLAR"
+      ]
+    }
+  },
+  "structuralPreflight": {
+    "comparisonScope": "V1-V3 candidate filenames and user-supplied forbidden skeleton registry only",
+    "priorCandidateFileCount": 120,
+    "priorQuestionBodiesRead": false,
+    "officialQuestionContentRead": false,
+    "newVsForbiddenSkeletonCollisionCount": 0,
+    "newVsPriorStructuralCollisionCount": 0,
+    "withinV4SkeletonOverLimitCount": 0
+  },
+  "items": [
+    {
+      "candidateId": "CQ-MATH-3001",
+      "subject": "math",
+      "topicCode": "M-FUNC-QUAD",
+      "taskFamily": "quadratic_scale_then_vertex",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "332864ea0791de78499c63f1",
+      "blindSha256": "5452d788d1318c38a780733205daf298a273d9e21f4f769563703ed9cd22ca7c"
+    },
+    {
+      "candidateId": "CQ-MATH-3002",
+      "subject": "math",
+      "topicCode": "M-FUNC-QUAD",
+      "taskFamily": "quadratic_scale_then_vertex",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "332864ea0791de78499c63f1",
+      "blindSha256": "534d3dca4ebd7eadfe2fe9d6c63dcb1c4dff2f00838607f3980b08df84645a5b"
+    },
+    {
+      "candidateId": "CQ-MATH-3003",
+      "subject": "math",
+      "topicCode": "M-SEQ-ARITH",
+      "taskFamily": "arithmetic_sequence_two_terms_then_sum",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "6e0058ba467b7f656ef58138",
+      "blindSha256": "869680a69d1cff5b895194b7dac80a2d2aae91f2b2b3f1a36dfeb68cf396445d"
+    },
+    {
+      "candidateId": "CQ-MATH-3004",
+      "subject": "math",
+      "topicCode": "M-SEQ-ARITH",
+      "taskFamily": "arithmetic_sequence_two_terms_then_sum",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "6e0058ba467b7f656ef58138",
+      "blindSha256": "eeb6b6bb567184c6ac19cb616944446f596a07b2bb537b1019e9ded26970f38e"
+    },
+    {
+      "candidateId": "CQ-MATH-3005",
+      "subject": "math",
+      "topicCode": "M-SEQ-GEO",
+      "taskFamily": "geometric_sequence_nonadjacent_then_sum",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "22e2dd7d5714501c8a56439b",
+      "blindSha256": "68e6af5891f86050dbf362f339f12352e523188bfd773b68a2649be53752f745"
+    },
+    {
+      "candidateId": "CQ-MATH-3006",
+      "subject": "math",
+      "topicCode": "M-SEQ-GEO",
+      "taskFamily": "geometric_sequence_nonadjacent_then_sum",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "22e2dd7d5714501c8a56439b",
+      "blindSha256": "8e5af9d89e319efbcf853c24754f3e2140f87cd3980f31d3f99998efe14cc813"
+    },
+    {
+      "candidateId": "CQ-MATH-3007",
+      "subject": "math",
+      "topicCode": "M-SET-IE",
+      "taskFamily": "inclusion_exclusion_exactly_one",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "ba77825df60929bc0bbce2d0",
+      "blindSha256": "cf0694a63c3762f713e92d42fcc72adc82c09ab776131b7940ba24f01a719fb0"
+    },
+    {
+      "candidateId": "CQ-MATH-3008",
+      "subject": "math",
+      "topicCode": "M-SET-IE",
+      "taskFamily": "inclusion_exclusion_exactly_one",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "ba77825df60929bc0bbce2d0",
+      "blindSha256": "780013d30a67901ab66370f53c7dfc3144527fe1105b17e1c62d8dbff9dbe4d8"
+    },
+    {
+      "candidateId": "CQ-MATH-3009",
+      "subject": "math",
+      "topicCode": "M-PROB-HYPER",
+      "taskFamily": "probability_exactly_one_red_without_replacement",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "8a3f74d5dfce658d8d246d66",
+      "blindSha256": "64ab523e809d9369a473c7fd95a83a9106c990260bc7dd083a25d780feb2e2bb"
+    },
+    {
+      "candidateId": "CQ-MATH-3010",
+      "subject": "math",
+      "topicCode": "M-PROB-HYPER",
+      "taskFamily": "probability_exactly_one_red_without_replacement",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "8a3f74d5dfce658d8d246d66",
+      "blindSha256": "46eaefdb6fc5170f37aebc495ee76f42bed75fab38ff49c9112c25c3fad0ffe3"
+    },
+    {
+      "candidateId": "CQ-MATH-3011",
+      "subject": "math",
+      "topicCode": "M-VEC-DOT",
+      "taskFamily": "vector_parameter_then_norm",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "0fba925283a47332c1fb262f",
+      "blindSha256": "af1cb9e1a2d49d19ac88eb638d11084639b9b365509f1cadb6c5da2876deeaed"
+    },
+    {
+      "candidateId": "CQ-MATH-3012",
+      "subject": "math",
+      "topicCode": "M-VEC-DOT",
+      "taskFamily": "vector_parameter_then_norm",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "0fba925283a47332c1fb262f",
+      "blindSha256": "642fe8ca87047b9b26391fbe884f121846b4e9e6194a41637e5872504b34e4f2"
+    },
+    {
+      "candidateId": "CQ-MATH-3013",
+      "subject": "math",
+      "topicCode": "M-GEO-CIRCLE",
+      "taskFamily": "circle_line_chord_length",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "596882575c3ceb1ae01ff83d",
+      "blindSha256": "d07f5c83b8bd773d4f5e5b4d566eec5270c7493eb355addbaadcac9b57932fe1"
+    },
+    {
+      "candidateId": "CQ-MATH-3014",
+      "subject": "math",
+      "topicCode": "M-GEO-CIRCLE",
+      "taskFamily": "circle_line_chord_length",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "596882575c3ceb1ae01ff83d",
+      "blindSha256": "dd2aeea0ba3becd8e32b8ed949539d3c6a34d7b02cbb820bc82f5b7e8b22fd48"
+    },
+    {
+      "candidateId": "CQ-MATH-3015",
+      "subject": "math",
+      "topicCode": "M-TRIG-HALF",
+      "taskFamily": "trig_quadrant_half_angle",
+      "designedDifficulty": "hard",
+      "structureFingerprint": "f66c5dbf9f5c2881273df4da",
+      "blindSha256": "8d65465a2a1447a86470868d157fa4f29b21a825b65ea2a64da99fc4fbb4b403"
+    },
+    {
+      "candidateId": "CQ-MATH-3016",
+      "subject": "math",
+      "topicCode": "M-TRIG-HALF",
+      "taskFamily": "trig_quadrant_half_angle",
+      "designedDifficulty": "hard",
+      "structureFingerprint": "f66c5dbf9f5c2881273df4da",
+      "blindSha256": "4aa19d2855aafdf4840149a4aa3941cb1ace3c3f8709eb8f5b1ae369131b5bfc"
+    },
+    {
+      "candidateId": "CQ-MATH-3017",
+      "subject": "math",
+      "topicCode": "M-FUNC-LOGEQ",
+      "taskFamily": "logarithmic_product_equation_with_domain",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "7a016aeebb2396d899722449",
+      "blindSha256": "021e8b090a771d7c7cc752f33f85ee2f69b82fd52ceb5f3855fe726851fd5906"
+    },
+    {
+      "candidateId": "CQ-MATH-3018",
+      "subject": "math",
+      "topicCode": "M-FUNC-LOGEQ",
+      "taskFamily": "logarithmic_product_equation_with_domain",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "7a016aeebb2396d899722449",
+      "blindSha256": "9cbcda9c2b40708ced139a068b67a762debcaba6d8abe57bc54925ba652aab33"
+    },
+    {
+      "candidateId": "CQ-MATH-3019",
+      "subject": "math",
+      "topicCode": "M-STAT-COMB",
+      "taskFamily": "combined_variance_with_between_group_shift",
+      "designedDifficulty": "hard",
+      "structureFingerprint": "a69ac84fd73774db2c8a78ab",
+      "blindSha256": "85122af5a4c09a897cfcbab399cc00e7d772f2d9758f10bef3f52599692cb35d"
+    },
+    {
+      "candidateId": "CQ-MATH-3020",
+      "subject": "math",
+      "topicCode": "M-STAT-COMB",
+      "taskFamily": "combined_variance_with_between_group_shift",
+      "designedDifficulty": "hard",
+      "structureFingerprint": "a69ac84fd73774db2c8a78ab",
+      "blindSha256": "75caf827ce266b2a2d7035acf0a1a32dc7972cf3019c2a0ba9e3383e462373d9"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3001",
+      "subject": "physics",
+      "topicCode": "P-MECH-PROJ",
+      "taskFamily": "horizontal_projectile_landing_speed",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "095316a6b5228bfb48db9fce",
+      "blindSha256": "1b011451e5da416fcddc285b53d86ed5113e32357239d79a61f0aca3aeaffe10"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3002",
+      "subject": "physics",
+      "topicCode": "P-MECH-PROJ",
+      "taskFamily": "horizontal_projectile_landing_speed",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "095316a6b5228bfb48db9fce",
+      "blindSha256": "6235e035faee0e984545b13318633b7c80e82fa28a2363c7006b490bc6f2a277"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3003",
+      "subject": "physics",
+      "topicCode": "P-MECH-ENERGY",
+      "taskFamily": "work_energy_with_friction",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "09fee837c887cf4b01e11eaf",
+      "blindSha256": "f5d6f7cfebc244aaa42e46784efee27f9585049c8bd17958b9bad6af50e4e833"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3004",
+      "subject": "physics",
+      "topicCode": "P-MECH-ENERGY",
+      "taskFamily": "work_energy_with_friction",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "09fee837c887cf4b01e11eaf",
+      "blindSha256": "51f7cabd35ba95611f9413c04cb49452cc63a1c8dfe708f3746e709b2b27440a"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3005",
+      "subject": "physics",
+      "topicCode": "P-MECH-MOM",
+      "taskFamily": "perfectly_inelastic_momentum",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "74f34cc1e656b0b14a98482b",
+      "blindSha256": "15e3eeac8bbb490a8ed5c16d386afdd11208881708671315b3c78865d0283281"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3006",
+      "subject": "physics",
+      "topicCode": "P-MECH-MOM",
+      "taskFamily": "perfectly_inelastic_momentum",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "74f34cc1e656b0b14a98482b",
+      "blindSha256": "adeff335679582cc76f38f59bcb79f5d2baff21cbf4c1bbffdc7372da9d0e75a"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3007",
+      "subject": "physics",
+      "topicCode": "P-ELEC-CIRCUIT",
+      "taskFamily": "series_parallel_circuit_current",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "f18419d67b1811a84927a4c9",
+      "blindSha256": "eed094abbadb08da5b5b038fab28f618d7ac9f7ccc160fd8679bb5600880bd7e"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3008",
+      "subject": "physics",
+      "topicCode": "P-ELEC-CIRCUIT",
+      "taskFamily": "series_parallel_circuit_current",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "f18419d67b1811a84927a4c9",
+      "blindSha256": "5530d922887dcdc500f06a8b505f23e5c493ebc6e35edc95bf912236696b1766"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3009",
+      "subject": "physics",
+      "topicCode": "P-ELEC-FIELD",
+      "taskFamily": "electrostatic_zero_field_between_charges",
+      "designedDifficulty": "hard",
+      "structureFingerprint": "d2ccc1087320046f73003014",
+      "blindSha256": "8fb958eaceff0f265d4a9733fe26bc01c6ed6751644d7dcb1f1db8154e0850c7"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3010",
+      "subject": "physics",
+      "topicCode": "P-ELEC-FIELD",
+      "taskFamily": "electrostatic_zero_field_between_charges",
+      "designedDifficulty": "hard",
+      "structureFingerprint": "d2ccc1087320046f73003014",
+      "blindSha256": "d8278418981350642437e54754de8c208cd3c7ca9d07ebff3b8576ae9f72161d"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3011",
+      "subject": "physics",
+      "topicCode": "P-MECH-BUOY",
+      "taskFamily": "floating_density_from_exposed_fraction",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "b5a2626f5bb325417dfbfb10",
+      "blindSha256": "cb2665441f6612f5896e6ac23ca5756ea4955225735e49fea3dce1accb4ea9ca"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3012",
+      "subject": "physics",
+      "topicCode": "P-MECH-BUOY",
+      "taskFamily": "floating_density_from_exposed_fraction",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "b5a2626f5bb325417dfbfb10",
+      "blindSha256": "353c33b5f560055c639befddd8b7a8bc3d4117680605d92b5df470f8d3bc9687"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3013",
+      "subject": "physics",
+      "topicCode": "P-OPT-LENS",
+      "taskFamily": "thin_lens_magnification",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "53311d6bd59f62b04694186d",
+      "blindSha256": "a388323129158cdcc7a3ee4c8a66ea7cef5542972f38faef34c8c6f2fc5b1197"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3014",
+      "subject": "physics",
+      "topicCode": "P-OPT-LENS",
+      "taskFamily": "thin_lens_magnification",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "53311d6bd59f62b04694186d",
+      "blindSha256": "7980975536930b9540510ea3d73f5ed63c7a5d0c0db87c7c904eefcb7f7baabe"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3015",
+      "subject": "physics",
+      "topicCode": "P-WAVE-STAND",
+      "taskFamily": "standing_wave_speed",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "daa9cec4838e8d2fb48ae530",
+      "blindSha256": "89713872978d449f77077fc8bd064c5947204a26a9590f3369312b7767c75680"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3016",
+      "subject": "physics",
+      "topicCode": "P-WAVE-STAND",
+      "taskFamily": "standing_wave_speed",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "daa9cec4838e8d2fb48ae530",
+      "blindSha256": "c1335da61467321835aff0fe7ad002cbd90540156e36ef43066f99e8b487897e"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3017",
+      "subject": "physics",
+      "topicCode": "P-THERM-CAL",
+      "taskFamily": "calorimetry_equilibrium",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "0c1ea675cdc30db04522268d",
+      "blindSha256": "073ef23dcdddcb9d851e1a5d505acf39b6e2260c54502c02dd7d998a6373cbaa"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3018",
+      "subject": "physics",
+      "topicCode": "P-THERM-CAL",
+      "taskFamily": "calorimetry_equilibrium",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "0c1ea675cdc30db04522268d",
+      "blindSha256": "50de1db166269c60b0a0e11bdfcc7040dbfe1a5fb8fe170571ccad3a87f22241"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3019",
+      "subject": "physics",
+      "topicCode": "P-MAG-LORENTZ",
+      "taskFamily": "magnetic_circular_radius",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "704c37c15212cd3e4d8a4257",
+      "blindSha256": "a96759e049cde88a194017028830ceb490d8e9e468c52f706769817f70682086"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3020",
+      "subject": "physics",
+      "topicCode": "P-MAG-LORENTZ",
+      "taskFamily": "magnetic_circular_radius",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "704c37c15212cd3e4d8a4257",
+      "blindSha256": "3646a3b7bb59e9d80447515f80e226b8da384133b2a930f734f0a7aa8e1b689f"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3001",
+      "subject": "chemistry",
+      "topicCode": "C-STOICH-LIMIT",
+      "taskFamily": "limiting_reagent_product_mass",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "9790c34d3ff908597f94ea72",
+      "blindSha256": "411044d15cb5bc7fe3d7f5288319ba6dad217b26afd46a68648ec56dc30847cc"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3002",
+      "subject": "chemistry",
+      "topicCode": "C-STOICH-LIMIT",
+      "taskFamily": "limiting_reagent_product_mass",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "9790c34d3ff908597f94ea72",
+      "blindSha256": "0b8bdffbcc8bb475111e29a2680911f7739771f1a0f448fd1de3c92f4e447aff"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3003",
+      "subject": "chemistry",
+      "topicCode": "C-STOICH-PURITY",
+      "taskFamily": "carbonate_purity_from_gas_volume",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "4b0a23942fb701cd97e7286b",
+      "blindSha256": "b75546188a4c0f48e438dc7937004148920e6a87fe2f4926451b315ee3da8581"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3004",
+      "subject": "chemistry",
+      "topicCode": "C-STOICH-PURITY",
+      "taskFamily": "carbonate_purity_from_gas_volume",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "4b0a23942fb701cd97e7286b",
+      "blindSha256": "fcb1182febf471a22ab63316e08a4c04293de215156dc3094f56315ac47570a4"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3005",
+      "subject": "chemistry",
+      "topicCode": "C-ORG-EMP",
+      "taskFamily": "empirical_formula_from_combustion",
+      "designedDifficulty": "hard",
+      "structureFingerprint": "e73189a79742925f2618f83f",
+      "blindSha256": "382cb6e6041be75105e0bdcd90eb10063cad1fdf426197bd3b5c26133fd3a343"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3006",
+      "subject": "chemistry",
+      "topicCode": "C-ORG-EMP",
+      "taskFamily": "empirical_formula_from_combustion",
+      "designedDifficulty": "hard",
+      "structureFingerprint": "e73189a79742925f2618f83f",
+      "blindSha256": "dd417bd283ebb5abce624c9f70bc5685460e8db25ca4cc19c93a4d543cd6c093"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3007",
+      "subject": "chemistry",
+      "topicCode": "C-REDOX-E",
+      "taskFamily": "redox_electron_stoichiometry",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "0fc365fd7efc77436e834039",
+      "blindSha256": "398aaac66db40f8a234d16d66f59f7c1329d4ec22567b3b776f43bbe46e628e8"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3008",
+      "subject": "chemistry",
+      "topicCode": "C-REDOX-E",
+      "taskFamily": "redox_electron_stoichiometry",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "0fc365fd7efc77436e834039",
+      "blindSha256": "bcc0515b4441cca6be8b9212f5686599ed1f4eed4ebab5fe67ef098bc007d6d1"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3009",
+      "subject": "chemistry",
+      "topicCode": "C-EQ-KC",
+      "taskFamily": "equilibrium_constant_from_composition",
+      "designedDifficulty": "hard",
+      "structureFingerprint": "e128994b02ef6e7b23d5d820",
+      "blindSha256": "12cf968033d672db50563e5068bcc6e459673b1d92fa24b9b741ca2e4dcf8642"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3010",
+      "subject": "chemistry",
+      "topicCode": "C-EQ-KC",
+      "taskFamily": "equilibrium_constant_from_composition",
+      "designedDifficulty": "hard",
+      "structureFingerprint": "e128994b02ef6e7b23d5d820",
+      "blindSha256": "d6f3c705af3559c7d0d76cf2a5c680a639523da95cc262e9e7a61b3756521326"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3011",
+      "subject": "chemistry",
+      "topicCode": "C-SOL-CRYS",
+      "taskFamily": "crystallization_from_solubility_change",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "6d0c8feb3d721f2a01954888",
+      "blindSha256": "39bd11a3fe365d8a01cb5e27e13ff316282194e374499fb4c7235881b3571e68"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3012",
+      "subject": "chemistry",
+      "topicCode": "C-SOL-CRYS",
+      "taskFamily": "crystallization_from_solubility_change",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "6d0c8feb3d721f2a01954888",
+      "blindSha256": "9adbf8301e8fff0e65cd7a21e207cb43c576bf4b0ecfa5d53930f7da29ba5cd4"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3013",
+      "subject": "chemistry",
+      "topicCode": "C-ELEC-FAR",
+      "taskFamily": "electrolysis_faraday_deposition",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "77ecad830387f75109ce27d9",
+      "blindSha256": "1ec91935ee154d60447841fa5a112102f0f350939af05cd3757d6d0c3dd6eebb"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3014",
+      "subject": "chemistry",
+      "topicCode": "C-ELEC-FAR",
+      "taskFamily": "electrolysis_faraday_deposition",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "77ecad830387f75109ce27d9",
+      "blindSha256": "eb8ae1bb09b89d516bcc43868a4caccfcd7be52588a23533165dc619f59578f5"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3015",
+      "subject": "chemistry",
+      "topicCode": "C-THERMO-HESS",
+      "taskFamily": "hess_law_target_enthalpy",
+      "designedDifficulty": "hard",
+      "structureFingerprint": "fcba26f3a4f8b9bc3093bef2",
+      "blindSha256": "ab945e4723bc44cad4815b2e832a8af155a6df88817c01ed70096646f53a89a5"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3016",
+      "subject": "chemistry",
+      "topicCode": "C-THERMO-HESS",
+      "taskFamily": "hess_law_target_enthalpy",
+      "designedDifficulty": "hard",
+      "structureFingerprint": "fcba26f3a4f8b9bc3093bef2",
+      "blindSha256": "12f3fe9b84f6087f49d8b9e82ecd6ec49f2eb06fb2aaf4b50c37758ebd0f8a2b"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3017",
+      "subject": "chemistry",
+      "topicCode": "C-ORG-HC",
+      "taskFamily": "hydrocarbon_formula_from_combustion",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "efe7cdce6f2184d5a1230150",
+      "blindSha256": "438bb0d3556d68642274f38b1c25862fa2264b9569f5662e5b2009b765b29469"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3018",
+      "subject": "chemistry",
+      "topicCode": "C-ORG-HC",
+      "taskFamily": "hydrocarbon_formula_from_combustion",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "efe7cdce6f2184d5a1230150",
+      "blindSha256": "52ca52a9a6564b8395715ac5bffcad1d1ec0fd565808fac3d3e270cf799e2de3"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3019",
+      "subject": "chemistry",
+      "topicCode": "C-SOL-MOLAR",
+      "taskFamily": "molarity_from_mass_fraction_density",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "8a167b871a1ce146ec699598",
+      "blindSha256": "3c9a77eb7916eb69d49ec54a3648bb842122a6148373d035422a5a5f4886b0bf"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3020",
+      "subject": "chemistry",
+      "topicCode": "C-SOL-MOLAR",
+      "taskFamily": "molarity_from_mass_fraction_density",
+      "designedDifficulty": "medium",
+      "structureFingerprint": "8a167b871a1ce146ec699598",
+      "blindSha256": "d3d7798f131f725fb57fc23b8df9453170f3eb0d4cdea669cc0180867228ac6d"
+    }
+  ]
+}

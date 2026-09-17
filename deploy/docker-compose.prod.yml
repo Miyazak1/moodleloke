@@ -1,0 +1,123 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-cscalite}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    volumes:
+      - cscalite-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  migrate:
+    image: cscalite-backend:migrate
+    build:
+      context: ..
+      dockerfile: deploy/backend.Dockerfile
+      target: build
+    command: ["node", "scripts/deploy-migrate-and-seed.cjs"]
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-cscalite}?schema=public&connection_limit=${PRISMA_CONNECTION_LIMIT:-12}&pool_timeout=${PRISMA_POOL_TIMEOUT:-30}
+      AUTH_SECRET: ${AUTH_SECRET:-replace-with-production-auth-secret}
+      PAYMENT_CALLBACK_SECRET: ${PAYMENT_CALLBACK_SECRET:-replace-with-payment-callback-secret}
+      CORS_ORIGINS: ${PUBLIC_APP_ORIGIN:-http://localhost:18080}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    image: cscalite-backend:prod
+    env_file:
+      - .env
+    build:
+      context: ..
+      dockerfile: deploy/backend.Dockerfile
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      CSC_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-cscalite}?schema=public&connection_limit=${PRISMA_CONNECTION_LIMIT:-12}&pool_timeout=${PRISMA_POOL_TIMEOUT:-30}
+      AUTH_SECRET: ${AUTH_SECRET:-replace-with-production-auth-secret}
+      JWT_SECRET: ${AUTH_SECRET:-replace-with-production-auth-secret}
+      AUTH_REFRESH_COOKIE_ENABLED: ${AUTH_REFRESH_COOKIE_ENABLED:-true}
+      AUTH_REFRESH_COOKIE_NAME: ${AUTH_REFRESH_COOKIE_NAME:-cscalite_refresh}
+      AUTH_CSRF_COOKIE_NAME: ${AUTH_CSRF_COOKIE_NAME:-cscalite_csrf}
+      AUTH_CSRF_HEADER_NAME: ${AUTH_CSRF_HEADER_NAME:-x-csrf-token}
+      AUTH_LEGACY_REFRESH_FALLBACK_ENABLED: ${AUTH_LEGACY_REFRESH_FALLBACK_ENABLED:-false}
+      AUTH_COOKIE_DOMAIN: ${AUTH_COOKIE_DOMAIN:-}
+      AUTH_COOKIE_SECURE: ${AUTH_COOKIE_SECURE:-false}
+      ADMIN_BOOTSTRAP_EMAIL: ${ADMIN_BOOTSTRAP_EMAIL:-admin@example.com}
+      ADMIN_BOOTSTRAP_PASSWORD: ${ADMIN_BOOTSTRAP_PASSWORD:-replace-before-production}
+      PAYMENT_CALLBACK_SECRET: ${PAYMENT_CALLBACK_SECRET:-replace-with-payment-callback-secret}
+      CORS_ORIGINS: ${PUBLIC_APP_ORIGIN:-http://localhost:18080}
+      PUBLIC_APP_ORIGIN: ${PUBLIC_APP_ORIGIN:-http://localhost:18080}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GOOGLE_OAUTH_REDIRECT_URI: ${GOOGLE_OAUTH_REDIRECT_URI:-}
+      AUTH_GOOGLE_STATE_COOKIE_NAME: ${AUTH_GOOGLE_STATE_COOKIE_NAME:-cscalite_oauth_state}
+      LOG_FORMAT: ${LOG_FORMAT:-json}
+      REQUEST_BODY_LIMIT: ${REQUEST_BODY_LIMIT:-2mb}
+      READY_DB_TIMEOUT_MS: ${READY_DB_TIMEOUT_MS:-1500}
+      CSP_MODE: ${CSP_MODE:-report-only}
+      CSP_REPORT_URI: ${CSP_REPORT_URI:-/api/v1/ops/csp-report}
+      OPS_METRICS_ENABLED: ${OPS_METRICS_ENABLED:-false}
+      OPS_METRICS_TOKEN: ${OPS_METRICS_TOKEN:-}
+      APP_VERSION: ${APP_VERSION:-docker-local}
+      RATE_LIMIT_STORE: ${RATE_LIMIT_STORE:-redis}
+      RATE_LIMIT_REDIS_URL: ${RATE_LIMIT_REDIS_URL:-redis://redis:6379}
+      RATE_LIMIT_REDIS_TIMEOUT_MS: ${RATE_LIMIT_REDIS_TIMEOUT_MS:-500}
+      REDIS_URL: ${RATE_LIMIT_REDIS_URL:-redis://redis:6379}
+      BACKUP_DIR: /backups
+      UPLOADS_DIR: /app/uploads
+      PAST_PAPER_UPLOAD_LIMIT_MB: ${PAST_PAPER_UPLOAD_LIMIT_MB:-100}
+    volumes:
+      - cscalite-backups:/backups
+      - cscalite-uploads:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/v1/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  frontend:
+    image: cscalite-frontend:prod
+    build:
+      context: ..
+      dockerfile: deploy/frontend.Dockerfile
+      args:
+        VITE_AUTH_CSRF_COOKIE_NAME: ${VITE_AUTH_CSRF_COOKIE_NAME:-cscalite_csrf}
+        VITE_AUTH_CSRF_HEADER_NAME: ${VITE_AUTH_CSRF_HEADER_NAME:-X-CSRF-Token}
+    restart: unless-stopped
+    ports:
+      - "${CSC_DOCKER_HTTP_PORT:-18080}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  cscalite-postgres-data:
+  cscalite-backups:
+  cscalite-uploads:

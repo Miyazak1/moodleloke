@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "codex-blind-review-manifest-v1",
+  "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+  "batchId": "pilot-30-v4-repair",
+  "reviewedAt": "2026-09-15T18:56:29+08:00",
+  "reviewCount": 4,
+  "summary": {
+    "pass": 4,
+    "reject": 0,
+    "abstain": 0,
+    "uniqueAnswer": 4,
+    "conditionsSufficient": 4,
+    "ambiguityFound": 0,
+    "syllabusAligned": 4
+  },
+  "results": [
+    {
+      "candidateId": "CQ-CHEMISTRY-4001",
+      "derivedAnswer": "C",
+      "verdictBeforeReveal": "pass",
+      "difficultyAssessment": "medium"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-4002",
+      "derivedAnswer": "A",
+      "verdictBeforeReveal": "pass",
+      "difficultyAssessment": "hard"
+    },
+    {
+      "candidateId": "CQ-MATH-4001",
+      "derivedAnswer": "C",
+      "verdictBeforeReveal": "pass",
+      "difficultyAssessment": "medium"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-4001",
+      "derivedAnswer": "A",
+      "verdictBeforeReveal": "pass",
+      "difficultyAssessment": "medium"
+    }
+  ],
+  "accessDeclaration": {
+    "readScope": [
+      "question-production/batches/pilot-30-v4-repair/blind/",
+      "question-production/schemas/blind-review.schema.json"
+    ],
+    "writeScope": [
+      "question-production/batches/pilot-30-v4-repair/reviews/"
+    ],
+    "prohibitedContentAccessed": false,
+    "answersRevealedBeforeVerdicts": false,
+    "gitAccessed": false
+  }
+}

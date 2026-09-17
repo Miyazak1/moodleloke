@@ -1,0 +1,635 @@
+{
+  "schemaVersion": "codex-question-candidate-v1",
+  "candidateId": "CQ-CHEMISTRY-1012",
+  "subject": "chemistry",
+  "topicCode": "C-BASIC-003",
+  "topicTitle": "强酸强碱稀释与中和",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "质量审核单记录漂洗水样的处理过程，供工艺审核使用。操作记录如下：将 10 mL 0.2 mol/L HCl 与 30 mL 0.06 mol/L NaOH 混合，混合后 pH 是多少？所得结果用于完成质量审核。",
+  "options": [
+    {
+      "id": "A",
+      "text": "所得溶液的 pH 为 2.8"
+    },
+    {
+      "id": "B",
+      "text": "所得溶液的 pH 为 1.8"
+    },
+    {
+      "id": "C",
+      "text": "所得溶液的 pH 为 3.3"
+    },
+    {
+      "id": "D",
+      "text": "所得溶液的 pH 为 2.3"
+    }
+  ],
+  "correctAnswer": "D",
+  "explanation": "25°C下先分别记账：酸提供 n(H+)=0.2×10/1000=0.002 mol；碱提供 n(OH-)=0.06×30/1000=0.0018 mol。两者相减后 H+ 过量，再除以合并体积，c=0.0002000000000000001/0.04=0.005000000000000002 mol/L。最后由pH=-lg[H+]得到结果=2.3。 因此选择 D。",
+  "knowledgeTags": [
+    "溶液浓度与pH计算",
+    "强酸强碱",
+    "strong_acid_base_neutralization"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "chemistry",
+    "topicId": 51,
+    "topicTitle": "电解质溶液与酸碱平衡",
+    "productionCellId": 42,
+    "targetDifficulty": "medium",
+    "taskFamily": "ph_dilution_strong_acid_base_neutralization",
+    "planTemplate": "chemistry_strong_acid_base_single_relation_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "completeDissociationOnly": true,
+      "allowedSpecies": [
+        "HCl",
+        "HNO3",
+        "NaOH",
+        "KOH"
+      ],
+      "allowedRelationKinds": [
+        "strong_acid_dilution",
+        "strong_base_dilution",
+        "strong_acid_base_neutralization"
+      ],
+      "allowedAnswerTargets": [
+        "ph_value",
+        "acid_base_character"
+      ],
+      "exactChemistryRelationKind": "strong_acid_base_neutralization",
+      "exactChemistryAnswerTarget": "ph_value",
+      "requireVisibleQuantitiesAndUnits": true,
+      "requireTemperatureConvention25C": true,
+      "forbidWeakPolyproticBufferHydrolysisActivityAndTitration": true,
+      "maxIndependentRelations": 1,
+      "forbidMultiStageModelChain": true,
+      "finalAnswerShape": "one_numeric_ph_or_acidic_neutral_basic_judgement",
+      "preferredPromptSkeletons": [
+        "给出一元强酸或一元强碱的初始 pH 和稀释倍数，只求最终 pH 或酸碱性",
+        "给出强酸或强碱浓度、初始体积和稀释后总体积，只求最终 pH 或酸碱性",
+        "给出一元强酸与一元强碱各自浓度和体积，比较物质的量后只求混合液 pH 或酸碱性"
+      ]
+    },
+    "budget": {
+      "maxPlanRepairs": 2,
+      "maxCandidateRepairs": 1
+    },
+    "scenarioContract": {
+      "schemaVersion": "subject-practice-scenario-contract-v1",
+      "policyVersion": "subject-practice-scenario-diversity-shadow-v2-multi-evidence-status",
+      "stage": "shadow_only_thresholds_not_frozen",
+      "scenarioMode": "experimental",
+      "scenarioFamilyId": "chemistry_lab_neutralization_test",
+      "scenarioDomain": "chemistry_laboratory",
+      "scenarioEntity": "acid_base_aliquots",
+      "scenarioAction": "strong_acid_base_neutralization",
+      "informationForm": "numeric_procedure_text",
+      "scenarioFingerprint": "scenario-e40086f93d19acdb1531",
+      "contextNecessity": "required_for_solution",
+      "requiredInformationFields": [
+        "scenarioAction",
+        "motion_or_reaction_condition",
+        "quantities_with_units"
+      ],
+      "solverRelevantFields": [
+        "scenarioAction",
+        "motion_or_reaction_condition",
+        "quantities_with_units"
+      ],
+      "surface": {
+        "zhEntity": "酸碱试样",
+        "enEntity": "acid and base aliquots",
+        "zhSetting": "实验室定量混合",
+        "enSetting": "a quantitative laboratory mixing test",
+        "cueTokens": [
+          "酸碱试样",
+          "acid and base aliquots"
+        ]
+      },
+      "plausibility": {
+        "temperatureC": 25,
+        "completeDissociationOnly": true,
+        "visibleConcentrationAndVolumeUnits": true
+      },
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "controlled_catalog_and_sealed_ordinal_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "strong_acid_base_quantity",
+        "role": "visible_initial_ph_or_concentration_and_volume",
+        "independentGroup": "ph1"
+      },
+      {
+        "id": "e2",
+        "type": "dilution_or_neutralization_relation",
+        "role": "one_complete_dissociation_relation",
+        "independentGroup": "ph1"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "compute_diluted_concentration_or_excess_moles",
+        "inputs": [
+          "e1",
+          "e2"
+        ],
+        "output": "final_h_or_oh_concentration"
+      },
+      {
+        "id": "r2",
+        "operation": "map_concentration_to_ph_or_character",
+        "inputs": [
+          "final_h_or_oh_concentration"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "strong_acid_base_ph_round_trip",
+        "expression": "dilution or excess-mole concentration maps to one pH/character",
+        "variables": [
+          "concentration",
+          "volume",
+          "pH"
+        ],
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "using initial pH as the requested result",
+      "ignoring total volume after neutralization",
+      "treating weak or polyprotic species as complete one-to-one dissociation"
+    ],
+    "answerDerivation": [
+      "one complete-dissociation dilution or neutralization relation determines one pH or acid-base character"
+    ],
+    "uniquenessConditions": [
+      "exactly one option matches the independently recomputed pH or character"
+    ]
+  },
+  "localizations": {
+    "zh": {
+      "prompt": "质量审核单记录漂洗水样的处理过程，供工艺审核使用。操作记录如下：将 10 mL 0.2 mol/L HCl 与 30 mL 0.06 mol/L NaOH 混合，混合后 pH 是多少？所得结果用于完成质量审核。",
+      "options": [
+        {
+          "id": "A",
+          "text": "所得溶液的 pH 为 2.8"
+        },
+        {
+          "id": "B",
+          "text": "所得溶液的 pH 为 1.8"
+        },
+        {
+          "id": "C",
+          "text": "所得溶液的 pH 为 3.3"
+        },
+        {
+          "id": "D",
+          "text": "所得溶液的 pH 为 2.3"
+        }
+      ],
+      "explanation": "25°C下先分别记账：酸提供 n(H+)=0.2×10/1000=0.002 mol；碱提供 n(OH-)=0.06×30/1000=0.0018 mol。两者相减后 H+ 过量，再除以合并体积，c=0.0002000000000000001/0.04=0.005000000000000002 mol/L。最后由pH=-lg[H+]得到结果=2.3。 因此选择 D。",
+      "knowledgeTags": [
+        "溶液浓度与pH计算",
+        "强酸强碱"
+      ]
+    },
+    "en": {
+      "prompt": "electroplating water quality records frame this operation. The audit analysis sheet records how staff inspect a rinse water sample for audit. To complete the quality audit, during an electroplating quality laboratory, 10 mL of 0.2 mol/L HCl in the rinse water sample is mixed with 30 mL of 0.06 mol/L NaOH. What is the pH after mixing? The result supports complete the quality audit.",
+      "options": [
+        {
+          "id": "A",
+          "text": "The resulting solution has pH 2.8."
+        },
+        {
+          "id": "B",
+          "text": "The resulting solution has pH 1.8."
+        },
+        {
+          "id": "C",
+          "text": "The resulting solution has pH 3.3."
+        },
+        {
+          "id": "D",
+          "text": "The resulting solution has pH 2.3."
+        }
+      ],
+      "explanation": "At 25°C, keep separate amount balances. The acid contributes n(H+)=0.2×10/1000=0.002 mol; the base contributes n(OH-)=0.06×30/1000=0.0018 mol. Subtraction leaves excess H+; division by the combined volume gives c=0.0002000000000000001/0.04=0.005000000000000002 mol/L. Applying pH=-log[H+] gives the result=2.3. Therefore, choose D.",
+      "knowledgeTags": [
+        "Strong acid-base pH"
+      ]
+    }
+  },
+  "generationMetadata": {
+    "origin": "codex_dual_session_pilot",
+    "generatorTaskId": "pilot-30-v2-generator-task-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v1",
+    "createdAt": "2026-09-15T10:45:00.000Z",
+    "family": "strong_acid_base_neutralization",
+    "seed": 2783,
+    "generatorVersion": "chemistry-strong-acid-base-local-generator-v5-bounded-plausible-values",
+    "scopeId": "chemistry-strong-acid-base-v3:strong_acid_base_neutralization:ph_value",
+    "deterministicVerification": {
+      "solver": {
+        "solverVersion": "chemistry-strong-acid-base-solver-v4-context-token-boundaries",
+        "taskFamily": "ph_dilution_strong_acid_base_neutralization",
+        "status": "verified",
+        "parsed": true,
+        "relationKind": "strong_acid_base_neutralization",
+        "answerTarget": "ph_value",
+        "expectedPh": 2.3010299956639813,
+        "expectedCharacter": "acidic",
+        "canonicalTask": {
+          "relationKind": "strong_acid_base_neutralization",
+          "answerTarget": "ph_value",
+          "expectedPh": 2.3010299956639813,
+          "expectedCharacter": "acidic",
+          "inputs": {
+            "acidSpecies": "HCL",
+            "baseSpecies": "NAOH",
+            "acidMoles": 0.002,
+            "baseMoles": 0.0018,
+            "totalVolumeLiters": 0.04
+          }
+        },
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "false",
+            "parsedTarget": "ph_value",
+            "parsedValue": 2.8,
+            "reasonCode": "chemistry_solver_ph_mismatch"
+          },
+          {
+            "optionId": "B",
+            "verdict": "false",
+            "parsedTarget": "ph_value",
+            "parsedValue": 1.8,
+            "reasonCode": "chemistry_solver_ph_mismatch"
+          },
+          {
+            "optionId": "C",
+            "verdict": "false",
+            "parsedTarget": "ph_value",
+            "parsedValue": 3.3,
+            "reasonCode": "chemistry_solver_ph_mismatch"
+          },
+          {
+            "optionId": "D",
+            "verdict": "true",
+            "parsedTarget": "ph_value",
+            "parsedValue": 2.3,
+            "reasonCode": "chemistry_solver_ph_matches"
+          }
+        ],
+        "trueOptionIds": [
+          "D"
+        ],
+        "selectedOptionId": "D",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "assumptions": [
+          "aqueous_solution_25_celsius",
+          "complete_dissociation",
+          "monoprotic_strong_acid_or_monohydroxide_strong_base",
+          "additive_solution_volumes"
+        ],
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": [],
+        "verificationScope": {
+          "scopeVersion": "chemistry-strong-acid-base-verification-scope-v3",
+          "scopeId": "chemistry-strong-acid-base-v3:strong_acid_base_neutralization:ph_value",
+          "status": "matched",
+          "matched": true,
+          "relationKind": "strong_acid_base_neutralization",
+          "answerTarget": "ph_value",
+          "reasonCodes": []
+        }
+      },
+      "oracle": {
+        "oracleVersion": "chemistry-acid-base-independent-oracle-v5-dynamic-context",
+        "status": "verified",
+        "relationKind": "strong_acid_base_neutralization",
+        "answerTarget": "ph_value",
+        "expectedPh": 2.3,
+        "expectedCharacter": "acidic",
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "false"
+          },
+          {
+            "optionId": "B",
+            "verdict": "false"
+          },
+          {
+            "optionId": "C",
+            "verdict": "false"
+          },
+          {
+            "optionId": "D",
+            "verdict": "true"
+          }
+        ],
+        "trueOptionIds": [
+          "D"
+        ],
+        "selectedOptionId": "D",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "scopeId": "chemistry-strong-acid-base-v3:strong_acid_base_neutralization:ph_value",
+        "scopeMatched": true,
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      },
+      "explanation": {
+        "verifierVersion": "chemistry-acid-base-explanation-verifier-v1",
+        "status": "verified",
+        "solverEvidence": {
+          "solverVersion": "chemistry-strong-acid-base-solver-v4-context-token-boundaries",
+          "taskFamily": "ph_dilution_strong_acid_base_neutralization",
+          "status": "verified",
+          "parsed": true,
+          "relationKind": "strong_acid_base_neutralization",
+          "answerTarget": "ph_value",
+          "expectedPh": 2.3010299956639813,
+          "expectedCharacter": "acidic",
+          "canonicalTask": {
+            "relationKind": "strong_acid_base_neutralization",
+            "answerTarget": "ph_value",
+            "expectedPh": 2.3010299956639813,
+            "expectedCharacter": "acidic",
+            "inputs": {
+              "acidSpecies": "HCL",
+              "baseSpecies": "NAOH",
+              "acidMoles": 0.002,
+              "baseMoles": 0.0018,
+              "totalVolumeLiters": 0.04
+            }
+          },
+          "optionVerdicts": [
+            {
+              "optionId": "A",
+              "verdict": "false",
+              "parsedTarget": "ph_value",
+              "parsedValue": 2.8,
+              "reasonCode": "chemistry_solver_ph_mismatch"
+            },
+            {
+              "optionId": "B",
+              "verdict": "false",
+              "parsedTarget": "ph_value",
+              "parsedValue": 1.8,
+              "reasonCode": "chemistry_solver_ph_mismatch"
+            },
+            {
+              "optionId": "C",
+              "verdict": "false",
+              "parsedTarget": "ph_value",
+              "parsedValue": 3.3,
+              "reasonCode": "chemistry_solver_ph_mismatch"
+            },
+            {
+              "optionId": "D",
+              "verdict": "true",
+              "parsedTarget": "ph_value",
+              "parsedValue": 2.3,
+              "reasonCode": "chemistry_solver_ph_matches"
+            }
+          ],
+          "trueOptionIds": [
+            "D"
+          ],
+          "selectedOptionId": "D",
+          "uniqueAnswer": true,
+          "agreesWithGenerator": true,
+          "evidenceBoundary": "prompt_and_visible_options_only",
+          "assumptions": [
+            "aqueous_solution_25_celsius",
+            "complete_dissociation",
+            "monoprotic_strong_acid_or_monohydroxide_strong_base",
+            "additive_solution_volumes"
+          ],
+          "providerImpact": "none_no_provider_call",
+          "productionGateImpact": "none_shadow_only",
+          "reasonCodes": [],
+          "verificationScope": {
+            "scopeVersion": "chemistry-strong-acid-base-verification-scope-v3",
+            "scopeId": "chemistry-strong-acid-base-v3:strong_acid_base_neutralization:ph_value",
+            "status": "matched",
+            "matched": true,
+            "relationKind": "strong_acid_base_neutralization",
+            "answerTarget": "ph_value",
+            "reasonCodes": []
+          }
+        },
+        "recomputedWithoutGeneratorExplanation": true,
+        "formulaInputsUnitsAndConclusionChecked": true,
+        "chemistryAssumptionsChecked": true,
+        "checks": [
+          {
+            "language": "zh",
+            "temperatureConventionPresent": true,
+            "relationDerivationMatched": true,
+            "promptInputsCovered": true,
+            "conclusionMatched": true,
+            "answerTargetConclusionMatched": true,
+            "conclusionPh": 2.3,
+            "reasonCodes": []
+          },
+          {
+            "language": "en",
+            "temperatureConventionPresent": true,
+            "relationDerivationMatched": true,
+            "promptInputsCovered": true,
+            "conclusionMatched": true,
+            "answerTargetConclusionMatched": true,
+            "conclusionPh": 2.3,
+            "reasonCodes": []
+          }
+        ],
+        "mismatchCount": 0,
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      }
+    },
+    "questionPlanAdherence": {
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "validPlan": true,
+      "adheres": true,
+      "planTemplate": "chemistry_strong_acid_base_single_relation_v1",
+      "taskFamily": "ph_dilution_strong_acid_base_neutralization",
+      "failureCodes": [],
+      "features": {
+        "operationWords": 0,
+        "observationWords": 0,
+        "hypothesisMarkers": 0,
+        "reasoningConnectors": 2,
+        "quantitativeMarkers": 7,
+        "reactionClues": 5,
+        "gasSpeciesMarkers": 1,
+        "gasControlMarkers": 0,
+        "redoxReactionMarkers": 1,
+        "redoxConceptMarkers": 0,
+        "redoxQuantitativeChainMarkers": 15,
+        "mathPropertySignals": 0,
+        "mathStatementMarkers": 4,
+        "mathTransformationSignals": 1,
+        "mathOrderingSignals": 0,
+        "mathParameterConstraintSignals": 0,
+        "mathProbabilitySignals": 0,
+        "mathProbabilityEventLabelCount": 0,
+        "mathProbabilityNormalHardInteractionCueCount": 0,
+        "mathProbabilityHardInteractionCueCount": 0,
+        "mathProbabilityConcreteFrameSignals": 2,
+        "mathProbabilityNormalMediumNoEventRisk": false,
+        "mathProbabilityNormalReferenceTableRisk": false,
+        "mathProbabilityConceptOnlyRisk": false,
+        "mathProbabilitySingleResultRisk": false,
+        "mathProbabilityEventListOnlyRisk": false,
+        "mathDerivativeSignals": 0,
+        "mathDerivativeMediumDefinitionOnlyRisk": false,
+        "mathDerivativeHardCoefficientSolveOnlyRisk": false,
+        "mathDerivativeBasicAdvancedOperationRisk": false,
+        "mathVectorComplexSignals": 0,
+        "mathVectorComplexBasicDefinitionOnlyRisk": false,
+        "mathGeometrySignals": 0,
+        "mathAnalyticGeometryDefinitionOnlyRisk": false,
+        "mathAnalyticGeometryBasicGeneralCircleRisk": false,
+        "mathAnalyticGeometryHardConicRelationOnlyRisk": false,
+        "mathElementaryFunctionSignals": 0,
+        "mathElementaryFunctionGenericClassificationRisk": false,
+        "mathElementaryFunctionBasicEquationSolveRisk": false,
+        "mathElementaryFunctionBasicMultipleObjectRisk": false,
+        "mathSequenceSignals": 0,
+        "mathSequenceGenericClassificationRisk": false,
+        "mathStatisticsSignals": 0,
+        "mathStatisticsBasicMultiStatisticComparisonRisk": false,
+        "mathStatisticsMediumPureLinearTransformRisk": false,
+        "mathStatisticsHardDirectCombinedVarianceRisk": false,
+        "mathSpatialSignals": 1,
+        "mathSpatialMediumMultiPropositionOvercomplexRisk": false,
+        "mathSpatialHardConceptOnlyRisk": false,
+        "mathSpatialHardDirectCoordinateOnlyRisk": false,
+        "mathParameterInferenceRisk": false,
+        "mathOptionJudgement": true,
+        "mathEnumeratedConditionCount": 0,
+        "mathFunctionPropertyStackCount": 0,
+        "mathFunctionDistinctPropertyCount": 0,
+        "mathStudentFacingDistinctPropertyCount": 0,
+        "mathStudentFacingFunctionPropertyOverComplex": false,
+        "mathFunctionObjectSignals": 0,
+        "mathFunctionPointValueCount": 0,
+        "mathFunctionNamedPointCount": 0,
+        "mathFunctionMultipleNamedPointsRisk": false,
+        "mathBasicFunctionSolutionScaffoldRisk": false,
+        "mathFunctionBasicMultiConstraintDomainRisk": false,
+        "mathPureFunctionExternalContextRisk": false,
+        "mathHardFunctionGenericConceptRisk": false,
+        "mathMediumFunctionPropertyOverComplex": false,
+        "mathDerivativeBasicDomainTrapRisk": false,
+        "mathDerivativeBasicOverComplexRisk": false,
+        "mathVectorComplexObjectCount": 0,
+        "mathVectorComplexRelationCount": 0,
+        "mathVectorComplexCoordinateGeometryDriftRisk": false,
+        "mathVectorComplexLocusParameterChainRisk": false,
+        "mathVectorComplexOneStepFormulaRisk": false,
+        "mathVectorComplexHardDirectMetricRisk": false,
+        "physicsKinematicsSignals": 0,
+        "physicsGraphSignals": 0,
+        "physicsUnitSignals": 0,
+        "physicsEquationSignals": 8,
+        "physicsOpticsSignals": 0,
+        "physicsOpticsRelationSignals": 0,
+        "physicsUnseenDiagramRisk": false,
+        "chemistryClassificationSignals": 2,
+        "chemistryStateChangeEvidenceSignals": 0,
+        "chemistryDefinitionOnlyClassificationRisk": false,
+        "chemistryPhConceptSignals": 16,
+        "chemistryPhOperationErrorSignals": 0,
+        "chemistryPhDirectionSignals": 0,
+        "chemistryPhDirectCalculationRisk": true
+      },
+      "productionImpact": "none_audit_or_gate_scaffold",
+      "providerImpact": "none_no_provider_call"
+    },
+    "scenarioRenderMode": "provisional_blueprint_shadow",
+    "provisionalScenarioContract": {
+      "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+      "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+      "stage": "provisional_shadow_only",
+      "subject": "chemistry",
+      "taskFamily": "ph_dilution_strong_acid_base_neutralization",
+      "planTemplate": "chemistry_strong_acid_base_single_relation_v1",
+      "scenarioFamilyId": "provisional_chemistry_b1244e5bf980f51a2abf7074",
+      "scenarioMode": "real_world",
+      "scenarioDomain": "electroplating water quality",
+      "scenarioEntity": "rinse water sample",
+      "environment": "quality audit laboratory",
+      "contextAction": "inspect a rinse water sample for audit",
+      "solverAction": "strong_acid_base_neutralization",
+      "informationForm": "audit analysis sheet",
+      "questionPurpose": "complete the quality audit",
+      "contextNecessity": "required_for_solution",
+      "requiredInformationFields": [
+        "contextAction",
+        "reactionOrDilutionCondition",
+        "concentrationsAndVolumesWithUnits"
+      ],
+      "solverRelevantFields": [
+        "solverAction",
+        "reactionOrDilutionCondition",
+        "concentrationsAndVolumesWithUnits"
+      ],
+      "plausibility": {
+        "temperatureC": 25,
+        "completeDissociationOnly": true,
+        "visibleConcentrationAndVolumeUnits": true,
+        "exactChemistryScope": "strong_acid_base_neutralization"
+      },
+      "surface": {
+        "zhEntity": "漂洗水样",
+        "enEntity": "rinse water sample",
+        "zhSetting": "电镀水质审核室",
+        "enSetting": "an electroplating quality laboratory"
+      },
+      "blueprintBinding": {
+        "blueprintDigest": "a00b93f00ba1c26d16f96b8684e3c561c408d6a00efc35909750bdd9808d8c69",
+        "blueprintFingerprint": "blueprint-b1244e5bf980f51a2abf7074",
+        "renameInvariantFingerprint": "blueprint-structure-25e43cb5473ed5815c2d7ad0",
+        "ideationCycleEvidenceDigest": "423566099dc18b2ab7abe9c9ffd19354ea0505a5f60ce441bd0cb3fb17b16274"
+      },
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "validated_blueprint_cycle_only"
+      },
+      "scenarioContractDigest": "320843cf681c9ffeacfb9f399087edf7143e9d732365ff0559c73c41cd5881ee"
+    },
+    "v1Correction": "numerical_ph_target_only"
+  }
+}

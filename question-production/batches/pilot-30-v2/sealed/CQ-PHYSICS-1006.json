@@ -1,0 +1,600 @@
+{
+  "schemaVersion": "codex-question-candidate-v1",
+  "candidateId": "CQ-PHYSICS-1006",
+  "subject": "physics",
+  "topicCode": "P-MECH-001",
+  "topicTitle": "直线运动学",
+  "designedDifficulty": "basic",
+  "questionType": "single_choice",
+  "prompt": "转播导播单记录轨道摄像车跟拍一个镜头的过程。在体育场边线直轨中，轨道摄像车沿直线运动，初速度为 4 m/s，末速度为 0 m/s，用时为 4 s，求这段时间内的加速度。计算结果用于对齐镜头段落。",
+  "options": [
+    {
+      "id": "A",
+      "text": "加速度：0 m/s^2"
+    },
+    {
+      "id": "B",
+      "text": "加速度：-2 m/s^2"
+    },
+    {
+      "id": "C",
+      "text": "加速度：1 m/s^2"
+    },
+    {
+      "id": "D",
+      "text": "加速度：-1 m/s^2"
+    }
+  ],
+  "correctAnswer": "D",
+  "explanation": "轨道摄像车的速度变化量为 (0-4) m/s，持续时间为 4 s；按 a=(v-u)/t，计算结果为 -1 m/s^2，因此唯一匹配的选项正确。",
+  "knowledgeTags": [
+    "运动学",
+    "直线运动",
+    "acceleration_from_velocity_change"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "physics",
+    "topicId": 78,
+    "topicTitle": "运动学",
+    "productionCellId": 24,
+    "targetDifficulty": "basic",
+    "taskFamily": "kinematics_basic_direct_relation",
+    "planTemplate": "physics_kinematics_basic_relation_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "requirePhysicsSituation": true,
+      "requireUnitOrGraphEvidence": true,
+      "exactPhysicsKinematicsScope": "acceleration_from_velocity_change",
+      "maxIndependentRelations": 1,
+      "forbidMultiStageModelChain": true,
+      "finalAnswerShape": "one_direct_kinematics_value_direction_or_graph_fact",
+      "preferredPromptSkeletons": [
+        "给出位移、时间、速度或加速度中的两个直接量，求第三个量并保留单位",
+        "用文字完整描述一段 s-t 或 v-t 直线图像，判断斜率、方向或速度中的一个事实"
+      ]
+    },
+    "budget": {
+      "maxPlanRepairs": 2,
+      "maxCandidateRepairs": 1
+    },
+    "scenarioContract": {
+      "schemaVersion": "subject-practice-scenario-contract-v1",
+      "policyVersion": "subject-practice-scenario-diversity-shadow-v2-multi-evidence-status",
+      "stage": "shadow_only_thresholds_not_frozen",
+      "scenarioMode": "experimental",
+      "scenarioFamilyId": "physics_lab_cart_track",
+      "scenarioDomain": "mechanics_laboratory",
+      "scenarioEntity": "wheeled_vehicle",
+      "scenarioAction": "acceleration_from_velocity_change",
+      "informationForm": "numeric_text",
+      "scenarioFingerprint": "scenario-e373882ae39649c59bb4",
+      "contextNecessity": "required_for_solution",
+      "requiredInformationFields": [
+        "scenarioAction",
+        "motion_or_reaction_condition",
+        "quantities_with_units"
+      ],
+      "solverRelevantFields": [
+        "scenarioAction",
+        "motion_or_reaction_condition",
+        "quantities_with_units"
+      ],
+      "surface": {
+        "zhEntity": "实验小车",
+        "enEntity": "laboratory cart",
+        "zhSetting": "水平直轨实验",
+        "enSetting": "a horizontal straight-track experiment",
+        "cueTokens": [
+          "实验小车",
+          "laboratory cart"
+        ]
+      },
+      "plausibility": {
+        "straightLineMotion": true,
+        "siUnitsRequired": true,
+        "signedVelocityAndAccelerationAllowed": true
+      },
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "controlled_catalog_and_sealed_ordinal_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "physical_situation",
+        "role": "one_self_contained_kinematics_object_or_motion_segment",
+        "independentGroup": "k1"
+      },
+      {
+        "id": "e2",
+        "type": "quantity_or_graph_relation",
+        "role": "one_displacement_time_velocity_acceleration_or_graph_slope_relation_with_units",
+        "independentGroup": "k1"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "identify_direct_kinematics_relation",
+        "inputs": [
+          "e1",
+          "e2"
+        ],
+        "output": "selected_relation"
+      },
+      {
+        "id": "r2",
+        "operation": "derive_one_value_direction_or_graph_fact",
+        "inputs": [
+          "selected_relation"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "kinematics_unit_or_graph_round_trip",
+        "expression": "displacement/time/velocity/acceleration relation or graph slope checks the answer",
+        "variables": [
+          "s",
+          "t",
+          "v",
+          "a"
+        ],
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "confuse displacement with distance",
+      "confuse graph slope with graph height",
+      "omit or mismatch units"
+    ],
+    "answerDerivation": [
+      "apply exactly one visible kinematics relation or one graph-slope interpretation"
+    ],
+    "uniquenessConditions": [
+      "only one option matches the stated motion relation and units"
+    ]
+  },
+  "localizations": {
+    "zh": {
+      "prompt": "转播导播单记录轨道摄像车跟拍一个镜头的过程。在体育场边线直轨中，轨道摄像车沿直线运动，初速度为 4 m/s，末速度为 0 m/s，用时为 4 s，求这段时间内的加速度。计算结果用于对齐镜头段落。",
+      "options": [
+        {
+          "id": "A",
+          "text": "加速度：0 m/s^2"
+        },
+        {
+          "id": "B",
+          "text": "加速度：-2 m/s^2"
+        },
+        {
+          "id": "C",
+          "text": "加速度：1 m/s^2"
+        },
+        {
+          "id": "D",
+          "text": "加速度：-1 m/s^2"
+        }
+      ],
+      "explanation": "轨道摄像车的速度变化量为 (0-4) m/s，持续时间为 4 s；按 a=(v-u)/t，计算结果为 -1 m/s^2，因此唯一匹配的选项正确。",
+      "knowledgeTags": [
+        "运动学",
+        "直线运动"
+      ]
+    },
+    "en": {
+      "prompt": "sports broadcasting records frame this operational task. During a sideline camera rail, the camera dolly moves in a straight line with initial velocity 4 m/s and reaches 0 m/s in 4 s. Find its acceleration. The result supports align the filming segment.",
+      "options": [
+        {
+          "id": "A",
+          "text": "Acceleration: 0 m/s^2"
+        },
+        {
+          "id": "B",
+          "text": "Acceleration: -2 m/s^2"
+        },
+        {
+          "id": "C",
+          "text": "Acceleration: 1 m/s^2"
+        },
+        {
+          "id": "D",
+          "text": "Acceleration: -1 m/s^2"
+        }
+      ],
+      "explanation": "The camera dolly's velocity changes by (0-4) m/s over 4 s. By a=(v-u)/t, the resulting signed acceleration is -1 m/s^2, identifying the unique matching option.",
+      "knowledgeTags": [
+        "Kinematics",
+        "Linear motion"
+      ]
+    }
+  },
+  "generationMetadata": {
+    "origin": "codex_dual_session_pilot",
+    "generatorTaskId": "pilot-30-v2-generator-task-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v1",
+    "createdAt": "2026-09-15T10:45:00.000Z",
+    "family": "kinematics_acceleration",
+    "seed": 35,
+    "generatorVersion": "physics-kinematics-local-generator-v3-semantic-options",
+    "scopeId": "physics-basic-kinematics-v2:acceleration_from_velocity_change",
+    "deterministicVerification": {
+      "solver": {
+        "solverVersion": "physics-basic-kinematics-solver-v4",
+        "taskFamily": "kinematics_basic_direct_relation",
+        "status": "verified",
+        "parsed": true,
+        "relationKind": "acceleration_from_velocity_change",
+        "expectedDimension": "acceleration",
+        "expectedSiValue": -1,
+        "canonicalTask": {
+          "relationKind": "acceleration_from_velocity_change",
+          "dimension": "acceleration",
+          "expectedSiValue": -1,
+          "inputs": {
+            "initialSpeedMetersPerSecond": 4,
+            "finalSpeedMetersPerSecond": 0,
+            "durationSeconds": 4
+          }
+        },
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "false",
+            "parsedDimension": "acceleration",
+            "normalizedSiValue": 0,
+            "reasonCode": "physics_solver_quantity_mismatch"
+          },
+          {
+            "optionId": "B",
+            "verdict": "false",
+            "parsedDimension": "acceleration",
+            "normalizedSiValue": -2,
+            "reasonCode": "physics_solver_quantity_mismatch"
+          },
+          {
+            "optionId": "C",
+            "verdict": "false",
+            "parsedDimension": "acceleration",
+            "normalizedSiValue": 1,
+            "reasonCode": "physics_solver_quantity_mismatch"
+          },
+          {
+            "optionId": "D",
+            "verdict": "true",
+            "parsedDimension": "acceleration",
+            "normalizedSiValue": -1,
+            "reasonCode": "physics_solver_quantity_matches"
+          }
+        ],
+        "trueOptionIds": [
+          "D"
+        ],
+        "selectedOptionId": "D",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": [],
+        "verificationScope": {
+          "scopeVersion": "physics-basic-kinematics-verification-scope-v2",
+          "scopeId": "physics-basic-kinematics-v2:acceleration_from_velocity_change",
+          "status": "matched",
+          "matched": true,
+          "relationKind": "acceleration_from_velocity_change",
+          "reasonCodes": []
+        }
+      },
+      "oracle": {
+        "oracleVersion": "physics-kinematics-independent-oracle-v3",
+        "status": "verified",
+        "relationKind": "acceleration_from_velocity_change",
+        "expectedValue": -1,
+        "expectedUnit": "m/s^2",
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "false",
+            "value": 0,
+            "unit": "m/s^2"
+          },
+          {
+            "optionId": "B",
+            "verdict": "false",
+            "value": -2,
+            "unit": "m/s^2"
+          },
+          {
+            "optionId": "C",
+            "verdict": "false",
+            "value": 1,
+            "unit": "m/s^2"
+          },
+          {
+            "optionId": "D",
+            "verdict": "true",
+            "value": -1,
+            "unit": "m/s^2"
+          }
+        ],
+        "trueOptionIds": [
+          "D"
+        ],
+        "selectedOptionId": "D",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "scopeId": "physics-basic-kinematics-v2:acceleration_from_velocity_change",
+        "scopeMatched": true,
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      },
+      "explanation": {
+        "verifierVersion": "physics-kinematics-explanation-verifier-v1",
+        "status": "verified",
+        "solverEvidence": {
+          "solverVersion": "physics-basic-kinematics-solver-v4",
+          "taskFamily": "kinematics_basic_direct_relation",
+          "status": "verified",
+          "parsed": true,
+          "relationKind": "acceleration_from_velocity_change",
+          "expectedDimension": "acceleration",
+          "expectedSiValue": -1,
+          "canonicalTask": {
+            "relationKind": "acceleration_from_velocity_change",
+            "dimension": "acceleration",
+            "expectedSiValue": -1,
+            "inputs": {
+              "initialSpeedMetersPerSecond": 4,
+              "finalSpeedMetersPerSecond": 0,
+              "durationSeconds": 4
+            }
+          },
+          "optionVerdicts": [
+            {
+              "optionId": "A",
+              "verdict": "false",
+              "parsedDimension": "acceleration",
+              "normalizedSiValue": 0,
+              "reasonCode": "physics_solver_quantity_mismatch"
+            },
+            {
+              "optionId": "B",
+              "verdict": "false",
+              "parsedDimension": "acceleration",
+              "normalizedSiValue": -2,
+              "reasonCode": "physics_solver_quantity_mismatch"
+            },
+            {
+              "optionId": "C",
+              "verdict": "false",
+              "parsedDimension": "acceleration",
+              "normalizedSiValue": 1,
+              "reasonCode": "physics_solver_quantity_mismatch"
+            },
+            {
+              "optionId": "D",
+              "verdict": "true",
+              "parsedDimension": "acceleration",
+              "normalizedSiValue": -1,
+              "reasonCode": "physics_solver_quantity_matches"
+            }
+          ],
+          "trueOptionIds": [
+            "D"
+          ],
+          "selectedOptionId": "D",
+          "uniqueAnswer": true,
+          "agreesWithGenerator": true,
+          "evidenceBoundary": "prompt_and_visible_options_only",
+          "providerImpact": "none_no_provider_call",
+          "productionGateImpact": "none_shadow_only",
+          "reasonCodes": [],
+          "verificationScope": {
+            "scopeVersion": "physics-basic-kinematics-verification-scope-v2",
+            "scopeId": "physics-basic-kinematics-v2:acceleration_from_velocity_change",
+            "status": "matched",
+            "matched": true,
+            "relationKind": "acceleration_from_velocity_change",
+            "reasonCodes": []
+          }
+        },
+        "recomputedWithoutGeneratorExplanation": true,
+        "formulaInputsUnitsAndConclusionChecked": true,
+        "checks": [
+          {
+            "language": "zh",
+            "formulaMatched": true,
+            "promptInputsCovered": true,
+            "conclusionMatched": true,
+            "conclusionValue": -1,
+            "conclusionUnit": "m/s^2",
+            "reasonCodes": []
+          },
+          {
+            "language": "en",
+            "formulaMatched": true,
+            "promptInputsCovered": true,
+            "conclusionMatched": true,
+            "conclusionValue": -1,
+            "conclusionUnit": "m/s^2",
+            "reasonCodes": []
+          }
+        ],
+        "mismatchCount": 0,
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      }
+    },
+    "questionPlanAdherence": {
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "validPlan": true,
+      "adheres": true,
+      "planTemplate": "physics_kinematics_basic_relation_v1",
+      "taskFamily": "kinematics_basic_direct_relation",
+      "failureCodes": [],
+      "features": {
+        "operationWords": 0,
+        "observationWords": 0,
+        "hypothesisMarkers": 0,
+        "reasoningConnectors": 1,
+        "quantitativeMarkers": 0,
+        "reactionClues": 4,
+        "gasSpeciesMarkers": 0,
+        "gasControlMarkers": 0,
+        "redoxReactionMarkers": 0,
+        "redoxConceptMarkers": 0,
+        "redoxQuantitativeChainMarkers": 0,
+        "mathPropertySignals": 0,
+        "mathStatementMarkers": 5,
+        "mathTransformationSignals": 1,
+        "mathOrderingSignals": 5,
+        "mathParameterConstraintSignals": 1,
+        "mathProbabilitySignals": 0,
+        "mathProbabilityEventLabelCount": 0,
+        "mathProbabilityNormalHardInteractionCueCount": 0,
+        "mathProbabilityHardInteractionCueCount": 0,
+        "mathProbabilityConcreteFrameSignals": 0,
+        "mathProbabilityNormalMediumNoEventRisk": false,
+        "mathProbabilityNormalReferenceTableRisk": false,
+        "mathProbabilityConceptOnlyRisk": false,
+        "mathProbabilitySingleResultRisk": false,
+        "mathProbabilityEventListOnlyRisk": false,
+        "mathDerivativeSignals": 0,
+        "mathDerivativeMediumDefinitionOnlyRisk": false,
+        "mathDerivativeHardCoefficientSolveOnlyRisk": false,
+        "mathDerivativeBasicAdvancedOperationRisk": false,
+        "mathVectorComplexSignals": 0,
+        "mathVectorComplexBasicDefinitionOnlyRisk": false,
+        "mathGeometrySignals": 1,
+        "mathAnalyticGeometryDefinitionOnlyRisk": false,
+        "mathAnalyticGeometryBasicGeneralCircleRisk": false,
+        "mathAnalyticGeometryHardConicRelationOnlyRisk": false,
+        "mathElementaryFunctionSignals": 0,
+        "mathElementaryFunctionGenericClassificationRisk": false,
+        "mathElementaryFunctionBasicEquationSolveRisk": false,
+        "mathElementaryFunctionBasicMultipleObjectRisk": false,
+        "mathSequenceSignals": 0,
+        "mathSequenceGenericClassificationRisk": false,
+        "mathStatisticsSignals": 0,
+        "mathStatisticsBasicMultiStatisticComparisonRisk": false,
+        "mathStatisticsMediumPureLinearTransformRisk": false,
+        "mathStatisticsHardDirectCombinedVarianceRisk": false,
+        "mathSpatialSignals": 0,
+        "mathSpatialMediumMultiPropositionOvercomplexRisk": false,
+        "mathSpatialHardConceptOnlyRisk": false,
+        "mathSpatialHardDirectCoordinateOnlyRisk": false,
+        "mathParameterInferenceRisk": false,
+        "mathOptionJudgement": true,
+        "mathEnumeratedConditionCount": 0,
+        "mathFunctionPropertyStackCount": 0,
+        "mathFunctionDistinctPropertyCount": 0,
+        "mathStudentFacingDistinctPropertyCount": 0,
+        "mathStudentFacingFunctionPropertyOverComplex": false,
+        "mathFunctionObjectSignals": 0,
+        "mathFunctionPointValueCount": 0,
+        "mathFunctionNamedPointCount": 0,
+        "mathFunctionMultipleNamedPointsRisk": false,
+        "mathBasicFunctionSolutionScaffoldRisk": false,
+        "mathFunctionBasicMultiConstraintDomainRisk": false,
+        "mathPureFunctionExternalContextRisk": false,
+        "mathHardFunctionGenericConceptRisk": false,
+        "mathMediumFunctionPropertyOverComplex": false,
+        "mathDerivativeBasicDomainTrapRisk": false,
+        "mathDerivativeBasicOverComplexRisk": false,
+        "mathVectorComplexObjectCount": 1,
+        "mathVectorComplexRelationCount": 0,
+        "mathVectorComplexCoordinateGeometryDriftRisk": false,
+        "mathVectorComplexLocusParameterChainRisk": false,
+        "mathVectorComplexOneStepFormulaRisk": false,
+        "mathVectorComplexHardDirectMetricRisk": false,
+        "physicsKinematicsSignals": 8,
+        "physicsGraphSignals": 0,
+        "physicsUnitSignals": 10,
+        "physicsEquationSignals": 1,
+        "physicsOpticsSignals": 0,
+        "physicsOpticsRelationSignals": 0,
+        "physicsUnseenDiagramRisk": false,
+        "chemistryClassificationSignals": 0,
+        "chemistryStateChangeEvidenceSignals": 0,
+        "chemistryDefinitionOnlyClassificationRisk": false,
+        "chemistryPhConceptSignals": 0,
+        "chemistryPhOperationErrorSignals": 0,
+        "chemistryPhDirectionSignals": 0,
+        "chemistryPhDirectCalculationRisk": false
+      },
+      "productionImpact": "none_audit_or_gate_scaffold",
+      "providerImpact": "none_no_provider_call"
+    },
+    "scenarioRenderMode": "provisional_blueprint_shadow",
+    "provisionalScenarioContract": {
+      "schemaVersion": "subject-practice-scenario-contract-v2-provisional-blueprint",
+      "policyVersion": "subject-practice-scenario-blueprint-materialization-v4-method-neutral-chemistry",
+      "stage": "provisional_shadow_only",
+      "subject": "physics",
+      "taskFamily": "kinematics_basic_direct_relation",
+      "planTemplate": "physics_kinematics_basic_relation_v1",
+      "scenarioFamilyId": "provisional_physics_f43a01312fe5195e4b8743fd",
+      "scenarioMode": "real_world",
+      "scenarioDomain": "sports broadcasting",
+      "scenarioEntity": "camera dolly",
+      "environment": "sideline rail",
+      "contextAction": "track an athlete for a broadcast shot",
+      "solverAction": "acceleration_from_velocity_change",
+      "informationForm": "production cue sheet",
+      "questionPurpose": "align the filming segment",
+      "contextNecessity": "required_for_solution",
+      "requiredInformationFields": [
+        "contextAction",
+        "motionCondition",
+        "quantitiesWithSiUnits"
+      ],
+      "solverRelevantFields": [
+        "solverAction",
+        "motionCondition",
+        "quantitiesWithSiUnits"
+      ],
+      "plausibility": {
+        "straightLineMotion": true,
+        "siUnitsRequired": true,
+        "signedVelocityAndAccelerationAllowed": true,
+        "exactKinematicsScope": "acceleration_from_velocity_change"
+      },
+      "surface": {
+        "zhEntity": "轨道摄像车",
+        "enEntity": "camera dolly",
+        "zhSetting": "体育场边线直轨",
+        "enSetting": "a sideline camera rail"
+      },
+      "blueprintBinding": {
+        "blueprintDigest": "c77412b42e67d84023f442bd99fbb49469f9e08dc2b2a3068bcc552074621e48",
+        "blueprintFingerprint": "blueprint-f43a01312fe5195e4b8743fd",
+        "renameInvariantFingerprint": "blueprint-structure-1b9690a48b1d74365e3d1510",
+        "ideationCycleEvidenceDigest": "aa88980693ee771bd1189e470445bff1e36462f899cfce3cfa8c1412420db5ab"
+      },
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "validated_blueprint_cycle_only"
+      },
+      "scenarioContractDigest": "2a42a776e1ae1c192048ecb8157ec7c0ca6a659b056bc6662a0a1169dc87a5d8"
+    },
+    "v1Correction": null
+  }
+}

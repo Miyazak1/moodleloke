@@ -1,0 +1,243 @@
+{
+  "schemaVersion": "codex-question-candidate-v1",
+  "candidateId": "CQ-CHEMISTRY-4001",
+  "subject": "chemistry",
+  "topicCode": "C-STOICH-PURITY",
+  "topicTitle": "物质的量与纯度",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "含惰性杂质的石灰石样品质量为 10 g，其中 CaCO₃ 的质量分数为 80%。加入足量盐酸使 CaCO₃ 完全反应：CaCO₃+2HCl→CaCl₂+H₂O+CO₂↑。已知 M(CaCO₃)=100 g/mol，标准状况下气体摩尔体积为 22.4 L/mol，求生成 CO₂ 的体积。",
+  "options": [
+    {
+      "id": "A",
+      "text": "2.24 L"
+    },
+    {
+      "id": "B",
+      "text": "4.0727 L"
+    },
+    {
+      "id": "C",
+      "text": "1.792 L"
+    },
+    {
+      "id": "D",
+      "text": "2.792 L"
+    }
+  ],
+  "knowledgeTags": [
+    "物质的量与纯度",
+    "修订题"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "chemistry",
+    "topicCode": "C-STOICH-PURITY",
+    "topicTitle": "物质的量与纯度",
+    "targetDifficulty": "medium",
+    "taskFamily": "carbonate_purity_from_gas_volume",
+    "planTemplate": "pilot_v4_repair_carbonate_purity_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "4b0a23942fb701cd97e7286b",
+      "scenarioDataMustAffectSolution": true,
+      "selfContainedConstantsRequired": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "sampleMassGrams",
+        "purity",
+        "carbonateMolarMass",
+        "gasMolarVolume"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "databaseQuestionTextUsed": false,
+        "priorReviewBodyUsed": false,
+        "selectionBasis": "specified_v4_candidate_repair_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "sampleMassGrams",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "purity",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "carbonateMolarMass",
+        "independentGroup": "g3"
+      },
+      {
+        "id": "e4",
+        "type": "visible_parameter",
+        "role": "gasMolarVolume",
+        "independentGroup": "g4"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "由质量分数求纯碳酸钙质量",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3",
+          "e4"
+        ],
+        "output": "m(CaCO₃)"
+      },
+      {
+        "id": "r2",
+        "operation": "由摩尔质量求碳酸钙物质的量",
+        "inputs": [
+          "r1"
+        ],
+        "output": "n(CaCO₃)"
+      },
+      {
+        "id": "r3",
+        "operation": "按反应计量比求二氧化碳体积",
+        "inputs": [
+          "r2"
+        ],
+        "output": "V(CO₂)"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "m纯=m样品×w",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "n=m/M",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q3",
+        "type": "deterministic_relation",
+        "expression": "n(CO₂)=n(CaCO₃)",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q4",
+        "type": "deterministic_relation",
+        "expression": "V=nVₘ",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "遗漏题干常数或条件",
+      "未完成中间量复核"
+    ],
+    "answerDerivation": [
+      "仅使用题干和 QuestionPlan 中的可见输入独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项逐一代入后恰有一个满足全部关系"
+    ],
+    "canonicalInputs": {
+      "sampleMassGrams": 10,
+      "purity": 0.8,
+      "carbonateMolarMass": 100,
+      "gasMolarVolume": 22.4
+    },
+    "verificationContract": {
+      "version": "pilot-v4-repair-local-verifier-v1",
+      "independentSolverRequired": true,
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    }
+  },
+  "correctAnswer": "C",
+  "explanation": "样品中 CaCO₃ 的质量为 10×80%=8 g，其物质的量为 8/100=0.08 mol。反应中 CaCO₃ 与 CO₂ 的计量比为 1∶1，所以 V(CO₂)=0.08×22.4=1.792 L。",
+  "generationMetadata": {
+    "origin": "codex_local_deterministic_v4_repair",
+    "generatorTaskId": "pilot-30-v4-repair-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-repair-v1",
+    "createdAt": "2026-09-15T17:00:00.000Z",
+    "languageScope": "zh_primary_only",
+    "providerCalls": 0,
+    "supersedes": "CQ-CHEMISTRY-3003",
+    "revisionReason": "self_containment_constants_added",
+    "sourceIsolation": {
+      "officialQuestionContentRead": false,
+      "databaseQuestionTextRead": false,
+      "originalityPerItemHitsRead": false,
+      "priorReviewBodiesRead": false,
+      "sourceCandidateReadOnly": true
+    },
+    "deterministicVerification": {
+      "solver": {
+        "version": "pilot-v4-repair-independent-solver-v1",
+        "status": "verified",
+        "evidenceBoundary": "prompt_options_and_question_plan",
+        "expectedCanonical": 1.7919999999999998,
+        "selectedOptionId": "C",
+        "uniqueAnswer": true
+      },
+      "oracle": {
+        "version": "pilot-v4-repair-independent-oracle-v1",
+        "status": "verified",
+        "implementation": "separate_equivalent_derivation",
+        "expectedCanonical": 1.7919999999999998,
+        "agreesWithSolver": true
+      },
+      "optionTruthTable": [
+        {
+          "optionId": "A",
+          "verdict": false,
+          "canonicalValue": 2.24
+        },
+        {
+          "optionId": "B",
+          "verdict": false,
+          "canonicalValue": 4.0727
+        },
+        {
+          "optionId": "C",
+          "verdict": true,
+          "canonicalValue": 1.792
+        },
+        {
+          "optionId": "D",
+          "verdict": false,
+          "canonicalValue": 2.792
+        }
+      ],
+      "explanationReplay": {
+        "version": "pilot-v4-repair-explanation-replay-v1",
+        "status": "verified",
+        "requiredEvidenceTokens": [
+          "8/100=0.08 mol",
+          "1∶1",
+          "1.792 L"
+        ],
+        "allRequiredTokensPresent": true,
+        "conclusionMatchesAnswer": true
+      }
+    }
+  }
+}

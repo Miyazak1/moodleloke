@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cscalite.local/schemas/codex-question-candidate-v1.json",
+  "title": "CodexQuestionCandidateV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "candidateId", "subject", "topicCode", "topicTitle",
+    "designedDifficulty", "questionType", "prompt", "options", "correctAnswer",
+    "explanation", "knowledgeTags", "syllabusVersion", "questionPlan",
+    "generationMetadata"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "codex-question-candidate-v1" },
+    "candidateId": { "type": "string", "pattern": "^CQ-(MATH|PHYSICS|CHEMISTRY)-[0-9]{4}$" },
+    "subject": { "enum": ["math", "physics", "chemistry"] },
+    "topicCode": { "type": "string", "minLength": 1 },
+    "topicTitle": { "type": "string", "minLength": 1 },
+    "designedDifficulty": { "enum": ["basic", "medium", "hard"] },
+    "questionType": { "const": "single_choice" },
+    "prompt": { "type": "string", "minLength": 12 },
+    "options": {
+      "type": "array", "minItems": 4, "maxItems": 4,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "text"],
+        "properties": {
+          "id": { "enum": ["A", "B", "C", "D"] },
+          "text": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "correctAnswer": { "enum": ["A", "B", "C", "D"] },
+    "explanation": { "type": "string", "minLength": 20 },
+    "knowledgeTags": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+    "syllabusVersion": { "type": "string", "minLength": 1 },
+    "questionPlan": { "type": "object" },
+    "localizations": { "type": "object" },
+    "generationMetadata": {
+      "type": "object", "additionalProperties": true,
+      "required": ["origin", "generatorTaskId", "model", "promptVersion", "createdAt"],
+      "properties": {
+        "origin": { "const": "codex_dual_session_pilot" },
+        "generatorTaskId": { "type": "string", "minLength": 1 },
+        "model": { "type": "string", "minLength": 1 },
+        "promptVersion": { "const": "codex-library-generator-v1" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}
+

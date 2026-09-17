@@ -1,0 +1,308 @@
+.induction-page {
+  --physics-blue: #315dff;
+  --physics-soft: #e9efff
+}
+
+.induction-card {
+  display:grid;
+  grid-template-columns:280px minmax(0,1fr);
+  gap:16px;
+  padding:16px;
+  border:1px solid rgba(79,70,229,.16);
+  border-radius:20px;
+  background:#fff;
+  box-shadow:0 16px 42px #0f172a12
+}
+
+.induction-side,.induction-main {
+  display:grid;
+  align-content:start;
+  min-width:0;
+  gap:14px
+}
+
+.induction-side article,.induction-stage,.induction-explain-card article {
+  border:1px solid rgba(79,70,229,.14);
+  border-radius:16px;
+  background:#fff
+}
+
+.induction-side article,.induction-explain-card article {
+  padding:16px
+}
+
+.induction-side h2,.induction-explain-card h2 {
+  margin:0 0 12px;
+  color:#312e81;
+  font-size:15px;
+  font-weight:950
+}
+
+.induction-formula-card,.induction-data-card,.induction-control-card,.induction-slider-stack {
+  display:grid;
+  gap:10px
+}
+
+.induction-formula-card .math-content {
+  justify-content:center;
+  padding:16px 10px;
+  border:1px solid rgba(79,70,229,.18);
+  border-radius:12px;
+  background:var(--physics-soft)
+}
+
+.induction-metric,.induction-direction {
+  display:grid;
+  grid-template-columns:12px minmax(0,1fr) 92px;
+  gap:9px;
+  align-items:center;
+  padding:9px 10px;
+  border-radius:10px;
+  background:#f8fafc
+}
+
+.induction-metric i {
+  width:10px;
+  height:10px;
+  border-radius:3px
+}
+
+.induction-metric span,.induction-direction span {
+  color:#5f6f69;
+  font-size:12px;
+  font-weight:900
+}
+
+.induction-metric strong,.induction-direction strong,.induction-slider-stack strong {
+  justify-self:end;
+  color:#0f172a;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:12px;
+  font-variant-numeric:tabular-nums
+}
+
+.induction-direction {
+  grid-template-columns:minmax(0,1fr) 92px;
+  border:1px solid rgba(79,70,229,.14);
+  background:#e9efff
+}
+
+.induction-select,.induction-slider-stack label {
+  display:grid;
+  grid-template-columns:82px minmax(0,1fr) 82px;
+  gap:10px;
+  align-items:center;
+  color:#475569;
+  font-size:13px;
+  font-weight:900
+}
+
+.induction-select {
+  grid-template-columns:82px minmax(0,1fr)
+}
+
+.induction-select select {
+  width:100%;
+  min-height:38px;
+  border:1px solid #dbe3ef;
+  border-radius:10px;
+  background:#fff;
+  color:#0f172a;
+  font-weight:850
+}
+
+.induction-slider-stack input[type=range] {
+  width:100%;
+  accent-color:var(--physics-blue)
+}
+
+.induction-actions {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px
+}
+
+.induction-actions button {
+  min-height:38px;
+  border:1px solid rgba(79,70,229,.2);
+  border-radius:10px;
+  background:#f8fafc;
+  color:#334155;
+  font-weight:950
+}
+
+.induction-actions button:first-child {
+  border-color:var(--physics-blue);
+  background:var(--physics-blue);
+  color:#fff
+}
+
+.induction-stage {
+  padding:12px;
+  overflow:hidden;
+  background:#f8fbff
+}
+
+.induction-experiment-svg,.induction-graph-svg {
+  display:block;
+  width:100%
+}
+
+.induction-experiment-svg {
+  min-height:320px
+}
+
+.induction-graph-svg {
+  min-height:250px
+}
+
+.induction-experiment-svg text,.induction-graph-svg text {
+  fill:#5f6f69;
+  font-size:13px;
+  font-weight:900
+}
+
+.induction-experiment-svg .induction-bg,.induction-graph-svg .graph-bg {
+  fill:#f1f5ff
+}
+
+.induction-experiment-svg .stage-title,.induction-graph-svg .stage-title {
+  fill:#5f6f69;
+  text-anchor:start
+}
+
+.induction-experiment-svg .field-region {
+  fill:#6366f114;
+  stroke:#a5b4fc;
+  stroke-width:2;
+  stroke-dasharray:6 6
+}
+
+.induction-experiment-svg .field-label {
+  fill:#315dff;
+  text-anchor:middle
+}
+
+.induction-experiment-svg .field-crosses line {
+  stroke:#a5b4fc;
+  stroke-width:2;
+  opacity:.82
+}
+
+.induction-experiment-svg .coil rect {
+  fill:#ef44440d;
+  stroke:#ef4444;
+  stroke-width:4
+}
+
+.induction-experiment-svg .coil.active rect {
+  filter:drop-shadow(0 0 8px rgba(239,68,68,.28))
+}
+
+.induction-experiment-svg .coil circle {
+  fill:#ef4444
+}
+
+.induction-experiment-svg .velocity-arrow,.induction-experiment-svg .rotation-arrow {
+  fill:none;
+  stroke:#22c55e;
+  stroke-width:3
+}
+
+.induction-experiment-svg .velocity-label {
+  fill:#16a34a
+}
+
+.induction-experiment-svg .current-flow {
+  fill:none;
+  stroke-width:3
+}
+
+.induction-experiment-svg .current-flow.positive {
+  stroke:#ef4444
+}
+
+.induction-experiment-svg .current-flow.negative {
+  stroke:#315dff
+}
+
+.induction-meter rect {
+  fill:#fff;
+  stroke:#c7d2fe;
+  stroke-width:2
+}
+
+.induction-meter text {
+  fill:#312e81;
+  text-anchor:middle;
+  font-weight:950
+}
+
+.induction-meter .meter-needle {
+  stroke:#ef4444;
+  stroke-width:4;
+  stroke-linecap:round
+}
+
+.induction-experiment-svg .stage-note {
+  fill:#334155;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace
+}
+
+.induction-graph-svg .grid-line {
+  stroke:#dbe4f0;
+  stroke-width:1
+}
+
+.induction-graph-svg .axis-line {
+  stroke:#94a3b8;
+  stroke-width:1.5
+}
+
+.induction-graph-svg .flux-line,.induction-graph-svg .emf-line {
+  fill:none;
+  stroke-width:3;
+  stroke-linecap:round
+}
+
+.induction-graph-svg .flux-line {
+  stroke:#3b82f6
+}
+
+.induction-graph-svg .emf-line {
+  stroke:#ef4444
+}
+
+.induction-graph-svg .cursor-line {
+  stroke:#0f172a;
+  stroke-dasharray:5 6;
+  opacity:.42
+}
+
+.induction-graph-svg .flux-dot {
+  fill:#3b82f6
+}
+
+.induction-graph-svg .emf-dot {
+  fill:#ef4444
+}
+
+.induction-graph-svg .graph-legend text {
+  fill:#334155
+}
+
+.induction-explain-card {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px
+}
+
+.induction-explain-card p {
+  margin:0;
+  color:#334155;
+  font-size:13px;
+  font-weight:850;
+  line-height:1.7
+}
+
+/* Photoelectric effect visualizer */

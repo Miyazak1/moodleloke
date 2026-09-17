@@ -1,0 +1,80 @@
+{
+  "manifestVersion": "cscalite-question-engine-migration-manifest-v6-portable-adapter",
+  "migration": "all_five_registered_family_core_chains",
+  "sourceState": {
+    "toolVerifierSha256": "254599ea5447e402eaad168366542221b3c8a121f74944b4c1b6879d4f7ca629",
+    "solverSha256": "79d52112d1710b785fe35a4f00f04b75dc3928b3e2b5c9adcaa9debc6a1a0517",
+    "independentOracleSha256": "8fb26fb00baefc420108febd32e69cdc0d52d3f7f42d1bad32072a1397fe5d26",
+    "explanationVerifierSha256": "fdf611482552107258cbe826df9968c0fea5ebed20650c9ef90b85f13162882e"
+  },
+  "canonicalState": {
+    "toolVerifierSha256": "3c65a1d773221065314c1221a6417a43f03c0da61f3dab8e9f0a80b79067f0dc",
+    "solverSha256": "10a8c11ea2e89f49529230a3acbf8947dc101f13c810f53f3b8636b97aed9740",
+    "independentOracleSha256": "3371f5b5f4f5209be2d9aaecdac3938956f287e680730f08bc24234b98b74ada",
+    "explanationVerifierSha256": "c1ab3b7cea96f706d893c4a52c171be6900659fe9b994a17b122954126e3a5a6"
+  },
+  "generatorState": {
+    "canonicalPath": "question-engine/core/subject-practice-math-derivative-local-generator.ts",
+    "canonicalSha256": "46b92932a80e9ab66161aabfabdd034030d704e84d684b3b71857b2b995f8e12",
+    "compatibilityFacadePath": "backend/src/ai-questioning/subject-practice-math-derivative-local-generator.ts",
+    "compatibilityFacadeSha256": "93a83f0395abbccedeb7c7aa35e05694614747cbdbb3627b91821ea458c8ce9f",
+    "questionPlanBinding": "explicit_validate_and_adherence_ports",
+    "behavioralEvidence": "512_of_512_triple_verified_with_1024_bilingual_checks"
+  },
+  "additionalCoreFamilies": {
+    "mathElementary": {
+      "solverSha256": "0000872a1bb2e111d7b85b36266bfe57f9781ff5ad0da152d8d4520055374450",
+      "independentOracleSha256": "c3aae8098488f1fdfb2507f702b9734c0534c169008fb9763ab43e99d1ee4239",
+      "explanationVerifierSha256": "cb7d81ccdb11b7ef7cf171c1efd2e0f623015e79ce420f99978394e683c0fea4",
+      "generatorSha256": "7b00818f272f6fdd7296447f2d49366468aac6569ad61ebd6a693f076d3bea38",
+      "questionPlanBinding": "explicit_validate_port"
+    },
+    "mathLineRelation": {
+      "solverSha256": "c0d2ca25a7e95f150282144e87d8498ab13b54ca2fe2e3cb63296099764facdf",
+      "independentOracleSha256": "fa720a12d2ed9b3c7eed71c8348c478735dedcd672b66f372290e762109b38b2",
+      "explanationVerifierSha256": "e93294517d9aa26f928e34cb4adaf65fae96031d164a8b7da1236c424f913948",
+      "generatorSha256": "4f2d748692e8a5913aed5f26db21d88057ed5520d3d7be754d1dc38966b095fc",
+      "questionPlanBinding": "explicit_validate_and_adherence_ports"
+    },
+    "physicsKinematics": {
+      "solverSha256": "503ea19e9b1ee72a5cbca026a0f8f02e7828d0f6841e4e1dcbdc1f3596f655a0",
+      "independentOracleSha256": "67519743a5faea8bb2bce06c83c0792f40e851758a8939c3a093021bfef457bb",
+      "explanationVerifierSha256": "a42bec0a27e109b18bcc4b664680f9cb9f0b1464f85f6b70b45f57bcc6ba4790",
+      "generatorSha256": "64d98da0733c097f0a6219c2e91356a57311fb8da3f4835a8f1d04fa452a2628",
+      "questionPlanBinding": "explicit_validate_adherence_and_scenario_ports"
+    },
+    "chemistryAcidBase": {
+      "solverSha256": "051a06d598942ef4813d4f6c635624aaa0070b509861623135f368422c11c77d",
+      "independentOracleSha256": "5f7f24dc651ec15b1f5247def372b0bec0fd4c63f22190f92dfecf0269901e84",
+      "explanationVerifierSha256": "ad58f8ceaf24c1bc839e06c891d7f7c7f9f472818c884dfd1ee54b08e5b8eb48",
+      "generatorSha256": "38c9186a08cf68ad81e4add731e36552168fb8433560c8a4fdce06615aae92b8",
+      "questionPlanBinding": "explicit_validate_adherence_and_scenario_ports"
+    }
+  },
+  "hostAdapter": {
+    "version": "cscalite-question-engine-host-adapter-v1",
+    "path": "question-engine/adapters/cscalite-host.cjs",
+    "sha256": "51bdce17add4f4243c0aa3f1e0120952756379b08167b1ba0b84d343505c4f8e",
+    "ports": ["buildQuestionPlan", "validate", "adherenceFor", "validateScenario"],
+    "databaseAccess": false,
+    "providerAccess": false,
+    "publicationAccess": false
+  },
+  "portableAdapter": {
+    "version": "cscalite-question-engine-portable-host-adapter-v1-offline-only",
+    "path": "question-engine/adapters/portable-host.cjs",
+    "sha256": "be84f06a0e709cc15ad9e6701cdc95e878c4e6c1256d38db4abea1bbd914fd3b",
+    "offlineExactPlanPreview": true,
+    "productionQualification": false,
+    "scenarioMaterialization": false,
+    "databaseAccess": false,
+    "providerAccess": false,
+    "publicationAccess": false
+  },
+  "expectedDifference": "type_import_rebound_to_question_engine_core_types_only",
+  "versionStringsChanged": false,
+  "backendCompatibilityMode": "verification_re_exports_same_function_objects_generator_binds_explicit_question_plan_ports",
+  "providerImpact": "none_no_provider_call",
+  "databaseImpact": "none_no_database_write",
+  "publicationImpact": "none_no_student_publication"
+}

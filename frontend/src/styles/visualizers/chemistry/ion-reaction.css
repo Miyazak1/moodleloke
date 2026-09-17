@@ -1,0 +1,364 @@
+.ion-reaction-card {
+  display:grid;
+  grid-template-columns:300px minmax(0,1fr) 270px;
+  gap:16px;
+  align-items:stretch;
+  padding:18px;
+  background:#fffdf9
+}
+
+.ion-reaction-guide,.ion-reaction-stage,.ion-reaction-practice {
+  min-width:0
+}
+
+.ion-reaction-guide,.ion-reaction-practice {
+  display:grid;
+  align-content:start;
+  gap:14px
+}
+
+.ion-reaction-guide article,.ion-reaction-practice article,.ion-reaction-stage {
+  border:1px solid var(--public-line);
+  border-radius:14px;
+  background:#fffefa;
+  box-shadow:0 14px 34px #1720330e
+}
+
+.ion-equation-card,.ion-principle-card,.ion-solubility-card,.ion-current-equation,.ion-spectator-picker,.ion-reaction-select {
+  display:grid;
+  gap:10px;
+  padding:14px
+}
+
+.ion-equation-card h2,.ion-principle-card h2,.ion-solubility-card h2 {
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  margin:0;
+  color:#9a3412;
+  font-size:16px
+}
+
+.ion-equation-card button {
+  display:grid;
+  gap:5px;
+  padding:12px;
+  border:1px solid rgba(66,107,146,.22);
+  border-radius:10px;
+  background:#fff8e7;
+  color:var(--public-ink);
+  text-align:left
+}
+
+.ion-equation-card button.active {
+  border-color:var(--public-orange);
+  box-shadow:0 0 0 3px #315dff1a
+}
+
+.ion-equation-card button span,.ion-spectator-note span,.ion-current-equation span,.ion-spectator-picker>span,.ion-reaction-select span {
+  color:var(--public-muted);
+  font-size:12px;
+  font-weight:900
+}
+
+.ion-equation-card button strong,.ion-current-equation p {
+  color:var(--public-ink);
+  font-size:15px;
+  line-height:1.45;
+  overflow-wrap:anywhere
+}
+
+.ion-spectator-note {
+  display:grid;
+  gap:4px;
+  padding:10px 12px;
+  border-radius:10px;
+  background:#eef4fb
+}
+
+.ion-spectator-note strong {
+  color:#5f6f69
+}
+
+.ion-principle-card p {
+  margin:0;
+  color:var(--public-muted);
+  line-height:1.6;
+  font-weight:850
+}
+
+.ion-solubility-card div {
+  display:grid;
+  grid-template-columns:minmax(86px,.85fr) minmax(0,1fr);
+  gap:8px;
+  padding:8px 0;
+  border-bottom:1px solid rgba(226,232,240,.8)
+}
+
+.ion-solubility-card div:last-child {
+  border-bottom:0
+}
+
+.ion-solubility-card span {
+  color:var(--public-ink);
+  font-size:12px;
+  font-weight:850
+}
+
+.ion-solubility-card strong {
+  font-size:12px;
+  line-height:1.35
+}
+
+.ion-solubility-card strong.green {
+  color:#059669
+}
+
+.ion-solubility-card strong.red {
+  color:#dc2626
+}
+
+.ion-reaction-stage {
+  display:grid;
+  gap:12px;
+  padding:16px;
+  overflow:hidden;
+  background:linear-gradient(180deg,#f8fbff,#fffefa)
+}
+
+.ion-stage-header {
+  display:flex;
+  gap:14px;
+  align-items:flex-start;
+  justify-content:space-between
+}
+
+.ion-stage-header h2 {
+  margin:0;
+  color:var(--public-ink);
+  font-size:22px
+}
+
+.ion-stage-header p {
+  margin:5px 0 0;
+  color:var(--public-muted);
+  line-height:1.55;
+  font-weight:850;
+  overflow-wrap:anywhere
+}
+
+.ion-stage-header span {
+  flex:0 0 auto;
+  min-width:72px;
+  padding:8px 10px;
+  border-radius:999px;
+  background:#fff1db;
+  color:var(--public-orange);
+  font-weight:950;
+  text-align:center
+}
+
+.ion-reaction-svg {
+  width:100%;
+  min-height:400px;
+  display:block;
+  border:1px solid #dbe4ef;
+  border-radius:12px;
+  background:radial-gradient(circle at 50% 45%,#fff 0,#f8fbff 72%)
+}
+
+.ion-beaker {
+  fill:#bfdbfe5c;
+  stroke:#94a3b8;
+  stroke-width:2
+}
+
+.ion-mix-arrow {
+  fill:none;
+  stroke:var(--public-orange);
+  stroke-width:5;
+  stroke-linecap:round;
+  marker-end:none
+}
+
+.ion-mix-arrow:after {
+  content:""
+}
+
+.ion-solution-label,.ion-stage-caption {
+  fill:#5f6f69;
+  font-size:13px;
+  font-weight:900
+}
+
+.ion-particle circle {
+  fill:#e0f2fe;
+  stroke:#60a5fa;
+  stroke-width:2;
+  filter:drop-shadow(0 8px 12px rgba(15,23,42,.12))
+}
+
+.ion-particle.spectator circle {
+  fill:#f1f5f9;
+  stroke:#cbd5e1
+}
+
+.ion-particle.reactive circle {
+  fill:#ffedd5;
+  stroke:var(--public-orange)
+}
+
+.ion-particle text {
+  fill:var(--public-ink);
+  font-size:12px;
+  font-weight:950
+}
+
+.ion-reaction-svg.playing .ion-particle.reacting {
+  animation:ion-reacting 1.35s ease-in-out infinite alternate
+}
+
+@keyframes ion-reacting {
+  0% {
+    transform:translate(0);
+    transform-box:fill-box;
+    transform-origin:center
+  }
+
+  to {
+    transform:translate(34px,-6px);
+    transform-box:fill-box;
+    transform-origin:center
+  }
+}
+
+.ion-product {
+  opacity:.28;
+  transition:opacity .2s ease,transform .2s ease
+}
+
+.ion-product.active {
+  opacity:1;
+  transform:translateY(-6px)
+}
+
+.ion-product path,.ion-product circle {
+  fill:#315dff2e;
+  stroke:var(--public-orange);
+  stroke-width:2
+}
+
+.ion-product text {
+  fill:var(--public-orange);
+  font-size:18px;
+  font-weight:950
+}
+
+.ion-current-equation strong {
+  color:var(--public-ink);
+  font-size:22px
+}
+
+.ion-current-equation p {
+  margin:0;
+  padding:12px;
+  border-radius:10px;
+  background:#fff8e7
+}
+
+.ion-spectator-picker div {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px
+}
+
+.ion-spectator-picker button {
+  min-height:38px;
+  display:inline-flex;
+  gap:6px;
+  align-items:center;
+  justify-content:center;
+  border:1px solid var(--public-line);
+  border-radius:999px;
+  background:#fff;
+  color:var(--public-ink);
+  font-weight:900
+}
+
+.ion-spectator-picker button.active {
+  border-color:var(--public-orange);
+  background:#fff1db;
+  color:var(--public-orange)
+}
+
+.ion-spectator-picker button.primary,.ion-play-button {
+  border-color:var(--public-orange);
+  background:var(--public-orange);
+  color:#fff;
+  box-shadow:0 12px 24px #315dff24
+}
+
+.ion-spectator-picker p {
+  margin:0;
+  padding:10px 12px;
+  border-radius:10px;
+  line-height:1.5;
+  font-weight:850
+}
+
+.ion-spectator-picker p.correct {
+  background:#dcfce7;
+  color:#047857
+}
+
+.ion-spectator-picker p.needs-work {
+  background:#fee2e2;
+  color:#b91c1c
+}
+
+.ion-reaction-select select {
+  min-height:38px;
+  width:100%;
+  border:1px solid var(--public-line);
+  border-radius:10px;
+  background:#fff;
+  color:var(--public-ink);
+  font-weight:850
+}
+
+.ion-mode-tabs {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  overflow:hidden;
+  border:1px solid var(--public-line);
+  border-radius:999px;
+  background:#fff
+}
+
+.ion-mode-tabs button {
+  min-height:38px;
+  border:0;
+  background:transparent;
+  color:var(--public-muted);
+  font-weight:900
+}
+
+.ion-mode-tabs button.active {
+  background:var(--public-orange);
+  color:#fff
+}
+
+.ion-play-button {
+  min-height:44px;
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  justify-content:center;
+  border:1px solid var(--public-orange);
+  border-radius:999px;
+  font-weight:950
+}
+
+.ion-reaction-support article {
+  min-width:0
+}

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-PHYSICS-1006",
+  "reviewerTaskId": "01a0a477-1ae5-7880-93e0-6f44c2e06294",
+  "derivedAnswer": "abstain",
+  "optionTruthTable": {
+    "A": false,
+    "B": false,
+    "C": false,
+    "D": false
+  },
+  "conditionsSufficient": false,
+  "ambiguityFound": true,
+  "syllabusAligned": true,
+  "difficultyAssessment": "basic",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "The endpoints imply average acceleration (0-4)/4=-1 m/s^2, but the prompt asks for acceleration without saying average acceleration or constant acceleration. A nonlinear velocity curve can share both endpoints while having time-varying acceleration, so D is only the average, not a uniquely defined instantaneous acceleration.",
+    "The English localization is not publication-ready: it begins with a lowercase sentence fragment and repeatedly uses ungrammatical constructions such as \"The result supports\" followed by a bare verb."
+  ],
+  "verdictBeforeReveal": "abstain",
+  "reasonCodes": [
+    "EN_LOCALIZATION_UNGRAMMATICAL",
+    "ACCELERATION_NOT_DEFINED_AS_AVERAGE_OR_CONSTANT",
+    "CONDITIONS_INSUFFICIENT"
+  ],
+  "reviewedAt": "2026-09-15T09:54:16.101Z"
+}

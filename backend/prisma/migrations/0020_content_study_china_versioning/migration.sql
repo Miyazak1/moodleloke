@@ -1,0 +1,3 @@
+ALTER TABLE "content_blocks" ADD COLUMN "version" INTEGER NOT NULL DEFAULT 1;
+ALTER TABLE "city_guides" ADD COLUMN "version" INTEGER NOT NULL DEFAULT 1;
+ALTER TABLE "application_timeline_windows" ADD COLUMN "version" INTEGER NOT NULL DEFAULT 1;

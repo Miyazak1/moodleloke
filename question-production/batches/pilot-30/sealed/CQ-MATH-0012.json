@@ -1,0 +1,778 @@
+{
+  "schemaVersion": "codex-question-candidate-v1",
+  "candidateId": "CQ-MATH-0012",
+  "subject": "math",
+  "topicCode": "M-ANALYTIC-001",
+  "topicTitle": "解析几何中的直线关系",
+  "designedDifficulty": "basic",
+  "questionType": "single_choice",
+  "prompt": "直线 l: x+y+15=0 的倾斜角是多少？",
+  "options": [
+    {
+      "id": "A",
+      "text": "0°"
+    },
+    {
+      "id": "B",
+      "text": "45°"
+    },
+    {
+      "id": "C",
+      "text": "90°"
+    },
+    {
+      "id": "D",
+      "text": "135°"
+    }
+  ],
+  "correctAnswer": "D",
+  "explanation": "将直线化为 y=kx+b，得到斜率 k=-1，故倾斜角为 135°。",
+  "knowledgeTags": [
+    "解析几何",
+    "直线关系",
+    "inclination_angle_from_line"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "math",
+    "topicId": null,
+    "topicTitle": "直线关系",
+    "productionCellId": "line-relation-shadow-v1",
+    "targetDifficulty": "basic",
+    "taskFamily": "math_line_relation_direct",
+    "planTemplate": "math_line_relation_direct_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "exactLineRelationScope": "inclination_angle_from_line",
+      "forbidFigureDependency": true,
+      "forbidMultiStageIntersection": true,
+      "forbidVerticalLineUndefinedSlope": true,
+      "forbidCoincidentOrMultipleCorrectOptions": true,
+      "canonicalLineForm": "integer_primitive_ax_plus_by_plus_c_equals_zero_sign_fixed",
+      "finalAnswerShape": "one_unique_slope_exact_angle_relation_or_line_equation"
+    },
+    "budget": {
+      "maxPlanRepairs": 2,
+      "maxCandidateRepairs": 1
+    },
+    "scenarioContract": {
+      "schemaVersion": "subject-practice-scenario-contract-v1",
+      "policyVersion": "subject-practice-scenario-diversity-shadow-v2-multi-evidence-status",
+      "stage": "shadow_only_thresholds_not_frozen",
+      "scenarioMode": "abstract",
+      "scenarioFamilyId": "math_abstract_line_object",
+      "scenarioDomain": "pure_mathematics",
+      "scenarioEntity": "line_object",
+      "scenarioAction": "inclination_angle_from_line",
+      "informationForm": "symbolic_text",
+      "scenarioFingerprint": "scenario-d665503f9b678d7a7eb4",
+      "contextNecessity": "not_applicable",
+      "requiredInformationFields": [],
+      "solverRelevantFields": [],
+      "surface": {
+        "zhEntity": "",
+        "enEntity": "",
+        "zhSetting": "",
+        "enSetting": "",
+        "cueTokens": []
+      },
+      "plausibility": {
+        "externalContextForbidden": true
+      },
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "controlled_catalog_and_sealed_ordinal_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "explicit_line_data",
+        "role": "two_points_line_equation_or_point_and_slope",
+        "independentGroup": "l1"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "apply_exact_line_relation",
+        "inputs": [
+          "e1"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "line_relation_round_trip",
+        "expression": "direction or normal vector relation checks every visible option",
+        "variables": [
+          "x",
+          "y",
+          "a",
+          "b",
+          "c"
+        ],
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "delta x and delta y reversed",
+      "reciprocal used instead of negative reciprocal",
+      "coincident line accepted as distinct parallel line",
+      "constant sign error"
+    ],
+    "answerDerivation": [
+      "apply exactly one explicit slope, inclination, parallel/perpendicular, or point-slope relation"
+    ],
+    "uniquenessConditions": [
+      "all visible options are parsed and exactly one satisfies the selected exact scope"
+    ]
+  },
+  "localizations": {
+    "zh": {
+      "prompt": "直线 l: x+y+15=0 的倾斜角是多少？",
+      "options": [
+        {
+          "id": "A",
+          "text": "0°"
+        },
+        {
+          "id": "B",
+          "text": "45°"
+        },
+        {
+          "id": "C",
+          "text": "90°"
+        },
+        {
+          "id": "D",
+          "text": "135°"
+        }
+      ],
+      "explanation": "将直线化为 y=kx+b，得到斜率 k=-1，故倾斜角为 135°。",
+      "knowledgeTags": [
+        "解析几何",
+        "直线关系"
+      ]
+    },
+    "en": {
+      "prompt": "What is the inclination angle of line l: x+y+15=0?",
+      "options": [
+        {
+          "id": "A",
+          "text": "0°"
+        },
+        {
+          "id": "B",
+          "text": "45°"
+        },
+        {
+          "id": "C",
+          "text": "90°"
+        },
+        {
+          "id": "D",
+          "text": "135°"
+        }
+      ],
+      "explanation": "Writing the line as y=kx+b gives k=-1, so its inclination angle is 135°.",
+      "knowledgeTags": [
+        "Analytic geometry",
+        "Line relations"
+      ]
+    }
+  },
+  "generationMetadata": {
+    "origin": "codex_dual_session_pilot",
+    "generatorTaskId": "pilot-30-generator-task-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v1",
+    "createdAt": "2026-09-15T10:00:00.000Z",
+    "family": "line_relation",
+    "seed": 83,
+    "generatorVersion": "math-line-relation-local-generator-v3",
+    "scopeId": "math-basic-line-relation-v1:inclination_angle_from_line",
+    "deterministicVerification": {
+      "solver": {
+        "solverVersion": "math-line-relation-solver-v2",
+        "status": "verified",
+        "taskFamily": "math_line_relation_direct",
+        "scopeId": "math-basic-line-relation-v1:inclination_angle_from_line",
+        "scopeMatched": true,
+        "exactScope": "inclination_angle_from_line",
+        "canonicalTask": {
+          "kind": "inclination_angle_from_line",
+          "line": {
+            "a": 1,
+            "b": 1,
+            "c": 15
+          },
+          "expectedAngleDegrees": 135
+        },
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "false",
+            "semanticValue": {
+              "kind": "angle_degrees",
+              "value": 0
+            },
+            "reasonCode": "math_line_relation_option_false"
+          },
+          {
+            "optionId": "B",
+            "verdict": "false",
+            "semanticValue": {
+              "kind": "angle_degrees",
+              "value": 45
+            },
+            "reasonCode": "math_line_relation_option_false"
+          },
+          {
+            "optionId": "C",
+            "verdict": "false",
+            "semanticValue": {
+              "kind": "angle_degrees",
+              "value": 90
+            },
+            "reasonCode": "math_line_relation_option_false"
+          },
+          {
+            "optionId": "D",
+            "verdict": "true",
+            "semanticValue": {
+              "kind": "angle_degrees",
+              "value": 135
+            },
+            "reasonCode": "math_line_relation_option_true"
+          }
+        ],
+        "trueOptionIds": [
+          "D"
+        ],
+        "selectedOptionId": "D",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": [],
+        "verificationScope": {
+          "scopeVersion": "math-line-relation-scope-v1",
+          "scopeId": "math-basic-line-relation-v1:inclination_angle_from_line",
+          "matched": true,
+          "exactScope": "inclination_angle_from_line",
+          "reasonCodes": []
+        }
+      },
+      "oracle": {
+        "oracleVersion": "math-line-relation-independent-vector-oracle-v3",
+        "status": "verified",
+        "exactScope": "inclination_angle_from_line",
+        "scopeId": "math-basic-line-relation-v1:inclination_angle_from_line",
+        "scopeMatched": true,
+        "canonicalTask": {
+          "kind": "inclination_angle_from_line",
+          "normalVector": {
+            "a": {
+              "numerator": "1",
+              "denominator": "1"
+            },
+            "b": {
+              "numerator": "1",
+              "denominator": "1"
+            }
+          },
+          "directionVector": {
+            "dx": {
+              "numerator": "1",
+              "denominator": "1"
+            },
+            "dy": {
+              "numerator": "-1",
+              "denominator": "1"
+            }
+          },
+          "expectedAngleDegrees": 135
+        },
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "false",
+            "reasonCode": "math_line_relation_oracle_option_false"
+          },
+          {
+            "optionId": "B",
+            "verdict": "false",
+            "reasonCode": "math_line_relation_oracle_option_false"
+          },
+          {
+            "optionId": "C",
+            "verdict": "false",
+            "reasonCode": "math_line_relation_oracle_option_false"
+          },
+          {
+            "optionId": "D",
+            "verdict": "true",
+            "reasonCode": "math_line_relation_oracle_option_true"
+          }
+        ],
+        "trueOptionIds": [
+          "D"
+        ],
+        "selectedOptionId": "D",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "method": "independent_direction_normal_vector_cross_dot",
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      },
+      "explanation": {
+        "verifierVersion": "math-line-relation-explanation-verifier-v1",
+        "status": "verified",
+        "solverEvidence": {
+          "solverVersion": "math-line-relation-solver-v2",
+          "status": "verified",
+          "taskFamily": "math_line_relation_direct",
+          "scopeId": "math-basic-line-relation-v1:inclination_angle_from_line",
+          "scopeMatched": true,
+          "exactScope": "inclination_angle_from_line",
+          "canonicalTask": {
+            "kind": "inclination_angle_from_line",
+            "line": {
+              "a": 1,
+              "b": 1,
+              "c": 15
+            },
+            "expectedAngleDegrees": 135
+          },
+          "optionVerdicts": [
+            {
+              "optionId": "A",
+              "verdict": "false",
+              "semanticValue": {
+                "kind": "angle_degrees",
+                "value": 0
+              },
+              "reasonCode": "math_line_relation_option_false"
+            },
+            {
+              "optionId": "B",
+              "verdict": "false",
+              "semanticValue": {
+                "kind": "angle_degrees",
+                "value": 45
+              },
+              "reasonCode": "math_line_relation_option_false"
+            },
+            {
+              "optionId": "C",
+              "verdict": "false",
+              "semanticValue": {
+                "kind": "angle_degrees",
+                "value": 90
+              },
+              "reasonCode": "math_line_relation_option_false"
+            },
+            {
+              "optionId": "D",
+              "verdict": "true",
+              "semanticValue": {
+                "kind": "angle_degrees",
+                "value": 135
+              },
+              "reasonCode": "math_line_relation_option_true"
+            }
+          ],
+          "trueOptionIds": [
+            "D"
+          ],
+          "selectedOptionId": "D",
+          "uniqueAnswer": true,
+          "agreesWithGenerator": true,
+          "evidenceBoundary": "prompt_and_visible_options_only",
+          "providerImpact": "none_no_provider_call",
+          "productionGateImpact": "none_shadow_only",
+          "reasonCodes": [],
+          "verificationScope": {
+            "scopeVersion": "math-line-relation-scope-v1",
+            "scopeId": "math-basic-line-relation-v1:inclination_angle_from_line",
+            "matched": true,
+            "exactScope": "inclination_angle_from_line",
+            "reasonCodes": []
+          }
+        },
+        "recomputedWithoutGeneratorExplanation": true,
+        "bilingualDerivationAndConclusionChecked": true,
+        "checks": [
+          {
+            "language": "zh",
+            "answerRecomputed": true,
+            "derivationMatched": true,
+            "conclusionMatched": true,
+            "reasonCodes": []
+          },
+          {
+            "language": "en",
+            "answerRecomputed": true,
+            "derivationMatched": true,
+            "conclusionMatched": true,
+            "reasonCodes": []
+          }
+        ],
+        "mismatchCount": 0,
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      }
+    },
+    "questionPlanAdherence": {
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "validPlan": true,
+      "adheres": true,
+      "planTemplate": "math_line_relation_direct_v1",
+      "taskFamily": "math_line_relation_direct",
+      "failureCodes": [],
+      "features": {
+        "operationWords": 0,
+        "observationWords": 0,
+        "hypothesisMarkers": 0,
+        "reasoningConnectors": 1,
+        "quantitativeMarkers": 0,
+        "reactionClues": 4,
+        "gasSpeciesMarkers": 0,
+        "gasControlMarkers": 0,
+        "redoxReactionMarkers": 0,
+        "redoxConceptMarkers": 0,
+        "redoxQuantitativeChainMarkers": 0,
+        "mathPropertySignals": 0,
+        "mathStatementMarkers": 4,
+        "mathTransformationSignals": 1,
+        "mathOrderingSignals": 0,
+        "mathParameterConstraintSignals": 0,
+        "mathProbabilitySignals": 0,
+        "mathProbabilityEventLabelCount": 0,
+        "mathProbabilityNormalHardInteractionCueCount": 0,
+        "mathProbabilityHardInteractionCueCount": 0,
+        "mathProbabilityConcreteFrameSignals": 0,
+        "mathProbabilityNormalMediumNoEventRisk": false,
+        "mathProbabilityNormalReferenceTableRisk": false,
+        "mathProbabilityConceptOnlyRisk": false,
+        "mathProbabilitySingleResultRisk": false,
+        "mathProbabilityEventListOnlyRisk": false,
+        "mathDerivativeSignals": 1,
+        "mathDerivativeMediumDefinitionOnlyRisk": false,
+        "mathDerivativeHardCoefficientSolveOnlyRisk": false,
+        "mathDerivativeBasicAdvancedOperationRisk": false,
+        "mathVectorComplexSignals": 7,
+        "mathVectorComplexBasicDefinitionOnlyRisk": false,
+        "mathGeometrySignals": 3,
+        "mathAnalyticGeometryDefinitionOnlyRisk": false,
+        "mathAnalyticGeometryBasicGeneralCircleRisk": false,
+        "mathAnalyticGeometryHardConicRelationOnlyRisk": false,
+        "mathElementaryFunctionSignals": 0,
+        "mathElementaryFunctionGenericClassificationRisk": false,
+        "mathElementaryFunctionBasicEquationSolveRisk": false,
+        "mathElementaryFunctionBasicMultipleObjectRisk": false,
+        "mathSequenceSignals": 0,
+        "mathSequenceGenericClassificationRisk": false,
+        "mathStatisticsSignals": 0,
+        "mathStatisticsBasicMultiStatisticComparisonRisk": false,
+        "mathStatisticsMediumPureLinearTransformRisk": false,
+        "mathStatisticsHardDirectCombinedVarianceRisk": false,
+        "mathSpatialSignals": 7,
+        "mathSpatialMediumMultiPropositionOvercomplexRisk": false,
+        "mathSpatialHardConceptOnlyRisk": false,
+        "mathSpatialHardDirectCoordinateOnlyRisk": false,
+        "mathParameterInferenceRisk": false,
+        "mathOptionJudgement": true,
+        "mathEnumeratedConditionCount": 0,
+        "mathFunctionPropertyStackCount": 0,
+        "mathFunctionDistinctPropertyCount": 0,
+        "mathStudentFacingDistinctPropertyCount": 0,
+        "mathStudentFacingFunctionPropertyOverComplex": false,
+        "mathFunctionObjectSignals": 1,
+        "mathFunctionPointValueCount": 0,
+        "mathFunctionNamedPointCount": 0,
+        "mathFunctionMultipleNamedPointsRisk": false,
+        "mathBasicFunctionSolutionScaffoldRisk": false,
+        "mathFunctionBasicMultiConstraintDomainRisk": false,
+        "mathPureFunctionExternalContextRisk": false,
+        "mathHardFunctionGenericConceptRisk": false,
+        "mathMediumFunctionPropertyOverComplex": false,
+        "mathDerivativeBasicDomainTrapRisk": false,
+        "mathDerivativeBasicOverComplexRisk": false,
+        "mathVectorComplexObjectCount": 0,
+        "mathVectorComplexRelationCount": 0,
+        "mathVectorComplexCoordinateGeometryDriftRisk": true,
+        "mathVectorComplexLocusParameterChainRisk": false,
+        "mathVectorComplexOneStepFormulaRisk": false,
+        "mathVectorComplexHardDirectMetricRisk": false,
+        "physicsKinematicsSignals": 1,
+        "physicsGraphSignals": 1,
+        "physicsUnitSignals": 0,
+        "physicsEquationSignals": 3,
+        "physicsOpticsSignals": 0,
+        "physicsOpticsRelationSignals": 0,
+        "physicsUnseenDiagramRisk": false,
+        "chemistryClassificationSignals": 0,
+        "chemistryStateChangeEvidenceSignals": 0,
+        "chemistryDefinitionOnlyClassificationRisk": false,
+        "chemistryPhConceptSignals": 0,
+        "chemistryPhOperationErrorSignals": 0,
+        "chemistryPhDirectionSignals": 0,
+        "chemistryPhDirectCalculationRisk": false
+      },
+      "productionImpact": "none_audit_or_gate_scaffold",
+      "providerImpact": "none_no_provider_call"
+    },
+    "generatorSelfVerification": {
+      "solver": {
+        "solverVersion": "math-line-relation-solver-v2",
+        "status": "verified",
+        "taskFamily": "math_line_relation_direct",
+        "scopeId": "math-basic-line-relation-v1:inclination_angle_from_line",
+        "scopeMatched": true,
+        "exactScope": "inclination_angle_from_line",
+        "canonicalTask": {
+          "kind": "inclination_angle_from_line",
+          "line": {
+            "a": 1,
+            "b": 1,
+            "c": 15
+          },
+          "expectedAngleDegrees": 135
+        },
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "false",
+            "semanticValue": {
+              "kind": "angle_degrees",
+              "value": 0
+            },
+            "reasonCode": "math_line_relation_option_false"
+          },
+          {
+            "optionId": "B",
+            "verdict": "false",
+            "semanticValue": {
+              "kind": "angle_degrees",
+              "value": 45
+            },
+            "reasonCode": "math_line_relation_option_false"
+          },
+          {
+            "optionId": "C",
+            "verdict": "false",
+            "semanticValue": {
+              "kind": "angle_degrees",
+              "value": 90
+            },
+            "reasonCode": "math_line_relation_option_false"
+          },
+          {
+            "optionId": "D",
+            "verdict": "true",
+            "semanticValue": {
+              "kind": "angle_degrees",
+              "value": 135
+            },
+            "reasonCode": "math_line_relation_option_true"
+          }
+        ],
+        "trueOptionIds": [
+          "D"
+        ],
+        "selectedOptionId": "D",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": [],
+        "verificationScope": {
+          "scopeVersion": "math-line-relation-scope-v1",
+          "scopeId": "math-basic-line-relation-v1:inclination_angle_from_line",
+          "matched": true,
+          "exactScope": "inclination_angle_from_line",
+          "reasonCodes": []
+        }
+      },
+      "oracle": {
+        "oracleVersion": "math-line-relation-independent-vector-oracle-v3",
+        "status": "verified",
+        "exactScope": "inclination_angle_from_line",
+        "scopeId": "math-basic-line-relation-v1:inclination_angle_from_line",
+        "scopeMatched": true,
+        "canonicalTask": {
+          "kind": "inclination_angle_from_line",
+          "normalVector": {
+            "a": {
+              "numerator": "1",
+              "denominator": "1"
+            },
+            "b": {
+              "numerator": "1",
+              "denominator": "1"
+            }
+          },
+          "directionVector": {
+            "dx": {
+              "numerator": "1",
+              "denominator": "1"
+            },
+            "dy": {
+              "numerator": "-1",
+              "denominator": "1"
+            }
+          },
+          "expectedAngleDegrees": 135
+        },
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "false",
+            "reasonCode": "math_line_relation_oracle_option_false"
+          },
+          {
+            "optionId": "B",
+            "verdict": "false",
+            "reasonCode": "math_line_relation_oracle_option_false"
+          },
+          {
+            "optionId": "C",
+            "verdict": "false",
+            "reasonCode": "math_line_relation_oracle_option_false"
+          },
+          {
+            "optionId": "D",
+            "verdict": "true",
+            "reasonCode": "math_line_relation_oracle_option_true"
+          }
+        ],
+        "trueOptionIds": [
+          "D"
+        ],
+        "selectedOptionId": "D",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "method": "independent_direction_normal_vector_cross_dot",
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      },
+      "explanation": {
+        "verifierVersion": "math-line-relation-explanation-verifier-v1",
+        "status": "verified",
+        "solverEvidence": {
+          "solverVersion": "math-line-relation-solver-v2",
+          "status": "verified",
+          "taskFamily": "math_line_relation_direct",
+          "scopeId": "math-basic-line-relation-v1:inclination_angle_from_line",
+          "scopeMatched": true,
+          "exactScope": "inclination_angle_from_line",
+          "canonicalTask": {
+            "kind": "inclination_angle_from_line",
+            "line": {
+              "a": 1,
+              "b": 1,
+              "c": 15
+            },
+            "expectedAngleDegrees": 135
+          },
+          "optionVerdicts": [
+            {
+              "optionId": "A",
+              "verdict": "false",
+              "semanticValue": {
+                "kind": "angle_degrees",
+                "value": 0
+              },
+              "reasonCode": "math_line_relation_option_false"
+            },
+            {
+              "optionId": "B",
+              "verdict": "false",
+              "semanticValue": {
+                "kind": "angle_degrees",
+                "value": 45
+              },
+              "reasonCode": "math_line_relation_option_false"
+            },
+            {
+              "optionId": "C",
+              "verdict": "false",
+              "semanticValue": {
+                "kind": "angle_degrees",
+                "value": 90
+              },
+              "reasonCode": "math_line_relation_option_false"
+            },
+            {
+              "optionId": "D",
+              "verdict": "true",
+              "semanticValue": {
+                "kind": "angle_degrees",
+                "value": 135
+              },
+              "reasonCode": "math_line_relation_option_true"
+            }
+          ],
+          "trueOptionIds": [
+            "D"
+          ],
+          "selectedOptionId": "D",
+          "uniqueAnswer": true,
+          "agreesWithGenerator": true,
+          "evidenceBoundary": "prompt_and_visible_options_only",
+          "providerImpact": "none_no_provider_call",
+          "productionGateImpact": "none_shadow_only",
+          "reasonCodes": [],
+          "verificationScope": {
+            "scopeVersion": "math-line-relation-scope-v1",
+            "scopeId": "math-basic-line-relation-v1:inclination_angle_from_line",
+            "matched": true,
+            "exactScope": "inclination_angle_from_line",
+            "reasonCodes": []
+          }
+        },
+        "recomputedWithoutGeneratorExplanation": true,
+        "bilingualDerivationAndConclusionChecked": true,
+        "checks": [
+          {
+            "language": "zh",
+            "answerRecomputed": true,
+            "derivationMatched": true,
+            "conclusionMatched": true,
+            "reasonCodes": []
+          },
+          {
+            "language": "en",
+            "answerRecomputed": true,
+            "derivationMatched": true,
+            "conclusionMatched": true,
+            "reasonCodes": []
+          }
+        ],
+        "mismatchCount": 0,
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      }
+    }
+  }
+}

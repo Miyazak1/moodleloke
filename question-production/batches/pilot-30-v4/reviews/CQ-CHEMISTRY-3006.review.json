@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-CHEMISTRY-3006",
+  "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+  "derivedAnswer": "A",
+  "optionTruthTable": {
+    "A": true,
+    "B": false,
+    "C": false,
+    "D": false
+  },
+  "conditionsSufficient": false,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "hard",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "按常用原子量：n(C)=8.8/44=0.2，n(H)=2×3.6/18=0.4，氧质量=6-2.4-0.4=3.2 g 即 0.2 mol，原子比 1:2:1，A。必要原子量/摩尔质量未在题面给出。",
+    "已逐项对照 A/B/C/D；真值表只标记由题干独立推出的选项，未采用任何题面或元数据自报答案。"
+  ],
+  "verdictBeforeReveal": "reject",
+  "reasonCodes": [
+    "MISSING_ATOMIC_MASS_DATA",
+    "CONDITIONS_INSUFFICIENT"
+  ],
+  "reviewedAt": "2026-09-15T18:46:01.1890259+08:00"
+}

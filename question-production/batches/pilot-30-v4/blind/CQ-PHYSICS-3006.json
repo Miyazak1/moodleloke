@@ -1,0 +1,160 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-PHYSICS-3006",
+  "subject": "physics",
+  "topicCode": "P-MECH-MOM",
+  "topicTitle": "动量守恒",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "在水平直轨上，质量 3 kg 的小车以 5 m/s 向右运动，质量 2 kg 的小车初速度为 1 m/s 向左。两车碰撞后粘在一起，忽略外力冲量。规定向右为正，求共同速度。",
+  "options": [
+    {
+      "id": "A",
+      "text": "2.6 m/s"
+    },
+    {
+      "id": "B",
+      "text": "2 m/s"
+    },
+    {
+      "id": "C",
+      "text": "3.4 m/s"
+    },
+    {
+      "id": "D",
+      "text": "13 m/s"
+    }
+  ],
+  "knowledgeTags": [
+    "动量守恒",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "physics",
+    "topicCode": "P-MECH-MOM",
+    "topicTitle": "动量守恒",
+    "targetDifficulty": "medium",
+    "taskFamily": "perfectly_inelastic_momentum",
+    "planTemplate": "pilot_v4_perfectly_inelastic_momentum_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "74f34cc1e656b0b14a98482b",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "m1",
+        "m2",
+        "v1",
+        "v2"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "m1",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "m2",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "v1",
+        "independentGroup": "g3"
+      },
+      {
+        "id": "e4",
+        "type": "visible_parameter",
+        "role": "v2",
+        "independentGroup": "g4"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "signed momenta",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3",
+          "e4"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "total momentum",
+        "inputs": [
+          "r1"
+        ],
+        "output": "intermediate_2"
+      },
+      {
+        "id": "r3",
+        "operation": "common velocity",
+        "inputs": [
+          "r2"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "p_before=m1v1+m2v2",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "(m1+m2)v=p_before",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "忽略反向速度符号",
+      "把速度直接平均"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "m1": 3,
+      "v1": 5,
+      "m2": 2,
+      "v2": -1
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 2
+  }
+}

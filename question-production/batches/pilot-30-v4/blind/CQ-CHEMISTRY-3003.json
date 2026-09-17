@@ -1,0 +1,156 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-CHEMISTRY-3003",
+  "subject": "chemistry",
+  "topicCode": "C-STOICH-PURITY",
+  "topicTitle": "物质的量与纯度",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "含惰性杂质的石灰石样品质量为 10 g，其中 CaCO₃ 的质量分数为 80%。加入足量盐酸使 CaCO₃ 完全反应，反应为 CaCO₃+2HCl→CaCl₂+H₂O+CO₂↑。标准状况下气体摩尔体积取 22.4 L/mol，求生成 CO₂ 的体积。",
+  "options": [
+    {
+      "id": "A",
+      "text": "2.24 L"
+    },
+    {
+      "id": "B",
+      "text": "4.0727 L"
+    },
+    {
+      "id": "C",
+      "text": "1.792 L"
+    },
+    {
+      "id": "D",
+      "text": "2.792 L"
+    }
+  ],
+  "knowledgeTags": [
+    "物质的量与纯度",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "chemistry",
+    "topicCode": "C-STOICH-PURITY",
+    "topicTitle": "物质的量与纯度",
+    "targetDifficulty": "medium",
+    "taskFamily": "carbonate_purity_from_gas_volume",
+    "planTemplate": "pilot_v4_carbonate_purity_from_gas_volume_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "4b0a23942fb701cd97e7286b",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "mass",
+        "purity"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "mass",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "purity",
+        "independentGroup": "g2"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "sample purity",
+        "inputs": [
+          "e1",
+          "e2"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "pure mass",
+        "inputs": [
+          "r1"
+        ],
+        "output": "intermediate_2"
+      },
+      {
+        "id": "r3",
+        "operation": "moles",
+        "inputs": [
+          "r2"
+        ],
+        "output": "intermediate_3"
+      },
+      {
+        "id": "r4",
+        "operation": "gas volume",
+        "inputs": [
+          "r3"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "m_pure=m_sample*w",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "n(CaCO3)=m_pure/100",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q3",
+        "type": "deterministic_relation",
+        "expression": "V(CO2)=n*22.4",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "用样品总质量计算",
+      "把纯度百分数当整数"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "mass": 10,
+      "purity": 0.8
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 1
+  }
+}

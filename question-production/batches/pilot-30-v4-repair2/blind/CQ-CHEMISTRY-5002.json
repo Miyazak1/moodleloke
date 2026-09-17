@@ -1,0 +1,178 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-CHEMISTRY-5002",
+  "subject": "chemistry",
+  "topicCode": "C-THEORY-003",
+  "topicTitle": "化学反应速率与平衡",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "恒容反应器中发生反应 2SO₂(g)+O₂(g)→2SO₃(g)。在 40 s 内，SO₂ 的浓度由 1.00 mol/L 降至 0.40 mol/L。假设这段时间内没有物质进出反应器，求用 O₂ 浓度变化表示的平均消耗速率。",
+  "options": [
+    {
+      "id": "A",
+      "text": "0.00375 mol/(L·s)"
+    },
+    {
+      "id": "B",
+      "text": "0.0075 mol/(L·s)"
+    },
+    {
+      "id": "C",
+      "text": "0.015 mol/(L·s)"
+    },
+    {
+      "id": "D",
+      "text": "0.030 mol/(L·s)"
+    }
+  ],
+  "knowledgeTags": [
+    "化学反应速率与平衡",
+    "综合计算"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "chemistry",
+    "topicCode": "C-THEORY-003",
+    "topicTitle": "化学反应速率与平衡",
+    "targetDifficulty": "medium",
+    "taskFamily": "reaction_rate_stoichiometric_conversion",
+    "planTemplate": "pilot_v4_repair2_reaction_rate_stoichiometric_conversion_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "chem-rate-stoichiometric-conversion-v1",
+      "scenarioDataMustAffectSolution": true,
+      "selfContainedConstantsRequired": true,
+      "unitsRequired": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "reactionCoefficientSO2",
+        "reactionCoefficientO2",
+        "initialSO2Concentration",
+        "finalSO2Concentration",
+        "elapsedSeconds"
+      ],
+      "requiredAssumptionsPresent": true,
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "databaseQuestionTextUsed": false,
+        "reviewBodyUsed": false,
+        "selectionBasis": "formal_syllabus_topic_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "reactionCoefficientSO2",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "reactionCoefficientO2",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "initialSO2Concentration",
+        "independentGroup": "g3"
+      },
+      {
+        "id": "e4",
+        "type": "visible_parameter",
+        "role": "finalSO2Concentration",
+        "independentGroup": "g4"
+      },
+      {
+        "id": "e5",
+        "type": "visible_parameter",
+        "role": "elapsedSeconds",
+        "independentGroup": "g5"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "计算二氧化硫浓度的减少量",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3",
+          "e4",
+          "e5"
+        ],
+        "output": "Δc(SO₂)"
+      },
+      {
+        "id": "r2",
+        "operation": "按反应计量系数换算氧气浓度减少量",
+        "inputs": [
+          "r1"
+        ],
+        "output": "Δc(O₂)"
+      },
+      {
+        "id": "r3",
+        "operation": "用浓度变化量除以时间",
+        "inputs": [
+          "r2"
+        ],
+        "output": "氧气平均消耗速率"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "Δc(SO₂)=c初-c末",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "Δc(O₂)/Δc(SO₂)=1/2",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q3",
+        "type": "deterministic_relation",
+        "expression": "v消耗(O₂)=Δc(O₂)/Δt",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "忽略反应计量系数直接沿用二氧化硫速率",
+      "把浓度变化量与时间相乘"
+    ],
+    "answerDerivation": [
+      "只使用题干与 QuestionPlan 中的可见条件独立计算并复核单位"
+    ],
+    "uniquenessConditions": [
+      "四个选项逐一按同一物理化学关系检验后恰有一个成立"
+    ],
+    "canonicalInputs": {
+      "reactionCoefficientSO2": 2,
+      "reactionCoefficientO2": 1,
+      "initialSO2Concentration": 1,
+      "finalSO2Concentration": 0.4,
+      "elapsedSeconds": 40
+    },
+    "verificationContract": {
+      "version": "pilot-v4-repair2-local-verifier-v1",
+      "independentSolverRequired": true,
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    }
+  }
+}

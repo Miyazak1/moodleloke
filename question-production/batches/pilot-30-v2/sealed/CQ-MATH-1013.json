@@ -1,0 +1,591 @@
+{
+  "schemaVersion": "codex-question-candidate-v1",
+  "candidateId": "CQ-MATH-1013",
+  "subject": "math",
+  "topicCode": "M-ANALYTIC-001",
+  "topicTitle": "解析几何中的直线关系",
+  "designedDifficulty": "basic",
+  "questionType": "single_choice",
+  "prompt": "下列哪条直线与直线 l: x-3y+3=0 垂直？",
+  "options": [
+    {
+      "id": "A",
+      "text": "-3x-y+5=0"
+    },
+    {
+      "id": "B",
+      "text": "2x-6y+6=0"
+    },
+    {
+      "id": "C",
+      "text": "x-3y+4=0"
+    },
+    {
+      "id": "D",
+      "text": "-2x-4y+6=0"
+    }
+  ],
+  "correctAnswer": "A",
+  "explanation": "垂直直线的法向量点积为 0。 因此只有该选项符合题设条件。",
+  "knowledgeTags": [
+    "解析几何",
+    "直线关系",
+    "identify_parallel_or_perpendicular_line"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "math",
+    "topicId": null,
+    "topicTitle": "直线关系",
+    "productionCellId": "line-relation-shadow-v1",
+    "targetDifficulty": "basic",
+    "taskFamily": "math_line_relation_direct",
+    "planTemplate": "math_line_relation_direct_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "exactLineRelationScope": "identify_parallel_or_perpendicular_line",
+      "forbidFigureDependency": true,
+      "forbidMultiStageIntersection": true,
+      "forbidVerticalLineUndefinedSlope": true,
+      "forbidCoincidentOrMultipleCorrectOptions": true,
+      "canonicalLineForm": "integer_primitive_ax_plus_by_plus_c_equals_zero_sign_fixed",
+      "finalAnswerShape": "one_unique_slope_exact_angle_relation_or_line_equation"
+    },
+    "budget": {
+      "maxPlanRepairs": 2,
+      "maxCandidateRepairs": 1
+    },
+    "scenarioContract": {
+      "schemaVersion": "subject-practice-scenario-contract-v1",
+      "policyVersion": "subject-practice-scenario-diversity-shadow-v2-multi-evidence-status",
+      "stage": "shadow_only_thresholds_not_frozen",
+      "scenarioMode": "abstract",
+      "scenarioFamilyId": "math_abstract_line_object",
+      "scenarioDomain": "pure_mathematics",
+      "scenarioEntity": "line_object",
+      "scenarioAction": "identify_parallel_or_perpendicular_line",
+      "informationForm": "symbolic_text",
+      "scenarioFingerprint": "scenario-3dd2341456d4fcc9d9af",
+      "contextNecessity": "not_applicable",
+      "requiredInformationFields": [],
+      "solverRelevantFields": [],
+      "surface": {
+        "zhEntity": "",
+        "enEntity": "",
+        "zhSetting": "",
+        "enSetting": "",
+        "cueTokens": []
+      },
+      "plausibility": {
+        "externalContextForbidden": true
+      },
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "controlled_catalog_and_sealed_ordinal_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "explicit_line_data",
+        "role": "two_points_line_equation_or_point_and_slope",
+        "independentGroup": "l1"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "apply_exact_line_relation",
+        "inputs": [
+          "e1"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "line_relation_round_trip",
+        "expression": "direction or normal vector relation checks every visible option",
+        "variables": [
+          "x",
+          "y",
+          "a",
+          "b",
+          "c"
+        ],
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "delta x and delta y reversed",
+      "reciprocal used instead of negative reciprocal",
+      "coincident line accepted as distinct parallel line",
+      "constant sign error"
+    ],
+    "answerDerivation": [
+      "apply exactly one explicit slope, inclination, parallel/perpendicular, or point-slope relation"
+    ],
+    "uniquenessConditions": [
+      "all visible options are parsed and exactly one satisfies the selected exact scope"
+    ]
+  },
+  "localizations": {
+    "zh": {
+      "prompt": "下列哪条直线与直线 l: x-3y+3=0 垂直？",
+      "options": [
+        {
+          "id": "A",
+          "text": "-3x-y+5=0"
+        },
+        {
+          "id": "B",
+          "text": "2x-6y+6=0"
+        },
+        {
+          "id": "C",
+          "text": "x-3y+4=0"
+        },
+        {
+          "id": "D",
+          "text": "-2x-4y+6=0"
+        }
+      ],
+      "explanation": "垂直直线的法向量点积为 0。 因此只有该选项符合题设条件。",
+      "knowledgeTags": [
+        "解析几何",
+        "直线关系"
+      ]
+    },
+    "en": {
+      "prompt": "Which line is perpendicular to line l: x-3y+3=0?",
+      "options": [
+        {
+          "id": "A",
+          "text": "-3x-y+5=0"
+        },
+        {
+          "id": "B",
+          "text": "2x-6y+6=0"
+        },
+        {
+          "id": "C",
+          "text": "x-3y+4=0"
+        },
+        {
+          "id": "D",
+          "text": "-2x-4y+6=0"
+        }
+      ],
+      "explanation": "The normal vectors of perpendicular lines have dot product 0.",
+      "knowledgeTags": [
+        "Analytic geometry",
+        "Line relations"
+      ]
+    }
+  },
+  "generationMetadata": {
+    "origin": "codex_dual_session_pilot",
+    "generatorTaskId": "pilot-30-v2-generator-task-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v1",
+    "createdAt": "2026-09-15T10:45:00.000Z",
+    "family": "line_relation",
+    "seed": 988,
+    "generatorVersion": "math-line-relation-local-generator-v3",
+    "scopeId": "math-basic-line-relation-v1:identify_parallel_or_perpendicular_line",
+    "deterministicVerification": {
+      "solver": {
+        "solverVersion": "math-line-relation-solver-v2",
+        "status": "verified",
+        "taskFamily": "math_line_relation_direct",
+        "scopeId": "math-basic-line-relation-v1:identify_parallel_or_perpendicular_line",
+        "scopeMatched": true,
+        "exactScope": "identify_parallel_or_perpendicular_line",
+        "canonicalTask": {
+          "kind": "identify_parallel_or_perpendicular_line",
+          "referenceLine": {
+            "a": 1,
+            "b": -3,
+            "c": 3
+          },
+          "relation": "perpendicular"
+        },
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "true",
+            "semanticValue": {
+              "kind": "canonical_line",
+              "line": {
+                "a": 3,
+                "b": 1,
+                "c": -5
+              },
+              "parallel": false,
+              "perpendicular": true,
+              "coincident": false
+            },
+            "reasonCode": "math_line_relation_option_true"
+          },
+          {
+            "optionId": "B",
+            "verdict": "false",
+            "semanticValue": {
+              "kind": "canonical_line",
+              "line": {
+                "a": 1,
+                "b": -3,
+                "c": 3
+              },
+              "parallel": true,
+              "perpendicular": false,
+              "coincident": true
+            },
+            "reasonCode": "math_line_relation_option_false"
+          },
+          {
+            "optionId": "C",
+            "verdict": "false",
+            "semanticValue": {
+              "kind": "canonical_line",
+              "line": {
+                "a": 1,
+                "b": -3,
+                "c": 4
+              },
+              "parallel": true,
+              "perpendicular": false,
+              "coincident": false
+            },
+            "reasonCode": "math_line_relation_option_false"
+          },
+          {
+            "optionId": "D",
+            "verdict": "false",
+            "semanticValue": {
+              "kind": "canonical_line",
+              "line": {
+                "a": 1,
+                "b": 2,
+                "c": -3
+              },
+              "parallel": false,
+              "perpendicular": false,
+              "coincident": false
+            },
+            "reasonCode": "math_line_relation_option_false"
+          }
+        ],
+        "trueOptionIds": [
+          "A"
+        ],
+        "selectedOptionId": "A",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": [],
+        "verificationScope": {
+          "scopeVersion": "math-line-relation-scope-v1",
+          "scopeId": "math-basic-line-relation-v1:identify_parallel_or_perpendicular_line",
+          "matched": true,
+          "exactScope": "identify_parallel_or_perpendicular_line",
+          "reasonCodes": []
+        }
+      },
+      "oracle": {
+        "oracleVersion": "math-line-relation-independent-vector-oracle-v3",
+        "status": "verified",
+        "exactScope": "identify_parallel_or_perpendicular_line",
+        "scopeId": "math-basic-line-relation-v1:identify_parallel_or_perpendicular_line",
+        "scopeMatched": true,
+        "canonicalTask": {
+          "kind": "identify_parallel_or_perpendicular_line",
+          "referenceNormalVector": {
+            "a": {
+              "numerator": "1",
+              "denominator": "1"
+            },
+            "b": {
+              "numerator": "-3",
+              "denominator": "1"
+            }
+          },
+          "relation": "perpendicular"
+        },
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "true",
+            "reasonCode": "math_line_relation_oracle_option_true"
+          },
+          {
+            "optionId": "B",
+            "verdict": "false",
+            "reasonCode": "math_line_relation_oracle_option_false"
+          },
+          {
+            "optionId": "C",
+            "verdict": "false",
+            "reasonCode": "math_line_relation_oracle_option_false"
+          },
+          {
+            "optionId": "D",
+            "verdict": "false",
+            "reasonCode": "math_line_relation_oracle_option_false"
+          }
+        ],
+        "trueOptionIds": [
+          "A"
+        ],
+        "selectedOptionId": "A",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "method": "independent_direction_normal_vector_cross_dot",
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      },
+      "explanation": {
+        "verifierVersion": "math-line-relation-explanation-verifier-v1",
+        "status": "verified",
+        "solverEvidence": {
+          "solverVersion": "math-line-relation-solver-v2",
+          "status": "verified",
+          "taskFamily": "math_line_relation_direct",
+          "scopeId": "math-basic-line-relation-v1:identify_parallel_or_perpendicular_line",
+          "scopeMatched": true,
+          "exactScope": "identify_parallel_or_perpendicular_line",
+          "canonicalTask": {
+            "kind": "identify_parallel_or_perpendicular_line",
+            "referenceLine": {
+              "a": 1,
+              "b": -3,
+              "c": 3
+            },
+            "relation": "perpendicular"
+          },
+          "optionVerdicts": [
+            {
+              "optionId": "A",
+              "verdict": "true",
+              "semanticValue": {
+                "kind": "canonical_line",
+                "line": {
+                  "a": 3,
+                  "b": 1,
+                  "c": -5
+                },
+                "parallel": false,
+                "perpendicular": true,
+                "coincident": false
+              },
+              "reasonCode": "math_line_relation_option_true"
+            },
+            {
+              "optionId": "B",
+              "verdict": "false",
+              "semanticValue": {
+                "kind": "canonical_line",
+                "line": {
+                  "a": 1,
+                  "b": -3,
+                  "c": 3
+                },
+                "parallel": true,
+                "perpendicular": false,
+                "coincident": true
+              },
+              "reasonCode": "math_line_relation_option_false"
+            },
+            {
+              "optionId": "C",
+              "verdict": "false",
+              "semanticValue": {
+                "kind": "canonical_line",
+                "line": {
+                  "a": 1,
+                  "b": -3,
+                  "c": 4
+                },
+                "parallel": true,
+                "perpendicular": false,
+                "coincident": false
+              },
+              "reasonCode": "math_line_relation_option_false"
+            },
+            {
+              "optionId": "D",
+              "verdict": "false",
+              "semanticValue": {
+                "kind": "canonical_line",
+                "line": {
+                  "a": 1,
+                  "b": 2,
+                  "c": -3
+                },
+                "parallel": false,
+                "perpendicular": false,
+                "coincident": false
+              },
+              "reasonCode": "math_line_relation_option_false"
+            }
+          ],
+          "trueOptionIds": [
+            "A"
+          ],
+          "selectedOptionId": "A",
+          "uniqueAnswer": true,
+          "agreesWithGenerator": true,
+          "evidenceBoundary": "prompt_and_visible_options_only",
+          "providerImpact": "none_no_provider_call",
+          "productionGateImpact": "none_shadow_only",
+          "reasonCodes": [],
+          "verificationScope": {
+            "scopeVersion": "math-line-relation-scope-v1",
+            "scopeId": "math-basic-line-relation-v1:identify_parallel_or_perpendicular_line",
+            "matched": true,
+            "exactScope": "identify_parallel_or_perpendicular_line",
+            "reasonCodes": []
+          }
+        },
+        "recomputedWithoutGeneratorExplanation": true,
+        "bilingualDerivationAndConclusionChecked": true,
+        "checks": [
+          {
+            "language": "zh",
+            "answerRecomputed": true,
+            "derivationMatched": true,
+            "conclusionMatched": true,
+            "reasonCodes": []
+          },
+          {
+            "language": "en",
+            "answerRecomputed": true,
+            "derivationMatched": true,
+            "conclusionMatched": true,
+            "reasonCodes": []
+          }
+        ],
+        "mismatchCount": 0,
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      }
+    },
+    "questionPlanAdherence": {
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "validPlan": true,
+      "adheres": true,
+      "planTemplate": "math_line_relation_direct_v1",
+      "taskFamily": "math_line_relation_direct",
+      "failureCodes": [],
+      "features": {
+        "operationWords": 0,
+        "observationWords": 0,
+        "hypothesisMarkers": 0,
+        "reasoningConnectors": 1,
+        "quantitativeMarkers": 2,
+        "reactionClues": 4,
+        "gasSpeciesMarkers": 2,
+        "gasControlMarkers": 0,
+        "redoxReactionMarkers": 1,
+        "redoxConceptMarkers": 2,
+        "redoxQuantitativeChainMarkers": 0,
+        "mathPropertySignals": 0,
+        "mathStatementMarkers": 5,
+        "mathTransformationSignals": 1,
+        "mathOrderingSignals": 0,
+        "mathParameterConstraintSignals": 0,
+        "mathProbabilitySignals": 1,
+        "mathProbabilityEventLabelCount": 0,
+        "mathProbabilityNormalHardInteractionCueCount": 0,
+        "mathProbabilityHardInteractionCueCount": 0,
+        "mathProbabilityConcreteFrameSignals": 0,
+        "mathProbabilityNormalMediumNoEventRisk": false,
+        "mathProbabilityNormalReferenceTableRisk": false,
+        "mathProbabilityConceptOnlyRisk": true,
+        "mathProbabilitySingleResultRisk": false,
+        "mathProbabilityEventListOnlyRisk": false,
+        "mathDerivativeSignals": 0,
+        "mathDerivativeMediumDefinitionOnlyRisk": false,
+        "mathDerivativeHardCoefficientSolveOnlyRisk": false,
+        "mathDerivativeBasicAdvancedOperationRisk": false,
+        "mathVectorComplexSignals": 9,
+        "mathVectorComplexBasicDefinitionOnlyRisk": false,
+        "mathGeometrySignals": 3,
+        "mathAnalyticGeometryDefinitionOnlyRisk": false,
+        "mathAnalyticGeometryBasicGeneralCircleRisk": false,
+        "mathAnalyticGeometryHardConicRelationOnlyRisk": false,
+        "mathElementaryFunctionSignals": 0,
+        "mathElementaryFunctionGenericClassificationRisk": false,
+        "mathElementaryFunctionBasicEquationSolveRisk": false,
+        "mathElementaryFunctionBasicMultipleObjectRisk": false,
+        "mathSequenceSignals": 0,
+        "mathSequenceGenericClassificationRisk": false,
+        "mathStatisticsSignals": 0,
+        "mathStatisticsBasicMultiStatisticComparisonRisk": false,
+        "mathStatisticsMediumPureLinearTransformRisk": false,
+        "mathStatisticsHardDirectCombinedVarianceRisk": false,
+        "mathSpatialSignals": 8,
+        "mathSpatialMediumMultiPropositionOvercomplexRisk": false,
+        "mathSpatialHardConceptOnlyRisk": false,
+        "mathSpatialHardDirectCoordinateOnlyRisk": false,
+        "mathParameterInferenceRisk": false,
+        "mathOptionJudgement": true,
+        "mathEnumeratedConditionCount": 0,
+        "mathFunctionPropertyStackCount": 0,
+        "mathFunctionDistinctPropertyCount": 0,
+        "mathStudentFacingDistinctPropertyCount": 0,
+        "mathStudentFacingFunctionPropertyOverComplex": false,
+        "mathFunctionObjectSignals": 0,
+        "mathFunctionPointValueCount": 0,
+        "mathFunctionNamedPointCount": 0,
+        "mathFunctionMultipleNamedPointsRisk": false,
+        "mathBasicFunctionSolutionScaffoldRisk": false,
+        "mathFunctionBasicMultiConstraintDomainRisk": false,
+        "mathPureFunctionExternalContextRisk": false,
+        "mathHardFunctionGenericConceptRisk": false,
+        "mathMediumFunctionPropertyOverComplex": false,
+        "mathDerivativeBasicDomainTrapRisk": false,
+        "mathDerivativeBasicOverComplexRisk": false,
+        "mathVectorComplexObjectCount": 0,
+        "mathVectorComplexRelationCount": 3,
+        "mathVectorComplexCoordinateGeometryDriftRisk": false,
+        "mathVectorComplexLocusParameterChainRisk": false,
+        "mathVectorComplexOneStepFormulaRisk": false,
+        "mathVectorComplexHardDirectMetricRisk": false,
+        "physicsKinematicsSignals": 0,
+        "physicsGraphSignals": 0,
+        "physicsUnitSignals": 0,
+        "physicsEquationSignals": 5,
+        "physicsOpticsSignals": 0,
+        "physicsOpticsRelationSignals": 0,
+        "physicsUnseenDiagramRisk": false,
+        "chemistryClassificationSignals": 0,
+        "chemistryStateChangeEvidenceSignals": 0,
+        "chemistryDefinitionOnlyClassificationRisk": false,
+        "chemistryPhConceptSignals": 0,
+        "chemistryPhOperationErrorSignals": 0,
+        "chemistryPhDirectionSignals": 0,
+        "chemistryPhDirectCalculationRisk": false
+      },
+      "productionImpact": "none_audit_or_gate_scaffold",
+      "providerImpact": "none_no_provider_call"
+    },
+    "scenarioRenderMode": "abstract_math",
+    "provisionalScenarioContract": null,
+    "v1Correction": null
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "manifestVersion": "subject-practice-post-freeze-random-manifest-v5-three-subject-engine-core",
+  "createdAt": "2026-09-16T00:00:00+08:00",
+  "casesPerScope": 128,
+  "subjects": {
+    "math": {
+      "solverPath": "backend/src/ai-questioning/subject-practice-math-solver.ts",
+      "solverSha256": "d23590d38881da36a586fe8357033294abd497b7f562fe7a58e01d9118d71fde",
+      "seedNamespace": "csca-math-elementary-post-freeze-random-v2",
+      "seedCommitmentSha256": "bd3615f34cc1700f7274c33ce738cb1f0f31a5a2bc421073c1164ab924980d18"
+    },
+    "physics": {
+      "solverPath": "question-engine/core/subject-practice-physics-kinematics-solver.ts",
+      "solverSha256": "503ea19e9b1ee72a5cbca026a0f8f02e7828d0f6841e4e1dcbdc1f3596f655a0",
+      "identityOwner": "question_engine_core",
+      "compatibilityFacadePath": "backend/src/ai-questioning/subject-practice-physics-kinematics-solver.ts",
+      "compatibilityFacadeExportTarget": "../../../question-engine/core/subject-practice-physics-kinematics-solver",
+      "generatorPath": "question-engine/core/subject-practice-physics-kinematics-local-generator.ts",
+      "generatorSha256": "64d98da0733c097f0a6219c2e91356a57311fb8da3f4835a8f1d04fa452a2628",
+      "generatorFacadePath": "backend/src/ai-questioning/subject-practice-physics-kinematics-local-generator.ts",
+      "generatorFacadeImportTarget": "../../../question-engine/core/subject-practice-physics-kinematics-local-generator",
+      "seedNamespace": "csca-physics-kinematics-post-freeze-random-v2",
+      "seedCommitmentSha256": "3ec601db5048cd7a254fa02d968cb50de4c8b83132f5f89d37ace0f13844cc7d"
+    },
+    "chemistry": {
+      "solverPath": "question-engine/core/subject-practice-chemistry-acid-base-solver.ts",
+      "solverSha256": "051a06d598942ef4813d4f6c635624aaa0070b509861623135f368422c11c77d",
+      "identityOwner": "question_engine_core",
+      "compatibilityFacadePath": "backend/src/ai-questioning/subject-practice-chemistry-acid-base-solver.ts",
+      "compatibilityFacadeExportTarget": "../../../question-engine/core/subject-practice-chemistry-acid-base-solver",
+      "generatorPath": "question-engine/core/subject-practice-chemistry-acid-base-local-generator.ts",
+      "generatorSha256": "38c9186a08cf68ad81e4add731e36552168fb8433560c8a4fdce06615aae92b8",
+      "generatorFacadePath": "backend/src/ai-questioning/subject-practice-chemistry-acid-base-local-generator.ts",
+      "generatorFacadeImportTarget": "../../../question-engine/core/subject-practice-chemistry-acid-base-local-generator",
+      "seedNamespace": "csca-chemistry-acid-base-post-freeze-random-v2",
+      "seedCommitmentSha256": "cf680035a7239fa2bcb6e1d6d6256585f46cf248aa60bc7627a9f5b1c54ce6fd"
+    },
+    "mathDerivative": {
+      "solverPath": "question-engine/core/subject-practice-math-derivative-solver.ts",
+      "solverSha256": "10a8c11ea2e89f49529230a3acbf8947dc101f13c810f53f3b8636b97aed9740",
+      "identityOwner": "question_engine_core",
+      "compatibilityFacadePath": "backend/src/ai-questioning/subject-practice-math-derivative-solver.ts",
+      "compatibilityFacadeExportTarget": "../../../question-engine/core/subject-practice-math-derivative-solver",
+      "generatorPath": "question-engine/core/subject-practice-math-derivative-local-generator.ts",
+      "generatorSha256": "46b92932a80e9ab66161aabfabdd034030d704e84d684b3b71857b2b995f8e12",
+      "generatorFacadePath": "backend/src/ai-questioning/subject-practice-math-derivative-local-generator.ts",
+      "generatorFacadeImportTarget": "../../../question-engine/core/subject-practice-math-derivative-local-generator",
+      "seedNamespace": "csca-math-derivative-post-freeze-random-v1",
+      "seedCommitmentSha256": "d0f222dedb1e6833c36f43645c11e306451085c790824b93509c2f3e152ff729"
+    }
+  }
+}

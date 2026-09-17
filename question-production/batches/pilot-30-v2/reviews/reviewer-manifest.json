@@ -1,0 +1,384 @@
+{
+  "schemaVersion": "codex-blind-review-manifest-v1",
+  "reviewerTaskId": "01a0a477-1ae5-7880-93e0-6f44c2e06294",
+  "batchId": "pilot-30-v2",
+  "blindScope": "question-production/batches/pilot-30-v2/blind/",
+  "reviewedAt": "2026-09-15T09:54:16.101Z",
+  "candidateCount": 45,
+  "countsBySubject": {
+    "math": {
+      "pass": 15,
+      "reject": 0,
+      "abstain": 0
+    },
+    "physics": {
+      "pass": 0,
+      "reject": 11,
+      "abstain": 4
+    },
+    "chemistry": {
+      "pass": 0,
+      "reject": 15,
+      "abstain": 0
+    }
+  },
+  "totalCounts": {
+    "pass": 15,
+    "reject": 26,
+    "abstain": 4
+  },
+  "recurringReasonCodes": {
+    "EN_LOCALIZATION_UNGRAMMATICAL": 30,
+    "ACCELERATION_NOT_DEFINED_AS_AVERAGE_OR_CONSTANT": 4,
+    "CONDITIONS_INSUFFICIENT": 4,
+    "OPERATIONAL_SCALE_OR_PURPOSE_IMPLAUSIBLE": 3
+  },
+  "candidates": [
+    {
+      "candidateId": "CQ-CHEMISTRY-1001",
+      "subject": "chemistry",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1002",
+      "subject": "chemistry",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1003",
+      "subject": "chemistry",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1004",
+      "subject": "chemistry",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1005",
+      "subject": "chemistry",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1006",
+      "subject": "chemistry",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1007",
+      "subject": "chemistry",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1008",
+      "subject": "chemistry",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1009",
+      "subject": "chemistry",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1010",
+      "subject": "chemistry",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1011",
+      "subject": "chemistry",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL",
+        "OPERATIONAL_SCALE_OR_PURPOSE_IMPLAUSIBLE"
+      ]
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1012",
+      "subject": "chemistry",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1013",
+      "subject": "chemistry",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1014",
+      "subject": "chemistry",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-1015",
+      "subject": "chemistry",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-MATH-1001",
+      "subject": "math",
+      "verdict": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-1002",
+      "subject": "math",
+      "verdict": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-1003",
+      "subject": "math",
+      "verdict": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-1004",
+      "subject": "math",
+      "verdict": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-1005",
+      "subject": "math",
+      "verdict": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-1006",
+      "subject": "math",
+      "verdict": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-1007",
+      "subject": "math",
+      "verdict": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-1008",
+      "subject": "math",
+      "verdict": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-1009",
+      "subject": "math",
+      "verdict": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-1010",
+      "subject": "math",
+      "verdict": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-1011",
+      "subject": "math",
+      "verdict": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-1012",
+      "subject": "math",
+      "verdict": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-1013",
+      "subject": "math",
+      "verdict": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-1014",
+      "subject": "math",
+      "verdict": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-MATH-1015",
+      "subject": "math",
+      "verdict": "pass",
+      "reasonCodes": []
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1001",
+      "subject": "physics",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1002",
+      "subject": "physics",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1003",
+      "subject": "physics",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1004",
+      "subject": "physics",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1005",
+      "subject": "physics",
+      "verdict": "abstain",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL",
+        "ACCELERATION_NOT_DEFINED_AS_AVERAGE_OR_CONSTANT",
+        "CONDITIONS_INSUFFICIENT"
+      ]
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1006",
+      "subject": "physics",
+      "verdict": "abstain",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL",
+        "ACCELERATION_NOT_DEFINED_AS_AVERAGE_OR_CONSTANT",
+        "CONDITIONS_INSUFFICIENT"
+      ]
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1007",
+      "subject": "physics",
+      "verdict": "abstain",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL",
+        "ACCELERATION_NOT_DEFINED_AS_AVERAGE_OR_CONSTANT",
+        "CONDITIONS_INSUFFICIENT"
+      ]
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1008",
+      "subject": "physics",
+      "verdict": "abstain",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL",
+        "ACCELERATION_NOT_DEFINED_AS_AVERAGE_OR_CONSTANT",
+        "CONDITIONS_INSUFFICIENT"
+      ]
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1009",
+      "subject": "physics",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1010",
+      "subject": "physics",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL",
+        "OPERATIONAL_SCALE_OR_PURPOSE_IMPLAUSIBLE"
+      ]
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1011",
+      "subject": "physics",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL",
+        "OPERATIONAL_SCALE_OR_PURPOSE_IMPLAUSIBLE"
+      ]
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1012",
+      "subject": "physics",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1013",
+      "subject": "physics",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1014",
+      "subject": "physics",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    },
+    {
+      "candidateId": "CQ-PHYSICS-1015",
+      "subject": "physics",
+      "verdict": "reject",
+      "reasonCodes": [
+        "EN_LOCALIZATION_UNGRAMMATICAL"
+      ]
+    }
+  ],
+  "limitations": [
+    "Blind review only: no sealed answers, generator reasoning, Git history, old reviews, official question bodies, or publication state were consulted.",
+    "No external empirical source was used to calibrate operational realism; realism findings are reviewer judgments from the prompt facts.",
+    "Science candidates were rejected when their included English localization was not publication-ready, even when the numerical answer was independently unique."
+  ]
+}

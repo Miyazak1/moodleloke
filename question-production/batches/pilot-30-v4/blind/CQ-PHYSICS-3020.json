@@ -1,0 +1,152 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-PHYSICS-3020",
+  "subject": "physics",
+  "topicCode": "P-MAG-LORENTZ",
+  "topicTitle": "带电粒子在磁场中的运动",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "质量为 0.000003 kg、电荷量绝对值为 0.00002 C 的粒子，以 4 m/s 的速度垂直进入磁感应强度为 0.8 T 的匀强磁场。忽略重力，求圆周运动半径。",
+  "options": [
+    {
+      "id": "A",
+      "text": "0.48 m"
+    },
+    {
+      "id": "B",
+      "text": "1.3333 m"
+    },
+    {
+      "id": "C",
+      "text": "0.75 m"
+    },
+    {
+      "id": "D",
+      "text": "0.0469 m"
+    }
+  ],
+  "knowledgeTags": [
+    "带电粒子在磁场中的运动",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "physics",
+    "topicCode": "P-MAG-LORENTZ",
+    "topicTitle": "带电粒子在磁场中的运动",
+    "targetDifficulty": "medium",
+    "taskFamily": "magnetic_circular_radius",
+    "planTemplate": "pilot_v4_magnetic_circular_radius_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "704c37c15212cd3e4d8a4257",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "B",
+        "m",
+        "q",
+        "v"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "B",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "m",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "q",
+        "independentGroup": "g3"
+      },
+      {
+        "id": "e4",
+        "type": "visible_parameter",
+        "role": "v",
+        "independentGroup": "g4"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "magnetic force as centripetal force",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3",
+          "e4"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "radius with units",
+        "inputs": [
+          "r1"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "qvB=mv^2/r",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "r=mv/(qB)",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "漏掉电荷量",
+      "把速度放在分母"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "m": 0.000003,
+      "q": 0.00002,
+      "v": 4,
+      "B": 0.8
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 2
+  }
+}

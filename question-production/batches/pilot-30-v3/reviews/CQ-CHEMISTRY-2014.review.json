@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-CHEMISTRY-2014",
+  "reviewerTaskId": "01a0a489-caf4-75e3-8c3a-a92ea323f53c",
+  "derivedAnswer": "B",
+  "optionTruthTable": {
+    "A": false,
+    "B": true,
+    "C": false,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "medium",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "n(HCl)=0.025×0.12=0.003 mol，n(NaOH)=0.030×0.06=0.0018 mol；过量 H+ 为 0.0012 mol，总体积 0.055 L，[H+]=0.021818 mol/L。",
+    "pH=-lg(0.021818)=1.66118，约为 1.66，只有 B 符合。以各选项反算 [H+] 也只有 B 满足物料衡算。"
+  ],
+  "verdictBeforeReveal": "pass",
+  "reasonCodes": [],
+  "reviewedAt": "2026-09-15T18:11:48.7966294+08:00"
+}

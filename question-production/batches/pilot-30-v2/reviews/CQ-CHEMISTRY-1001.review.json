@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-CHEMISTRY-1001",
+  "reviewerTaskId": "01a0a477-1ae5-7880-93e0-6f44c2e06294",
+  "derivedAnswer": "A",
+  "optionTruthTable": {
+    "A": true,
+    "B": false,
+    "C": false,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "medium",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "[H+]=0.08*(50/1250)=0.0032 mol/L; pH=-log10(0.0032)=2.4949, rounding to 2.49. Only A matches.",
+    "The English localization is not publication-ready: it begins with a lowercase sentence fragment and repeatedly uses ungrammatical constructions such as \"The result supports\" followed by a bare verb."
+  ],
+  "verdictBeforeReveal": "reject",
+  "reasonCodes": [
+    "EN_LOCALIZATION_UNGRAMMATICAL"
+  ],
+  "reviewedAt": "2026-09-15T09:54:16.101Z"
+}

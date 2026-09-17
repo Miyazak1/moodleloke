@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "codex-question-repair-batch-v1",
+  "batchId": "pilot-30-v4-repair2-2026-09-15",
+  "candidateCount": 2,
+  "subject": "chemistry",
+  "language": "zh_primary_only",
+  "questionType": "single_choice",
+  "purpose": "为 Hess 题替代保留两个互异任务族的结构余量",
+  "topicCoverage": [
+    { "topicCode": "C-BASIC-005", "taskFamily": "ideal_gas_combined_state_application" },
+    { "topicCode": "C-THEORY-003", "taskFamily": "reaction_rate_stoichiometric_conversion" }
+  ],
+  "isolation": {
+    "providerCallsAllowed": false,
+    "officialQuestionContentRead": false,
+    "databaseQuestionTextRead": false,
+    "originalityPerItemHitsRead": false,
+    "reviewBodiesRead": false
+  }
+}

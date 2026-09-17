@@ -1,0 +1,229 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-CHEMISTRY-3009",
+  "subject": "chemistry",
+  "topicCode": "C-EQ-KC",
+  "topicTitle": "化学平衡",
+  "designedDifficulty": "hard",
+  "questionType": "single_choice",
+  "prompt": "在 1.0 L 恒容容器中发生反应 A(g)+B(g)⇌C(g)。起始时 A、B、C 的物质的量分别为 0.5 mol、0.4 mol、0；达到平衡时 C 为 0.2 mol。求该温度下的浓度平衡常数 Kc。",
+  "options": [
+    {
+      "id": "A",
+      "text": "10/3"
+    },
+    {
+      "id": "B",
+      "text": "1"
+    },
+    {
+      "id": "C",
+      "text": "0.4"
+    },
+    {
+      "id": "D",
+      "text": "0.3"
+    }
+  ],
+  "knowledgeTags": [
+    "化学平衡",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "chemistry",
+    "topicCode": "C-EQ-KC",
+    "topicTitle": "化学平衡",
+    "targetDifficulty": "hard",
+    "taskFamily": "equilibrium_constant_from_composition",
+    "planTemplate": "pilot_v4_equilibrium_constant_from_composition_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "e128994b02ef6e7b23d5d820",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "a",
+        "b",
+        "c"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "a",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "b",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "c",
+        "independentGroup": "g3"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "equilibrium extent",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "all equilibrium concentrations",
+        "inputs": [
+          "r1"
+        ],
+        "output": "intermediate_2"
+      },
+      {
+        "id": "r3",
+        "operation": "K expression",
+        "inputs": [
+          "r2"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "extent=c_eq",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "Aeq=A0-extent",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q3",
+        "type": "deterministic_relation",
+        "expression": "Beq=B0-extent",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q4",
+        "type": "deterministic_relation",
+        "expression": "Kc=Ceq/(Aeq Beq)",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "用初始浓度代入平衡常数",
+      "漏减反应物浓度"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "a": 0.5,
+      "b": 0.4,
+      "c": 0.2
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 1
+  },
+  "correctAnswer": "A",
+  "explanation": "容积为 1.0 L，平衡时 c(A)=0.3 mol/L，c(B)=0.2 mol/L，c(C)=0.2 mol/L。故 Kc=c(C)/[c(A)c(B)]=0.2/[0.3×0.2]=10/3。",
+  "generationMetadata": {
+    "origin": "codex_local_deterministic_v4",
+    "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v4",
+    "createdAt": "2026-09-15T16:00:00.000Z",
+    "languageScope": "zh_primary_only",
+    "providerCalls": 0,
+    "sourceIsolation": {
+      "officialQuestionContentRead": false,
+      "databaseQuestionTextRead": false,
+      "priorReviewTextRead": false
+    },
+    "deterministicVerification": {
+      "solver": {
+        "version": "pilot-v4-batch-local-solver-v1",
+        "status": "verified",
+        "taskFamily": "equilibrium_constant_from_composition",
+        "evidenceBoundary": "prompt_options_and_question_plan",
+        "expectedCanonical": 3.3333333333333335,
+        "selectedOptionId": "A",
+        "uniqueAnswer": true
+      },
+      "oracle": {
+        "version": "pilot-v4-independent-oracle-v1",
+        "status": "verified",
+        "implementation": "fresh_family_evaluation_from_canonical_inputs",
+        "expectedCanonical": 3.3333333333333335,
+        "agreesWithSolver": true
+      },
+      "optionTruthTable": [
+        {
+          "optionId": "A",
+          "verdict": true,
+          "canonicalValue": 3.3333333333333335
+        },
+        {
+          "optionId": "B",
+          "verdict": false,
+          "canonicalValue": 1
+        },
+        {
+          "optionId": "C",
+          "verdict": false,
+          "canonicalValue": 0.4
+        },
+        {
+          "optionId": "D",
+          "verdict": false,
+          "canonicalValue": 0.3
+        }
+      ],
+      "explanationReplay": {
+        "version": "pilot-v4-explanation-replay-v1",
+        "status": "verified",
+        "requiredEvidenceTokens": [
+          "平衡时",
+          "10/3"
+        ],
+        "allRequiredTokensPresent": true,
+        "conclusionMatchesAnswer": true
+      }
+    }
+  }
+}

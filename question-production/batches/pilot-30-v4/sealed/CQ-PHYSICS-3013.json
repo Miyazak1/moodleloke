@@ -1,0 +1,208 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-PHYSICS-3013",
+  "subject": "physics",
+  "topicCode": "P-OPT-LENS",
+  "topicTitle": "几何光学",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "一薄凸透镜焦距为 10 cm，物体垂直主轴放在距透镜 30 cm 处。按薄透镜公式求像距后，求像的线放大率绝对值。",
+  "options": [
+    {
+      "id": "A",
+      "text": "0.5"
+    },
+    {
+      "id": "B",
+      "text": "15"
+    },
+    {
+      "id": "C",
+      "text": "3"
+    },
+    {
+      "id": "D",
+      "text": "1.5"
+    }
+  ],
+  "knowledgeTags": [
+    "几何光学",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "physics",
+    "topicCode": "P-OPT-LENS",
+    "topicTitle": "几何光学",
+    "targetDifficulty": "medium",
+    "taskFamily": "thin_lens_magnification",
+    "planTemplate": "pilot_v4_thin_lens_magnification_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "53311d6bd59f62b04694186d",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "f",
+        "u"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "f",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "u",
+        "independentGroup": "g2"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "lens equation",
+        "inputs": [
+          "e1",
+          "e2"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "image distance",
+        "inputs": [
+          "r1"
+        ],
+        "output": "intermediate_2"
+      },
+      {
+        "id": "r3",
+        "operation": "magnification",
+        "inputs": [
+          "r2"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "1/f=1/u+1/v",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "|m|=v/u",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "把物距当像距",
+      "漏取像距与物距的比"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "f": 10,
+      "u": 30
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 1
+  },
+  "correctAnswer": "A",
+  "explanation": "由 1/f=1/u+1/v 得像距 v=15 cm。线放大率绝对值 |m|=v/u=15/30=0.5。",
+  "generationMetadata": {
+    "origin": "codex_local_deterministic_v4",
+    "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v4",
+    "createdAt": "2026-09-15T16:00:00.000Z",
+    "languageScope": "zh_primary_only",
+    "providerCalls": 0,
+    "sourceIsolation": {
+      "officialQuestionContentRead": false,
+      "databaseQuestionTextRead": false,
+      "priorReviewTextRead": false
+    },
+    "deterministicVerification": {
+      "solver": {
+        "version": "pilot-v4-batch-local-solver-v1",
+        "status": "verified",
+        "taskFamily": "thin_lens_magnification",
+        "evidenceBoundary": "prompt_options_and_question_plan",
+        "expectedCanonical": 0.5,
+        "selectedOptionId": "A",
+        "uniqueAnswer": true
+      },
+      "oracle": {
+        "version": "pilot-v4-independent-oracle-v1",
+        "status": "verified",
+        "implementation": "fresh_family_evaluation_from_canonical_inputs",
+        "expectedCanonical": 0.5,
+        "agreesWithSolver": true
+      },
+      "optionTruthTable": [
+        {
+          "optionId": "A",
+          "verdict": true,
+          "canonicalValue": 0.5
+        },
+        {
+          "optionId": "B",
+          "verdict": false,
+          "canonicalValue": 14.999999999999996
+        },
+        {
+          "optionId": "C",
+          "verdict": false,
+          "canonicalValue": 3
+        },
+        {
+          "optionId": "D",
+          "verdict": false,
+          "canonicalValue": 1.4999999999999996
+        }
+      ],
+      "explanationReplay": {
+        "version": "pilot-v4-explanation-replay-v1",
+        "status": "verified",
+        "requiredEvidenceTokens": [
+          "v=15",
+          "0.5"
+        ],
+        "allRequiredTokensPresent": true,
+        "conclusionMatchesAnswer": true
+      }
+    }
+  }
+}

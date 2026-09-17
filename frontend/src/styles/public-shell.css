@@ -1,0 +1,195 @@
+/* Shared public page shell. Feature files should only add styles under their own page roots. */
+.site-main-public {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0 0 88px;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(49, 93, 255, .052) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .052) 1px, transparent 1px),
+    linear-gradient(135deg, #fbfff9 0, #f6fbf6 42%, #eef8f7 100%);
+  background-size: 42px 42px, 42px 42px, auto;
+}
+
+.site-main-public::before {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  content: "";
+  background:
+    linear-gradient(116deg, transparent 0 18.9%, rgba(183, 239, 67, .045) 19% 19.8%, transparent 19.9% 100%),
+    linear-gradient(152deg, transparent 0 69.2%, rgba(255, 113, 94, .04) 69.3% 70.1%, transparent 70.2% 100%);
+}
+
+.site-main-public > .brand-page {
+  position: relative;
+  z-index: 1;
+  width: min(1160px, calc(100vw - 56px));
+  margin-inline: auto;
+  padding-top: 38px;
+}
+
+.site-main-public .error-banner {
+  position: relative;
+  z-index: 1;
+  width: min(1160px, calc(100vw - 56px));
+}
+
+.brand-page {
+  --public-ink: var(--ink-900);
+  --public-muted: var(--ink-700);
+  --public-soft: var(--ink-500);
+  --public-orange: #315dff;
+  --public-orange-dark: #1f42d6;
+  --public-line: #dbe8df;
+  --public-line-strong: #bfd6cc;
+  --public-panel: rgba(255, 255, 255, .88);
+  --public-panel-strong: var(--surface-strong);
+  --public-blush: #e9efff;
+  --public-shadow: var(--brand-shadow);
+  color: var(--public-ink);
+}
+
+.brand-page.page-stack {
+  gap: 42px;
+}
+
+.brand-page .page-hero {
+  max-width: none;
+  padding: 34px 0 28px;
+  border-bottom: 1px solid var(--public-line);
+}
+
+.brand-page .page-kicker {
+  color: #315dff;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.brand-page .page-hero h1 {
+  max-width: min(22ch, 100%);
+  color: var(--public-ink);
+  font-size: clamp(34px, 3.2vw, 46px);
+  line-height: 1.14;
+  letter-spacing: 0;
+}
+
+.brand-page .page-body,
+.brand-page .page-hero p,
+.brand-page .process-row p {
+  color: var(--public-muted);
+}
+
+.brand-page .inline-actions button,
+.brand-page .ghost {
+  min-height: 42px;
+  border-radius: 8px;
+  font-weight: 900;
+}
+
+.brand-page .inline-actions button:not(.ghost),
+.brand-practice-page .practice-submit button:not(.ghost) {
+  border-color: var(--public-orange);
+  background: var(--public-orange);
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(49, 93, 255, .18);
+}
+
+.brand-page .inline-actions .ghost,
+.brand-page .ghost {
+  border: 1px solid var(--public-line);
+  background: rgba(255, 255, 255, .86);
+  color: var(--public-orange-dark);
+  box-shadow: none;
+}
+
+.brand-page .inline-actions button:hover,
+.brand-page .ghost:hover {
+  border-color: rgba(49, 93, 255, .42);
+  transform: translateY(-1px);
+}
+
+.brand-page .source-line {
+  color: var(--public-soft);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.brand-page .school-empty-state {
+  border-color: var(--public-line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .82);
+  box-shadow: 0 16px 42px rgba(32, 35, 55, .055);
+}
+
+.brand-page .page-hero .inline-actions {
+  margin-top: 8px;
+}
+
+.brand-page .process-list {
+  overflow: hidden;
+  border: 1px solid var(--public-line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .82);
+  box-shadow: 0 16px 42px rgba(32, 35, 55, .055);
+}
+
+.brand-page .process-row {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 22px;
+  padding: 22px 24px;
+  border-color: var(--public-line);
+}
+
+.brand-page .process-row > span {
+  display: inline-grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid var(--public-line-strong);
+  border-radius: 999px;
+  color: var(--public-orange);
+  letter-spacing: 0;
+}
+
+.brand-page .process-row strong {
+  color: var(--public-ink);
+  font-size: 20px;
+}
+
+.brand-page .process-row b {
+  color: var(--public-orange-dark);
+}
+
+@media (max-width: 980px) {
+  .site-main-public > .brand-page,
+  .site-main-public .error-banner {
+    width: min(100%, calc(100vw - 32px));
+  }
+}
+
+@media (max-width: 640px) {
+  .brand-page .page-hero h1 {
+    max-width: none;
+    font-size: 36px;
+    line-height: 1.16;
+  }
+}
+
+@media (max-width: 620px) {
+  .brand-page .page-hero {
+    padding: 24px 0 20px;
+  }
+
+  .brand-page .process-row {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .brand-page .process-row b {
+    grid-column: 2;
+  }
+}

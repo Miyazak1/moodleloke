@@ -1,0 +1,98 @@
+[
+  {
+    "nameZh": "示例大学",
+    "nameEn": "Example University",
+    "region": "Shanghai",
+    "schoolType": "regular",
+    "cscaRequired": true,
+    "cscaRequirementNote": "理工科项目通常要求数学、物理；文科项目按招生简章确认。",
+    "languageRequirement": "中文授课项目通常要求 HSK 4；英文授课项目要求 IELTS/TOEFL 或同等证明。",
+    "languageOfInstruction": ["中文授课", "英文授课"],
+    "tuitionSummary": "RMB 22000-32000/年",
+    "applicationFee": "RMB 400",
+    "officialWebsiteUrl": "https://example.edu.cn",
+    "admissionsWebsiteUrl": "https://admission.example.edu.cn",
+    "sourceUrl": "https://admission.example.edu.cn/csca",
+    "sourceLabel": "国际学生招生简章",
+    "lastVerifiedAt": "2026-05-08",
+    "programFields": ["Computer Science", "Business Administration"],
+    "englishPrograms": "Computer Science, International Business",
+    "scholarships": ["大学奖学金"],
+    "cscaRules": [
+      {
+        "title": "理工科类",
+        "category": "理工科类",
+        "scope": "本科理工科中文/英文授课项目",
+        "cscaSubjects": ["数学", "物理"],
+        "languageCondition": "中文授课参考 HSK 4；英文授课参考英语成绩。",
+        "description": "申请理工类项目时，学校将参考 CSCA 数学和物理成绩。",
+        "importantNote": "具体考试科目以当年招生简章和项目页面为准。",
+        "sourceUrl": "https://admission.example.edu.cn/csca",
+        "sourceLabel": "CSCA 要求说明",
+        "lastVerifiedAt": "2026-05-08",
+        "sortOrder": 1,
+        "status": "published"
+      },
+      {
+        "title": "HSK 免考资格",
+        "category": "HSK 免考资格",
+        "scope": "部分英文授课项目",
+        "cscaSubjects": [],
+        "languageCondition": "英文授课项目可提交英语成绩，是否免 HSK 以项目要求为准。",
+        "description": "该规则用于记录语言条件，不代表所有项目自动免 HSK。",
+        "sourceUrl": "https://admission.example.edu.cn/language",
+        "sourceLabel": "语言要求",
+        "lastVerifiedAt": "2026-05-08",
+        "sortOrder": 2,
+        "status": "published"
+      }
+    ],
+    "programs": [
+      {
+        "nameZh": "计算机科学与技术",
+        "nameEn": "Computer Science and Technology",
+        "degreeLevel": "本科",
+        "durationYears": "4",
+        "fieldCategory": "Engineering",
+        "teachingLanguage": "英文授课",
+        "cscaSubjects": ["数学", "物理"],
+        "cscaRequirement": "数学 + 物理",
+        "hskRequirement": "待确认",
+        "englishRequirement": "IELTS 6.0 或同等英语能力证明",
+        "tuitionAmount": 30000,
+        "tuitionCurrency": "RMB",
+        "tuitionPeriod": "year",
+        "tuitionText": "RMB 30000/年",
+        "scholarshipText": "可申请大学奖学金或 CSC",
+        "openDate": "2026-01-15",
+        "deadlineDate": "2026-06-30",
+        "deadlineLabel": "2026 年 6 月 30 日",
+        "applicationRound": "2026 秋季本科",
+        "applicationUrl": "https://admission.example.edu.cn/apply/cs",
+        "applicationNote": "需在网申系统提交成绩单、护照、语言证明和 CSCA 成绩。",
+        "sourceUrl": "https://admission.example.edu.cn/programs/cs",
+        "sourceLabel": "项目页面",
+        "lastVerifiedAt": "2026-05-08",
+        "sortOrder": 1,
+        "status": "published"
+      }
+    ],
+    "scholarshipsDetailed": [
+      {
+        "name": "中国政府奖学金",
+        "type": "csc",
+        "coverage": "全额或部分资助",
+        "applicableDegree": "本科/硕士",
+        "applicableProgram": "以 CSC 当年可申请项目为准",
+        "amountText": "学费、住宿费、生活费等以 CSC 公告为准",
+        "requirementText": "需符合 CSC 和学校国际学生招生要求。",
+        "sourceUrl": "https://admission.example.edu.cn/scholarships/csc",
+        "sourceLabel": "CSC 奖学金说明",
+        "lastVerifiedAt": "2026-05-08",
+        "sortOrder": 1,
+        "status": "published"
+      }
+    ],
+    "status": "published"
+  }
+]

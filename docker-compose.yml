@@ -1,0 +1,35 @@
+name: moodlelike
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: moodlelike-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: moodlelike
+    ports:
+      - "56432:5432"
+    volumes:
+      - moodlelike_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d moodlelike"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: moodlelike-redis
+    restart: unless-stopped
+    ports:
+      - "${CSC_REDIS_PORT:-57379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  moodlelike_postgres_data:

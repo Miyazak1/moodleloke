@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-CHEMISTRY-1014",
+  "reviewerTaskId": "01a0a477-1ae5-7880-93e0-6f44c2e06294",
+  "derivedAnswer": "B",
+  "optionTruthTable": {
+    "A": false,
+    "B": true,
+    "C": false,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "medium",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "n(H+)=0.025*0.12=0.003 mol; n(OH-)=0.030*0.06=0.0018 mol. Excess [H+]=0.0012/0.055=0.021818 mol/L, so pH=1.6612, rounding to 1.66. Only B matches.",
+    "The English localization is not publication-ready: it begins with a lowercase sentence fragment and repeatedly uses ungrammatical constructions such as \"The result supports\" followed by a bare verb."
+  ],
+  "verdictBeforeReveal": "reject",
+  "reasonCodes": [
+    "EN_LOCALIZATION_UNGRAMMATICAL"
+  ],
+  "reviewedAt": "2026-09-15T09:54:16.101Z"
+}

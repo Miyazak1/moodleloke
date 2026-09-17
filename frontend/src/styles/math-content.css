@@ -1,0 +1,74 @@
+.math-content {
+  display: inline;
+  min-width: 0;
+  max-width: 100%;
+  line-height: inherit;
+  overflow-wrap: anywhere;
+}
+
+.math-content [data-math-formula="true"] {
+  box-sizing: border-box;
+}
+
+.math-content .katex {
+  font-size: 1.03em;
+  line-height: normal;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.math-content .katex,
+.math-content .katex * {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  flex: initial;
+  gap: normal;
+  min-width: 0;
+  max-width: none;
+}
+
+.math-content-inline {
+  display: inline-block;
+  max-width: none;
+  line-height: 1.7;
+  overflow: visible;
+  vertical-align: -0.15em;
+  padding: 0 1px;
+}
+
+.math-content-fallback {
+  display: inline;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.math-content-block {
+  display: block;
+  max-width: 100%;
+  margin: 10px 0;
+  overflow-x: auto;
+  overflow-y: visible;
+  padding: 0 1px 0.18em;
+}
+
+.math-content .katex-display {
+  max-width: 100%;
+  margin: 0.45em 0;
+  overflow-x: auto;
+  overflow-y: visible;
+  padding-bottom: 0.18em;
+}
+
+.math-content .katex-html {
+  overflow: visible;
+}
+
+.special-question-card h1 .math-content .katex {
+  font-size: 1.08em;
+}
+
+.special-answer-options .math-content {
+  display: inline;
+}

@@ -1,0 +1,370 @@
+.ph-titration-card {
+  display:grid;
+  grid-template-columns:280px minmax(0,1fr) 240px;
+  gap:16px;
+  align-items:stretch;
+  padding:18px;
+  background:#fffdf9
+}
+
+.ph-titration-controls,.ph-titration-stage,.ph-titration-metrics {
+  min-width:0;
+  border:1px solid var(--public-line);
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 14px 36px #1720330f
+}
+
+.ph-titration-controls {
+  display:grid;
+  align-content:start;
+  gap:14px;
+  padding:16px
+}
+
+.ph-stage-card {
+  display:grid;
+  gap:6px;
+  padding:14px;
+  border:1px solid rgba(66,107,146,.2);
+  border-radius:12px;
+  background:var(--public-soft)
+}
+
+.ph-stage-card span,.ph-titration-controls label span,.ph-titration-metrics span {
+  color:var(--public-muted);
+  font-size:12px;
+  font-weight:900
+}
+
+.ph-stage-card strong {
+  color:var(--public-ink);
+  font-size:20px
+}
+
+.ph-stage-card p {
+  margin:0;
+  color:var(--public-muted);
+  line-height:1.6;
+  font-weight:850
+}
+
+.ph-acid-picker {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px
+}
+
+.ph-acid-picker button {
+  min-height:76px;
+  display:grid;
+  gap:3px;
+  justify-items:start;
+  padding:11px 12px;
+  border:1px solid var(--public-line);
+  border-radius:12px;
+  background:#fff;
+  color:var(--public-ink);
+  text-align:left
+}
+
+.ph-acid-picker button.active {
+  border-color:var(--public-orange);
+  background:var(--public-soft)
+}
+
+.ph-acid-picker span {
+  color:var(--public-orange);
+  font-weight:950
+}
+
+.ph-acid-picker strong {
+  font-size:15px
+}
+
+.ph-acid-picker small {
+  color:var(--public-muted);
+  font-weight:850
+}
+
+.ph-titration-controls label {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:8px;
+  align-items:center
+}
+
+.ph-titration-controls label input {
+  grid-column:1 / -1;
+  width:100%;
+  accent-color:var(--public-orange)
+}
+
+.ph-titration-controls label strong {
+  color:var(--public-orange);
+  font-size:13px
+}
+
+.ph-titration-actions {
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px
+}
+
+.ph-titration-actions button {
+  min-height:42px;
+  display:inline-flex;
+  gap:7px;
+  align-items:center;
+  justify-content:center;
+  padding:10px 14px;
+  border:1px solid var(--public-orange);
+  border-radius:999px;
+  background:var(--public-orange);
+  color:#fff;
+  font-weight:900;
+  box-shadow:0 12px 24px #315dff24
+}
+
+.ph-titration-actions button.ghost {
+  border-color:var(--public-line);
+  background:#fff;
+  color:var(--public-ink);
+  box-shadow:none
+}
+
+.ph-titration-stage {
+  display:grid;
+  gap:14px;
+  padding:16px;
+  background:linear-gradient(180deg,#fffefa,#f8fbff)
+}
+
+.ph-lab-panel {
+  position:relative;
+  min-height:270px;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  border:1px solid #dbe4ef;
+  border-radius:12px;
+  background:#f8fbff
+}
+
+.ph-burette {
+  position:absolute;
+  top:18px;
+  left:36%;
+  width:18px;
+  height:70px;
+  border:2px solid #94a3b8;
+  background:#c7d2fe
+}
+
+.ph-burette span {
+  position:absolute;
+  left:24px;
+  top:2px;
+  color:#315dff;
+  font-size:12px;
+  font-weight:950
+}
+
+.ph-beaker {
+  position:absolute;
+  left:18%;
+  bottom:34px;
+  width:210px;
+  height:150px;
+  overflow:hidden;
+  border:3px solid #94a3b8;
+  border-top:0;
+  border-radius:0 0 12px 12px;
+  background:#fff
+}
+
+.ph-solution {
+  position:absolute;
+  right:0;
+  bottom:0;
+  left:0;
+  transition:height .2s ease,background .2s ease
+}
+
+.ph-beaker.acidic .ph-solution {
+  background:#f8717180
+}
+
+.ph-beaker.neutral .ph-solution {
+  background:#4ade8061
+}
+
+.ph-beaker.basic .ph-solution {
+  background:#60a5fa6b
+}
+
+.ph-beaker span {
+  position:absolute;
+  right:0;
+  bottom:8px;
+  left:0;
+  color:#5f6f69;
+  font-size:12px;
+  font-weight:900;
+  text-align:center
+}
+
+.ph-meter {
+  position:absolute;
+  right:12%;
+  top:54px;
+  width:136px;
+  display:grid;
+  gap:8px;
+  justify-items:center;
+  padding:14px 12px;
+  border:3px solid #94a3b8;
+  border-radius:14px;
+  background:#f8fafc
+}
+
+.ph-meter span {
+  color:#5f6f69;
+  font-size:12px;
+  font-weight:950
+}
+
+.ph-meter strong {
+  width:100%;
+  padding:8px 10px;
+  border-radius:7px;
+  background:#0f172a;
+  color:#ef4444;
+  font-size:30px;
+  line-height:1;
+  text-align:center
+}
+
+.ph-meter b {
+  color:var(--public-orange)
+}
+
+.ph-mini-scale {
+  position:relative;
+  width:98px;
+  height:12px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#ef4444,#f1a826 25%,#4ade80,#38bdf8 75%,#8b5cf6)
+}
+
+.ph-mini-scale i {
+  position:absolute;
+  top:-4px;
+  width:6px;
+  height:20px;
+  border-radius:999px;
+  background:#0f172a;
+  transform:translate(-50%)
+}
+
+.ph-titration-chart {
+  width:100%;
+  height:auto;
+  min-height:280px;
+  border:1px solid var(--public-line);
+  border-radius:12px;
+  background:#fffaf0
+}
+
+.ph-titration-chart .axis {
+  stroke:#8ea0ba;
+  stroke-width:1.6
+}
+
+.ph-titration-chart .grid {
+  stroke:#cbd5e194
+}
+
+.ph-titration-chart .grid.neutral {
+  stroke:#3b82f657;
+  stroke-dasharray:5 6
+}
+
+.ph-titration-chart .curve {
+  fill:none;
+  stroke:var(--public-orange);
+  stroke-width:3.2;
+  stroke-linecap:round
+}
+
+.ph-titration-chart .equivalence {
+  stroke:#ef4444;
+  stroke-dasharray:6 6;
+  stroke-width:1.8
+}
+
+.ph-titration-chart .half-equivalence {
+  stroke:#3b82f6;
+  stroke-dasharray:4 7;
+  stroke-width:1.6
+}
+
+.ph-titration-chart .time-marker {
+  stroke:#0f172a47;
+  stroke-dasharray:5 6
+}
+
+.ph-titration-chart .current-dot {
+  fill:#ef4444;
+  stroke:#fff;
+  stroke-width:3
+}
+
+.ph-titration-chart .axis-label,.ph-titration-chart .equivalence-label {
+  fill:#8190a8;
+  font-size:12px;
+  font-weight:850
+}
+
+.ph-titration-chart .equivalence-label {
+  fill:#ef4444
+}
+
+.ph-titration-chart .rotate {
+  transform-box:fill-box;
+  transform-origin:center;
+  transform:rotate(-90deg)
+}
+
+.ph-titration-metrics {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  align-content:start;
+  padding:16px
+}
+
+.ph-titration-metrics article {
+  display:grid;
+  gap:5px;
+  padding:14px;
+  border:1px solid var(--public-line);
+  border-radius:12px;
+  background:#fffefa
+}
+
+.ph-titration-metrics strong {
+  color:var(--public-ink);
+  font-size:19px;
+  line-height:1.2;
+  overflow-wrap:anywhere
+}
+
+.ph-titration-metrics article:first-child strong {
+  color:#ef4444;
+  font-size:34px
+}
+
+.ph-titration-support article {
+  min-width:0
+}

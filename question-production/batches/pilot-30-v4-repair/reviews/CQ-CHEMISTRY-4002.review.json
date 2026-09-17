@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-CHEMISTRY-4002",
+  "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+  "derivedAnswer": "A",
+  "optionTruthTable": {
+    "A": true,
+    "B": false,
+    "C": false,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "hard",
+  "caseNecessary": false,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "题面自足性：样品质量、完全燃烧产物质量、M(CO2)=44 g/mol、M(H2O)=18 g/mol以及C/H/O相对原子质量均明示，差量求氧不依赖外部常数。",
+    "独立计算：n(C)=8.8/44=0.20 mol；n(H)=2×5.4/18=0.60 mol；样品中m(O)=4.6-12×0.20-1×0.60=1.6 g，n(O)=1.6/16=0.10 mol。",
+    "原子数比C:H:O=0.20:0.60:0.10=2:6:1，最简整数比给出实验式C2H6O，对应A。",
+    "选项核验：B的1:3:1、C的1:2:0、D的1:3:0均与独立求得的2:6:1不符，只有A成立。",
+    "条件与表述：限定样品只含C、H、O且完全燃烧，使产物归属与氧差量唯一；质量单位一致，题意无歧义。",
+    "难度与考纲：需从两种燃烧产物反推C、H，再用质量守恒差量求O并约最简比，多步综合，hard标注可以接受；属于有机物组成分析考纲范围。",
+    "反例检查：尝试将水的物质的量误作氢原子物质的量会产生非题设守恒的比例；逐项回代后其余三个式均不能同时重现C、H、O三者的测得质量。"
+  ],
+  "verdictBeforeReveal": "pass",
+  "reasonCodes": [],
+  "reviewedAt": "2026-09-15T18:56:29+08:00"
+}

@@ -1,0 +1,730 @@
+{
+  "schemaVersion": "codex-question-candidate-v1",
+  "candidateId": "CQ-MATH-0008",
+  "subject": "math",
+  "topicCode": "M-FUNC-001",
+  "topicTitle": "基本初等函数",
+  "designedDifficulty": "basic",
+  "questionType": "single_choice",
+  "prompt": "已知函数 f(x)=√(-23x+1587)，判断它在给定区间上的单调性。",
+  "options": [
+    {
+      "id": "A",
+      "text": "若反转内部斜率 -23 的作用，会误判为在定义域内单调递增"
+    },
+    {
+      "id": "B",
+      "text": "若忽略根号约束（内部斜率 -23），会误写成在 R 上单调递减"
+    },
+    {
+      "id": "C",
+      "text": "因内部斜率 -23<0，函数在定义域内单调递减"
+    },
+    {
+      "id": "D",
+      "text": "忽略可行输入约束，断言函数在 [69,+∞) 上单调递减"
+    }
+  ],
+  "correctAnswer": "C",
+  "explanation": "可取输入由 -23x+1587≥0 确定，即 (-∞,69]。任选 u<v，内部量从 u 到 v 的增量是 -23(v-u)<0；再开平方仍保持先后，故在该区间单调递减。",
+  "knowledgeTags": [
+    "基本初等函数",
+    "根式函数",
+    "单调性"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "math",
+    "topicId": 69,
+    "topicTitle": "基本初等函数",
+    "productionCellId": 16,
+    "targetDifficulty": "basic",
+    "taskFamily": "elementary_function_direct_property",
+    "planTemplate": "math_elementary_function_relation_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "pureMathStemOnly": true,
+      "forbidGenericFunctionListClassification": true,
+      "forbidElementaryFunctionExternalContextWrapper": true,
+      "requireMediumElementaryConcreteExpressionRelation": false,
+      "requireBasicElementarySingleObjectSingleTarget": true,
+      "singlePropertyTargetContractVersion": "math-basic-elementary-single-property-target-v1",
+      "allowedSinglePropertyTargets": [
+        "function_value",
+        "domain",
+        "range",
+        "monotonicity"
+      ],
+      "requiredSinglePropertyTarget": "monotonicity",
+      "requiredElementaryFunctionClass": "radical",
+      "forbidCrossPropertyDistractors": true,
+      "forbidBasicElementaryEquationSolve": true,
+      "forbidBasicElementaryOrderingChain": true,
+      "forbidBasicElementaryParameterInference": true,
+      "forbidBasicElementaryTargetProfileInflation": true,
+      "maxFunctionPropertyStack": 1,
+      "maxEnumeratedConditions": 1,
+      "maxFunctionObjects": 1,
+      "maxIndependentRelations": 1,
+      "finalAnswerShape": "one_direct_elementary_function_property_or_value",
+      "preferredPromptSkeletons": [
+        "给出一个指数/对数/幂/根式函数表达式，只求定义域、单调性或一个函数值中的一项；题干与解析均不得提及未考查性质",
+        "给出 log_a x、a^x、x^n 或一个简单根式的具体参数，只判断一个直接性质；不要用“无需判断其他性质”等否定措辞列出其他性质"
+      ]
+    },
+    "budget": {
+      "maxPlanRepairs": 2,
+      "maxCandidateRepairs": 1
+    },
+    "scenarioContract": {
+      "schemaVersion": "subject-practice-scenario-contract-v1",
+      "policyVersion": "subject-practice-scenario-diversity-shadow-v2-multi-evidence-status",
+      "stage": "shadow_only_thresholds_not_frozen",
+      "scenarioMode": "abstract",
+      "scenarioFamilyId": "math_abstract_function_object",
+      "scenarioDomain": "pure_mathematics",
+      "scenarioEntity": "function_object",
+      "scenarioAction": "radical:monotonicity",
+      "informationForm": "symbolic_text",
+      "scenarioFingerprint": "scenario-09771cb83dc8ef839424",
+      "contextNecessity": "not_applicable",
+      "requiredInformationFields": [],
+      "solverRelevantFields": [],
+      "surface": {
+        "zhEntity": "",
+        "enEntity": "",
+        "zhSetting": "",
+        "enSetting": "",
+        "cueTokens": []
+      },
+      "plausibility": {
+        "externalContextForbidden": true
+      },
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "controlled_catalog_and_sealed_ordinal_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "elementary_function_object",
+        "role": "exponential_logarithmic_power_or_radical_expression",
+        "independentGroup": "e1"
+      },
+      {
+        "id": "e2",
+        "type": "domain_order_or_graph_condition",
+        "role": "domain_range_monotonicity_order_interval_or_graph_intersection",
+        "independentGroup": "e1"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "identify_elementary_function_domain_or_expression",
+        "inputs": [
+          "e1"
+        ],
+        "output": "function_frame"
+      },
+      {
+        "id": "r2",
+        "operation": "apply_domain_order_or_graph_condition",
+        "inputs": [
+          "function_frame",
+          "e2"
+        ],
+        "output": "intermediate_relation"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "elementary_function_relation_round_trip",
+        "expression": "domain, order, graph, inverse, or inequality relation checks the selected result",
+        "variables": [
+          "x",
+          "log",
+          "exp",
+          "power"
+        ],
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "ignoring domain restrictions",
+      "comparing logs or powers by decimal guessing only",
+      "medium elementary-function item as a generic function-list classification without a given expression relation",
+      "hard elementary-function item without a second bound or parameter relation"
+    ],
+    "answerDerivation": [
+      "use the elementary-function object and one visible relation to determine the answer"
+    ],
+    "uniquenessConditions": [
+      "only one option satisfies all visible elementary-function relations"
+    ]
+  },
+  "localizations": {
+    "zh": {
+      "prompt": "已知函数 f(x)=√(-23x+1587)，判断它在给定区间上的单调性。",
+      "options": [
+        {
+          "id": "A",
+          "text": "若反转内部斜率 -23 的作用，会误判为在定义域内单调递增"
+        },
+        {
+          "id": "B",
+          "text": "若忽略根号约束（内部斜率 -23），会误写成在 R 上单调递减"
+        },
+        {
+          "id": "C",
+          "text": "因内部斜率 -23<0，函数在定义域内单调递减"
+        },
+        {
+          "id": "D",
+          "text": "忽略可行输入约束，断言函数在 [69,+∞) 上单调递减"
+        }
+      ],
+      "explanation": "可取输入由 -23x+1587≥0 确定，即 (-∞,69]。任选 u<v，内部量从 u 到 v 的增量是 -23(v-u)<0；再开平方仍保持先后，故在该区间单调递减。",
+      "knowledgeTags": [
+        "基本初等函数",
+        "根式函数",
+        "单调性"
+      ]
+    },
+    "en": {
+      "prompt": "For f(x)=sqrt(-23x+1587), determine its monotonicity on the stated interval.",
+      "options": [
+        {
+          "id": "A",
+          "text": "Reversing the effect of inner slope -23 would incorrectly make it increasing on its domain"
+        },
+        {
+          "id": "B",
+          "text": "With inner slope -23, ignoring the radical constraint would incorrectly claim decreasing on R"
+        },
+        {
+          "id": "C",
+          "text": "With inner slope -23<0, the function is decreasing on its domain"
+        },
+        {
+          "id": "D",
+          "text": "Ignoring feasible inputs, claim that the function is decreasing on [69,+∞)"
+        }
+      ],
+      "explanation": "Allowed x: (-∞,69]. For u<v: delta-r=-23(v-u)<0 -> f(u)>f(v). f: decreasing; (-∞,69].",
+      "knowledgeTags": [
+        "Elementary functions"
+      ]
+    }
+  },
+  "generationMetadata": {
+    "origin": "codex_dual_session_pilot",
+    "generatorTaskId": "pilot-30-generator-task-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v1",
+    "createdAt": "2026-09-15T10:00:00.000Z",
+    "family": "elementary_bounded",
+    "seed": 122,
+    "generatorVersion": "math-elementary-local-generator-v6-formula-evidence",
+    "scopeId": "math-basic-elementary-rotation-v1:radical:monotonicity",
+    "deterministicVerification": {
+      "solver": {
+        "solverVersion": "math-elementary-direct-property-solver-v1",
+        "taskFamily": "elementary_function_direct_property",
+        "status": "verified",
+        "parsed": true,
+        "functionKind": "radical",
+        "canonicalTask": {
+          "model": {
+            "kind": "radical",
+            "coefficient": -23,
+            "offset": 1587
+          },
+          "propertyTarget": "monotonicity",
+          "evaluationInput": null
+        },
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "false",
+            "property": "monotonicity",
+            "reasonCode": "math_solver_monotonicity_direction_mismatch",
+            "semanticValue": {
+              "kind": "monotonicity",
+              "direction": "increasing",
+              "interval": {
+                "lower": "-infinity",
+                "upper": 69,
+                "lowerClosed": false,
+                "upperClosed": true
+              }
+            }
+          },
+          {
+            "optionId": "B",
+            "verdict": "false",
+            "property": "monotonicity",
+            "reasonCode": "math_solver_monotonicity_interval_outside_domain",
+            "semanticValue": {
+              "kind": "monotonicity",
+              "direction": "decreasing",
+              "interval": {
+                "lower": "-infinity",
+                "upper": "infinity",
+                "lowerClosed": false,
+                "upperClosed": false
+              }
+            }
+          },
+          {
+            "optionId": "C",
+            "verdict": "true",
+            "property": "monotonicity",
+            "reasonCode": "math_solver_monotonicity_matches",
+            "semanticValue": {
+              "kind": "monotonicity",
+              "direction": "decreasing",
+              "interval": {
+                "lower": "-infinity",
+                "upper": 69,
+                "lowerClosed": false,
+                "upperClosed": true
+              }
+            }
+          },
+          {
+            "optionId": "D",
+            "verdict": "false",
+            "property": "monotonicity",
+            "reasonCode": "math_solver_monotonicity_interval_outside_domain",
+            "semanticValue": {
+              "kind": "monotonicity",
+              "direction": "decreasing",
+              "interval": {
+                "lower": 69,
+                "upper": "infinity",
+                "lowerClosed": true,
+                "upperClosed": false
+              }
+            }
+          }
+        ],
+        "trueOptionIds": [
+          "C"
+        ],
+        "selectedOptionId": "C",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": [
+          "math_solver_monotonicity_direction_mismatch",
+          "math_solver_monotonicity_interval_outside_domain",
+          "math_solver_monotonicity_matches"
+        ],
+        "verificationScope": {
+          "scopeVersion": "math-elementary-direct-property-verification-scope-v1",
+          "scopeId": "math-basic-elementary-rotation-v1:radical:monotonicity",
+          "status": "matched",
+          "matched": true,
+          "plannedFunctionClass": "radical",
+          "plannedPropertyTarget": "monotonicity",
+          "observedFunctionClass": "radical",
+          "observedPropertyTargets": [
+            "monotonicity"
+          ],
+          "reasonCodes": []
+        }
+      },
+      "oracle": {
+        "oracleVersion": "math-elementary-independent-oracle-v1",
+        "status": "verified",
+        "functionClass": "radical",
+        "propertyTarget": "monotonicity",
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "false"
+          },
+          {
+            "optionId": "B",
+            "verdict": "false"
+          },
+          {
+            "optionId": "C",
+            "verdict": "true"
+          },
+          {
+            "optionId": "D",
+            "verdict": "false"
+          }
+        ],
+        "trueOptionIds": [
+          "C"
+        ],
+        "selectedOptionId": "C",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "scopeId": "math-basic-elementary-rotation-v1:radical:monotonicity",
+        "scopeMatched": true,
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      },
+      "explanation": {
+        "verifierVersion": "math-elementary-explanation-verifier-v3-formula-evidence",
+        "status": "verified",
+        "solverEvidence": {
+          "solverVersion": "math-elementary-direct-property-solver-v1",
+          "taskFamily": "elementary_function_direct_property",
+          "status": "verified",
+          "parsed": true,
+          "functionKind": "radical",
+          "canonicalTask": {
+            "model": {
+              "kind": "radical",
+              "coefficient": -23,
+              "offset": 1587
+            },
+            "propertyTarget": "monotonicity",
+            "evaluationInput": null
+          },
+          "optionVerdicts": [
+            {
+              "optionId": "A",
+              "verdict": "false",
+              "property": "monotonicity",
+              "reasonCode": "math_solver_monotonicity_direction_mismatch",
+              "semanticValue": {
+                "kind": "monotonicity",
+                "direction": "increasing",
+                "interval": {
+                  "lower": "-infinity",
+                  "upper": 69,
+                  "lowerClosed": false,
+                  "upperClosed": true
+                }
+              }
+            },
+            {
+              "optionId": "B",
+              "verdict": "false",
+              "property": "monotonicity",
+              "reasonCode": "math_solver_monotonicity_interval_outside_domain",
+              "semanticValue": {
+                "kind": "monotonicity",
+                "direction": "decreasing",
+                "interval": {
+                  "lower": "-infinity",
+                  "upper": "infinity",
+                  "lowerClosed": false,
+                  "upperClosed": false
+                }
+              }
+            },
+            {
+              "optionId": "C",
+              "verdict": "true",
+              "property": "monotonicity",
+              "reasonCode": "math_solver_monotonicity_matches",
+              "semanticValue": {
+                "kind": "monotonicity",
+                "direction": "decreasing",
+                "interval": {
+                  "lower": "-infinity",
+                  "upper": 69,
+                  "lowerClosed": false,
+                  "upperClosed": true
+                }
+              }
+            },
+            {
+              "optionId": "D",
+              "verdict": "false",
+              "property": "monotonicity",
+              "reasonCode": "math_solver_monotonicity_interval_outside_domain",
+              "semanticValue": {
+                "kind": "monotonicity",
+                "direction": "decreasing",
+                "interval": {
+                  "lower": 69,
+                  "upper": "infinity",
+                  "lowerClosed": true,
+                  "upperClosed": false
+                }
+              }
+            }
+          ],
+          "trueOptionIds": [
+            "C"
+          ],
+          "selectedOptionId": "C",
+          "uniqueAnswer": true,
+          "agreesWithGenerator": true,
+          "evidenceBoundary": "prompt_and_visible_options_only",
+          "providerImpact": "none_no_provider_call",
+          "productionGateImpact": "none_shadow_only",
+          "reasonCodes": [
+            "math_solver_monotonicity_direction_mismatch",
+            "math_solver_monotonicity_interval_outside_domain",
+            "math_solver_monotonicity_matches"
+          ],
+          "verificationScope": {
+            "scopeVersion": "math-elementary-direct-property-verification-scope-v1",
+            "scopeId": "math-basic-elementary-rotation-v1:radical:monotonicity",
+            "status": "matched",
+            "matched": true,
+            "plannedFunctionClass": "radical",
+            "plannedPropertyTarget": "monotonicity",
+            "observedFunctionClass": "radical",
+            "observedPropertyTargets": [
+              "monotonicity"
+            ],
+            "reasonCodes": []
+          }
+        },
+        "recomputedWithoutGeneratorExplanation": true,
+        "formulaInputsUnitsAndConclusionChecked": true,
+        "checks": [
+          {
+            "language": "zh",
+            "derivationMatched": true,
+            "conclusionMatched": true,
+            "reasonCodes": []
+          },
+          {
+            "language": "en",
+            "derivationMatched": true,
+            "conclusionMatched": true,
+            "reasonCodes": []
+          }
+        ],
+        "mismatchCount": 0,
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      }
+    },
+    "questionPlanAdherence": {
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "validPlan": true,
+      "adheres": true,
+      "planTemplate": "math_elementary_function_relation_v1",
+      "taskFamily": "elementary_function_direct_property",
+      "failureCodes": [],
+      "features": {
+        "operationWords": 0,
+        "observationWords": 0,
+        "hypothesisMarkers": 0,
+        "reasoningConnectors": 2,
+        "quantitativeMarkers": 0,
+        "reactionClues": 4,
+        "gasSpeciesMarkers": 5,
+        "gasControlMarkers": 0,
+        "redoxReactionMarkers": 0,
+        "redoxConceptMarkers": 0,
+        "redoxQuantitativeChainMarkers": 3,
+        "mathPropertySignals": 21,
+        "mathStatementMarkers": 5,
+        "mathTransformationSignals": 3,
+        "mathOrderingSignals": 4,
+        "mathParameterConstraintSignals": 4,
+        "mathProbabilitySignals": 0,
+        "mathProbabilityEventLabelCount": 0,
+        "mathProbabilityNormalHardInteractionCueCount": 0,
+        "mathProbabilityHardInteractionCueCount": 1,
+        "mathProbabilityConcreteFrameSignals": 0,
+        "mathProbabilityNormalMediumNoEventRisk": false,
+        "mathProbabilityNormalReferenceTableRisk": false,
+        "mathProbabilityConceptOnlyRisk": false,
+        "mathProbabilitySingleResultRisk": false,
+        "mathProbabilityEventListOnlyRisk": false,
+        "mathDerivativeSignals": 16,
+        "mathDerivativeMediumDefinitionOnlyRisk": false,
+        "mathDerivativeHardCoefficientSolveOnlyRisk": false,
+        "mathDerivativeBasicAdvancedOperationRisk": true,
+        "mathVectorComplexSignals": 0,
+        "mathVectorComplexBasicDefinitionOnlyRisk": false,
+        "mathGeometrySignals": 3,
+        "mathAnalyticGeometryDefinitionOnlyRisk": false,
+        "mathAnalyticGeometryBasicGeneralCircleRisk": false,
+        "mathAnalyticGeometryHardConicRelationOnlyRisk": false,
+        "mathElementaryFunctionSignals": 17,
+        "mathElementaryFunctionGenericClassificationRisk": false,
+        "mathElementaryFunctionBasicEquationSolveRisk": false,
+        "mathElementaryFunctionBasicMultipleObjectRisk": false,
+        "mathSequenceSignals": 6,
+        "mathSequenceGenericClassificationRisk": false,
+        "mathStatisticsSignals": 0,
+        "mathStatisticsBasicMultiStatisticComparisonRisk": false,
+        "mathStatisticsMediumPureLinearTransformRisk": false,
+        "mathStatisticsHardDirectCombinedVarianceRisk": false,
+        "mathSpatialSignals": 0,
+        "mathSpatialMediumMultiPropositionOvercomplexRisk": false,
+        "mathSpatialHardConceptOnlyRisk": false,
+        "mathSpatialHardDirectCoordinateOnlyRisk": false,
+        "mathParameterInferenceRisk": false,
+        "mathOptionJudgement": true,
+        "mathEnumeratedConditionCount": 0,
+        "mathFunctionPropertyStackCount": 3,
+        "mathFunctionDistinctPropertyCount": 2,
+        "mathStudentFacingDistinctPropertyCount": 1,
+        "mathStudentFacingFunctionPropertyOverComplex": false,
+        "mathFunctionObjectSignals": 3,
+        "mathFunctionPointValueCount": 1,
+        "mathFunctionNamedPointCount": 0,
+        "mathFunctionMultipleNamedPointsRisk": false,
+        "mathBasicFunctionSolutionScaffoldRisk": false,
+        "mathFunctionBasicMultiConstraintDomainRisk": false,
+        "mathPureFunctionExternalContextRisk": false,
+        "mathHardFunctionGenericConceptRisk": false,
+        "mathMediumFunctionPropertyOverComplex": false,
+        "mathDerivativeBasicDomainTrapRisk": false,
+        "mathDerivativeBasicOverComplexRisk": true,
+        "mathVectorComplexObjectCount": 0,
+        "mathVectorComplexRelationCount": 0,
+        "mathVectorComplexCoordinateGeometryDriftRisk": false,
+        "mathVectorComplexLocusParameterChainRisk": false,
+        "mathVectorComplexOneStepFormulaRisk": false,
+        "mathVectorComplexHardDirectMetricRisk": false,
+        "physicsKinematicsSignals": 3,
+        "physicsGraphSignals": 3,
+        "physicsUnitSignals": 0,
+        "physicsEquationSignals": 4,
+        "physicsOpticsSignals": 0,
+        "physicsOpticsRelationSignals": 1,
+        "physicsUnseenDiagramRisk": false,
+        "chemistryClassificationSignals": 0,
+        "chemistryStateChangeEvidenceSignals": 0,
+        "chemistryDefinitionOnlyClassificationRisk": false,
+        "chemistryPhConceptSignals": 0,
+        "chemistryPhOperationErrorSignals": 0,
+        "chemistryPhDirectionSignals": 0,
+        "chemistryPhDirectCalculationRisk": false
+      },
+      "productionImpact": "none_audit_or_gate_scaffold",
+      "providerImpact": "none_no_provider_call"
+    },
+    "generatorSelfVerification": {
+      "solverVersion": "math-elementary-direct-property-solver-v1",
+      "taskFamily": "elementary_function_direct_property",
+      "status": "verified",
+      "parsed": true,
+      "functionKind": "radical",
+      "canonicalTask": {
+        "model": {
+          "kind": "radical",
+          "coefficient": -23,
+          "offset": 1587
+        },
+        "propertyTarget": "monotonicity",
+        "evaluationInput": null
+      },
+      "optionVerdicts": [
+        {
+          "optionId": "A",
+          "verdict": "false",
+          "property": "monotonicity",
+          "reasonCode": "math_solver_monotonicity_direction_mismatch",
+          "semanticValue": {
+            "kind": "monotonicity",
+            "direction": "increasing",
+            "interval": {
+              "lower": "-infinity",
+              "upper": 69,
+              "lowerClosed": false,
+              "upperClosed": true
+            }
+          }
+        },
+        {
+          "optionId": "B",
+          "verdict": "false",
+          "property": "monotonicity",
+          "reasonCode": "math_solver_monotonicity_interval_outside_domain",
+          "semanticValue": {
+            "kind": "monotonicity",
+            "direction": "decreasing",
+            "interval": {
+              "lower": "-infinity",
+              "upper": "infinity",
+              "lowerClosed": false,
+              "upperClosed": false
+            }
+          }
+        },
+        {
+          "optionId": "C",
+          "verdict": "true",
+          "property": "monotonicity",
+          "reasonCode": "math_solver_monotonicity_matches",
+          "semanticValue": {
+            "kind": "monotonicity",
+            "direction": "decreasing",
+            "interval": {
+              "lower": "-infinity",
+              "upper": 69,
+              "lowerClosed": false,
+              "upperClosed": true
+            }
+          }
+        },
+        {
+          "optionId": "D",
+          "verdict": "false",
+          "property": "monotonicity",
+          "reasonCode": "math_solver_monotonicity_interval_outside_domain",
+          "semanticValue": {
+            "kind": "monotonicity",
+            "direction": "decreasing",
+            "interval": {
+              "lower": 69,
+              "upper": "infinity",
+              "lowerClosed": true,
+              "upperClosed": false
+            }
+          }
+        }
+      ],
+      "trueOptionIds": [
+        "C"
+      ],
+      "selectedOptionId": "C",
+      "uniqueAnswer": true,
+      "agreesWithGenerator": true,
+      "evidenceBoundary": "prompt_and_visible_options_only",
+      "providerImpact": "none_no_provider_call",
+      "productionGateImpact": "none_shadow_only",
+      "reasonCodes": [
+        "math_solver_monotonicity_direction_mismatch",
+        "math_solver_monotonicity_interval_outside_domain",
+        "math_solver_monotonicity_matches"
+      ],
+      "verificationScope": {
+        "scopeVersion": "math-elementary-direct-property-verification-scope-v1",
+        "scopeId": "math-basic-elementary-rotation-v1:radical:monotonicity",
+        "status": "matched",
+        "matched": true,
+        "plannedFunctionClass": "radical",
+        "plannedPropertyTarget": "monotonicity",
+        "observedFunctionClass": "radical",
+        "observedPropertyTargets": [
+          "monotonicity"
+        ],
+        "reasonCodes": []
+      }
+    }
+  }
+}

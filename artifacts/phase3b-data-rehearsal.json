@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1",
+  "runId": "phase3b-2026-09-17T11-38-01-665Z",
+  "startedAt": "2026-09-17T11:38:01.668Z",
+  "containerImage": "postgres:16-alpine",
+  "sourceDatabase": "source_phase3b",
+  "targetDatabase": "target_phase3b",
+  "checks": {
+    "preflightCleanStatus": "passed",
+    "preflightBlockedProbeStatus": "blocked",
+    "sourceTableCount": 149,
+    "migratedTableCount": 149,
+    "migratedProbeRows": 2,
+    "targetSentinelAfterMigration": "missing",
+    "prismaMigrationRows": 97,
+    "rollbackSentinelRows": 1,
+    "sourceProbeAfterRollback": "missing"
+  },
+  "status": "passed",
+  "completedAt": "2026-09-17T11:39:17.083Z",
+  "manifest": ".local\\data-migrations\\phase3b-2026-09-17T11-38-01-665Z\\manifest.json"
+}

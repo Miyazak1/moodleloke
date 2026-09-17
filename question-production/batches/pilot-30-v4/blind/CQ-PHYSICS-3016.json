@@ -1,0 +1,143 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-PHYSICS-3016",
+  "subject": "physics",
+  "topicCode": "P-WAVE-STAND",
+  "topicTitle": "机械波",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "两端固定的弦长为 0.75 m，形成含 5 个半波的稳定驻波，振动频率为 500 Hz。求波在弦上的传播速度。",
+  "options": [
+    {
+      "id": "A",
+      "text": "75 m/s"
+    },
+    {
+      "id": "B",
+      "text": "750 m/s"
+    },
+    {
+      "id": "C",
+      "text": "150 m/s"
+    },
+    {
+      "id": "D",
+      "text": "1666.6667 m/s"
+    }
+  ],
+  "knowledgeTags": [
+    "机械波",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "physics",
+    "topicCode": "P-WAVE-STAND",
+    "topicTitle": "机械波",
+    "targetDifficulty": "medium",
+    "taskFamily": "standing_wave_speed",
+    "planTemplate": "pilot_v4_standing_wave_speed_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "daa9cec4838e8d2fb48ae530",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "L",
+        "f",
+        "n"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "L",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "f",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "n",
+        "independentGroup": "g3"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "mode wavelength from fixed ends",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "speed from frequency",
+        "inputs": [
+          "r1"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "L=nλ/2",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "v=fλ",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "把半波数当整波数",
+      "误用 v=f/λ 的倒数"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "L": 0.75,
+      "n": 5,
+      "f": 500
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 2
+  }
+}

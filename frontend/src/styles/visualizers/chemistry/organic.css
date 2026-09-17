@@ -1,0 +1,711 @@
+.organic-hydrocarbon-card {
+  display:grid;
+  grid-template-columns:280px minmax(0,1fr) 260px;
+  gap:16px;
+  align-items:stretch;
+  padding:18px;
+  background:#fffdf9
+}
+
+.organic-info-panel,.organic-stage-panel,.organic-control-panel {
+  min-width:0
+}
+
+.organic-info-panel,.organic-control-panel {
+  display:grid;
+  align-content:start;
+  gap:14px
+}
+
+.organic-info-panel article,.organic-control-panel article,.organic-stage-panel {
+  border:1px solid var(--public-line);
+  border-radius:14px;
+  background:#fffefa;
+  box-shadow:0 14px 34px #1720330e
+}
+
+.organic-formula-card,.organic-property-card,.organic-reaction-card,.organic-isomer-card,.organic-family-card {
+  display:grid;
+  gap:10px;
+  padding:14px
+}
+
+.organic-formula-card h2,.organic-property-card h2,.organic-reaction-card h2,.organic-isomer-card h2 {
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  margin:0;
+  color:#9a3412;
+  font-size:16px
+}
+
+.organic-formula-card strong,.organic-formula-card b {
+  display:grid;
+  min-height:70px;
+  place-items:center;
+  border:1px solid rgba(66,107,146,.22);
+  border-radius:10px;
+  background:#fff8e7;
+  color:var(--public-ink);
+  font-size:24px;
+  font-style:italic
+}
+
+.organic-property-card dl {
+  display:grid;
+  gap:8px;
+  margin:0
+}
+
+.organic-property-card div {
+  display:grid;
+  grid-template-columns:84px minmax(0,1fr);
+  gap:8px
+}
+
+.organic-property-card dt,.organic-family-card span,.organic-control-panel label span {
+  color:var(--public-muted);
+  font-size:12px;
+  font-weight:900
+}
+
+.organic-property-card dd {
+  margin:0;
+  color:var(--public-ink);
+  font-weight:900
+}
+
+.organic-reaction-card p,.organic-reaction-card span,.organic-isomer-card p,.organic-family-card p {
+  margin:0;
+  color:var(--public-muted);
+  line-height:1.55;
+  font-weight:850
+}
+
+.organic-isomer-card strong {
+  color:var(--public-orange);
+  font-size:36px;
+  line-height:1
+}
+
+.organic-stage-panel {
+  display:grid;
+  gap:12px;
+  padding:16px;
+  overflow:hidden;
+  background:linear-gradient(180deg,#f8fbff,#fffefa)
+}
+
+.organic-stage-header {
+  display:flex;
+  gap:14px;
+  align-items:flex-start;
+  justify-content:space-between
+}
+
+.organic-stage-header h2 {
+  margin:0;
+  color:var(--public-ink);
+  font-size:22px
+}
+
+.organic-stage-header p {
+  margin:5px 0 0;
+  color:var(--public-muted);
+  font-weight:900;
+  overflow-wrap:anywhere
+}
+
+.organic-stage-header span {
+  flex:0 0 auto;
+  min-width:90px;
+  padding:8px 10px;
+  border-radius:999px;
+  background:#fff1db;
+  color:var(--public-orange);
+  font-weight:950;
+  text-align:center
+}
+
+.organic-molecule-svg {
+  width:100%;
+  min-height:390px;
+  display:block;
+  border:1px solid #dbe4ef;
+  border-radius:12px;
+  background:radial-gradient(circle at 50% 45%,#fff 0,#f8fbff 74%)
+}
+
+.organic-bond,.organic-h-bond {
+  stroke:#5f6f69;
+  stroke-width:6;
+  stroke-linecap:round
+}
+
+.organic-bond.multiple {
+  stroke:var(--public-orange)
+}
+
+.organic-h-bond {
+  stroke:#cbd5e1;
+  stroke-width:3
+}
+
+.organic-carbon {
+  fill:#111827;
+  stroke:#e2e8f0;
+  stroke-width:2;
+  filter:drop-shadow(0 8px 12px rgba(15,23,42,.16))
+}
+
+.organic-oxygen {
+  fill:#dc2626;
+  stroke:#fee2e2;
+  stroke-width:2;
+  filter:drop-shadow(0 8px 12px rgba(15,23,42,.16))
+}
+
+.organic-nitrogen {
+  fill:#315dff;
+  stroke:#dbeafe;
+  stroke-width:2;
+  filter:drop-shadow(0 8px 12px rgba(15,23,42,.16))
+}
+
+.organic-hydrogen {
+  fill:#f8fafc;
+  stroke:#94a3b8;
+  stroke-width:2
+}
+
+.organic-atom-label {
+  fill:#fff;
+  font-size:17px;
+  font-weight:950
+}
+
+.organic-h-label {
+  fill:#5f6f69;
+  font-size:11px;
+  font-weight:950
+}
+
+.organic-condensed-label {
+  fill:#5f6f69;
+  font-size:15px;
+  font-weight:950
+}
+
+.organic-reaction-visual path {
+  fill:none;
+  stroke:var(--public-orange);
+  stroke-width:4;
+  stroke-dasharray:8 8
+}
+
+.organic-reaction-visual text {
+  fill:var(--public-orange);
+  font-size:14px;
+  font-weight:950
+}
+
+.organic-molecule-svg.reacting .organic-bond.multiple {
+  animation:organic-bond-pulse 1s ease-in-out infinite alternate
+}
+
+@keyframes organic-bond-pulse {
+  0% {
+    stroke-width:6
+  }
+
+  to {
+    stroke-width:10
+  }
+}
+
+.organic-family-card strong {
+  color:var(--public-ink);
+  font-size:28px
+}
+
+.organic-family-picker {
+  display:grid;
+  gap:8px
+}
+
+.organic-family-picker button {
+  display:flex;
+  gap:10px;
+  align-items:center;
+  justify-content:space-between;
+  min-height:54px;
+  padding:10px 12px;
+  border:1px solid var(--public-line);
+  border-radius:12px;
+  background:#fff;
+  color:var(--public-ink)
+}
+
+.organic-family-picker button.active {
+  border-color:var(--public-orange);
+  background:var(--public-soft);
+  box-shadow:0 0 0 3px #315dff1a
+}
+
+.organic-family-picker strong {
+  font-size:16px
+}
+
+.organic-family-picker span {
+  color:var(--public-muted);
+  font-weight:850
+}
+
+.organic-control-panel label {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:8px;
+  padding:13px 14px;
+  border:1px solid var(--public-line);
+  border-radius:14px;
+  background:#fffefa
+}
+
+.organic-control-panel label input[type=range] {
+  grid-column:1 / -1;
+  width:100%;
+  accent-color:var(--public-orange)
+}
+
+.organic-control-panel label select {
+  grid-column:1 / -1;
+  min-height:38px;
+  width:100%;
+  border:1px solid var(--public-line);
+  border-radius:10px;
+  background:#fff;
+  color:var(--public-ink);
+  font-weight:850
+}
+
+.organic-control-panel label strong {
+  color:var(--public-orange);
+  font-size:13px
+}
+
+.organic-control-panel .organic-toggle {
+  display:flex;
+  align-items:center;
+  justify-content:space-between
+}
+
+.organic-toggle input {
+  width:36px;
+  height:20px;
+  accent-color:var(--public-orange)
+}
+
+.organic-reaction-button {
+  min-height:44px;
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  justify-content:center;
+  border:1px solid var(--public-orange);
+  border-radius:999px;
+  background:var(--public-orange);
+  color:#fff;
+  font-weight:950;
+  box-shadow:0 12px 24px #315dff24
+}
+
+.organic-hydrocarbon-support article {
+  min-width:0
+}
+@media (max-width: 980px) {
+  .substance-classification-layout,
+  .substance-classification-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .substance-toolbar-actions {
+    justify-content: flex-start;
+  }
+
+  .substance-target-grid,
+  .substance-review-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .chem-nomenclature-card {
+    grid-template-columns: 1fr;
+  }
+
+  .chem-nomenclature-controls {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .reaction-rate-card {
+    grid-template-columns: 1fr;
+  }
+
+  .reaction-rate-controls,
+  .reaction-rate-metrics,
+  .reaction-observation-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .redox-cell-card {
+    grid-template-columns: 1fr;
+  }
+
+  .redox-cell-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .redox-cell-conclusion,
+  .redox-cell-picker {
+    grid-column: 1 / -1;
+  }
+
+  .ph-titration-card {
+    grid-template-columns: 1fr;
+  }
+
+  .ph-titration-controls,
+  .ph-titration-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ph-stage-card,
+  .ph-acid-picker,
+  .ph-titration-actions {
+    grid-column: 1 / -1;
+  }
+
+  .atomic-periodic-card {
+    grid-template-columns: 1fr;
+  }
+
+  .atomic-info-panel {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  .atomic-principle-card {
+    grid-column: 1 / -1;
+  }
+
+  .atomic-control-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .atomic-insight-card,
+  .atomic-orbital-card {
+    grid-column: 1 / -1;
+  }
+
+  .bonding-structure-card {
+    grid-template-columns: 1fr;
+  }
+
+  .bonding-control-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bonding-molecule-picker,
+  .bonding-rule-card {
+    grid-column: 1 / -1;
+  }
+
+  .bonding-analysis-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ion-reaction-card {
+    grid-template-columns: 1fr;
+  }
+
+  .ion-reaction-guide,
+  .ion-reaction-practice {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ion-equation-card,
+  .ion-solubility-card,
+  .ion-current-equation,
+  .ion-spectator-picker {
+    grid-column: 1 / -1;
+  }
+
+  .organic-hydrocarbon-card {
+    grid-template-columns: 1fr;
+  }
+
+  .organic-info-panel,
+  .organic-control-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .organic-family-picker,
+  .organic-reaction-button {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 720px) {
+  .chem-neutralization-stage,
+  .chem-neutralization-support,
+  .substance-classification-layout,
+  .substance-classification-toolbar,
+  .substance-review-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .chem-neutralization-stage {
+    gap: 24px;
+    padding: 22px;
+  }
+
+  .chem-chart-legend {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .chem-beaker {
+    height: 226px;
+  }
+
+  .chem-neutralization-controls {
+    margin: 10px;
+    padding: 14px;
+  }
+
+  .chem-neutralization-support p {
+    width: 100%;
+  }
+
+  .substance-tree-panel {
+    min-height: 0;
+    padding: 14px;
+  }
+
+  .substance-target {
+    min-height: 210px;
+  }
+
+  .substance-classification-toolbar {
+    padding: 12px;
+  }
+
+  .substance-chip-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .substance-target-grid,
+  .substance-review-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .chem-nomenclature-controls,
+  .chem-category-choice-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chem-reference-table .head,
+  .chem-reference-table button {
+    grid-template-columns: minmax(66px, .8fr) minmax(86px, 1fr) 62px;
+    gap: 6px;
+    padding-inline: 8px;
+  }
+
+  .chem-nomenclature-question strong {
+    font-size: clamp(30px, 12vw, 44px);
+  }
+
+  .reaction-rate-controls,
+  .reaction-rate-metrics,
+  .reaction-observation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .reaction-rate-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .reaction-particle-panel {
+    min-height: 210px;
+  }
+
+  .reaction-rate-chart {
+    min-height: 220px;
+  }
+
+  .redox-cell-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .redox-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .redox-cell-svg {
+    min-height: 320px;
+  }
+
+  .redox-cell-stage {
+    padding: 10px;
+  }
+
+  .ph-titration-controls,
+  .ph-titration-metrics,
+  .ph-acid-picker {
+    grid-template-columns: 1fr;
+  }
+
+  .ph-titration-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .ph-lab-panel {
+    min-height: 250px;
+  }
+
+  .ph-beaker {
+    left: 8%;
+    width: 170px;
+  }
+
+  .ph-meter {
+    right: 6%;
+    width: 118px;
+  }
+
+  .ph-titration-chart {
+    min-height: 230px;
+  }
+
+  .atomic-info-panel,
+  .atomic-control-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .atomic-principle-card,
+  .atomic-insight-card,
+  .atomic-orbital-card {
+    grid-column: auto;
+  }
+
+  .atomic-periodic-card {
+    padding: 12px;
+  }
+
+  .atomic-model-header,
+  .atomic-periodic-title {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .atomic-model-header span {
+    width: fit-content;
+  }
+
+  .atomic-bohr-svg {
+    min-height: 300px;
+  }
+
+  .atomic-periodic-table {
+    min-width: 650px;
+    grid-template-rows: repeat(4, 50px);
+  }
+
+  .bonding-structure-card {
+    padding: 12px;
+  }
+
+  .bonding-control-panel,
+  .bonding-analysis-panel,
+  .bonding-molecule-picker {
+    grid-template-columns: 1fr;
+  }
+
+  .bonding-molecule-picker,
+  .bonding-rule-card {
+    grid-column: auto;
+  }
+
+  .bonding-stage-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .bonding-stage-header span {
+    width: fit-content;
+  }
+
+  .bonding-molecule-svg {
+    min-height: 310px;
+  }
+
+  .ion-reaction-card {
+    padding: 12px;
+  }
+
+  .ion-reaction-guide,
+  .ion-reaction-practice,
+  .ion-spectator-picker div {
+    grid-template-columns: 1fr;
+  }
+
+  .ion-equation-card,
+  .ion-solubility-card,
+  .ion-current-equation,
+  .ion-spectator-picker {
+    grid-column: auto;
+  }
+
+  .ion-stage-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .ion-stage-header span {
+    width: fit-content;
+  }
+
+  .ion-reaction-svg {
+    min-height: 310px;
+  }
+
+  .ion-solubility-card div {
+    grid-template-columns: 1fr;
+  }
+
+  .organic-hydrocarbon-card {
+    padding: 12px;
+  }
+
+  .organic-info-panel,
+  .organic-control-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .organic-family-picker,
+  .organic-reaction-button {
+    grid-column: auto;
+  }
+
+  .organic-stage-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .organic-stage-header span {
+    width: fit-content;
+  }
+
+  .organic-molecule-svg {
+    min-height: 310px;
+  }
+
+  .organic-property-card div {
+    grid-template-columns: 72px minmax(0, 1fr);
+  }
+}

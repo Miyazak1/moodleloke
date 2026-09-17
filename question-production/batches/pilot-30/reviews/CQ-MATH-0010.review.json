@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-MATH-0010",
+  "reviewerTaskId": "pilot-30-independent-blind-review",
+  "derivedAnswer": "A",
+  "optionTruthTable": {
+    "A": true,
+    "B": false,
+    "C": false,
+    "D": true
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": true,
+  "syllabusAligned": true,
+  "difficultyAssessment": "basic",
+  "caseNecessary": false,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "对数底0.2合法且不改变真数条件；x+2>0，所以定义域(-2,+∞)，A成立。",
+    "D“忽略真数约束会误判为R”同样是字面成立的错误诊断，造成两个真命题。"
+  ],
+  "verdictBeforeReveal": "reject",
+  "reasonCodes": [
+    "multiple_literal_true_options",
+    "metacognitive_distractor_ambiguity"
+  ],
+  "reviewedAt": "2026-09-15T09:29:16.058Z"
+}

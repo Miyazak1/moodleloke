@@ -1,0 +1,134 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+
+const root = path.join(__dirname, '..');
+const envFiles = ['.env.example', '.env.production.example'];
+const requiredProduction = ['DATABASE_URL', 'AUTH_SECRET', 'CORS_ORIGINS'];
+const optionalCommercial = ['ADMIN_BOOTSTRAP_EMAIL', 'ADMIN_BOOTSTRAP_PASSWORD', 'PAYMENT_CALLBACK_SECRET'];
+const optionalAI = [
+  'AI_GATEWAY_ENABLED',
+  'AI_DEFAULT_PROVIDER',
+  'AI_GATEWAY_LEDGER_ENABLED',
+  'AI_GATEWAY_GLOBAL_CONCURRENCY',
+  'AI_GATEWAY_REALTIME_CONCURRENCY',
+  'AI_GATEWAY_BACKGROUND_CONCURRENCY',
+  'AI_GATEWAY_DEFAULT_TIMEOUT_MS',
+  'AI_GATEWAY_STUDENT_TIMEOUT_MS',
+  'AI_GATEWAY_BACKGROUND_TIMEOUT_MS',
+  'AI_GATEWAY_QUEUE_TIMEOUT_MS',
+  'DEEPSEEK_BASE_URL',
+  'DEEPSEEK_API_KEYS',
+  'DEEPSEEK_BACKGROUND_API_KEYS',
+  'DEEPSEEK_PERSONAL_API_KEYS',
+  'DEEPSEEK_BACKGROUND_BASE_URL',
+  'DEEPSEEK_PERSONAL_BASE_URL',
+  'DEEPSEEK_DEFAULT_MODEL',
+  'DEEPSEEK_BACKGROUND_DEFAULT_MODEL',
+  'DEEPSEEK_PERSONAL_DEFAULT_MODEL',
+  'DEEPSEEK_REASONER_MODEL',
+  'DEEPSEEK_KEY_CONCURRENCY',
+  'DEEPSEEK_BACKGROUND_KEY_CONCURRENCY',
+  'DEEPSEEK_PERSONAL_KEY_CONCURRENCY',
+  'DEEPSEEK_REQUESTS_PER_MINUTE',
+  'DEEPSEEK_BACKGROUND_REQUESTS_PER_MINUTE',
+  'DEEPSEEK_PERSONAL_REQUESTS_PER_MINUTE',
+  'DEEPSEEK_REQUESTS_PER_DAY',
+  'DEEPSEEK_BACKGROUND_REQUESTS_PER_DAY',
+  'DEEPSEEK_PERSONAL_REQUESTS_PER_DAY',
+  'CSCA_AI_COACH_ENABLED',
+  'CSCA_AI_PROVIDER',
+  'CSCA_AI_MODEL',
+  'CSCA_AI_API_KEY',
+  'CSCA_AI_BASE_URL',
+  'CSCA_AI_TIMEOUT_MS',
+  'CSCA_AI_TEMPERATURE',
+  'CSCA_AI_PROMPT_VERSION',
+  'CSCA_AI_MAX_OUTPUT_CHARS',
+  'CSCA_AI_ROLLOUT_PERCENT',
+  'CSCA_AI_INITIAL_FREE_UNITS',
+  'CSCA_AI_ENTITLEMENT_ENABLED',
+  'CSCA_AI_INPUT_COST_PER_1K_TOKENS',
+  'CSCA_AI_OUTPUT_COST_PER_1K_TOKENS',
+  'CSCA_AI_UNIT_TOKEN_BUDGET',
+  'CSCA_AI_COST_CURRENCY',
+  'CSCA_AI_ROLLOUT_MIN_INTERACTIONS',
+  'CSCA_AI_ROLLOUT_MIN_FEEDBACK',
+  'CSCA_AI_ROLLOUT_MAX_ERROR_RATE',
+  'CSCA_AI_ROLLOUT_MAX_REJECTION_RATE',
+  'CSCA_AI_ROLLOUT_MAX_LOW_FEEDBACK_RATE',
+  'CSCA_AI_ROLLOUT_MIN_AVERAGE_RATING',
+  'CSCA_ORG_LLM_KEY_SECRET'
+];
+const fixedQuestionBankIsolation = {
+  CSCA_AI_COACH_ENABLED: 'false',
+  CSCA_AI_ROLLOUT_PERCENT: '0',
+  CSCA_AI_ENTITLEMENT_ENABLED: 'false',
+  CSCA_AI_QUESTION_REVIEW_ENABLED: 'false',
+  CSCA_AI_QUESTION_GENERATION_ENABLED: 'false',
+  CSCALITE_SPECIAL_PRACTICE_STUDENT_SESSIONS_ENABLED: 'true',
+  CSCA_AI_QUESTIONING_SCHEDULER_ENABLED: 'false',
+  CSCA_AI_QUESTIONING_SCHEDULER_RUN_ON_STARTUP: 'false',
+  CSCA_SUBJECT_PRACTICE_PRODUCTION_ENABLED: 'false',
+  CSCA_SUBJECT_PRACTICE_PREDICTIVE_REPLENISHMENT_ENABLED: 'false',
+  CSCA_AI_QUESTIONING_TASK_RECOVERY_DISABLED: 'true',
+  CSCA_SUBJECT_PRACTICE_LIFECYCLE_RECONCILIATION_DISABLED: 'true',
+  SUBJECT_PRACTICE_OBSERVATION_TASK_ENABLED: 'false',
+  SUBJECT_PRACTICE_OBSERVATION_EXECUTION_ENABLED: 'false',
+  SUBJECT_PRACTICE_OBSERVATION_ONLY_MODE: 'false'
+};
+const operational = [
+  'PUBLIC_APP_ORIGIN',
+  'AUTH_REFRESH_COOKIE_ENABLED',
+  'AUTH_REFRESH_COOKIE_NAME',
+  'AUTH_CSRF_COOKIE_NAME',
+  'AUTH_CSRF_HEADER_NAME',
+  'AUTH_LEGACY_REFRESH_FALLBACK_ENABLED',
+  'AUTH_COOKIE_DOMAIN',
+  'AUTH_COOKIE_SECURE',
+  'VITE_AUTH_CSRF_COOKIE_NAME',
+  'VITE_AUTH_CSRF_HEADER_NAME',
+  'STAGING_BASE_URL',
+  'REQUEST_BODY_LIMIT',
+  'READY_DB_TIMEOUT_MS',
+  'LOG_FORMAT',
+  'CSP_MODE',
+  'CSP_REPORT_URI',
+  'OPS_METRICS_ENABLED',
+  'OPS_METRICS_TOKEN',
+  'OPS_READY_TOKEN',
+  'OPS_HEALTH_DETAILS_ENABLED',
+  'APP_VERSION',
+  'RELEASE_EVIDENCE_DIR',
+  'BACKUP_DIR',
+  'ALLOW_DB_RESTORE',
+  'ALLOW_PRODUCTION_DB_RESTORE',
+  'CONFIRM_RESTORE_DATABASE',
+  'RESTORE_TEST_DATABASE_URL',
+  'BACKUP_RESTORE_DRILL_FILE',
+  'CLEANUP_AUTH_EMAIL_TOKEN_DAYS',
+  'CLEANUP_REFRESH_SESSION_DAYS',
+  'CLEANUP_PAYMENT_CALLBACK_LOG_DAYS'
+];
+
+for (const file of envFiles) {
+  const source = fs.readFileSync(path.join(root, file), 'utf8');
+  for (const key of requiredProduction) {
+    assert.match(source, new RegExp(`^${key}=`, 'm'), `${file} must document ${key}`);
+  }
+  for (const key of optionalCommercial) {
+    assert.match(source, new RegExp(`^${key}=`, 'm'), `${file} must document ${key}`);
+  }
+  for (const key of optionalAI) {
+    assert.match(source, new RegExp(`^${key}=`, 'm'), `${file} must document ${key}`);
+  }
+  for (const key of operational) {
+    assert.match(source, new RegExp(`^${key}=`, 'm'), `${file} must document ${key}`);
+  }
+  for (const [key, value] of Object.entries(fixedQuestionBankIsolation)) {
+    assert.match(source, new RegExp(`^${key}="?${value}"?$`, 'm'), `${file} must keep fixed-question-bank isolation ${key}=${value}`);
+  }
+  assert.match(source, /production/i, `${file} must describe production usage`);
+}
+
+console.log('CSCAlite production environment smoke passed.');

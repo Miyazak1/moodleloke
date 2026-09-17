@@ -1,0 +1,596 @@
+{
+  "schemaVersion": "codex-question-candidate-v1",
+  "candidateId": "CQ-MATH-1007",
+  "subject": "math",
+  "topicCode": "M-FUNC-001",
+  "topicTitle": "基本初等函数",
+  "designedDifficulty": "basic",
+  "questionType": "single_choice",
+  "prompt": "函数关系 f(x)=0.64^x 给出每个实数输入的输出；这些输出组成哪一个值域？",
+  "options": [
+    {
+      "id": "A",
+      "text": "值域为 [0,+∞)"
+    },
+    {
+      "id": "B",
+      "text": "值域为 (0,+∞)"
+    },
+    {
+      "id": "C",
+      "text": "值域为 (-∞,+∞)"
+    },
+    {
+      "id": "D",
+      "text": "值域为 (1,+∞)"
+    }
+  ],
+  "correctAnswer": "B",
+  "explanation": "先作零值与负值检验：方程 0.64^x=0 无实数解，且 f(x)>0。再任取 y>0，令 x=log_0.64(y)，便有 f(x)=y。输出集合因此是 (0,+∞)。",
+  "knowledgeTags": [
+    "基本初等函数",
+    "指数函数",
+    "值域"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "math",
+    "topicId": 69,
+    "topicTitle": "基本初等函数",
+    "productionCellId": 16,
+    "targetDifficulty": "basic",
+    "taskFamily": "elementary_function_direct_property",
+    "planTemplate": "math_elementary_function_relation_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "pureMathStemOnly": true,
+      "forbidGenericFunctionListClassification": true,
+      "forbidElementaryFunctionExternalContextWrapper": true,
+      "requireMediumElementaryConcreteExpressionRelation": false,
+      "requireBasicElementarySingleObjectSingleTarget": true,
+      "singlePropertyTargetContractVersion": "math-basic-elementary-single-property-target-v1",
+      "allowedSinglePropertyTargets": [
+        "function_value",
+        "domain",
+        "range",
+        "monotonicity"
+      ],
+      "requiredSinglePropertyTarget": "range",
+      "requiredElementaryFunctionClass": "exponential",
+      "forbidCrossPropertyDistractors": true,
+      "forbidBasicElementaryEquationSolve": true,
+      "forbidBasicElementaryOrderingChain": true,
+      "forbidBasicElementaryParameterInference": true,
+      "forbidBasicElementaryTargetProfileInflation": true,
+      "maxFunctionPropertyStack": 1,
+      "maxEnumeratedConditions": 1,
+      "maxFunctionObjects": 1,
+      "maxIndependentRelations": 1,
+      "finalAnswerShape": "one_direct_elementary_function_property_or_value",
+      "preferredPromptSkeletons": [
+        "给出一个指数/对数/幂/根式函数表达式，只求定义域、单调性或一个函数值中的一项；题干与解析均不得提及未考查性质",
+        "给出 log_a x、a^x、x^n 或一个简单根式的具体参数，只判断一个直接性质；不要用“无需判断其他性质”等否定措辞列出其他性质"
+      ]
+    },
+    "budget": {
+      "maxPlanRepairs": 2,
+      "maxCandidateRepairs": 1
+    },
+    "scenarioContract": {
+      "schemaVersion": "subject-practice-scenario-contract-v1",
+      "policyVersion": "subject-practice-scenario-diversity-shadow-v2-multi-evidence-status",
+      "stage": "shadow_only_thresholds_not_frozen",
+      "scenarioMode": "abstract",
+      "scenarioFamilyId": "math_abstract_function_object",
+      "scenarioDomain": "pure_mathematics",
+      "scenarioEntity": "function_object",
+      "scenarioAction": "exponential:range",
+      "informationForm": "symbolic_text",
+      "scenarioFingerprint": "scenario-18536eebe01a7c7d29db",
+      "contextNecessity": "not_applicable",
+      "requiredInformationFields": [],
+      "solverRelevantFields": [],
+      "surface": {
+        "zhEntity": "",
+        "enEntity": "",
+        "zhSetting": "",
+        "enSetting": "",
+        "cueTokens": []
+      },
+      "plausibility": {
+        "externalContextForbidden": true
+      },
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "controlled_catalog_and_sealed_ordinal_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "elementary_function_object",
+        "role": "exponential_logarithmic_power_or_radical_expression",
+        "independentGroup": "e1"
+      },
+      {
+        "id": "e2",
+        "type": "domain_order_or_graph_condition",
+        "role": "domain_range_monotonicity_order_interval_or_graph_intersection",
+        "independentGroup": "e1"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "identify_elementary_function_domain_or_expression",
+        "inputs": [
+          "e1"
+        ],
+        "output": "function_frame"
+      },
+      {
+        "id": "r2",
+        "operation": "apply_domain_order_or_graph_condition",
+        "inputs": [
+          "function_frame",
+          "e2"
+        ],
+        "output": "intermediate_relation"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "elementary_function_relation_round_trip",
+        "expression": "domain, order, graph, inverse, or inequality relation checks the selected result",
+        "variables": [
+          "x",
+          "log",
+          "exp",
+          "power"
+        ],
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "ignoring domain restrictions",
+      "comparing logs or powers by decimal guessing only",
+      "medium elementary-function item as a generic function-list classification without a given expression relation",
+      "hard elementary-function item without a second bound or parameter relation"
+    ],
+    "answerDerivation": [
+      "use the elementary-function object and one visible relation to determine the answer"
+    ],
+    "uniquenessConditions": [
+      "only one option satisfies all visible elementary-function relations"
+    ]
+  },
+  "localizations": {
+    "zh": {
+      "prompt": "函数关系 f(x)=0.64^x 给出每个实数输入的输出；这些输出组成哪一个值域？",
+      "options": [
+        {
+          "id": "A",
+          "text": "值域为 [0,+∞)"
+        },
+        {
+          "id": "B",
+          "text": "值域为 (0,+∞)"
+        },
+        {
+          "id": "C",
+          "text": "值域为 (-∞,+∞)"
+        },
+        {
+          "id": "D",
+          "text": "值域为 (1,+∞)"
+        }
+      ],
+      "explanation": "先作零值与负值检验：方程 0.64^x=0 无实数解，且 f(x)>0。再任取 y>0，令 x=log_0.64(y)，便有 f(x)=y。输出集合因此是 (0,+∞)。",
+      "knowledgeTags": [
+        "基本初等函数",
+        "指数函数",
+        "值域"
+      ]
+    },
+    "en": {
+      "prompt": "The rule f(x)=0.64^x maps real inputs to outputs. Which set is its range?",
+      "options": [
+        {
+          "id": "A",
+          "text": "The range is [0,+∞)"
+        },
+        {
+          "id": "B",
+          "text": "The range is (0,+∞)"
+        },
+        {
+          "id": "C",
+          "text": "The range is (-∞,+∞)"
+        },
+        {
+          "id": "D",
+          "text": "The range is (1,+∞)"
+        }
+      ],
+      "explanation": "First test nonpositive outputs: 0.64^x=0 has no real solution and f(x)>0. Next take any y>0 and set x=log_0.64(y); then f(x)=y. The range is therefore (0,+∞).",
+      "knowledgeTags": [
+        "Elementary functions"
+      ]
+    }
+  },
+  "generationMetadata": {
+    "origin": "codex_dual_session_pilot",
+    "generatorTaskId": "pilot-30-v2-generator-task-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v1",
+    "createdAt": "2026-09-15T10:45:00.000Z",
+    "family": "elementary_bounded",
+    "seed": 693,
+    "generatorVersion": "math-elementary-local-generator-v6-formula-evidence",
+    "scopeId": "math-basic-elementary-rotation-v1:exponential:range",
+    "deterministicVerification": {
+      "solver": {
+        "solverVersion": "math-elementary-direct-property-solver-v1",
+        "taskFamily": "elementary_function_direct_property",
+        "status": "verified",
+        "parsed": true,
+        "functionKind": "exponential",
+        "canonicalTask": {
+          "model": {
+            "kind": "exponential",
+            "base": 0.64
+          },
+          "propertyTarget": "range",
+          "evaluationInput": null
+        },
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "false",
+            "property": "range",
+            "reasonCode": "math_solver_range_mismatch",
+            "semanticValue": {
+              "kind": "interval",
+              "lower": 0,
+              "upper": "infinity",
+              "lowerClosed": true,
+              "upperClosed": false
+            }
+          },
+          {
+            "optionId": "B",
+            "verdict": "true",
+            "property": "range",
+            "reasonCode": "math_solver_range_matches",
+            "semanticValue": {
+              "kind": "interval",
+              "lower": 0,
+              "upper": "infinity",
+              "lowerClosed": false,
+              "upperClosed": false
+            }
+          },
+          {
+            "optionId": "C",
+            "verdict": "false",
+            "property": "range",
+            "reasonCode": "math_solver_range_mismatch",
+            "semanticValue": {
+              "kind": "interval",
+              "lower": "-infinity",
+              "upper": "infinity",
+              "lowerClosed": false,
+              "upperClosed": false
+            }
+          },
+          {
+            "optionId": "D",
+            "verdict": "false",
+            "property": "range",
+            "reasonCode": "math_solver_range_mismatch",
+            "semanticValue": {
+              "kind": "interval",
+              "lower": 1,
+              "upper": "infinity",
+              "lowerClosed": false,
+              "upperClosed": false
+            }
+          }
+        ],
+        "trueOptionIds": [
+          "B"
+        ],
+        "selectedOptionId": "B",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": [
+          "math_solver_range_mismatch",
+          "math_solver_range_matches"
+        ],
+        "verificationScope": {
+          "scopeVersion": "math-elementary-direct-property-verification-scope-v1",
+          "scopeId": "math-basic-elementary-rotation-v1:exponential:range",
+          "status": "matched",
+          "matched": true,
+          "plannedFunctionClass": "exponential",
+          "plannedPropertyTarget": "range",
+          "observedFunctionClass": "exponential",
+          "observedPropertyTargets": [
+            "range"
+          ],
+          "reasonCodes": []
+        }
+      },
+      "oracle": {
+        "oracleVersion": "math-elementary-independent-oracle-v1",
+        "status": "verified",
+        "functionClass": "exponential",
+        "propertyTarget": "range",
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "false"
+          },
+          {
+            "optionId": "B",
+            "verdict": "true"
+          },
+          {
+            "optionId": "C",
+            "verdict": "false"
+          },
+          {
+            "optionId": "D",
+            "verdict": "false"
+          }
+        ],
+        "trueOptionIds": [
+          "B"
+        ],
+        "selectedOptionId": "B",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "scopeId": "math-basic-elementary-rotation-v1:exponential:range",
+        "scopeMatched": true,
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      },
+      "explanation": {
+        "verifierVersion": "math-elementary-explanation-verifier-v3-formula-evidence",
+        "status": "verified",
+        "solverEvidence": {
+          "solverVersion": "math-elementary-direct-property-solver-v1",
+          "taskFamily": "elementary_function_direct_property",
+          "status": "verified",
+          "parsed": true,
+          "functionKind": "exponential",
+          "canonicalTask": {
+            "model": {
+              "kind": "exponential",
+              "base": 0.64
+            },
+            "propertyTarget": "range",
+            "evaluationInput": null
+          },
+          "optionVerdicts": [
+            {
+              "optionId": "A",
+              "verdict": "false",
+              "property": "range",
+              "reasonCode": "math_solver_range_mismatch",
+              "semanticValue": {
+                "kind": "interval",
+                "lower": 0,
+                "upper": "infinity",
+                "lowerClosed": true,
+                "upperClosed": false
+              }
+            },
+            {
+              "optionId": "B",
+              "verdict": "true",
+              "property": "range",
+              "reasonCode": "math_solver_range_matches",
+              "semanticValue": {
+                "kind": "interval",
+                "lower": 0,
+                "upper": "infinity",
+                "lowerClosed": false,
+                "upperClosed": false
+              }
+            },
+            {
+              "optionId": "C",
+              "verdict": "false",
+              "property": "range",
+              "reasonCode": "math_solver_range_mismatch",
+              "semanticValue": {
+                "kind": "interval",
+                "lower": "-infinity",
+                "upper": "infinity",
+                "lowerClosed": false,
+                "upperClosed": false
+              }
+            },
+            {
+              "optionId": "D",
+              "verdict": "false",
+              "property": "range",
+              "reasonCode": "math_solver_range_mismatch",
+              "semanticValue": {
+                "kind": "interval",
+                "lower": 1,
+                "upper": "infinity",
+                "lowerClosed": false,
+                "upperClosed": false
+              }
+            }
+          ],
+          "trueOptionIds": [
+            "B"
+          ],
+          "selectedOptionId": "B",
+          "uniqueAnswer": true,
+          "agreesWithGenerator": true,
+          "evidenceBoundary": "prompt_and_visible_options_only",
+          "providerImpact": "none_no_provider_call",
+          "productionGateImpact": "none_shadow_only",
+          "reasonCodes": [
+            "math_solver_range_mismatch",
+            "math_solver_range_matches"
+          ],
+          "verificationScope": {
+            "scopeVersion": "math-elementary-direct-property-verification-scope-v1",
+            "scopeId": "math-basic-elementary-rotation-v1:exponential:range",
+            "status": "matched",
+            "matched": true,
+            "plannedFunctionClass": "exponential",
+            "plannedPropertyTarget": "range",
+            "observedFunctionClass": "exponential",
+            "observedPropertyTargets": [
+              "range"
+            ],
+            "reasonCodes": []
+          }
+        },
+        "recomputedWithoutGeneratorExplanation": true,
+        "formulaInputsUnitsAndConclusionChecked": true,
+        "checks": [
+          {
+            "language": "zh",
+            "derivationMatched": true,
+            "conclusionMatched": true,
+            "reasonCodes": []
+          },
+          {
+            "language": "en",
+            "derivationMatched": true,
+            "conclusionMatched": true,
+            "reasonCodes": []
+          }
+        ],
+        "mismatchCount": 0,
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      }
+    },
+    "questionPlanAdherence": {
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "validPlan": true,
+      "adheres": true,
+      "planTemplate": "math_elementary_function_relation_v1",
+      "taskFamily": "elementary_function_direct_property",
+      "failureCodes": [],
+      "features": {
+        "operationWords": 0,
+        "observationWords": 0,
+        "hypothesisMarkers": 0,
+        "reasoningConnectors": 1,
+        "quantitativeMarkers": 0,
+        "reactionClues": 6,
+        "gasSpeciesMarkers": 0,
+        "gasControlMarkers": 1,
+        "redoxReactionMarkers": 0,
+        "redoxConceptMarkers": 0,
+        "redoxQuantitativeChainMarkers": 2,
+        "mathPropertySignals": 10,
+        "mathStatementMarkers": 4,
+        "mathTransformationSignals": 2,
+        "mathOrderingSignals": 5,
+        "mathParameterConstraintSignals": 0,
+        "mathProbabilitySignals": 0,
+        "mathProbabilityEventLabelCount": 0,
+        "mathProbabilityNormalHardInteractionCueCount": 0,
+        "mathProbabilityHardInteractionCueCount": 0,
+        "mathProbabilityConcreteFrameSignals": 0,
+        "mathProbabilityNormalMediumNoEventRisk": false,
+        "mathProbabilityNormalReferenceTableRisk": false,
+        "mathProbabilityConceptOnlyRisk": false,
+        "mathProbabilitySingleResultRisk": false,
+        "mathProbabilityEventListOnlyRisk": false,
+        "mathDerivativeSignals": 0,
+        "mathDerivativeMediumDefinitionOnlyRisk": false,
+        "mathDerivativeHardCoefficientSolveOnlyRisk": false,
+        "mathDerivativeBasicAdvancedOperationRisk": false,
+        "mathVectorComplexSignals": 0,
+        "mathVectorComplexBasicDefinitionOnlyRisk": false,
+        "mathGeometrySignals": 1,
+        "mathAnalyticGeometryDefinitionOnlyRisk": false,
+        "mathAnalyticGeometryBasicGeneralCircleRisk": false,
+        "mathAnalyticGeometryHardConicRelationOnlyRisk": false,
+        "mathElementaryFunctionSignals": 10,
+        "mathElementaryFunctionGenericClassificationRisk": false,
+        "mathElementaryFunctionBasicEquationSolveRisk": false,
+        "mathElementaryFunctionBasicMultipleObjectRisk": false,
+        "mathSequenceSignals": 0,
+        "mathSequenceGenericClassificationRisk": false,
+        "mathStatisticsSignals": 3,
+        "mathStatisticsBasicMultiStatisticComparisonRisk": false,
+        "mathStatisticsMediumPureLinearTransformRisk": false,
+        "mathStatisticsHardDirectCombinedVarianceRisk": false,
+        "mathSpatialSignals": 0,
+        "mathSpatialMediumMultiPropositionOvercomplexRisk": false,
+        "mathSpatialHardConceptOnlyRisk": false,
+        "mathSpatialHardDirectCoordinateOnlyRisk": false,
+        "mathParameterInferenceRisk": false,
+        "mathOptionJudgement": true,
+        "mathEnumeratedConditionCount": 0,
+        "mathFunctionPropertyStackCount": 1,
+        "mathFunctionDistinctPropertyCount": 2,
+        "mathStudentFacingDistinctPropertyCount": 1,
+        "mathStudentFacingFunctionPropertyOverComplex": false,
+        "mathFunctionObjectSignals": 3,
+        "mathFunctionPointValueCount": 2,
+        "mathFunctionNamedPointCount": 0,
+        "mathFunctionMultipleNamedPointsRisk": false,
+        "mathBasicFunctionSolutionScaffoldRisk": false,
+        "mathFunctionBasicMultiConstraintDomainRisk": false,
+        "mathPureFunctionExternalContextRisk": false,
+        "mathHardFunctionGenericConceptRisk": false,
+        "mathMediumFunctionPropertyOverComplex": false,
+        "mathDerivativeBasicDomainTrapRisk": false,
+        "mathDerivativeBasicOverComplexRisk": false,
+        "mathVectorComplexObjectCount": 0,
+        "mathVectorComplexRelationCount": 0,
+        "mathVectorComplexCoordinateGeometryDriftRisk": false,
+        "mathVectorComplexLocusParameterChainRisk": false,
+        "mathVectorComplexOneStepFormulaRisk": false,
+        "mathVectorComplexHardDirectMetricRisk": false,
+        "physicsKinematicsSignals": 0,
+        "physicsGraphSignals": 0,
+        "physicsUnitSignals": 0,
+        "physicsEquationSignals": 6,
+        "physicsOpticsSignals": 0,
+        "physicsOpticsRelationSignals": 0,
+        "physicsUnseenDiagramRisk": false,
+        "chemistryClassificationSignals": 1,
+        "chemistryStateChangeEvidenceSignals": 0,
+        "chemistryDefinitionOnlyClassificationRisk": false,
+        "chemistryPhConceptSignals": 0,
+        "chemistryPhOperationErrorSignals": 0,
+        "chemistryPhDirectionSignals": 2,
+        "chemistryPhDirectCalculationRisk": false
+      },
+      "productionImpact": "none_audit_or_gate_scaffold",
+      "providerImpact": "none_no_provider_call"
+    },
+    "scenarioRenderMode": "abstract_math",
+    "provisionalScenarioContract": null,
+    "v1Correction": "parallel_mathematical_options_no_metacognitive_truth_claims"
+  }
+}

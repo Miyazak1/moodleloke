@@ -1,0 +1,249 @@
+@import './mock-exam.part-01.css';
+@import './mock-exam.part-02.css';
+@import './mock-exam.part-03.css';
+
+/* 2026-09-02 student CSCA refresh: online mock uses the Calm Science Lab system. */
+.mock-exam-page,
+.mock-report-page,
+.mock-taking-shell {
+  --public-ink: #202337;
+  --public-muted: #5f6f69;
+  --public-soft: #8a96a8;
+  --public-orange: #315dff;
+  --public-orange-dark: #2448d8;
+  --public-line: #dbe8df;
+  --public-line-strong: #bfd6cc;
+  --public-panel: rgba(255, 255, 255, .84);
+  --public-panel-strong: #ffffff;
+  --public-blush: #e9efff;
+  --public-shadow: 0 22px 56px rgba(34, 55, 100, .09);
+}
+
+.site-main-public:has(.mock-exam-page),
+.site-main-public:has(.mock-report-page),
+.mock-taking-shell {
+  background:
+    linear-gradient(90deg, rgba(49, 93, 255, .052) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .052) 1px, transparent 1px),
+    linear-gradient(135deg, #fbfff9 0, #f6fbf6 42%, #eef8f7 100%);
+  background-size: 42px 42px, 42px 42px, auto;
+}
+
+.mock-exam-page .page-hero h1,
+.mock-subject-hero h1 {
+  font-size: clamp(34px, 3.3vw, 50px);
+  line-height: 1.1;
+}
+
+.mock-subject-card,
+.mock-paper-card,
+.mock-stat-grid article,
+.mock-roadmap-grid article,
+.mock-bundle-panel,
+.mock-knowledge-panel,
+.mock-review-panel,
+.mock-report-hero,
+.mock-start-card,
+.mock-start-notes article,
+.mock-status-panel,
+.mock-real-paper-card,
+.mock-adaptive-paper-band {
+  border-color: rgba(57, 95, 130, .16);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .84);
+  box-shadow: 0 18px 42px rgba(34, 55, 100, .055);
+  backdrop-filter: blur(8px);
+}
+
+.mock-subject-card button,
+.mock-paper-card.free button,
+.mock-start-actions .inline-actions button:not(.ghost),
+.mock-submit-button,
+.mock-question-actions button:not(.ghost),
+.mock-taking-shell .mock-submit-button {
+  border-color: rgba(49, 93, 255, .86);
+  background: #315dff;
+  color: #fff;
+  box-shadow: 0 14px 28px rgba(49, 93, 255, .16);
+}
+
+.mock-subject-card button:hover,
+.mock-paper-card.free button:hover,
+.mock-start-actions .inline-actions button:not(.ghost):hover,
+.mock-submit-button:hover,
+.mock-question-actions button:not(.ghost):hover,
+.mock-taking-shell .mock-submit-button:hover {
+  border-color: #2448d8;
+  background: #2448d8;
+}
+
+.mock-card-icon,
+.mock-start-icon {
+  border-color: rgba(49, 93, 255, .18);
+  border-radius: 8px;
+  background: #e9efff;
+}
+
+.mock-card-label,
+.mock-status-panel span,
+.mock-paper-topline b,
+.mock-question-nav-title {
+  color: #315dff;
+}
+
+.mock-chip-row span,
+.mock-focus-pills span,
+.mock-paper-meta span,
+.mock-feature-strip span {
+  border-color: rgba(19, 199, 163, .18);
+  background: #dcfbf2;
+  color: #087c66;
+}
+
+.mock-taking-shell {
+  min-height: 100vh;
+  color: var(--public-ink);
+}
+
+.mock-exam-bar {
+  border-bottom-color: rgba(57, 95, 130, .16);
+  background: rgba(255, 255, 255, .88);
+  box-shadow: 0 14px 28px rgba(34, 55, 100, .06);
+}
+
+.mock-exam-progress {
+  background: #e9efff;
+}
+
+.mock-exam-progress i {
+  background: linear-gradient(90deg, #315dff, #13c7a3, #b7ef43);
+}
+
+.mock-exam-bar .time {
+  color: #315dff;
+}
+
+.mock-cbt-status,
+.mock-question-nav,
+.mock-question-panel {
+  border-color: rgba(57, 95, 130, .16);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .88);
+  box-shadow: 0 18px 42px rgba(34, 55, 100, .055);
+}
+
+.mock-question-nav button {
+  border-color: rgba(57, 95, 130, .16);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.mock-question-nav button.answered {
+  border-color: rgba(19, 199, 163, .38);
+  background: #dcfbf2;
+  color: #087c66;
+}
+
+.mock-question-nav button.current {
+  border-color: #315dff;
+  background: #315dff;
+  color: #fff;
+  box-shadow: 0 0 0 4px rgba(49, 93, 255, .14), 0 10px 20px rgba(49, 93, 255, .16);
+}
+
+.mock-question-nav button.marked {
+  box-shadow: 0 0 0 3px rgba(255, 113, 94, .24);
+}
+
+.mock-question-legend i.current {
+  border-color: #315dff;
+  background: #315dff;
+}
+
+.mock-question-legend i.answered {
+  border-color: rgba(19, 199, 163, .38);
+  background: #dcfbf2;
+}
+
+.mock-question-legend i.marked {
+  border-color: rgba(255, 113, 94, .38);
+  background: #ffe9e4;
+}
+
+.mock-options button {
+  border-color: rgba(57, 95, 130, .16);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .9);
+}
+
+.mock-options button:hover,
+.mock-options button.selected {
+  border-color: rgba(49, 93, 255, .34);
+  background: #e9efff;
+}
+
+.mock-options button b {
+  border-radius: 8px;
+  background: #eef8f7;
+  color: #5f6f69;
+}
+
+.mock-options button.selected b {
+  background: #13c7a3;
+  color: #073f35;
+}
+
+.mock-mark.active {
+  border-color: rgba(255, 113, 94, .3);
+  background: #ffe9e4;
+  color: #9b2f23;
+}
+
+.mock-report-hero {
+  background:
+    linear-gradient(90deg, rgba(49, 93, 255, .04) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .04) 1px, transparent 1px),
+    linear-gradient(135deg, rgba(255, 255, 255, .94), rgba(220, 251, 242, .5));
+  background-size: 36px 36px, 36px 36px, auto;
+}
+
+.brand-page.mock-exam-page .mock-product-card.tone-math::before,
+.brand-page.mock-exam-page .mock-product-card:not(.tone-physics):not(.tone-chemistry):not(.tone-mixed):not(.tone-bundle)::before {
+  content: none;
+  display: none;
+}
+
+.brand-page.mock-exam-page .mock-product-card.tone-physics::before {
+  content: none;
+  display: none;
+}
+
+.brand-page.mock-exam-page .mock-product-card.tone-chemistry::before {
+  content: none;
+  display: none;
+}
+
+.brand-page.mock-exam-page .mock-product-cover.tone-math,
+.brand-page.mock-exam-page .mock-product-cover:not(.tone-physics):not(.tone-chemistry):not(.tone-mixed):not(.tone-bundle) {
+  background: #315dff;
+  color: #fff;
+  box-shadow: 0 16px 28px rgba(49, 93, 255, .16);
+}
+
+.brand-page.mock-exam-page .mock-product-cover.tone-physics {
+  background: #13c7a3;
+  color: #073f35;
+  box-shadow: 0 16px 28px rgba(19, 199, 163, .16);
+}
+
+.brand-page.mock-exam-page .mock-product-cover.tone-chemistry {
+  background: #ff715e;
+  color: #fff;
+  box-shadow: 0 16px 28px rgba(255, 113, 94, .16);
+}
+
+.brand-page.mock-exam-page .mock-product-cover.tone-mixed,
+.brand-page.mock-exam-page .mock-product-cover.tone-bundle {
+  background: linear-gradient(135deg, #315dff, #13c7a3, #b7ef43);
+  color: #fff;
+}

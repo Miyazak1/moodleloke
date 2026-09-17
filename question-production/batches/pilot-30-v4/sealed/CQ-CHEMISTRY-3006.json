@@ -1,0 +1,237 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-CHEMISTRY-3006",
+  "subject": "chemistry",
+  "topicCode": "C-ORG-EMP",
+  "topicTitle": "有机物组成",
+  "designedDifficulty": "hard",
+  "questionType": "single_choice",
+  "prompt": "某只含 C、H、O 三种元素的有机物样品 6 g 完全燃烧，得到 8.8 g CO₂ 和 3.6 g H₂O。求该有机物的实验式。",
+  "options": [
+    {
+      "id": "A",
+      "text": "CH₂O"
+    },
+    {
+      "id": "B",
+      "text": "C₂H₄O₂"
+    },
+    {
+      "id": "C",
+      "text": "CH₂"
+    },
+    {
+      "id": "D",
+      "text": "C₂H₆"
+    }
+  ],
+  "knowledgeTags": [
+    "有机物组成",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "chemistry",
+    "topicCode": "C-ORG-EMP",
+    "topicTitle": "有机物组成",
+    "targetDifficulty": "hard",
+    "taskFamily": "empirical_formula_from_combustion",
+    "planTemplate": "pilot_v4_empirical_formula_from_combustion_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "e73189a79742925f2618f83f",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "co2",
+        "h2o",
+        "sample"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "co2",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "h2o",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "sample",
+        "independentGroup": "g3"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "combustion products",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "C/H masses",
+        "inputs": [
+          "r1"
+        ],
+        "output": "intermediate_2"
+      },
+      {
+        "id": "r3",
+        "operation": "residual O",
+        "inputs": [
+          "r2"
+        ],
+        "output": "intermediate_3"
+      },
+      {
+        "id": "r4",
+        "operation": "atom ratio",
+        "inputs": [
+          "r3"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "nC=mCO2/44",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "nH=2mH2O/18",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q3",
+        "type": "deterministic_relation",
+        "expression": "mO=msample-12nC-nH",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q4",
+        "type": "deterministic_relation",
+        "expression": "simplify nC:nH:nO",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "把产物质量直接作原子比",
+      "氧元素质量未用差量法"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "sample": 6,
+      "co2": 8.8,
+      "h2o": 3.6
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 2
+  },
+  "correctAnswer": "A",
+  "explanation": "n(C)=8.8/44=0.2 mol，n(H)=2×3.6/18=0.4 mol。样品中氧的质量由差量得 3.2 g，即 n(O)=0.2 mol。三者取最简整数比，实验式为 CH₂O。",
+  "generationMetadata": {
+    "origin": "codex_local_deterministic_v4",
+    "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v4",
+    "createdAt": "2026-09-15T16:00:00.000Z",
+    "languageScope": "zh_primary_only",
+    "providerCalls": 0,
+    "sourceIsolation": {
+      "officialQuestionContentRead": false,
+      "databaseQuestionTextRead": false,
+      "priorReviewTextRead": false
+    },
+    "deterministicVerification": {
+      "solver": {
+        "version": "pilot-v4-batch-local-solver-v1",
+        "status": "verified",
+        "taskFamily": "empirical_formula_from_combustion",
+        "evidenceBoundary": "prompt_options_and_question_plan",
+        "expectedCanonical": "CH₂O",
+        "selectedOptionId": "A",
+        "uniqueAnswer": true
+      },
+      "oracle": {
+        "version": "pilot-v4-independent-oracle-v1",
+        "status": "verified",
+        "implementation": "fresh_family_evaluation_from_canonical_inputs",
+        "expectedCanonical": "CH₂O",
+        "agreesWithSolver": true
+      },
+      "optionTruthTable": [
+        {
+          "optionId": "A",
+          "verdict": true,
+          "canonicalValue": "CH₂O"
+        },
+        {
+          "optionId": "B",
+          "verdict": false,
+          "canonicalValue": "C₂H₄O₂"
+        },
+        {
+          "optionId": "C",
+          "verdict": false,
+          "canonicalValue": "CH₂"
+        },
+        {
+          "optionId": "D",
+          "verdict": false,
+          "canonicalValue": "C₂H₆"
+        }
+      ],
+      "explanationReplay": {
+        "version": "pilot-v4-explanation-replay-v1",
+        "status": "verified",
+        "requiredEvidenceTokens": [
+          "差量",
+          "CH₂O"
+        ],
+        "allRequiredTokensPresent": true,
+        "conclusionMatchesAnswer": true
+      }
+    }
+  }
+}

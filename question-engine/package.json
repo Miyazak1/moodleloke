@@ -1,0 +1,34 @@
+{
+  "name": "@moodlelike/question-engine",
+  "version": "0.1.0-alpha.1",
+  "private": true,
+  "description": "Stable read-only boundary around CSCALite's verified question-generation engine.",
+  "type": "commonjs",
+  "main": "src/portable-index.cjs",
+  "exports": {
+    ".": "./src/portable-index.cjs",
+    "./cscalite": "./src/index.cjs"
+  },
+  "bin": {
+    "cscalite-question-engine": "bin/portable-question-engine.cjs"
+  },
+  "files": [
+    "adapters/portable-host.cjs",
+    "bin/portable-question-engine.cjs",
+    "dist/core",
+    "src/portable-index.cjs",
+    "src/portable-runtime.cjs",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node ../backend/node_modules/typescript/bin/tsc -p tsconfig.json",
+    "test": "node test/contracts.test.cjs",
+    "test:portable": "node test/portable-runtime.test.cjs",
+    "preview:portable": "node bin/portable-question-engine.cjs",
+    "catalog": "node bin/question-engine.cjs catalog",
+    "readiness": "node bin/question-engine.cjs readiness"
+  },
+  "engines": {
+    "node": ">=22 <23"
+  }
+}

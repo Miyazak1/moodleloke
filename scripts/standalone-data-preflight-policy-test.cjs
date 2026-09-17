@@ -1,0 +1,10 @@
+const assert = require('node:assert/strict');
+const { criticalTables, assessDataPreflight } = require('./lib/standalone-data-preflight-policy.cjs');
+const clean = assessDataPreflight({ serverVersionNum: 160000, publicTableCount: 149, criticalTablesMissing: [], failedMigrationCount: 0, unvalidatedConstraints: [{ constraint: 'ck_forecast_verified_manifest_required' }], sequenceLag: [], approximateRows: { users: 1, csca_questions: 1, agent_conversations: 1 } });
+assert.equal(clean.status, 'passed');
+assert.equal(clean.warnings[0].code, 'accepted-legacy-unvalidated-constraints');
+const blocked = assessDataPreflight({ serverVersionNum: 150000, publicTableCount: 10, criticalTablesMissing: [criticalTables[0]], failedMigrationCount: 1, unvalidatedConstraints: [{ constraint: 'unexpected_probe' }], sequenceLag: [{ table: 'users', column: 'id' }], approximateRows: {} });
+assert.equal(blocked.status, 'blocked');
+assert.deepEqual(new Set(blocked.blockers.map((item) => item.code)), new Set(['postgres-version', 'missing-critical-table', 'failed-migrations', 'unvalidated-constraints', 'sequence-behind-data']));
+assert(blocked.warnings.length >= 3);
+console.log('Standalone data preflight policy tests passed.');

@@ -1,0 +1,1629 @@
+{
+  "schemaVersion": "1",
+  "generatedAt": "2026-09-17T11:50:19.599Z",
+  "frontend": {
+    "totals": {
+      "student-agent": 77,
+      "admin-authoring": 94,
+      "teaching-assets": 52,
+      "obsolete-candidate": 0
+    },
+    "groups": {
+      "student-agent": [
+        "src/StandaloneAgentApp.tsx",
+        "src/components/ConfirmDialog.tsx",
+        "src/components/ErrorBanner.tsx",
+        "src/components/Icon.tsx",
+        "src/components/MathContent.tsx",
+        "src/components/StudentProfileFields.tsx",
+        "src/components/UiPrimitives.tsx",
+        "src/components/UserAvatar.tsx",
+        "src/components/agent/AgentLearningSettingsView.tsx",
+        "src/components/agent/AgentPastPaperWorkspace.tsx",
+        "src/components/agent/TeachingAssetRegistry.tsx",
+        "src/content/localized/csca-subjects.ts",
+        "src/i18n/I18nProvider.tsx",
+        "src/i18n/locale-utils.ts",
+        "src/i18n/locales.ts",
+        "src/i18n/messages/en.ts",
+        "src/i18n/messages/index.ts",
+        "src/i18n/messages/vi.ts",
+        "src/i18n/messages/zh-CN.ts",
+        "src/i18n/useI18n.ts",
+        "src/lib/adaptive-practice-pool.ts",
+        "src/lib/agent-feature.ts",
+        "src/lib/api-admin.ts",
+        "src/lib/api-agent.ts",
+        "src/lib/api-content.ts",
+        "src/lib/api-me.ts",
+        "src/lib/api-mock-exam.ts",
+        "src/lib/api-past-papers.ts",
+        "src/lib/api-special-practice.ts",
+        "src/lib/api-types.ts",
+        "src/lib/api.ts",
+        "src/lib/app-navigation.ts",
+        "src/lib/auth.ts",
+        "src/lib/locale-routing.ts",
+        "src/lib/request.ts",
+        "src/lib/routes.ts",
+        "src/lib/use-auth-session.ts",
+        "src/main.tsx",
+        "src/pages/AgentPage.tsx",
+        "src/pages/CscaMockExamPage.tsx",
+        "src/pages/PublicAuthPage.tsx",
+        "src/pages/StandaloneAccountPage.tsx",
+        "src/pages/StudentOnboardingPage.tsx",
+        "src/pages/special-practice/adaptive/AdaptivePracticeViews.tsx",
+        "src/pages/special-practice/adaptive/FunctionShiftMicroLesson.tsx",
+        "src/styles.css",
+        "src/styles/account-components.css",
+        "src/styles/account.css",
+        "src/styles/account.part-01.css",
+        "src/styles/account.part-02.css",
+        "src/styles/account.part-03.css",
+        "src/styles/account.part-04.css",
+        "src/styles/account.part-05.css",
+        "src/styles/agent.css",
+        "src/styles/base.css",
+        "src/styles/brand.css",
+        "src/styles/index.css",
+        "src/styles/layout.css",
+        "src/styles/math-content.css",
+        "src/styles/mock-exam-maturity.css",
+        "src/styles/mock-exam-subject.css",
+        "src/styles/mock-exam-subject.part-01.css",
+        "src/styles/mock-exam-subject.part-02.css",
+        "src/styles/mock-exam.css",
+        "src/styles/mock-exam.part-01.css",
+        "src/styles/mock-exam.part-02.css",
+        "src/styles/mock-exam.part-03.css",
+        "src/styles/onboarding.css",
+        "src/styles/public-shell.css",
+        "src/styles/shared-components.css",
+        "src/styles/special-practice.css",
+        "src/styles/special-practice.part-01.css",
+        "src/styles/special-practice.part-02.css",
+        "src/styles/special-practice.part-03.css",
+        "src/styles/special-practice.part-04.css",
+        "src/styles/special-practice.part-05.css",
+        "src/styles/standalone-account.css"
+      ],
+      "admin-authoring": [
+        "src/AuthoringApp.tsx",
+        "src/components/AdminAuthGate.tsx",
+        "src/components/AdminNavActions.tsx",
+        "src/components/AdminPageShell.tsx",
+        "src/components/AdminRouteErrorBoundary.tsx",
+        "src/components/admin/AdminAuditWorkspaceLinks.tsx",
+        "src/components/admin/AdminConsoleShell.tsx",
+        "src/components/admin/AdminWorkbench.tsx",
+        "src/components/admin/QuestionSupplyFulfillmentPanel.tsx",
+        "src/components/admin/ai-question-bank/CandidateQuestionEditor.tsx",
+        "src/components/admin/ai-question-bank/CandidateReviewPanel.tsx",
+        "src/components/admin/ai-question-bank/CoverageWorkPanel.tsx",
+        "src/components/admin/ai-question-bank/CscaSyllabusWorkspace.tsx",
+        "src/components/admin/ai-question-bank/LedgerPanel.tsx",
+        "src/components/admin/ai-question-bank/MockExamProductionPanel.tsx",
+        "src/components/admin/ai-question-bank/ProfileVisualizationPanel.tsx",
+        "src/components/admin/ai-question-bank/PublishedQuestionPanel.tsx",
+        "src/components/admin/ai-question-bank/QualityWorkspace.tsx",
+        "src/components/admin/ai-question-bank/QuestionBankHeaderControls.tsx",
+        "src/components/admin/ai-question-bank/QuestionBankOverviewSummary.tsx",
+        "src/components/admin/ai-question-bank/QuestionBankTaskStatus.tsx",
+        "src/components/admin/ai-question-bank/RemediationWorkspace.tsx",
+        "src/components/admin/ai-question-bank/SourceImportPanel.tsx",
+        "src/components/admin/ai-question-bank/SourceQuestionManagerPanel.tsx",
+        "src/components/admin/ai-question-bank/SourceQuestionMappingCard.tsx",
+        "src/components/admin/ai-question-bank/SourceReferenceLibraryPanel.tsx",
+        "src/components/admin/ai-question-bank/SourceReferenceWorkspace.tsx",
+        "src/components/admin/ai-question-bank/StyleProfilePanel.tsx",
+        "src/components/admin/ai-question-bank/SubjectPracticeProductionPanel.tsx",
+        "src/components/admin/ai-question-bank/candidateBulkActions.ts",
+        "src/components/admin/ai-question-bank/candidateQueueFilters.ts",
+        "src/components/admin/ai-question-bank/candidateReviewHelpers.ts",
+        "src/components/admin/ai-question-bank/candidateReviewPanelProps.ts",
+        "src/components/admin/ai-question-bank/coverageWorkPanelProps.ts",
+        "src/components/admin/ai-question-bank/index.ts",
+        "src/components/admin/ai-question-bank/pageUtils.ts",
+        "src/components/admin/ai-question-bank/qualityWorkspaceProps.ts",
+        "src/components/admin/ai-question-bank/questionBankChromeProps.ts",
+        "src/components/admin/ai-question-bank/questionBankConfig.ts",
+        "src/components/admin/ai-question-bank/questionBankDefaults.ts",
+        "src/components/admin/ai-question-bank/questionBankQualitySummary.ts",
+        "src/components/admin/ai-question-bank/questionBankSummary.ts",
+        "src/components/admin/ai-question-bank/questionBankViewModel.ts",
+        "src/components/admin/ai-question-bank/questionData.ts",
+        "src/components/admin/ai-question-bank/questionEvidence.ts",
+        "src/components/admin/ai-question-bank/questionFormatting.ts",
+        "src/components/admin/ai-question-bank/questionLedgerPanelProps.ts",
+        "src/components/admin/ai-question-bank/remediationDrafts.ts",
+        "src/components/admin/ai-question-bank/remediationWorkspaceProps.ts",
+        "src/components/admin/ai-question-bank/sourceReferenceImport.ts",
+        "src/components/admin/ai-question-bank/sourceReferenceWorkspaceProps.ts",
+        "src/components/admin/ai-question-bank/types.ts",
+        "src/components/admin/ai-question-bank/useCandidateBulkActions.ts",
+        "src/components/admin/ai-question-bank/useCandidateDataRefresh.ts",
+        "src/components/admin/ai-question-bank/useCandidateQuestionActions.tsx",
+        "src/components/admin/ai-question-bank/useCandidateReviewState.ts",
+        "src/components/admin/ai-question-bank/useGenerationQueuePolling.ts",
+        "src/components/admin/ai-question-bank/useGovernanceDataRefresh.ts",
+        "src/components/admin/ai-question-bank/useQualityGovernanceActions.ts",
+        "src/components/admin/ai-question-bank/useQuestionAgentRuns.ts",
+        "src/components/admin/ai-question-bank/useQuestionBankActionRunner.ts",
+        "src/components/admin/ai-question-bank/useQuestionBankExports.ts",
+        "src/components/admin/ai-question-bank/useQuestionBankInitialData.ts",
+        "src/components/admin/ai-question-bank/useRemediationActions.ts",
+        "src/components/admin/ai-question-bank/useSourceReferenceActions.ts",
+        "src/components/admin/ai-question-bank/useSourceReferenceDataRefresh.ts",
+        "src/components/admin/ai-question-bank/useSourceReferenceState.ts",
+        "src/components/admin/ai-question-bank/useTopicHealthActions.ts",
+        "src/lib/admin-audit-exports.ts",
+        "src/lib/admin-audit-filters.ts",
+        "src/lib/admin-audit-summaries.ts",
+        "src/lib/ai-questioning-readiness-exports.ts",
+        "src/lib/api-admin-teaching-assets.ts",
+        "src/lib/organization-governance.ts",
+        "src/lib/syllabus-imports.ts",
+        "src/main-authoring.tsx",
+        "src/pages/AdminAIOperationsPage.tsx",
+        "src/pages/AdminAIQuestionBankPage.tsx",
+        "src/pages/AdminAuditPage.tsx",
+        "src/pages/AdminContentPage.tsx",
+        "src/pages/AdminMockExamPage.tsx",
+        "src/pages/AdminOrganizationsPage.tsx",
+        "src/pages/AdminPastPapersPage.tsx",
+        "src/pages/AdminSpecialPracticePage.tsx",
+        "src/pages/AdminTeachingAssetsPage.tsx",
+        "src/pages/AdminUsersPage.tsx",
+        "src/styles/admin-components.css",
+        "src/styles/admin-console.css",
+        "src/styles/admin-work.css",
+        "src/styles/admin-work.part-01.css",
+        "src/styles/admin-work.part-02.css",
+        "src/styles/admin-work.part-03.css",
+        "src/styles/admin.css",
+        "src/styles/authoring-entry.css"
+      ],
+      "teaching-assets": [
+        "src/components/NewtonSecondLawCanvas.tsx",
+        "src/components/SolidGeometryCanvas.tsx",
+        "src/pages/special-practice/ChemistryVisualizers.tsx",
+        "src/pages/special-practice/MathVisualizers.tsx",
+        "src/pages/special-practice/PhysicsCircuitSeriesParallelVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsCircularMotionVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsDoubleSlitVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsElectricFieldVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsElectromagneticInductionVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsEnergyConservationVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsIdealGasLawVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsKinematicsGraphsVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsMagneticForceVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsMomentumCollisionVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsNewtonSecondLawVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsPhotoelectricEffectVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsThermodynamicsFirstLawVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsThinLensVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsWaveSpeedVisualizerView.tsx",
+        "src/styles/special-practice-visualizers-chemistry.css",
+        "src/styles/special-practice-visualizers-physics.css",
+        "src/styles/special-practice-visualizers.css",
+        "src/styles/visualizers/chemistry/atomic-periodic.css",
+        "src/styles/visualizers/chemistry/bonding.css",
+        "src/styles/visualizers/chemistry/ion-reaction.css",
+        "src/styles/visualizers/chemistry/neutralization.css",
+        "src/styles/visualizers/chemistry/nomenclature.css",
+        "src/styles/visualizers/chemistry/organic.css",
+        "src/styles/visualizers/chemistry/ph-titration.css",
+        "src/styles/visualizers/chemistry/reaction-rate.css",
+        "src/styles/visualizers/chemistry/redox.css",
+        "src/styles/visualizers/chemistry/substance-classification.css",
+        "src/styles/visualizers/math/charts-responsive.css",
+        "src/styles/visualizers/math/layout-controls.css",
+        "src/styles/visualizers/math/math-tools.css",
+        "src/styles/visualizers/math/notes-legends.css",
+        "src/styles/visualizers/math/shared-formula-trig.css",
+        "src/styles/visualizers/physics/circuit.css",
+        "src/styles/visualizers/physics/circular.css",
+        "src/styles/visualizers/physics/double-slit.css",
+        "src/styles/visualizers/physics/electric.css",
+        "src/styles/visualizers/physics/energy.css",
+        "src/styles/visualizers/physics/ideal-gas.css",
+        "src/styles/visualizers/physics/induction.css",
+        "src/styles/visualizers/physics/kinematics.css",
+        "src/styles/visualizers/physics/lens.css",
+        "src/styles/visualizers/physics/magnetic.css",
+        "src/styles/visualizers/physics/momentum.css",
+        "src/styles/visualizers/physics/newton.css",
+        "src/styles/visualizers/physics/photoelectric.css",
+        "src/styles/visualizers/physics/thermodynamics.css",
+        "src/styles/visualizers/physics/wave.css"
+      ],
+      "obsolete-candidate": []
+    }
+  },
+  "backend": {
+    "entry": "backend/src/app.module.ts",
+    "totals": {
+      "all": 246,
+      "reachable": 208,
+      "unreachable": 38
+    },
+    "areas": {
+      "admin-audit": {
+        "total": 5,
+        "reachable": 1,
+        "unreachable": 4
+      },
+      "agent": {
+        "total": 40,
+        "reachable": 40,
+        "unreachable": 0
+      },
+      "ai-gateway": {
+        "total": 12,
+        "reachable": 12,
+        "unreachable": 0
+      },
+      "ai-questioning": {
+        "total": 83,
+        "reachable": 60,
+        "unreachable": 23
+      },
+      "(root)": {
+        "total": 2,
+        "reachable": 1,
+        "unreachable": 1
+      },
+      "auth": {
+        "total": 12,
+        "reachable": 12,
+        "unreachable": 0
+      },
+      "common": {
+        "total": 5,
+        "reachable": 4,
+        "unreachable": 1
+      },
+      "csca-learning": {
+        "total": 3,
+        "reachable": 3,
+        "unreachable": 0
+      },
+      "csca-mock-exam": {
+        "total": 6,
+        "reachable": 6,
+        "unreachable": 0
+      },
+      "csca-special-practice": {
+        "total": 19,
+        "reachable": 19,
+        "unreachable": 0
+      },
+      "health": {
+        "total": 2,
+        "reachable": 2,
+        "unreachable": 0
+      },
+      "learning-intelligence": {
+        "total": 27,
+        "reachable": 26,
+        "unreachable": 1
+      },
+      "me": {
+        "total": 4,
+        "reachable": 4,
+        "unreachable": 0
+      },
+      "ops": {
+        "total": 2,
+        "reachable": 0,
+        "unreachable": 2
+      },
+      "past-papers": {
+        "total": 5,
+        "reachable": 5,
+        "unreachable": 0
+      },
+      "prisma": {
+        "total": 2,
+        "reachable": 2,
+        "unreachable": 0
+      },
+      "schools": {
+        "total": 11,
+        "reachable": 11,
+        "unreachable": 0
+      },
+      "score-calibration": {
+        "total": 6,
+        "reachable": 0,
+        "unreachable": 6
+      }
+    },
+    "reachable": [
+      "backend/src/admin-audit/admin-audit-log.ts",
+      "backend/src/agent/admin-teaching-assets.controller.ts",
+      "backend/src/agent/admin-teaching-assets.service.ts",
+      "backend/src/agent/agent-attachment-analysis.service.ts",
+      "backend/src/agent/agent-attachment-evidence.service.ts",
+      "backend/src/agent/agent-attachment-storage.ts",
+      "backend/src/agent/agent-attachment.service.ts",
+      "backend/src/agent/agent-event.service.ts",
+      "backend/src/agent/agent-grounded-response.service.ts",
+      "backend/src/agent/agent-intent-router.service.ts",
+      "backend/src/agent/agent-intervention-delivery.service.ts",
+      "backend/src/agent/agent-intervention-verification.service.ts",
+      "backend/src/agent/agent-journey-read.service.ts",
+      "backend/src/agent/agent-learning-assistance.service.ts",
+      "backend/src/agent/agent-past-paper-assistance.service.ts",
+      "backend/src/agent/agent-past-paper-attempt.service.ts",
+      "backend/src/agent/agent-past-paper-question.service.ts",
+      "backend/src/agent/agent-practice-action.service.ts",
+      "backend/src/agent/agent-practice-question-context.service.ts",
+      "backend/src/agent/agent-recovery.service.ts",
+      "backend/src/agent/agent-runner.service.ts",
+      "backend/src/agent/agent-runtime-feature-flags.service.ts",
+      "backend/src/agent/agent-teaching-asset.service.ts",
+      "backend/src/agent/agent-tool-executor.service.ts",
+      "backend/src/agent/agent-trusted-question-matcher.service.ts",
+      "backend/src/agent/agent.controller.ts",
+      "backend/src/agent/agent.module.ts",
+      "backend/src/agent/agent.service.ts",
+      "backend/src/agent/agent.types.ts",
+      "backend/src/agent/question-supply-evaluation.service.ts",
+      "backend/src/agent/question-supply-fulfillment.contract.ts",
+      "backend/src/agent/question-supply-fulfillment.service.ts",
+      "backend/src/agent/question-supply-operations-health.service.ts",
+      "backend/src/agent/question-supply-request.controller.ts",
+      "backend/src/agent/question-supply-request.service.ts",
+      "backend/src/agent/question-supply-shadow-scheduler.service.ts",
+      "backend/src/agent/question-supply-shadow.adapter.ts",
+      "backend/src/agent/teaching-asset-registry.ts",
+      "backend/src/agent/teaching-asset-routing-outcome-policy.ts",
+      "backend/src/agent/teaching-asset-routing-outcome.service.ts",
+      "backend/src/agent/teaching-asset-selection-policy.ts",
+      "backend/src/ai-gateway/ai-gateway-concurrency.service.ts",
+      "backend/src/ai-gateway/ai-gateway-config.service.ts",
+      "backend/src/ai-gateway/ai-gateway-cost.service.ts",
+      "backend/src/ai-gateway/ai-gateway-key-pool.service.ts",
+      "backend/src/ai-gateway/ai-gateway-ledger.service.ts",
+      "backend/src/ai-gateway/ai-gateway-monitor.controller.ts",
+      "backend/src/ai-gateway/ai-gateway-monitor.service.ts",
+      "backend/src/ai-gateway/ai-gateway.module.ts",
+      "backend/src/ai-gateway/ai-gateway.service.ts",
+      "backend/src/ai-gateway/ai-gateway.types.ts",
+      "backend/src/ai-gateway/providers/deepseek.provider.ts",
+      "backend/src/ai-gateway/providers/openai-compatible-http.ts",
+      "backend/src/ai-questioning/adaptive-replenishment.service.ts",
+      "backend/src/ai-questioning/ai-questioning-scheduler.service.ts",
+      "backend/src/ai-questioning/ai-questioning.controller.ts",
+      "backend/src/ai-questioning/ai-questioning.module.ts",
+      "backend/src/ai-questioning/ai-questioning.service.ts",
+      "backend/src/ai-questioning/ai-questioning.types.ts",
+      "backend/src/ai-questioning/question-generator-provider.service.ts",
+      "backend/src/ai-questioning/question-generator.service.ts",
+      "backend/src/ai-questioning/question-prompt-builder.service.ts",
+      "backend/src/ai-questioning/question-quality.service.ts",
+      "backend/src/ai-questioning/question-reviewer-provider.service.ts",
+      "backend/src/ai-questioning/question-reviewer.service.ts",
+      "backend/src/ai-questioning/question-topic-mapper-provider.service.ts",
+      "backend/src/ai-questioning/question-validator.service.ts",
+      "backend/src/ai-questioning/question-version-governance.ts",
+      "backend/src/ai-questioning/source-question-profile-normalizer.ts",
+      "backend/src/ai-questioning/subject-practice-candidate-output-novelty-policy.ts",
+      "backend/src/ai-questioning/subject-practice-chemistry-acid-base-explanation-verifier.ts",
+      "backend/src/ai-questioning/subject-practice-chemistry-acid-base-independent-oracle.ts",
+      "backend/src/ai-questioning/subject-practice-chemistry-acid-base-local-generator.ts",
+      "backend/src/ai-questioning/subject-practice-chemistry-acid-base-solver.ts",
+      "backend/src/ai-questioning/subject-practice-difficulty-evidence-policy-version.ts",
+      "backend/src/ai-questioning/subject-practice-formal-verification-orchestrator.ts",
+      "backend/src/ai-questioning/subject-practice-generator-source-isolation-policy.ts",
+      "backend/src/ai-questioning/subject-practice-limited-release-control-policy.ts",
+      "backend/src/ai-questioning/subject-practice-local-generator-production-profile-binding-policy.ts",
+      "backend/src/ai-questioning/subject-practice-local-shadow-candidate-seed-policy.ts",
+      "backend/src/ai-questioning/subject-practice-math-derivative-explanation-verifier.ts",
+      "backend/src/ai-questioning/subject-practice-math-derivative-independent-oracle.ts",
+      "backend/src/ai-questioning/subject-practice-math-derivative-local-generator.ts",
+      "backend/src/ai-questioning/subject-practice-math-derivative-solver.ts",
+      "backend/src/ai-questioning/subject-practice-math-elementary-explanation-verifier.ts",
+      "backend/src/ai-questioning/subject-practice-math-elementary-independent-oracle.ts",
+      "backend/src/ai-questioning/subject-practice-math-elementary-local-generator.ts",
+      "backend/src/ai-questioning/subject-practice-math-line-relation-explanation-verifier.ts",
+      "backend/src/ai-questioning/subject-practice-math-line-relation-independent-oracle.ts",
+      "backend/src/ai-questioning/subject-practice-math-line-relation-local-generator.ts",
+      "backend/src/ai-questioning/subject-practice-math-line-relation-solver.ts",
+      "backend/src/ai-questioning/subject-practice-math-solver.ts",
+      "backend/src/ai-questioning/subject-practice-observation-batch-manifest-policy.ts",
+      "backend/src/ai-questioning/subject-practice-observation-scenario-blueprint-addendum-policy.ts",
+      "backend/src/ai-questioning/subject-practice-observation-scope-binding-policy.ts",
+      "backend/src/ai-questioning/subject-practice-physics-kinematics-explanation-verifier.ts",
+      "backend/src/ai-questioning/subject-practice-physics-kinematics-independent-oracle.ts",
+      "backend/src/ai-questioning/subject-practice-physics-kinematics-local-generator.ts",
+      "backend/src/ai-questioning/subject-practice-physics-kinematics-solver.ts",
+      "backend/src/ai-questioning/subject-practice-production-shadow-scope-registry.ts",
+      "backend/src/ai-questioning/subject-practice-question-plan-policy.ts",
+      "backend/src/ai-questioning/subject-practice-scenario-blueprint-compatibility-policy.ts",
+      "backend/src/ai-questioning/subject-practice-scenario-blueprint-ideation-policy.ts",
+      "backend/src/ai-questioning/subject-practice-scenario-blueprint-materialization-policy.ts",
+      "backend/src/ai-questioning/subject-practice-scenario-blueprint-memory-policy.ts",
+      "backend/src/ai-questioning/subject-practice-scenario-blueprint-orchestrator.ts",
+      "backend/src/ai-questioning/subject-practice-scenario-blueprint-policy.ts",
+      "backend/src/ai-questioning/subject-practice-scenario-blueprint-response-policy.ts",
+      "backend/src/ai-questioning/subject-practice-scenario-blueprint-shadow-evidence-policy.ts",
+      "backend/src/ai-questioning/subject-practice-scenario-diversity-policy.ts",
+      "backend/src/ai-questioning/subject-practice-source-corpus-scan-policy.ts",
+      "backend/src/ai-questioning/subject-practice-source-corpus-topology-policy.ts",
+      "backend/src/ai-questioning/subject-practice-task-family-policy.ts",
+      "backend/src/app.module.ts",
+      "backend/src/auth/access-policy.guard.ts",
+      "backend/src/auth/access-policy.ts",
+      "backend/src/auth/access.decorator.ts",
+      "backend/src/auth/admin-users.controller.ts",
+      "backend/src/auth/auth-email.sender.ts",
+      "backend/src/auth/auth.controller.ts",
+      "backend/src/auth/auth.cookies.ts",
+      "backend/src/auth/auth.guards.ts",
+      "backend/src/auth/auth.module.ts",
+      "backend/src/auth/auth.service.ts",
+      "backend/src/auth/auth.types.ts",
+      "backend/src/auth/current-user.decorator.ts",
+      "backend/src/common/ops-metrics.ts",
+      "backend/src/common/rate-limit.ts",
+      "backend/src/common/request-context.ts",
+      "backend/src/common/validation.ts",
+      "backend/src/csca-learning/csca-learning.module.ts",
+      "backend/src/csca-learning/csca-learning.service.ts",
+      "backend/src/csca-learning/csca-learning.types.ts",
+      "backend/src/csca-mock-exam/csca-mock-exam.controller.ts",
+      "backend/src/csca-mock-exam/csca-mock-exam.module.ts",
+      "backend/src/csca-mock-exam/csca-mock-exam.service.ts",
+      "backend/src/csca-mock-exam/csca-mock-exam.types.ts",
+      "backend/src/csca-mock-exam/mock-exam-mastery-bridge.service.ts",
+      "backend/src/csca-mock-exam/mock-exam-planner.service.ts",
+      "backend/src/csca-special-practice/adaptive-planner.service.ts",
+      "backend/src/csca-special-practice/adaptive-question-provider.service.ts",
+      "backend/src/csca-special-practice/ai-coach-prompt-templates.ts",
+      "backend/src/csca-special-practice/ai-coach-provider.service.ts",
+      "backend/src/csca-special-practice/ai-coach.service.ts",
+      "backend/src/csca-special-practice/ai-entitlement.service.ts",
+      "backend/src/csca-special-practice/ai-observability.service.ts",
+      "backend/src/csca-special-practice/ai-secret-store.ts",
+      "backend/src/csca-special-practice/ai-usage-meter.service.ts",
+      "backend/src/csca-special-practice/csca-adaptive.service.ts",
+      "backend/src/csca-special-practice/csca-adaptive.types.ts",
+      "backend/src/csca-special-practice/csca-special-practice.controller.ts",
+      "backend/src/csca-special-practice/csca-special-practice.module.ts",
+      "backend/src/csca-special-practice/csca-special-practice.service.ts",
+      "backend/src/csca-special-practice/csca-special-practice.types.ts",
+      "backend/src/csca-special-practice/mastery-engine.service.ts",
+      "backend/src/csca-special-practice/organization-permissions.ts",
+      "backend/src/csca-special-practice/planner-assistant.service.ts",
+      "backend/src/csca-special-practice/training-event.service.ts",
+      "backend/src/health/health.controller.ts",
+      "backend/src/health/health.module.ts",
+      "backend/src/learning-intelligence/calibration/score-calibration-engine.ts",
+      "backend/src/learning-intelligence/calibration/score-prediction-calibration-dataset.service.ts",
+      "backend/src/learning-intelligence/calibration/score-prediction-calibration-dataset.ts",
+      "backend/src/learning-intelligence/capabilities/learning-capability-registry.service.ts",
+      "backend/src/learning-intelligence/capabilities/learning-capability.error.ts",
+      "backend/src/learning-intelligence/capabilities/learning-read-capability.contracts.ts",
+      "backend/src/learning-intelligence/capabilities/learning-read-capability.service.ts",
+      "backend/src/learning-intelligence/contracts/learning-intelligence.contracts.ts",
+      "backend/src/learning-intelligence/decision/learning-decision.model.ts",
+      "backend/src/learning-intelligence/decision/learning-decision.service.ts",
+      "backend/src/learning-intelligence/evidence/learning-evidence-mapper.ts",
+      "backend/src/learning-intelligence/evidence/learning-evidence-writer.service.ts",
+      "backend/src/learning-intelligence/intervention/learning-intervention-policy.ts",
+      "backend/src/learning-intelligence/intervention/learning-intervention-shadow.service.ts",
+      "backend/src/learning-intelligence/learning-evidence-writer.port.ts",
+      "backend/src/learning-intelligence/learning-intelligence-contracts.service.ts",
+      "backend/src/learning-intelligence/learning-intelligence-feature-flags.service.ts",
+      "backend/src/learning-intelligence/learning-intelligence-foundation.module.ts",
+      "backend/src/learning-intelligence/projection/learning-state-projection-worker.service.ts",
+      "backend/src/learning-intelligence/projection/learning-state-projection.model.ts",
+      "backend/src/learning-intelligence/projection/learning-state-projector.service.ts",
+      "backend/src/learning-intelligence/projection/learning-state-shadow-query.service.ts",
+      "backend/src/learning-intelligence/readiness/score-calibration-governance.service.ts",
+      "backend/src/learning-intelligence/readiness/score-prediction-shadow.model.ts",
+      "backend/src/learning-intelligence/readiness/score-prediction-shadow.service.ts",
+      "backend/src/learning-intelligence/readiness/score-readiness.service.ts",
+      "backend/src/me/me.controller.ts",
+      "backend/src/me/me.module.ts",
+      "backend/src/me/me.service.ts",
+      "backend/src/me/me.types.ts",
+      "backend/src/past-papers/past-paper-storage.ts",
+      "backend/src/past-papers/past-papers.controller.ts",
+      "backend/src/past-papers/past-papers.module.ts",
+      "backend/src/past-papers/past-papers.service.ts",
+      "backend/src/past-papers/past-papers.types.ts",
+      "backend/src/prisma/prisma.module.ts",
+      "backend/src/prisma/prisma.service.ts",
+      "backend/src/schools/admin-scholarships.controller.ts",
+      "backend/src/schools/admin-scholarships.service.ts",
+      "backend/src/schools/admin-schools.controller.ts",
+      "backend/src/schools/admin-schools.service.ts",
+      "backend/src/schools/scholarships.controller.ts",
+      "backend/src/schools/scholarships.service.ts",
+      "backend/src/schools/schools.controller.ts",
+      "backend/src/schools/schools.module.ts",
+      "backend/src/schools/schools.query.ts",
+      "backend/src/schools/schools.service.ts",
+      "backend/src/schools/schools.types.ts"
+    ],
+    "unreachable": [
+      "backend/src/admin-audit/admin-audit.controller.ts",
+      "backend/src/admin-audit/admin-audit.module.ts",
+      "backend/src/admin-audit/admin-audit.service.ts",
+      "backend/src/admin-audit/admin-audit.types.ts",
+      "backend/src/ai-questioning/subject-practice-candidate-output-novelty-resolution-policy.ts",
+      "backend/src/ai-questioning/subject-practice-canonical-task-graph-policy.ts",
+      "backend/src/ai-questioning/subject-practice-common-fragment-corpus-policy.ts",
+      "backend/src/ai-questioning/subject-practice-dynamic-scenario-qualification-policy.ts",
+      "backend/src/ai-questioning/subject-practice-family-automation-qualification-policy.ts",
+      "backend/src/ai-questioning/subject-practice-math-derivative-tool-verifier.ts",
+      "backend/src/ai-questioning/subject-practice-observation-batch-evidence-policy.ts",
+      "backend/src/ai-questioning/subject-practice-observation-batch-qualification-policy.ts",
+      "backend/src/ai-questioning/subject-practice-observation-batch-resume-policy.ts",
+      "backend/src/ai-questioning/subject-practice-observation-scenario-blueprint-execution-policy.ts",
+      "backend/src/ai-questioning/subject-practice-observation-scenario-blueprint-pack-policy.ts",
+      "backend/src/ai-questioning/subject-practice-production-shadow-evidence-policy.ts",
+      "backend/src/ai-questioning/subject-practice-production-shadow-trusted-exporter.ts",
+      "backend/src/ai-questioning/subject-practice-read-only-db-novelty-evidence-policy.ts",
+      "backend/src/ai-questioning/subject-practice-scenario-blueprint-feedback-policy.ts",
+      "backend/src/ai-questioning/subject-practice-scenario-blueprint-promotion-policy.ts",
+      "backend/src/ai-questioning/subject-practice-scope-release-path-policy.ts",
+      "backend/src/ai-questioning/subject-practice-source-corpus-calibration-policy.ts",
+      "backend/src/ai-questioning/subject-practice-source-corpus-length-policy.ts",
+      "backend/src/ai-questioning/subject-practice-source-corpus-release-qualification-policy.ts",
+      "backend/src/ai-questioning/subject-practice-source-corpus-structure-shadow-policy.ts",
+      "backend/src/ai-questioning/subject-practice-verification-capability-policy.ts",
+      "backend/src/ai-questioning/subject-practice-verification-release-benchmark-policy.ts",
+      "backend/src/common/structured-error.filter.ts",
+      "backend/src/learning-intelligence/testing/fixtures.ts",
+      "backend/src/main.ts",
+      "backend/src/ops/ops.module.ts",
+      "backend/src/ops/readiness-calibration-scheduler.service.ts",
+      "backend/src/score-calibration/score-calibration-admin.service.ts",
+      "backend/src/score-calibration/score-calibration.controller.ts",
+      "backend/src/score-calibration/score-calibration.module.ts",
+      "backend/src/score-calibration/student-exam-outcome.controller.ts",
+      "backend/src/score-calibration/student-exam-outcome.service.ts",
+      "backend/src/score-calibration/verified-exam-calibration-dataset.service.ts"
+    ]
+  },
+  "prisma": {
+    "totalModels": 147,
+    "reviewCandidates": 34,
+    "models": [
+      {
+        "model": "User",
+        "accessor": "user",
+        "prismaAccessorMentions": 50,
+        "typeMentions": 16,
+        "reviewCandidate": false
+      },
+      {
+        "model": "StudentProfile",
+        "accessor": "studentProfile",
+        "prismaAccessorMentions": 11,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "AuthEmailToken",
+        "accessor": "authEmailToken",
+        "prismaAccessorMentions": 5,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "OAuthAccount",
+        "accessor": "oAuthAccount",
+        "prismaAccessorMentions": 6,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "RefreshSession",
+        "accessor": "refreshSession",
+        "prismaAccessorMentions": 6,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "PublicContentBlock",
+        "accessor": "publicContentBlock",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "CityGuide",
+        "accessor": "cityGuide",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "ApplicationTimelineWindow",
+        "accessor": "applicationTimelineWindow",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "AdminAuditLog",
+        "accessor": "adminAuditLog",
+        "prismaAccessorMentions": 4,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "SchoolRaw",
+        "accessor": "schoolRaw",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "School",
+        "accessor": "school",
+        "prismaAccessorMentions": 37,
+        "typeMentions": 15,
+        "reviewCandidate": false
+      },
+      {
+        "model": "SchoolProgram",
+        "accessor": "schoolProgram",
+        "prismaAccessorMentions": 7,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "SchoolCscaRule",
+        "accessor": "schoolCscaRule",
+        "prismaAccessorMentions": 5,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "SchoolScholarship",
+        "accessor": "schoolScholarship",
+        "prismaAccessorMentions": 5,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "Scholarship",
+        "accessor": "scholarship",
+        "prismaAccessorMentions": 17,
+        "typeMentions": 107,
+        "reviewCandidate": false
+      },
+      {
+        "model": "ScholarshipSchool",
+        "accessor": "scholarshipSchool",
+        "prismaAccessorMentions": 1,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "ScholarshipProgram",
+        "accessor": "scholarshipProgram",
+        "prismaAccessorMentions": 1,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "SavedSchool",
+        "accessor": "savedSchool",
+        "prismaAccessorMentions": 3,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "SchoolCompareItem",
+        "accessor": "schoolCompareItem",
+        "prismaAccessorMentions": 7,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "SchoolChangeLog",
+        "accessor": "schoolChangeLog",
+        "prismaAccessorMentions": 9,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "SchoolSnapshot",
+        "accessor": "schoolSnapshot",
+        "prismaAccessorMentions": 3,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "PracticeQuestion",
+        "accessor": "practiceQuestion",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "PracticeAttempt",
+        "accessor": "practiceAttempt",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "SpecialPracticeTopic",
+        "accessor": "specialPracticeTopic",
+        "prismaAccessorMentions": 21,
+        "typeMentions": 2,
+        "reviewCandidate": false
+      },
+      {
+        "model": "SpecialPracticeQuestion",
+        "accessor": "specialPracticeQuestion",
+        "prismaAccessorMentions": 23,
+        "typeMentions": 2,
+        "reviewCandidate": false
+      },
+      {
+        "model": "SpecialPracticeSession",
+        "accessor": "specialPracticeSession",
+        "prismaAccessorMentions": 10,
+        "typeMentions": 2,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaExamTopic",
+        "accessor": "cscaExamTopic",
+        "prismaAccessorMentions": 26,
+        "typeMentions": 2,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaSourceDocument",
+        "accessor": "cscaSourceDocument",
+        "prismaAccessorMentions": 2,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaSourceQuestion",
+        "accessor": "cscaSourceQuestion",
+        "prismaAccessorMentions": 1,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaQuestionStyleProfile",
+        "accessor": "cscaQuestionStyleProfile",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "CscaExamSeriesProfile",
+        "accessor": "cscaExamSeriesProfile",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "CscaGenerationProfile",
+        "accessor": "cscaGenerationProfile",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "CscaSyllabusImport",
+        "accessor": "cscaSyllabusImport",
+        "prismaAccessorMentions": 1,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaTopicMapping",
+        "accessor": "cscaTopicMapping",
+        "prismaAccessorMentions": 12,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "UserCscaTopicMastery",
+        "accessor": "userCscaTopicMastery",
+        "prismaAccessorMentions": 17,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaAdaptiveSession",
+        "accessor": "cscaAdaptiveSession",
+        "prismaAccessorMentions": 9,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaAdaptiveRound",
+        "accessor": "cscaAdaptiveRound",
+        "prismaAccessorMentions": 24,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaAdaptiveRoundItem",
+        "accessor": "cscaAdaptiveRoundItem",
+        "prismaAccessorMentions": 6,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaQuestionExposure",
+        "accessor": "cscaQuestionExposure",
+        "prismaAccessorMentions": 7,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaQuestionBlueprint",
+        "accessor": "cscaQuestionBlueprint",
+        "prismaAccessorMentions": 1,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaQuestion",
+        "accessor": "cscaQuestion",
+        "prismaAccessorMentions": 29,
+        "typeMentions": 2,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaQuestionMisconception",
+        "accessor": "cscaQuestionMisconception",
+        "prismaAccessorMentions": 2,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaConceptCard",
+        "accessor": "cscaConceptCard",
+        "prismaAccessorMentions": 4,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "TeachingAsset",
+        "accessor": "teachingAsset",
+        "prismaAccessorMentions": 12,
+        "typeMentions": 1,
+        "reviewCandidate": false
+      },
+      {
+        "model": "TeachingAssetVersion",
+        "accessor": "teachingAssetVersion",
+        "prismaAccessorMentions": 13,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "TeachingAssetTopic",
+        "accessor": "teachingAssetTopic",
+        "prismaAccessorMentions": 4,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "TeachingAssetExposure",
+        "accessor": "teachingAssetExposure",
+        "prismaAccessorMentions": 6,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "TeachingInteractionEvent",
+        "accessor": "teachingInteractionEvent",
+        "prismaAccessorMentions": 10,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaQuestionQualityMetric",
+        "accessor": "cscaQuestionQualityMetric",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "CscaAiGenerationJob",
+        "accessor": "cscaAiGenerationJob",
+        "prismaAccessorMentions": 1,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaSubjectPracticeProductionRun",
+        "accessor": "cscaSubjectPracticeProductionRun",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "CscaSubjectPracticeProductionCell",
+        "accessor": "cscaSubjectPracticeProductionCell",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "CscaAiQuestioningTask",
+        "accessor": "cscaAiQuestioningTask",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "CscaAiQuestioningSetting",
+        "accessor": "cscaAiQuestioningSetting",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "Organization",
+        "accessor": "organization",
+        "prismaAccessorMentions": 27,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "OrganizationMember",
+        "accessor": "organizationMember",
+        "prismaAccessorMentions": 10,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "OrganizationCohort",
+        "accessor": "organizationCohort",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "OrganizationInvite",
+        "accessor": "organizationInvite",
+        "prismaAccessorMentions": 9,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "OrganizationInviteAttempt",
+        "accessor": "organizationInviteAttempt",
+        "prismaAccessorMentions": 2,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "OrganizationAiCreditPool",
+        "accessor": "organizationAiCreditPool",
+        "prismaAccessorMentions": 6,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "OrganizationLlmProviderConfig",
+        "accessor": "organizationLlmProviderConfig",
+        "prismaAccessorMentions": 4,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaAIInteraction",
+        "accessor": "cscaAIInteraction",
+        "prismaAccessorMentions": 8,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaAIReviewDecision",
+        "accessor": "cscaAIReviewDecision",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "CscaAIInteractionFeedback",
+        "accessor": "cscaAIInteractionFeedback",
+        "prismaAccessorMentions": 3,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaAIEntitlementAccount",
+        "accessor": "cscaAIEntitlementAccount",
+        "prismaAccessorMentions": 11,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaAIUsageLedger",
+        "accessor": "cscaAIUsageLedger",
+        "prismaAccessorMentions": 10,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "AiGatewayCallLog",
+        "accessor": "aiGatewayCallLog",
+        "prismaAccessorMentions": 5,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaTrainingEvent",
+        "accessor": "cscaTrainingEvent",
+        "prismaAccessorMentions": 23,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaLearningCohort",
+        "accessor": "cscaLearningCohort",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "CscaStudentLearningCycle",
+        "accessor": "cscaStudentLearningCycle",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "CscaAdaptiveUsageAggregate",
+        "accessor": "cscaAdaptiveUsageAggregate",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "CscaAdaptiveInventorySnapshot",
+        "accessor": "cscaAdaptiveInventorySnapshot",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "CscaAdaptiveInventoryEvent",
+        "accessor": "cscaAdaptiveInventoryEvent",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "CscaLearningDailySnapshot",
+        "accessor": "cscaLearningDailySnapshot",
+        "prismaAccessorMentions": 6,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaLearningStreak",
+        "accessor": "cscaLearningStreak",
+        "prismaAccessorMentions": 3,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaLearningInsight",
+        "accessor": "cscaLearningInsight",
+        "prismaAccessorMentions": 1,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaReadinessActionCalibrationSnapshot",
+        "accessor": "cscaReadinessActionCalibrationSnapshot",
+        "prismaAccessorMentions": 2,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CscaWrongPattern",
+        "accessor": "cscaWrongPattern",
+        "prismaAccessorMentions": 24,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "MockExamPaper",
+        "accessor": "mockExamPaper",
+        "prismaAccessorMentions": 25,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "MockExamQuestion",
+        "accessor": "mockExamQuestion",
+        "prismaAccessorMentions": 20,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "MockExamBlueprint",
+        "accessor": "mockExamBlueprint",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "MockExamBlueprintSlot",
+        "accessor": "mockExamBlueprintSlot",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "MockExamGenerationJob",
+        "accessor": "mockExamGenerationJob",
+        "prismaAccessorMentions": 1,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "MockExamAttempt",
+        "accessor": "mockExamAttempt",
+        "prismaAccessorMentions": 27,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "PastPaper",
+        "accessor": "pastPaper",
+        "prismaAccessorMentions": 37,
+        "typeMentions": 8,
+        "reviewCandidate": false
+      },
+      {
+        "model": "AgentPastPaperAttempt",
+        "accessor": "agentPastPaperAttempt",
+        "prismaAccessorMentions": 12,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "ResourceBundle",
+        "accessor": "resourceBundle",
+        "prismaAccessorMentions": 12,
+        "typeMentions": 3,
+        "reviewCandidate": false
+      },
+      {
+        "model": "ResourceBundleItem",
+        "accessor": "resourceBundleItem",
+        "prismaAccessorMentions": 5,
+        "typeMentions": 3,
+        "reviewCandidate": false
+      },
+      {
+        "model": "PastPaperFile",
+        "accessor": "pastPaperFile",
+        "prismaAccessorMentions": 5,
+        "typeMentions": 6,
+        "reviewCandidate": false
+      },
+      {
+        "model": "PastPaperDownload",
+        "accessor": "pastPaperDownload",
+        "prismaAccessorMentions": 1,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "CartItem",
+        "accessor": "cartItem",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "Order",
+        "accessor": "order",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "OrderItem",
+        "accessor": "orderItem",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "Payment",
+        "accessor": "payment",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "PaymentCallbackLog",
+        "accessor": "paymentCallbackLog",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "StudentScoreGoal",
+        "accessor": "studentScoreGoal",
+        "prismaAccessorMentions": 9,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "StudentScoreGoalSubject",
+        "accessor": "studentScoreGoalSubject",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "StudyAvailabilityPreference",
+        "accessor": "studyAvailabilityPreference",
+        "prismaAccessorMentions": 9,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "LearningEvidenceEvent",
+        "accessor": "learningEvidenceEvent",
+        "prismaAccessorMentions": 13,
+        "typeMentions": 1,
+        "reviewCandidate": false
+      },
+      {
+        "model": "LearningEvidenceRetraction",
+        "accessor": "learningEvidenceRetraction",
+        "prismaAccessorMentions": 1,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "LearningEvidenceOutbox",
+        "accessor": "learningEvidenceOutbox",
+        "prismaAccessorMentions": 11,
+        "typeMentions": 1,
+        "reviewCandidate": false
+      },
+      {
+        "model": "UserCscaTopicStateV2",
+        "accessor": "userCscaTopicStateV2",
+        "prismaAccessorMentions": 7,
+        "typeMentions": 1,
+        "reviewCandidate": false
+      },
+      {
+        "model": "LearningStateProjectionCheckpoint",
+        "accessor": "learningStateProjectionCheckpoint",
+        "prismaAccessorMentions": 8,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "TargetGapSnapshot",
+        "accessor": "targetGapSnapshot",
+        "prismaAccessorMentions": 1,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "LearningPrescription",
+        "accessor": "learningPrescription",
+        "prismaAccessorMentions": 2,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "LearningDecisionCurrent",
+        "accessor": "learningDecisionCurrent",
+        "prismaAccessorMentions": 6,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "LearningIntervention",
+        "accessor": "learningIntervention",
+        "prismaAccessorMentions": 3,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "LearningInterventionDelivery",
+        "accessor": "learningInterventionDelivery",
+        "prismaAccessorMentions": 13,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "LearningInterventionStep",
+        "accessor": "learningInterventionStep",
+        "prismaAccessorMentions": 4,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "LearningInterventionVerification",
+        "accessor": "learningInterventionVerification",
+        "prismaAccessorMentions": 22,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "LearningInterventionOutcome",
+        "accessor": "learningInterventionOutcome",
+        "prismaAccessorMentions": 2,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "LearningInterventionStabilityAssessment",
+        "accessor": "learningInterventionStabilityAssessment",
+        "prismaAccessorMentions": 4,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "LearningPrescriptionOutcome",
+        "accessor": "learningPrescriptionOutcome",
+        "prismaAccessorMentions": 12,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "QuestionSupplyRequest",
+        "accessor": "questionSupplyRequest",
+        "prismaAccessorMentions": 16,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "QuestionSupplyFulfillmentPlan",
+        "accessor": "questionSupplyFulfillmentPlan",
+        "prismaAccessorMentions": 13,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "QuestionSupplyFulfillmentEvent",
+        "accessor": "questionSupplyFulfillmentEvent",
+        "prismaAccessorMentions": 6,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "QuestionSupplyRecoveryConfirmation",
+        "accessor": "questionSupplyRecoveryConfirmation",
+        "prismaAccessorMentions": 2,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "QuestionSupplyInventoryCheck",
+        "accessor": "questionSupplyInventoryCheck",
+        "prismaAccessorMentions": 5,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "QuestionSupplySchedulerState",
+        "accessor": "questionSupplySchedulerState",
+        "prismaAccessorMentions": 5,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "QuestionSupplySchedulerRun",
+        "accessor": "questionSupplySchedulerRun",
+        "prismaAccessorMentions": 4,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "QuestionSupplyRequestEvent",
+        "accessor": "questionSupplyRequestEvent",
+        "prismaAccessorMentions": 4,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "AssessmentItemExposure",
+        "accessor": "assessmentItemExposure",
+        "prismaAccessorMentions": 3,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "ScoreReadinessForecast",
+        "accessor": "scoreReadinessForecast",
+        "prismaAccessorMentions": 1,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "ScorePredictionShadowRun",
+        "accessor": "scorePredictionShadowRun",
+        "prismaAccessorMentions": 3,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "ExamScoringPolicy",
+        "accessor": "examScoringPolicy",
+        "prismaAccessorMentions": 2,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "ItemCalibrationSnapshot",
+        "accessor": "itemCalibrationSnapshot",
+        "prismaAccessorMentions": 2,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "ForecastCalibrationSnapshot",
+        "accessor": "forecastCalibrationSnapshot",
+        "prismaAccessorMentions": 1,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "StudentExamOutcome",
+        "accessor": "studentExamOutcome",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "StudentExamOutcomeEvidence",
+        "accessor": "studentExamOutcomeEvidence",
+        "prismaAccessorMentions": 1,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "StudentExamOutcomeEvent",
+        "accessor": "studentExamOutcomeEvent",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "ForecastCalibrationDatasetManifest",
+        "accessor": "forecastCalibrationDatasetManifest",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "ForecastCalibrationDatasetRow",
+        "accessor": "forecastCalibrationDatasetRow",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "ScoreCalibrationGovernanceEvent",
+        "accessor": "scoreCalibrationGovernanceEvent",
+        "prismaAccessorMentions": 0,
+        "typeMentions": 0,
+        "reviewCandidate": true
+      },
+      {
+        "model": "AgentConversation",
+        "accessor": "agentConversation",
+        "prismaAccessorMentions": 22,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "AgentMessage",
+        "accessor": "agentMessage",
+        "prismaAccessorMentions": 13,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "AgentAttachment",
+        "accessor": "agentAttachment",
+        "prismaAccessorMentions": 15,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "AgentAttachmentPage",
+        "accessor": "agentAttachmentPage",
+        "prismaAccessorMentions": 3,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "AgentAttachmentChunk",
+        "accessor": "agentAttachmentChunk",
+        "prismaAccessorMentions": 3,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "AgentMessageAttachment",
+        "accessor": "agentMessageAttachment",
+        "prismaAccessorMentions": 2,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "AgentAttachmentAnalysis",
+        "accessor": "agentAttachmentAnalysis",
+        "prismaAccessorMentions": 13,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "AgentAttachmentAnalysisItem",
+        "accessor": "agentAttachmentAnalysisItem",
+        "prismaAccessorMentions": 2,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "AgentAttachmentQuestionMatch",
+        "accessor": "agentAttachmentQuestionMatch",
+        "prismaAccessorMentions": 3,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "AgentAttachmentEvidenceCandidate",
+        "accessor": "agentAttachmentEvidenceCandidate",
+        "prismaAccessorMentions": 11,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "AgentRun",
+        "accessor": "agentRun",
+        "prismaAccessorMentions": 26,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "AgentToolCall",
+        "accessor": "agentToolCall",
+        "prismaAccessorMentions": 60,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "AgentArtifact",
+        "accessor": "agentArtifact",
+        "prismaAccessorMentions": 23,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      },
+      {
+        "model": "AgentOutbox",
+        "accessor": "agentOutbox",
+        "prismaAccessorMentions": 6,
+        "typeMentions": 0,
+        "reviewCandidate": false
+      }
+    ]
+  }
+}

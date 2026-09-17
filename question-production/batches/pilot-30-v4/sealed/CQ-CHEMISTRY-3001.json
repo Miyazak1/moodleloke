@@ -1,0 +1,216 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-CHEMISTRY-3001",
+  "subject": "chemistry",
+  "topicCode": "C-STOICH-LIMIT",
+  "topicTitle": "化学计量",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "密闭反应器中加入 3 mol H₂ 和 2 mol O₂，点燃后充分反应。反应为 2H₂+O₂→2H₂O，假定生成的水全部收集，求水的质量（H₂O 的摩尔质量为 18 g/mol）。",
+  "options": [
+    {
+      "id": "A",
+      "text": "54 g"
+    },
+    {
+      "id": "B",
+      "text": "90 g"
+    },
+    {
+      "id": "C",
+      "text": "72 g"
+    },
+    {
+      "id": "D",
+      "text": "27 g"
+    }
+  ],
+  "knowledgeTags": [
+    "化学计量",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "chemistry",
+    "topicCode": "C-STOICH-LIMIT",
+    "topicTitle": "化学计量",
+    "targetDifficulty": "medium",
+    "taskFamily": "limiting_reagent_product_mass",
+    "planTemplate": "pilot_v4_limiting_reagent_product_mass_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "9790c34d3ff908597f94ea72",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "h2",
+        "o2"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "h2",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "o2",
+        "independentGroup": "g2"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "balanced ratio",
+        "inputs": [
+          "e1",
+          "e2"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "limiting reagent",
+        "inputs": [
+          "r1"
+        ],
+        "output": "intermediate_2"
+      },
+      {
+        "id": "r3",
+        "operation": "product amount",
+        "inputs": [
+          "r2"
+        ],
+        "output": "intermediate_3"
+      },
+      {
+        "id": "r4",
+        "operation": "mass",
+        "inputs": [
+          "r3"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "n(H2O)=min(n(H2),2n(O2))",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "m=nM",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "不判断限量试剂",
+      "把反应物物质的量直接相加"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "h2": 3,
+      "o2": 2
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 1
+  },
+  "correctAnswer": "A",
+  "explanation": "按 2∶1 比较可知限量试剂，生成 H₂O 的物质的量为 3 mol。故水的质量 m=3×18=54 g。",
+  "generationMetadata": {
+    "origin": "codex_local_deterministic_v4",
+    "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v4",
+    "createdAt": "2026-09-15T16:00:00.000Z",
+    "languageScope": "zh_primary_only",
+    "providerCalls": 0,
+    "sourceIsolation": {
+      "officialQuestionContentRead": false,
+      "databaseQuestionTextRead": false,
+      "priorReviewTextRead": false
+    },
+    "deterministicVerification": {
+      "solver": {
+        "version": "pilot-v4-batch-local-solver-v1",
+        "status": "verified",
+        "taskFamily": "limiting_reagent_product_mass",
+        "evidenceBoundary": "prompt_options_and_question_plan",
+        "expectedCanonical": 54,
+        "selectedOptionId": "A",
+        "uniqueAnswer": true
+      },
+      "oracle": {
+        "version": "pilot-v4-independent-oracle-v1",
+        "status": "verified",
+        "implementation": "fresh_family_evaluation_from_canonical_inputs",
+        "expectedCanonical": 54,
+        "agreesWithSolver": true
+      },
+      "optionTruthTable": [
+        {
+          "optionId": "A",
+          "verdict": true,
+          "canonicalValue": 54
+        },
+        {
+          "optionId": "B",
+          "verdict": false,
+          "canonicalValue": 90
+        },
+        {
+          "optionId": "C",
+          "verdict": false,
+          "canonicalValue": 72
+        },
+        {
+          "optionId": "D",
+          "verdict": false,
+          "canonicalValue": 27
+        }
+      ],
+      "explanationReplay": {
+        "version": "pilot-v4-explanation-replay-v1",
+        "status": "verified",
+        "requiredEvidenceTokens": [
+          "限量试剂",
+          "54 g"
+        ],
+        "allRequiredTokensPresent": true,
+        "conclusionMatchesAnswer": true
+      }
+    }
+  }
+}

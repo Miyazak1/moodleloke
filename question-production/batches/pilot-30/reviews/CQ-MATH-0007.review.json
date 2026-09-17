@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-MATH-0007",
+  "reviewerTaskId": "pilot-30-independent-blind-review",
+  "derivedAnswer": "B",
+  "optionTruthTable": {
+    "A": true,
+    "B": true,
+    "C": true,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": true,
+  "syllabusAligned": true,
+  "difficultyAssessment": "basic",
+  "caseNecessary": false,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "对任意实数x，2^x>0且x→-∞时趋于0但不取0，故值域(0,+∞)，B成立。",
+    "A与C均以“若……会得到……”描述真实可发生的错误推导，字面上也成立；选项没有统一作为候选值域陈述。"
+  ],
+  "verdictBeforeReveal": "reject",
+  "reasonCodes": [
+    "multiple_literal_true_options",
+    "metacognitive_distractor_ambiguity"
+  ],
+  "reviewedAt": "2026-09-15T09:29:16.058Z"
+}

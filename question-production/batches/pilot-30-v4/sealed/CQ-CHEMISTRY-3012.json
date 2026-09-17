@@ -1,0 +1,215 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-CHEMISTRY-3012",
+  "subject": "chemistry",
+  "topicCode": "C-SOL-CRYS",
+  "topicTitle": "溶解度",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "某固体在高温时的溶解度为每 100 g 水溶解 60 g，在低温时为每 100 g 水溶解 20 g。用 150 g 水配成高温饱和溶液，再冷却到低温；忽略水的蒸发，求析出晶体的质量。",
+  "options": [
+    {
+      "id": "A",
+      "text": "30 g"
+    },
+    {
+      "id": "B",
+      "text": "100 g"
+    },
+    {
+      "id": "C",
+      "text": "60 g"
+    },
+    {
+      "id": "D",
+      "text": "90 g"
+    }
+  ],
+  "knowledgeTags": [
+    "溶解度",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "chemistry",
+    "topicCode": "C-SOL-CRYS",
+    "topicTitle": "溶解度",
+    "targetDifficulty": "medium",
+    "taskFamily": "crystallization_from_solubility_change",
+    "planTemplate": "pilot_v4_crystallization_from_solubility_change_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "6d0c8feb3d721f2a01954888",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "cold",
+        "hot",
+        "water"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "cold",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "hot",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "water",
+        "independentGroup": "g3"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "same solvent mass + two solubilities",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "dissolved mass difference",
+        "inputs": [
+          "r1"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "m_hot=mwater Shot/100",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "m_cold=mwater Scold/100",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q3",
+        "type": "deterministic_relation",
+        "expression": "m_crystal=m_hot-m_cold",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "把溶液质量当水质量",
+      "只计算低温溶解量"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "water": 150,
+      "hot": 60,
+      "cold": 20
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 2
+  },
+  "correctAnswer": "C",
+  "explanation": "高温溶解质量为 150×60/100=90 g；低温仍可溶解 150×20/100=30 g。两者之差即析晶质量 60 g。",
+  "generationMetadata": {
+    "origin": "codex_local_deterministic_v4",
+    "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v4",
+    "createdAt": "2026-09-15T16:00:00.000Z",
+    "languageScope": "zh_primary_only",
+    "providerCalls": 0,
+    "sourceIsolation": {
+      "officialQuestionContentRead": false,
+      "databaseQuestionTextRead": false,
+      "priorReviewTextRead": false
+    },
+    "deterministicVerification": {
+      "solver": {
+        "version": "pilot-v4-batch-local-solver-v1",
+        "status": "verified",
+        "taskFamily": "crystallization_from_solubility_change",
+        "evidenceBoundary": "prompt_options_and_question_plan",
+        "expectedCanonical": 60,
+        "selectedOptionId": "C",
+        "uniqueAnswer": true
+      },
+      "oracle": {
+        "version": "pilot-v4-independent-oracle-v1",
+        "status": "verified",
+        "implementation": "fresh_family_evaluation_from_canonical_inputs",
+        "expectedCanonical": 60,
+        "agreesWithSolver": true
+      },
+      "optionTruthTable": [
+        {
+          "optionId": "A",
+          "verdict": false,
+          "canonicalValue": 30
+        },
+        {
+          "optionId": "B",
+          "verdict": false,
+          "canonicalValue": 100
+        },
+        {
+          "optionId": "C",
+          "verdict": true,
+          "canonicalValue": 60
+        },
+        {
+          "optionId": "D",
+          "verdict": false,
+          "canonicalValue": 90
+        }
+      ],
+      "explanationReplay": {
+        "version": "pilot-v4-explanation-replay-v1",
+        "status": "verified",
+        "requiredEvidenceTokens": [
+          "两者之差",
+          "60 g"
+        ],
+        "allRequiredTokensPresent": true,
+        "conclusionMatchesAnswer": true
+      }
+    }
+  }
+}

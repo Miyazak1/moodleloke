@@ -1,0 +1,1087 @@
+{
+  "schemaVersion": "codex-accepted-question-pack-manifest-v1",
+  "packId": "pilot-30-v4-2026-09-15",
+  "selectionId": "pilot-30-v4-2026-09-15",
+  "languageScope": "zh_primary_only",
+  "candidateIds": [
+    "CQ-MATH-3001",
+    "CQ-MATH-3003",
+    "CQ-MATH-3005",
+    "CQ-MATH-3007",
+    "CQ-MATH-3009",
+    "CQ-MATH-3011",
+    "CQ-MATH-3013",
+    "CQ-MATH-4001",
+    "CQ-MATH-3017",
+    "CQ-MATH-3019",
+    "CQ-PHYSICS-3001",
+    "CQ-PHYSICS-3003",
+    "CQ-PHYSICS-3005",
+    "CQ-PHYSICS-3007",
+    "CQ-PHYSICS-4001",
+    "CQ-PHYSICS-3011",
+    "CQ-PHYSICS-3013",
+    "CQ-PHYSICS-3015",
+    "CQ-PHYSICS-3017",
+    "CQ-PHYSICS-3019",
+    "CQ-CHEMISTRY-3001",
+    "CQ-CHEMISTRY-3007",
+    "CQ-CHEMISTRY-3009",
+    "CQ-CHEMISTRY-3011",
+    "CQ-CHEMISTRY-3013",
+    "CQ-CHEMISTRY-3016",
+    "CQ-CHEMISTRY-3017",
+    "CQ-CHEMISTRY-3019",
+    "CQ-CHEMISTRY-4001",
+    "CQ-CHEMISTRY-4002"
+  ],
+  "questionCount": 30,
+  "countsBySubject": {
+    "math": 10,
+    "physics": 10,
+    "chemistry": 10
+  },
+  "questionsSha256": "976a6b68706451ead5cedca096e3745ee1da9fa3ddee589d0ba692bf8211f031",
+  "distribution": {
+    "familiesBySubject": {
+      "math": {
+        "quadratic_scale_then_vertex": 1,
+        "arithmetic_sequence_two_terms_then_sum": 1,
+        "geometric_sequence_nonadjacent_then_sum": 1,
+        "inclusion_exclusion_exactly_one": 1,
+        "probability_exactly_one_red_without_replacement": 1,
+        "vector_parameter_then_norm": 1,
+        "circle_line_chord_length": 1,
+        "trig_quadrant_half_angle": 1,
+        "logarithmic_product_equation_with_domain": 1,
+        "combined_variance_with_between_group_shift": 1
+      },
+      "physics": {
+        "horizontal_projectile_landing_speed": 1,
+        "work_energy_with_friction": 1,
+        "perfectly_inelastic_momentum": 1,
+        "series_parallel_circuit_current": 1,
+        "electrostatic_zero_field_between_charges": 1,
+        "floating_density_from_exposed_fraction": 1,
+        "thin_lens_magnification": 1,
+        "standing_wave_speed": 1,
+        "calorimetry_equilibrium": 1,
+        "magnetic_circular_radius": 1
+      },
+      "chemistry": {
+        "limiting_reagent_product_mass": 1,
+        "redox_electron_stoichiometry": 1,
+        "equilibrium_constant_from_composition": 1,
+        "crystallization_from_solubility_change": 1,
+        "electrolysis_faraday_deposition": 1,
+        "hess_law_target_enthalpy": 1,
+        "hydrocarbon_formula_from_combustion": 1,
+        "molarity_from_mass_fraction_density": 1,
+        "carbonate_purity_from_gas_volume": 1,
+        "empirical_formula_from_combustion": 1
+      }
+    },
+    "topicsBySubject": {
+      "math": {
+        "M-FUNC-QUAD": 1,
+        "M-SEQ-ARITH": 1,
+        "M-SEQ-GEO": 1,
+        "M-SET-IE": 1,
+        "M-PROB-HYPER": 1,
+        "M-VEC-DOT": 1,
+        "M-GEO-CIRCLE": 1,
+        "M-TRIG-HALF": 1,
+        "M-FUNC-LOGEQ": 1,
+        "M-STAT-COMB": 1
+      },
+      "physics": {
+        "P-MECH-PROJ": 1,
+        "P-MECH-ENERGY": 1,
+        "P-MECH-MOM": 1,
+        "P-ELEC-CIRCUIT": 1,
+        "P-ELEC-FIELD": 1,
+        "P-MECH-BUOY": 1,
+        "P-OPT-LENS": 1,
+        "P-WAVE-STAND": 1,
+        "P-THERM-CAL": 1,
+        "P-MAG-LORENTZ": 1
+      },
+      "chemistry": {
+        "C-STOICH-LIMIT": 1,
+        "C-REDOX-E": 1,
+        "C-EQ-KC": 1,
+        "C-SOL-CRYS": 1,
+        "C-ELEC-FAR": 1,
+        "C-THERMO-HESS": 1,
+        "C-ORG-HC": 1,
+        "C-SOL-MOLAR": 1,
+        "C-STOICH-PURITY": 1,
+        "C-ORG-EMP": 1
+      }
+    }
+  },
+  "evidence": {
+    "selection": {
+      "path": "question-production/accepted/pilot-30-v4/selection-plan.json",
+      "sha256": "c303c5bacd681aeb0468b8de05ec883529453527ed30cb6be258c22130fb443d",
+      "bytes": 2850
+    },
+    "originalityAudit": {
+      "path": "question-production/accepted/pilot-30-v4/audit/originality-audit.json",
+      "sha256": "b4b6ba482abd08287496447b07f1b5940fc83412e2b8ec3f52c1ed7f86bd80aa",
+      "bytes": 369020,
+      "schemaVersion": "cscalite-pilot-30-v4-originality-audit-v1",
+      "reportSha256": "8cdb39b0407c50713eb6b03f430f63f1f5e5928d24a1c4e89cb80ba2da40cd4c",
+      "reportedFormalQualificationEligible": false,
+      "auditAloneDoesNotAuthorizePublication": true,
+      "selectedCandidateRule": "every selected candidate status must equal clear"
+    },
+    "items": [
+      {
+        "candidateId": "CQ-MATH-3001",
+        "subject": "math",
+        "batch": "pilot-30-v4",
+        "taskFamily": "quadratic_scale_then_vertex",
+        "topicCode": "M-FUNC-QUAD",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-MATH-3001.json",
+          "sha256": "e431ef76617797a6d9cbc4ab2e830ebe33dde72013c7760651b327069b0948f6",
+          "bytes": 5800
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-MATH-3001.review.json",
+          "sha256": "4e371563655f8bfadffeca906e74cdd697bbc804cbfe791b722471a883ed555e",
+          "bytes": 838,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "A"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "e431ef76617797a6d9cbc4ab2e830ebe33dde72013c7760651b327069b0948f6",
+          "fingerprints": {
+            "promptSha256": "153bdf947f0e3e62b05c067e03bc4ba75e8876bdc2fcb97b2f0e63548f691049",
+            "contentSha256": "19448ffde20c1b33711704e2629aad3f9f22599764f06c24cb334c5abb1a879f",
+            "family": "quadratic_scale_then_vertex",
+            "structureFingerprint": "332864ea0791de78499c63f1",
+            "canonicalInputsSha256": "a4a9d0b886ad786872e56fc166ec03ea3c66c7b9b584c23bfc543abf27fe385b"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-MATH-3003",
+        "subject": "math",
+        "batch": "pilot-30-v4",
+        "taskFamily": "arithmetic_sequence_two_terms_then_sum",
+        "topicCode": "M-SEQ-ARITH",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-MATH-3003.json",
+          "sha256": "abe5813cdd8f6c516d768bc8358d0ca58739e4f5232b5d01504d389cf3dd0dd1",
+          "bytes": 6187
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-MATH-3003.review.json",
+          "sha256": "584cf42d4ded6d347030ad84c331562b63f894cd19f1f76cd65f1d7e1ecab2f0",
+          "bytes": 809,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "C"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "abe5813cdd8f6c516d768bc8358d0ca58739e4f5232b5d01504d389cf3dd0dd1",
+          "fingerprints": {
+            "promptSha256": "89d65e86d4c4cc954e6ae08cf2573c018b18e8453521f646c25de37139262b9b",
+            "contentSha256": "dfd030365daf1e496aff9c14b9dc057f3d91068b788666f7a17387890768c5a5",
+            "family": "arithmetic_sequence_two_terms_then_sum",
+            "structureFingerprint": "6e0058ba467b7f656ef58138",
+            "canonicalInputsSha256": "ee2ce6c22533db4aaa374d44f23d940a5248241f3dd7872d18dfd27d57d11b61"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-MATH-3005",
+        "subject": "math",
+        "batch": "pilot-30-v4",
+        "taskFamily": "geometric_sequence_nonadjacent_then_sum",
+        "topicCode": "M-SEQ-GEO",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-MATH-3005.json",
+          "sha256": "c87eb1081074b1681aa859b7ef558534ed179eea053d46fe7b5bd6d40daf934c",
+          "bytes": 5848
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-MATH-3005.review.json",
+          "sha256": "dfd6b1f3a14e40b91af0bd213c4c6d32bb0267053e066a1e65f4e344e6f197e9",
+          "bytes": 825,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "A"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "c87eb1081074b1681aa859b7ef558534ed179eea053d46fe7b5bd6d40daf934c",
+          "fingerprints": {
+            "promptSha256": "6c1a9a298b9704ad5c6152aac25a7d7961c958ce3abccf923a35e03b4767242d",
+            "contentSha256": "5e41b56ec9a0aa1306a3921d3b53768cbb52384901e0a02e2da7d0a4fda9263b",
+            "family": "geometric_sequence_nonadjacent_then_sum",
+            "structureFingerprint": "22e2dd7d5714501c8a56439b",
+            "canonicalInputsSha256": "6d0b93be10b2ef2fba64707a68a5923e914ec047403e5ef6b24b3eaf31183ff7"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-MATH-3007",
+        "subject": "math",
+        "batch": "pilot-30-v4",
+        "taskFamily": "inclusion_exclusion_exactly_one",
+        "topicCode": "M-SET-IE",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-MATH-3007.json",
+          "sha256": "b9b684da97fde1c64dd3194e14d0314621e326dac3561c4321aa5ed7e4603339",
+          "bytes": 6305
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-MATH-3007.review.json",
+          "sha256": "b95f736b699c518880086e11a30030c3a3885851abf9a0724955a4052e001208",
+          "bytes": 834,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "C"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "b9b684da97fde1c64dd3194e14d0314621e326dac3561c4321aa5ed7e4603339",
+          "fingerprints": {
+            "promptSha256": "d4f3eea6c7874f143783896300e5cafef9c228a3ee34e1eb156cf50500e290d2",
+            "contentSha256": "a02b91d989324013e5b4580efe9659dbc0cb75eb60a98b7a37de720355e78dcf",
+            "family": "inclusion_exclusion_exactly_one",
+            "structureFingerprint": "ba77825df60929bc0bbce2d0",
+            "canonicalInputsSha256": "333bb0db0440121270b4f65476d636659a8d240fc5f3885424dbafb72ebd8cbf"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-MATH-3009",
+        "subject": "math",
+        "batch": "pilot-30-v4",
+        "taskFamily": "probability_exactly_one_red_without_replacement",
+        "topicCode": "M-PROB-HYPER",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-MATH-3009.json",
+          "sha256": "6a82bfc74687e64ac288876be5ae18e509139098c4545a6129aa78bc6024016a",
+          "bytes": 5748
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-MATH-3009.review.json",
+          "sha256": "f93c0f937664bc23037e081c01a71b3f1e6ba8c6830f892407e22246f20077ca",
+          "bytes": 843,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "A"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "6a82bfc74687e64ac288876be5ae18e509139098c4545a6129aa78bc6024016a",
+          "fingerprints": {
+            "promptSha256": "6737e66535494896259e4649a1742745f1db32fb92fd76eebe21be0a9d782776",
+            "contentSha256": "37dcca138b893890da4a9c0f8250f37988171e33c4e568d6e4fe5f042f968733",
+            "family": "probability_exactly_one_red_without_replacement",
+            "structureFingerprint": "8a3f74d5dfce658d8d246d66",
+            "canonicalInputsSha256": "6f6426fe7738f8d678b20f56296e13dbc255ea08d6dc743366775c12ad68f163"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-MATH-3011",
+        "subject": "math",
+        "batch": "pilot-30-v4",
+        "taskFamily": "vector_parameter_then_norm",
+        "topicCode": "M-VEC-DOT",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-MATH-3011.json",
+          "sha256": "3a7483487ed21e901cc5065cdcc6aab95bd03a4dbdba623f7088785f37701a5a",
+          "bytes": 5813
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-MATH-3011.review.json",
+          "sha256": "cbfb8215c886d5a359fe0215c3e281a2c97b37a6a5e876c9ed57021d87f10d1c",
+          "bytes": 815,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "C"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "3a7483487ed21e901cc5065cdcc6aab95bd03a4dbdba623f7088785f37701a5a",
+          "fingerprints": {
+            "promptSha256": "2cb4c8670a4f56e9cd08bab5ce56f7bb00173faa2c36ebcd10d3518456368d6c",
+            "contentSha256": "b6a4ed5f52c8e44b274810698db11175acea8483f205851b30c62c9f0d267a23",
+            "family": "vector_parameter_then_norm",
+            "structureFingerprint": "0fba925283a47332c1fb262f",
+            "canonicalInputsSha256": "0a0168f46b0c4e39a29708b9b1783921211057a11a846b55ad89a1a61b5fe80a"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-MATH-3013",
+        "subject": "math",
+        "batch": "pilot-30-v4",
+        "taskFamily": "circle_line_chord_length",
+        "topicCode": "M-GEO-CIRCLE",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-MATH-3013.json",
+          "sha256": "62720492a37d0e4d6d677268a3d5d98c6c3c495ada6c619c1e11fa46bcfef781",
+          "bytes": 5522
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-MATH-3013.review.json",
+          "sha256": "a244e70de99719c4abd6110aa6d25b50c959a07c8404f7d6ab14ad106dd9c61f",
+          "bytes": 834,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "A"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "62720492a37d0e4d6d677268a3d5d98c6c3c495ada6c619c1e11fa46bcfef781",
+          "fingerprints": {
+            "promptSha256": "95d7c4ca40f7539da65ee1f7c4c95723821d9297aab29296f08e328508bbff26",
+            "contentSha256": "cca6744b9ef6f74307598d07e914d15be341594a4e2e72ad70a143b0da9f2575",
+            "family": "circle_line_chord_length",
+            "structureFingerprint": "596882575c3ceb1ae01ff83d",
+            "canonicalInputsSha256": "6d447c3d475356b7bf45275479c4e377a3aa282b30e1b5971bb97048c259406a"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-MATH-4001",
+        "subject": "math",
+        "batch": "pilot-30-v4-repair",
+        "taskFamily": "trig_quadrant_half_angle",
+        "topicCode": "M-TRIG-HALF",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4-repair/sealed/CQ-MATH-4001.json",
+          "sha256": "31009fc2e11b18085d0269b9cad199dd85182dc657f74bd43f8562908c5acda5",
+          "bytes": 5885
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4-repair/reviews/CQ-MATH-4001.review.json",
+          "sha256": "e592dc6541180e42983ddc3b03fac9820f29a0c259a9bb0ae3816013762842ab",
+          "bytes": 1389,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "C"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "31009fc2e11b18085d0269b9cad199dd85182dc657f74bd43f8562908c5acda5",
+          "fingerprints": {
+            "promptSha256": "17e5bfa06875a13e252d4a47802a102eff82ae163e7766e880f6e11a77bb733f",
+            "contentSha256": "77058bf85c76e76d64462111e384e59c38ea880637b1d6e2e5fccf00591d2057",
+            "family": "trig_quadrant_half_angle",
+            "structureFingerprint": "f66c5dbf9f5c2881273df4da",
+            "canonicalInputsSha256": "332b794c53229d3b702ed8d729b313cd6db925f4c0975dec8c6ad29acb956846"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-MATH-3017",
+        "subject": "math",
+        "batch": "pilot-30-v4",
+        "taskFamily": "logarithmic_product_equation_with_domain",
+        "topicCode": "M-FUNC-LOGEQ",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-MATH-3017.json",
+          "sha256": "ad6de950bbea151c470954af741f5e41d0f59d880aa4d07f46142915196a2d92",
+          "bytes": 6045
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-MATH-3017.review.json",
+          "sha256": "11770b462e3920d944b195924f61544451968436c6585d24a8fc51e0095c61b8",
+          "bytes": 843,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "A"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "ad6de950bbea151c470954af741f5e41d0f59d880aa4d07f46142915196a2d92",
+          "fingerprints": {
+            "promptSha256": "652833e300ebb32439a6775a04df5f4a54c52bfe497c1c597abe5318cb559278",
+            "contentSha256": "63e5067213a231ef1637ef61ef3dc230f73689589eb98c8736f107717ba61945",
+            "family": "logarithmic_product_equation_with_domain",
+            "structureFingerprint": "7a016aeebb2396d899722449",
+            "canonicalInputsSha256": "65b8abdb9e0119300379dee3db0350eb2ad6c491effa7338c07c0bcff56cd97a"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-MATH-3019",
+        "subject": "math",
+        "batch": "pilot-30-v4",
+        "taskFamily": "combined_variance_with_between_group_shift",
+        "topicCode": "M-STAT-COMB",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-MATH-3019.json",
+          "sha256": "7cb151b69c7023bc46f86f14e94d314764bfbdda2fb400c4712dce9484e3f23e",
+          "bytes": 6444
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-MATH-3019.review.json",
+          "sha256": "e77c8269c80722ab787e1335aa2c3387ba4c4279ebbe2346a5d8c21bc917e663",
+          "bytes": 870,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "C"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "7cb151b69c7023bc46f86f14e94d314764bfbdda2fb400c4712dce9484e3f23e",
+          "fingerprints": {
+            "promptSha256": "b63a80c09d099b751f5d53c797e6ee78bb9940cbfa74bc706b5b606bd91db825",
+            "contentSha256": "1b3193007fed04da7de6bcff37549ff59d12004183d51481b6f0235b9a851b19",
+            "family": "combined_variance_with_between_group_shift",
+            "structureFingerprint": "a69ac84fd73774db2c8a78ab",
+            "canonicalInputsSha256": "e91514df97e0881a47772d0ec0cd170ce01607fd816b0bae8e2314fbefec4b98"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-PHYSICS-3001",
+        "subject": "physics",
+        "batch": "pilot-30-v4",
+        "taskFamily": "horizontal_projectile_landing_speed",
+        "topicCode": "P-MECH-PROJ",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-PHYSICS-3001.json",
+          "sha256": "6fd22e14224fbf7dff6f87345ae3deb7cf0e1fb04e549949ad4f1603158baee7",
+          "bytes": 5934
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-PHYSICS-3001.review.json",
+          "sha256": "e1043377e738ff041da548f383f9fed1afa2d8f161670fb1a3e787d247fc2561",
+          "bytes": 874,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "A"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "6fd22e14224fbf7dff6f87345ae3deb7cf0e1fb04e549949ad4f1603158baee7",
+          "fingerprints": {
+            "promptSha256": "f24557c33893edebd28432ee03cfbffc3e828da4187d5827ab4523888a3a554b",
+            "contentSha256": "9620259a208ccc0aa13582c3ef2c091d3ac97628e28df3beb2174e7161ff6cba",
+            "family": "horizontal_projectile_landing_speed",
+            "structureFingerprint": "095316a6b5228bfb48db9fce",
+            "canonicalInputsSha256": "b0aa3b1a62af2a61a305a47ffa24ebd542c6c1fdd40c868d1f5882aaaaf6d71b"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-PHYSICS-3003",
+        "subject": "physics",
+        "batch": "pilot-30-v4",
+        "taskFamily": "work_energy_with_friction",
+        "topicCode": "P-MECH-ENERGY",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-PHYSICS-3003.json",
+          "sha256": "436903a9f46ac11a0edf2ffdb0f0ced76db69707c458a5f6c6334ac66b1e0455",
+          "bytes": 5951
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-PHYSICS-3003.review.json",
+          "sha256": "10b527469c0aa292c3897a80d81cc7ae2cbbf5cece91c5683aeeae16c3bb267e",
+          "bytes": 879,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "C"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "436903a9f46ac11a0edf2ffdb0f0ced76db69707c458a5f6c6334ac66b1e0455",
+          "fingerprints": {
+            "promptSha256": "ad1b412ba5487822bb630ede56a6afd728ad71b797500c11126f9d48204b0285",
+            "contentSha256": "96347bde03e869e199a20cbd93462a9417811040ffd226ddf2f9c78571d11142",
+            "family": "work_energy_with_friction",
+            "structureFingerprint": "09fee837c887cf4b01e11eaf",
+            "canonicalInputsSha256": "4a1dbe8768a0205352752bda0d0a5b0c122b542cfb96de79367e9a748975210e"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-PHYSICS-3005",
+        "subject": "physics",
+        "batch": "pilot-30-v4",
+        "taskFamily": "perfectly_inelastic_momentum",
+        "topicCode": "P-MECH-MOM",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-PHYSICS-3005.json",
+          "sha256": "7a140032e2ac4f662f4d64e92d1e17da731905cfce4837ed82d3b69f7c435de2",
+          "bytes": 6011
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-PHYSICS-3005.review.json",
+          "sha256": "cd132bd5fadbe2afd1b983f8de459d373a29dbb766d21ab7fcdc28661ffbeb70",
+          "bytes": 816,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "A"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "7a140032e2ac4f662f4d64e92d1e17da731905cfce4837ed82d3b69f7c435de2",
+          "fingerprints": {
+            "promptSha256": "bd92ae367cb5a71b9d802294880630333db28c9f2983efc33f3af054b20830f8",
+            "contentSha256": "384aa81a5a7b17ef95ddb6721e109f04ea5328ab995440e745c039ca3dc9a2d6",
+            "family": "perfectly_inelastic_momentum",
+            "structureFingerprint": "74f34cc1e656b0b14a98482b",
+            "canonicalInputsSha256": "280198add4c40f9009e724461d63a79c2f96110b60cd362acca1ec6abd6de24e"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-PHYSICS-3007",
+        "subject": "physics",
+        "batch": "pilot-30-v4",
+        "taskFamily": "series_parallel_circuit_current",
+        "topicCode": "P-ELEC-CIRCUIT",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-PHYSICS-3007.json",
+          "sha256": "2caeca5806b163e59b814310d6bc804805bcd091a72ca21284fb1f28117526e1",
+          "bytes": 6111
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-PHYSICS-3007.review.json",
+          "sha256": "3194ce36560b5de3112bfa7ecba18d8499ae88fd8297749793eec06b0e619969",
+          "bytes": 841,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "C"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "2caeca5806b163e59b814310d6bc804805bcd091a72ca21284fb1f28117526e1",
+          "fingerprints": {
+            "promptSha256": "080d69376d21002188ed5b5d8d101e6b36a2071c2d54128ffcf8491f8dba756e",
+            "contentSha256": "a8d83584874288ab658e571606e36db09a6e95f46c15746333c711b964f8a24d",
+            "family": "series_parallel_circuit_current",
+            "structureFingerprint": "f18419d67b1811a84927a4c9",
+            "canonicalInputsSha256": "c8961397c8aafbbfa5c8d935137c1aff2af30c476a30c9a46c666a7b33361145"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-PHYSICS-4001",
+        "subject": "physics",
+        "batch": "pilot-30-v4-repair",
+        "taskFamily": "electrostatic_zero_field_between_charges",
+        "topicCode": "P-ELEC-FIELD",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4-repair/sealed/CQ-PHYSICS-4001.json",
+          "sha256": "c270aec340c09f662f2eecf77faae0b87d38c4fb48b664fbc0d00a4e7881a2f1",
+          "bytes": 6033
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4-repair/reviews/CQ-PHYSICS-4001.review.json",
+          "sha256": "0b13e214701414e5c0652e209bf8aa05c1265e78590ff3ea499b1693141f6e5e",
+          "bytes": 1569,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "A"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "c270aec340c09f662f2eecf77faae0b87d38c4fb48b664fbc0d00a4e7881a2f1",
+          "fingerprints": {
+            "promptSha256": "022c4fc9410febe864057c66efae912c75f4e85e23b5718def38cc7b26f73520",
+            "contentSha256": "ae87fe7c93590da1a83bd7c5f2eecc12665194c12ac119e7f878d75aaac92aef",
+            "family": "electrostatic_zero_field_between_charges",
+            "structureFingerprint": "d2ccc1087320046f73003014",
+            "canonicalInputsSha256": "324bf3855840df0c0f9ebb49d0a9d087317fb991e28e34627c4526302f101e36"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-PHYSICS-3011",
+        "subject": "physics",
+        "batch": "pilot-30-v4",
+        "taskFamily": "floating_density_from_exposed_fraction",
+        "topicCode": "P-MECH-BUOY",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-PHYSICS-3011.json",
+          "sha256": "13c2e5ca5d3c804413f579b78faf265e76fcdf47d117ecbae8a08a097e0c29bf",
+          "bytes": 5669
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-PHYSICS-3011.review.json",
+          "sha256": "cfbe09313b86bba84f3ea2f88e77e335121535176dea8189d2043fdbff2ddec9",
+          "bytes": 817,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "C"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "13c2e5ca5d3c804413f579b78faf265e76fcdf47d117ecbae8a08a097e0c29bf",
+          "fingerprints": {
+            "promptSha256": "8a4e68d38850475582742ff1678dd15c52e4598638ea29fdcf022a1c58aee569",
+            "contentSha256": "3c62e585508d078b4afc7c0e943a42dbd570ba03a9a4203f34dba90f0a06b79c",
+            "family": "floating_density_from_exposed_fraction",
+            "structureFingerprint": "b5a2626f5bb325417dfbfb10",
+            "canonicalInputsSha256": "b879f2dd4e868b53befbe25fd934497e914f41ab121e27e26b791b4fd5346005"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-PHYSICS-3013",
+        "subject": "physics",
+        "batch": "pilot-30-v4",
+        "taskFamily": "thin_lens_magnification",
+        "topicCode": "P-OPT-LENS",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-PHYSICS-3013.json",
+          "sha256": "f3ab639328c2c595ef98373f80af3dc4bec70be7f3db37492afc3e88ec82813a",
+          "bytes": 5542
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-PHYSICS-3013.review.json",
+          "sha256": "fc2ef3a2de7014b373cff7fff0ddd1029145213864d9160f1fcd788c10e38444",
+          "bytes": 841,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "A"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "f3ab639328c2c595ef98373f80af3dc4bec70be7f3db37492afc3e88ec82813a",
+          "fingerprints": {
+            "promptSha256": "aae920b9cc4bd2aabf49d7691feef3392fff54333d41bdffa42d74b7c8a3d802",
+            "contentSha256": "25b9111779c52b0e7bb4e2f56f7948778e432972eb32a1dd7cb2c68f0ad40270",
+            "family": "thin_lens_magnification",
+            "structureFingerprint": "53311d6bd59f62b04694186d",
+            "canonicalInputsSha256": "f40775c4065e6bdb860b977c5f4c3ce8d790eee589f1071c9baff26d9d467351"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-PHYSICS-3015",
+        "subject": "physics",
+        "batch": "pilot-30-v4",
+        "taskFamily": "standing_wave_speed",
+        "topicCode": "P-WAVE-STAND",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-PHYSICS-3015.json",
+          "sha256": "4b366eb5ed7f2dcb86895a8be9c6ab06c81c490017c7659a9958f9a769919105",
+          "bytes": 5583
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-PHYSICS-3015.review.json",
+          "sha256": "1caa85658c26af97f811dc90917b5deb33158a6f7fea335a4ff967060464ab17",
+          "bytes": 839,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "C"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "4b366eb5ed7f2dcb86895a8be9c6ab06c81c490017c7659a9958f9a769919105",
+          "fingerprints": {
+            "promptSha256": "9c71a81ad9320baaef769c1c1c2d72f1cd1122d9b756783940cfd4f1894e9f37",
+            "contentSha256": "9296d5360742bc618a2e17ef4cdc923f9905d3de7350ac9548b623bc0f7f88c9",
+            "family": "standing_wave_speed",
+            "structureFingerprint": "daa9cec4838e8d2fb48ae530",
+            "canonicalInputsSha256": "39ee3f1295d69d66c5a8806e6b4424e9a1c695cc68da1eb74c2922c8ee3e5fd8"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-PHYSICS-3017",
+        "subject": "physics",
+        "batch": "pilot-30-v4",
+        "taskFamily": "calorimetry_equilibrium",
+        "topicCode": "P-THERM-CAL",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-PHYSICS-3017.json",
+          "sha256": "b340e58a91dc1fa7bf3a13985acb76652cce28fd95545583b679507def137553",
+          "bytes": 6087
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-PHYSICS-3017.review.json",
+          "sha256": "bd0ef1ce721ba31047f81cb08c9735350544a04274da56b284098895ddda180c",
+          "bytes": 862,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "A"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "b340e58a91dc1fa7bf3a13985acb76652cce28fd95545583b679507def137553",
+          "fingerprints": {
+            "promptSha256": "b31c11b38576ea4c35dc969cbc84d0930debb6f86eeb1aef6ad79ea6fb49003f",
+            "contentSha256": "cd3da6ad28128dff92e37aaca7f36688fcfa4f31cb7240c2e61a3e6dc448afdd",
+            "family": "calorimetry_equilibrium",
+            "structureFingerprint": "0c1ea675cdc30db04522268d",
+            "canonicalInputsSha256": "d1ccdd2c58d1965d7d85fc5fa5144ef7e0f90b289fa0becd2e2fa784bd573398"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-PHYSICS-3019",
+        "subject": "physics",
+        "batch": "pilot-30-v4",
+        "taskFamily": "magnetic_circular_radius",
+        "topicCode": "P-MAG-LORENTZ",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-PHYSICS-3019.json",
+          "sha256": "4e834a82f7764d01e043b5e39537fae48551d9d275b41632c6e7404d1e63b683",
+          "bytes": 5941
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-PHYSICS-3019.review.json",
+          "sha256": "d2827bf59355814a8b4793516996d1feb0ade9cb947fd0cd5d4de27413178457",
+          "bytes": 840,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "C"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "4e834a82f7764d01e043b5e39537fae48551d9d275b41632c6e7404d1e63b683",
+          "fingerprints": {
+            "promptSha256": "8f6c1f99c96be735cccdf99c6e0d2be7a432110c580248b4ff5097295d0a413e",
+            "contentSha256": "4b5debba3c74bb4d08f4ad289d0d05659f57af4e377f57fd246ade1b52204ad1",
+            "family": "magnetic_circular_radius",
+            "structureFingerprint": "704c37c15212cd3e4d8a4257",
+            "canonicalInputsSha256": "2b38b6f59fe96186deb8f0099b0cf3bb404652eb084d0f1f015fcaf5cca4f7aa"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-CHEMISTRY-3001",
+        "subject": "chemistry",
+        "batch": "pilot-30-v4",
+        "taskFamily": "limiting_reagent_product_mass",
+        "topicCode": "C-STOICH-LIMIT",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-CHEMISTRY-3001.json",
+          "sha256": "9aa4115aabfa3ba108bce6fce76c86ae801dd677a78f87afb8ac82e275571d4b",
+          "bytes": 5817
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-CHEMISTRY-3001.review.json",
+          "sha256": "e549d8635ede473e5c28886fb7f7f01e7be5ee04dfd2e4879f890f7276af7f6b",
+          "bytes": 863,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "A"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "9aa4115aabfa3ba108bce6fce76c86ae801dd677a78f87afb8ac82e275571d4b",
+          "fingerprints": {
+            "promptSha256": "df96904da2119f3903894b51e002a2ea96917423437245e25dcfed93223acf78",
+            "contentSha256": "a0934f057f15d5d3612584abb87ab97e7c7dd77033bcf8b0b4a410aed53bb318",
+            "family": "limiting_reagent_product_mass",
+            "structureFingerprint": "9790c34d3ff908597f94ea72",
+            "canonicalInputsSha256": "bedf84c5735e3f0c4ea85ecf90c688b03cbb22d62d251288728af7e43248afe5"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-CHEMISTRY-3007",
+        "subject": "chemistry",
+        "batch": "pilot-30-v4",
+        "taskFamily": "redox_electron_stoichiometry",
+        "topicCode": "C-REDOX-E",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-CHEMISTRY-3007.json",
+          "sha256": "22d9362a3231836722808c4a7b4bea05fef2c2664332e6891be1b57528bd1237",
+          "bytes": 5990
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-CHEMISTRY-3007.review.json",
+          "sha256": "0ace5e8c264e35d672c2dc0e76e63f0c2ed11561585c5ac268faf855d544adcd",
+          "bytes": 862,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "C"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "22d9362a3231836722808c4a7b4bea05fef2c2664332e6891be1b57528bd1237",
+          "fingerprints": {
+            "promptSha256": "d2ad1f3e74c57710cd3ff7b0018b3fcbca853b2678f2bd48e729488025774c1e",
+            "contentSha256": "a9cf9a54523ebdb8d82942f52e1ef8cbb1ccf1a9d98e08f5e9754d2b085799cd",
+            "family": "redox_electron_stoichiometry",
+            "structureFingerprint": "0fc365fd7efc77436e834039",
+            "canonicalInputsSha256": "ce0cea03f41a2abd4220e974e4b438169e5196420aa2fb5544ec04c9fb0f4944"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-CHEMISTRY-3009",
+        "subject": "chemistry",
+        "batch": "pilot-30-v4",
+        "taskFamily": "equilibrium_constant_from_composition",
+        "topicCode": "C-EQ-KC",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-CHEMISTRY-3009.json",
+          "sha256": "ef62eeeabc7bb6386a996bc0c986f247b5e9cb82bd165b6750f13ad1b17d8875",
+          "bytes": 6215
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-CHEMISTRY-3009.review.json",
+          "sha256": "8f08237241ad3ddc74b2b0469ad319282eb39c47bfb66624a9ebf3682fee3673",
+          "bytes": 844,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "A"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "ef62eeeabc7bb6386a996bc0c986f247b5e9cb82bd165b6750f13ad1b17d8875",
+          "fingerprints": {
+            "promptSha256": "c2561ce7da897bb8aca8031981ec7b33f1b89b7b3412f04880b71ae6091290b3",
+            "contentSha256": "967e351dfe06a8f19f33b3ba138e190df9f4bb4ee8b05153b3fab184127ab084",
+            "family": "equilibrium_constant_from_composition",
+            "structureFingerprint": "e128994b02ef6e7b23d5d820",
+            "canonicalInputsSha256": "26c9a1b0242729154f8f02e086a983e185b8c522a705402799b111adacc229f6"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-CHEMISTRY-3011",
+        "subject": "chemistry",
+        "batch": "pilot-30-v4",
+        "taskFamily": "crystallization_from_solubility_change",
+        "topicCode": "C-SOL-CRYS",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-CHEMISTRY-3011.json",
+          "sha256": "ee4411507ab7c5b9deee3f5a92b328ab68a51a70ea3895225bfb80888451ad36",
+          "bytes": 5950
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-CHEMISTRY-3011.review.json",
+          "sha256": "ba7817fd29ad2614f62b851bf7691b07ed8ef07a635328176148b9ab24ec06b6",
+          "bytes": 836,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "C"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "ee4411507ab7c5b9deee3f5a92b328ab68a51a70ea3895225bfb80888451ad36",
+          "fingerprints": {
+            "promptSha256": "e6f9bf98669499b1ecbf2976fec1ffad9223eaa9f9bc3ff993312018e20151cd",
+            "contentSha256": "245e0c459cd071738bdb3d7baef5f24d9c8ce7f29a833987828db69f3b616b00",
+            "family": "crystallization_from_solubility_change",
+            "structureFingerprint": "6d0c8feb3d721f2a01954888",
+            "canonicalInputsSha256": "50daf578640f9a7e6c5b86746c3d70e598a7412ee7c3b098d90627770d6f8cfb"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-CHEMISTRY-3013",
+        "subject": "chemistry",
+        "batch": "pilot-30-v4",
+        "taskFamily": "electrolysis_faraday_deposition",
+        "topicCode": "C-ELEC-FAR",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-CHEMISTRY-3013.json",
+          "sha256": "d49e338985cc37f7ce4dbda73680261e03c50abcfa7addfa61b306946c951b56",
+          "bytes": 6524
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-CHEMISTRY-3013.review.json",
+          "sha256": "43a8b0243d67c21244fba4cb4c6caecce9e427b20ec2ab1666816c722b5ff7b3",
+          "bytes": 858,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "A"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "d49e338985cc37f7ce4dbda73680261e03c50abcfa7addfa61b306946c951b56",
+          "fingerprints": {
+            "promptSha256": "d9f57bb32edcbbd4d382a1dc7163c84a85f219ab0271ffc3c934340bdfd97e46",
+            "contentSha256": "e9d1ab6490b72af298c43f95739c051608e7690aa0cda7fd49a9b9dcb9a7aa01",
+            "family": "electrolysis_faraday_deposition",
+            "structureFingerprint": "77ecad830387f75109ce27d9",
+            "canonicalInputsSha256": "83a3798723202b1a4c705fa50487be448bf7c442e9f98cb419c15a5359eee377"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-CHEMISTRY-3016",
+        "subject": "chemistry",
+        "batch": "pilot-30-v4",
+        "taskFamily": "hess_law_target_enthalpy",
+        "topicCode": "C-THERMO-HESS",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-CHEMISTRY-3016.json",
+          "sha256": "58cb28bde0e42416fb9ddeb5525edaff323a2eeafa1a83058e8433d2ba5a5a9f",
+          "bytes": 6407
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-CHEMISTRY-3016.review.json",
+          "sha256": "54d9e94b637a1ad79de0066c27cd6097e0afbc1301ce982add064c11a9117084",
+          "bytes": 884,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "C"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "58cb28bde0e42416fb9ddeb5525edaff323a2eeafa1a83058e8433d2ba5a5a9f",
+          "fingerprints": {
+            "promptSha256": "eba10f51a3767b73a3401f4a43442d9bdf0bcea28385e018523add9a483d78c6",
+            "contentSha256": "5ff5f49eb9d865e1e0e457c38c77a2b71c407bb6f1d27dde8d7bb561c9bf6d64",
+            "family": "hess_law_target_enthalpy",
+            "structureFingerprint": "fcba26f3a4f8b9bc3093bef2",
+            "canonicalInputsSha256": "f8501d8ca405c9af60bea3b4cfa5dd7a1fe52b8aab7335f13e293a75aeabc7a9"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-CHEMISTRY-3017",
+        "subject": "chemistry",
+        "batch": "pilot-30-v4",
+        "taskFamily": "hydrocarbon_formula_from_combustion",
+        "topicCode": "C-ORG-HC",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-CHEMISTRY-3017.json",
+          "sha256": "4eb14f31b21e22df05c2e58892d754adcaf036b73f3b1a7d13049abcd2cb6829",
+          "bytes": 5726
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-CHEMISTRY-3017.review.json",
+          "sha256": "756bfc38329f740c47bc95bda81984b889ce0bd47fd21b92696d404a5ec4256b",
+          "bytes": 878,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "A"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "4eb14f31b21e22df05c2e58892d754adcaf036b73f3b1a7d13049abcd2cb6829",
+          "fingerprints": {
+            "promptSha256": "5664bcea675a6e494a2e89176a81e1d857385542c8fd7f7c35bcf421d5972757",
+            "contentSha256": "a2c23106854449ffebd8212bb14eb4ce1d103104c8ea36ab30f83406387b1deb",
+            "family": "hydrocarbon_formula_from_combustion",
+            "structureFingerprint": "efe7cdce6f2184d5a1230150",
+            "canonicalInputsSha256": "1f0ce2eff367a74c70d1c628fd9c98b026ec6230708741ac540349950bd62b38"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-CHEMISTRY-3019",
+        "subject": "chemistry",
+        "batch": "pilot-30-v4",
+        "taskFamily": "molarity_from_mass_fraction_density",
+        "topicCode": "C-SOL-MOLAR",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4/sealed/CQ-CHEMISTRY-3019.json",
+          "sha256": "df43d085f7771114a3bb6f3929dc84eb686dde39cd016683b6d546e181c5a0f8",
+          "bytes": 6027
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4/reviews/CQ-CHEMISTRY-3019.review.json",
+          "sha256": "aa3af7c36eed565c38369fff1f8ce970c0b26567ce9a7eb25337dcca2e791aa2",
+          "bytes": 843,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "C"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "df43d085f7771114a3bb6f3929dc84eb686dde39cd016683b6d546e181c5a0f8",
+          "fingerprints": {
+            "promptSha256": "472f1478d8f8d9ce2855cc4e8824a501e3264460d26d2fd7818895dcef6bb2d5",
+            "contentSha256": "c404b21a4535c3eecdf9bf9e5402ba9eb82636cfe6753d6ad966605f4b5430d8",
+            "family": "molarity_from_mass_fraction_density",
+            "structureFingerprint": "8a167b871a1ce146ec699598",
+            "canonicalInputsSha256": "20eeb89085070313b165dcd8b3315082a4771f0a0ad5adc61a185e0a93c3589a"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-CHEMISTRY-4001",
+        "subject": "chemistry",
+        "batch": "pilot-30-v4-repair",
+        "taskFamily": "carbonate_purity_from_gas_volume",
+        "topicCode": "C-STOICH-PURITY",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4-repair/sealed/CQ-CHEMISTRY-4001.json",
+          "sha256": "d60ce48cbf57de9a6f60da47188e6ae19035a1cead96932fbdab7b6b790b381a",
+          "bytes": 6909
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4-repair/reviews/CQ-CHEMISTRY-4001.review.json",
+          "sha256": "42999c079609fb4b68b732eac4413c5dd32b4845ab3ea7573285093b5398afa3",
+          "bytes": 1477,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "C"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "d60ce48cbf57de9a6f60da47188e6ae19035a1cead96932fbdab7b6b790b381a",
+          "fingerprints": {
+            "promptSha256": "d9c05ef4331bb11ff5647597606ed423bcc8f89ebc7f1dd941822015799d249a",
+            "contentSha256": "b24bb7d8afef1ab5d3b06deba5787c1b8593cce39e8c14d15631c7725ce121db",
+            "family": "carbonate_purity_from_gas_volume",
+            "structureFingerprint": "4b0a23942fb701cd97e7286b",
+            "canonicalInputsSha256": "905eb979965d1c17ce3144dc9d4cf64498a861637804de576c72410188d92e2e"
+          }
+        }
+      },
+      {
+        "candidateId": "CQ-CHEMISTRY-4002",
+        "subject": "chemistry",
+        "batch": "pilot-30-v4-repair",
+        "taskFamily": "empirical_formula_from_combustion",
+        "topicCode": "C-ORG-EMP",
+        "sealed": {
+          "path": "question-production/batches/pilot-30-v4-repair/sealed/CQ-CHEMISTRY-4002.json",
+          "sha256": "08fb18e2e769ddc31a10c347b69fb9af682e084b28f6f5c654ce722472b5d922",
+          "bytes": 7523
+        },
+        "blindReview": {
+          "path": "question-production/batches/pilot-30-v4-repair/reviews/CQ-CHEMISTRY-4002.review.json",
+          "sha256": "7133108cb680d5518d84256950c59a3e69e615b1b4fbeb3a64b0172670fce5c2",
+          "bytes": 1627,
+          "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+          "verdict": "pass",
+          "derivedAnswer": "A"
+        },
+        "audit": {
+          "status": "clear",
+          "sourceFileSha256": "08fb18e2e769ddc31a10c347b69fb9af682e084b28f6f5c654ce722472b5d922",
+          "fingerprints": {
+            "promptSha256": "85e0c77d9c8066f42d663d56f12bcf3daf069a228129fc4222194838f15dcbd6",
+            "contentSha256": "9286c393fe7ce57454188b9bf9a590442b7ead4ef816e0085cac139937206e6d",
+            "family": "empirical_formula_from_combustion",
+            "structureFingerprint": "e73189a79742925f2618f83f",
+            "canonicalInputsSha256": "8738887623e086150b342ed361cb3364e6523e25f55381661138ab3f84da63c3"
+          }
+        }
+      }
+    ]
+  },
+  "governance": {
+    "auditAloneDoesNotAuthorizePublication": true,
+    "qualificationBasis": [
+      "blind_review_pass",
+      "generator_reviewer_answer_agreement",
+      "deterministic_solver_oracle_truth_table_and_explanation_replay",
+      "per_candidate_originality_clear",
+      "supervised_acceptance"
+    ]
+  },
+  "assembly": {
+    "tool": "question-production/tools/assemble-accepted-pack.cjs",
+    "canonicalization": "recursive lexicographic object keys; array order preserved",
+    "sourceMutation": "none"
+  }
+}

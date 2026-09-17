@@ -1,0 +1,217 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-CHEMISTRY-3008",
+  "subject": "chemistry",
+  "topicCode": "C-REDOX-E",
+  "topicTitle": "氧化还原反应",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "在酸性溶液中，1 mol Cr₂O₇²⁻ 完全反应时得到 6 mol 电子。现有 0.015 mol Cr₂O₇²⁻ 恰好把 Fe²⁺ 全部氧化为 Fe³⁺，求被氧化的 Fe²⁺ 的物质的量。",
+  "options": [
+    {
+      "id": "A",
+      "text": "0.0025 mol"
+    },
+    {
+      "id": "B",
+      "text": "0.015 mol"
+    },
+    {
+      "id": "C",
+      "text": "0.09 mol"
+    },
+    {
+      "id": "D",
+      "text": "0.54 mol"
+    }
+  ],
+  "knowledgeTags": [
+    "氧化还原反应",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "chemistry",
+    "topicCode": "C-REDOX-E",
+    "topicTitle": "氧化还原反应",
+    "targetDifficulty": "medium",
+    "taskFamily": "redox_electron_stoichiometry",
+    "planTemplate": "pilot_v4_redox_electron_stoichiometry_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "0fc365fd7efc77436e834039",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "e",
+        "kind",
+        "oxidant"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "e",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "kind",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "oxidant",
+        "independentGroup": "g3"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "oxidant electron gain per mole",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "electron balance",
+        "inputs": [
+          "r1"
+        ],
+        "output": "intermediate_2"
+      },
+      {
+        "id": "r3",
+        "operation": "reductant amount",
+        "inputs": [
+          "r2"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "n(e gained)=n(oxidant)*e_per_mol",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "n(Fe2+)=n(e lost)",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "忽略每摩尔氧化剂转移电子数",
+      "把电子数相减"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "kind": "Cr₂O₇²⁻",
+      "oxidant": 0.015,
+      "e": 6
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 2
+  },
+  "correctAnswer": "C",
+  "explanation": "Fe²⁺→Fe³⁺ 每 1 mol Fe²⁺ 失去 1 mol 电子。0.015 mol Cr₂O₇²⁻ 共得到 0.015×6=0.09 mol 电子；由电子守恒，被氧化的 Fe²⁺ 为 0.09 mol。",
+  "generationMetadata": {
+    "origin": "codex_local_deterministic_v4",
+    "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v4",
+    "createdAt": "2026-09-15T16:00:00.000Z",
+    "languageScope": "zh_primary_only",
+    "providerCalls": 0,
+    "sourceIsolation": {
+      "officialQuestionContentRead": false,
+      "databaseQuestionTextRead": false,
+      "priorReviewTextRead": false
+    },
+    "deterministicVerification": {
+      "solver": {
+        "version": "pilot-v4-batch-local-solver-v1",
+        "status": "verified",
+        "taskFamily": "redox_electron_stoichiometry",
+        "evidenceBoundary": "prompt_options_and_question_plan",
+        "expectedCanonical": 0.09,
+        "selectedOptionId": "C",
+        "uniqueAnswer": true
+      },
+      "oracle": {
+        "version": "pilot-v4-independent-oracle-v1",
+        "status": "verified",
+        "implementation": "fresh_family_evaluation_from_canonical_inputs",
+        "expectedCanonical": 0.09,
+        "agreesWithSolver": true
+      },
+      "optionTruthTable": [
+        {
+          "optionId": "A",
+          "verdict": false,
+          "canonicalValue": 0.0025
+        },
+        {
+          "optionId": "B",
+          "verdict": false,
+          "canonicalValue": 0.015
+        },
+        {
+          "optionId": "C",
+          "verdict": true,
+          "canonicalValue": 0.09
+        },
+        {
+          "optionId": "D",
+          "verdict": false,
+          "canonicalValue": 0.54
+        }
+      ],
+      "explanationReplay": {
+        "version": "pilot-v4-explanation-replay-v1",
+        "status": "verified",
+        "requiredEvidenceTokens": [
+          "电子守恒",
+          "0.09 mol"
+        ],
+        "allRequiredTokensPresent": true,
+        "conclusionMatchesAnswer": true
+      }
+    }
+  }
+}

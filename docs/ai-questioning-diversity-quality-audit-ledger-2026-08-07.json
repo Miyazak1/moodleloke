@@ -1,0 +1,553 @@
+{
+  "version": "subject-practice-diversity-quality-audit-ledger-v1",
+  "scope": "audit_only",
+  "createdAt": "2026-08-07",
+  "notes": "Offline quality-audit sampling evidence for diversity-engine calibration. This file is read by audit tooling only; it is not a production review step, does not enable production blockers, and does not modify the question pool.",
+  "samples": [
+    {
+      "subject": "math",
+      "reviewType": "math_soft_cap_incremental_sample",
+      "questionId": 10875,
+      "nearestQuestionId": 10830,
+      "decision": "true_positive_repeated_shell",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "quadratic_function_properties",
+        "nearDuplicateSimilarity": 0.96,
+        "nearDuplicateSource": "expression_signature",
+        "sameCoreExpression": "x^2+2x-3",
+        "studentVisibleImpact": "protected_by_current_policy_or_audit_only"
+      },
+      "notes": "Same quadratic-function property judgement shell as #10830; answer letters differ because options are arranged differently."
+    },
+    {
+      "subject": "math",
+      "reviewType": "math_soft_cap_incremental_sample",
+      "questionId": 10879,
+      "nearestQuestionId": 10801,
+      "decision": "true_positive_overrepresented_family",
+      "reviewedAt": "2026-08-10",
+      "evidence": {
+        "taskFamily": "function_monotonicity_parity_statement",
+        "nearDuplicateSimilarity": null,
+        "nearDuplicateSource": "none",
+        "acceptedFamilyWindow": "2/5",
+        "studentVisibleImpact": "protected_by_default_off_soft_cap_calibration",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The item is mathematically correct and acceptable in isolation: domain [1,3], endpoint value sqrt(2), maximum 2 at x=2, so option A is correct. The signal is a true soft-cap family-density hit rather than a near-duplicate: recent same-topic medium items already concentrate on function property judgement over domain/range/monotonicity/parity shells, so this is valid calibration evidence for guarded default-off math soft-cap readiness."
+    },
+    {
+      "subject": "math",
+      "reviewType": "math_soft_cap_incremental_sample",
+      "questionId": 10881,
+      "nearestQuestionId": 10879,
+      "decision": "true_positive_overrepresented_family",
+      "reviewedAt": "2026-08-11",
+      "evidence": {
+        "taskFamily": "function_monotonicity_parity_statement",
+        "nearDuplicateSimilarity": null,
+        "nearDuplicateSource": "none",
+        "acceptedFamilyWindow": "2/6",
+        "answerCorrectness": "verified_correct_derivative_monotonicity",
+        "studentVisibleImpact": "protected_by_default_off_soft_cap_calibration",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The item is mathematically correct in isolation: f'(x)=6x(x-1), so f is decreasing on [0,1], not increasing on all R, not odd, and not decreasing on (-∞,0]. The soft-cap signal is accepted as overrepresented-family calibration evidence rather than a near-duplicate claim, because recent medium function-property items already concentrate on monotonicity/parity/domain judgement shells."
+    },
+    {
+      "subject": "math",
+      "reviewType": "math_scheduler_hint_observation_sample",
+      "questionId": 15527,
+      "decision": "true_positive_preferred_family_match_gate_held",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "preferredFamily": "logarithmic_equation_domain_solution",
+        "taskFamily": "logarithmic_equation_domain_solution",
+        "avoidFamilies": [
+          "quadratic_function_properties",
+          "function_monotonicity_parity_statement"
+        ],
+        "gateDecision": "regenerate",
+        "gateReasons": [
+          "profile_difficulty_evidence_mismatch"
+        ],
+        "studentVisibleImpact": "not_published_pending_review",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "Scheduler hint successfully moved the function-properties medium cell away from overused quadratic/monotonicity families into a logarithmic-equation/domain shell. The answer path appears mathematically coherent, but the publication gate held the candidate for profile/difficulty evidence, so this is mechanism-positive but not a release-quality approval."
+    },
+    {
+      "subject": "math",
+      "reviewType": "math_scheduler_hint_observation_sample",
+      "questionId": 15919,
+      "nearestQuestionId": 10801,
+      "decision": "true_positive_preferred_family_match_gate_held",
+      "reviewedAt": "2026-08-10",
+      "evidence": {
+        "preferredFamily": "function_monotonicity_parity_statement",
+        "taskFamily": "function_monotonicity_parity_statement",
+        "avoidFamilies": [
+          "quadratic_function_properties",
+          "logarithmic_equation_domain_solution"
+        ],
+        "gateDecision": "regenerate",
+        "gateReasons": [
+          "profile_difficulty_evidence_mismatch"
+        ],
+        "answerCorrectness": "verified_correct_piecewise_absolute_value_analysis",
+        "targetProfileConflict": "medium_concept_judgement_with_heavy_calculation_load_reached_observation_unnormalized",
+        "studentVisibleImpact": "not_published_pending_review",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The scheduler selected and generated the preferred function-property family without hitting an avoid family. The answer and explanation are correct, but the automatic gate held the item because the legacy observation path passed a medium concept-judgement profile with heavy calculation load. This sample is mechanism-positive and also records the target-profile normalization gap fixed after the run."
+    },
+    {
+      "subject": "math",
+      "reviewType": "math_scheduler_hint_observation_sample",
+      "questionId": 15938,
+      "decision": "true_positive_preferred_family_match_gate_held",
+      "reviewedAt": "2026-08-10",
+      "evidence": {
+        "preferredFamily": "elementary_function_exp_log_ordering",
+        "taskFamily": "elementary_function_exp_log_ordering",
+        "avoidFamilies": [
+          "function_monotonicity_parity_statement",
+          "quadratic_function_properties",
+          "logarithmic_equation_domain_solution"
+        ],
+        "gateDecision": "human_review",
+        "gateReasons": [
+          "reviewer_human_review",
+          "style_alignment_low",
+          "profile_alignment_warning"
+        ],
+        "answerCorrectness": "verified_correct_logarithm_ordering",
+        "targetProfileConflict": "process_time_cell_refresh_overwrote_observation_normalization_with_legacy_heavy_load",
+        "studentVisibleImpact": "not_published_pending_review",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The scheduler produced the preferred exponential/logarithmic ordering family and avoided every discouraged family. The ordering b<c<a<d and explanation are correct, and medium difficulty is reasonable. The automatic gate held the candidate. Its metadata also proved that process-time cell refresh restored the legacy heavy calculation load after enqueue-time normalization; the refresh path was fixed after this run, so this sample must not be treated as normalized-profile live evidence."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 12528,
+      "decision": "true_positive_physics_model_error",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "uniform_electric_field_potential_relation",
+        "issueCode": "physics_field_deflection_axis_conflict",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only_pending_feature_flag",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "Prompt gives horizontal initial velocity and horizontal electric field, then asks vertical deflection without a vertical force source; published explanation assumes vertical acceleration."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 12552,
+      "decision": "true_positive_hard_too_simple",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "electrostatic_force_field_compute",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "Direct Coulomb-law substitution is numerically correct but too shallow for hard unless paired with a nontrivial model or multi-step constraint."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 12546,
+      "decision": "true_positive_physics_model_error",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "uniform_electric_field_potential_relation",
+        "issueCode": "physics_potential_energy_sign_conflict",
+        "studentVisibleImpact": "adaptive_candidate_visible_current_policy_candidate",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "For a positive charge entering perpendicular to a downward uniform electric field with no other vertical force, the field-driven displacement is along the field and electric potential energy decreases; the prompt/explanation treats the increase as positive."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 12525,
+      "decision": "false_positive_hard_multistep_acceptable",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "uniform_electric_field_potential_relation",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The item asks for electric-field work after perpendicular entry and requires time of flight, acceleration, displacement, and work; it is formulaic but has enough staged modeling to remain acceptable as hard/borderline-hard."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 12446,
+      "decision": "true_positive_hard_too_simple",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "magnetic_force_current_wire_compute",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "Direct Ampere-force formula substitution is correct but not enough hard-difficulty evidence on its own."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 12434,
+      "decision": "false_positive_hard_multistep_acceptable",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "kinematics_constant_acceleration_direct",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The motorcycle-truck pursuit requires a switch from acceleration to constant speed, checks whether catch-up occurs during acceleration, then uses relative motion; the direct-family audit is intentionally broad here."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 12433,
+      "decision": "false_positive_hard_multistep_acceptable",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "kinematics_constant_acceleration_direct",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The solution must test the invalid pre-stop catch-up branch, then switch object A to rest and solve B's later catch-up time; this is not a one-step formula substitution."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 12440,
+      "decision": "false_positive_hard_multistep_acceptable",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "kinematics_constant_acceleration",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "Pursuit with reaction delay and quadratic timing has enough staging to remain acceptable as a hard/borderline-hard sample despite sharing a kinematics family."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 12259,
+      "decision": "true_positive_hard_too_simple",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "circuit_ohm_kirchhoff_resistor_network",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The circuit reduces to one parallel equivalent resistance, one series sum with internal resistance, and P=I^2R; correct, but better treated as medium unless paired with a nontrivial topology or comparison."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 12251,
+      "decision": "true_positive_hard_too_simple",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "circuit_ohm_kirchhoff_resistor_network",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "Equivalent resistance plus closed-circuit current and P=I^2R is a clean direct calculation; correct, but too shallow for hard."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 12244,
+      "decision": "true_positive_hard_too_simple",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "circuit_ohm_kirchhoff_resistor_network",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "Two equal resistors in parallel, one series resistor, internal resistance, and P=I^2R form a routine medium calculation rather than hard reasoning."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 12243,
+      "decision": "true_positive_hard_too_simple",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "circuit_ohm_kirchhoff_resistor_network",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The answer is one parallel equivalent resistance followed by I=E/R and output power; correct but not hard."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 12240,
+      "decision": "true_positive_unbacked_visual_reference",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "circuit_ohm_kirchhoff_resistor_network",
+        "issueCode": "unbacked_visual_reference",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only_pending_feature_flag",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The prompt starts with an unattached circuit figure reference in a text-only subject-practice item. The text includes enough circuit data for a direct calculation, but the visible student prompt still contains a missing-figure dependency."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 12238,
+      "decision": "false_positive_hard_multistep_acceptable",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "circuit_ohm_kirchhoff_resistor_network",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The item compares switch-open and switch-closed power states and solves a parameter from a square-root relation, so it has enough multi-step structure for hard/borderline-hard."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 12235,
+      "decision": "true_positive_hard_too_simple",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "circuit_ohm_kirchhoff_resistor_network",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "A single series circuit with a measured voltage and direct power calculation is correct but should be medium at most."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 12234,
+      "decision": "true_positive_hard_too_simple",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "circuit_ohm_kirchhoff_resistor_network",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "Closing the switch simply shorts one resistor, then the item is direct current and P=I^2R; correct but too shallow for hard."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 12222,
+      "decision": "true_positive_unbacked_visual_reference",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "circuit_ohm_kirchhoff_resistor_network",
+        "issueCode": "unbacked_visual_reference",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only_pending_feature_flag",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The prompt references an unattached circuit diagram. Even though the text later states the intended parallel relation, the visible item still depends on a missing figure reference and should not be student-consumable."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 12186,
+      "decision": "false_positive_hard_multistep_acceptable",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "circuit_ohm_kirchhoff_resistor_network",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The maximum-power condition for the sliding rheostat plus output-power ratio introduces a non-obvious optimization condition, so this should remain acceptable hard/borderline-hard."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 11221,
+      "decision": "true_positive_unbacked_visual_reference",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "nuclear_mass_defect_energy_release",
+        "issueCode": "unbacked_visual_reference",
+        "studentVisibleImpact": "blocked_by_current_policy_at_adaptive_selection",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The prompt says a lower figure displays the fusion reaction, but the subject-practice item has no attached figure field. The numerical mass-defect calculation is coherent, yet the student-facing stem should be text-complete."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 12257,
+      "decision": "false_positive_hard_multistep_acceptable",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "dc_circuit_switching_equivalent_resistance",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "Circuit topology changes after switching, so the answer requires model comparison rather than a single direct substitution."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 11219,
+      "decision": "true_positive_unbacked_visual_reference",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "nuclear_mass_defect_energy_release",
+        "issueCode": "unbacked_visual_reference",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only_pending_feature_flag",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The stem says a figure shows the decay chain, but the current subject-practice schema has no attached figure. The chain is mostly textualized, so this should stay audit-only until visual-policy pool impact is safe."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 11168,
+      "decision": "false_positive_hard_multistep_acceptable",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "kinematics_constant_acceleration_direct",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The orbital-speed item combines surface gravity with GM, changes radius to R+h, and converts units; despite the broad family label it is a reasonable hard/borderline-hard sample."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 10929,
+      "decision": "false_positive_hard_multistep_acceptable",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "kinematics_constant_acceleration_direct",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The solution chains energy conservation, friction work, and a second energy-conversion stage. It is formulaic but not a one-step direct-substitution shell."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 10917,
+      "decision": "true_positive_unbacked_visual_reference",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "work_energy_conservation",
+        "issueCode": "unbacked_visual_reference",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only_pending_feature_flag",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The item starts with an unattached figure reference for the track layout. The text gives many conditions, but visual dependence should remain visible in audit before any flag is enabled."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 10903,
+      "decision": "true_positive_unbacked_visual_reference",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "kinematics_constant_acceleration_direct",
+        "issueCode": "unbacked_visual_reference",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only_pending_feature_flag",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The prompt references a missing diagram for the circular track and rough plane. The physics chain is coherent, but the student-facing item should be text-complete before visual-policy blocking is enabled."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 10857,
+      "decision": "false_positive_hard_multistep_acceptable",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "photoelectric_effect_threshold_energy",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The item uses cutoff frequency, measured stopping voltage, work function inference, and a new-frequency calculation. It is acceptable as hard/borderline-hard."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 10850,
+      "decision": "false_positive_hard_multistep_acceptable",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "photoelectric_effect_threshold_energy",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "Deriving the work function symbolically from two stopping-voltage equations requires elimination and algebraic rearrangement; the direct-family audit is broad here."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 10847,
+      "decision": "true_positive_hard_too_simple",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "photoelectric_effect_threshold_energy",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "Given work function and two wavelengths, the answer is a routine Einstein-equation substitution; correct, but better treated as medium."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 10844,
+      "decision": "false_positive_hard_multistep_acceptable",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "photoelectric_effect_threshold_energy",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The item relates two wavelength/voltage cases and solves symbolically for the work function, which is enough multi-step algebra for hard/borderline-hard."
+    },
+    {
+      "subject": "physics",
+      "reviewType": "physics_difficulty_watch_sample",
+      "questionId": 10843,
+      "decision": "true_positive_hard_too_simple",
+      "reviewedAt": "2026-08-07",
+      "evidence": {
+        "taskFamily": "photoelectric_effect_threshold_energy",
+        "issueCode": "physics_hard_direct_formula_task_family",
+        "studentVisibleImpact": "adaptive_candidate_visible_audit_only",
+        "productionImpact": "none_audit_only"
+      },
+      "notes": "The item is a direct algebraic rewrite of Ek=hnu-W after doubling the frequency; correct, but too shallow for hard."
+    }
+  ]
+}

@@ -1,0 +1,898 @@
+{
+  "schemaVersion": "codex-generator-manifest-v1",
+  "batchId": "pilot-30-2026-09-15",
+  "generatorTaskId": "pilot-30-generator-task-2026-09-15",
+  "generatedAt": "2026-09-15T10:00:00.000Z",
+  "candidateCount": 45,
+  "counts": {
+    "math": {
+      "derivative_direct_evaluation": 5,
+      "elementary_bounded": 5,
+      "line_relation": 5
+    },
+    "physics": {
+      "kinematics_uniform_speed": 4,
+      "kinematics_acceleration": 4,
+      "kinematics_final_velocity": 4,
+      "kinematics_displacement": 3
+    },
+    "chemistry": {
+      "strong_acid_dilution": 5,
+      "strong_base_dilution": 5,
+      "strong_acid_base_neutralization": 5
+    }
+  },
+  "validationSummary": {
+    "allGeneratedBySupportedLocalGenerators": true,
+    "allFourUniqueOptions": true,
+    "allSolverVerified": true,
+    "allIndependentOracleVerified": true,
+    "allExplanationVerified": true,
+    "allQuestionPlansAdhere": true,
+    "duplicateSurfaceCount": 0,
+    "officialSourceBodiesRead": false
+  },
+  "rejectionReplacementHistory": [],
+  "items": [
+    {
+      "candidateId": "CQ-MATH-0001",
+      "subject": "math",
+      "family": "derivative_direct_evaluation",
+      "seed": 8,
+      "correctAnswer": "A",
+      "blindContentSha256": "fc6f5c32455fb70a441f1b3c5c13726abdd721d108d2d49ddf153b16a35c546d",
+      "sealedCandidateSha256": "4924dbff9f3540300728962f7117185cbbc90dd4c402ef17a0361167ab345d6a",
+      "calculationEvidence": {
+        "generatorVersion": "subject-practice-math-derivative-local-generator-v1-direct-polynomial-value",
+        "scopeId": "math-basic-derivative-v1:direct_polynomial_value",
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-MATH-0002",
+      "subject": "math",
+      "family": "derivative_direct_evaluation",
+      "seed": 57,
+      "correctAnswer": "B",
+      "blindContentSha256": "5b85b1b668fc3c51063b48036f5c2b323d72c707fb916486d6a5ecb298164fc9",
+      "sealedCandidateSha256": "6f2e21c1c6298e9a691b21719ad8fd17b6c7c03e0e9eaae40de1922136c3e5f5",
+      "calculationEvidence": {
+        "generatorVersion": "subject-practice-math-derivative-local-generator-v1-direct-polynomial-value",
+        "scopeId": "math-basic-derivative-v1:direct_polynomial_value",
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-MATH-0003",
+      "subject": "math",
+      "family": "derivative_direct_evaluation",
+      "seed": 134,
+      "correctAnswer": "C",
+      "blindContentSha256": "6c00392d8d55a8ac1e8a55be8ddbfd44fd98154a22c1f4ec9185a6048955ade3",
+      "sealedCandidateSha256": "7491c16ead634ab07f9166b47df3254e3264e80d8f8a353adf0ce179390ac120",
+      "calculationEvidence": {
+        "generatorVersion": "subject-practice-math-derivative-local-generator-v1-direct-polynomial-value",
+        "scopeId": "math-basic-derivative-v1:direct_polynomial_value",
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-MATH-0004",
+      "subject": "math",
+      "family": "derivative_direct_evaluation",
+      "seed": 247,
+      "correctAnswer": "D",
+      "blindContentSha256": "4c221171f38c257a1323310a8c3557182a8b8d0f5fd5baf70f6b59ec66a49b21",
+      "sealedCandidateSha256": "9a7761e9003c657386343866c0e122b945df6388474283dba9c8d6a6ae872c3e",
+      "calculationEvidence": {
+        "generatorVersion": "subject-practice-math-derivative-local-generator-v1-direct-polynomial-value",
+        "scopeId": "math-basic-derivative-v1:direct_polynomial_value",
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-MATH-0005",
+      "subject": "math",
+      "family": "derivative_direct_evaluation",
+      "seed": 388,
+      "correctAnswer": "A",
+      "blindContentSha256": "8ffa642d11e5f40f8bf8ce04efb597df46c243487323823c9fc0fe4957e75c68",
+      "sealedCandidateSha256": "edb533b1a184620a7e8c73bb4a524df3cc39955d6212d1f296977cd6d99afdcc",
+      "calculationEvidence": {
+        "generatorVersion": "subject-practice-math-derivative-local-generator-v1-direct-polynomial-value",
+        "scopeId": "math-basic-derivative-v1:direct_polynomial_value",
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-MATH-0006",
+      "subject": "math",
+      "family": "elementary_bounded",
+      "seed": 16,
+      "correctAnswer": "A",
+      "blindContentSha256": "0d1a3121bb3cfe9c57418603795eef43b78359bc92ad72eaa65ef0b05993f642",
+      "sealedCandidateSha256": "4ce95c8516ae2c30ff324b2235ee06ded5a7fa8dc68bb74b2c9c5f6d40945f95",
+      "calculationEvidence": {
+        "generatorVersion": "math-elementary-local-generator-v6-formula-evidence",
+        "scopeId": "math-basic-elementary-rotation-v1:logarithmic:domain",
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-MATH-0007",
+      "subject": "math",
+      "family": "elementary_bounded",
+      "seed": 73,
+      "correctAnswer": "B",
+      "blindContentSha256": "7531fdd8aa979f98571c81a49d43c15d47b54306558618a97869dd057332c568",
+      "sealedCandidateSha256": "190d6ebb2a0491a5354757f5d04af9a8d153cfdedf059ccc2ab3484ee42c047a",
+      "calculationEvidence": {
+        "generatorVersion": "math-elementary-local-generator-v6-formula-evidence",
+        "scopeId": "math-basic-elementary-rotation-v1:exponential:range",
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-MATH-0008",
+      "subject": "math",
+      "family": "elementary_bounded",
+      "seed": 122,
+      "correctAnswer": "C",
+      "blindContentSha256": "44264978eef0ec230da38c5e5b6aa4ffd5fd248a4378ee0b7d120b2ef939fc4d",
+      "sealedCandidateSha256": "c47193a2ffa37a0f85291e9d9583e48af52e2c76d191e4b56232eb50d10412d0",
+      "calculationEvidence": {
+        "generatorVersion": "math-elementary-local-generator-v6-formula-evidence",
+        "scopeId": "math-basic-elementary-rotation-v1:radical:monotonicity",
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-MATH-0009",
+      "subject": "math",
+      "family": "elementary_bounded",
+      "seed": 211,
+      "correctAnswer": "D",
+      "blindContentSha256": "4c54e246eaa761d05ddd5f42399584642950bb174bb9a8717d3c7dc92ec6c29f",
+      "sealedCandidateSha256": "4444dc819360317e474ad119d4d62294d9c13712f6463f2d372cf58993433e1b",
+      "calculationEvidence": {
+        "generatorVersion": "math-elementary-local-generator-v6-formula-evidence",
+        "scopeId": "math-basic-elementary-rotation-v1:power:function_value",
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-MATH-0010",
+      "subject": "math",
+      "family": "elementary_bounded",
+      "seed": 312,
+      "correctAnswer": "A",
+      "blindContentSha256": "ac5e8743f16cf7b3c785bc67d02524d9d4ff367e53067121c4f6a15387936b90",
+      "sealedCandidateSha256": "0a3b5b910c2345824435069313557c87270ca8eea2b73a2972c949c7c595e768",
+      "calculationEvidence": {
+        "generatorVersion": "math-elementary-local-generator-v6-formula-evidence",
+        "scopeId": "math-basic-elementary-rotation-v1:logarithmic:domain",
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-MATH-0011",
+      "subject": "math",
+      "family": "line_relation",
+      "seed": 18,
+      "correctAnswer": "C",
+      "blindContentSha256": "3ea6b2384a6abfbce37e0b81fc7287da249ae3870d97e3f66ba3bcb04c4810dd",
+      "sealedCandidateSha256": "6b974d49774753f912a6ca2e4d28484639338b184229603de5f35c139f18a794",
+      "calculationEvidence": {
+        "generatorVersion": "math-line-relation-local-generator-v3",
+        "scopeId": "math-basic-line-relation-v1:slope_from_two_distinct_points",
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-MATH-0012",
+      "subject": "math",
+      "family": "line_relation",
+      "seed": 83,
+      "correctAnswer": "D",
+      "blindContentSha256": "a2a1bbb5504df41f9f6a0e912192ed7691a6a4955db0c7dc9f5e4830684f526e",
+      "sealedCandidateSha256": "ce6b964f2e525e33686494047d543b9dc5a6ceca3fe09468c05e4e80ec2f1720",
+      "calculationEvidence": {
+        "generatorVersion": "math-line-relation-local-generator-v3",
+        "scopeId": "math-basic-line-relation-v1:inclination_angle_from_line",
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-MATH-0013",
+      "subject": "math",
+      "family": "line_relation",
+      "seed": 148,
+      "correctAnswer": "A",
+      "blindContentSha256": "dfd526067115ac6e72e3e6a62aaa0f83d60bff4ef236a5db4f7f4d711839267e",
+      "sealedCandidateSha256": "52d977d3f94981108bce2fc76bafdc74daa9abb4a755aef89074907d2c707dd5",
+      "calculationEvidence": {
+        "generatorVersion": "math-line-relation-local-generator-v3",
+        "scopeId": "math-basic-line-relation-v1:identify_parallel_or_perpendicular_line",
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-MATH-0014",
+      "subject": "math",
+      "family": "line_relation",
+      "seed": 225,
+      "correctAnswer": "B",
+      "blindContentSha256": "7930f68d64812f7900c248c1ef4534bbcd75a35281615f8d4daa0a65a5d0fddb",
+      "sealedCandidateSha256": "5407045102dce7c253a0ce63960cc3944fc7eec765a0ef7f1b11a1d731673029",
+      "calculationEvidence": {
+        "generatorVersion": "math-line-relation-local-generator-v3",
+        "scopeId": "math-basic-line-relation-v1:line_equation_from_point_and_slope",
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-MATH-0015",
+      "subject": "math",
+      "family": "line_relation",
+      "seed": 346,
+      "correctAnswer": "C",
+      "blindContentSha256": "12e4120971c71c18fbf5b10cdcf99fc6b1cba742271ba28666e8f84ffd170dc9",
+      "sealedCandidateSha256": "a811ef8c48e194689192d4c37400f301178cf31a2a8d33f078350720657f33f5",
+      "calculationEvidence": {
+        "generatorVersion": "math-line-relation-local-generator-v3",
+        "scopeId": "math-basic-line-relation-v1:slope_from_two_distinct_points",
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0001",
+      "subject": "physics",
+      "family": "kinematics_uniform_speed",
+      "seed": 12,
+      "correctAnswer": "A",
+      "blindContentSha256": "3bfa01f4a250ab60f6c9a1c1fc716f9e0d52e188cb137719666f4df126eb1ac2",
+      "sealedCandidateSha256": "5221df55cc6f657ac2898f3c5cdba57dc73d82e12cb959a63bced723125d7833",
+      "calculationEvidence": {
+        "generatorVersion": "physics-kinematics-local-generator-v3-semantic-options",
+        "scopeId": "physics-basic-kinematics-v2:uniform_speed",
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0002",
+      "subject": "physics",
+      "family": "kinematics_uniform_speed",
+      "seed": 65,
+      "correctAnswer": "B",
+      "blindContentSha256": "193a8d357db1803d749d138fead93866af5f7c1c42f477eb1831cefdb6d1e4d0",
+      "sealedCandidateSha256": "d3c0e0b540664aeca59058825d4edf4e1caf02d3ae76d9e3d98984cef8ad990f",
+      "calculationEvidence": {
+        "generatorVersion": "physics-kinematics-local-generator-v3-semantic-options",
+        "scopeId": "physics-basic-kinematics-v2:uniform_speed",
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0003",
+      "subject": "physics",
+      "family": "kinematics_uniform_speed",
+      "seed": 150,
+      "correctAnswer": "C",
+      "blindContentSha256": "cf87013e9665d8641eaa3bd845068f5959f37662c8621d193e0a027b795d6b32",
+      "sealedCandidateSha256": "005dc29e7b5b8a4e181b5165718a5cf26e200a2b18ea458d497f1a561b1049b7",
+      "calculationEvidence": {
+        "generatorVersion": "physics-kinematics-local-generator-v3-semantic-options",
+        "scopeId": "physics-basic-kinematics-v2:uniform_speed",
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0004",
+      "subject": "physics",
+      "family": "kinematics_uniform_speed",
+      "seed": 283,
+      "correctAnswer": "D",
+      "blindContentSha256": "4253b23886c2a736fcadc73d68bff10a10800264be0dbffb72723199db1b5f28",
+      "sealedCandidateSha256": "9f2fd35418674301d43696128c78ed08f3133c945a4f1286975a899a0cc40063",
+      "calculationEvidence": {
+        "generatorVersion": "physics-kinematics-local-generator-v3-semantic-options",
+        "scopeId": "physics-basic-kinematics-v2:uniform_speed",
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0005",
+      "subject": "physics",
+      "family": "kinematics_acceleration",
+      "seed": 24,
+      "correctAnswer": "A",
+      "blindContentSha256": "b95fb6edefecea700db73c2f791845648ce7b0c923889861102e880c0b596819",
+      "sealedCandidateSha256": "9df7c1322e3c262be0f826bb20e0a35dacd2fa54b21d5d07c2391ca28ca6815f",
+      "calculationEvidence": {
+        "generatorVersion": "physics-kinematics-local-generator-v3-semantic-options",
+        "scopeId": "physics-basic-kinematics-v2:acceleration_from_velocity_change",
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0006",
+      "subject": "physics",
+      "family": "kinematics_acceleration",
+      "seed": 89,
+      "correctAnswer": "B",
+      "blindContentSha256": "6c74aec76d0c42cf23d9ac173ebdf45375a81af6b434a5e88d2fcc94c929c2b4",
+      "sealedCandidateSha256": "0247805d66b3c13a6b74e6f306f07cf5b9b1ba5fcf8ae70213fcb205e9780831",
+      "calculationEvidence": {
+        "generatorVersion": "physics-kinematics-local-generator-v3-semantic-options",
+        "scopeId": "physics-basic-kinematics-v2:acceleration_from_velocity_change",
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0007",
+      "subject": "physics",
+      "family": "kinematics_acceleration",
+      "seed": 174,
+      "correctAnswer": "C",
+      "blindContentSha256": "221605d0153f31e4573ef18a143fc64a1936301de8cad6515445b17de0d02863",
+      "sealedCandidateSha256": "4394d5c0634f32ed43cb325cd1bf74461448e2f6b5a6c44d1b5e4211d57a3b9d",
+      "calculationEvidence": {
+        "generatorVersion": "physics-kinematics-local-generator-v3-semantic-options",
+        "scopeId": "physics-basic-kinematics-v2:acceleration_from_velocity_change",
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0008",
+      "subject": "physics",
+      "family": "kinematics_acceleration",
+      "seed": 307,
+      "correctAnswer": "D",
+      "blindContentSha256": "10c3ddf4024ab43a82c4687cf540830cc0124547b0160a1e55764c2c83390fba",
+      "sealedCandidateSha256": "e7dd1b1b90a2005ddeae996ba0c0708269bd9ec341e1073dcf5fa930c8f21c75",
+      "calculationEvidence": {
+        "generatorVersion": "physics-kinematics-local-generator-v3-semantic-options",
+        "scopeId": "physics-basic-kinematics-v2:acceleration_from_velocity_change",
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0009",
+      "subject": "physics",
+      "family": "kinematics_final_velocity",
+      "seed": 32,
+      "correctAnswer": "A",
+      "blindContentSha256": "556561ee3962fb17e605bb7eb2631461f14e669fdbc9446694b6f1364704926c",
+      "sealedCandidateSha256": "2b79b1350ebb00df627f99eb1c4a531e137326b02c9e10a6fb1c4bf827dfafca",
+      "calculationEvidence": {
+        "generatorVersion": "physics-kinematics-local-generator-v3-semantic-options",
+        "scopeId": "physics-basic-kinematics-v2:final_velocity_from_initial_acceleration_time",
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0010",
+      "subject": "physics",
+      "family": "kinematics_final_velocity",
+      "seed": 101,
+      "correctAnswer": "B",
+      "blindContentSha256": "ecef2e8b57ab39fcdb1938e8a83c6beacfee3960f5dce91d7398108e0147079c",
+      "sealedCandidateSha256": "c9e4a59b10d05dad8ba44577c1e8dbf3c81ecb750527368403a9c43c451691ef",
+      "calculationEvidence": {
+        "generatorVersion": "physics-kinematics-local-generator-v3-semantic-options",
+        "scopeId": "physics-basic-kinematics-v2:final_velocity_from_initial_acceleration_time",
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0011",
+      "subject": "physics",
+      "family": "kinematics_final_velocity",
+      "seed": 198,
+      "correctAnswer": "C",
+      "blindContentSha256": "e658509b0526acc21dc0bd58fccd45f4d6c514d09258470adc42ab2f899b125c",
+      "sealedCandidateSha256": "6abae1067d45c7a3dd321fbe29c04d98540fbc34d42e43486d45aea5b9b96a7d",
+      "calculationEvidence": {
+        "generatorVersion": "physics-kinematics-local-generator-v3-semantic-options",
+        "scopeId": "physics-basic-kinematics-v2:final_velocity_from_initial_acceleration_time",
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0012",
+      "subject": "physics",
+      "family": "kinematics_final_velocity",
+      "seed": 331,
+      "correctAnswer": "D",
+      "blindContentSha256": "42bb617d0135d280654b66a0ba698e4cdf7ba971df42cfca5941380601c6d72d",
+      "sealedCandidateSha256": "c2faff1df0a7a0b5db8461bd8b9f4956dc1e36aad480b321a975dab005eb7374",
+      "calculationEvidence": {
+        "generatorVersion": "physics-kinematics-local-generator-v3-semantic-options",
+        "scopeId": "physics-basic-kinematics-v2:final_velocity_from_initial_acceleration_time",
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0013",
+      "subject": "physics",
+      "family": "kinematics_displacement",
+      "seed": 44,
+      "correctAnswer": "A",
+      "blindContentSha256": "3f71219b359420483549188e842f8ad7139fb85c9fb1906844f74d4482ef2d24",
+      "sealedCandidateSha256": "f3928af1fafe19d74826c161a7c13ff3c8abf019abd4f2faa002029929571ea2",
+      "calculationEvidence": {
+        "generatorVersion": "physics-kinematics-local-generator-v3-semantic-options",
+        "scopeId": "physics-basic-kinematics-v2:displacement_from_initial_acceleration_time",
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0014",
+      "subject": "physics",
+      "family": "kinematics_displacement",
+      "seed": 129,
+      "correctAnswer": "B",
+      "blindContentSha256": "1103507b216b7e3592b140bc7c25875ade96b8688d14f124fdd0106e6274ab80",
+      "sealedCandidateSha256": "6013f785b2ab79813231f84374f399f8b66370e3bbda736af808a4c62acc92ec",
+      "calculationEvidence": {
+        "generatorVersion": "physics-kinematics-local-generator-v3-semantic-options",
+        "scopeId": "physics-basic-kinematics-v2:displacement_from_initial_acceleration_time",
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-PHYSICS-0015",
+      "subject": "physics",
+      "family": "kinematics_displacement",
+      "seed": 238,
+      "correctAnswer": "C",
+      "blindContentSha256": "e420396081e5a7996508d96ad56c1c7ce07f1d4045e0a7e958247ab5eda26575",
+      "sealedCandidateSha256": "ce20a6295bd8573d812d19eb220674e8e916af8693f11f4f10e95f5e8c749618",
+      "calculationEvidence": {
+        "generatorVersion": "physics-kinematics-local-generator-v3-semantic-options",
+        "scopeId": "physics-basic-kinematics-v2:displacement_from_initial_acceleration_time",
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0001",
+      "subject": "chemistry",
+      "family": "strong_acid_dilution",
+      "seed": 12,
+      "correctAnswer": "A",
+      "blindContentSha256": "098fde8124681e08370db49d5cc721bc3e05baeed56b06d744abbd35a2d298c5",
+      "sealedCandidateSha256": "82b70d1f4b9a96e572f2ab45e8f7dc8813617be18b9f05d1dd256dafcbe5484b",
+      "calculationEvidence": {
+        "generatorVersion": "chemistry-strong-acid-base-local-generator-v5-bounded-plausible-values",
+        "scopeId": "chemistry-strong-acid-base-v3:strong_acid_dilution:ph_value",
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0002",
+      "subject": "chemistry",
+      "family": "strong_acid_dilution",
+      "seed": 65,
+      "correctAnswer": "B",
+      "blindContentSha256": "bb7d368b03a8a61c1e7bff6549ed295534610fa6a08688533732a2b8603c758b",
+      "sealedCandidateSha256": "615ebde7653dff794d9b182061154f0032b42fe0344f20eac55279585d2e5910",
+      "calculationEvidence": {
+        "generatorVersion": "chemistry-strong-acid-base-local-generator-v5-bounded-plausible-values",
+        "scopeId": "chemistry-strong-acid-base-v3:strong_acid_dilution:ph_value",
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0003",
+      "subject": "chemistry",
+      "family": "strong_acid_dilution",
+      "seed": 138,
+      "correctAnswer": "C",
+      "blindContentSha256": "ce1c6c8a5e7ba6546eac636e72e45c8430a59db79adf159c62daa5eb5e151bac",
+      "sealedCandidateSha256": "2d3df43ef3d4944521122a9b6e55be5c6d1fe34d9e5cb421924bf42a0b691253",
+      "calculationEvidence": {
+        "generatorVersion": "chemistry-strong-acid-base-local-generator-v5-bounded-plausible-values",
+        "scopeId": "chemistry-strong-acid-base-v3:strong_acid_dilution:ph_value",
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0004",
+      "subject": "chemistry",
+      "family": "strong_acid_dilution",
+      "seed": 251,
+      "correctAnswer": "D",
+      "blindContentSha256": "4b012fc7d5acc6de0e3e116757228c0f00b9032923e01f4063f76e29269d8cfc",
+      "sealedCandidateSha256": "ab44553f85689ed447b9e5555418e9cb9585e1b5aa7b997b2b711784c0c21854",
+      "calculationEvidence": {
+        "generatorVersion": "chemistry-strong-acid-base-local-generator-v5-bounded-plausible-values",
+        "scopeId": "chemistry-strong-acid-base-v3:strong_acid_dilution:ph_value",
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0005",
+      "subject": "chemistry",
+      "family": "strong_acid_dilution",
+      "seed": 372,
+      "correctAnswer": "A",
+      "blindContentSha256": "aaeec62d9bc75476782fedfd3df091581243d779320f0b6c2d96ce6df5cb1d1c",
+      "sealedCandidateSha256": "66d8fecf160a3648998aa394d4abff536b26ed9e48855ae267bfdf102d37a559",
+      "calculationEvidence": {
+        "generatorVersion": "chemistry-strong-acid-base-local-generator-v5-bounded-plausible-values",
+        "scopeId": "chemistry-strong-acid-base-v3:strong_acid_dilution:acid_base_character",
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0006",
+      "subject": "chemistry",
+      "family": "strong_base_dilution",
+      "seed": 28,
+      "correctAnswer": "A",
+      "blindContentSha256": "e5cae281ad381e73e35de17bda0b13c6abd27f2a15a144875614357a93390619",
+      "sealedCandidateSha256": "9fcd63ba9ebfa50aad4a7c0cd651212c2a060b280603d2fdb9d607db893eb58e",
+      "calculationEvidence": {
+        "generatorVersion": "chemistry-strong-acid-base-local-generator-v5-bounded-plausible-values",
+        "scopeId": "chemistry-strong-acid-base-v3:strong_base_dilution:ph_value",
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0007",
+      "subject": "chemistry",
+      "family": "strong_base_dilution",
+      "seed": 97,
+      "correctAnswer": "B",
+      "blindContentSha256": "4c3d2808e363099b3cd1d788ac2078bfd1ed67a3c6310078331d28f2f1e6dc9b",
+      "sealedCandidateSha256": "3e4ccca1408798d3569dda7277b55a334f2ce096e38425b106be86df3b593a2d",
+      "calculationEvidence": {
+        "generatorVersion": "chemistry-strong-acid-base-local-generator-v5-bounded-plausible-values",
+        "scopeId": "chemistry-strong-acid-base-v3:strong_base_dilution:ph_value",
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0008",
+      "subject": "chemistry",
+      "family": "strong_base_dilution",
+      "seed": 182,
+      "correctAnswer": "C",
+      "blindContentSha256": "9b104d43ecdbccfd282250c2971fc1dc1b3d16c3dd9d0d301cbf6b26bb571032",
+      "sealedCandidateSha256": "2a70103f4bea7c7481ce362a8fd525ca657cea692d7fab094137a3f32bdd8e93",
+      "calculationEvidence": {
+        "generatorVersion": "chemistry-strong-acid-base-local-generator-v5-bounded-plausible-values",
+        "scopeId": "chemistry-strong-acid-base-v3:strong_base_dilution:ph_value",
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0009",
+      "subject": "chemistry",
+      "family": "strong_base_dilution",
+      "seed": 295,
+      "correctAnswer": "D",
+      "blindContentSha256": "df9321b9478ead6286d2be8266b4d85a86c484b40834584b9aff18938fe98afa",
+      "sealedCandidateSha256": "29714d3c51629bcafa35d8bfdd01340e46a7278760baec77bbc0423148c12860",
+      "calculationEvidence": {
+        "generatorVersion": "chemistry-strong-acid-base-local-generator-v5-bounded-plausible-values",
+        "scopeId": "chemistry-strong-acid-base-v3:strong_base_dilution:ph_value",
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0010",
+      "subject": "chemistry",
+      "family": "strong_base_dilution",
+      "seed": 420,
+      "correctAnswer": "A",
+      "blindContentSha256": "b4f10e7b4e6ba985a4b8accb61bd8786867b5168e7b8c85249d5f9b6da73ca0e",
+      "sealedCandidateSha256": "68d6b3c6dabd43c3def5166abedb42e5d96ff8f436bcb3042e04bfc214ffa66c",
+      "calculationEvidence": {
+        "generatorVersion": "chemistry-strong-acid-base-local-generator-v5-bounded-plausible-values",
+        "scopeId": "chemistry-strong-acid-base-v3:strong_base_dilution:acid_base_character",
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0011",
+      "subject": "chemistry",
+      "family": "strong_acid_base_neutralization",
+      "seed": 46,
+      "correctAnswer": "C",
+      "blindContentSha256": "c942cf2e832e77d5997c55fbc8aff1f6c14528ba66b741c2971ce94370e6fec0",
+      "sealedCandidateSha256": "39892cc4782a7c6c303f5f925f78b2fba352a3fc8e9337f53dc0c568f195dce9",
+      "calculationEvidence": {
+        "generatorVersion": "chemistry-strong-acid-base-local-generator-v5-bounded-plausible-values",
+        "scopeId": "chemistry-strong-acid-base-v3:strong_acid_base_neutralization:ph_value",
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0012",
+      "subject": "chemistry",
+      "family": "strong_acid_base_neutralization",
+      "seed": 115,
+      "correctAnswer": "D",
+      "blindContentSha256": "2de556781ff998f6aa4ace2552ae5ed05a44ec742d6a4281998b85aa3b02acac",
+      "sealedCandidateSha256": "cbec7324a81f0afa496e3586f1fe84b3e399abe6a40f71b04dee30a8f09f8274",
+      "calculationEvidence": {
+        "generatorVersion": "chemistry-strong-acid-base-local-generator-v5-bounded-plausible-values",
+        "scopeId": "chemistry-strong-acid-base-v3:strong_acid_base_neutralization:ph_value",
+        "solverStatus": "verified",
+        "solverAnswer": "D",
+        "oracleStatus": "verified",
+        "oracleAnswer": "D",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0013",
+      "subject": "chemistry",
+      "family": "strong_acid_base_neutralization",
+      "seed": 212,
+      "correctAnswer": "A",
+      "blindContentSha256": "f552cf7d6eeb1420a61c1a730b966d61c5e85656566520dc005bd8831c8cfa86",
+      "sealedCandidateSha256": "4580d0bdb0e1f545e8d4e0607c476430b210e8d67b6f5bb7312af5b5fce1c892",
+      "calculationEvidence": {
+        "generatorVersion": "chemistry-strong-acid-base-local-generator-v5-bounded-plausible-values",
+        "scopeId": "chemistry-strong-acid-base-v3:strong_acid_base_neutralization:ph_value",
+        "solverStatus": "verified",
+        "solverAnswer": "A",
+        "oracleStatus": "verified",
+        "oracleAnswer": "A",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0014",
+      "subject": "chemistry",
+      "family": "strong_acid_base_neutralization",
+      "seed": 337,
+      "correctAnswer": "B",
+      "blindContentSha256": "5c7e02c8482ba4e9706a43db88c10d2d81aafafbf1a4fe01a92b537d27b750be",
+      "sealedCandidateSha256": "3fafee7d3a060ae0c1a3d05f10499add2da338851ccab333014cc443d8856ef1",
+      "calculationEvidence": {
+        "generatorVersion": "chemistry-strong-acid-base-local-generator-v5-bounded-plausible-values",
+        "scopeId": "chemistry-strong-acid-base-v3:strong_acid_base_neutralization:ph_value",
+        "solverStatus": "verified",
+        "solverAnswer": "B",
+        "oracleStatus": "verified",
+        "oracleAnswer": "B",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-0015",
+      "subject": "chemistry",
+      "family": "strong_acid_base_neutralization",
+      "seed": 462,
+      "correctAnswer": "C",
+      "blindContentSha256": "d95411335729cb58bfa244c7741eab2f9eb183ad7839846eb59a7e776f8ad6a7",
+      "sealedCandidateSha256": "1c4a88521b7821529ce20cb4b7701cd9458e384c7e20558ae1ed8d09136e7c7e",
+      "calculationEvidence": {
+        "generatorVersion": "chemistry-strong-acid-base-local-generator-v5-bounded-plausible-values",
+        "scopeId": "chemistry-strong-acid-base-v3:strong_acid_base_neutralization:acid_base_character",
+        "solverStatus": "verified",
+        "solverAnswer": "C",
+        "oracleStatus": "verified",
+        "oracleAnswer": "C",
+        "explanationStatus": "verified",
+        "questionPlanAdheres": true
+      }
+    }
+  ],
+  "limitations": [
+    "Generator-side verification is pre-review evidence only and does not decide acceptance.",
+    "Official-source leakage and corpus-wide duplicate gates are reserved for the post-generation supervisor.",
+    "Items remain fixed candidates; no blueprint promotion or publication is authorized."
+  ]
+}

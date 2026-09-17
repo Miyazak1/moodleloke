@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "codex-question-production-batch-v1",
+  "batchId": "pilot-30-v2-2026-09-15",
+  "purpose": "Replace the rejected pilot surface set with structurally diverse, deterministic fixed-question candidates.",
+  "supersedesForReview": "pilot-30-2026-09-15",
+  "targetAccepted": { "math": 10, "physics": 10, "chemistry": 10 },
+  "candidateCount": { "math": 15, "physics": 15, "chemistry": 15 },
+  "language": "bilingual_zh_en_when_supported",
+  "questionType": "single_choice",
+  "publicationPolicy": "no_direct_publish_import_as_draft_and_replay_current_gates",
+  "officialSourceIsolation": {
+    "generatorMayReadPastPaperBodies": false,
+    "reviewerMayReadPastPaperBodies": false,
+    "postGenerationLeakCheckerMayReadPastPaperBodies": true
+  },
+  "families": {
+    "math": [
+      { "family": "derivative_direct_evaluation", "count": 5 },
+      { "family": "elementary_bounded", "count": 5 },
+      { "family": "line_relation", "count": 5 }
+    ],
+    "physics": [
+      { "family": "kinematics_uniform_speed", "count": 4 },
+      { "family": "kinematics_acceleration", "count": 4 },
+      { "family": "kinematics_final_velocity", "count": 4 },
+      { "family": "kinematics_displacement", "count": 3 }
+    ],
+    "chemistry": [
+      { "family": "strong_acid_dilution", "count": 5 },
+      { "family": "strong_base_dilution", "count": 5 },
+      { "family": "strong_acid_base_neutralization", "count": 5 }
+    ]
+  },
+  "structuralDiversityRules": {
+    "physicsMinimumScenarioFamilies": 8,
+    "chemistryMinimumScenarioFamilies": 8,
+    "maximumItemsPerScenarioFamily": 2,
+    "requiredVaryingDimensions": ["entity", "environment", "action", "information_form", "question_purpose"],
+    "renameOnlyVariationAccepted": false,
+    "contextMustParticipateNaturally": true
+  },
+  "v1CorrectionRules": [
+    "elementary-function options must be parallel mathematical claims, never true descriptions of a misconception",
+    "every interval-dependent prompt must state its interval or explicitly bind the claim to the function domain",
+    "chemistry medium items must require numerical pH derivation rather than acid-base character recognition"
+  ],
+  "hardAcceptanceRules": [
+    "blind reviewer derives exactly one correct option without seeing the claimed answer",
+    "generator and blind reviewer answers match after reveal",
+    "conditions are sufficient and no material ambiguity is found",
+    "question is within a published syllabus topic and declared QuestionPlan",
+    "available deterministic Solver and independent Oracle both verify",
+    "explanation recomputes the answer without hidden information",
+    "structural diversity rules pass before acceptance",
+    "duplicate, rename-only and official-source leakage checks pass",
+    "unknown, abstain, missing evidence or disagreement always quarantines"
+  ]
+}

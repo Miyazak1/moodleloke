@@ -1,0 +1,6764 @@
+[
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-MATH-3001",
+    "subject": "math",
+    "topicCode": "M-FUNC-QUAD",
+    "topicTitle": "二次函数",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "二次函数 f(x)=a[x-(1)][x-(5)] 的图像经过点 (0,10)。先确定 a，再求该函数的顶点纵坐标。",
+    "options": [
+      {
+        "id": "A",
+        "text": "-8"
+      },
+      {
+        "id": "B",
+        "text": "-4"
+      },
+      {
+        "id": "C",
+        "text": "2"
+      },
+      {
+        "id": "D",
+        "text": "-6"
+      }
+    ],
+    "knowledgeTags": [
+      "二次函数",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "math",
+      "topicCode": "M-FUNC-QUAD",
+      "topicTitle": "二次函数",
+      "targetDifficulty": "medium",
+      "taskFamily": "quadratic_scale_then_vertex",
+      "planTemplate": "pilot_v4_quadratic_scale_then_vertex_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "332864ea0791de78499c63f1",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "f0",
+          "r1",
+          "r2"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "f0",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "r1",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "r2",
+          "independentGroup": "g3"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "roots+point",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "scale",
+          "inputs": [
+            "r1"
+          ],
+          "output": "intermediate_2"
+        },
+        {
+          "id": "r3",
+          "operation": "axis-value",
+          "inputs": [
+            "r2"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "f(0)=a(0-r1)(0-r2)",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "x_v=(r1+r2)/2",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q3",
+          "type": "deterministic_relation",
+          "expression": "y_v=f(x_v)",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "忽略比例系数",
+        "把零点之一当成顶点"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "r1": 1,
+        "r2": 5,
+        "f0": 10
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "A",
+    "explanation": "由 f(0)=10 得 a=2。对称轴为 x=(1+5)/2=3，代回得顶点纵坐标 -8。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "quadratic_scale_then_vertex",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": -8,
+          "selectedOptionId": "A",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": -8,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": true,
+            "canonicalValue": -8
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": -4
+          },
+          {
+            "optionId": "C",
+            "verdict": false,
+            "canonicalValue": 2
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": -6
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "a=2",
+            "-8"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-MATH-3003",
+    "subject": "math",
+    "topicCode": "M-SEQ-ARITH",
+    "topicTitle": "等差数列",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "等差数列 {aₙ} 中，a3=7，a8=22。求前 10 项和 S10。",
+    "options": [
+      {
+        "id": "A",
+        "text": "175"
+      },
+      {
+        "id": "B",
+        "text": "144"
+      },
+      {
+        "id": "C",
+        "text": "145"
+      },
+      {
+        "id": "D",
+        "text": "146"
+      }
+    ],
+    "knowledgeTags": [
+      "等差数列",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "math",
+      "topicCode": "M-SEQ-ARITH",
+      "topicTitle": "等差数列",
+      "targetDifficulty": "medium",
+      "taskFamily": "arithmetic_sequence_two_terms_then_sum",
+      "planTemplate": "pilot_v4_arithmetic_sequence_two_terms_then_sum_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "6e0058ba467b7f656ef58138",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "ai",
+          "aj",
+          "i",
+          "j",
+          "n"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "ai",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "aj",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "i",
+          "independentGroup": "g3"
+        },
+        {
+          "id": "e4",
+          "type": "visible_parameter",
+          "role": "j",
+          "independentGroup": "g4"
+        },
+        {
+          "id": "e5",
+          "type": "visible_parameter",
+          "role": "n",
+          "independentGroup": "g5"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "two nonadjacent terms",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3",
+            "e4",
+            "e5"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "common difference",
+          "inputs": [
+            "r1"
+          ],
+          "output": "intermediate_2"
+        },
+        {
+          "id": "r3",
+          "operation": "partial sum",
+          "inputs": [
+            "r2"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "d=(aj-ai)/(j-i)",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "a1=ai-(i-1)d",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q3",
+          "type": "deterministic_relation",
+          "expression": "Sn=n(2a1+(n-1)d)/2",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "把项数差误作下标差",
+        "求和漏乘项数"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "i": 3,
+        "ai": 7,
+        "j": 8,
+        "aj": 22,
+        "n": 10
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "C",
+    "explanation": "由两项之差得公差 d=(22-7)/(8-3)=3，故首项 a₁=1。于是 S10=10[2×1+9×(3)]/2=145。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "arithmetic_sequence_two_terms_then_sum",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 145,
+          "selectedOptionId": "C",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 145,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": false,
+            "canonicalValue": 175
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 144
+          },
+          {
+            "optionId": "C",
+            "verdict": true,
+            "canonicalValue": 145
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 146
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "公差",
+            "145"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-MATH-3005",
+    "subject": "math",
+    "topicCode": "M-SEQ-GEO",
+    "topicTitle": "等比数列",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "正项等比数列 {aₙ} 满足 a₂=6，a₅=162。求前 4 项和 S4。",
+    "options": [
+      {
+        "id": "A",
+        "text": "80"
+      },
+      {
+        "id": "B",
+        "text": "240"
+      },
+      {
+        "id": "C",
+        "text": "78"
+      },
+      {
+        "id": "D",
+        "text": "83"
+      }
+    ],
+    "knowledgeTags": [
+      "等比数列",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "math",
+      "topicCode": "M-SEQ-GEO",
+      "topicTitle": "等比数列",
+      "targetDifficulty": "medium",
+      "taskFamily": "geometric_sequence_nonadjacent_then_sum",
+      "planTemplate": "pilot_v4_geometric_sequence_nonadjacent_then_sum_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "22e2dd7d5714501c8a56439b",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "a2",
+          "a5",
+          "n"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "a2",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "a5",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "n",
+          "independentGroup": "g3"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "positive ratio constraint + separated terms",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "ratio",
+          "inputs": [
+            "r1"
+          ],
+          "output": "intermediate_2"
+        },
+        {
+          "id": "r3",
+          "operation": "sum",
+          "inputs": [
+            "r2"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "q^3=a5/a2",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "a1=a2/q",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q3",
+          "type": "deterministic_relation",
+          "expression": "Sn=a1(q^n-1)/(q-1)",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "忽略公比为正的条件",
+        "把下标差少算一"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "a2": 6,
+        "a5": 162,
+        "n": 4
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "A",
+    "explanation": "正项条件确定公比 q>0；由 a₅/a₂=q³=27 得 q=3，a₁=2。代入等比数列求和式得 S4=80。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "geometric_sequence_nonadjacent_then_sum",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 80,
+          "selectedOptionId": "A",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 80,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": true,
+            "canonicalValue": 80
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 240
+          },
+          {
+            "optionId": "C",
+            "verdict": false,
+            "canonicalValue": 78
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 83
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "q=3",
+            "80"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-MATH-3007",
+    "subject": "math",
+    "topicCode": "M-SET-IE",
+    "topicTitle": "集合计数",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "一次问卷共调查 60 人。选择项目 A 的有 35 人，选择项目 B 的有 28 人，两项都不选的有 8 人。恰好只选择一项的有多少人？",
+    "options": [
+      {
+        "id": "A",
+        "text": "52 人"
+      },
+      {
+        "id": "B",
+        "text": "11 人"
+      },
+      {
+        "id": "C",
+        "text": "41 人"
+      },
+      {
+        "id": "D",
+        "text": "42 人"
+      }
+    ],
+    "knowledgeTags": [
+      "集合计数",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "math",
+      "topicCode": "M-SET-IE",
+      "topicTitle": "集合计数",
+      "targetDifficulty": "medium",
+      "taskFamily": "inclusion_exclusion_exactly_one",
+      "planTemplate": "pilot_v4_inclusion_exclusion_exactly_one_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "ba77825df60929bc0bbce2d0",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "a",
+          "b",
+          "n",
+          "neither"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "a",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "b",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "n",
+          "independentGroup": "g3"
+        },
+        {
+          "id": "e4",
+          "type": "visible_parameter",
+          "role": "neither",
+          "independentGroup": "g4"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "population+neither",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3",
+            "e4"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "union",
+          "inputs": [
+            "r1"
+          ],
+          "output": "intermediate_2"
+        },
+        {
+          "id": "r3",
+          "operation": "intersection",
+          "inputs": [
+            "r2"
+          ],
+          "output": "intermediate_3"
+        },
+        {
+          "id": "r4",
+          "operation": "exactly-one",
+          "inputs": [
+            "r3"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "|A∪B|=n-neither",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "|A∩B|=|A|+|B|-|A∪B|",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q3",
+          "type": "deterministic_relation",
+          "expression": "exactlyOne=|A|+|B|-2|A∩B|",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "把并集当成交集",
+        "重复计数交集元素"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "n": 60,
+        "a": 35,
+        "b": 28,
+        "neither": 8
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "C",
+    "explanation": "至少选一项的有 60-8=52 人。由容斥原理，两项都选的有 35+28-52=11 人，因此恰好选一项的有 35+28-2×11=41 人。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "inclusion_exclusion_exactly_one",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 41,
+          "selectedOptionId": "C",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 41,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": false,
+            "canonicalValue": 52
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 11
+          },
+          {
+            "optionId": "C",
+            "verdict": true,
+            "canonicalValue": 41
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 42
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "11",
+            "41"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-MATH-3009",
+    "subject": "math",
+    "topicCode": "M-PROB-HYPER",
+    "topicTitle": "古典概率",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "袋中有 4 个红球和 6 个蓝球，球除颜色外完全相同。不放回地随机取出 2 个球，恰好取到 1 个红球的概率为多少？",
+    "options": [
+      {
+        "id": "A",
+        "text": "8/15"
+      },
+      {
+        "id": "B",
+        "text": "4/10"
+      },
+      {
+        "id": "C",
+        "text": "24/100"
+      },
+      {
+        "id": "D",
+        "text": "0.4667"
+      }
+    ],
+    "knowledgeTags": [
+      "古典概率",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "math",
+      "topicCode": "M-PROB-HYPER",
+      "topicTitle": "古典概率",
+      "targetDifficulty": "medium",
+      "taskFamily": "probability_exactly_one_red_without_replacement",
+      "planTemplate": "pilot_v4_probability_exactly_one_red_without_replacement_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "8a3f74d5dfce658d8d246d66",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "b",
+          "r"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "b",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "r",
+          "independentGroup": "g2"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "unordered two-draw sample",
+          "inputs": [
+            "e1",
+            "e2"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "favorable mixed pairs / all pairs",
+          "inputs": [
+            "r1"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "favorable=C(r,1)C(b,1)",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "total=C(r+b,2)",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q3",
+          "type": "deterministic_relation",
+          "expression": "P=favorable/total",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "误用有放回模型",
+        "只计算一种取出次序"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "r": 4,
+        "b": 6
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "A",
+    "explanation": "用组合数计数：有利取法为 C(4,1)C(6,1)=24，全部取法为 C(10,2)。所以概率为 24/C(10,2)=8/15。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "probability_exactly_one_red_without_replacement",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 0.5333333333333333,
+          "selectedOptionId": "A",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 0.5333333333333333,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": true,
+            "canonicalValue": 0.5333333333333333
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 0.4
+          },
+          {
+            "optionId": "C",
+            "verdict": false,
+            "canonicalValue": 0.24
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 0.4666666666666667
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "组合数",
+            "8/15"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-MATH-3011",
+    "subject": "math",
+    "topicCode": "M-VEC-DOT",
+    "topicTitle": "平面向量",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "向量 a=(k,2) 与向量 b=(3,-6) 垂直。先求参数 k，再求 |a|。",
+    "options": [
+      {
+        "id": "A",
+        "text": "6"
+      },
+      {
+        "id": "B",
+        "text": "4"
+      },
+      {
+        "id": "C",
+        "text": "2√5"
+      },
+      {
+        "id": "D",
+        "text": "20"
+      }
+    ],
+    "knowledgeTags": [
+      "平面向量",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "math",
+      "topicCode": "M-VEC-DOT",
+      "topicTitle": "平面向量",
+      "targetDifficulty": "medium",
+      "taskFamily": "vector_parameter_then_norm",
+      "planTemplate": "pilot_v4_vector_parameter_then_norm_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "0fba925283a47332c1fb262f",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "bx",
+          "by",
+          "y"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "bx",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "by",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "y",
+          "independentGroup": "g3"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "perpendicular dot constraint",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "parameter",
+          "inputs": [
+            "r1"
+          ],
+          "output": "intermediate_2"
+        },
+        {
+          "id": "r3",
+          "operation": "norm",
+          "inputs": [
+            "r2"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "a·b=0",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "k=-y by/bx",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q3",
+          "type": "deterministic_relation",
+          "expression": "|a|=sqrt(k^2+y^2)",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "把垂直误作坐标对应相等",
+        "求模时漏开方"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "y": 2,
+        "bx": 3,
+        "by": -6
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "C",
+    "explanation": "由垂直条件 a·b=3k+(2)×(-6)=0，得 k=4。因此 |a|=√[4²+(2)²]=2√5。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "vector_parameter_then_norm",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 4.47213595499958,
+          "selectedOptionId": "C",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 4.47213595499958,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": false,
+            "canonicalValue": 6
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 4
+          },
+          {
+            "optionId": "C",
+            "verdict": true,
+            "canonicalValue": 4.47213595499958
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 20
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "k=4",
+            "2√5"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-MATH-3013",
+    "subject": "math",
+    "topicCode": "M-GEO-CIRCLE",
+    "topicTitle": "圆与直线",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "一条直线与半径为 5 的圆相交，圆心到该直线的距离为 3。求这条直线被圆截得的弦长。",
+    "options": [
+      {
+        "id": "A",
+        "text": "8"
+      },
+      {
+        "id": "B",
+        "text": "4"
+      },
+      {
+        "id": "C",
+        "text": "5.831"
+      },
+      {
+        "id": "D",
+        "text": "9"
+      }
+    ],
+    "knowledgeTags": [
+      "圆与直线",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "math",
+      "topicCode": "M-GEO-CIRCLE",
+      "topicTitle": "圆与直线",
+      "targetDifficulty": "medium",
+      "taskFamily": "circle_line_chord_length",
+      "planTemplate": "pilot_v4_circle_line_chord_length_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "596882575c3ceb1ae01ff83d",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "R",
+          "d"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "R",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "d",
+          "independentGroup": "g2"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "center-to-line distance + radius",
+          "inputs": [
+            "e1",
+            "e2"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "half chord",
+          "inputs": [
+            "r1"
+          ],
+          "output": "intermediate_2"
+        },
+        {
+          "id": "r3",
+          "operation": "chord",
+          "inputs": [
+            "r2"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "halfChord^2=R^2-d^2",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "chord=2 halfChord",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "把半弦长当弦长",
+        "直接用半径减距离"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "R": 5,
+        "d": 3
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "A",
+    "explanation": "圆心到弦的垂线平分弦。半弦长为 √(5²-3²)=4，所以弦长为 2×4=8。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "circle_line_chord_length",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 8,
+          "selectedOptionId": "A",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 8,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": true,
+            "canonicalValue": 8
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 4
+          },
+          {
+            "optionId": "C",
+            "verdict": false,
+            "canonicalValue": 5.830951894845301
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 9
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "平分弦",
+            "8"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-question-candidate-v1",
+    "candidateId": "CQ-MATH-4001",
+    "subject": "math",
+    "topicCode": "M-TRIG-HALF",
+    "topicTitle": "三角函数",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "已知角 α 在第二象限，且 sin α=3/5。求 tan(α/2)。",
+    "options": [
+      {
+        "id": "A",
+        "text": "0.3333"
+      },
+      {
+        "id": "B",
+        "text": "-3"
+      },
+      {
+        "id": "C",
+        "text": "3"
+      },
+      {
+        "id": "D",
+        "text": "4"
+      }
+    ],
+    "knowledgeTags": [
+      "三角函数",
+      "修订题"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "math",
+      "topicCode": "M-TRIG-HALF",
+      "topicTitle": "三角函数",
+      "targetDifficulty": "medium",
+      "taskFamily": "trig_quadrant_half_angle",
+      "planTemplate": "pilot_v4_repair_trig_quadrant_half_angle_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "f66c5dbf9f5c2881273df4da",
+        "scenarioDataMustAffectSolution": true,
+        "selfContainedConstantsRequired": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "quadrant",
+          "sinNumerator",
+          "sinDenominator"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "databaseQuestionTextUsed": false,
+          "priorReviewBodyUsed": false,
+          "selectionBasis": "specified_v4_candidate_repair_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "quadrant",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "sinNumerator",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "sinDenominator",
+          "independentGroup": "g3"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "由象限和正弦值确定余弦符号及数值",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3"
+          ],
+          "output": "cos α"
+        },
+        {
+          "id": "r2",
+          "operation": "代入半角正切恒等式",
+          "inputs": [
+            "r1"
+          ],
+          "output": "tan(α/2)"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "sin²α+cos²α=1",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "tan(α/2)=sinα/(1+cosα)",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "遗漏题干常数或条件",
+        "未完成中间量复核"
+      ],
+      "answerDerivation": [
+        "仅使用题干和 QuestionPlan 中的可见输入独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项逐一代入后恰有一个满足全部关系"
+      ],
+      "canonicalInputs": {
+        "quadrant": "第二象限",
+        "sinNumerator": 3,
+        "sinDenominator": 5
+      },
+      "verificationContract": {
+        "version": "pilot-v4-repair-local-verifier-v1",
+        "independentSolverRequired": true,
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      }
+    },
+    "correctAnswer": "C",
+    "explanation": "第二象限内 cos α<0。由 sin²α+cos²α=1 得 cos α=-4/5；再用 tan(α/2)=sin α/(1+cos α)，可得 tan(α/2)=(3/5)/(1-4/5)=3。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4_repair",
+      "generatorTaskId": "pilot-30-v4-repair-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-repair-v1",
+      "createdAt": "2026-09-15T17:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "supersedes": "CQ-MATH-3015",
+      "revisionReason": "difficulty_normalization",
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "originalityPerItemHitsRead": false,
+        "priorReviewBodiesRead": false,
+        "sourceCandidateReadOnly": true
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-repair-independent-solver-v1",
+          "status": "verified",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 3.0000000000000004,
+          "selectedOptionId": "C",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-repair-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "separate_equivalent_derivation",
+          "expectedCanonical": 3,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": false,
+            "canonicalValue": 0.3333333333333333
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": -3
+          },
+          {
+            "optionId": "C",
+            "verdict": true,
+            "canonicalValue": 3
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 4
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-repair-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "第二象限",
+            "cos α=-4/5",
+            "=3"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-MATH-3017",
+    "subject": "math",
+    "topicCode": "M-FUNC-LOGEQ",
+    "topicTitle": "对数方程",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "解方程 log_2(x-1)+log_2(x-3)=3。",
+    "options": [
+      {
+        "id": "A",
+        "text": "5"
+      },
+      {
+        "id": "B",
+        "text": "-1"
+      },
+      {
+        "id": "C",
+        "text": "4"
+      },
+      {
+        "id": "D",
+        "text": "6"
+      }
+    ],
+    "knowledgeTags": [
+      "对数方程",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "math",
+      "topicCode": "M-FUNC-LOGEQ",
+      "topicTitle": "对数方程",
+      "targetDifficulty": "medium",
+      "taskFamily": "logarithmic_product_equation_with_domain",
+      "planTemplate": "pilot_v4_logarithmic_product_equation_with_domain_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "7a016aeebb2396d899722449",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "a",
+          "b",
+          "base",
+          "c"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "a",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "b",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "base",
+          "independentGroup": "g3"
+        },
+        {
+          "id": "e4",
+          "type": "visible_parameter",
+          "role": "c",
+          "independentGroup": "g4"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "domain intersection + log sum",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3",
+            "e4"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "quadratic",
+          "inputs": [
+            "r1"
+          ],
+          "output": "intermediate_2"
+        },
+        {
+          "id": "r3",
+          "operation": "reject extraneous root",
+          "inputs": [
+            "r2"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "x-a>0 and x-b>0",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "(x-a)(x-b)=base^c",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q3",
+          "type": "deterministic_relation",
+          "expression": "filter roots by domain",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "忘记真数同时为正",
+        "保留不满足定义域的根"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "base": 2,
+        "a": 1,
+        "b": 3,
+        "c": 3
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "A",
+    "explanation": "定义域要求 x-1>0 且 x-3>0。合并对数得 (x-1)(x-3)=8；解二次方程并按定义域筛选，唯一可取的根为 x=5。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "logarithmic_product_equation_with_domain",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 5,
+          "selectedOptionId": "A",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 5,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": true,
+            "canonicalValue": 5
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": -1
+          },
+          {
+            "optionId": "C",
+            "verdict": false,
+            "canonicalValue": 4
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 6
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "定义域",
+            "x=5"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-MATH-3019",
+    "subject": "math",
+    "topicCode": "M-STAT-COMB",
+    "topicTitle": "统计",
+    "designedDifficulty": "hard",
+    "questionType": "single_choice",
+    "prompt": "甲组有 10 个数据，均值为 6、方差为 4；乙组有 20 个数据，均值为 9、方差为 1。把两组合并后，按“各数据与总体均值的离差平方的平均数”定义方差，求合并数据的方差。",
+    "options": [
+      {
+        "id": "A",
+        "text": "2"
+      },
+      {
+        "id": "B",
+        "text": "5"
+      },
+      {
+        "id": "C",
+        "text": "4"
+      },
+      {
+        "id": "D",
+        "text": "6"
+      }
+    ],
+    "knowledgeTags": [
+      "统计",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "math",
+      "topicCode": "M-STAT-COMB",
+      "topicTitle": "统计",
+      "targetDifficulty": "hard",
+      "taskFamily": "combined_variance_with_between_group_shift",
+      "planTemplate": "pilot_v4_combined_variance_with_between_group_shift_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "a69ac84fd73774db2c8a78ab",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "m1",
+          "m2",
+          "n1",
+          "n2",
+          "v1",
+          "v2"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "m1",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "m2",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "n1",
+          "independentGroup": "g3"
+        },
+        {
+          "id": "e4",
+          "type": "visible_parameter",
+          "role": "n2",
+          "independentGroup": "g4"
+        },
+        {
+          "id": "e5",
+          "type": "visible_parameter",
+          "role": "v1",
+          "independentGroup": "g5"
+        },
+        {
+          "id": "e6",
+          "type": "visible_parameter",
+          "role": "v2",
+          "independentGroup": "g6"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "group summaries",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3",
+            "e4",
+            "e5",
+            "e6"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "combined mean",
+          "inputs": [
+            "r1"
+          ],
+          "output": "intermediate_2"
+        },
+        {
+          "id": "r3",
+          "operation": "within+between variance",
+          "inputs": [
+            "r2"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "m=(n1m1+n2m2)/(n1+n2)",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "V=[n1(V1+(m1-m)^2)+n2(V2+(m2-m)^2)]/(n1+n2)",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "只加权组内方差",
+        "把标准差当方差"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "n1": 10,
+        "m1": 6,
+        "v1": 4,
+        "n2": 20,
+        "m2": 9,
+        "v2": 1
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "C",
+    "explanation": "总体均值为 (10×6+20×9)/30=8。合并离差平方和需计入组内项与两组均值相对总体均值的偏移项，除以 30 后得方差 4。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "combined_variance_with_between_group_shift",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 4,
+          "selectedOptionId": "C",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 4,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": false,
+            "canonicalValue": 2
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 5
+          },
+          {
+            "optionId": "C",
+            "verdict": true,
+            "canonicalValue": 4
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 6
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "总体均值",
+            "4"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-PHYSICS-3001",
+    "subject": "physics",
+    "topicCode": "P-MECH-PROJ",
+    "topicTitle": "平抛运动",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "救援物资从距水平地面 20 m 高的平台边缘以 10 m/s 的水平初速度抛出，忽略空气阻力，取 g=10 m/s²。求物资落地瞬间的速度大小。",
+    "options": [
+      {
+        "id": "A",
+        "text": "10√5 m/s"
+      },
+      {
+        "id": "B",
+        "text": "20 m/s"
+      },
+      {
+        "id": "C",
+        "text": "10 m/s"
+      },
+      {
+        "id": "D",
+        "text": "30 m/s"
+      }
+    ],
+    "knowledgeTags": [
+      "平抛运动",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "physics",
+      "topicCode": "P-MECH-PROJ",
+      "topicTitle": "平抛运动",
+      "targetDifficulty": "medium",
+      "taskFamily": "horizontal_projectile_landing_speed",
+      "planTemplate": "pilot_v4_horizontal_projectile_landing_speed_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "095316a6b5228bfb48db9fce",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "g",
+          "h",
+          "u"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "g",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "h",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "u",
+          "independentGroup": "g3"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "derive vertical landing component",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "combine perpendicular velocity components",
+          "inputs": [
+            "r1"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "vy^2=2gh",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "vx=u",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q3",
+          "type": "deterministic_relation",
+          "expression": "v=sqrt(vx^2+vy^2)",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "把末速度等同水平速度",
+        "把分速度直接相加"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "u": 10,
+        "h": 20,
+        "g": 10
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "A",
+    "explanation": "竖直方向由 v_y²=2gh 得 v_y=20 m/s；水平方向速度保持 10 m/s。两分速度垂直，故落地速度大小为 √(10²+20²)=10√5 m/s。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "horizontal_projectile_landing_speed",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 22.360679774997898,
+          "selectedOptionId": "A",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 22.360679774997898,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": true,
+            "canonicalValue": 22.360679774997898
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 20
+          },
+          {
+            "optionId": "C",
+            "verdict": false,
+            "canonicalValue": 10
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 30
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "v_y=20",
+            "10√5"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-PHYSICS-3003",
+    "subject": "physics",
+    "topicCode": "P-MECH-ENERGY",
+    "topicTitle": "功和能",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "质量为 2 kg 的货箱从静止开始在水平地面上移动 4 m，恒定水平拉力为 10 N，滑动摩擦力为 2 N。求末速度大小。",
+    "options": [
+      {
+        "id": "A",
+        "text": "6.3246 m/s"
+      },
+      {
+        "id": "B",
+        "text": "16 m/s"
+      },
+      {
+        "id": "C",
+        "text": "4√2 m/s"
+      },
+      {
+        "id": "D",
+        "text": "4 m/s"
+      }
+    ],
+    "knowledgeTags": [
+      "功和能",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "physics",
+      "topicCode": "P-MECH-ENERGY",
+      "topicTitle": "功和能",
+      "targetDifficulty": "medium",
+      "taskFamily": "work_energy_with_friction",
+      "planTemplate": "pilot_v4_work_energy_with_friction_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "09fee837c887cf4b01e11eaf",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "F",
+          "f",
+          "m",
+          "s"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "F",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "f",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "m",
+          "independentGroup": "g3"
+        },
+        {
+          "id": "e4",
+          "type": "visible_parameter",
+          "role": "s",
+          "independentGroup": "g4"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "net work from drive and friction",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3",
+            "e4"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "kinetic energy",
+          "inputs": [
+            "r1"
+          ],
+          "output": "intermediate_2"
+        },
+        {
+          "id": "r3",
+          "operation": "speed",
+          "inputs": [
+            "r2"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "Wnet=(F-f)s",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "Wnet=mv^2/2",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "只计算牵引力做功",
+        "把合力直接当速度"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "m": 2,
+        "F": 10,
+        "f": 2,
+        "s": 4
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "C",
+    "explanation": "合力做功 W=(10-2)×4=32 J。由动能定理 W=mv²/2，得 v=4√2 m/s。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "work_energy_with_friction",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 5.656854249492381,
+          "selectedOptionId": "C",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 5.656854249492381,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": false,
+            "canonicalValue": 6.324555320336759
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 16
+          },
+          {
+            "optionId": "C",
+            "verdict": true,
+            "canonicalValue": 5.656854249492381
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 4
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "32 J",
+            "4√2"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-PHYSICS-3005",
+    "subject": "physics",
+    "topicCode": "P-MECH-MOM",
+    "topicTitle": "动量守恒",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "在水平直轨上，质量 2 kg 的小车以 6 m/s 向右运动，质量 1 kg 的小车初速度为 0。两车碰撞后粘在一起，忽略外力冲量。规定向右为正，求共同速度。",
+    "options": [
+      {
+        "id": "A",
+        "text": "4 m/s"
+      },
+      {
+        "id": "B",
+        "text": "3 m/s"
+      },
+      {
+        "id": "C",
+        "text": "12 m/s"
+      },
+      {
+        "id": "D",
+        "text": "5 m/s"
+      }
+    ],
+    "knowledgeTags": [
+      "动量守恒",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "physics",
+      "topicCode": "P-MECH-MOM",
+      "topicTitle": "动量守恒",
+      "targetDifficulty": "medium",
+      "taskFamily": "perfectly_inelastic_momentum",
+      "planTemplate": "pilot_v4_perfectly_inelastic_momentum_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "74f34cc1e656b0b14a98482b",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "m1",
+          "m2",
+          "v1",
+          "v2"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "m1",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "m2",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "v1",
+          "independentGroup": "g3"
+        },
+        {
+          "id": "e4",
+          "type": "visible_parameter",
+          "role": "v2",
+          "independentGroup": "g4"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "signed momenta",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3",
+            "e4"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "total momentum",
+          "inputs": [
+            "r1"
+          ],
+          "output": "intermediate_2"
+        },
+        {
+          "id": "r3",
+          "operation": "common velocity",
+          "inputs": [
+            "r2"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "p_before=m1v1+m2v2",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "(m1+m2)v=p_before",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "忽略反向速度符号",
+        "把速度直接平均"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "m1": 2,
+        "v1": 6,
+        "m2": 1,
+        "v2": 0
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "A",
+    "explanation": "取向右为正，碰前总动量为 2×6+1×(0)。由动量守恒，(m₁+m₂)v=m₁v₁+m₂v₂，得 v=4 m/s，方向向右。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "perfectly_inelastic_momentum",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 4,
+          "selectedOptionId": "A",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 4,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": true,
+            "canonicalValue": 4
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 3
+          },
+          {
+            "optionId": "C",
+            "verdict": false,
+            "canonicalValue": 12
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 5
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "动量守恒",
+            "4"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-PHYSICS-3007",
+    "subject": "physics",
+    "topicCode": "P-ELEC-CIRCUIT",
+    "topicTitle": "直流电路",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "电阻 R₁=6 Ω 与 R₂=3 Ω 并联后，再与 R₃=4 Ω 串联，接在电压为 12 V 的理想电源两端。求电路总电流。",
+    "options": [
+      {
+        "id": "A",
+        "text": "0.9231 A"
+      },
+      {
+        "id": "B",
+        "text": "6 A"
+      },
+      {
+        "id": "C",
+        "text": "2 A"
+      },
+      {
+        "id": "D",
+        "text": "3 A"
+      }
+    ],
+    "knowledgeTags": [
+      "直流电路",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "physics",
+      "topicCode": "P-ELEC-CIRCUIT",
+      "topicTitle": "直流电路",
+      "targetDifficulty": "medium",
+      "taskFamily": "series_parallel_circuit_current",
+      "planTemplate": "pilot_v4_series_parallel_circuit_current_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "f18419d67b1811a84927a4c9",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "U",
+          "r1",
+          "r2",
+          "r3"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "U",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "r1",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "r2",
+          "independentGroup": "g3"
+        },
+        {
+          "id": "e4",
+          "type": "visible_parameter",
+          "role": "r3",
+          "independentGroup": "g4"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "parallel equivalent",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3",
+            "e4"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "series total resistance",
+          "inputs": [
+            "r1"
+          ],
+          "output": "intermediate_2"
+        },
+        {
+          "id": "r3",
+          "operation": "total current",
+          "inputs": [
+            "r2"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "Rp=R1R2/(R1+R2)",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "Rtotal=Rp+R3",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q3",
+          "type": "deterministic_relation",
+          "expression": "I=U/Rtotal",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "把并联电阻直接相加",
+        "把电压全部加在并联支路"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "r1": 6,
+        "r2": 3,
+        "r3": 4,
+        "U": 12
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "C",
+    "explanation": "并联部分等效电阻 R并=6×3/(6+3)=2 Ω；总电阻为 6 Ω，因此总电流 I=12/6=2 A。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "series_parallel_circuit_current",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 2,
+          "selectedOptionId": "C",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 2,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": false,
+            "canonicalValue": 0.9230769230769231
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 6
+          },
+          {
+            "optionId": "C",
+            "verdict": true,
+            "canonicalValue": 2
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 3
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "并联部分",
+            "2 A"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-question-candidate-v1",
+    "candidateId": "CQ-PHYSICS-4001",
+    "subject": "physics",
+    "topicCode": "P-ELEC-FIELD",
+    "topicTitle": "静电场",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "相距 6 m 的两个正点电荷固定在同一直线上，左侧电荷量为 q，右侧为 4q。两电荷之间距左侧电荷多远处的合场强为零？",
+    "options": [
+      {
+        "id": "A",
+        "text": "2 m"
+      },
+      {
+        "id": "B",
+        "text": "4 m"
+      },
+      {
+        "id": "C",
+        "text": "1.2 m"
+      },
+      {
+        "id": "D",
+        "text": "3 m"
+      }
+    ],
+    "knowledgeTags": [
+      "静电场",
+      "修订题"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "physics",
+      "topicCode": "P-ELEC-FIELD",
+      "topicTitle": "静电场",
+      "targetDifficulty": "medium",
+      "taskFamily": "electrostatic_zero_field_between_charges",
+      "planTemplate": "pilot_v4_repair_electrostatic_zero_field_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "d2ccc1087320046f73003014",
+        "scenarioDataMustAffectSolution": true,
+        "selfContainedConstantsRequired": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "distanceMeters",
+          "leftChargeRatio",
+          "rightChargeRatio"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "databaseQuestionTextUsed": false,
+          "priorReviewBodyUsed": false,
+          "selectionBasis": "specified_v4_candidate_repair_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "distanceMeters",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "leftChargeRatio",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "rightChargeRatio",
+          "independentGroup": "g3"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "判断两正电荷之间的场强方向相反",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3"
+          ],
+          "output": "零场点区间"
+        },
+        {
+          "id": "r2",
+          "operation": "令两侧场强大小相等并解距离",
+          "inputs": [
+            "r1"
+          ],
+          "output": "x"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "kq₁/x²=kq₂/(d-x)²",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "x=d√q₁/(√q₁+√q₂)",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "遗漏题干常数或条件",
+        "未完成中间量复核"
+      ],
+      "answerDerivation": [
+        "仅使用题干和 QuestionPlan 中的可见输入独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项逐一代入后恰有一个满足全部关系"
+      ],
+      "canonicalInputs": {
+        "distanceMeters": 6,
+        "leftChargeRatio": 1,
+        "rightChargeRatio": 4
+      },
+      "verificationContract": {
+        "version": "pilot-v4-repair-local-verifier-v1",
+        "independentSolverRequired": true,
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      }
+    },
+    "correctAnswer": "A",
+    "explanation": "两电荷均为正，只有它们之间的场强方向相反。设零场点距左侧电荷 x m，则 kq/x²=k·4q/(6-x)²，因此 x/(6-x)=1/2，解得 x=2 m。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4_repair",
+      "generatorTaskId": "pilot-30-v4-repair-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-repair-v1",
+      "createdAt": "2026-09-15T17:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "supersedes": "CQ-PHYSICS-3009",
+      "revisionReason": "difficulty_normalization",
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "originalityPerItemHitsRead": false,
+        "priorReviewBodiesRead": false,
+        "sourceCandidateReadOnly": true
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-repair-independent-solver-v1",
+          "status": "verified",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 2,
+          "selectedOptionId": "A",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-repair-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "separate_equivalent_derivation",
+          "expectedCanonical": 2,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": true,
+            "canonicalValue": 2
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 4
+          },
+          {
+            "optionId": "C",
+            "verdict": false,
+            "canonicalValue": 1.2
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 3
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-repair-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "方向相反",
+            "x/(6-x)=1/2",
+            "x=2 m"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-PHYSICS-3011",
+    "subject": "physics",
+    "topicCode": "P-MECH-BUOY",
+    "topicTitle": "浮力",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "一均匀实心物块漂浮在水面上，露出水面的体积占总体积的 25%。水的密度取 1000 kg/m³，求物块密度。",
+    "options": [
+      {
+        "id": "A",
+        "text": "250 kg/m³"
+      },
+      {
+        "id": "B",
+        "text": "1333.3333 kg/m³"
+      },
+      {
+        "id": "C",
+        "text": "750 kg/m³"
+      },
+      {
+        "id": "D",
+        "text": "1000 kg/m³"
+      }
+    ],
+    "knowledgeTags": [
+      "浮力",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "physics",
+      "topicCode": "P-MECH-BUOY",
+      "topicTitle": "浮力",
+      "targetDifficulty": "medium",
+      "taskFamily": "floating_density_from_exposed_fraction",
+      "planTemplate": "pilot_v4_floating_density_from_exposed_fraction_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "b5a2626f5bb325417dfbfb10",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "above"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "above",
+          "independentGroup": "g1"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "exposed fraction",
+          "inputs": [
+            "e1"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "submerged volume",
+          "inputs": [
+            "r1"
+          ],
+          "output": "intermediate_2"
+        },
+        {
+          "id": "r3",
+          "operation": "floating balance",
+          "inputs": [
+            "r2"
+          ],
+          "output": "intermediate_3"
+        },
+        {
+          "id": "r4",
+          "operation": "density",
+          "inputs": [
+            "r3"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "Vsub/V=1-fabove",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "rho_object V=rho_water Vsub",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "把露出比例当浸没比例",
+        "漏用漂浮平衡"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "above": 0.25
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "C",
+    "explanation": "浸入水中的体积分数为 1-0.25=0.75。漂浮时重力等于浮力，所以 ρ物Vg=ρ水V浸g，得 ρ物=750 kg/m³。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "floating_density_from_exposed_fraction",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 750,
+          "selectedOptionId": "C",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 750,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": false,
+            "canonicalValue": 250
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 1333.3333333333333
+          },
+          {
+            "optionId": "C",
+            "verdict": true,
+            "canonicalValue": 750
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 1000
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "浸入",
+            "750 kg/m³"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-PHYSICS-3013",
+    "subject": "physics",
+    "topicCode": "P-OPT-LENS",
+    "topicTitle": "几何光学",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "一薄凸透镜焦距为 10 cm，物体垂直主轴放在距透镜 30 cm 处。按薄透镜公式求像距后，求像的线放大率绝对值。",
+    "options": [
+      {
+        "id": "A",
+        "text": "0.5"
+      },
+      {
+        "id": "B",
+        "text": "15"
+      },
+      {
+        "id": "C",
+        "text": "3"
+      },
+      {
+        "id": "D",
+        "text": "1.5"
+      }
+    ],
+    "knowledgeTags": [
+      "几何光学",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "physics",
+      "topicCode": "P-OPT-LENS",
+      "topicTitle": "几何光学",
+      "targetDifficulty": "medium",
+      "taskFamily": "thin_lens_magnification",
+      "planTemplate": "pilot_v4_thin_lens_magnification_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "53311d6bd59f62b04694186d",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "f",
+          "u"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "f",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "u",
+          "independentGroup": "g2"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "lens equation",
+          "inputs": [
+            "e1",
+            "e2"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "image distance",
+          "inputs": [
+            "r1"
+          ],
+          "output": "intermediate_2"
+        },
+        {
+          "id": "r3",
+          "operation": "magnification",
+          "inputs": [
+            "r2"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "1/f=1/u+1/v",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "|m|=v/u",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "把物距当像距",
+        "漏取像距与物距的比"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "f": 10,
+        "u": 30
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "A",
+    "explanation": "由 1/f=1/u+1/v 得像距 v=15 cm。线放大率绝对值 |m|=v/u=15/30=0.5。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "thin_lens_magnification",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 0.5,
+          "selectedOptionId": "A",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 0.5,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": true,
+            "canonicalValue": 0.5
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 14.999999999999996
+          },
+          {
+            "optionId": "C",
+            "verdict": false,
+            "canonicalValue": 3
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 1.4999999999999996
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "v=15",
+            "0.5"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-PHYSICS-3015",
+    "subject": "physics",
+    "topicCode": "P-WAVE-STAND",
+    "topicTitle": "机械波",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "两端固定的弦长为 1.2 m，形成含 3 个半波的稳定驻波，振动频率为 150 Hz。求波在弦上的传播速度。",
+    "options": [
+      {
+        "id": "A",
+        "text": "60 m/s"
+      },
+      {
+        "id": "B",
+        "text": "360 m/s"
+      },
+      {
+        "id": "C",
+        "text": "120 m/s"
+      },
+      {
+        "id": "D",
+        "text": "187.5 m/s"
+      }
+    ],
+    "knowledgeTags": [
+      "机械波",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "physics",
+      "topicCode": "P-WAVE-STAND",
+      "topicTitle": "机械波",
+      "targetDifficulty": "medium",
+      "taskFamily": "standing_wave_speed",
+      "planTemplate": "pilot_v4_standing_wave_speed_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "daa9cec4838e8d2fb48ae530",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "L",
+          "f",
+          "n"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "L",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "f",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "n",
+          "independentGroup": "g3"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "mode wavelength from fixed ends",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "speed from frequency",
+          "inputs": [
+            "r1"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "L=nλ/2",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "v=fλ",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "把半波数当整波数",
+        "误用 v=f/λ 的倒数"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "L": 1.2,
+        "n": 3,
+        "f": 150
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "C",
+    "explanation": "弦长满足 L=3λ/2，因此 λ=2L/3=0.8 m。由 v=fλ 得 v=150×0.8=120 m/s。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "standing_wave_speed",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 120,
+          "selectedOptionId": "C",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 119.99999999999999,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": false,
+            "canonicalValue": 60
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 360
+          },
+          {
+            "optionId": "C",
+            "verdict": true,
+            "canonicalValue": 120
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 187.50000000000003
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "弦长满足",
+            "120 m/s"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-PHYSICS-3017",
+    "subject": "physics",
+    "topicCode": "P-THERM-CAL",
+    "topicTitle": "热学",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "把质量 0.42 kg、比热容 400 J/(kg·℃)、初温 80 ℃ 的金属块投入质量 0.04 kg、比热容 4200 J/(kg·℃)、初温 20 ℃ 的水中。容器绝热且不发生相变，求共同温度。",
+    "options": [
+      {
+        "id": "A",
+        "text": "50 ℃"
+      },
+      {
+        "id": "B",
+        "text": "60 ℃"
+      },
+      {
+        "id": "C",
+        "text": "40 ℃"
+      },
+      {
+        "id": "D",
+        "text": "51 ℃"
+      }
+    ],
+    "knowledgeTags": [
+      "热学",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "physics",
+      "topicCode": "P-THERM-CAL",
+      "topicTitle": "热学",
+      "targetDifficulty": "medium",
+      "taskFamily": "calorimetry_equilibrium",
+      "planTemplate": "pilot_v4_calorimetry_equilibrium_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "0c1ea675cdc30db04522268d",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "Tm",
+          "Tw",
+          "cm",
+          "cw",
+          "mm",
+          "mw"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "Tm",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "Tw",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "cm",
+          "independentGroup": "g3"
+        },
+        {
+          "id": "e4",
+          "type": "visible_parameter",
+          "role": "cw",
+          "independentGroup": "g4"
+        },
+        {
+          "id": "e5",
+          "type": "visible_parameter",
+          "role": "mm",
+          "independentGroup": "g5"
+        },
+        {
+          "id": "e6",
+          "type": "visible_parameter",
+          "role": "mw",
+          "independentGroup": "g6"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "two heat quantities + energy conservation",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3",
+            "e4",
+            "e5",
+            "e6"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "equilibrium temperature",
+          "inputs": [
+            "r1"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "mm cm(Tm-T)=mw cw(T-Tw)",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "未按质量和比热加权",
+        "把初温简单平均"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "mm": 0.42,
+        "cm": 400,
+        "Tm": 80,
+        "mw": 0.04,
+        "cw": 4200,
+        "Tw": 20
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "A",
+    "explanation": "绝热条件下金属放热等于水吸热：0.42×400×(80-T)=0.04×4200×(T-20)。解得共同温度 T=50 ℃。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "calorimetry_equilibrium",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 50,
+          "selectedOptionId": "A",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 50,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": true,
+            "canonicalValue": 50
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 60
+          },
+          {
+            "optionId": "C",
+            "verdict": false,
+            "canonicalValue": 40
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 51
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "放热等于水吸热",
+            "50 ℃"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-PHYSICS-3019",
+    "subject": "physics",
+    "topicCode": "P-MAG-LORENTZ",
+    "topicTitle": "带电粒子在磁场中的运动",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "质量为 0.000002 kg、电荷量绝对值为 0.00004 C 的粒子，以 6 m/s 的速度垂直进入磁感应强度为 0.5 T 的匀强磁场。忽略重力，求圆周运动半径。",
+    "options": [
+      {
+        "id": "A",
+        "text": "0.15 m"
+      },
+      {
+        "id": "B",
+        "text": "1.6667 m"
+      },
+      {
+        "id": "C",
+        "text": "0.6 m"
+      },
+      {
+        "id": "D",
+        "text": "0.0167 m"
+      }
+    ],
+    "knowledgeTags": [
+      "带电粒子在磁场中的运动",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "physics",
+      "topicCode": "P-MAG-LORENTZ",
+      "topicTitle": "带电粒子在磁场中的运动",
+      "targetDifficulty": "medium",
+      "taskFamily": "magnetic_circular_radius",
+      "planTemplate": "pilot_v4_magnetic_circular_radius_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "704c37c15212cd3e4d8a4257",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "B",
+          "m",
+          "q",
+          "v"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "B",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "m",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "q",
+          "independentGroup": "g3"
+        },
+        {
+          "id": "e4",
+          "type": "visible_parameter",
+          "role": "v",
+          "independentGroup": "g4"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "magnetic force as centripetal force",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3",
+            "e4"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "radius with units",
+          "inputs": [
+            "r1"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "qvB=mv^2/r",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "r=mv/(qB)",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "漏掉电荷量",
+        "把速度放在分母"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "m": 0.000002,
+        "q": 0.00004,
+        "v": 6,
+        "B": 0.5
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "C",
+    "explanation": "洛伦兹力提供向心力：qvB=mv²/r，约去一个 v 后得 r=mv/(qB)。代入题给数据，r=0.6 m。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "magnetic_circular_radius",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 0.6,
+          "selectedOptionId": "C",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 0.5999999999999999,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": false,
+            "canonicalValue": 0.15
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 1.6666666666666667
+          },
+          {
+            "optionId": "C",
+            "verdict": true,
+            "canonicalValue": 0.6
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 0.016666666666666663
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "向心力",
+            "0.6 m"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-CHEMISTRY-3001",
+    "subject": "chemistry",
+    "topicCode": "C-STOICH-LIMIT",
+    "topicTitle": "化学计量",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "密闭反应器中加入 3 mol H₂ 和 2 mol O₂，点燃后充分反应。反应为 2H₂+O₂→2H₂O，假定生成的水全部收集，求水的质量（H₂O 的摩尔质量为 18 g/mol）。",
+    "options": [
+      {
+        "id": "A",
+        "text": "54 g"
+      },
+      {
+        "id": "B",
+        "text": "90 g"
+      },
+      {
+        "id": "C",
+        "text": "72 g"
+      },
+      {
+        "id": "D",
+        "text": "27 g"
+      }
+    ],
+    "knowledgeTags": [
+      "化学计量",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "chemistry",
+      "topicCode": "C-STOICH-LIMIT",
+      "topicTitle": "化学计量",
+      "targetDifficulty": "medium",
+      "taskFamily": "limiting_reagent_product_mass",
+      "planTemplate": "pilot_v4_limiting_reagent_product_mass_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "9790c34d3ff908597f94ea72",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "h2",
+          "o2"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "h2",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "o2",
+          "independentGroup": "g2"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "balanced ratio",
+          "inputs": [
+            "e1",
+            "e2"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "limiting reagent",
+          "inputs": [
+            "r1"
+          ],
+          "output": "intermediate_2"
+        },
+        {
+          "id": "r3",
+          "operation": "product amount",
+          "inputs": [
+            "r2"
+          ],
+          "output": "intermediate_3"
+        },
+        {
+          "id": "r4",
+          "operation": "mass",
+          "inputs": [
+            "r3"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "n(H2O)=min(n(H2),2n(O2))",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "m=nM",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "不判断限量试剂",
+        "把反应物物质的量直接相加"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "h2": 3,
+        "o2": 2
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "A",
+    "explanation": "按 2∶1 比较可知限量试剂，生成 H₂O 的物质的量为 3 mol。故水的质量 m=3×18=54 g。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "limiting_reagent_product_mass",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 54,
+          "selectedOptionId": "A",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 54,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": true,
+            "canonicalValue": 54
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 90
+          },
+          {
+            "optionId": "C",
+            "verdict": false,
+            "canonicalValue": 72
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 27
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "限量试剂",
+            "54 g"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-CHEMISTRY-3007",
+    "subject": "chemistry",
+    "topicCode": "C-REDOX-E",
+    "topicTitle": "氧化还原反应",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "在酸性溶液中，1 mol MnO₄⁻ 完全反应时得到 5 mol 电子。现有 0.02 mol MnO₄⁻ 恰好把 Fe²⁺ 全部氧化为 Fe³⁺，求被氧化的 Fe²⁺ 的物质的量。",
+    "options": [
+      {
+        "id": "A",
+        "text": "0.004 mol"
+      },
+      {
+        "id": "B",
+        "text": "0.02 mol"
+      },
+      {
+        "id": "C",
+        "text": "0.1 mol"
+      },
+      {
+        "id": "D",
+        "text": "0.5 mol"
+      }
+    ],
+    "knowledgeTags": [
+      "氧化还原反应",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "chemistry",
+      "topicCode": "C-REDOX-E",
+      "topicTitle": "氧化还原反应",
+      "targetDifficulty": "medium",
+      "taskFamily": "redox_electron_stoichiometry",
+      "planTemplate": "pilot_v4_redox_electron_stoichiometry_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "0fc365fd7efc77436e834039",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "e",
+          "kind",
+          "oxidant"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "e",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "kind",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "oxidant",
+          "independentGroup": "g3"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "oxidant electron gain per mole",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "electron balance",
+          "inputs": [
+            "r1"
+          ],
+          "output": "intermediate_2"
+        },
+        {
+          "id": "r3",
+          "operation": "reductant amount",
+          "inputs": [
+            "r2"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "n(e gained)=n(oxidant)*e_per_mol",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "n(Fe2+)=n(e lost)",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "忽略每摩尔氧化剂转移电子数",
+        "把电子数相减"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "kind": "MnO₄⁻",
+        "oxidant": 0.02,
+        "e": 5
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "C",
+    "explanation": "Fe²⁺→Fe³⁺ 每 1 mol Fe²⁺ 失去 1 mol 电子。0.02 mol MnO₄⁻ 共得到 0.02×5=0.1 mol 电子；由电子守恒，被氧化的 Fe²⁺ 为 0.1 mol。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "redox_electron_stoichiometry",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 0.1,
+          "selectedOptionId": "C",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 0.1,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": false,
+            "canonicalValue": 0.004
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 0.02
+          },
+          {
+            "optionId": "C",
+            "verdict": true,
+            "canonicalValue": 0.1
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 0.5
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "电子守恒",
+            "0.1 mol"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-CHEMISTRY-3009",
+    "subject": "chemistry",
+    "topicCode": "C-EQ-KC",
+    "topicTitle": "化学平衡",
+    "designedDifficulty": "hard",
+    "questionType": "single_choice",
+    "prompt": "在 1.0 L 恒容容器中发生反应 A(g)+B(g)⇌C(g)。起始时 A、B、C 的物质的量分别为 0.5 mol、0.4 mol、0；达到平衡时 C 为 0.2 mol。求该温度下的浓度平衡常数 Kc。",
+    "options": [
+      {
+        "id": "A",
+        "text": "10/3"
+      },
+      {
+        "id": "B",
+        "text": "1"
+      },
+      {
+        "id": "C",
+        "text": "0.4"
+      },
+      {
+        "id": "D",
+        "text": "0.3"
+      }
+    ],
+    "knowledgeTags": [
+      "化学平衡",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "chemistry",
+      "topicCode": "C-EQ-KC",
+      "topicTitle": "化学平衡",
+      "targetDifficulty": "hard",
+      "taskFamily": "equilibrium_constant_from_composition",
+      "planTemplate": "pilot_v4_equilibrium_constant_from_composition_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "e128994b02ef6e7b23d5d820",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "a",
+          "b",
+          "c"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "a",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "b",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "c",
+          "independentGroup": "g3"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "equilibrium extent",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "all equilibrium concentrations",
+          "inputs": [
+            "r1"
+          ],
+          "output": "intermediate_2"
+        },
+        {
+          "id": "r3",
+          "operation": "K expression",
+          "inputs": [
+            "r2"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "extent=c_eq",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "Aeq=A0-extent",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q3",
+          "type": "deterministic_relation",
+          "expression": "Beq=B0-extent",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q4",
+          "type": "deterministic_relation",
+          "expression": "Kc=Ceq/(Aeq Beq)",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "用初始浓度代入平衡常数",
+        "漏减反应物浓度"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "a": 0.5,
+        "b": 0.4,
+        "c": 0.2
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "A",
+    "explanation": "容积为 1.0 L，平衡时 c(A)=0.3 mol/L，c(B)=0.2 mol/L，c(C)=0.2 mol/L。故 Kc=c(C)/[c(A)c(B)]=0.2/[0.3×0.2]=10/3。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "equilibrium_constant_from_composition",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 3.3333333333333335,
+          "selectedOptionId": "A",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 3.3333333333333335,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": true,
+            "canonicalValue": 3.3333333333333335
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 1
+          },
+          {
+            "optionId": "C",
+            "verdict": false,
+            "canonicalValue": 0.4
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 0.3
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "平衡时",
+            "10/3"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-CHEMISTRY-3011",
+    "subject": "chemistry",
+    "topicCode": "C-SOL-CRYS",
+    "topicTitle": "溶解度",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "某固体在高温时的溶解度为每 100 g 水溶解 80 g，在低温时为每 100 g 水溶解 30 g。用 200 g 水配成高温饱和溶液，再冷却到低温；忽略水的蒸发，求析出晶体的质量。",
+    "options": [
+      {
+        "id": "A",
+        "text": "60 g"
+      },
+      {
+        "id": "B",
+        "text": "125 g"
+      },
+      {
+        "id": "C",
+        "text": "100 g"
+      },
+      {
+        "id": "D",
+        "text": "160 g"
+      }
+    ],
+    "knowledgeTags": [
+      "溶解度",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "chemistry",
+      "topicCode": "C-SOL-CRYS",
+      "topicTitle": "溶解度",
+      "targetDifficulty": "medium",
+      "taskFamily": "crystallization_from_solubility_change",
+      "planTemplate": "pilot_v4_crystallization_from_solubility_change_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "6d0c8feb3d721f2a01954888",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "cold",
+          "hot",
+          "water"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "cold",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "hot",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "water",
+          "independentGroup": "g3"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "same solvent mass + two solubilities",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "dissolved mass difference",
+          "inputs": [
+            "r1"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "m_hot=mwater Shot/100",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "m_cold=mwater Scold/100",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q3",
+          "type": "deterministic_relation",
+          "expression": "m_crystal=m_hot-m_cold",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "把溶液质量当水质量",
+        "只计算低温溶解量"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "water": 200,
+        "hot": 80,
+        "cold": 30
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "C",
+    "explanation": "高温溶解质量为 200×80/100=160 g；低温仍可溶解 200×30/100=60 g。两者之差即析晶质量 100 g。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "crystallization_from_solubility_change",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 100,
+          "selectedOptionId": "C",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 100,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": false,
+            "canonicalValue": 60
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 125
+          },
+          {
+            "optionId": "C",
+            "verdict": true,
+            "canonicalValue": 100
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 160
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "两者之差",
+            "100 g"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-CHEMISTRY-3013",
+    "subject": "chemistry",
+    "topicCode": "C-ELEC-FAR",
+    "topicTitle": "电解原理",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "电解含 Cu²⁺ 的溶液，阴极只发生 Cu²⁺ 得电子析出 Cu。通过电量 19300 C，法拉第常数取 96500 C/mol，Cu 的摩尔质量为 64 g/mol。求阴极析出金属的质量。",
+    "options": [
+      {
+        "id": "A",
+        "text": "6.4 g"
+      },
+      {
+        "id": "B",
+        "text": "12.8 g"
+      },
+      {
+        "id": "C",
+        "text": "301.5625 g"
+      },
+      {
+        "id": "D",
+        "text": "7.4 g"
+      }
+    ],
+    "knowledgeTags": [
+      "电解原理",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "chemistry",
+      "topicCode": "C-ELEC-FAR",
+      "topicTitle": "电解原理",
+      "targetDifficulty": "medium",
+      "taskFamily": "electrolysis_faraday_deposition",
+      "planTemplate": "pilot_v4_electrolysis_faraday_deposition_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "77ecad830387f75109ce27d9",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "M",
+          "Q",
+          "ion",
+          "metal",
+          "z"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "M",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "Q",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "ion",
+          "independentGroup": "g3"
+        },
+        {
+          "id": "e4",
+          "type": "visible_parameter",
+          "role": "metal",
+          "independentGroup": "g4"
+        },
+        {
+          "id": "e5",
+          "type": "visible_parameter",
+          "role": "z",
+          "independentGroup": "g5"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "charge",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3",
+            "e4",
+            "e5"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "electron amount",
+          "inputs": [
+            "r1"
+          ],
+          "output": "intermediate_2"
+        },
+        {
+          "id": "r3",
+          "operation": "metal amount",
+          "inputs": [
+            "r2"
+          ],
+          "output": "intermediate_3"
+        },
+        {
+          "id": "r4",
+          "operation": "mass",
+          "inputs": [
+            "r3"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "n(e)=Q/F",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "n(metal)=n(e)/z",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q3",
+          "type": "deterministic_relation",
+          "expression": "m=nM",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "忽略离子价态",
+        "把电量直接换成金属物质的量"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "metal": "Cu",
+        "ion": "Cu²⁺",
+        "Q": 19300,
+        "z": 2,
+        "M": 64
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "A",
+    "explanation": "电子的物质的量为 19300/96500=0.2 mol。每 1 mol Cu²⁺ 需 2 mol 电子，故析出金属 0.1 mol，质量为 0.1×64=6.4 g。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "electrolysis_faraday_deposition",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 6.4,
+          "selectedOptionId": "A",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 6.4,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": true,
+            "canonicalValue": 6.4
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 12.8
+          },
+          {
+            "optionId": "C",
+            "verdict": false,
+            "canonicalValue": 301.5625
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 7.4
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "0.2 mol",
+            "6.4 g"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-question-candidate-v1",
+    "candidateId": "CQ-CHEMISTRY-5001",
+    "subject": "chemistry",
+    "topicCode": "C-BASIC-005",
+    "topicTitle": "理想气体状态方程应用",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "实验室用带刻度、可移动活塞的密闭气筒封存一定量气体。初态压强为 100 kPa、体积为 2.40 L、温度为 27 ℃；缓慢调节后，气体压强变为 120 kPa、温度变为 127 ℃。假设气体物质的量不变、可视为理想气体，且各状态均达到热平衡。求末态体积。",
+    "options": [
+      {
+        "id": "A",
+        "text": "2.00 L"
+      },
+      {
+        "id": "B",
+        "text": "2.67 L"
+      },
+      {
+        "id": "C",
+        "text": "3.20 L"
+      },
+      {
+        "id": "D",
+        "text": "1.50 L"
+      }
+    ],
+    "knowledgeTags": [
+      "理想气体状态方程应用",
+      "综合计算"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "chemistry",
+      "topicCode": "C-BASIC-005",
+      "topicTitle": "理想气体状态方程应用",
+      "targetDifficulty": "medium",
+      "taskFamily": "ideal_gas_combined_state_application",
+      "planTemplate": "pilot_v4_repair2_ideal_gas_combined_state_application_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "chem-ideal-gas-combined-state-v1",
+        "scenarioDataMustAffectSolution": true,
+        "selfContainedConstantsRequired": true,
+        "unitsRequired": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "initialPressureKPa",
+          "initialVolumeLiters",
+          "initialTemperatureCelsius",
+          "finalPressureKPa",
+          "finalTemperatureCelsius",
+          "kelvinOffset"
+        ],
+        "requiredAssumptionsPresent": true,
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "databaseQuestionTextUsed": false,
+          "reviewBodyUsed": false,
+          "selectionBasis": "formal_syllabus_topic_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "initialPressureKPa",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "initialVolumeLiters",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "initialTemperatureCelsius",
+          "independentGroup": "g3"
+        },
+        {
+          "id": "e4",
+          "type": "visible_parameter",
+          "role": "finalPressureKPa",
+          "independentGroup": "g4"
+        },
+        {
+          "id": "e5",
+          "type": "visible_parameter",
+          "role": "finalTemperatureCelsius",
+          "independentGroup": "g5"
+        },
+        {
+          "id": "e6",
+          "type": "visible_parameter",
+          "role": "kelvinOffset",
+          "independentGroup": "g6"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "把初、末摄氏温度转换为开尔文温度",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3",
+            "e4",
+            "e5",
+            "e6"
+          ],
+          "output": "T₁、T₂"
+        },
+        {
+          "id": "r2",
+          "operation": "对定量理想气体应用联合气体定律",
+          "inputs": [
+            "r1"
+          ],
+          "output": "V₂"
+        },
+        {
+          "id": "r3",
+          "operation": "核对压强、温度变化对体积的方向影响",
+          "inputs": [
+            "r2"
+          ],
+          "output": "结果复核"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "T(K)=t(℃)+273",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "P₁V₁/T₁=P₂V₂/T₂",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q3",
+          "type": "deterministic_relation",
+          "expression": "V₂=V₁(T₂/T₁)(P₁/P₂)",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "直接把摄氏温度代入状态方程",
+        "只考虑压强变化而忽略温度变化"
+      ],
+      "answerDerivation": [
+        "只使用题干与 QuestionPlan 中的可见条件独立计算并复核单位"
+      ],
+      "uniquenessConditions": [
+        "四个选项逐一按同一物理化学关系检验后恰有一个成立"
+      ],
+      "canonicalInputs": {
+        "initialPressureKPa": 100,
+        "initialVolumeLiters": 2.4,
+        "initialTemperatureCelsius": 27,
+        "finalPressureKPa": 120,
+        "finalTemperatureCelsius": 127,
+        "kelvinOffset": 273
+      },
+      "verificationContract": {
+        "version": "pilot-v4-repair2-local-verifier-v1",
+        "independentSolverRequired": true,
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      }
+    },
+    "correctAnswer": "B",
+    "explanation": "先把温度换算为开尔文温度：T₁=27+273=300 K，T₂=127+273=400 K。气体物质的量不变，由 P₁V₁/T₁=P₂V₂/T₂，得 V₂=2.40×(400/300)×(100/120)=2.67 L。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4_repair2",
+      "generatorTaskId": "pilot-30-v4-repair2-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-repair2-v1",
+      "createdAt": "2026-09-15T18:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "originalityPerItemHitsRead": false,
+        "reviewBodiesRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-repair2-independent-solver-v1",
+          "status": "verified",
+          "taskFamily": "ideal_gas_combined_state_application",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 2.6666666666666665,
+          "selectedOptionId": "B",
+          "uniqueAnswer": true,
+          "unitsChecked": true
+        },
+        "oracle": {
+          "version": "pilot-v4-repair2-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "separate_equivalent_derivation",
+          "expectedCanonical": 2.6666666666666665,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": false,
+            "canonicalValue": 2
+          },
+          {
+            "optionId": "B",
+            "verdict": true,
+            "canonicalValue": 2.6666666666666665
+          },
+          {
+            "optionId": "C",
+            "verdict": false,
+            "canonicalValue": 3.2
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 1.5
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-repair2-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "300 K",
+            "400 K",
+            "P₁V₁/T₁=P₂V₂/T₂",
+            "2.67 L"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-CHEMISTRY-3017",
+    "subject": "chemistry",
+    "topicCode": "C-ORG-HC",
+    "topicTitle": "烃的组成",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "0.1 mol 某烃完全燃烧，生成 0.3 mol CO₂ 和 0.4 mol H₂O。求该烃的分子式。",
+    "options": [
+      {
+        "id": "A",
+        "text": "C₃H₈"
+      },
+      {
+        "id": "B",
+        "text": "C3H4"
+      },
+      {
+        "id": "C",
+        "text": "C6H8"
+      },
+      {
+        "id": "D",
+        "text": "CH₄"
+      }
+    ],
+    "knowledgeTags": [
+      "烃的组成",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "chemistry",
+      "topicCode": "C-ORG-HC",
+      "topicTitle": "烃的组成",
+      "targetDifficulty": "medium",
+      "taskFamily": "hydrocarbon_formula_from_combustion",
+      "planTemplate": "pilot_v4_hydrocarbon_formula_from_combustion_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "efe7cdce6f2184d5a1230150",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "co2",
+          "h2o",
+          "sample"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "co2",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "h2o",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "sample",
+          "independentGroup": "g3"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "product mole ratios per hydrocarbon mole",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "carbon and hydrogen subscripts",
+          "inputs": [
+            "r1"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "x=nCO2/nhydrocarbon",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "y=2nH2O/nhydrocarbon",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "把水的系数直接作氢原子数",
+        "忽略样品物质的量"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "sample": 0.1,
+        "co2": 0.3,
+        "h2o": 0.4
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "A",
+    "explanation": "每 1 mol 烃生成 3 mol CO₂，故含 3 个 C 原子；生成 4 mol H₂O，故含 8 个 H 原子。分子式为 C₃H₈。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "hydrocarbon_formula_from_combustion",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": "C₃H₈",
+          "selectedOptionId": "A",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": "C₃H₈",
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": true,
+            "canonicalValue": "C₃H₈"
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": "C3H4"
+          },
+          {
+            "optionId": "C",
+            "verdict": false,
+            "canonicalValue": "C6H8"
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": "CH₄"
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "3 个 C",
+            "C₃H₈"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-blind-question-v1",
+    "candidateId": "CQ-CHEMISTRY-3019",
+    "subject": "chemistry",
+    "topicCode": "C-SOL-MOLAR",
+    "topicTitle": "物质的量浓度",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "某溶液密度为 1.2 g/mL，溶质质量分数为 20%，溶质摩尔质量为 60 g/mol。求该溶液的物质的量浓度。",
+    "options": [
+      {
+        "id": "A",
+        "text": "0.004 mol/L"
+      },
+      {
+        "id": "B",
+        "text": "40 mol/L"
+      },
+      {
+        "id": "C",
+        "text": "4 mol/L"
+      },
+      {
+        "id": "D",
+        "text": "5 mol/L"
+      }
+    ],
+    "knowledgeTags": [
+      "物质的量浓度",
+      "综合推理"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "chemistry",
+      "topicCode": "C-SOL-MOLAR",
+      "topicTitle": "物质的量浓度",
+      "targetDifficulty": "medium",
+      "taskFamily": "molarity_from_mass_fraction_density",
+      "planTemplate": "pilot_v4_molarity_from_mass_fraction_density_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "8a167b871a1ce146ec699598",
+        "scenarioDataMustAffectSolution": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "M",
+          "density",
+          "w"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "reversibleSourceFieldsUsed": false,
+          "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "M",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "density",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "w",
+          "independentGroup": "g3"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "one-liter solution mass from density",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3"
+          ],
+          "output": "intermediate_1"
+        },
+        {
+          "id": "r2",
+          "operation": "solute mass",
+          "inputs": [
+            "r1"
+          ],
+          "output": "intermediate_2"
+        },
+        {
+          "id": "r3",
+          "operation": "amount concentration",
+          "inputs": [
+            "r2"
+          ],
+          "output": "answer"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "m_solution=1000 rho",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "m_solute=w m_solution",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q3",
+          "type": "deterministic_relation",
+          "expression": "c=(m_solute/M)/1L",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "把毫升与升混用",
+        "把质量分数当物质的量分数"
+      ],
+      "answerDerivation": [
+        "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项经同一判定规则计算后恰有一个为真"
+      ],
+      "canonicalInputs": {
+        "density": 1.2,
+        "w": 0.2,
+        "M": 60
+      },
+      "verificationContract": {
+        "version": "pilot-v4-batch-local-verifier-v1",
+        "solverEvidenceBoundary": "prompt_options_and_question_plan",
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      },
+      "itemOrdinal": 1
+    },
+    "correctAnswer": "C",
+    "explanation": "取 1.00 L 溶液，其质量为 1000×1.2=1200 g，含溶质 1200×0.2=240 g，即 4 mol。因此浓度为 4 mol/L。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4",
+      "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-generator-v4",
+      "createdAt": "2026-09-15T16:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "priorReviewTextRead": false
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-batch-local-solver-v1",
+          "status": "verified",
+          "taskFamily": "molarity_from_mass_fraction_density",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 4,
+          "selectedOptionId": "C",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "fresh_family_evaluation_from_canonical_inputs",
+          "expectedCanonical": 4,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": false,
+            "canonicalValue": 0.004
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 40
+          },
+          {
+            "optionId": "C",
+            "verdict": true,
+            "canonicalValue": 4
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 5
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "1.00 L",
+            "4 mol/L"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-question-candidate-v1",
+    "candidateId": "CQ-CHEMISTRY-4001",
+    "subject": "chemistry",
+    "topicCode": "C-STOICH-PURITY",
+    "topicTitle": "物质的量与纯度",
+    "designedDifficulty": "medium",
+    "questionType": "single_choice",
+    "prompt": "含惰性杂质的石灰石样品质量为 10 g，其中 CaCO₃ 的质量分数为 80%。加入足量盐酸使 CaCO₃ 完全反应：CaCO₃+2HCl→CaCl₂+H₂O+CO₂↑。已知 M(CaCO₃)=100 g/mol，标准状况下气体摩尔体积为 22.4 L/mol，求生成 CO₂ 的体积。",
+    "options": [
+      {
+        "id": "A",
+        "text": "2.24 L"
+      },
+      {
+        "id": "B",
+        "text": "4.0727 L"
+      },
+      {
+        "id": "C",
+        "text": "1.792 L"
+      },
+      {
+        "id": "D",
+        "text": "2.792 L"
+      }
+    ],
+    "knowledgeTags": [
+      "物质的量与纯度",
+      "修订题"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "chemistry",
+      "topicCode": "C-STOICH-PURITY",
+      "topicTitle": "物质的量与纯度",
+      "targetDifficulty": "medium",
+      "taskFamily": "carbonate_purity_from_gas_volume",
+      "planTemplate": "pilot_v4_repair_carbonate_purity_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "4b0a23942fb701cd97e7286b",
+        "scenarioDataMustAffectSolution": true,
+        "selfContainedConstantsRequired": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "sampleMassGrams",
+          "purity",
+          "carbonateMolarMass",
+          "gasMolarVolume"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "databaseQuestionTextUsed": false,
+          "priorReviewBodyUsed": false,
+          "selectionBasis": "specified_v4_candidate_repair_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "sampleMassGrams",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "purity",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "carbonateMolarMass",
+          "independentGroup": "g3"
+        },
+        {
+          "id": "e4",
+          "type": "visible_parameter",
+          "role": "gasMolarVolume",
+          "independentGroup": "g4"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "由质量分数求纯碳酸钙质量",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3",
+            "e4"
+          ],
+          "output": "m(CaCO₃)"
+        },
+        {
+          "id": "r2",
+          "operation": "由摩尔质量求碳酸钙物质的量",
+          "inputs": [
+            "r1"
+          ],
+          "output": "n(CaCO₃)"
+        },
+        {
+          "id": "r3",
+          "operation": "按反应计量比求二氧化碳体积",
+          "inputs": [
+            "r2"
+          ],
+          "output": "V(CO₂)"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "m纯=m样品×w",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "n=m/M",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q3",
+          "type": "deterministic_relation",
+          "expression": "n(CO₂)=n(CaCO₃)",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q4",
+          "type": "deterministic_relation",
+          "expression": "V=nVₘ",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "遗漏题干常数或条件",
+        "未完成中间量复核"
+      ],
+      "answerDerivation": [
+        "仅使用题干和 QuestionPlan 中的可见输入独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项逐一代入后恰有一个满足全部关系"
+      ],
+      "canonicalInputs": {
+        "sampleMassGrams": 10,
+        "purity": 0.8,
+        "carbonateMolarMass": 100,
+        "gasMolarVolume": 22.4
+      },
+      "verificationContract": {
+        "version": "pilot-v4-repair-local-verifier-v1",
+        "independentSolverRequired": true,
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      }
+    },
+    "correctAnswer": "C",
+    "explanation": "样品中 CaCO₃ 的质量为 10×80%=8 g，其物质的量为 8/100=0.08 mol。反应中 CaCO₃ 与 CO₂ 的计量比为 1∶1，所以 V(CO₂)=0.08×22.4=1.792 L。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4_repair",
+      "generatorTaskId": "pilot-30-v4-repair-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-repair-v1",
+      "createdAt": "2026-09-15T17:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "supersedes": "CQ-CHEMISTRY-3003",
+      "revisionReason": "self_containment_constants_added",
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "originalityPerItemHitsRead": false,
+        "priorReviewBodiesRead": false,
+        "sourceCandidateReadOnly": true
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-repair-independent-solver-v1",
+          "status": "verified",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": 1.7919999999999998,
+          "selectedOptionId": "C",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-repair-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "separate_equivalent_derivation",
+          "expectedCanonical": 1.7919999999999998,
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": false,
+            "canonicalValue": 2.24
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": 4.0727
+          },
+          {
+            "optionId": "C",
+            "verdict": true,
+            "canonicalValue": 1.792
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": 2.792
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-repair-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "8/100=0.08 mol",
+            "1∶1",
+            "1.792 L"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  },
+  {
+    "schemaVersion": "codex-question-candidate-v1",
+    "candidateId": "CQ-CHEMISTRY-4002",
+    "subject": "chemistry",
+    "topicCode": "C-ORG-EMP",
+    "topicTitle": "有机物组成",
+    "designedDifficulty": "hard",
+    "questionType": "single_choice",
+    "prompt": "某只含 C、H、O 三种元素的有机物样品 4.6 g 完全燃烧，得到 8.8 g CO₂ 和 5.4 g H₂O。已知 M(CO₂)=44 g/mol、M(H₂O)=18 g/mol，C、H、O 的相对原子质量分别为 12、1、16。求该有机物的实验式。",
+    "options": [
+      {
+        "id": "A",
+        "text": "C₂H₆O"
+      },
+      {
+        "id": "B",
+        "text": "CH₃O"
+      },
+      {
+        "id": "C",
+        "text": "CH₂"
+      },
+      {
+        "id": "D",
+        "text": "C₂H₆"
+      }
+    ],
+    "knowledgeTags": [
+      "有机物组成",
+      "修订题"
+    ],
+    "syllabusVersion": "2025",
+    "questionPlan": {
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "subject": "chemistry",
+      "topicCode": "C-ORG-EMP",
+      "topicTitle": "有机物组成",
+      "targetDifficulty": "hard",
+      "taskFamily": "empirical_formula_from_combustion",
+      "planTemplate": "pilot_v4_repair_empirical_formula_v1",
+      "representationType": "text",
+      "renderConstraints": {
+        "questionType": "single_choice",
+        "requiresImage": false,
+        "externalContextAllowed": false,
+        "language": "zh",
+        "structureFingerprint": "e73189a79742925f2618f83f",
+        "scenarioDataMustAffectSolution": true,
+        "selfContainedConstantsRequired": true
+      },
+      "scenarioContract": {
+        "contextNecessity": "required_for_solution",
+        "solverRelevantFields": [
+          "sampleMassGrams",
+          "carbonDioxideMassGrams",
+          "waterMassGrams",
+          "carbonDioxideMolarMass",
+          "waterMolarMass",
+          "relativeAtomicMasses"
+        ],
+        "sourceIsolation": {
+          "officialQuestionContentUsed": false,
+          "databaseQuestionTextUsed": false,
+          "priorReviewBodyUsed": false,
+          "selectionBasis": "specified_v4_candidate_repair_only"
+        }
+      },
+      "evidenceSlots": [
+        {
+          "id": "e1",
+          "type": "visible_parameter",
+          "role": "sampleMassGrams",
+          "independentGroup": "g1"
+        },
+        {
+          "id": "e2",
+          "type": "visible_parameter",
+          "role": "carbonDioxideMassGrams",
+          "independentGroup": "g2"
+        },
+        {
+          "id": "e3",
+          "type": "visible_parameter",
+          "role": "waterMassGrams",
+          "independentGroup": "g3"
+        },
+        {
+          "id": "e4",
+          "type": "visible_parameter",
+          "role": "carbonDioxideMolarMass",
+          "independentGroup": "g4"
+        },
+        {
+          "id": "e5",
+          "type": "visible_parameter",
+          "role": "waterMolarMass",
+          "independentGroup": "g5"
+        },
+        {
+          "id": "e6",
+          "type": "visible_parameter",
+          "role": "relativeAtomicMasses",
+          "independentGroup": "g6"
+        }
+      ],
+      "hypotheses": [],
+      "reasoningSteps": [
+        {
+          "id": "r1",
+          "operation": "由燃烧产物求碳、氢原子的物质的量",
+          "inputs": [
+            "e1",
+            "e2",
+            "e3",
+            "e4",
+            "e5",
+            "e6"
+          ],
+          "output": "n(C)、n(H)"
+        },
+        {
+          "id": "r2",
+          "operation": "用差量法求样品中氧的质量和物质的量",
+          "inputs": [
+            "r1"
+          ],
+          "output": "n(O)"
+        },
+        {
+          "id": "r3",
+          "operation": "约成最简整数原子比",
+          "inputs": [
+            "r2"
+          ],
+          "output": "实验式"
+        }
+      ],
+      "quantitativeRelations": [
+        {
+          "id": "q1",
+          "type": "deterministic_relation",
+          "expression": "n(C)=m(CO₂)/M(CO₂)",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q2",
+          "type": "deterministic_relation",
+          "expression": "n(H)=2m(H₂O)/M(H₂O)",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q3",
+          "type": "deterministic_relation",
+          "expression": "m(O)=m样品-12n(C)-n(H)",
+          "roundTripCheck": true
+        },
+        {
+          "id": "q4",
+          "type": "deterministic_relation",
+          "expression": "n(C):n(H):n(O)=最简整数比",
+          "roundTripCheck": true
+        }
+      ],
+      "misconceptionTargets": [
+        "遗漏题干常数或条件",
+        "未完成中间量复核"
+      ],
+      "answerDerivation": [
+        "仅使用题干和 QuestionPlan 中的可见输入独立重算"
+      ],
+      "uniquenessConditions": [
+        "四个选项逐一代入后恰有一个满足全部关系"
+      ],
+      "canonicalInputs": {
+        "sampleMassGrams": 4.6,
+        "carbonDioxideMassGrams": 8.8,
+        "waterMassGrams": 5.4,
+        "carbonDioxideMolarMass": 44,
+        "waterMolarMass": 18,
+        "relativeAtomicMasses": {
+          "C": 12,
+          "H": 1,
+          "O": 16
+        }
+      },
+      "verificationContract": {
+        "version": "pilot-v4-repair-local-verifier-v1",
+        "independentSolverRequired": true,
+        "independentOracleRequired": true,
+        "optionTruthTableRequired": true,
+        "explanationReplayRequired": true
+      }
+    },
+    "correctAnswer": "A",
+    "explanation": "n(C)=8.8/44=0.2 mol，n(H)=2×5.4/18=0.6 mol。碳、氢的质量分别为 2.4 g、0.6 g，故样品中氧为 4.6-2.4-0.6=1.6 g，即 n(O)=1.6/16=0.1 mol。原子数之比为 0.2∶0.6∶0.1=2∶6∶1，所以实验式为 C₂H₆O。",
+    "generationMetadata": {
+      "origin": "codex_local_deterministic_v4_repair",
+      "generatorTaskId": "pilot-30-v4-repair-2026-09-15",
+      "model": "gpt-5",
+      "promptVersion": "codex-library-repair-v1",
+      "createdAt": "2026-09-15T17:00:00.000Z",
+      "languageScope": "zh_primary_only",
+      "providerCalls": 0,
+      "supersedes": "CQ-CHEMISTRY-3005",
+      "revisionReason": "self_containment_constants_added",
+      "sourceIsolation": {
+        "officialQuestionContentRead": false,
+        "databaseQuestionTextRead": false,
+        "originalityPerItemHitsRead": false,
+        "priorReviewBodiesRead": false,
+        "sourceCandidateReadOnly": true
+      },
+      "deterministicVerification": {
+        "solver": {
+          "version": "pilot-v4-repair-independent-solver-v1",
+          "status": "verified",
+          "evidenceBoundary": "prompt_options_and_question_plan",
+          "expectedCanonical": "C₂H₆O",
+          "selectedOptionId": "A",
+          "uniqueAnswer": true
+        },
+        "oracle": {
+          "version": "pilot-v4-repair-independent-oracle-v1",
+          "status": "verified",
+          "implementation": "separate_equivalent_derivation",
+          "expectedCanonical": "C₂H₆O",
+          "agreesWithSolver": true
+        },
+        "optionTruthTable": [
+          {
+            "optionId": "A",
+            "verdict": true,
+            "canonicalValue": "C₂H₆O"
+          },
+          {
+            "optionId": "B",
+            "verdict": false,
+            "canonicalValue": "CH₃O"
+          },
+          {
+            "optionId": "C",
+            "verdict": false,
+            "canonicalValue": "CH₂"
+          },
+          {
+            "optionId": "D",
+            "verdict": false,
+            "canonicalValue": "C₂H₆"
+          }
+        ],
+        "explanationReplay": {
+          "version": "pilot-v4-repair-explanation-replay-v1",
+          "status": "verified",
+          "requiredEvidenceTokens": [
+            "1.6/16=0.1 mol",
+            "2∶6∶1",
+            "C₂H₆O"
+          ],
+          "allRequiredTokensPresent": true,
+          "conclusionMatchesAnswer": true
+        }
+      }
+    }
+  }
+]

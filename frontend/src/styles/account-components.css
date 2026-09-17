@@ -1,0 +1,1344 @@
+/*
+ * Account component layer
+ *
+ * This file intentionally sits after the older account.part-* files. It gives
+ * the personal page a cleaner, quieter workbench language without removing the
+ * existing functional sections.
+ */
+
+.me-page {
+  --account-surface: #fff;
+  --account-subtle: #f6fbf6;
+  --account-muted-surface: #fbfcfd;
+  --account-border: rgba(49, 93, 255, .16);
+  --account-border-strong: rgba(49, 93, 255, .28);
+  --account-ink: var(--public-ink);
+  --account-muted: var(--public-muted);
+  --account-accent: #315dff;
+  --account-accent-strong: #315dff;
+  --account-success: #0f766e;
+  --account-warning: #9a6a18;
+  --account-danger: #b93620;
+  --account-radius: 10px;
+  --account-radius-lg: 14px;
+  --account-focus: 0 0 0 3px rgba(49, 93, 255, .12);
+}
+
+.me-page.brand-work-page {
+  background: transparent;
+}
+
+.me-page .page-kicker,
+.me-summary-grid span,
+.me-next-panel .page-kicker,
+.me-section-head .page-kicker,
+.me-profile-card .page-kicker,
+.me-settings-row span,
+.me-settings-field span,
+.me-wrong-filters label span,
+.me-school-card dt,
+.me-learning-subject-grid span,
+.me-learning-card-head strong,
+.me-wrong-review-pack-list span,
+.me-wrong-summary > span,
+.me-wrong-pattern-grid span,
+.me-ai-insight-actions span {
+  color: var(--account-accent-strong);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.me-page button,
+.me-page input,
+.me-page select {
+  letter-spacing: 0;
+}
+
+.me-workbench-hero {
+  justify-items: stretch;
+  padding: 18px 0 0;
+  text-align: left;
+}
+
+.me-learning-profile {
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "avatar title"
+    "avatar email"
+    "avatar status"
+    "metrics metrics";
+  justify-items: start;
+  align-items: center;
+  width: 100%;
+  max-width: none;
+  gap: 6px 16px;
+  padding: 18px;
+  border: 1px solid var(--account-border);
+  border-radius: var(--account-radius-lg);
+  background: var(--account-surface);
+  box-shadow: none;
+}
+
+.me-avatar {
+  grid-area: avatar;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: var(--account-accent);
+  box-shadow: none;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.me-learning-profile h1 {
+  grid-area: title;
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.18;
+}
+
+.brand-page .page-hero .me-learning-profile h1 {
+  max-width: none;
+  font-size: 22px;
+  line-height: 1.18;
+}
+
+.me-learning-profile p {
+  grid-area: email;
+  color: var(--account-muted);
+  font-size: 14px;
+}
+
+.me-profile-status {
+  grid-area: status;
+  justify-content: flex-start;
+}
+
+.me-profile-status span,
+.me-login-benefits span,
+.me-profile-card span,
+.me-school-card span,
+.me-wrong-dashboard-badges span,
+.me-readiness-confidence,
+.me-readiness-outcome strong,
+.me-ai-insight-status,
+.me-wrong-summary > em,
+.me-wrong-tags span,
+.me-learning-trend-summary span,
+.me-practice-list span {
+  min-height: 24px;
+  border-radius: 7px;
+  border-color: var(--account-border);
+  background: var(--account-subtle);
+  color: var(--account-accent-strong);
+  box-shadow: none;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.me-profile-metrics {
+  grid-area: metrics;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin-top: 12px;
+  border-color: var(--account-border);
+  border-radius: var(--account-radius);
+  background: var(--account-muted-surface);
+  box-shadow: none;
+}
+
+.me-profile-metrics div {
+  min-height: 58px;
+  padding: 10px 12px;
+}
+
+.me-profile-metrics strong {
+  font-size: 16px;
+}
+
+.me-admin-callout,
+.me-email-callout,
+.me-ai-credit-card,
+.me-next-panel,
+.me-task-card,
+.me-learning-dashboard,
+.me-readiness-card,
+.me-learning-card,
+.me-learning-subject-grid article,
+.me-wrong-dashboard-card,
+.me-wrong-practice-hero,
+.me-wrong-bank,
+.me-wrong-review-pack-list button,
+.me-wrong-list article,
+.me-wrong-detail section,
+.me-wrong-ai-grid article,
+.me-wrong-options p,
+.me-wrong-empty,
+.me-empty-card,
+.me-school-card,
+.me-practice-list article,
+.me-order-list article,
+.me-settings-section,
+.me-section-card {
+  border-color: var(--account-border);
+  border-radius: var(--account-radius-lg);
+  background: var(--account-surface);
+  box-shadow: none;
+}
+
+.me-ai-credit-card,
+.me-ai-credit-card.low,
+.me-ai-credit-card.empty,
+.me-overview-command-bar .me-next-panel,
+.me-overview-aside .me-next-panel,
+.me-task-card,
+.me-task-card.priority,
+.me-wrong-dashboard-card,
+.me-wrong-dashboard-compact,
+.me-wrong-practice-hero,
+.me-learning-dashboard,
+.me-readiness-card,
+.me-readiness-score,
+.me-ai-insight,
+.me-learning-trend,
+.me-wrong-review-pack-list button.due,
+.me-wrong-review-pack-list button.due.active {
+  background: var(--account-surface);
+  box-shadow: none;
+}
+
+.me-ai-credit-strip {
+  grid-template-columns: minmax(0, 1fr) minmax(116px, auto) auto;
+  align-items: center;
+  column-gap: 22px;
+  row-gap: 14px;
+  margin-top: 0;
+  padding: 16px 18px;
+  border-radius: 12px;
+}
+
+.me-ai-credit-strip > div:first-child {
+  min-width: 0;
+}
+
+.me-ai-credit-strip h2 {
+  margin: 2px 0 6px;
+  font-size: 20px;
+  line-height: 1.24;
+}
+
+.me-ai-credit-strip p:not(.page-kicker) {
+  max-width: 760px;
+  font-size: 14px;
+  line-height: 1.54;
+}
+
+.me-ai-credit-strip .me-ai-credit-balance {
+  min-width: 0;
+  width: auto;
+  gap: 3px;
+  justify-items: start;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.me-ai-credit-strip .me-ai-credit-balance b {
+  width: fit-content;
+  min-height: 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--account-success);
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: 800;
+}
+
+.me-ai-credit-card.low .me-ai-credit-balance b {
+  background: transparent;
+  color: var(--account-warning);
+}
+
+.me-ai-credit-card.empty .me-ai-credit-balance b {
+  background: transparent;
+  color: var(--account-danger);
+}
+
+.me-ai-credit-strip .me-ai-credit-balance em {
+  color: var(--account-muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.me-ai-credit-strip button {
+  min-width: 112px;
+  min-height: 40px;
+  padding: 9px 14px;
+}
+
+.me-admin-callout,
+.me-email-callout,
+.me-ai-credit-card,
+.me-next-panel {
+  padding: 18px;
+}
+
+.me-admin-callout strong,
+.me-email-callout strong,
+.me-profile-card h2,
+.me-section-head h2,
+.me-learning-hero h2,
+.me-readiness-main h3,
+.me-wrong-dashboard-card h2,
+.me-wrong-practice-hero h3,
+.me-overview-command-bar .me-next-panel h2,
+.me-overview-aside .me-next-panel h2,
+.me-wrong-dashboard-compact h2 {
+  color: var(--account-ink);
+  font-size: 20px;
+  line-height: 1.22;
+}
+
+.me-learning-hero h2,
+.me-readiness-main h3 {
+  max-width: 760px;
+  font-size: 21px;
+}
+
+.me-page p,
+.me-page li,
+.me-learning-hero p,
+.me-readiness-main p,
+.me-readiness-dimensions p,
+.me-readiness-footer p,
+.me-readiness-footer li,
+.me-wrong-dashboard-card p,
+.me-wrong-practice-hero p {
+  color: var(--account-muted);
+  font-size: 14px;
+  line-height: 1.56;
+}
+
+.me-login-hero h1 {
+  color: var(--account-ink);
+  font-size: 26px;
+  line-height: 1.12;
+  letter-spacing: 0;
+}
+
+.me-profile-metrics,
+.me-learning-meta-list,
+.me-settings-list,
+.me-password-panel,
+.me-subscription-row,
+.me-credit-feature-card,
+.me-school-card,
+.me-practice-list,
+.me-order-list {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.me-school-card h3,
+.me-empty-card strong,
+.me-subscription-row strong,
+.me-settings-row strong,
+.me-password-toggle strong {
+  font-size: 17px;
+  line-height: 1.28;
+}
+
+.me-practice-list strong,
+.me-order-list strong,
+.me-asset-card strong {
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.me-admin-callout button,
+.me-email-callout button,
+.me-ai-credit-card button,
+.me-next-panel button,
+.me-empty-card button,
+.me-overview-command-bar .me-next-panel button,
+.me-overview-aside .me-next-panel button,
+.me-wrong-dashboard-action button,
+.me-wrong-practice-hero button,
+.me-learning-subject-grid button,
+.me-ai-insight-side button,
+.me-settings-actions button,
+.me-section-head .ghost,
+.me-password-toggle b,
+.me-wrong-filters .ghost,
+.me-wrong-actions .ghost,
+.me-wrong-empty .ghost,
+.me-readiness-score button,
+.me-readiness-next-actions button,
+.me-wrong-pattern-grid button,
+.me-review-action {
+  min-height: 38px;
+  border-radius: 8px;
+  border: 1px solid var(--account-border-strong);
+  background: #fff;
+  color: var(--account-accent-strong);
+  box-shadow: none;
+  font-weight: 800;
+  transition: background-color .16s ease, border-color .16s ease, color .16s ease;
+}
+
+.me-admin-callout button,
+.me-email-callout button,
+.me-ai-credit-card button,
+.me-next-panel button,
+.me-empty-card button,
+.me-overview-command-bar .me-next-panel button,
+.me-overview-aside .me-next-panel button,
+.me-wrong-practice-hero button,
+.me-learning-subject-grid button,
+.me-ai-insight-side button,
+.me-settings-actions button,
+.me-readiness-score button,
+.me-readiness-next-actions button:first-child,
+.me-review-action.primary {
+  border-color: var(--account-accent);
+  background: var(--account-accent);
+  color: #fff;
+}
+
+.me-page button:hover:not(:disabled) {
+  transform: none;
+}
+
+.me-page button:focus-visible,
+.me-page input:focus-visible,
+.me-page select:focus-visible,
+.me-page summary:focus-visible {
+  outline: none;
+  box-shadow: var(--account-focus);
+}
+
+.me-section-nav-wrap {
+  top: 72px;
+  margin: 0;
+  padding: 10px 0;
+  border-bottom-color: var(--account-border);
+  background: transparent;
+  backdrop-filter: blur(10px);
+}
+
+.me-section-nav {
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 10px;
+  border-color: var(--account-border);
+  background: #fff;
+}
+
+.me-section-nav button {
+  min-height: 36px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 7px;
+  color: var(--account-muted);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.me-section-nav button small {
+  min-width: 20px;
+  min-height: 20px;
+  border-radius: 6px;
+  background: var(--account-subtle);
+  color: var(--account-muted);
+  font-size: 11px;
+}
+
+.me-section-nav button:hover {
+  border-color: transparent;
+  background: var(--account-subtle);
+  color: var(--account-accent-strong);
+}
+
+.me-section-nav button.active {
+  border-color: transparent;
+  background: #e9efff;
+  color: var(--account-accent-strong);
+  box-shadow: none;
+}
+
+.me-task-card.priority {
+  border-color: var(--account-border-strong);
+  background: #e9efff;
+}
+
+.me-section-nav button.active small {
+  background: #fff;
+  color: var(--account-accent-strong);
+}
+
+.me-content-panel,
+.me-overview-section {
+  gap: 18px;
+}
+
+.me-overview-command-bar {
+  grid-template-columns: minmax(320px, .82fr) minmax(520px, 1fr);
+  gap: 14px;
+}
+
+.me-summary-grid button,
+.me-summary-strip button,
+.me-summary-rail button {
+  min-height: 104px;
+  border-color: var(--account-border);
+  border-radius: var(--account-radius);
+  background: var(--account-surface);
+  box-shadow: none;
+}
+
+.me-summary-strip button {
+  grid-template-rows: minmax(26px, auto) 28px minmax(32px, auto);
+  min-height: 96px;
+  padding: 12px 14px;
+}
+
+.me-summary-grid button.active {
+  border-color: var(--account-border-strong);
+  background: var(--account-subtle);
+}
+
+.me-summary-grid strong,
+.me-summary-strip strong,
+.me-summary-rail strong,
+.me-ai-credit-balance strong,
+.me-readiness-score > strong,
+.me-readiness-score strong,
+.me-wrong-dashboard-card dt,
+.me-wrong-practice-hero dt,
+.me-wrong-review-pack-list strong,
+.me-learning-trend-summary strong,
+.me-learning-subject-grid strong,
+.me-wrong-trend-card > div:first-child strong {
+  color: var(--account-ink);
+}
+
+.me-summary-grid strong,
+.me-summary-strip strong,
+.me-summary-rail strong {
+  font-size: 22px;
+  line-height: 1.1;
+}
+
+.me-summary-grid p,
+.me-summary-grid span,
+.me-summary-strip p,
+.me-summary-strip span,
+.me-summary-rail p,
+.me-summary-rail span {
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.me-learning-dashboard {
+  gap: 14px;
+  padding: 16px;
+}
+
+.me-next-panel {
+  padding: 16px;
+}
+
+.me-next-panel h2,
+.me-learning-dashboard h2,
+.me-ai-credit-card h2,
+.me-wrong-bank h2 {
+  font-size: 20px;
+  line-height: 1.25;
+}
+
+.me-next-panel p,
+.me-learning-dashboard p,
+.me-ai-credit-card p,
+.me-wrong-bank p {
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.me-learning-grid,
+.me-readiness-dimensions,
+.me-wrong-pattern-grid,
+.me-wrong-review-pack-list,
+.me-settings-grid,
+.me-school-card-grid {
+  gap: 12px;
+}
+
+.me-learning-card,
+.me-learning-subject-grid article,
+.me-readiness-dimensions article,
+.me-wrong-pattern-grid article,
+.me-wrong-trend-card,
+.me-learning-long-term,
+.me-ai-insight {
+  border-color: var(--account-border);
+  background: var(--account-surface);
+  box-shadow: none;
+}
+
+.me-learning-card,
+.me-learning-subject-grid article,
+.me-readiness-dimensions article,
+.me-settings-row,
+.me-password-panel,
+.me-school-card {
+  padding: 14px;
+}
+
+.me-task-card {
+  min-height: 128px;
+  padding: 14px;
+  gap: 8px;
+}
+
+.me-task-card strong {
+  font-size: 17px;
+  line-height: 1.28;
+}
+
+.me-task-card span {
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.me-task-card p {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.me-readiness-score {
+  border-color: var(--account-border);
+  box-shadow: none;
+  transition: border-color .16s ease, background-color .16s ease, box-shadow .16s ease;
+}
+
+.me-readiness-score::before {
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #fff 0 55%, transparent 56%),
+    conic-gradient(var(--account-accent) calc(var(--readiness-score, 0) * 1%), #e7eef4 0);
+  box-shadow:
+    inset 0 0 0 1px rgba(49, 93, 255, .12),
+    0 0 0 6px rgba(49, 93, 255, .035);
+  transition: box-shadow .16s ease, transform .16s ease;
+}
+
+.me-readiness-score > strong {
+  background: transparent;
+}
+
+.me-readiness-score:hover,
+.me-readiness-score:focus-within {
+  border-color: rgba(49, 93, 255, .32);
+  background: var(--account-surface);
+  box-shadow: 0 10px 26px rgba(49, 93, 255, .08);
+}
+
+.me-readiness-score:hover::before,
+.me-readiness-score:focus-within::before {
+  box-shadow:
+    inset 0 0 0 1px rgba(49, 93, 255, .18),
+    0 0 0 7px rgba(49, 93, 255, .055);
+  transform: translateY(-1px);
+}
+
+.me-readiness-score strong {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.me-readiness-score strong span {
+  font-size: 12px;
+  line-height: 1;
+}
+
+.me-readiness-explain {
+  border-color: var(--account-border);
+  border-radius: 10px;
+  background: var(--account-muted-surface);
+}
+
+.me-readiness-explain[open] {
+  background: var(--account-surface);
+}
+
+.me-readiness-explain summary {
+  cursor: pointer;
+  border-radius: 9px;
+  color: var(--account-accent-strong);
+  transition: background-color .16s ease, color .16s ease;
+}
+
+.me-readiness-explain summary:hover {
+  background: #f1f6fa;
+  color: var(--account-ink);
+}
+
+.me-readiness-next-actions button strong {
+  color: inherit;
+}
+
+.me-readiness-next-actions button small {
+  color: var(--account-accent-strong);
+  font-weight: 800;
+}
+
+.me-readiness-next-actions button em {
+  color: var(--account-muted);
+}
+
+.me-readiness-next-actions button:first-child strong,
+.me-readiness-next-actions button:first-child small,
+.me-readiness-next-actions button:first-child em {
+  color: rgba(255, 255, 255, .88);
+}
+
+.me-readiness-next-actions button:first-child strong {
+  color: #fff;
+}
+
+.me-readiness-next-actions button:first-child:hover strong,
+.me-readiness-next-actions button:first-child:hover small,
+.me-readiness-next-actions button:first-child:hover em,
+.me-readiness-next-actions button:first-child:focus-visible strong,
+.me-readiness-next-actions button:first-child:focus-visible small,
+.me-readiness-next-actions button:first-child:focus-visible em {
+  color: #fff;
+}
+
+.me-wrong-dashboard-card dt,
+.me-wrong-practice-hero dt,
+.me-learning-subject-grid strong,
+.me-learning-trend-summary strong,
+.me-ai-credit-balance strong {
+  font-size: 22px;
+  line-height: 1.12;
+}
+
+.me-ai-credit-strip .me-ai-credit-balance strong {
+  font-size: 22px;
+  line-height: 1.12;
+  letter-spacing: 0;
+}
+
+.me-wrong-dashboard-card dd,
+.me-wrong-practice-hero dd,
+.me-learning-trend-summary span,
+.me-ai-credit-balance span {
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.me-wrong-trend-card strong,
+.me-wrong-review-pack-list strong,
+.me-ai-credit-stat strong {
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.me-wrong-trend-card span,
+.me-wrong-review-pack-list span,
+.me-ai-credit-stat span {
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.me-readiness-bar,
+.me-wrong-trend-bar {
+  border-radius: 6px;
+  background: #edf2f6;
+}
+
+.me-readiness-bar i,
+.me-wrong-trend-bar span {
+  background: var(--account-accent);
+}
+
+.me-readiness-footer > div,
+.me-readiness-explain,
+.me-readiness-outcome,
+.me-ai-insight-actions,
+.me-wrong-dashboard-action {
+  border-color: var(--account-border);
+  background: var(--account-subtle);
+}
+
+.me-section-card,
+.me-settings-section {
+  padding: 22px 0 0;
+  border-top-color: var(--account-border);
+  background: transparent;
+}
+
+.me-settings-row,
+.me-settings-field,
+.me-settings-actions,
+.me-password-panel,
+.me-practice-list article,
+.me-order-list article,
+.me-school-card,
+.me-empty-card {
+  border-color: var(--account-border);
+}
+
+.me-settings-field input,
+.me-settings-field select,
+.me-wrong-filters select {
+  border-color: var(--account-border);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.me-settings-field input:focus,
+.me-settings-field select:focus,
+.me-wrong-filters select:focus {
+  border-color: var(--account-accent);
+  box-shadow: var(--account-focus);
+}
+
+.me-settings-section .me-settings-panel {
+  gap: 14px;
+  padding: 18px 0 20px;
+  border-top: 1px solid var(--account-border);
+}
+
+.me-settings-section .me-settings-panel.account-panel {
+  border-top: 0;
+  padding-top: 4px;
+}
+
+.me-shortlist-empty {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  max-width: none;
+  min-height: 150px;
+  margin-top: 6px;
+  padding: 24px;
+  border: 1px dashed var(--account-border-strong);
+  border-radius: 8px;
+  background: var(--account-surface);
+}
+
+.me-shortlist-empty > div {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.me-shortlist-empty button {
+  min-height: 42px;
+  min-width: 126px;
+  padding: 10px 16px;
+  border: 1px solid var(--account-accent);
+  border-radius: 8px;
+  background: var(--account-accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.me-orders-section .me-order-list {
+  gap: 12px;
+}
+
+.me-order-list .me-order-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  min-height: 92px;
+  padding: 16px 18px;
+  border: 1px solid var(--account-border);
+  border-radius: 8px;
+  background: var(--account-surface);
+}
+
+.me-order-main {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  min-width: 0;
+}
+
+.me-order-main strong {
+  margin: 0 0 4px;
+}
+
+.me-order-main p {
+  margin: 0;
+}
+
+.me-order-amount {
+  display: grid;
+  justify-items: end;
+  min-width: 120px;
+}
+
+.me-order-amount b {
+  color: var(--account-accent-strong);
+  font-size: 16px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.me-orders-empty {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  max-width: none;
+  min-height: 132px;
+  margin-top: 6px;
+  padding: 24px;
+  border: 1px dashed var(--account-border-strong);
+  border-radius: 8px;
+  background: var(--account-surface);
+}
+
+.me-orders-empty > div {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.me-orders-empty button {
+  min-height: 42px;
+  min-width: 126px;
+  padding: 10px 16px;
+  border: 1px solid var(--account-accent);
+  border-radius: 8px;
+  background: var(--account-accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.me-settings-panel-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.me-settings-panel-head div {
+  display: grid;
+  gap: 4px;
+}
+
+.me-settings-panel-head span {
+  color: var(--account-accent-strong);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.me-settings-panel-head strong {
+  color: var(--account-ink);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.me-settings-panel-head p {
+  max-width: 560px;
+  margin: 0;
+  color: var(--account-muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.me-settings-section .me-settings-grid {
+  gap: 14px 22px;
+}
+
+.me-settings-section .organization-settings-grid {
+  align-items: start;
+}
+
+.me-settings-section .me-settings-row,
+.me-settings-section .me-settings-field,
+.me-settings-section .me-settings-actions {
+  padding: 0;
+  border-top: 0;
+}
+
+.me-settings-section .me-settings-row,
+.me-settings-section .me-settings-field {
+  gap: 7px;
+}
+
+.me-settings-section .me-settings-row span,
+.me-settings-section .me-settings-field span {
+  color: var(--account-accent-strong);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.me-settings-section .me-settings-row strong {
+  color: var(--account-ink);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.me-settings-section .me-settings-row p,
+.me-settings-section .me-settings-field small,
+.me-settings-section .me-password-toggle small {
+  color: var(--account-muted);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.me-settings-section .me-settings-field input,
+.me-settings-section .me-settings-field select {
+  color: var(--account-ink);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.me-settings-section .me-settings-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.me-settings-section .me-settings-invite-box {
+  display: block;
+  min-width: 0;
+}
+
+.me-settings-section .me-settings-actions.organization-actions {
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  padding-top: 2px;
+}
+
+.me-settings-section .me-settings-actions.organization-actions .secondary {
+  border-color: var(--account-border-strong);
+  background: var(--account-surface);
+  color: var(--account-accent-strong);
+}
+
+.me-settings-section .me-settings-actions.split {
+  justify-content: space-between;
+}
+
+.me-settings-section .profile-panel .me-settings-actions,
+.me-settings-section .account-panel .me-settings-actions {
+  padding-top: 4px;
+}
+
+.me-settings-section .me-settings-actions button {
+  min-width: 126px;
+}
+
+.me-settings-section .me-settings-feedback {
+  grid-column: 1 / -1;
+}
+
+.me-settings-section .me-settings-field select:disabled {
+  cursor: not-allowed;
+  background-color: var(--account-subtle);
+  color: var(--account-muted);
+  opacity: 1;
+}
+
+.me-settings-section .me-settings-actions button,
+.me-settings-section .me-section-head .ghost,
+.me-settings-section .me-password-toggle b {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.me-settings-section .me-password-panel {
+  padding: 0;
+  border-top: 1px solid var(--account-border);
+}
+
+.me-settings-section .me-password-toggle {
+  padding: 18px 0;
+}
+
+.me-settings-section .me-password-toggle button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 40px;
+  min-width: 136px;
+  padding: 9px 14px;
+  border: 1px solid var(--account-border-strong);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--account-accent-strong);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.me-settings-section .me-password-toggle button:disabled {
+  cursor: not-allowed;
+  opacity: .65;
+}
+
+.google-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background:
+    conic-gradient(from -40deg, #4285f4 0 25%, #34a853 0 50%, #fbbc05 0 75%, #ea4335 0 100%);
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.google-mark span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  color: #4285f4;
+}
+
+.me-password-toggle {
+  border-radius: 8px;
+}
+
+.me-password-toggle:hover {
+  background: var(--account-subtle);
+}
+
+.me-wrong-practice-hero {
+  grid-template-columns: minmax(0, 1fr) minmax(220px, .42fr) auto;
+  padding: 16px;
+}
+
+.me-wrong-bank {
+  padding: 16px;
+  background: var(--account-muted-surface);
+}
+
+.me-wrong-review-pack-list button {
+  min-height: 108px;
+  border-radius: var(--account-radius);
+  box-shadow: none;
+}
+
+.me-wrong-review-pack-list button.active,
+.me-wrong-review-pack-list button.due.active {
+  border-color: var(--account-accent);
+  background: #e9efff;
+}
+
+.me-wrong-review-pack-list button.due {
+  border-color: var(--account-border-strong);
+}
+
+.me-wrong-filters {
+  padding: 12px;
+  border: 1px solid var(--account-border);
+  border-radius: var(--account-radius);
+  background: #fff;
+}
+
+.me-wrong-filters label:has(input[type="checkbox"]) {
+  min-height: 38px;
+  grid-template-columns: auto auto;
+  align-items: center;
+  align-self: end;
+  justify-content: start;
+  padding: 8px 10px;
+  border: 1px solid var(--account-border);
+  border-radius: 8px;
+}
+
+.me-wrong-list article {
+  background: #fff;
+}
+
+.me-wrong-list article.expanded {
+  border-color: var(--account-border-strong);
+}
+
+.me-wrong-options p.correct {
+  border-color: rgba(15, 118, 110, .28);
+  background: #f2fbf8;
+}
+
+.me-wrong-options p.wrong {
+  border-color: rgba(185, 54, 32, .24);
+  background: #fff7f5;
+}
+
+.me-wrong-ai-grid article,
+.me-wrong-detail section {
+  background: var(--account-subtle);
+}
+
+.me-loading-skeleton .me-skeleton-line,
+.me-loading-skeleton .me-skeleton-pill,
+.me-loading-skeleton .me-skeleton-button,
+.me-skeleton-line,
+.me-skeleton-pill,
+.me-skeleton-button {
+  background: #e8eef3;
+}
+
+.me-skeleton-pill,
+.me-skeleton-button {
+  border-radius: 8px;
+}
+
+@media (max-width: 980px) {
+  .me-learning-profile {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .me-profile-metrics,
+  .me-summary-grid,
+  .me-summary-strip,
+  .me-summary-rail,
+  .me-learning-grid,
+  .me-learning-subject-grid,
+  .me-readiness-dimensions,
+  .me-wrong-pattern-grid,
+  .me-wrong-review-pack-list,
+  .me-settings-grid,
+  .me-school-card-grid,
+  .me-wrong-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .me-overview-command-bar,
+  .me-wrong-practice-hero,
+  .me-readiness-main {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .me-learning-profile {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "avatar"
+      "title"
+      "email"
+      "status"
+      "metrics";
+  }
+
+  .me-profile-metrics,
+  .me-summary-grid,
+  .me-summary-strip,
+  .me-summary-rail,
+  .me-learning-grid,
+  .me-learning-subject-grid,
+  .me-readiness-dimensions,
+  .me-wrong-pattern-grid,
+  .me-wrong-review-pack-list,
+  .me-settings-grid,
+  .me-school-card-grid,
+  .me-wrong-filters,
+  .me-password-fields,
+  .me-wrong-ai-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .me-section-nav {
+    width: 100%;
+  }
+
+  .me-section-nav button {
+    flex: 1 0 auto;
+  }
+
+  .me-admin-callout,
+  .me-email-callout,
+  .me-ai-credit-card,
+  .me-ai-credit-strip,
+  .me-next-panel,
+  .me-section-head,
+  .me-practice-list article,
+  .me-wrong-list article,
+  .me-order-list article {
+    grid-template-columns: 1fr;
+  }
+
+  .me-settings-panel-head {
+    display: grid;
+    align-items: start;
+  }
+
+  .me-shortlist-empty {
+    grid-template-columns: 1fr;
+    align-items: start;
+    min-height: 0;
+  }
+
+  .me-shortlist-empty button,
+  .me-orders-empty button {
+    width: 100%;
+  }
+
+  .me-order-list .me-order-card,
+  .me-order-main,
+  .me-orders-empty {
+    grid-template-columns: 1fr;
+  }
+
+  .me-order-amount {
+    justify-items: start;
+    min-width: 0;
+  }
+
+  .me-settings-section .me-settings-actions {
+    justify-content: stretch;
+    flex-wrap: wrap;
+  }
+
+  .me-settings-section .me-settings-actions button {
+    flex: 1 1 180px;
+    width: 100%;
+  }
+
+  .me-settings-section .me-password-toggle button {
+    width: 100%;
+  }
+}

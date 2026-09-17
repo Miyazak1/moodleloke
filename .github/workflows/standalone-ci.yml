@@ -1,0 +1,35 @@
+name: standalone-agent-ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  contracts-and-golden-paths:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            backend/package-lock.json
+            frontend/package-lock.json
+      - run: npm ci
+      - run: npm ci --prefix backend
+      - run: npm ci --prefix frontend
+      - run: npm exec --prefix frontend -- playwright install --with-deps chromium
+      - run: npm run ci:contracts
+      - run: npm run ci:golden
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: golden-path-debug
+          path: |
+            frontend/test-results
+            frontend/playwright-report
+            artifacts
+          if-no-files-found: ignore

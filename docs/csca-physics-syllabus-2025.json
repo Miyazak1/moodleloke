@@ -1,0 +1,838 @@
+{
+  "schemaVersion": "csca-syllabus-v1",
+  "subject": "physics",
+  "syllabusVersion": "2025",
+  "sourceLabel": "CSCA 物理考试大纲（2025版，用户提供截图，映射增强）",
+  "sourceUrl": null,
+  "verifiedAt": "2026-06-15",
+  "examMetadata": {
+    "title": "CSCA 物理考试大纲",
+    "edition": "2025版",
+    "durationMinutes": 60,
+    "totalScore": 100,
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "questionTypeText": "单项选择题",
+    "questionCount": 48,
+    "purpose": "评估未来留学生攻读中国本科理工科专业所需的物理核心素养，包括物理知识体系的构建、科学思维方法的掌握和跨学科应用能力的培养。"
+  },
+  "topics": [
+    {
+      "code": "P-MECH-001",
+      "previousCodes": [],
+      "title": "运动学",
+      "module": "力学",
+      "examScope": "掌握位移、路程、速度、速率、加速度、匀变速直线运动、自由落体、追及相遇、质点模型和运动图像的基本概念与计算；能根据文字、表格、v-t 图、s-t 图判断运动状态和物理量关系。",
+      "allowedQuestionTypes": [
+        "single_choice"
+      ],
+      "difficultyRange": [
+        "basic",
+        "medium",
+        "hard"
+      ],
+      "weight": 1,
+      "skills": [
+        "位移",
+        "速度",
+        "加速度",
+        "匀变速直线运动",
+        "自由落体运动",
+        "路程",
+        "速率",
+        "运动图像",
+        "v-t图",
+        "s-t图",
+        "追及相遇",
+        "位移时间关系",
+        "速度时间关系",
+        "质点模型",
+        "标量与矢量基础判断"
+      ],
+      "aliases": [
+        "运动学",
+        "直线运动",
+        "自由落体",
+        "kinematics",
+        "displacement",
+        "distance",
+        "velocity",
+        "speed",
+        "acceleration",
+        "free fall",
+        "motion graph",
+        "velocity-time graph",
+        "point particle",
+        "particle model",
+        "idealized particle",
+        "scalar and vector basics"
+      ],
+      "excludedScope": [
+        "不要求动力学受力分析、能量守恒、圆周运动动力学或波动问题；图像题如果必须依赖缺失图片才能读数，应由源题 eligibility 排除。"
+      ],
+      "status": "published"
+    },
+    {
+      "code": "P-MECH-002",
+      "previousCodes": [],
+      "title": "牛顿运动定律及其应用",
+      "module": "力学",
+      "examScope": "理解牛顿三大运动定律、惯性、力和加速度关系，能进行力的合成与分解、重力、弹力、摩擦力、拉力、支持力等受力分析，并解决水平面、斜面、连接体和简单平衡或加速问题。",
+      "allowedQuestionTypes": [
+        "single_choice"
+      ],
+      "difficultyRange": [
+        "basic",
+        "medium",
+        "hard"
+      ],
+      "weight": 1,
+      "skills": [
+        "牛顿第一定律",
+        "牛顿第二定律",
+        "牛顿第三定律",
+        "受力分析",
+        "动力学",
+        "惯性",
+        "重力",
+        "弹力",
+        "摩擦力",
+        "拉力",
+        "支持力",
+        "斜面",
+        "连接体",
+        "平衡",
+        "加速运动",
+        "力的合成",
+        "力的分解",
+        "resultant force",
+        "force composition"
+      ],
+      "aliases": [
+        "牛顿定律",
+        "运动定律",
+        "动力学应用",
+        "Newton laws",
+        "force analysis",
+        "friction",
+        "normal force",
+        "inclined plane",
+        "equilibrium",
+        "F=ma",
+        "resultant force",
+        "force composition",
+        "net force",
+        "opposite forces"
+      ],
+      "excludedScope": [
+        "不要求动量守恒、机械能守恒、电磁力或流体力学；受力分析限于牛顿定律基础应用，不把纯运动学图像题归入本 topic。"
+      ],
+      "status": "published"
+    },
+    {
+      "code": "P-MECH-003",
+      "previousCodes": [],
+      "title": "动量与冲量",
+      "module": "力学",
+      "examScope": "掌握动量、冲量、动量定理和动量守恒，能分析碰撞、反冲、爆炸、合并和分离等相互作用过程，判断系统内外力和动量变化。",
+      "allowedQuestionTypes": [
+        "single_choice"
+      ],
+      "difficultyRange": [
+        "basic",
+        "medium",
+        "hard"
+      ],
+      "weight": 1,
+      "skills": [
+        "动量",
+        "冲量",
+        "动量守恒",
+        "碰撞",
+        "相互作用",
+        "动量定理",
+        "弹性碰撞",
+        "非弹性碰撞",
+        "反冲",
+        "爆炸",
+        "系统内力",
+        "系统外力"
+      ],
+      "aliases": [
+        "动量守恒",
+        "冲量",
+        "碰撞问题",
+        "momentum",
+        "impulse",
+        "conservation of momentum",
+        "collision",
+        "recoil",
+        "explosion"
+      ],
+      "excludedScope": [
+        "不要求相对论动量、连续介质冲量、复杂二维碰撞或能量守恒主导的机械能题；碰撞能量损失只作为辅助判断。"
+      ],
+      "status": "published"
+    },
+    {
+      "code": "P-MECH-004",
+      "previousCodes": [],
+      "title": "功与能",
+      "module": "力学",
+      "examScope": "掌握功、功率、动能、重力势能、弹性势能、动能定理、机械能守恒和能量转化；能分析摩擦做功、外力做功、效率和简单机械或曲面运动中的能量问题。",
+      "allowedQuestionTypes": [
+        "single_choice"
+      ],
+      "difficultyRange": [
+        "basic",
+        "medium",
+        "hard"
+      ],
+      "weight": 1,
+      "skills": [
+        "功",
+        "功率",
+        "动能",
+        "势能",
+        "机械能守恒",
+        "能量转化",
+        "动能定理",
+        "重力势能",
+        "弹性势能",
+        "摩擦做功",
+        "外力做功",
+        "机械效率"
+      ],
+      "aliases": [
+        "功和能",
+        "机械能守恒",
+        "能量守恒",
+        "work",
+        "power",
+        "kinetic energy",
+        "potential energy",
+        "mechanical energy",
+        "energy conservation",
+        "work-energy theorem"
+      ],
+      "excludedScope": [
+        "不要求热力学第一定律、电场力做功、复杂非保守力系统或机械振动能量推导；能量守恒在本 topic 中限于机械能与功能关系。"
+      ],
+      "status": "published"
+    },
+    {
+      "code": "P-MECH-005",
+      "previousCodes": [],
+      "title": "圆周运动与万有引力",
+      "module": "力学",
+      "examScope": "理解匀速圆周运动、向心力、向心加速度、周期、频率、角速度和线速度关系，掌握万有引力、卫星运动和天体表面重力加速度的基本应用。",
+      "allowedQuestionTypes": [
+        "single_choice"
+      ],
+      "difficultyRange": [
+        "basic",
+        "medium",
+        "hard"
+      ],
+      "weight": 1,
+      "skills": [
+        "圆周运动",
+        "向心力",
+        "向心加速度",
+        "周期",
+        "万有引力",
+        "频率",
+        "角速度",
+        "线速度",
+        "卫星运动"
+      ],
+      "aliases": [
+        "圆周运动",
+        "万有引力",
+        "向心力",
+        "circular motion",
+        "centripetal force",
+        "centripetal acceleration",
+        "angular velocity",
+        "universal gravitation",
+        "satellite"
+      ],
+      "excludedScope": [
+        "不要求天体轨道摄动、开普勒定律复杂推导、机械波周期频率或量子轨道模型；周期和频率在本 topic 中指圆周运动量。"
+      ],
+      "status": "published"
+    },
+    {
+      "code": "P-MECH-006",
+      "previousCodes": [],
+      "title": "简谐振动与机械波",
+      "module": "力学",
+      "examScope": "理解简谐振动、周期、频率、振幅、机械波、波长、波速、横波纵波、波的图像和传播方向；能根据波形图判断质点振动方向、相位关系和波速。",
+      "allowedQuestionTypes": [
+        "single_choice"
+      ],
+      "difficultyRange": [
+        "basic",
+        "medium",
+        "hard"
+      ],
+      "weight": 1,
+      "skills": [
+        "简谐振动",
+        "机械波",
+        "周期",
+        "频率",
+        "波长",
+        "波速",
+        "简谐运动",
+        "振幅",
+        "横波",
+        "纵波",
+        "波形图",
+        "相位"
+      ],
+      "aliases": [
+        "振动与波",
+        "机械波",
+        "简谐运动",
+        "oscillation",
+        "simple harmonic motion",
+        "mechanical wave",
+        "wavelength",
+        "wave speed",
+        "frequency",
+        "amplitude",
+        "phase",
+        "wave graph"
+      ],
+      "excludedScope": [
+        "不要求电磁波、光的干涉衍射、复杂阻尼/受迫振动或微分方程；周期和频率在本 topic 中指振动与机械波。"
+      ],
+      "status": "published"
+    },
+    {
+      "code": "P-EM-001",
+      "previousCodes": [],
+      "title": "静电场",
+      "module": "电磁学",
+      "examScope": "掌握库仑定律、电荷守恒、电场强度、电势、电势差、电势能、电场线和带电粒子在匀强电场中的受力与简单运动，能判断电场方向和能量变化。",
+      "allowedQuestionTypes": [
+        "single_choice"
+      ],
+      "difficultyRange": [
+        "basic",
+        "medium",
+        "hard"
+      ],
+      "weight": 1,
+      "skills": [
+        "库仑定律",
+        "电场强度",
+        "电势",
+        "点电荷",
+        "静电力",
+        "电荷守恒",
+        "电势差",
+        "电势能",
+        "电场线",
+        "匀强电场",
+        "带电粒子"
+      ],
+      "aliases": [
+        "静电场",
+        "库仑定律",
+        "电场",
+        "electric field",
+        "Coulomb law",
+        "charge conservation",
+        "electric potential",
+        "potential difference",
+        "electric field lines",
+        "charged particle"
+      ],
+      "excludedScope": [
+        "不要求磁场中洛伦兹力、电磁感应、电路计算或电磁波；带电粒子题仅限匀强电场中的受力、运动和能量变化。"
+      ],
+      "status": "published"
+    },
+    {
+      "code": "P-EM-002",
+      "previousCodes": [],
+      "title": "直流电路",
+      "module": "电磁学",
+      "examScope": "掌握电流、电压、电阻、欧姆定律、电功、电功率、串并联电路、闭合电路欧姆定律和简单电表读数；能进行电路等效、故障判断和能量计算。",
+      "allowedQuestionTypes": [
+        "single_choice"
+      ],
+      "difficultyRange": [
+        "basic",
+        "medium",
+        "hard"
+      ],
+      "weight": 1,
+      "skills": [
+        "欧姆定律",
+        "串联电路",
+        "并联电路",
+        "电流",
+        "电压",
+        "电阻",
+        "电功率",
+        "电功",
+        "闭合电路欧姆定律",
+        "电表读数",
+        "等效电阻"
+      ],
+      "aliases": [
+        "直流电路",
+        "欧姆定律",
+        "串并联电路",
+        "current",
+        "voltage",
+        "resistance",
+        "Ohm law",
+        "electric power",
+        "series circuit",
+        "parallel circuit",
+        "circuit analysis"
+      ],
+      "excludedScope": [
+        "不要求交流电路、复杂电桥、磁场电磁感应或半导体电路；电功和电功率限于直流电路中的能量计算。"
+      ],
+      "status": "published"
+    },
+    {
+      "code": "P-EM-003",
+      "previousCodes": [],
+      "title": "磁场",
+      "module": "电磁学",
+      "examScope": "理解磁场、磁感线、磁感应强度及其单位、安培力、洛伦兹力、通电导线和带电粒子在磁场中的受力方向，能用左手定则判断力、电流和磁场方向关系。",
+      "allowedQuestionTypes": [
+        "single_choice"
+      ],
+      "difficultyRange": [
+        "basic",
+        "medium",
+        "hard"
+      ],
+      "weight": 1,
+      "skills": [
+        "磁感应强度",
+        "安培力",
+        "洛伦兹力",
+        "磁场方向",
+        "带电粒子运动",
+        "磁场",
+        "磁感线",
+        "通电导线",
+        "左手定则",
+        "带电粒子",
+        "磁感应强度单位",
+        "特斯拉"
+      ],
+      "aliases": [
+        "磁场",
+        "安培力",
+        "洛伦兹力",
+        "magnetic field",
+        "magnetic field lines",
+        "Ampere force",
+        "Lorentz force",
+        "left hand rule",
+        "magnetic flux density",
+        "tesla",
+        "T",
+        "magnetic flux density unit"
+      ],
+      "excludedScope": [
+        "不要求静电场库仑力、电场电势、电磁感应或带电粒子在电场中的运动；带电粒子题仅限磁场洛伦兹力和圆周运动。"
+      ],
+      "status": "published"
+    },
+    {
+      "code": "P-EM-004",
+      "previousCodes": [],
+      "title": "电磁感应",
+      "module": "电磁学",
+      "examScope": "理解电磁感应、磁通量、感应电流、楞次定律、法拉第电磁感应定律和简单交流电现象，能判断感应电流方向和感应电动势变化。",
+      "allowedQuestionTypes": [
+        "single_choice"
+      ],
+      "difficultyRange": [
+        "basic",
+        "medium",
+        "hard"
+      ],
+      "weight": 1,
+      "skills": [
+        "法拉第定律",
+        "楞次定律",
+        "电磁感应",
+        "感应电流",
+        "感应电动势",
+        "磁通量",
+        "交流电"
+      ],
+      "aliases": [
+        "电磁感应",
+        "法拉第定律",
+        "楞次定律",
+        "electromagnetic induction",
+        "magnetic flux",
+        "induced current",
+        "induced emf",
+        "Lenz law",
+        "Faraday law"
+      ],
+      "excludedScope": [
+        "不要求交流电路、变压器、麦克斯韦方程或复杂电磁波；电磁感应限于法拉第定律、楞次定律和简单感应电动势判断。",
+        "单纯考查磁感应强度 B 的定义或单位、且不涉及磁通量变化/感应电流/感应电动势时，归入 P-EM-003 磁场。"
+      ],
+      "status": "published"
+    },
+    {
+      "code": "P-THERM-001",
+      "previousCodes": [],
+      "title": "分子动理论",
+      "module": "热学",
+      "examScope": "理解分子动理论、温度、内能、热量、热运动、扩散、布朗运动和分子间作用力，能解释常见热现象和微观粒子运动。",
+      "allowedQuestionTypes": [
+        "single_choice"
+      ],
+      "difficultyRange": [
+        "basic",
+        "medium",
+        "hard"
+      ],
+      "weight": 1,
+      "skills": [
+        "分子动理论",
+        "热运动",
+        "温度",
+        "压强",
+        "微观解释",
+        "内能",
+        "扩散",
+        "布朗运动",
+        "分子间作用力"
+      ],
+      "aliases": [
+        "分子动理论",
+        "热运动",
+        "热学微观解释",
+        "molecular kinetic theory",
+        "temperature",
+        "internal energy",
+        "diffusion",
+        "Brownian motion"
+      ],
+      "excludedScope": [
+        "不要求复杂统计物理、真实气体状态方程或热机循环计算；温度和压强只作为分子动理论概念解释，不作为气体方程计算主线。"
+      ],
+      "status": "published"
+    },
+    {
+      "code": "P-THERM-002",
+      "previousCodes": [],
+      "title": "理想气体状态方程",
+      "module": "热学",
+      "examScope": "掌握理想气体状态方程、压强、体积、温度、物质的量和气体状态变化，能处理等温、等压、等容过程和简单 p-V 图判断。",
+      "allowedQuestionTypes": [
+        "single_choice"
+      ],
+      "difficultyRange": [
+        "basic",
+        "medium",
+        "hard"
+      ],
+      "weight": 1,
+      "skills": [
+        "理想气体",
+        "状态方程",
+        "压强",
+        "体积",
+        "温度",
+        "气体计算",
+        "理想气体状态方程",
+        "热力学温度",
+        "物质的量",
+        "等温过程",
+        "等压过程",
+        "等容过程",
+        "p-V图"
+      ],
+      "aliases": [
+        "理想气体状态方程",
+        "气体状态方程",
+        "PV=nRT",
+        "ideal gas law",
+        "pressure",
+        "volume",
+        "temperature",
+        "isothermal",
+        "isobaric",
+        "isochoric"
+      ],
+      "excludedScope": [
+        "不要求热力学循环、复杂过程积分、分子动理论推导或非理想气体；温度、压强和体积关系以理想气体状态方程基础计算为主。"
+      ],
+      "status": "published"
+    },
+    {
+      "code": "P-THERM-003",
+      "previousCodes": [],
+      "title": "热力学第一定律",
+      "module": "热学",
+      "examScope": "理解热力学第一定律、内能变化、做功、吸热放热和能量守恒，能判断气体膨胀压缩、热机效率和简单热过程中的能量转化。",
+      "allowedQuestionTypes": [
+        "single_choice"
+      ],
+      "difficultyRange": [
+        "basic",
+        "medium",
+        "hard"
+      ],
+      "weight": 1,
+      "skills": [
+        "热力学第一定律",
+        "内能",
+        "热量",
+        "做功",
+        "能量守恒",
+        "内能变化",
+        "吸热",
+        "放热",
+        "热机效率"
+      ],
+      "aliases": [
+        "热力学第一定律",
+        "内能变化",
+        "热力学过程",
+        "first law of thermodynamics",
+        "internal energy change",
+        "heat transfer",
+        "work done by gas",
+        "thermal efficiency"
+      ],
+      "excludedScope": [
+        "不要求分子动理论微观推导、复杂热机循环、熵或统计热力学；内能变化以热量、做功和能量守恒关系为主。"
+      ],
+      "status": "published"
+    },
+    {
+      "code": "P-OPT-001",
+      "previousCodes": [],
+      "title": "几何光学",
+      "module": "光学",
+      "examScope": "掌握光的直线传播、反射、折射、全反射、透镜成像和光路图，能判断像的性质、焦距、物距像距关系和常见光学仪器原理。",
+      "allowedQuestionTypes": [
+        "single_choice"
+      ],
+      "difficultyRange": [
+        "basic",
+        "medium",
+        "hard"
+      ],
+      "weight": 1,
+      "skills": [
+        "反射定律",
+        "折射定律",
+        "光路",
+        "平面镜",
+        "透镜",
+        "直线传播",
+        "反射",
+        "折射",
+        "全反射",
+        "透镜成像",
+        "光路图",
+        "焦距",
+        "物距",
+        "像距"
+      ],
+      "aliases": [
+        "几何光学",
+        "反射",
+        "折射",
+        "geometrical optics",
+        "reflection",
+        "refraction",
+        "total internal reflection",
+        "lens imaging",
+        "ray diagram"
+      ],
+      "excludedScope": [
+        "不要求干涉、衍射、偏振、波粒二象性或复杂光学仪器成像；几何光学限于反射、折射、透镜和简单成像。"
+      ],
+      "status": "published"
+    },
+    {
+      "code": "P-OPT-002",
+      "previousCodes": [],
+      "title": "物理光学",
+      "module": "光学",
+      "examScope": "理解光的干涉、衍射、偏振、光的波粒二象性和颜色现象，能识别典型实验现象并判断波动性证据。",
+      "allowedQuestionTypes": [
+        "single_choice"
+      ],
+      "difficultyRange": [
+        "basic",
+        "medium",
+        "hard"
+      ],
+      "weight": 1,
+      "skills": [
+        "干涉",
+        "衍射",
+        "波动性",
+        "物理光学",
+        "光学现象",
+        "偏振",
+        "波粒二象性",
+        "颜色",
+        "双缝干涉"
+      ],
+      "aliases": [
+        "物理光学",
+        "干涉",
+        "衍射",
+        "physical optics",
+        "interference",
+        "diffraction",
+        "polarization",
+        "wave-particle duality",
+        "double-slit"
+      ],
+      "excludedScope": [
+        "不要求几何光学成像计算、量子光学或复杂双缝定量推导；干涉和衍射以现象识别和基础波动性判断为主。"
+      ],
+      "status": "published"
+    },
+    {
+      "code": "P-MODERN-001",
+      "previousCodes": [],
+      "title": "光电效应",
+      "module": "近代物理",
+      "examScope": "理解光电效应的实验现象、逸出功、截止频率、光电子最大初动能和爱因斯坦光电方程，能判断光强、频率和电压对光电流的影响。",
+      "allowedQuestionTypes": [
+        "single_choice"
+      ],
+      "difficultyRange": [
+        "basic",
+        "medium",
+        "hard"
+      ],
+      "weight": 1,
+      "skills": [
+        "光电效应",
+        "逸出功",
+        "截止频率",
+        "光子能量",
+        "爱因斯坦光电方程",
+        "光电子",
+        "最大初动能"
+      ],
+      "aliases": [
+        "光电效应",
+        "截止频率",
+        "光子",
+        "photoelectric effect",
+        "work function",
+        "threshold frequency",
+        "photoelectron",
+        "Einstein photoelectric equation"
+      ],
+      "excludedScope": [
+        "不要求原子能级跃迁、核反应、复杂量子力学或固体能带理论；光电效应限于逸出功、截止频率、光电子能量等基础关系。"
+      ],
+      "status": "published"
+    },
+    {
+      "code": "P-MODERN-002",
+      "previousCodes": [],
+      "title": "原子结构",
+      "module": "近代物理",
+      "examScope": "理解原子结构、能级、电子跃迁、光谱、玻尔模型和氢原子能级，能判断吸收发射光子和能量差关系。",
+      "allowedQuestionTypes": [
+        "single_choice"
+      ],
+      "difficultyRange": [
+        "basic",
+        "medium",
+        "hard"
+      ],
+      "weight": 1,
+      "skills": [
+        "原子结构",
+        "能级",
+        "原子跃迁",
+        "光谱",
+        "原子模型",
+        "电子跃迁",
+        "玻尔模型",
+        "氢原子"
+      ],
+      "aliases": [
+        "原子结构",
+        "能级",
+        "原子物理",
+        "atomic structure",
+        "energy level",
+        "electron transition",
+        "spectrum",
+        "Bohr model",
+        "hydrogen atom"
+      ],
+      "excludedScope": [
+        "不要求核衰变、核反应能、复杂量子数或量子力学波函数；原子结构限于能级、跃迁、光谱和玻尔模型基础。"
+      ],
+      "status": "published"
+    },
+    {
+      "code": "P-MODERN-003",
+      "previousCodes": [],
+      "title": "核物理基础",
+      "module": "近代物理",
+      "examScope": "理解原子核、同位素、核反应、放射性、半衰期、核能、质量亏损和质能方程等基础概念，能判断衰变类型和简单核反应守恒关系。",
+      "allowedQuestionTypes": [
+        "single_choice"
+      ],
+      "difficultyRange": [
+        "basic",
+        "medium",
+        "hard"
+      ],
+      "weight": 1,
+      "skills": [
+        "原子核",
+        "核反应",
+        "放射性",
+        "质量亏损",
+        "核能",
+        "同位素",
+        "半衰期",
+        "质能方程",
+        "衰变"
+      ],
+      "aliases": [
+        "核物理",
+        "核反应",
+        "放射性",
+        "nuclear physics",
+        "isotope",
+        "nuclear reaction",
+        "radioactivity",
+        "half-life",
+        "mass defect",
+        "E=mc2",
+        "decay"
+      ],
+      "excludedScope": [
+        "不要求原子能级光谱、复杂核反应链、粒子物理或辐射剂量计算；核物理限于同位素、衰变、半衰期、质能方程和守恒判断。"
+      ],
+      "status": "published"
+    }
+  ]
+}

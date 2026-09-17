@@ -1,0 +1,408 @@
+.thermo-page {
+  width: min(1240px, calc(100vw - 48px));
+}
+
+.thermo-card {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid rgba(49, 93, 255, .16);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 16px 42px rgba(15, 23, 42, .07);
+}
+
+.thermo-side,
+.thermo-main {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  min-width: 0;
+}
+
+.thermo-side article,
+.thermo-stage,
+.thermo-explain-card article {
+  border: 1px solid rgba(49, 93, 255, .14);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.thermo-side article,
+.thermo-explain-card article {
+  padding: 16px;
+}
+
+.thermo-side h2,
+.thermo-explain-card h2 {
+  margin: 0 0 12px;
+  color: #312e81;
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.thermo-formula-card,
+.thermo-data-card,
+.thermo-state-card,
+.thermo-control-card,
+.thermo-slider-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.thermo-formula-card .math-content {
+  justify-content: center;
+  padding: 16px 10px;
+  border: 1px solid rgba(49, 93, 255, .18);
+  border-radius: 12px;
+  background: #e9efff;
+}
+
+.thermo-metric {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr) 88px;
+  gap: 8px;
+  align-items: center;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.thermo-metric i {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.thermo-metric strong,
+.thermo-slider-stack strong,
+.thermo-state-card td {
+  color: #0f172a;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.thermo-metric strong,
+.thermo-slider-stack strong {
+  justify-self: end;
+}
+
+.thermo-state-card table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.thermo-state-card th,
+.thermo-state-card td {
+  padding: 8px 6px;
+  border-bottom: 1px solid rgba(148, 163, 184, .2);
+  text-align: right;
+}
+
+.thermo-state-card th:first-child,
+.thermo-state-card td:first-child {
+  color: #334155;
+  font-family: inherit;
+  font-weight: 950;
+  text-align: left;
+}
+
+.thermo-state-card th {
+  color: #5f6f69;
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.thermo-state-card p {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(49, 93, 255, .12);
+  border-radius: 12px;
+  background: #f8fbff;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.65;
+}
+
+.thermo-select,
+.thermo-slider-stack label {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) 76px;
+  gap: 10px;
+  align-items: center;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.thermo-select {
+  grid-template-columns: 88px minmax(0, 1fr);
+}
+
+.thermo-select select {
+  min-width: 0;
+  min-height: 38px;
+  border: 1px solid rgba(49, 93, 255, .18);
+  border-radius: 10px;
+  background: #fff;
+  color: #0f172a;
+  font-weight: 900;
+}
+
+.thermo-slider-stack input[type="range"] {
+  width: 100%;
+  accent-color: #315dff;
+}
+
+.thermo-stage {
+  padding: 12px;
+  overflow: hidden;
+  background: #f8fbff;
+}
+
+.thermo-svg {
+  display: block;
+  width: 100%;
+  min-height: 540px;
+  border-radius: 10px;
+  background: #eef4ff;
+}
+
+.thermo-svg .thermo-bg {
+  fill: #eef4ff;
+}
+
+.thermo-svg text {
+  fill: #5f6f69;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.thermo-svg .stage-title {
+  fill: #5f6f69;
+  text-anchor: start;
+}
+
+.thermo-svg .heat-source {
+  fill: #fff1f2;
+  stroke: #fb7185;
+  stroke-width: 2;
+}
+
+.thermo-svg .work-sink {
+  fill: #dbeafe;
+  stroke: #60a5fa;
+  stroke-width: 2;
+}
+
+.thermo-svg .system-box {
+  stroke: #818cf8;
+  stroke-width: 3;
+}
+
+.thermo-svg .thermo-flow text {
+  text-anchor: middle;
+  fill: #315dff;
+  font-weight: 950;
+}
+
+.thermo-svg .heat-arrow {
+  stroke: #ef4444;
+  stroke-linecap: round;
+}
+
+.thermo-svg .work-arrow {
+  stroke: #3b82f6;
+  stroke-linecap: round;
+}
+
+.thermo-svg .heat-label {
+  fill: #ef4444;
+}
+
+.thermo-svg .work-label {
+  fill: #3b82f6;
+}
+
+.thermo-svg .balance-label {
+  fill: #5f6f69;
+}
+
+.thermo-svg .thermo-pv-chart line {
+  stroke: #94a3b8;
+  stroke-width: 1.5;
+}
+
+.thermo-svg .thermo-pv-chart text {
+  fill: #5f6f69;
+  font-size: 11px;
+  text-anchor: middle;
+}
+
+.thermo-svg .work-area {
+  fill: rgba(129, 140, 248, .22);
+}
+
+.thermo-svg .process-path {
+  fill: none;
+  stroke: #315dff;
+  stroke-width: 3;
+  marker-end: url("#thermo-arrow-blue");
+}
+
+.thermo-svg .state-one {
+  fill: #22c55e;
+  stroke: #fff;
+  stroke-width: 3;
+}
+
+.thermo-svg .state-two {
+  fill: #ef4444;
+  stroke: #fff;
+  stroke-width: 3;
+}
+
+.thermo-svg .watermark {
+  fill: #cbd5e1;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.thermo-explain-card {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.thermo-explain-card p {
+  margin: 0;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.7;
+}
+@media (max-width: 720px) {
+  .photoelectric-card,
+  .photoelectric-explain-card {
+    grid-template-columns: 1fr;
+  }
+
+  .photoelectric-card {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .photoelectric-experiment-svg {
+    min-height: 280px;
+  }
+
+  .photoelectric-graph-svg {
+    min-height: 220px;
+  }
+
+  .photoelectric-slider-stack label,
+  .photoelectric-select {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .photoelectric-slider-stack strong,
+  .photoelectric-metric strong {
+    justify-self: start;
+  }
+
+  .photoelectric-metric {
+    grid-template-columns: 12px minmax(0, 1fr);
+  }
+}
+@media (max-width: 720px) {
+  .circular-card,
+  .circular-explain-card {
+    grid-template-columns: 1fr;
+  }
+
+  .circular-card {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .circular-motion-svg {
+    min-height: 300px;
+  }
+
+  .circular-slider-stack label {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .circular-slider-stack strong {
+    justify-self: start;
+  }
+
+  .circular-metric {
+    grid-template-columns: 12px minmax(0, 1fr) 58px 42px;
+  }
+}
+@media (max-width: 720px) {
+  .circuit-card,
+  .circuit-analysis {
+    grid-template-columns: 1fr;
+  }
+
+  .circuit-card {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .circuit-svg {
+    min-height: 260px;
+  }
+
+  .circuit-slider-stack label {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .circuit-slider-stack strong {
+    justify-self: start;
+  }
+
+  .circuit-bar-row {
+    grid-template-columns: 30px minmax(0, 1fr) 76px;
+  }
+}
+@media (max-width: 720px) {
+  .induction-card {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .induction-experiment-svg {
+    min-height: 300px;
+  }
+
+  .induction-graph-svg {
+    min-height: 220px;
+  }
+
+  .induction-select,
+  .induction-slider-stack label {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .induction-slider-stack strong,
+  .induction-metric strong,
+  .induction-direction strong {
+    justify-self: start;
+  }
+
+  .induction-metric,
+  .induction-direction,
+  .induction-explain-card {
+    grid-template-columns: 1fr;
+  }
+}

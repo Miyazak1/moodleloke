@@ -1,0 +1,226 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-PHYSICS-3004",
+  "subject": "physics",
+  "topicCode": "P-MECH-ENERGY",
+  "topicTitle": "功和能",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "质量为 5 kg 的货箱从静止开始在水平地面上移动 10 m，恒定水平拉力为 30 N，滑动摩擦力为 5 N。求末速度大小。",
+  "options": [
+    {
+      "id": "A",
+      "text": "10.9545 m/s"
+    },
+    {
+      "id": "B",
+      "text": "50 m/s"
+    },
+    {
+      "id": "C",
+      "text": "10 m/s"
+    },
+    {
+      "id": "D",
+      "text": "5 m/s"
+    }
+  ],
+  "knowledgeTags": [
+    "功和能",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "physics",
+    "topicCode": "P-MECH-ENERGY",
+    "topicTitle": "功和能",
+    "targetDifficulty": "medium",
+    "taskFamily": "work_energy_with_friction",
+    "planTemplate": "pilot_v4_work_energy_with_friction_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "09fee837c887cf4b01e11eaf",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "F",
+        "f",
+        "m",
+        "s"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "F",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "f",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "m",
+        "independentGroup": "g3"
+      },
+      {
+        "id": "e4",
+        "type": "visible_parameter",
+        "role": "s",
+        "independentGroup": "g4"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "net work from drive and friction",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3",
+          "e4"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "kinetic energy",
+        "inputs": [
+          "r1"
+        ],
+        "output": "intermediate_2"
+      },
+      {
+        "id": "r3",
+        "operation": "speed",
+        "inputs": [
+          "r2"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "Wnet=(F-f)s",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "Wnet=mv^2/2",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "只计算牵引力做功",
+      "把合力直接当速度"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "m": 5,
+      "F": 30,
+      "f": 5,
+      "s": 10
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 2
+  },
+  "correctAnswer": "C",
+  "explanation": "合力做功 W=(30-5)×10=250 J。由动能定理 W=mv²/2，得 v=10 m/s。",
+  "generationMetadata": {
+    "origin": "codex_local_deterministic_v4",
+    "generatorTaskId": "pilot-30-v4-generator-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v4",
+    "createdAt": "2026-09-15T16:00:00.000Z",
+    "languageScope": "zh_primary_only",
+    "providerCalls": 0,
+    "sourceIsolation": {
+      "officialQuestionContentRead": false,
+      "databaseQuestionTextRead": false,
+      "priorReviewTextRead": false
+    },
+    "deterministicVerification": {
+      "solver": {
+        "version": "pilot-v4-batch-local-solver-v1",
+        "status": "verified",
+        "taskFamily": "work_energy_with_friction",
+        "evidenceBoundary": "prompt_options_and_question_plan",
+        "expectedCanonical": 10,
+        "selectedOptionId": "C",
+        "uniqueAnswer": true
+      },
+      "oracle": {
+        "version": "pilot-v4-independent-oracle-v1",
+        "status": "verified",
+        "implementation": "fresh_family_evaluation_from_canonical_inputs",
+        "expectedCanonical": 10,
+        "agreesWithSolver": true
+      },
+      "optionTruthTable": [
+        {
+          "optionId": "A",
+          "verdict": false,
+          "canonicalValue": 10.954451150103322
+        },
+        {
+          "optionId": "B",
+          "verdict": false,
+          "canonicalValue": 50
+        },
+        {
+          "optionId": "C",
+          "verdict": true,
+          "canonicalValue": 10
+        },
+        {
+          "optionId": "D",
+          "verdict": false,
+          "canonicalValue": 5
+        }
+      ],
+      "explanationReplay": {
+        "version": "pilot-v4-explanation-replay-v1",
+        "status": "verified",
+        "requiredEvidenceTokens": [
+          "250 J",
+          "10"
+        ],
+        "allRequiredTokensPresent": true,
+        "conclusionMatchesAnswer": true
+      }
+    }
+  }
+}

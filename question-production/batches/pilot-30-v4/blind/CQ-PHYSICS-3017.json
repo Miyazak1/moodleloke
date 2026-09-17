@@ -1,0 +1,164 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-PHYSICS-3017",
+  "subject": "physics",
+  "topicCode": "P-THERM-CAL",
+  "topicTitle": "热学",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "把质量 0.42 kg、比热容 400 J/(kg·℃)、初温 80 ℃ 的金属块投入质量 0.04 kg、比热容 4200 J/(kg·℃)、初温 20 ℃ 的水中。容器绝热且不发生相变，求共同温度。",
+  "options": [
+    {
+      "id": "A",
+      "text": "50 ℃"
+    },
+    {
+      "id": "B",
+      "text": "60 ℃"
+    },
+    {
+      "id": "C",
+      "text": "40 ℃"
+    },
+    {
+      "id": "D",
+      "text": "51 ℃"
+    }
+  ],
+  "knowledgeTags": [
+    "热学",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "physics",
+    "topicCode": "P-THERM-CAL",
+    "topicTitle": "热学",
+    "targetDifficulty": "medium",
+    "taskFamily": "calorimetry_equilibrium",
+    "planTemplate": "pilot_v4_calorimetry_equilibrium_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "0c1ea675cdc30db04522268d",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "Tm",
+        "Tw",
+        "cm",
+        "cw",
+        "mm",
+        "mw"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "Tm",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "Tw",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "cm",
+        "independentGroup": "g3"
+      },
+      {
+        "id": "e4",
+        "type": "visible_parameter",
+        "role": "cw",
+        "independentGroup": "g4"
+      },
+      {
+        "id": "e5",
+        "type": "visible_parameter",
+        "role": "mm",
+        "independentGroup": "g5"
+      },
+      {
+        "id": "e6",
+        "type": "visible_parameter",
+        "role": "mw",
+        "independentGroup": "g6"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "two heat quantities + energy conservation",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3",
+          "e4",
+          "e5",
+          "e6"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "equilibrium temperature",
+        "inputs": [
+          "r1"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "mm cm(Tm-T)=mw cw(T-Tw)",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "未按质量和比热加权",
+      "把初温简单平均"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "mm": 0.42,
+      "cm": 400,
+      "Tm": 80,
+      "mw": 0.04,
+      "cw": 4200,
+      "Tw": 20
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 1
+  }
+}

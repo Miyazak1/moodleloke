@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "codex-repair-blind-manifest-v1",
+  "batchId": "pilot-30-v4-repair2-2026-09-15",
+  "languageScope": "zh_primary_only",
+  "providerCalls": 0,
+  "count": 2,
+  "taskFamilyCount": 2,
+  "items": [
+    {
+      "candidateId": "CQ-CHEMISTRY-5001",
+      "subject": "chemistry",
+      "topicCode": "C-BASIC-005",
+      "topicTitle": "理想气体状态方程应用",
+      "designedDifficulty": "medium",
+      "taskFamily": "ideal_gas_combined_state_application",
+      "structureFingerprint": "chem-ideal-gas-combined-state-v1",
+      "blindSha256": "f919b3b7b14a368d2fbf2bfa5b9be24329e6c4ce3187511ae6b9fe1397714d39"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-5002",
+      "subject": "chemistry",
+      "topicCode": "C-THEORY-003",
+      "topicTitle": "化学反应速率与平衡",
+      "designedDifficulty": "medium",
+      "taskFamily": "reaction_rate_stoichiometric_conversion",
+      "structureFingerprint": "chem-rate-stoichiometric-conversion-v1",
+      "blindSha256": "81fa597dde1b2a1eb278aa4a1acc836edca3604230e11118b58e16e20182a2c5"
+    }
+  ]
+}

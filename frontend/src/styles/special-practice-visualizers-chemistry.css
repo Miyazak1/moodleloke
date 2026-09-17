@@ -1,0 +1,173 @@
+@import './visualizers/chemistry/neutralization.css';
+@import './visualizers/chemistry/substance-classification.css';
+@import './visualizers/chemistry/nomenclature.css';
+@import './visualizers/chemistry/reaction-rate.css';
+@import './visualizers/chemistry/redox.css';
+@import './visualizers/chemistry/ph-titration.css';
+@import './visualizers/chemistry/atomic-periodic.css';
+@import './visualizers/chemistry/bonding.css';
+@import './visualizers/chemistry/ion-reaction.css';
+@import './visualizers/chemistry/organic.css';
+
+/* 2026-09-03 Calm Science Lab shell for chemistry visualizers. */
+.special-visualizer-page {
+  --chem-ink: #202337;
+  --chem-muted: #5e6b7d;
+  --chem-line: rgba(57, 95, 130, .16);
+  --chem-blue: #315dff;
+  --chem-blue-soft: #e9efff;
+  --chem-mint: #13c7a3;
+  --chem-mint-dark: #087c66;
+  --chem-mint-soft: #dcfbf2;
+  --chem-lime: #b7ef43;
+  --chem-lime-soft: #f0ffd3;
+  --chem-coral: #ff715e;
+  --chem-coral-soft: #ffe9e4;
+  width: min(1320px, calc(100vw - 48px));
+}
+
+.special-visualizer-page[class*="chem-"],
+.special-visualizer-page[class*="reaction-"],
+.special-visualizer-page[class*="redox-"],
+.special-visualizer-page[class*="ph-"],
+.special-visualizer-page[class*="atomic-"],
+.special-visualizer-page[class*="bonding-"],
+.special-visualizer-page[class*="ion-"],
+.special-visualizer-page[class*="organic-"],
+.special-visualizer-page.substance-classification-page {
+  color: var(--chem-ink);
+}
+
+.special-visualizer-page :where(.special-visualizer-hero) {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.special-visualizer-page :where(
+  [class*="-card"],
+  [class*="-panel"],
+  [class*="-controls"],
+  [class*="-support"],
+  [class*="-workspace"],
+  [class*="-stage"]
+) {
+  border-color: var(--chem-line);
+  border-radius: 10px;
+}
+
+.special-visualizer-page :where(
+  [class*="-card"],
+  [class*="-panel"],
+  [class*="-controls"],
+  [class*="-support"],
+  [class*="-workspace"]
+) {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .96), rgba(251, 255, 249, .84)),
+    linear-gradient(90deg, rgba(49, 93, 255, .028) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .028) 1px, transparent 1px);
+  background-size: auto, 30px 30px, 30px 30px;
+  box-shadow: 0 16px 34px rgba(32, 35, 55, .05);
+}
+
+.special-visualizer-page :where([class*="-card"], [class*="-panel"], [class*="-controls"], [class*="-support"], [class*="-workspace"])::before {
+  content: none;
+  display: none;
+}
+
+.special-visualizer-page :where(
+  .chem-neutralization-stage,
+  .reaction-rate-stage,
+  .redox-cell-stage,
+  .ph-titration-stage,
+  .atomic-main-panel,
+  .bonding-stage-panel,
+  .ion-reaction-stage,
+  .organic-stage-panel,
+  .substance-tree-panel
+) {
+  background:
+    radial-gradient(circle at 50% 45%, rgba(19, 199, 163, .12), transparent 42%),
+    linear-gradient(90deg, rgba(49, 93, 255, .04) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .04) 1px, transparent 1px),
+    #fbfff9;
+  background-size: auto, 32px 32px, 32px 32px, auto;
+}
+
+.special-visualizer-page :where(
+  button,
+  .chem-toggle,
+  .chem-category-choice-grid button,
+  .chem-nomenclature-segments button,
+  .substance-tree-node,
+  .atomic-periodic-grid button,
+  .organic-family-list button
+) {
+  border-radius: 8px;
+}
+
+.special-visualizer-page :where(
+  .chem-control-actions button,
+  .chem-nomenclature-actions button,
+  .reaction-rate-controls button,
+  .redox-cell-controls button,
+  .ph-titration-controls button,
+  .atomic-control-panel button,
+  .bonding-control-panel button,
+  .ion-reaction-controls button,
+  .organic-control-panel button,
+  .substance-review-panel button
+) {
+  border-color: var(--chem-line);
+  background: rgba(255, 255, 255, .9);
+  color: var(--chem-ink);
+  box-shadow: none;
+}
+
+.special-visualizer-page :where(
+  button.primary,
+  button.active,
+  .chem-control-actions button.primary,
+  .chem-control-actions button.active,
+  .chem-nomenclature-actions button.primary,
+  .chem-nomenclature-segments button.active,
+  .chem-category-choice-grid button.active,
+  .reaction-rate-controls button.primary,
+  .reaction-rate-controls button.active,
+  .redox-cell-controls button.primary,
+  .redox-cell-controls button.active,
+  .ph-titration-controls button.primary,
+  .ph-titration-controls button.active,
+  .atomic-control-panel button.primary,
+  .atomic-control-panel button.active,
+  .bonding-control-panel button.primary,
+  .bonding-control-panel button.active,
+  .ion-reaction-controls button.primary,
+  .ion-reaction-controls button.active,
+  .organic-control-panel button.primary,
+  .organic-control-panel button.active
+) {
+  border-color: var(--chem-blue);
+  background: var(--chem-blue);
+  color: #fff;
+  box-shadow: 0 14px 26px rgba(49, 93, 255, .16);
+}
+
+.special-visualizer-page :where(input[type="range"], input[type="checkbox"]) {
+  accent-color: var(--chem-blue);
+}
+
+.special-visualizer-page :where(.special-visualizer-metrics span, [class*="-tag"], [class*="-badge"]) {
+  border-color: rgba(19, 199, 163, .22);
+  border-radius: 8px;
+  background: rgba(220, 251, 242, .72);
+  color: var(--chem-mint-dark);
+}
+
+.special-visualizer-page :where(.chem-model-note, .reaction-model-note, .ph-model-note) {
+  border-color: rgba(19, 199, 163, .22);
+  background: var(--chem-mint-soft);
+  color: var(--chem-mint-dark);
+}

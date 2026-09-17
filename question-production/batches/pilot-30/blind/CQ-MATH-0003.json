@@ -1,0 +1,214 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-MATH-0003",
+  "subject": "math",
+  "topicCode": "M-CALC-001",
+  "topicTitle": "导数与微积分初步",
+  "designedDifficulty": "basic",
+  "questionType": "single_choice",
+  "prompt": "已知 f(x)=2x^3-3x^2+3x-4，求 f'(2) 的值。",
+  "options": [
+    {
+      "id": "A",
+      "text": "16"
+    },
+    {
+      "id": "B",
+      "text": "14"
+    },
+    {
+      "id": "C",
+      "text": "15"
+    },
+    {
+      "id": "D",
+      "text": "-15"
+    }
+  ],
+  "knowledgeTags": [
+    "导数",
+    "多项式求导",
+    "函数值"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "math",
+    "topicId": null,
+    "topicTitle": "导数与微积分初步",
+    "productionCellId": 10,
+    "targetDifficulty": "basic",
+    "taskFamily": "derivative_direct_evaluation",
+    "planTemplate": "math_derivative_condition_chain_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "exactDerivativeScope": "direct_polynomial_value",
+      "forbidBasicDerivativeComplexity": true,
+      "forbidBasicDerivativeDomainTrap": true,
+      "forbidBasicDerivativeTargetProfileInflation": true,
+      "maxBasicDerivativeReasoningMoves": 1,
+      "forbidMediumDerivativeDefinitionOnly": false,
+      "minDerivativeLinkedMoves": 1,
+      "forbidPiecewiseParameterContinuityChain": true,
+      "forbidDerivativeOneStepOnly": false,
+      "requireVisibleDerivativeConditionChain": false,
+      "preferredPromptSkeletons": [
+        "已知 f(x)=...，求 f'(a) 的值",
+        "已知 f(x)=...，判断 f(x) 在一个给定区间上的单调性"
+      ],
+      "finalAnswerShape": "single_derivative_value_slope_or_sign_fact_no_domain_trap"
+    },
+    "budget": {
+      "maxPlanRepairs": 2,
+      "maxCandidateRepairs": 1
+    },
+    "scenarioContract": {
+      "schemaVersion": "subject-practice-scenario-contract-v1",
+      "policyVersion": "subject-practice-scenario-diversity-shadow-v2-multi-evidence-status",
+      "stage": "shadow_only_thresholds_not_frozen",
+      "scenarioMode": "abstract",
+      "scenarioFamilyId": "math_abstract_derivative_function_object",
+      "scenarioDomain": "pure_mathematics",
+      "scenarioEntity": "derivative_function_object",
+      "scenarioAction": "direct_polynomial_value",
+      "informationForm": "symbolic_text",
+      "scenarioFingerprint": "scenario-16ae128384d1e72b4b3f",
+      "contextNecessity": "not_applicable",
+      "requiredInformationFields": [],
+      "solverRelevantFields": [],
+      "surface": {
+        "zhEntity": "",
+        "enEntity": "",
+        "zhSetting": "",
+        "enSetting": "",
+        "cueTokens": []
+      },
+      "plausibility": {
+        "externalContextForbidden": true
+      },
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "controlled_catalog_and_sealed_ordinal_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "function_or_derivative_object",
+        "role": "function_derivative_tangent_or_interval_definition",
+        "independentGroup": "d1"
+      },
+      {
+        "id": "e2",
+        "type": "condition",
+        "role": "tangent_slope_monotonicity_extremum_or_parameter_condition",
+        "independentGroup": "d1"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "differentiate_or_read_derivative_condition",
+        "inputs": [
+          "e1"
+        ],
+        "output": "derivative_relation"
+      },
+      {
+        "id": "r2",
+        "operation": "apply_tangent_monotonicity_or_parameter_condition",
+        "inputs": [
+          "derivative_relation",
+          "e2"
+        ],
+        "output": "intermediate_constraint"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "derivative_condition_round_trip",
+        "expression": "derivative, tangent, monotonicity, extremum, interval, or parameter condition",
+        "variables": [
+          "x",
+          "f(x)",
+          "f'(x)",
+          "parameter"
+        ],
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "single derivative value labelled medium/hard",
+      "basic derivative inflated into piecewise, parameter, continuity, or undefined-domain trap",
+      "raw tangent slope without checking the tangent point or interval",
+      "medium derivative target reduced to f'(a) or one-step substitution",
+      "hard derivative target without sign chart, interval conclusion, and parameter/extremum/tangent constraint",
+      "parameter answer without derivative sign or extremum evidence"
+    ],
+    "answerDerivation": [
+      "differentiate or read exactly one derivative value, tangent slope, or one-interval sign fact; do not use piecewise, parameter, continuity, or undefined-domain trap shells"
+    ],
+    "uniquenessConditions": [
+      "only one option satisfies the derivative/tangent/interval condition when checked back"
+    ]
+  },
+  "localizations": {
+    "zh": {
+      "prompt": "已知 f(x)=2x^3-3x^2+3x-4，求 f'(2) 的值。",
+      "options": [
+        {
+          "id": "A",
+          "text": "16"
+        },
+        {
+          "id": "B",
+          "text": "14"
+        },
+        {
+          "id": "C",
+          "text": "15"
+        },
+        {
+          "id": "D",
+          "text": "-15"
+        }
+      ],
+      "knowledgeTags": [
+        "导数",
+        "多项式求导"
+      ]
+    },
+    "en": {
+      "prompt": "Given f(x)=2x^3-3x^2+3x-4, find the value of f'(2).",
+      "options": [
+        {
+          "id": "A",
+          "text": "16"
+        },
+        {
+          "id": "B",
+          "text": "14"
+        },
+        {
+          "id": "C",
+          "text": "15"
+        },
+        {
+          "id": "D",
+          "text": "-15"
+        }
+      ],
+      "knowledgeTags": [
+        "Derivative",
+        "Polynomial differentiation"
+      ]
+    }
+  }
+}

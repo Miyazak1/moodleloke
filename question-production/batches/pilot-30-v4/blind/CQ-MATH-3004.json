@@ -1,0 +1,175 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-MATH-3004",
+  "subject": "math",
+  "topicCode": "M-SEQ-ARITH",
+  "topicTitle": "等差数列",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "等差数列 {aₙ} 中，a3=18，a8=-2。求前 10 项和 S10。",
+  "options": [
+    {
+      "id": "A",
+      "text": "40"
+    },
+    {
+      "id": "B",
+      "text": "54"
+    },
+    {
+      "id": "C",
+      "text": "80"
+    },
+    {
+      "id": "D",
+      "text": "81"
+    }
+  ],
+  "knowledgeTags": [
+    "等差数列",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "math",
+    "topicCode": "M-SEQ-ARITH",
+    "topicTitle": "等差数列",
+    "targetDifficulty": "medium",
+    "taskFamily": "arithmetic_sequence_two_terms_then_sum",
+    "planTemplate": "pilot_v4_arithmetic_sequence_two_terms_then_sum_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "6e0058ba467b7f656ef58138",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "ai",
+        "aj",
+        "i",
+        "j",
+        "n"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "ai",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "aj",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "i",
+        "independentGroup": "g3"
+      },
+      {
+        "id": "e4",
+        "type": "visible_parameter",
+        "role": "j",
+        "independentGroup": "g4"
+      },
+      {
+        "id": "e5",
+        "type": "visible_parameter",
+        "role": "n",
+        "independentGroup": "g5"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "two nonadjacent terms",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3",
+          "e4",
+          "e5"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "common difference",
+        "inputs": [
+          "r1"
+        ],
+        "output": "intermediate_2"
+      },
+      {
+        "id": "r3",
+        "operation": "partial sum",
+        "inputs": [
+          "r2"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "d=(aj-ai)/(j-i)",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "a1=ai-(i-1)d",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q3",
+        "type": "deterministic_relation",
+        "expression": "Sn=n(2a1+(n-1)d)/2",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "把项数差误作下标差",
+      "求和漏乘项数"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "i": 3,
+      "ai": 18,
+      "j": 8,
+      "aj": -2,
+      "n": 10
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 2
+  }
+}

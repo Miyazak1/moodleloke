@@ -1,0 +1,160 @@
+{
+  "schemaVersion": "codex-blind-question-v1",
+  "candidateId": "CQ-PHYSICS-3003",
+  "subject": "physics",
+  "topicCode": "P-MECH-ENERGY",
+  "topicTitle": "功和能",
+  "designedDifficulty": "medium",
+  "questionType": "single_choice",
+  "prompt": "质量为 2 kg 的货箱从静止开始在水平地面上移动 4 m，恒定水平拉力为 10 N，滑动摩擦力为 2 N。求末速度大小。",
+  "options": [
+    {
+      "id": "A",
+      "text": "6.3246 m/s"
+    },
+    {
+      "id": "B",
+      "text": "16 m/s"
+    },
+    {
+      "id": "C",
+      "text": "4√2 m/s"
+    },
+    {
+      "id": "D",
+      "text": "4 m/s"
+    }
+  ],
+  "knowledgeTags": [
+    "功和能",
+    "综合推理"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "physics",
+    "topicCode": "P-MECH-ENERGY",
+    "topicTitle": "功和能",
+    "targetDifficulty": "medium",
+    "taskFamily": "work_energy_with_friction",
+    "planTemplate": "pilot_v4_work_energy_with_friction_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "language": "zh",
+      "structureFingerprint": "09fee837c887cf4b01e11eaf",
+      "scenarioDataMustAffectSolution": true
+    },
+    "scenarioContract": {
+      "contextNecessity": "required_for_solution",
+      "solverRelevantFields": [
+        "F",
+        "f",
+        "m",
+        "s"
+      ],
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "syllabus_metadata_and_local_parameters_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "visible_parameter",
+        "role": "F",
+        "independentGroup": "g1"
+      },
+      {
+        "id": "e2",
+        "type": "visible_parameter",
+        "role": "f",
+        "independentGroup": "g2"
+      },
+      {
+        "id": "e3",
+        "type": "visible_parameter",
+        "role": "m",
+        "independentGroup": "g3"
+      },
+      {
+        "id": "e4",
+        "type": "visible_parameter",
+        "role": "s",
+        "independentGroup": "g4"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "net work from drive and friction",
+        "inputs": [
+          "e1",
+          "e2",
+          "e3",
+          "e4"
+        ],
+        "output": "intermediate_1"
+      },
+      {
+        "id": "r2",
+        "operation": "kinetic energy",
+        "inputs": [
+          "r1"
+        ],
+        "output": "intermediate_2"
+      },
+      {
+        "id": "r3",
+        "operation": "speed",
+        "inputs": [
+          "r2"
+        ],
+        "output": "answer"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "deterministic_relation",
+        "expression": "Wnet=(F-f)s",
+        "roundTripCheck": true
+      },
+      {
+        "id": "q2",
+        "type": "deterministic_relation",
+        "expression": "Wnet=mv^2/2",
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "只计算牵引力做功",
+      "把合力直接当速度"
+    ],
+    "answerDerivation": [
+      "只使用题干可见数据，依照 reasoningSteps 顺序独立重算"
+    ],
+    "uniquenessConditions": [
+      "四个选项经同一判定规则计算后恰有一个为真"
+    ],
+    "canonicalInputs": {
+      "m": 2,
+      "F": 10,
+      "f": 2,
+      "s": 4
+    },
+    "verificationContract": {
+      "version": "pilot-v4-batch-local-verifier-v1",
+      "solverEvidenceBoundary": "prompt_options_and_question_plan",
+      "independentOracleRequired": true,
+      "optionTruthTableRequired": true,
+      "explanationReplayRequired": true
+    },
+    "itemOrdinal": 1
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "codex-question-library-selection-v1",
+  "selectionId": "pilot-30-2026-09-15",
+  "languageScope": "zh_primary_only",
+  "target": {
+    "math": 10,
+    "physics": 10,
+    "chemistry": 10
+  },
+  "candidates": [
+    { "candidateId": "CQ-MATH-1001", "batch": "pilot-30-v2" },
+    { "candidateId": "CQ-MATH-1002", "batch": "pilot-30-v2" },
+    { "candidateId": "CQ-MATH-1003", "batch": "pilot-30-v2" },
+    { "candidateId": "CQ-MATH-1006", "batch": "pilot-30-v2" },
+    { "candidateId": "CQ-MATH-1007", "batch": "pilot-30-v2" },
+    { "candidateId": "CQ-MATH-1008", "batch": "pilot-30-v2" },
+    { "candidateId": "CQ-MATH-1011", "batch": "pilot-30-v2" },
+    { "candidateId": "CQ-MATH-1012", "batch": "pilot-30-v2" },
+    { "candidateId": "CQ-MATH-1013", "batch": "pilot-30-v2" },
+    { "candidateId": "CQ-MATH-1014", "batch": "pilot-30-v2" },
+
+    { "candidateId": "CQ-PHYSICS-2001", "batch": "pilot-30-v3" },
+    { "candidateId": "CQ-PHYSICS-2002", "batch": "pilot-30-v3" },
+    { "candidateId": "CQ-PHYSICS-2003", "batch": "pilot-30-v3" },
+    { "candidateId": "CQ-PHYSICS-2004", "batch": "pilot-30-v3" },
+    { "candidateId": "CQ-PHYSICS-2005", "batch": "pilot-30-v3" },
+    { "candidateId": "CQ-PHYSICS-2006", "batch": "pilot-30-v3" },
+    { "candidateId": "CQ-PHYSICS-2010", "batch": "pilot-30-v3" },
+    { "candidateId": "CQ-PHYSICS-2012", "batch": "pilot-30-v3" },
+    { "candidateId": "CQ-PHYSICS-2013", "batch": "pilot-30-v3" },
+    { "candidateId": "CQ-PHYSICS-2014", "batch": "pilot-30-v3" },
+
+    { "candidateId": "CQ-CHEMISTRY-2001", "batch": "pilot-30-v3" },
+    { "candidateId": "CQ-CHEMISTRY-2002", "batch": "pilot-30-v3" },
+    { "candidateId": "CQ-CHEMISTRY-2004", "batch": "pilot-30-v3" },
+    { "candidateId": "CQ-CHEMISTRY-2005", "batch": "pilot-30-v3" },
+    { "candidateId": "CQ-CHEMISTRY-2006", "batch": "pilot-30-v3" },
+    { "candidateId": "CQ-CHEMISTRY-2007", "batch": "pilot-30-v3" },
+    { "candidateId": "CQ-CHEMISTRY-2008", "batch": "pilot-30-v3" },
+    { "candidateId": "CQ-CHEMISTRY-2010", "batch": "pilot-30-v3" },
+    { "candidateId": "CQ-CHEMISTRY-2012", "batch": "pilot-30-v3" },
+    { "candidateId": "CQ-CHEMISTRY-2014", "batch": "pilot-30-v3" }
+  ],
+  "selectionRationale": {
+    "math": "从 15 道盲审通过题中按导数、初等函数、直线三个考点分层选取，避免单一模板占满题包。",
+    "physics": "仅从 V3 盲审通过题中选取，覆盖匀速、恒加速度、末速度和位移；排除场景速度不合理的 2007-2009。",
+    "chemistry": "仅从 V3 盲审通过题中选取，覆盖酸稀释、碱稀释及酸碱中和；排除未给温度且依赖 pKw 的 2011、2013、2015。"
+  },
+  "supervisorNotes": [
+    "本文件仅确定进入后续查重与入库验证的 30 道题，不等于已经发布。",
+    "化学入选题的最终难度元数据应按盲审意见由 medium 规范化为 basic，并在导入记录中保留变更痕迹。"
+  ]
+}

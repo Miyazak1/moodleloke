@@ -1,0 +1,383 @@
+.atomic-periodic-card {
+  display:grid;
+  grid-template-columns:280px minmax(0,1fr) 250px;
+  gap:16px;
+  align-items:stretch;
+  padding:18px;
+  background:#fffdf9
+}
+
+.atomic-info-panel,.atomic-main-panel,.atomic-control-panel {
+  min-width:0
+}
+
+.atomic-info-panel,.atomic-control-panel {
+  display:grid;
+  align-content:start;
+  gap:14px
+}
+
+.atomic-info-panel article,.atomic-control-panel article,.atomic-model-card,.atomic-periodic-panel {
+  border:1px solid var(--public-line);
+  border-radius:14px;
+  background:#fffefa;
+  box-shadow:0 14px 34px #1720330e
+}
+
+.atomic-element-card {
+  position:relative;
+  display:grid;
+  justify-items:center;
+  gap:4px;
+  padding:18px 14px;
+  color:var(--public-ink)
+}
+
+.atomic-element-card .atomic-number {
+  position:absolute;
+  top:12px;
+  left:14px;
+  color:var(--public-muted);
+  font-size:12px;
+  font-weight:900
+}
+
+.atomic-element-card strong {
+  color:var(--public-orange);
+  font-size:48px;
+  line-height:1
+}
+
+.atomic-element-card b {
+  font-size:18px
+}
+
+.atomic-element-card small,.atomic-facts-grid small,.atomic-config-card p,.atomic-principle-card p,.atomic-trend-card span,.atomic-insight-card span,.atomic-control-panel label span {
+  color:var(--public-muted);
+  font-size:12px;
+  font-weight:850
+}
+
+.atomic-facts-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px
+}
+
+.atomic-facts-grid span {
+  display:grid;
+  gap:3px;
+  padding:12px;
+  border:1px solid rgba(66,107,146,.2);
+  border-radius:10px;
+  background:var(--public-soft);
+  text-align:center
+}
+
+.atomic-facts-grid strong {
+  color:var(--public-ink);
+  font-size:15px
+}
+
+.atomic-config-card,.atomic-principle-card,.atomic-trend-card,.atomic-insight-card,.atomic-orbital-card {
+  display:grid;
+  gap:10px;
+  padding:14px
+}
+
+.atomic-config-card h2,.atomic-principle-card h2,.atomic-orbital-card h2 {
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  margin:0;
+  color:#9a3412;
+  font-size:16px
+}
+
+.atomic-config-card code {
+  padding:13px;
+  border:1px solid rgba(66,107,146,.22);
+  border-radius:10px;
+  background:#fff8e7;
+  color:var(--public-ink);
+  font-size:14px;
+  font-weight:850;
+  white-space:normal
+}
+
+.atomic-principle-card p,.atomic-config-card p,.atomic-insight-card p {
+  margin:0;
+  line-height:1.6
+}
+
+.atomic-main-panel {
+  display:grid;
+  gap:14px
+}
+
+.atomic-model-card {
+  overflow:hidden;
+  background:linear-gradient(180deg,#f8fbff,#fffefa)
+}
+
+.atomic-model-header {
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  justify-content:space-between;
+  padding:14px 16px 0
+}
+
+.atomic-model-header h2 {
+  margin:0;
+  color:var(--public-ink);
+  font-size:20px
+}
+
+.atomic-model-header p {
+  margin:4px 0 0;
+  color:var(--public-muted);
+  font-weight:850
+}
+
+.atomic-model-header span {
+  flex:0 0 auto;
+  min-width:86px;
+  padding:7px 10px;
+  border-radius:999px;
+  background:#fff1db;
+  color:var(--public-orange);
+  font-weight:950;
+  text-align:center
+}
+
+.atomic-bohr-svg {
+  width:100%;
+  min-height:360px;
+  display:block
+}
+
+.atomic-nucleus {
+  fill:#dc2626;
+  filter:drop-shadow(0 4px 8px rgba(220,38,38,.25))
+}
+
+.atomic-nucleus-text {
+  fill:#fff;
+  font-size:15px;
+  font-weight:950
+}
+
+.atomic-nucleus-sub {
+  fill:#fee2e2;
+  font-size:12px;
+  font-weight:900
+}
+
+.atomic-shell {
+  fill:none;
+  stroke:#dbe5f2;
+  stroke-width:2;
+  stroke-dasharray:7 7
+}
+
+.atomic-shell-label,.atomic-config-label {
+  fill:#7a8aa4;
+  font-size:12px;
+  font-weight:850
+}
+
+.atomic-electron {
+  fill:var(--public-orange);
+  stroke:#fff;
+  stroke-width:2
+}
+
+.atomic-electron.animated {
+  animation:atomic-electron-pulse 1.35s ease-in-out infinite alternate
+}
+
+@keyframes atomic-electron-pulse {
+  0% {
+    transform:scale(1);
+    transform-box:fill-box;
+    transform-origin:center
+  }
+
+  to {
+    transform:scale(1.35);
+    transform-box:fill-box;
+    transform-origin:center
+  }
+}
+
+.atomic-periodic-panel {
+  display:grid;
+  gap:12px;
+  padding:14px;
+  overflow:hidden
+}
+
+.atomic-periodic-title {
+  display:flex;
+  gap:12px;
+  align-items:baseline;
+  justify-content:space-between
+}
+
+.atomic-periodic-title h2 {
+  margin:0;
+  color:var(--public-ink);
+  font-size:16px
+}
+
+.atomic-periodic-title span {
+  color:var(--public-muted);
+  font-size:12px;
+  font-weight:850;
+  text-align:right
+}
+
+.atomic-periodic-table {
+  display:grid;
+  grid-template-columns:repeat(18,minmax(34px,1fr));
+  grid-template-rows:repeat(4,54px);
+  gap:4px;
+  min-width:720px;
+  overflow:visible
+}
+
+.atomic-periodic-panel {
+  overflow-x:auto
+}
+
+.atomic-periodic-table button {
+  display:grid;
+  grid-template-rows:auto 1fr auto;
+  align-items:center;
+  min-width:0;
+  padding:4px 5px;
+  border:1px solid rgba(148,116,74,.22);
+  border-radius:6px;
+  color:var(--public-ink);
+  text-align:left;
+  transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease
+}
+
+.atomic-periodic-table button.active {
+  border:2px solid var(--public-orange);
+  box-shadow:0 0 0 3px #315dff1f;
+  transform:translateY(-1px)
+}
+
+.atomic-periodic-table small {
+  color:#0f172a85;
+  font-size:9px;
+  font-weight:900
+}
+
+.atomic-periodic-table strong {
+  font-size:16px;
+  line-height:1
+}
+
+.atomic-periodic-table span {
+  color:#0f172a9e;
+  font-size:10px;
+  font-weight:850;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap
+}
+
+.atomic-control-panel {
+  padding:0
+}
+
+.atomic-trend-card strong {
+  color:var(--public-ink);
+  font-size:22px
+}
+
+.atomic-trend-card p {
+  margin:0;
+  color:var(--public-orange);
+  font-size:16px;
+  font-weight:950
+}
+
+.atomic-control-panel label {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:8px;
+  padding:13px 14px;
+  border:1px solid var(--public-line);
+  border-radius:14px;
+  background:#fffefa
+}
+
+.atomic-control-panel label input[type=range],.atomic-control-panel label select {
+  grid-column:1 / -1;
+  width:100%
+}
+
+.atomic-control-panel label input[type=range] {
+  accent-color:var(--public-orange)
+}
+
+.atomic-control-panel label select {
+  min-height:38px;
+  border:1px solid var(--public-line);
+  border-radius:10px;
+  background:#fff;
+  color:var(--public-ink);
+  font-weight:850
+}
+
+.atomic-control-panel label strong {
+  color:var(--public-orange);
+  font-size:13px
+}
+
+.atomic-control-panel .atomic-toggle {
+  display:flex;
+  align-items:center;
+  justify-content:space-between
+}
+
+.atomic-toggle input {
+  width:36px;
+  height:20px;
+  accent-color:var(--public-orange)
+}
+
+.atomic-orbital-card div {
+  display:grid;
+  grid-template-columns:32px minmax(0,1fr) 44px;
+  gap:8px;
+  align-items:center
+}
+
+.atomic-orbital-card div>span,.atomic-orbital-card strong {
+  color:var(--public-muted);
+  font-size:12px;
+  font-weight:900
+}
+
+.atomic-orbital-card i {
+  height:8px;
+  overflow:hidden;
+  border-radius:999px;
+  background:#e2e8f0
+}
+
+.atomic-orbital-card b {
+  display:block;
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,#0f766e,var(--public-orange))
+}
+
+.atomic-periodic-support article {
+  min-width:0
+}

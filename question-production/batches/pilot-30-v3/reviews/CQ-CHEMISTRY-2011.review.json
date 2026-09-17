@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-CHEMISTRY-2011",
+  "reviewerTaskId": "01a0a489-caf4-75e3-8c3a-a92ea323f53c",
+  "derivedAnswer": "abstain",
+  "optionTruthTable": {
+    "A": false,
+    "B": false,
+    "C": false,
+    "D": false
+  },
+  "conditionsSufficient": false,
+  "ambiguityFound": true,
+  "syllabusAligned": true,
+  "difficultyAssessment": "medium",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "先做计量关系：n(HCl)=0.040×0.05=0.002 mol，n(NaOH)=0.025×0.25=0.00625 mol，混合后 [OH-]=(0.00625-0.002)/0.065=0.06538 mol/L，pOH≈1.1845。",
+    "题目未给温度，却要求碱性混合液的数值 pH；需用 pH=pKw(T)-pOH。只有额外假定 25°C、pKw=14 时才得 pH≈12.82（C）。不同温度下 pKw 改变，可落到不同选项附近，因此不能从题面唯一推出 A-D 中的一项。"
+  ],
+  "verdictBeforeReveal": "reject",
+  "reasonCodes": [
+    "missing_temperature",
+    "ambiguous_numeric_ph"
+  ],
+  "reviewedAt": "2026-09-15T18:11:48.7966294+08:00"
+}

@@ -1,0 +1,621 @@
+{
+  "schemaVersion": "codex-sealed-generator-manifest-v1",
+  "batchId": "pilot-30-v4-2026-09-15",
+  "providerCalls": 0,
+  "counts": {
+    "math": 20,
+    "physics": 20,
+    "chemistry": 20,
+    "total": 60
+  },
+  "verificationSummary": {
+    "solverVerified": 60,
+    "oracleVerified": 60,
+    "uniqueAnswerVerified": 60,
+    "optionTruthTablesVerified": 60,
+    "explanationReplayVerified": 60,
+    "failures": 0
+  },
+  "items": [
+    {
+      "candidateId": "CQ-MATH-3001",
+      "correctAnswer": "A",
+      "expectedCanonical": -8,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "e431ef76617797a6d9cbc4ab2e830ebe33dde72013c7760651b327069b0948f6"
+    },
+    {
+      "candidateId": "CQ-MATH-3002",
+      "correctAnswer": "A",
+      "expectedCanonical": -18,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "e7377c6208af8ef0ce8993c92e8b3d4aeb3ff1c97d2eef778189ee48f6cd9fac"
+    },
+    {
+      "candidateId": "CQ-MATH-3003",
+      "correctAnswer": "C",
+      "expectedCanonical": 145,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "abe5813cdd8f6c516d768bc8358d0ca58739e4f5232b5d01504d389cf3dd0dd1"
+    },
+    {
+      "candidateId": "CQ-MATH-3004",
+      "correctAnswer": "C",
+      "expectedCanonical": 80,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "27cba6a1d1889b1ef458059f62cb6436413636e4428bd4d43795f2b7cd7dbd0d"
+    },
+    {
+      "candidateId": "CQ-MATH-3005",
+      "correctAnswer": "A",
+      "expectedCanonical": 80,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "c87eb1081074b1681aa859b7ef558534ed179eea053d46fe7b5bd6d40daf934c"
+    },
+    {
+      "candidateId": "CQ-MATH-3006",
+      "correctAnswer": "A",
+      "expectedCanonical": 90,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "0e6aa4fa5902250e2958e881187fd45fce87354115c9f7e28eddb3844868b836"
+    },
+    {
+      "candidateId": "CQ-MATH-3007",
+      "correctAnswer": "C",
+      "expectedCanonical": 41,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "b9b684da97fde1c64dd3194e14d0314621e326dac3561c4321aa5ed7e4603339"
+    },
+    {
+      "candidateId": "CQ-MATH-3008",
+      "correctAnswer": "C",
+      "expectedCanonical": 53,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "60970bb91903d04a89b38202bc9f2dd2788bcb30fdb0cc67cca8161fa13b66e8"
+    },
+    {
+      "candidateId": "CQ-MATH-3009",
+      "correctAnswer": "A",
+      "expectedCanonical": 0.5333333333333333,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "6a82bfc74687e64ac288876be5ae18e509139098c4545a6129aa78bc6024016a"
+    },
+    {
+      "candidateId": "CQ-MATH-3010",
+      "correctAnswer": "A",
+      "expectedCanonical": 0.5357142857142857,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "ef101bb2fdab99331879f17ef1c59c5c1ce3e53c2a5b8dc3f6d949454bfec21d"
+    },
+    {
+      "candidateId": "CQ-MATH-3011",
+      "correctAnswer": "C",
+      "expectedCanonical": 4.47213595499958,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "3a7483487ed21e901cc5065cdcc6aab95bd03a4dbdba623f7088785f37701a5a"
+    },
+    {
+      "candidateId": "CQ-MATH-3012",
+      "correctAnswer": "C",
+      "expectedCanonical": 6.708203932499369,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "ac93c6456422d8d025e43959f0075a32688cd2ed347ed009bbd6eb600f8d786e"
+    },
+    {
+      "candidateId": "CQ-MATH-3013",
+      "correctAnswer": "A",
+      "expectedCanonical": 8,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "62720492a37d0e4d6d677268a3d5d98c6c3c495ada6c619c1e11fa46bcfef781"
+    },
+    {
+      "candidateId": "CQ-MATH-3014",
+      "correctAnswer": "A",
+      "expectedCanonical": 24,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "5839bb4b06dbeda878c22ff207f28b6704057860e7813f96e9374912367c9201"
+    },
+    {
+      "candidateId": "CQ-MATH-3015",
+      "correctAnswer": "C",
+      "expectedCanonical": 3,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "8c99f99d1c35c191a270eed52adfdd52cdc5561da4aeca535aba452255de272e"
+    },
+    {
+      "candidateId": "CQ-MATH-3016",
+      "correctAnswer": "C",
+      "expectedCanonical": -5,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "19ac7fd6157fa3ad24cebcbe116bcb44d1fb0952da68f88ddb045f78911e1247"
+    },
+    {
+      "candidateId": "CQ-MATH-3017",
+      "correctAnswer": "A",
+      "expectedCanonical": 5,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "ad6de950bbea151c470954af741f5e41d0f59d880aa4d07f46142915196a2d92"
+    },
+    {
+      "candidateId": "CQ-MATH-3018",
+      "correctAnswer": "A",
+      "expectedCanonical": 2,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "3dc5cc5219eca12eda4232de83e86d1c31213ef21847d20f70abaf11bbe72576"
+    },
+    {
+      "candidateId": "CQ-MATH-3019",
+      "correctAnswer": "C",
+      "expectedCanonical": 4,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "7cb151b69c7023bc46f86f14e94d314764bfbdda2fb400c4712dce9484e3f23e"
+    },
+    {
+      "candidateId": "CQ-MATH-3020",
+      "correctAnswer": "C",
+      "expectedCanonical": 8.6,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "6872156be8e551c0bff596f76f66101c54d8173cedfa7d22494016395d4f66ab"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3001",
+      "correctAnswer": "A",
+      "expectedCanonical": 22.360679774997898,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "6fd22e14224fbf7dff6f87345ae3deb7cf0e1fb04e549949ad4f1603158baee7"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3002",
+      "correctAnswer": "A",
+      "expectedCanonical": 33.54101966249684,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "246579f205a3e3c58da40c2c02cd8af17f388d1663ee7a5b1b9810a7ebf4119f"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3003",
+      "correctAnswer": "C",
+      "expectedCanonical": 5.656854249492381,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "436903a9f46ac11a0edf2ffdb0f0ced76db69707c458a5f6c6334ac66b1e0455"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3004",
+      "correctAnswer": "C",
+      "expectedCanonical": 10,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "466ca151950f9f59b0c6e1edd2e9a072ae15c34cad863904f324714120640530"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3005",
+      "correctAnswer": "A",
+      "expectedCanonical": 4,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "7a140032e2ac4f662f4d64e92d1e17da731905cfce4837ed82d3b69f7c435de2"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3006",
+      "correctAnswer": "A",
+      "expectedCanonical": 2.6,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "f060703e9a74367ed7c20d80cc66c902c9ec2eea55db5739a0b9ea267d2af69e"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3007",
+      "correctAnswer": "C",
+      "expectedCanonical": 2,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "2caeca5806b163e59b814310d6bc804805bcd091a72ca21284fb1f28117526e1"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3008",
+      "correctAnswer": "C",
+      "expectedCanonical": 3,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "82414692e1127c7bcec326cfaf299765bc2725a22098ae16fa1a07cc85cd071d"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3009",
+      "correctAnswer": "A",
+      "expectedCanonical": 2,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "522e3eacbd7fe371baae3d2b41873b04d0ccb7eb4bc92e508f4c00f787cf4384"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3010",
+      "correctAnswer": "A",
+      "expectedCanonical": 6,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "3aa574ceb2b39f45a017268a5d178acf4b2b43aba67d9c539b86f6ec27d805dc"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3011",
+      "correctAnswer": "C",
+      "expectedCanonical": 750,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "13c2e5ca5d3c804413f579b78faf265e76fcdf47d117ecbae8a08a097e0c29bf"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3012",
+      "correctAnswer": "C",
+      "expectedCanonical": 600,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "7c0f57de597646c32b0fc9a0d2da7db5216a65461308130e88b5fbe41658947b"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3013",
+      "correctAnswer": "A",
+      "expectedCanonical": 0.5,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "f3ab639328c2c595ef98373f80af3dc4bec70be7f3db37492afc3e88ec82813a"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3014",
+      "correctAnswer": "A",
+      "expectedCanonical": 2,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "6a69010835c279c2113b6b458bfcc0dbebfe3a53966ff90fb402a061c2a71804"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3015",
+      "correctAnswer": "C",
+      "expectedCanonical": 120,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "4b366eb5ed7f2dcb86895a8be9c6ab06c81c490017c7659a9958f9a769919105"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3016",
+      "correctAnswer": "C",
+      "expectedCanonical": 150,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "b4ba7e3e59876b606bbf1e87e5b7772d03ecca084fff4a59a78757463e44cd93"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3017",
+      "correctAnswer": "A",
+      "expectedCanonical": 50,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "b340e58a91dc1fa7bf3a13985acb76652cce28fd95545583b679507def137553"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3018",
+      "correctAnswer": "A",
+      "expectedCanonical": 40,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "fee8db2efaa7beec1ab907edcfdb93925d7f87b16d8aa6a6cfd566e31124e421"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3019",
+      "correctAnswer": "C",
+      "expectedCanonical": 0.6,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "4e834a82f7764d01e043b5e39537fae48551d9d275b41632c6e7404d1e63b683"
+    },
+    {
+      "candidateId": "CQ-PHYSICS-3020",
+      "correctAnswer": "C",
+      "expectedCanonical": 0.75,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "2051a69d277ee6ab22765431c0d12535ff5d45b892e6726b4e55c80a1368424f"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3001",
+      "correctAnswer": "A",
+      "expectedCanonical": 54,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "9aa4115aabfa3ba108bce6fce76c86ae801dd677a78f87afb8ac82e275571d4b"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3002",
+      "correctAnswer": "A",
+      "expectedCanonical": 72,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "138e4c76de9f461fa61b7267d68bfdae2778ef366b0037bca842add2ae85fa28"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3003",
+      "correctAnswer": "C",
+      "expectedCanonical": 1.792,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "d2f57a68340b511a40e9caa24176be96958b714b4ed4708f9eab62be85644415"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3004",
+      "correctAnswer": "C",
+      "expectedCanonical": 3.36,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "7281e22ae0924be62aa27dfa90a3683e4a2fb63b4c48556367a07e0b22b97454"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3005",
+      "correctAnswer": "A",
+      "expectedCanonical": "C₂H₆O",
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "b9182a69994745b975b07f2ee1d5dbf5218149a5ef1c55a6a4a8f5679b4a7264"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3006",
+      "correctAnswer": "A",
+      "expectedCanonical": "CH₂O",
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "b5f6c0d61edf4c21a51c06ae7bd7bf68c35080d6eff8d921b867a6cb80487a51"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3007",
+      "correctAnswer": "C",
+      "expectedCanonical": 0.1,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "22d9362a3231836722808c4a7b4bea05fef2c2664332e6891be1b57528bd1237"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3008",
+      "correctAnswer": "C",
+      "expectedCanonical": 0.09,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "88886c39a6a1b4e4ebe65995295546b4d0eb31ae19916f1ea50d9c19993406a6"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3009",
+      "correctAnswer": "A",
+      "expectedCanonical": 3.3333333333333335,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "ef62eeeabc7bb6386a996bc0c986f247b5e9cb82bd165b6750f13ad1b17d8875"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3010",
+      "correctAnswer": "A",
+      "expectedCanonical": 5,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "737b8b8c034cd7cc9ca527aea463517b4817828eb2d91d9e8ed2e7801d4910b9"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3011",
+      "correctAnswer": "C",
+      "expectedCanonical": 100,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "ee4411507ab7c5b9deee3f5a92b328ab68a51a70ea3895225bfb80888451ad36"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3012",
+      "correctAnswer": "C",
+      "expectedCanonical": 60,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "506d1a5051290ad9f01cb6cfd93c9afe9fe1bd7e125dc097e3d6fe10c447a00b"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3013",
+      "correctAnswer": "A",
+      "expectedCanonical": 6.4,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "d49e338985cc37f7ce4dbda73680261e03c50abcfa7addfa61b306946c951b56"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3014",
+      "correctAnswer": "A",
+      "expectedCanonical": 10.8,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "b35fd5e124ac1c66303ee8ba98670517a3a4e56476f22eb44297e3ea198629fb"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3015",
+      "correctAnswer": "C",
+      "expectedCanonical": -111,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "5ef5e08f1ea8aac73386084f14bce03594b3152593ec16c7cdde26c217f42cf6"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3016",
+      "correctAnswer": "C",
+      "expectedCanonical": -76,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "58cb28bde0e42416fb9ddeb5525edaff323a2eeafa1a83058e8433d2ba5a5a9f"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3017",
+      "correctAnswer": "A",
+      "expectedCanonical": "C₃H₈",
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "4eb14f31b21e22df05c2e58892d754adcaf036b73f3b1a7d13049abcd2cb6829"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3018",
+      "correctAnswer": "A",
+      "expectedCanonical": "C₄H₁₀",
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "8b5d38fdde0df7ffff5be068cd96c3ed1fec0d574423cebd9a4b3f5f50cd4fb8"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3019",
+      "correctAnswer": "C",
+      "expectedCanonical": 4,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "df43d085f7771114a3bb6f3929dc84eb686dde39cd016683b6d546e181c5a0f8"
+    },
+    {
+      "candidateId": "CQ-CHEMISTRY-3020",
+      "correctAnswer": "C",
+      "expectedCanonical": 2,
+      "solverStatus": "verified",
+      "oracleStatus": "verified",
+      "uniqueAnswer": true,
+      "explanationReplayStatus": "verified",
+      "sealedSha256": "331b8a9f95ac989fe944dc5448da6d5aefdde28d834f64e0c9f4bac2a5ebe86e"
+    }
+  ]
+}

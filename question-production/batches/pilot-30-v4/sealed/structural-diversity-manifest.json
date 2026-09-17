@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "codex-structural-diversity-manifest-v1",
+  "batchId": "pilot-30-v4-2026-09-15",
+  "diversity": {
+    "math": {
+      "taskFamilyCount": 10,
+      "topicCount": 10,
+      "maxItemsPerTaskFamily": 2,
+      "maxItemsPerTopic": 2,
+      "taskFamilies": [
+        "quadratic_scale_then_vertex",
+        "arithmetic_sequence_two_terms_then_sum",
+        "geometric_sequence_nonadjacent_then_sum",
+        "inclusion_exclusion_exactly_one",
+        "probability_exactly_one_red_without_replacement",
+        "vector_parameter_then_norm",
+        "circle_line_chord_length",
+        "trig_quadrant_half_angle",
+        "logarithmic_product_equation_with_domain",
+        "combined_variance_with_between_group_shift"
+      ],
+      "topics": [
+        "M-FUNC-QUAD",
+        "M-SEQ-ARITH",
+        "M-SEQ-GEO",
+        "M-SET-IE",
+        "M-PROB-HYPER",
+        "M-VEC-DOT",
+        "M-GEO-CIRCLE",
+        "M-TRIG-HALF",
+        "M-FUNC-LOGEQ",
+        "M-STAT-COMB"
+      ]
+    },
+    "physics": {
+      "taskFamilyCount": 10,
+      "topicCount": 10,
+      "maxItemsPerTaskFamily": 2,
+      "maxItemsPerTopic": 2,
+      "taskFamilies": [
+        "horizontal_projectile_landing_speed",
+        "work_energy_with_friction",
+        "perfectly_inelastic_momentum",
+        "series_parallel_circuit_current",
+        "electrostatic_zero_field_between_charges",
+        "floating_density_from_exposed_fraction",
+        "thin_lens_magnification",
+        "standing_wave_speed",
+        "calorimetry_equilibrium",
+        "magnetic_circular_radius"
+      ],
+      "topics": [
+        "P-MECH-PROJ",
+        "P-MECH-ENERGY",
+        "P-MECH-MOM",
+        "P-ELEC-CIRCUIT",
+        "P-ELEC-FIELD",
+        "P-MECH-BUOY",
+        "P-OPT-LENS",
+        "P-WAVE-STAND",
+        "P-THERM-CAL",
+        "P-MAG-LORENTZ"
+      ]
+    },
+    "chemistry": {
+      "taskFamilyCount": 10,
+      "topicCount": 10,
+      "maxItemsPerTaskFamily": 2,
+      "maxItemsPerTopic": 2,
+      "taskFamilies": [
+        "limiting_reagent_product_mass",
+        "carbonate_purity_from_gas_volume",
+        "empirical_formula_from_combustion",
+        "redox_electron_stoichiometry",
+        "equilibrium_constant_from_composition",
+        "crystallization_from_solubility_change",
+        "electrolysis_faraday_deposition",
+        "hess_law_target_enthalpy",
+        "hydrocarbon_formula_from_combustion",
+        "molarity_from_mass_fraction_density"
+      ],
+      "topics": [
+        "C-STOICH-LIMIT",
+        "C-STOICH-PURITY",
+        "C-ORG-EMP",
+        "C-REDOX-E",
+        "C-EQ-KC",
+        "C-SOL-CRYS",
+        "C-ELEC-FAR",
+        "C-THERMO-HESS",
+        "C-ORG-HC",
+        "C-SOL-MOLAR"
+      ]
+    }
+  },
+  "collisionSummary": {
+    "priorQuestionBodiesRead": false,
+    "officialQuestionContentRead": false,
+    "forbiddenSkeletonCollisions": 0,
+    "priorStructuralCollisions": 0,
+    "withinBatchSkeletonOverLimit": 0
+  }
+}

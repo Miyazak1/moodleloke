@@ -1,0 +1,664 @@
+{
+  "schemaVersion": "codex-question-candidate-v1",
+  "candidateId": "CQ-MATH-0009",
+  "subject": "math",
+  "topicCode": "M-FUNC-001",
+  "topicTitle": "基本初等函数",
+  "designedDifficulty": "basic",
+  "questionType": "single_choice",
+  "prompt": "对幂函数 f(x)=x^4，把 x=11 代入后，哪一条函数值等式成立？",
+  "options": [
+    {
+      "id": "A",
+      "text": "f(11)=14642"
+    },
+    {
+      "id": "B",
+      "text": "f(11)=14640"
+    },
+    {
+      "id": "C",
+      "text": "f(11)=-14641"
+    },
+    {
+      "id": "D",
+      "text": "f(11)=14641"
+    }
+  ],
+  "correctAnswer": "D",
+  "explanation": "本题只需完成一次整数幂运算。代入 x=11 后，f(11)=11^4=14641；底数为正，结果也为正。",
+  "knowledgeTags": [
+    "基本初等函数",
+    "幂函数",
+    "函数值"
+  ],
+  "syllabusVersion": "2025",
+  "questionPlan": {
+    "schemaVersion": "subject-practice-question-plan-v1",
+    "policyVersion": "subject-practice-question-plan-policy-v1",
+    "subject": "math",
+    "topicId": 69,
+    "topicTitle": "基本初等函数",
+    "productionCellId": 16,
+    "targetDifficulty": "basic",
+    "taskFamily": "elementary_function_direct_property",
+    "planTemplate": "math_elementary_function_relation_v1",
+    "representationType": "text",
+    "renderConstraints": {
+      "questionType": "single_choice",
+      "requiresImage": false,
+      "externalContextAllowed": false,
+      "pureMathStemOnly": true,
+      "forbidGenericFunctionListClassification": true,
+      "forbidElementaryFunctionExternalContextWrapper": true,
+      "requireMediumElementaryConcreteExpressionRelation": false,
+      "requireBasicElementarySingleObjectSingleTarget": true,
+      "singlePropertyTargetContractVersion": "math-basic-elementary-single-property-target-v1",
+      "allowedSinglePropertyTargets": [
+        "function_value",
+        "domain",
+        "range",
+        "monotonicity"
+      ],
+      "requiredSinglePropertyTarget": "function_value",
+      "requiredElementaryFunctionClass": "power",
+      "forbidCrossPropertyDistractors": true,
+      "forbidBasicElementaryEquationSolve": true,
+      "forbidBasicElementaryOrderingChain": true,
+      "forbidBasicElementaryParameterInference": true,
+      "forbidBasicElementaryTargetProfileInflation": true,
+      "maxFunctionPropertyStack": 1,
+      "maxEnumeratedConditions": 1,
+      "maxFunctionObjects": 1,
+      "maxIndependentRelations": 1,
+      "finalAnswerShape": "one_direct_elementary_function_property_or_value",
+      "preferredPromptSkeletons": [
+        "给出一个指数/对数/幂/根式函数表达式，只求定义域、单调性或一个函数值中的一项；题干与解析均不得提及未考查性质",
+        "给出 log_a x、a^x、x^n 或一个简单根式的具体参数，只判断一个直接性质；不要用“无需判断其他性质”等否定措辞列出其他性质"
+      ]
+    },
+    "budget": {
+      "maxPlanRepairs": 2,
+      "maxCandidateRepairs": 1
+    },
+    "scenarioContract": {
+      "schemaVersion": "subject-practice-scenario-contract-v1",
+      "policyVersion": "subject-practice-scenario-diversity-shadow-v2-multi-evidence-status",
+      "stage": "shadow_only_thresholds_not_frozen",
+      "scenarioMode": "abstract",
+      "scenarioFamilyId": "math_abstract_function_object",
+      "scenarioDomain": "pure_mathematics",
+      "scenarioEntity": "function_object",
+      "scenarioAction": "power:function_value",
+      "informationForm": "symbolic_text",
+      "scenarioFingerprint": "scenario-f9327659922a72e78c1b",
+      "contextNecessity": "not_applicable",
+      "requiredInformationFields": [],
+      "solverRelevantFields": [],
+      "surface": {
+        "zhEntity": "",
+        "enEntity": "",
+        "zhSetting": "",
+        "enSetting": "",
+        "cueTokens": []
+      },
+      "plausibility": {
+        "externalContextForbidden": true
+      },
+      "sourceIsolation": {
+        "officialQuestionContentUsed": false,
+        "reversibleSourceFieldsUsed": false,
+        "selectionBasis": "controlled_catalog_and_sealed_ordinal_only"
+      }
+    },
+    "evidenceSlots": [
+      {
+        "id": "e1",
+        "type": "elementary_function_object",
+        "role": "exponential_logarithmic_power_or_radical_expression",
+        "independentGroup": "e1"
+      },
+      {
+        "id": "e2",
+        "type": "domain_order_or_graph_condition",
+        "role": "domain_range_monotonicity_order_interval_or_graph_intersection",
+        "independentGroup": "e1"
+      }
+    ],
+    "hypotheses": [],
+    "reasoningSteps": [
+      {
+        "id": "r1",
+        "operation": "identify_elementary_function_domain_or_expression",
+        "inputs": [
+          "e1"
+        ],
+        "output": "function_frame"
+      },
+      {
+        "id": "r2",
+        "operation": "apply_domain_order_or_graph_condition",
+        "inputs": [
+          "function_frame",
+          "e2"
+        ],
+        "output": "intermediate_relation"
+      }
+    ],
+    "quantitativeRelations": [
+      {
+        "id": "q1",
+        "type": "elementary_function_relation_round_trip",
+        "expression": "domain, order, graph, inverse, or inequality relation checks the selected result",
+        "variables": [
+          "x",
+          "log",
+          "exp",
+          "power"
+        ],
+        "roundTripCheck": true
+      }
+    ],
+    "misconceptionTargets": [
+      "ignoring domain restrictions",
+      "comparing logs or powers by decimal guessing only",
+      "medium elementary-function item as a generic function-list classification without a given expression relation",
+      "hard elementary-function item without a second bound or parameter relation"
+    ],
+    "answerDerivation": [
+      "use the elementary-function object and one visible relation to determine the answer"
+    ],
+    "uniquenessConditions": [
+      "only one option satisfies all visible elementary-function relations"
+    ]
+  },
+  "localizations": {
+    "zh": {
+      "prompt": "对幂函数 f(x)=x^4，把 x=11 代入后，哪一条函数值等式成立？",
+      "options": [
+        {
+          "id": "A",
+          "text": "f(11)=14642"
+        },
+        {
+          "id": "B",
+          "text": "f(11)=14640"
+        },
+        {
+          "id": "C",
+          "text": "f(11)=-14641"
+        },
+        {
+          "id": "D",
+          "text": "f(11)=14641"
+        }
+      ],
+      "explanation": "本题只需完成一次整数幂运算。代入 x=11 后，f(11)=11^4=14641；底数为正，结果也为正。",
+      "knowledgeTags": [
+        "基本初等函数",
+        "幂函数",
+        "函数值"
+      ]
+    },
+    "en": {
+      "prompt": "For the rule f(x)=x^4, substitute x=11; which function-value equation is valid?",
+      "options": [
+        {
+          "id": "A",
+          "text": "f(11)=14642"
+        },
+        {
+          "id": "B",
+          "text": "f(11)=14640"
+        },
+        {
+          "id": "C",
+          "text": "f(11)=-14641"
+        },
+        {
+          "id": "D",
+          "text": "f(11)=14641"
+        }
+      ],
+      "explanation": "Only one integer-power calculation is needed. Substitute x=11: f(11)=11^4=14641; the base is positive, so the result is positive.",
+      "knowledgeTags": [
+        "Elementary functions"
+      ]
+    }
+  },
+  "generationMetadata": {
+    "origin": "codex_dual_session_pilot",
+    "generatorTaskId": "pilot-30-generator-task-2026-09-15",
+    "model": "gpt-5",
+    "promptVersion": "codex-library-generator-v1",
+    "createdAt": "2026-09-15T10:00:00.000Z",
+    "family": "elementary_bounded",
+    "seed": 211,
+    "generatorVersion": "math-elementary-local-generator-v6-formula-evidence",
+    "scopeId": "math-basic-elementary-rotation-v1:power:function_value",
+    "deterministicVerification": {
+      "solver": {
+        "solverVersion": "math-elementary-direct-property-solver-v1",
+        "taskFamily": "elementary_function_direct_property",
+        "status": "verified",
+        "parsed": true,
+        "functionKind": "positive_integer_power",
+        "canonicalTask": {
+          "model": {
+            "kind": "positive_integer_power",
+            "exponent": 4
+          },
+          "propertyTarget": "function_value",
+          "evaluationInput": null
+        },
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "false",
+            "property": "function_value",
+            "reasonCode": "math_solver_function_value_mismatch",
+            "semanticValue": {
+              "kind": "function_value",
+              "input": 11,
+              "value": 14642
+            }
+          },
+          {
+            "optionId": "B",
+            "verdict": "false",
+            "property": "function_value",
+            "reasonCode": "math_solver_function_value_mismatch",
+            "semanticValue": {
+              "kind": "function_value",
+              "input": 11,
+              "value": 14640
+            }
+          },
+          {
+            "optionId": "C",
+            "verdict": "false",
+            "property": "function_value",
+            "reasonCode": "math_solver_function_value_mismatch",
+            "semanticValue": {
+              "kind": "function_value",
+              "input": 11,
+              "value": -14641
+            }
+          },
+          {
+            "optionId": "D",
+            "verdict": "true",
+            "property": "function_value",
+            "reasonCode": "math_solver_function_value_matches",
+            "semanticValue": {
+              "kind": "function_value",
+              "input": 11,
+              "value": 14641
+            }
+          }
+        ],
+        "trueOptionIds": [
+          "D"
+        ],
+        "selectedOptionId": "D",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": [
+          "math_solver_function_value_mismatch",
+          "math_solver_function_value_matches"
+        ],
+        "verificationScope": {
+          "scopeVersion": "math-elementary-direct-property-verification-scope-v1",
+          "scopeId": "math-basic-elementary-rotation-v1:power:function_value",
+          "status": "matched",
+          "matched": true,
+          "plannedFunctionClass": "power",
+          "plannedPropertyTarget": "function_value",
+          "observedFunctionClass": "power",
+          "observedPropertyTargets": [
+            "function_value"
+          ],
+          "reasonCodes": []
+        }
+      },
+      "oracle": {
+        "oracleVersion": "math-elementary-independent-oracle-v1",
+        "status": "verified",
+        "functionClass": "power",
+        "propertyTarget": "function_value",
+        "optionVerdicts": [
+          {
+            "optionId": "A",
+            "verdict": "false"
+          },
+          {
+            "optionId": "B",
+            "verdict": "false"
+          },
+          {
+            "optionId": "C",
+            "verdict": "false"
+          },
+          {
+            "optionId": "D",
+            "verdict": "true"
+          }
+        ],
+        "trueOptionIds": [
+          "D"
+        ],
+        "selectedOptionId": "D",
+        "uniqueAnswer": true,
+        "agreesWithGenerator": true,
+        "scopeId": "math-basic-elementary-rotation-v1:power:function_value",
+        "scopeMatched": true,
+        "evidenceBoundary": "prompt_and_visible_options_only",
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      },
+      "explanation": {
+        "verifierVersion": "math-elementary-explanation-verifier-v3-formula-evidence",
+        "status": "verified",
+        "solverEvidence": {
+          "solverVersion": "math-elementary-direct-property-solver-v1",
+          "taskFamily": "elementary_function_direct_property",
+          "status": "verified",
+          "parsed": true,
+          "functionKind": "positive_integer_power",
+          "canonicalTask": {
+            "model": {
+              "kind": "positive_integer_power",
+              "exponent": 4
+            },
+            "propertyTarget": "function_value",
+            "evaluationInput": null
+          },
+          "optionVerdicts": [
+            {
+              "optionId": "A",
+              "verdict": "false",
+              "property": "function_value",
+              "reasonCode": "math_solver_function_value_mismatch",
+              "semanticValue": {
+                "kind": "function_value",
+                "input": 11,
+                "value": 14642
+              }
+            },
+            {
+              "optionId": "B",
+              "verdict": "false",
+              "property": "function_value",
+              "reasonCode": "math_solver_function_value_mismatch",
+              "semanticValue": {
+                "kind": "function_value",
+                "input": 11,
+                "value": 14640
+              }
+            },
+            {
+              "optionId": "C",
+              "verdict": "false",
+              "property": "function_value",
+              "reasonCode": "math_solver_function_value_mismatch",
+              "semanticValue": {
+                "kind": "function_value",
+                "input": 11,
+                "value": -14641
+              }
+            },
+            {
+              "optionId": "D",
+              "verdict": "true",
+              "property": "function_value",
+              "reasonCode": "math_solver_function_value_matches",
+              "semanticValue": {
+                "kind": "function_value",
+                "input": 11,
+                "value": 14641
+              }
+            }
+          ],
+          "trueOptionIds": [
+            "D"
+          ],
+          "selectedOptionId": "D",
+          "uniqueAnswer": true,
+          "agreesWithGenerator": true,
+          "evidenceBoundary": "prompt_and_visible_options_only",
+          "providerImpact": "none_no_provider_call",
+          "productionGateImpact": "none_shadow_only",
+          "reasonCodes": [
+            "math_solver_function_value_mismatch",
+            "math_solver_function_value_matches"
+          ],
+          "verificationScope": {
+            "scopeVersion": "math-elementary-direct-property-verification-scope-v1",
+            "scopeId": "math-basic-elementary-rotation-v1:power:function_value",
+            "status": "matched",
+            "matched": true,
+            "plannedFunctionClass": "power",
+            "plannedPropertyTarget": "function_value",
+            "observedFunctionClass": "power",
+            "observedPropertyTargets": [
+              "function_value"
+            ],
+            "reasonCodes": []
+          }
+        },
+        "recomputedWithoutGeneratorExplanation": true,
+        "formulaInputsUnitsAndConclusionChecked": true,
+        "checks": [
+          {
+            "language": "zh",
+            "derivationMatched": true,
+            "conclusionMatched": true,
+            "reasonCodes": []
+          },
+          {
+            "language": "en",
+            "derivationMatched": true,
+            "conclusionMatched": true,
+            "reasonCodes": []
+          }
+        ],
+        "mismatchCount": 0,
+        "providerImpact": "none_no_provider_call",
+        "productionGateImpact": "none_shadow_only",
+        "reasonCodes": []
+      }
+    },
+    "questionPlanAdherence": {
+      "policyVersion": "subject-practice-question-plan-policy-v1",
+      "schemaVersion": "subject-practice-question-plan-v1",
+      "validPlan": true,
+      "adheres": true,
+      "planTemplate": "math_elementary_function_relation_v1",
+      "taskFamily": "elementary_function_direct_property",
+      "failureCodes": [],
+      "features": {
+        "operationWords": 0,
+        "observationWords": 0,
+        "hypothesisMarkers": 0,
+        "reasoningConnectors": 0,
+        "quantitativeMarkers": 0,
+        "reactionClues": 4,
+        "gasSpeciesMarkers": 0,
+        "gasControlMarkers": 0,
+        "redoxReactionMarkers": 0,
+        "redoxConceptMarkers": 0,
+        "redoxQuantitativeChainMarkers": 0,
+        "mathPropertySignals": 0,
+        "mathStatementMarkers": 4,
+        "mathTransformationSignals": 2,
+        "mathOrderingSignals": 4,
+        "mathParameterConstraintSignals": 0,
+        "mathProbabilitySignals": 0,
+        "mathProbabilityEventLabelCount": 0,
+        "mathProbabilityNormalHardInteractionCueCount": 0,
+        "mathProbabilityHardInteractionCueCount": 0,
+        "mathProbabilityConcreteFrameSignals": 0,
+        "mathProbabilityNormalMediumNoEventRisk": false,
+        "mathProbabilityNormalReferenceTableRisk": false,
+        "mathProbabilityConceptOnlyRisk": false,
+        "mathProbabilitySingleResultRisk": false,
+        "mathProbabilityEventListOnlyRisk": false,
+        "mathDerivativeSignals": 0,
+        "mathDerivativeMediumDefinitionOnlyRisk": false,
+        "mathDerivativeHardCoefficientSolveOnlyRisk": false,
+        "mathDerivativeBasicAdvancedOperationRisk": false,
+        "mathVectorComplexSignals": 0,
+        "mathVectorComplexBasicDefinitionOnlyRisk": false,
+        "mathGeometrySignals": 0,
+        "mathAnalyticGeometryDefinitionOnlyRisk": false,
+        "mathAnalyticGeometryBasicGeneralCircleRisk": false,
+        "mathAnalyticGeometryHardConicRelationOnlyRisk": false,
+        "mathElementaryFunctionSignals": 2,
+        "mathElementaryFunctionGenericClassificationRisk": false,
+        "mathElementaryFunctionBasicEquationSolveRisk": false,
+        "mathElementaryFunctionBasicMultipleObjectRisk": false,
+        "mathSequenceSignals": 0,
+        "mathSequenceGenericClassificationRisk": false,
+        "mathStatisticsSignals": 0,
+        "mathStatisticsBasicMultiStatisticComparisonRisk": false,
+        "mathStatisticsMediumPureLinearTransformRisk": false,
+        "mathStatisticsHardDirectCombinedVarianceRisk": false,
+        "mathSpatialSignals": 0,
+        "mathSpatialMediumMultiPropositionOvercomplexRisk": false,
+        "mathSpatialHardConceptOnlyRisk": false,
+        "mathSpatialHardDirectCoordinateOnlyRisk": false,
+        "mathParameterInferenceRisk": false,
+        "mathOptionJudgement": true,
+        "mathEnumeratedConditionCount": 0,
+        "mathFunctionPropertyStackCount": 0,
+        "mathFunctionDistinctPropertyCount": 0,
+        "mathStudentFacingDistinctPropertyCount": 0,
+        "mathStudentFacingFunctionPropertyOverComplex": false,
+        "mathFunctionObjectSignals": 3,
+        "mathFunctionPointValueCount": 2,
+        "mathFunctionNamedPointCount": 0,
+        "mathFunctionMultipleNamedPointsRisk": false,
+        "mathBasicFunctionSolutionScaffoldRisk": false,
+        "mathFunctionBasicMultiConstraintDomainRisk": false,
+        "mathPureFunctionExternalContextRisk": false,
+        "mathHardFunctionGenericConceptRisk": false,
+        "mathMediumFunctionPropertyOverComplex": false,
+        "mathDerivativeBasicDomainTrapRisk": false,
+        "mathDerivativeBasicOverComplexRisk": false,
+        "mathVectorComplexObjectCount": 0,
+        "mathVectorComplexRelationCount": 0,
+        "mathVectorComplexCoordinateGeometryDriftRisk": false,
+        "mathVectorComplexLocusParameterChainRisk": false,
+        "mathVectorComplexOneStepFormulaRisk": false,
+        "mathVectorComplexHardDirectMetricRisk": false,
+        "physicsKinematicsSignals": 0,
+        "physicsGraphSignals": 0,
+        "physicsUnitSignals": 0,
+        "physicsEquationSignals": 9,
+        "physicsOpticsSignals": 0,
+        "physicsOpticsRelationSignals": 0,
+        "physicsUnseenDiagramRisk": false,
+        "chemistryClassificationSignals": 0,
+        "chemistryStateChangeEvidenceSignals": 0,
+        "chemistryDefinitionOnlyClassificationRisk": false,
+        "chemistryPhConceptSignals": 0,
+        "chemistryPhOperationErrorSignals": 0,
+        "chemistryPhDirectionSignals": 0,
+        "chemistryPhDirectCalculationRisk": false
+      },
+      "productionImpact": "none_audit_or_gate_scaffold",
+      "providerImpact": "none_no_provider_call"
+    },
+    "generatorSelfVerification": {
+      "solverVersion": "math-elementary-direct-property-solver-v1",
+      "taskFamily": "elementary_function_direct_property",
+      "status": "verified",
+      "parsed": true,
+      "functionKind": "positive_integer_power",
+      "canonicalTask": {
+        "model": {
+          "kind": "positive_integer_power",
+          "exponent": 4
+        },
+        "propertyTarget": "function_value",
+        "evaluationInput": null
+      },
+      "optionVerdicts": [
+        {
+          "optionId": "A",
+          "verdict": "false",
+          "property": "function_value",
+          "reasonCode": "math_solver_function_value_mismatch",
+          "semanticValue": {
+            "kind": "function_value",
+            "input": 11,
+            "value": 14642
+          }
+        },
+        {
+          "optionId": "B",
+          "verdict": "false",
+          "property": "function_value",
+          "reasonCode": "math_solver_function_value_mismatch",
+          "semanticValue": {
+            "kind": "function_value",
+            "input": 11,
+            "value": 14640
+          }
+        },
+        {
+          "optionId": "C",
+          "verdict": "false",
+          "property": "function_value",
+          "reasonCode": "math_solver_function_value_mismatch",
+          "semanticValue": {
+            "kind": "function_value",
+            "input": 11,
+            "value": -14641
+          }
+        },
+        {
+          "optionId": "D",
+          "verdict": "true",
+          "property": "function_value",
+          "reasonCode": "math_solver_function_value_matches",
+          "semanticValue": {
+            "kind": "function_value",
+            "input": 11,
+            "value": 14641
+          }
+        }
+      ],
+      "trueOptionIds": [
+        "D"
+      ],
+      "selectedOptionId": "D",
+      "uniqueAnswer": true,
+      "agreesWithGenerator": true,
+      "evidenceBoundary": "prompt_and_visible_options_only",
+      "providerImpact": "none_no_provider_call",
+      "productionGateImpact": "none_shadow_only",
+      "reasonCodes": [
+        "math_solver_function_value_mismatch",
+        "math_solver_function_value_matches"
+      ],
+      "verificationScope": {
+        "scopeVersion": "math-elementary-direct-property-verification-scope-v1",
+        "scopeId": "math-basic-elementary-rotation-v1:power:function_value",
+        "status": "matched",
+        "matched": true,
+        "plannedFunctionClass": "power",
+        "plannedPropertyTarget": "function_value",
+        "observedFunctionClass": "power",
+        "observedPropertyTargets": [
+          "function_value"
+        ],
+        "reasonCodes": []
+      }
+    }
+  }
+}

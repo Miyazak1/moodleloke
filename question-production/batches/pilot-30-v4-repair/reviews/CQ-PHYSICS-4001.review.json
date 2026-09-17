@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "codex-blind-review-v1",
+  "candidateId": "CQ-PHYSICS-4001",
+  "reviewerTaskId": "01a0956e-644c-7d11-9772-8cc443cf5aa8",
+  "derivedAnswer": "A",
+  "optionTruthTable": {
+    "A": true,
+    "B": false,
+    "C": false,
+    "D": false
+  },
+  "conditionsSufficient": true,
+  "ambiguityFound": false,
+  "syllabusAligned": true,
+  "difficultyAssessment": "medium",
+  "caseNecessary": true,
+  "counterexampleAttempted": true,
+  "verificationEvidence": [
+    "方向判断：两电荷同为正，在两者之间两场方向相反；区间外两场同向，故零场点只能位于两电荷之间。",
+    "独立计算：设零场点距左侧q为x m，则距右侧4q为(6-x) m。由kq/x^2=k(4q)/(6-x)^2，且0<x<6，得6-x=2x，从而x=2 m。",
+    "选项核验：x=2 m时两侧距离为2 m和4 m，场强大小分别为kq/4与4kq/16，相等；B、C、D代入均不相等，只有A成立。",
+    "条件与表述：电荷正负、大小比、固定、共线、间距及所求参照点均明确；库仑常量和q会约去，无需给出数值，单位一致。",
+    "难度与考纲：需先判断场方向和零点区间，再使用点电荷场强反平方关系求解，兼有概念与代数步骤，medium标注合理；属于静电场考纲。",
+    "反例检查：若错误按距离与电荷量成反比会选1.2 m，但代入反平方场强不相等；4 m是从右侧量得的同一点距离，却不符合题目明确的从左侧量距。"
+  ],
+  "verdictBeforeReveal": "pass",
+  "reasonCodes": [],
+  "reviewedAt": "2026-09-15T18:56:29+08:00"
+}

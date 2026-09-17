@@ -1,0 +1,264 @@
+.photoelectric-page {
+  width: min(1240px, calc(100vw - 48px));
+}
+
+.photoelectric-card {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid rgba(49, 93, 255, .16);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 16px 42px rgba(15, 23, 42, .07);
+}
+
+.photoelectric-side,
+.photoelectric-main {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  min-width: 0;
+}
+
+.photoelectric-side article,
+.photoelectric-stage,
+.photoelectric-explain-card article {
+  border: 1px solid rgba(49, 93, 255, .14);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.photoelectric-side article,
+.photoelectric-explain-card article {
+  padding: 16px;
+}
+
+.photoelectric-side h2,
+.photoelectric-explain-card h2 {
+  margin: 0 0 12px;
+  color: #312e81;
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.photoelectric-formula-card,
+.photoelectric-data-card,
+.photoelectric-control-card,
+.photoelectric-slider-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.photoelectric-formula-card .math-content {
+  justify-content: center;
+  padding: 16px 10px;
+  border: 1px solid rgba(49, 93, 255, .18);
+  border-radius: 12px;
+  background: #e9efff;
+}
+
+.photoelectric-metric {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr) 112px;
+  gap: 8px;
+  align-items: center;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.photoelectric-metric i {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.photoelectric-metric strong,
+.photoelectric-slider-stack strong {
+  justify-self: end;
+  color: #0f172a;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.photoelectric-emission {
+  justify-self: start;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #fee2e2;
+  color: #b91c1c;
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.photoelectric-emission.active {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.photoelectric-slider-stack label,
+.photoelectric-select {
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr) 104px;
+  gap: 10px;
+  align-items: center;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.photoelectric-select {
+  grid-template-columns: 70px minmax(0, 1fr);
+}
+
+.photoelectric-select select {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid rgba(49, 93, 255, .18);
+  border-radius: 9px;
+  background: #fff;
+  color: #0f172a;
+  font: inherit;
+}
+
+.photoelectric-slider-stack input[type="range"] {
+  width: 100%;
+  accent-color: #315dff;
+}
+
+.photoelectric-stage {
+  padding: 12px;
+  overflow: hidden;
+  background: #f8fbff;
+}
+
+.photoelectric-experiment-svg,
+.photoelectric-graph-svg {
+  display: block;
+  width: 100%;
+}
+
+.photoelectric-experiment-svg {
+  min-height: 330px;
+}
+
+.photoelectric-graph-svg {
+  min-height: 230px;
+}
+
+.photoelectric-experiment-svg text,
+.photoelectric-graph-svg text {
+  fill: #5f6f69;
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.photoelectric-experiment-svg .stage-title,
+.photoelectric-graph-svg .stage-title {
+  fill: #94a3b8;
+}
+
+.photoelectric-experiment-svg .photon-ray line {
+  stroke: rgba(124, 58, 237, .5);
+  stroke-width: 2;
+  stroke-dasharray: 9 9;
+}
+
+.photoelectric-experiment-svg .photon-ray text {
+  fill: #7c3aed;
+}
+
+.photoelectric-experiment-svg .metal-plate {
+  stroke: rgba(15, 23, 42, .24);
+  stroke-width: 3;
+  filter: drop-shadow(0 8px 12px rgba(15, 23, 42, .35));
+}
+
+.photoelectric-experiment-svg .electron-title {
+  fill: #60a5fa;
+  font-size: 14px;
+}
+
+.photoelectric-experiment-svg .emitted-electrons circle {
+  fill: #60a5fa;
+}
+
+.photoelectric-experiment-svg .emitted-electrons line {
+  stroke: #3b82f6;
+  stroke-width: 3;
+}
+
+.photoelectric-experiment-svg .emitted-electrons text {
+  fill: #60a5fa;
+}
+
+.photoelectric-experiment-svg .no-emission line {
+  stroke: rgba(148, 163, 184, .45);
+  stroke-width: 2;
+  stroke-dasharray: 7 7;
+}
+
+.photoelectric-experiment-svg .no-emission text {
+  fill: #cbd5e1;
+}
+
+.photoelectric-experiment-svg .watermark,
+.photoelectric-graph-svg .watermark {
+  fill: #cbd5e1;
+  font-size: 12px;
+}
+
+.photoelectric-graph-svg .grid-line {
+  stroke: rgba(148, 163, 184, .2);
+  stroke-width: 1;
+}
+
+.photoelectric-graph-svg .axis-line {
+  stroke: #5f6f69;
+  stroke-width: 2;
+}
+
+.photoelectric-graph-svg .threshold-zone {
+  fill: rgba(239, 68, 68, .07);
+}
+
+.photoelectric-graph-svg .threshold-line {
+  stroke: #ef4444;
+  stroke-width: 2;
+  stroke-dasharray: 5 5;
+}
+
+.photoelectric-graph-svg .threshold-label {
+  fill: #ef4444;
+}
+
+.photoelectric-graph-svg .energy-line {
+  stroke: #315dff;
+  stroke-width: 3;
+}
+
+.photoelectric-graph-svg .current-point {
+  fill: #315dff;
+  stroke: #fff;
+  stroke-width: 3;
+}
+
+.photoelectric-graph-svg .work-label {
+  fill: #5f6f69;
+}
+
+.photoelectric-explain-card {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.photoelectric-explain-card p {
+  margin: 0;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.7;
+}

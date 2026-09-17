@@ -1,0 +1,173 @@
+@import './visualizers/physics/newton.css';
+@import './visualizers/physics/kinematics.css';
+@import './visualizers/physics/momentum.css';
+@import './visualizers/physics/energy.css';
+@import './visualizers/physics/electric.css';
+@import './visualizers/physics/circular.css';
+@import './visualizers/physics/circuit.css';
+@import './visualizers/physics/induction.css';
+@import './visualizers/physics/photoelectric.css';
+@import './visualizers/physics/ideal-gas.css';
+@import './visualizers/physics/thermodynamics.css';
+@import './visualizers/physics/lens.css';
+@import './visualizers/physics/wave.css';
+@import './visualizers/physics/magnetic.css';
+@import './visualizers/physics/double-slit.css';
+
+/* 2026-09-03 Calm Science Lab shell for physics visualizers. */
+.special-visualizer-page {
+  --physics-ink: #202337;
+  --physics-muted: #5e6b7d;
+  --physics-line: rgba(57, 95, 130, .16);
+  --physics-blue: #315dff;
+  --physics-blue-soft: #e9efff;
+  --physics-mint: #13c7a3;
+  --physics-mint-dark: #087c66;
+  --physics-mint-soft: #dcfbf2;
+  --physics-lime: #b7ef43;
+  --physics-lime-soft: #f0ffd3;
+  --physics-coral: #ff715e;
+  width: min(1320px, calc(100vw - 48px));
+}
+
+.special-visualizer-page[class*="-page"] :where(.special-visualizer-hero) {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.special-visualizer-page :where(
+  [class*="-card"],
+  [class*="-panel"],
+  [class*="-strip"],
+  [class*="-support"],
+  [class*="-stage"]
+) {
+  border-color: var(--physics-line);
+  border-radius: 10px;
+}
+
+.special-visualizer-page :where(
+  [class*="-card"],
+  [class*="-panel"],
+  [class*="-strip"],
+  [class*="-support"]
+) {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .96), rgba(251, 255, 249, .84)),
+    linear-gradient(90deg, rgba(49, 93, 255, .028) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .028) 1px, transparent 1px);
+  background-size: auto, 30px 30px, 30px 30px;
+  box-shadow: 0 16px 34px rgba(32, 35, 55, .05);
+}
+
+.special-visualizer-page :where([class*="-card"], [class*="-panel"], [class*="-strip"], [class*="-support"])::before {
+  content: none;
+  display: none;
+}
+
+.special-visualizer-page :where(
+  .kinematics-stage,
+  .momentum-stage,
+  .energy-stage,
+  .electric-stage,
+  .circular-stage,
+  .circuit-stage,
+  .induction-stage,
+  .photoelectric-stage,
+  .ideal-gas-stage,
+  .thermo-stage,
+  .lens-stage,
+  .wave-stage,
+  .magnetic-stage,
+  .double-slit-stage
+) {
+  background:
+    radial-gradient(circle at 50% 45%, rgba(19, 199, 163, .12), transparent 42%),
+    linear-gradient(90deg, rgba(49, 93, 255, .04) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .04) 1px, transparent 1px),
+    #fbfff9;
+  background-size: auto, 32px 32px, 32px 32px, auto;
+}
+
+.special-visualizer-page :where(
+  .newton-action-row button,
+  .kinematics-control-card button,
+  .momentum-control-card button,
+  .energy-control-card button,
+  .electric-control-card button,
+  .circular-control-card button,
+  .circuit-control-card button,
+  .induction-control-card button,
+  .photoelectric-control-card button,
+  .ideal-gas-control-card button,
+  .thermo-control-card button,
+  .lens-control-card button,
+  .wave-control-card button,
+  .magnetic-control-card button,
+  .double-slit-control-card button
+) {
+  border-color: var(--physics-line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .9);
+  color: var(--physics-ink);
+  box-shadow: none;
+}
+
+.special-visualizer-page :where(
+  .newton-action-row button.primary,
+  .newton-action-row button.active,
+  .kinematics-control-card button.primary,
+  .kinematics-control-card button.active,
+  .momentum-control-card button.primary,
+  .momentum-control-card button.active,
+  .energy-control-card button.primary,
+  .energy-control-card button.active,
+  .electric-control-card button.primary,
+  .electric-control-card button.active,
+  .circular-control-card button.primary,
+  .circular-control-card button.active,
+  .circuit-control-card button.primary,
+  .circuit-control-card button.active,
+  .induction-control-card button.primary,
+  .induction-control-card button.active,
+  .photoelectric-control-card button.primary,
+  .photoelectric-control-card button.active,
+  .ideal-gas-control-card button.primary,
+  .ideal-gas-control-card button.active,
+  .thermo-control-card button.primary,
+  .thermo-control-card button.active,
+  .lens-control-card button.primary,
+  .lens-control-card button.active,
+  .wave-control-card button.primary,
+  .wave-control-card button.active,
+  .magnetic-control-card button.primary,
+  .magnetic-control-card button.active,
+  .double-slit-control-card button.primary,
+  .double-slit-control-card button.active
+) {
+  border-color: var(--physics-blue);
+  background: var(--physics-blue);
+  color: #fff;
+  box-shadow: 0 14px 26px rgba(49, 93, 255, .16);
+}
+
+.special-visualizer-page :where(input[type="range"], input[type="checkbox"]) {
+  accent-color: var(--physics-blue);
+}
+
+.special-visualizer-page :where(.special-visualizer-metrics span, [class*="-badge"], [class*="-tag"]) {
+  border-color: rgba(19, 199, 163, .22);
+  border-radius: 8px;
+  background: rgba(220, 251, 242, .72);
+  color: var(--physics-mint-dark);
+}
+
+.special-visualizer-page :where(.stage-title) {
+  fill: var(--physics-ink);
+}
+
+.special-visualizer-page :where(.stage-note) {
+  fill: var(--physics-muted);
+}

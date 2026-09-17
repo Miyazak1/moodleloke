@@ -1,0 +1,3721 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  student
+  advisor
+  admin
+}
+
+enum UserStatus {
+  active
+  disabled
+}
+
+enum SchoolType {
+  regular
+  partner
+}
+
+enum SchoolStatus {
+  draft
+  published
+  archived
+}
+
+enum CartItemType {
+  SCHOOL_SERVICE
+  ADVISOR_PACKAGE
+  AI_CREDITS
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+}
+
+model User {
+  id                      Int        @id @default(autoincrement())
+  loginName               String?    @unique @map("login_name") @db.VarChar(50)
+  email                   String?    @unique @db.VarChar(255)
+  passwordHash            String?    @map("password_hash") @db.VarChar(255)
+  role                    UserRole   @default(student)
+  status                  UserStatus @default(active)
+  displayName             String?    @map("display_name") @db.VarChar(100)
+  emailVerifiedAt         DateTime?  @map("email_verified_at")
+  emailVerificationSentAt DateTime?  @map("email_verification_sent_at")
+  createdAt               DateTime   @default(now()) @map("created_at")
+  updatedAt               DateTime   @updatedAt @map("updated_at")
+
+  practiceAttempts                         PracticeAttempt[]
+  savedSchools                             SavedSchool[]
+  compareItems                             SchoolCompareItem[]
+  cartItems                                CartItem[]
+  orders                                   Order[]
+  payments                                 Payment[]
+  refreshSessions                          RefreshSession[]
+  authEmailTokens                          AuthEmailToken[]
+  oauthAccounts                            OAuthAccount[]
+  mockExamAttempts                         MockExamAttempt[]
+  specialPracticeSessions                  SpecialPracticeSession[]
+  pastPaperDownloads                       PastPaperDownload[]
+  cscaAIEntitlementAccount                 CscaAIEntitlementAccount?
+  cscaAIUsageLedger                        CscaAIUsageLedger[]
+  cscaTrainingEvents                       CscaTrainingEvent[]
+  cscaLearningDailySnapshots               CscaLearningDailySnapshot[]
+  cscaLearningStreak                       CscaLearningStreak?
+  cscaLearningInsights                     CscaLearningInsight[]
+  cscaWrongPatterns                        CscaWrongPattern[]
+  organizationMemberships                  OrganizationMember[]
+  organizationInviteAttempts               OrganizationInviteAttempt[]
+  studentProfile                           StudentProfile?
+  studentScoreGoals                        StudentScoreGoal[]
+  studyAvailabilityPreferences             StudyAvailabilityPreference[]
+  learningEvidenceEvents                   LearningEvidenceEvent[]
+  learningTopicStatesV2                    UserCscaTopicStateV2[]
+  learningProjectionCheckpoints            LearningStateProjectionCheckpoint[]
+  targetGapSnapshots                       TargetGapSnapshot[]
+  learningPrescriptions                    LearningPrescription[]
+  learningPrescriptionOutcomes             LearningPrescriptionOutcome[]
+  assessmentItemExposures                  AssessmentItemExposure[]
+  scoreReadinessForecasts                  ScoreReadinessForecast[]
+  scorePredictionShadowRuns                ScorePredictionShadowRun[]
+  reviewedExamScoringPolicies              ExamScoringPolicy[]                       @relation("ExamScoringPolicyReviewer")
+  createdExamScoringPolicies               ExamScoringPolicy[]                       @relation("ExamScoringPolicyCreator")
+  reviewedItemCalibrations                 ItemCalibrationSnapshot[]                 @relation("ItemCalibrationReviewer")
+  createdItemCalibrations                  ItemCalibrationSnapshot[]                 @relation("ItemCalibrationCreator")
+  reviewedForecastCalibrations             ForecastCalibrationSnapshot[]             @relation("ForecastCalibrationReviewer")
+  createdForecastCalibrations              ForecastCalibrationSnapshot[]             @relation("ForecastCalibrationCreator")
+  scoreCalibrationGovernanceEvents         ScoreCalibrationGovernanceEvent[]
+  learningDecisionCurrents                 LearningDecisionCurrent[]
+  learningInterventions                    LearningIntervention[]
+  learningInterventionDeliveries           LearningInterventionDelivery[]
+  learningInterventionSteps                LearningInterventionStep[]
+  learningInterventionVerifications        LearningInterventionVerification[]
+  learningInterventionOutcomes             LearningInterventionOutcome[]
+  learningInterventionStabilityAssessments LearningInterventionStabilityAssessment[]
+  questionSupplyRequestEvents              QuestionSupplyRequestEvent[]
+  questionSupplyFulfillmentEvents          QuestionSupplyFulfillmentEvent[]
+  agentConversations                       AgentConversation[]
+  agentRuns                                AgentRun[]
+  agentToolCalls                           AgentToolCall[]
+  agentArtifacts                           AgentArtifact[]
+  agentAttachments                         AgentAttachment[]
+  agentAttachmentAnalyses                  AgentAttachmentAnalysis[]
+  agentAttachmentAnalysisItems             AgentAttachmentAnalysisItem[]
+  agentAttachmentEvidenceCandidates        AgentAttachmentEvidenceCandidate[]
+  agentAttachmentQuestionMatches           AgentAttachmentQuestionMatch[]
+  learningEvidenceRetractions              LearningEvidenceRetraction[]
+  studentExamOutcomes                      StudentExamOutcome[]                      @relation("StudentExamOutcomeOwner")
+  reviewedStudentExamOutcomes              StudentExamOutcome[]                      @relation("StudentExamOutcomeReviewer")
+  verifiedStudentExamOutcomes              StudentExamOutcome[]                      @relation("StudentExamOutcomeVerifier")
+  studentExamOutcomeEvents                 StudentExamOutcomeEvent[]
+  createdForecastDatasetManifests          ForecastCalibrationDatasetManifest[]
+  teachingAssetExposures                   TeachingAssetExposure[]
+  teachingInteractionEvents                TeachingInteractionEvent[]
+  agentPastPaperAttempts                   AgentPastPaperAttempt[]
+
+  @@index([role], map: "idx_users_role")
+  @@map("users")
+}
+
+model StudentProfile {
+  id                            Int       @id @default(autoincrement())
+  userId                        Int       @unique @map("user_id")
+  nationality                   String?   @db.VarChar(120)
+  nationalityCode               String?   @map("nationality_code") @db.VarChar(2)
+  country                       String?   @db.VarChar(120)
+  countryCode                   String?   @map("country_code") @db.VarChar(2)
+  grade                         String?   @db.VarChar(80)
+  gradeCode                     String?   @map("grade_code") @db.VarChar(40)
+  genderCode                    String?   @map("gender_code") @db.VarChar(32)
+  educationStageCode            String?   @map("education_stage_code") @db.VarChar(40)
+  graduationYear                Int?      @map("graduation_year")
+  targetExamDate                DateTime? @map("target_exam_date") @db.Date
+  targetSubjectCodes            Json?     @map("target_subject_codes")
+  preferredQuestionLanguageCode String?   @map("preferred_question_language_code") @db.VarChar(20)
+  examAttemptType               String?   @map("exam_attempt_type") @db.VarChar(24)
+  weeklyGoalDays                Int?      @map("weekly_goal_days")
+  targetMajorCategoryCode       String?   @map("target_major_category_code") @db.VarChar(40)
+  onboardingCompletedAt         DateTime? @map("onboarding_completed_at")
+  onboardingSkippedAt           DateTime? @map("onboarding_skipped_at")
+  currentOrganizationId         Int?      @map("current_organization_id")
+  metadata                      Json?
+  createdAt                     DateTime  @default(now()) @map("created_at")
+  updatedAt                     DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("student_profiles")
+}
+
+model AuthEmailToken {
+  id        String    @id @default(cuid())
+  userId    Int       @map("user_id")
+  type      String    @db.VarChar(32)
+  tokenHash String    @unique @map("token_hash") @db.VarChar(128)
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type, usedAt], map: "idx_auth_email_tokens_user_type")
+  @@index([expiresAt], map: "idx_auth_email_tokens_expires")
+  @@map("auth_email_tokens")
+}
+
+model OAuthAccount {
+  id             String   @id @default(cuid())
+  userId         Int      @map("user_id")
+  provider       String   @db.VarChar(32)
+  providerUserId String   @map("provider_user_id") @db.VarChar(191)
+  email          String?  @db.VarChar(255)
+  emailVerified  Boolean  @default(false) @map("email_verified")
+  displayName    String?  @map("display_name") @db.VarChar(100)
+  pictureUrl     String?  @map("picture_url") @db.VarChar(500)
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerUserId], map: "uniq_oauth_provider_subject")
+  @@index([userId], map: "idx_oauth_accounts_user")
+  @@index([email], map: "idx_oauth_accounts_email")
+  @@map("oauth_accounts")
+}
+
+model RefreshSession {
+  id          String    @id @default(cuid())
+  userId      Int       @map("user_id")
+  sessionHash String    @unique @map("session_hash") @db.VarChar(128)
+  expiresAt   DateTime  @map("expires_at")
+  revokedAt   DateTime? @map("revoked_at")
+  lastUsedAt  DateTime? @map("last_used_at")
+  userAgent   String?   @map("user_agent") @db.VarChar(255)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, revokedAt], map: "idx_refresh_sessions_user_revoked")
+  @@index([expiresAt], map: "idx_refresh_sessions_expires")
+  @@map("refresh_sessions")
+}
+
+model PublicContentBlock {
+  id        String   @id @default(cuid())
+  key       String
+  locale    String   @default("zh-CN") @db.VarChar(20)
+  title     String
+  subtitle  String?
+  bodyJson  Json     @map("body_json")
+  status    String   @default("published")
+  sortOrder Int      @default(0) @map("sort_order")
+  version   Int      @default(1)
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([key, locale], map: "uq_content_blocks_key_locale")
+  @@index([locale, status, sortOrder], map: "idx_content_blocks_locale_status_sort")
+  @@index([status, sortOrder], map: "idx_content_blocks_status_sort")
+  @@map("content_blocks")
+}
+
+model CityGuide {
+  id                           Int          @id @default(autoincrement())
+  slug                         String       @unique @db.VarChar(120)
+  nameZh                       String       @map("name_zh") @db.VarChar(120)
+  nameEn                       String       @map("name_en") @db.VarChar(120)
+  region                       String       @db.VarChar(80)
+  monthlyCost                  Int?         @map("monthly_cost")
+  costLevel                    String?      @map("cost_level") @db.VarChar(40)
+  density                      String?      @db.VarChar(40)
+  tags                         Json?
+  contentJson                  Json         @map("content_json")
+  nearby                       Json?
+  referenceSchoolCount         Int?         @map("reference_school_count")
+  referenceProgramCount        Int?         @map("reference_program_count")
+  referenceEnglishProgramCount Int?         @map("reference_english_program_count")
+  referenceScholarshipCount    Int?         @map("reference_scholarship_count")
+  referenceCscaSchoolCount     Int?         @map("reference_csca_school_count")
+  status                       SchoolStatus @default(draft)
+  sortOrder                    Int          @default(0) @map("sort_order")
+  version                      Int          @default(1)
+  createdAt                    DateTime     @default(now()) @map("created_at")
+  updatedAt                    DateTime     @updatedAt @map("updated_at")
+
+  @@index([status, sortOrder], map: "idx_city_guides_status_sort")
+  @@map("city_guides")
+}
+
+model ApplicationTimelineWindow {
+  id                Int          @id @default(autoincrement())
+  month             String       @db.VarChar(20)
+  title             String       @db.VarChar(160)
+  applicationWindow String       @map("application_window") @db.VarChar(240)
+  cscaWindow        String       @map("csca_window") @db.VarChar(240)
+  status            SchoolStatus @default(published)
+  sortOrder         Int          @default(0) @map("sort_order")
+  version           Int          @default(1)
+  createdAt         DateTime     @default(now()) @map("created_at")
+  updatedAt         DateTime     @updatedAt @map("updated_at")
+
+  @@index([status, sortOrder], map: "idx_application_timeline_windows_status_sort")
+  @@map("application_timeline_windows")
+}
+
+model AdminAuditLog {
+  id           Int      @id @default(autoincrement())
+  actorId      Int?     @map("actor_id")
+  module       String   @db.VarChar(80)
+  resourceType String   @map("resource_type") @db.VarChar(80)
+  resourceId   String?  @map("resource_id") @db.VarChar(120)
+  action       String   @db.VarChar(120)
+  before       Json?
+  after        Json?
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([module, createdAt], map: "idx_admin_audit_logs_module_created")
+  @@index([actorId, createdAt], map: "idx_admin_audit_logs_actor_created")
+  @@map("admin_audit_logs")
+}
+
+model SchoolRaw {
+  id          Int       @id @default(autoincrement())
+  source      String
+  sourceId    String?   @map("source_id")
+  payload     Json
+  importedAt  DateTime  @default(now()) @map("imported_at")
+  processedAt DateTime? @map("processed_at")
+
+  @@index([source, sourceId], map: "idx_schools_raw_source")
+  @@map("schools_raw")
+}
+
+model School {
+  id                   Int        @id @default(autoincrement())
+  nameZh               String     @map("name_zh") @db.VarChar(200)
+  nameEn               String?    @map("name_en") @db.VarChar(200)
+  rank                 Int?
+  schoolType           SchoolType @map("school_type")
+  citySlug             String?    @map("city_slug") @db.VarChar(120)
+  cityZh               String?    @map("city_zh") @db.VarChar(120)
+  guaranteedAdmission  Boolean    @default(false) @map("guaranteed_admission")
+  tierEn               String?    @map("tier_en")
+  region               String?
+  logoUrl              String?    @map("logo_url")
+  officialWebsite      String?    @map("official_website")
+  applicationSystemUrl String?    @map("application_system_url")
+
+  admissionLevel          Json?   @map("admission_level")
+  hskRequirement          String? @map("hsk_requirement") @db.Text
+  hskNotes                String? @map("hsk_notes") @db.Text
+  cscaRequirement         String? @map("csca_requirement") @db.Text
+  cscaRequired            Boolean @default(false) @map("csca_required")
+  cscaRequirementNote     String? @map("csca_requirement_note") @db.Text
+  undergradRequirements   String? @map("undergrad_requirements") @db.Text
+  postgradRequirements    String? @map("postgrad_requirements") @db.Text
+  preparatoryRequirements String? @map("preparatory_requirements") @db.Text
+  languageOfInstruction   Json?   @map("language_of_instruction")
+
+  hskMinLevel            Int?    @map("hsk_min_level")
+  hskChineseMinLevel     Int?    @map("hsk_chinese_min_level")
+  hskChineseMinListening Int?    @map("hsk_chinese_min_listening")
+  hskChineseMinReading   Int?    @map("hsk_chinese_min_reading")
+  hskChineseMinWriting   Int?    @map("hsk_chinese_min_writing")
+  hskChineseConditional  String? @map("hsk_chinese_conditional") @db.Text
+  hskEnglishRequired     Boolean @default(false) @map("hsk_english_required")
+  hskkRequired           Boolean @default(false) @map("hskk_required")
+  hskkChineseMinLevel    String? @map("hskk_chinese_min_level")
+  hskkChineseConditional String? @map("hskk_chinese_conditional") @db.Text
+  englishRequired        Boolean @default(false) @map("english_required")
+  englishMinIelts        Float?  @map("english_min_ielts")
+  englishMinToefl        Int?    @map("english_min_toefl")
+  englishRequirementNote String? @map("english_requirement_note") @db.Text
+
+  round1Deadline   String? @map("round1_deadline")
+  round2Deadline   String? @map("round2_deadline")
+  round1OpenDate   String? @map("round1_open_date")
+  round1CloseDate  String? @map("round1_close_date")
+  round2OpenDate   String? @map("round2_open_date")
+  round2CloseDate  String? @map("round2_close_date")
+  applicationSteps String? @map("application_steps") @db.Text
+
+  tuitionSummary    String? @map("tuition_summary") @db.Text
+  tuitionByCategory Json?   @map("tuition_by_category")
+  applicationFee    String? @map("application_fee")
+  insurance         String?
+  accommodationCost String? @map("accommodation_cost")
+  accommodationType String? @map("accommodation_type")
+  scholarships      Json?
+
+  englishPrograms  String? @map("english_programs") @db.Text
+  notablePrograms  String? @map("notable_programs") @db.Text
+  campusFacilities String? @map("campus_facilities") @db.Text
+  programFields    String? @map("program_fields") @db.Text
+  contactTel       String? @map("contact_tel")
+  contactEmail     String? @map("contact_email")
+  contactAddress   String? @map("contact_address") @db.Text
+  yearEstablished  Int?    @map("year_established")
+  studentCount     String? @map("student_count")
+  studentsServed   Int?    @map("students_served")
+
+  under18GuardianRequired Boolean      @default(false) @map("under_18_guardian_required")
+  under18RequirementNote  String?      @map("under_18_requirement_note") @db.Text
+  status                  SchoolStatus @default(draft)
+  version                 Int          @default(1)
+  source                  String?
+  sourceId                String?      @map("source_id")
+  sourceUrl               String?      @map("source_url")
+  dataQualityScore        Int?         @map("data_quality_score")
+  lastVerifiedAt          DateTime?    @map("last_verified_at")
+  createdAt               DateTime     @default(now()) @map("created_at")
+  updatedAt               DateTime     @updatedAt @map("updated_at")
+
+  changeLogs           SchoolChangeLog[]
+  snapshots            SchoolSnapshot[]
+  programs             SchoolProgram[]
+  cscaRules            SchoolCscaRule[]
+  detailedScholarships SchoolScholarship[]
+  scholarshipLinks     ScholarshipSchool[]
+  savedByUsers         SavedSchool[]
+  compareByUsers       SchoolCompareItem[]
+  cartItems            CartItem[]
+  orderItems           OrderItem[]
+
+  @@index([status, rank], map: "idx_schools_status_rank")
+  @@index([status, citySlug, rank], map: "idx_schools_status_city_rank")
+  @@index([schoolType, region], map: "idx_schools_type_region")
+  @@index([cscaRequired, hskMinLevel], map: "idx_schools_csca_hsk")
+  @@index([round1Deadline, round2Deadline], map: "idx_schools_deadline")
+  @@index([nameZh], map: "idx_schools_name_zh")
+  @@index([nameEn], map: "idx_schools_name_en")
+  @@map("schools")
+}
+
+model SchoolProgram {
+  id                 Int          @id @default(autoincrement())
+  schoolId           Int          @map("school_id")
+  nameZh             String       @map("name_zh") @db.VarChar(240)
+  nameEn             String?      @map("name_en") @db.VarChar(240)
+  degreeLevel        String?      @map("degree_level") @db.VarChar(80)
+  durationYears      String?      @map("duration_years") @db.VarChar(80)
+  fieldCategory      String?      @map("field_category") @db.VarChar(160)
+  teachingLanguage   String?      @map("teaching_language") @db.VarChar(120)
+  cscaSubjects       Json?        @map("csca_subjects")
+  cscaRequirement    String?      @map("csca_requirement") @db.Text
+  hskRequirement     String?      @map("hsk_requirement") @db.Text
+  englishRequirement String?      @map("english_requirement") @db.Text
+  tuitionAmount      Int?         @map("tuition_amount")
+  tuitionCurrency    String?      @map("tuition_currency") @db.VarChar(12)
+  tuitionPeriod      String?      @map("tuition_period") @db.VarChar(80)
+  tuitionText        String?      @map("tuition_text") @db.Text
+  scholarshipText    String?      @map("scholarship_text") @db.Text
+  openDate           DateTime?    @map("open_date")
+  deadlineDate       DateTime?    @map("deadline_date")
+  deadlineLabel      String?      @map("deadline_label") @db.VarChar(160)
+  applicationRound   String?      @map("application_round") @db.VarChar(120)
+  applicationUrl     String?      @map("application_url") @db.Text
+  applicationNote    String?      @map("application_note") @db.Text
+  sourceUrl          String?      @map("source_url") @db.Text
+  sourceLabel        String?      @map("source_label") @db.VarChar(240)
+  lastVerifiedAt     DateTime?    @map("last_verified_at")
+  sortOrder          Int          @default(0) @map("sort_order")
+  status             SchoolStatus @default(draft)
+  version            Int          @default(1)
+  createdAt          DateTime     @default(now()) @map("created_at")
+  updatedAt          DateTime     @updatedAt @map("updated_at")
+
+  school           School               @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  cscaRules        SchoolCscaRule[]
+  scholarships     SchoolScholarship[]
+  scholarshipLinks ScholarshipProgram[]
+
+  @@index([schoolId], map: "idx_school_programs_school")
+  @@index([schoolId, status, sortOrder], map: "idx_school_programs_school_status_sort")
+  @@index([degreeLevel, teachingLanguage], map: "idx_school_programs_degree_language")
+  @@index([deadlineDate, status], map: "idx_school_programs_deadline_status")
+  @@index([status, updatedAt], map: "idx_school_programs_status_updated")
+  @@map("school_programs")
+}
+
+model SchoolCscaRule {
+  id                Int          @id @default(autoincrement())
+  schoolId          Int          @map("school_id")
+  programId         Int?         @map("program_id")
+  title             String       @db.VarChar(240)
+  category          String       @db.VarChar(80)
+  scope             String?      @db.VarChar(240)
+  cscaSubjects      Json?        @map("csca_subjects")
+  languageCondition String?      @map("language_condition") @db.Text
+  description       String?      @db.Text
+  importantNote     String?      @map("important_note") @db.Text
+  sourceUrl         String?      @map("source_url") @db.Text
+  sourceLabel       String?      @map("source_label") @db.VarChar(240)
+  lastVerifiedAt    DateTime?    @map("last_verified_at")
+  sortOrder         Int          @default(0) @map("sort_order")
+  status            SchoolStatus @default(draft)
+  version           Int          @default(1)
+  createdAt         DateTime     @default(now()) @map("created_at")
+  updatedAt         DateTime     @updatedAt @map("updated_at")
+
+  school  School         @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  program SchoolProgram? @relation(fields: [programId], references: [id], onDelete: SetNull)
+
+  @@index([schoolId, status, sortOrder], map: "idx_school_csca_rules_school_status_sort")
+  @@index([programId], map: "idx_school_csca_rules_program")
+  @@index([category, status], map: "idx_school_csca_rules_category_status")
+  @@map("school_csca_rules")
+}
+
+model SchoolScholarship {
+  id                Int          @id @default(autoincrement())
+  schoolId          Int          @map("school_id")
+  programId         Int?         @map("program_id")
+  name              String       @db.VarChar(240)
+  type              String       @default("general") @db.VarChar(80)
+  coverage          String?      @db.Text
+  applicableDegree  String?      @map("applicable_degree") @db.VarChar(160)
+  applicableProgram String?      @map("applicable_program") @db.VarChar(240)
+  amountText        String?      @map("amount_text") @db.Text
+  requirementText   String?      @map("requirement_text") @db.Text
+  sourceUrl         String?      @map("source_url") @db.Text
+  sourceLabel       String?      @map("source_label") @db.VarChar(240)
+  lastVerifiedAt    DateTime?    @map("last_verified_at")
+  sortOrder         Int          @default(0) @map("sort_order")
+  status            SchoolStatus @default(draft)
+  version           Int          @default(1)
+  createdAt         DateTime     @default(now()) @map("created_at")
+  updatedAt         DateTime     @updatedAt @map("updated_at")
+
+  school  School         @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  program SchoolProgram? @relation(fields: [programId], references: [id], onDelete: SetNull)
+
+  @@index([schoolId, status, sortOrder], map: "idx_school_scholarships_school_status_sort")
+  @@index([programId], map: "idx_school_scholarships_program")
+  @@index([type, status], map: "idx_school_scholarships_type_status")
+  @@map("school_scholarships")
+}
+
+model Scholarship {
+  id                   Int          @id @default(autoincrement())
+  slug                 String       @unique @db.VarChar(260)
+  title                String       @db.VarChar(240)
+  type                 String       @default("other") @db.VarChar(80)
+  fundingLevel         String       @default("unknown") @map("funding_level") @db.VarChar(40)
+  providerName         String?      @map("provider_name") @db.VarChar(180)
+  providerNameEn       String?      @map("provider_name_en") @db.VarChar(180)
+  providerLocation     String?      @map("provider_location") @db.VarChar(180)
+  summary              String?      @db.Text
+  coverage             String?      @db.Text
+  applicableDegree     String?      @map("applicable_degree") @db.VarChar(160)
+  applicableProgram    String?      @map("applicable_program") @db.VarChar(240)
+  amountText           String?      @map("amount_text") @db.Text
+  requirementText      String?      @map("requirement_text") @db.Text
+  bodySections         Json?        @map("body_sections")
+  benefitItems         Json?        @map("benefit_items")
+  eligibilityItems     Json?        @map("eligibility_items")
+  applicationMaterials Json?        @map("application_materials")
+  applicationSteps     Json?        @map("application_steps")
+  contactInfo          Json?        @map("contact_info")
+  actionLinks          Json?        @map("action_links")
+  deadlineDate         DateTime?    @map("deadline_date")
+  deadlineLabel        String?      @map("deadline_label") @db.VarChar(160)
+  applicationRound     String?      @map("application_round") @db.VarChar(120)
+  targetCountries      Json?        @map("target_countries")
+  targetRegions        Json?        @map("target_regions")
+  benefits             Json?
+  sourceUrl            String?      @map("source_url") @db.Text
+  sourceLabel          String?      @map("source_label") @db.VarChar(240)
+  lastVerifiedAt       DateTime?    @map("last_verified_at")
+  sortOrder            Int          @default(0) @map("sort_order")
+  status               SchoolStatus @default(draft)
+  version              Int          @default(1)
+  createdAt            DateTime     @default(now()) @map("created_at")
+  updatedAt            DateTime     @updatedAt @map("updated_at")
+
+  schools  ScholarshipSchool[]
+  programs ScholarshipProgram[]
+
+  @@index([status, sortOrder], map: "idx_scholarships_status_sort")
+  @@index([type, status], map: "idx_scholarships_type_status")
+  @@index([fundingLevel, status], map: "idx_scholarships_funding_status")
+  @@index([deadlineDate, status], map: "idx_scholarships_deadline_status")
+  @@map("scholarships")
+}
+
+model ScholarshipSchool {
+  scholarshipId Int      @map("scholarship_id")
+  schoolId      Int      @map("school_id")
+  sortOrder     Int      @default(0) @map("sort_order")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  scholarship Scholarship @relation(fields: [scholarshipId], references: [id], onDelete: Cascade)
+  school      School      @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@id([scholarshipId, schoolId])
+  @@index([schoolId], map: "idx_scholarship_schools_school")
+  @@map("scholarship_schools")
+}
+
+model ScholarshipProgram {
+  scholarshipId Int      @map("scholarship_id")
+  programId     Int      @map("program_id")
+  sortOrder     Int      @default(0) @map("sort_order")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  scholarship Scholarship   @relation(fields: [scholarshipId], references: [id], onDelete: Cascade)
+  program     SchoolProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@id([scholarshipId, programId])
+  @@index([programId], map: "idx_scholarship_programs_program")
+  @@map("scholarship_programs")
+}
+
+model SavedSchool {
+  userId    Int      @map("user_id")
+  schoolId  Int      @map("school_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@id([userId, schoolId])
+  @@index([schoolId], map: "idx_saved_schools_school")
+  @@index([userId, createdAt], map: "idx_saved_schools_user_created")
+  @@map("saved_schools")
+}
+
+model SchoolCompareItem {
+  userId    Int      @map("user_id")
+  schoolId  Int      @map("school_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@id([userId, schoolId])
+  @@index([schoolId], map: "idx_school_compare_items_school")
+  @@index([userId, createdAt], map: "idx_school_compare_items_user_created")
+  @@map("school_compare_items")
+}
+
+model SchoolChangeLog {
+  id        Int      @id @default(autoincrement())
+  schoolId  Int      @map("school_id")
+  actorId   Int?     @map("actor_id")
+  action    String
+  before    Json?
+  after     Json?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@index([schoolId, createdAt], map: "idx_school_change_logs_school_created")
+  @@map("school_change_logs")
+}
+
+model SchoolSnapshot {
+  id        Int      @id @default(autoincrement())
+  schoolId  Int      @map("school_id")
+  version   Int
+  payload   Json
+  createdAt DateTime @default(now()) @map("created_at")
+
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@unique([schoolId, version], map: "uq_school_snapshots_school_version")
+  @@map("school_snapshots")
+}
+
+model PracticeQuestion {
+  id            Int      @id @default(autoincrement())
+  subject       String   @db.VarChar(100)
+  questionType  String   @map("question_type") @db.VarChar(100)
+  prompt        String   @db.Text
+  options       Json
+  correctAnswer String   @map("correct_answer") @db.VarChar(50)
+  explanation   String   @db.Text
+  status        String   @default("published") @db.VarChar(30)
+  sortOrder     Int      @default(0) @map("sort_order")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@index([status, sortOrder], map: "idx_practice_questions_status_sort")
+  @@map("practice_questions")
+}
+
+model PracticeAttempt {
+  id        Int      @id @default(autoincrement())
+  userId    Int?     @map("user_id")
+  answers   Json
+  score     Int
+  total     Int
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt], map: "idx_practice_attempts_user_created")
+  @@map("practice_attempts")
+}
+
+model SpecialPracticeTopic {
+  id                    Int      @id @default(autoincrement())
+  subject               String   @db.VarChar(60)
+  module                String   @db.VarChar(120)
+  slug                  String   @unique @db.VarChar(140)
+  title                 String   @db.VarChar(160)
+  description           String   @db.Text
+  overview              String?  @db.Text
+  focusItems            Json?    @map("focus_items")
+  studyAdvice           String?  @map("study_advice") @db.Text
+  difficultyLabel       String?  @map("difficulty_label") @db.VarChar(80)
+  frequencyLabel        String?  @map("frequency_label") @db.VarChar(80)
+  relatedResources      Json?    @map("related_resources")
+  relatedVisualizerSlug String?  @map("related_visualizer_slug") @db.VarChar(140)
+  localizations         Json?
+  estimatedMinutes      Int      @default(20) @map("estimated_minutes")
+  questionCount         Int      @map("question_count")
+  sortOrder             Int      @default(0) @map("sort_order")
+  status                String   @default("published") @db.VarChar(30)
+  version               Int      @default(1)
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  questions SpecialPracticeQuestion[]
+  sessions  SpecialPracticeSession[]
+
+  @@index([subject, status, sortOrder], map: "idx_special_practice_topics_subject_status_sort")
+  @@index([module, status], map: "idx_special_practice_topics_module_status")
+  @@map("special_practice_topics")
+}
+
+model SpecialPracticeQuestion {
+  id            Int      @id @default(autoincrement())
+  topicId       Int      @map("topic_id")
+  orderNumber   Int      @map("order_number")
+  difficulty    String   @default("基础") @db.VarChar(30)
+  questionType  String   @default("single-choice") @map("question_type") @db.VarChar(100)
+  prompt        String   @db.Text
+  options       Json
+  correctAnswer String   @map("correct_answer") @db.VarChar(50)
+  explanation   String   @db.Text
+  knowledgeTags Json     @map("knowledge_tags")
+  localizations Json?
+  status        String   @default("published") @db.VarChar(30)
+  version       Int      @default(1)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  topic SpecialPracticeTopic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@unique([topicId, orderNumber], map: "uq_special_practice_questions_topic_order")
+  @@index([topicId, status, orderNumber], map: "idx_special_practice_questions_topic_status_order")
+  @@map("special_practice_questions")
+}
+
+model SpecialPracticeSession {
+  id               Int       @id @default(autoincrement())
+  userId           Int?      @map("user_id")
+  topicId          Int       @map("topic_id")
+  language         String    @default("zh") @db.VarChar(20)
+  answers          Json      @default("{}")
+  timeSpent        Json      @default("{}") @map("time_spent")
+  currentQuestion  Int       @default(1) @map("current_question")
+  correctCount     Int       @default(0) @map("correct_count")
+  wrongCount       Int       @default(0) @map("wrong_count")
+  unansweredCount  Int       @default(0) @map("unanswered_count")
+  questionSnapshot Json?     @map("question_snapshot")
+  startedAt        DateTime  @default(now()) @map("started_at")
+  completedAt      DateTime? @map("completed_at")
+  version          Int       @default(1)
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  user  User?                @relation(fields: [userId], references: [id], onDelete: SetNull)
+  topic SpecialPracticeTopic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt], map: "idx_special_practice_sessions_user_created")
+  @@index([topicId, createdAt], map: "idx_special_practice_sessions_topic_created")
+  @@map("special_practice_sessions")
+}
+
+model CscaExamTopic {
+  id                   Int       @id @default(autoincrement())
+  subject              String    @db.VarChar(60)
+  module               String?   @db.VarChar(120)
+  code                 String    @unique @db.VarChar(140)
+  title                String    @db.VarChar(160)
+  description          String?   @db.Text
+  examScope            String?   @map("exam_scope") @db.Text
+  parentId             Int?      @map("parent_id")
+  syllabusVersion      String    @default("v1") @map("syllabus_version") @db.VarChar(60)
+  sourceUrl            String?   @map("source_url") @db.Text
+  sourceLabel          String?   @map("source_label") @db.VarChar(200)
+  lastVerifiedAt       DateTime? @map("last_verified_at")
+  verifiedBy           Int?      @map("verified_by")
+  weight               Int       @default(1)
+  allowedQuestionTypes Json?     @map("allowed_question_types")
+  difficultyRange      Json?     @map("difficulty_range")
+  excludedScope        Json?     @map("excluded_scope")
+  status               String    @default("published") @db.VarChar(30)
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  mappings            CscaTopicMapping[]
+  questionBlueprints  CscaQuestionBlueprint[]
+  questions           CscaQuestion[]
+  misconceptions      CscaQuestionMisconception[]
+  conceptCards        CscaConceptCard[]
+  wrongPatterns       CscaWrongPattern[]
+  sourceQuestions     CscaSourceQuestion[]
+  styleProfiles       CscaQuestionStyleProfile[]
+  teachingAssetTopics TeachingAssetTopic[]
+
+  @@index([subject, status], map: "idx_csca_exam_topics_subject_status")
+  @@index([subject, syllabusVersion, status], map: "idx_csca_exam_topics_subject_syllabus_status")
+  @@index([module, status], map: "idx_csca_exam_topics_module_status")
+  @@map("csca_exam_topics")
+}
+
+model CscaSourceDocument {
+  id           Int      @id @default(autoincrement())
+  subject      String   @db.VarChar(60)
+  sourceType   String   @default("past_paper") @map("source_type") @db.VarChar(60)
+  title        String   @db.VarChar(220)
+  examYear     Int?     @map("exam_year")
+  examSession  String?  @map("exam_session") @db.VarChar(80)
+  language     String   @default("zh") @db.VarChar(20)
+  fileHash     String   @map("file_hash") @db.VarChar(140)
+  storageKey   String?  @map("storage_key") @db.Text
+  sourceLabel  String   @map("source_label") @db.VarChar(220)
+  sourceUrl    String?  @map("source_url") @db.Text
+  licenseScope String   @default("internal_analysis") @map("license_scope") @db.VarChar(80)
+  usagePolicy  Json     @default("{}") @map("usage_policy")
+  status       String   @default("draft") @db.VarChar(40)
+  uploadedBy   Int?     @map("uploaded_by")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  questions  CscaSourceQuestion[]
+  pastPapers PastPaper[]
+
+  @@index([subject, status], map: "idx_csca_source_documents_subject_status")
+  @@index([sourceType, status], map: "idx_csca_source_documents_type_status")
+  @@index([fileHash], map: "idx_csca_source_documents_file_hash")
+  @@map("csca_source_documents")
+}
+
+model CscaSourceQuestion {
+  id                       Int       @id @default(autoincrement())
+  documentId               Int       @map("document_id")
+  subject                  String    @db.VarChar(60)
+  questionNumber           String    @map("question_number") @db.VarChar(60)
+  pageNumber               Int?      @map("page_number")
+  language                 String    @default("zh") @db.VarChar(20)
+  promptHash               String    @map("prompt_hash") @db.VarChar(140)
+  promptText               String?   @map("prompt_text") @db.Text
+  options                  Json?
+  correctAnswer            String?   @map("correct_answer") @db.VarChar(50)
+  explanation              String?   @db.Text
+  syllabusVersion          String    @default("v1") @map("syllabus_version") @db.VarChar(60)
+  topicId                  Int?      @map("topic_id")
+  topicCodes               Json      @default("[]") @map("topic_codes")
+  blueprintLikeTags        Json      @default("[]") @map("blueprint_like_tags")
+  analysis                 Json      @default("{}")
+  analysisStatus           String    @default("ai_parsed") @map("analysis_status") @db.VarChar(40)
+  analysisConfidence       Float?    @map("analysis_confidence")
+  analysisIssues           Json      @default("[]") @map("analysis_issues")
+  reviewStatus             String    @default("parsed") @map("review_status") @db.VarChar(40)
+  autoProfileStatus        String    @default("pending") @map("auto_profile_status") @db.VarChar(50)
+  autoProfileAttempts      Int       @default(0) @map("auto_profile_attempts")
+  autoProfileMaxAttempts   Int       @default(3) @map("auto_profile_max_attempts")
+  autoProfileNextRetryAt   DateTime? @map("auto_profile_next_retry_at")
+  autoProfileLastTriedAt   DateTime? @map("auto_profile_last_tried_at")
+  autoProfileDecidedAt     DateTime? @map("auto_profile_decided_at")
+  autoProfileFailureType   String?   @map("auto_profile_failure_type") @db.VarChar(100)
+  autoProfileFailureReason String?   @map("auto_profile_failure_reason") @db.Text
+  autoProfileDecision      Json?     @map("auto_profile_decision")
+  autoProfileGateResult    Json?     @map("auto_profile_gate_result")
+  autoProfileTaskId        String?   @map("auto_profile_task_id") @db.Uuid
+  createdAt                DateTime  @default(now()) @map("created_at")
+  updatedAt                DateTime  @updatedAt @map("updated_at")
+
+  document               CscaSourceDocument      @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  topic                  CscaExamTopic?          @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  agentPastPaperAttempts AgentPastPaperAttempt[]
+
+  @@unique([documentId, questionNumber], map: "uq_csca_source_questions_document_number")
+  @@index([subject, syllabusVersion], map: "idx_csca_source_questions_subject_syllabus")
+  @@index([topicId, reviewStatus], map: "idx_csca_source_questions_topic_review")
+  @@index([subject, autoProfileStatus], map: "idx_csca_source_questions_auto_profile_status")
+  @@index([autoProfileNextRetryAt], map: "idx_csca_source_questions_auto_profile_retry")
+  @@index([promptHash], map: "idx_csca_source_questions_prompt_hash")
+  @@map("csca_source_questions")
+}
+
+model CscaQuestionStyleProfile {
+  id                         Int      @id @default(autoincrement())
+  subject                    String   @db.VarChar(60)
+  syllabusVersion            String   @default("v1") @map("syllabus_version") @db.VarChar(60)
+  scopeType                  String   @default("subject") @map("scope_type") @db.VarChar(40)
+  scopeId                    Int?     @map("scope_id")
+  sourceQuestionIds          Json     @default("[]") @map("source_question_ids")
+  sampleSize                 Int      @default(0) @map("sample_size")
+  confidence                 String   @default("low") @db.VarChar(40)
+  profile                    Json     @default("{}")
+  profileVersion             Int      @default(1) @map("profile_version")
+  sourceQuestionSnapshotHash String   @map("source_question_snapshot_hash") @db.VarChar(140)
+  status                     String   @default("draft") @db.VarChar(40)
+  generatedBy                String   @default("rule") @map("generated_by") @db.VarChar(40)
+  generatedAt                DateTime @default(now()) @map("generated_at")
+  createdAt                  DateTime @default(now()) @map("created_at")
+  updatedAt                  DateTime @updatedAt @map("updated_at")
+
+  topic CscaExamTopic? @relation(fields: [scopeId], references: [id], onDelete: SetNull)
+
+  @@index([subject, syllabusVersion, scopeType, status], map: "idx_csca_style_profiles_scope_status")
+  @@index([scopeId, status], map: "idx_csca_style_profiles_scope_id_status")
+  @@map("csca_question_style_profiles")
+}
+
+model CscaExamSeriesProfile {
+  id                    Int      @id @default(autoincrement())
+  subject               String   @db.VarChar(60)
+  syllabusVersion       String   @default("v1") @map("syllabus_version") @db.VarChar(60)
+  title                 String   @db.VarChar(220)
+  sourceDocumentIds     Json     @default("[]") @map("source_document_ids")
+  sourceStyleProfileIds Json     @default("[]") @map("source_style_profile_ids")
+  sourceQuestionIds     Json     @default("[]") @map("source_question_ids")
+  sessionSummary        Json     @default("{}") @map("session_summary")
+  trendProfile          Json     @default("{}") @map("trend_profile")
+  sampleSize            Int      @default(0) @map("sample_size")
+  confidence            String   @default("low") @db.VarChar(40)
+  status                String   @default("draft") @db.VarChar(40)
+  generatedBy           String   @default("rule") @map("generated_by") @db.VarChar(40)
+  generatedAt           DateTime @default(now()) @map("generated_at")
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  @@index([subject, syllabusVersion, status], map: "idx_csca_exam_series_profiles_subject_status")
+  @@index([status, generatedAt], map: "idx_csca_exam_series_profiles_status_generated")
+  @@map("csca_exam_series_profiles")
+}
+
+model CscaGenerationProfile {
+  id                   Int      @id @default(autoincrement())
+  subject              String   @db.VarChar(60)
+  syllabusVersion      String   @default("v1") @map("syllabus_version") @db.VarChar(60)
+  useCase              String   @map("use_case") @db.VarChar(60)
+  title                String   @db.VarChar(220)
+  seriesProfileId      Int?     @map("series_profile_id")
+  sourceStyleProfileId Int?     @map("source_style_profile_id")
+  profile              Json     @default("{}")
+  targetPolicy         Json     @default("{}") @map("target_policy")
+  sampleSize           Int      @default(0) @map("sample_size")
+  confidence           String   @default("low") @db.VarChar(40)
+  status               String   @default("draft") @db.VarChar(40)
+  generatedBy          String   @default("rule") @map("generated_by") @db.VarChar(40)
+  generatedAt          DateTime @default(now()) @map("generated_at")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  @@index([subject, syllabusVersion, useCase, status], map: "idx_csca_generation_profiles_use_case_status")
+  @@index([seriesProfileId, status], map: "idx_csca_generation_profiles_series_status")
+  @@map("csca_generation_profiles")
+}
+
+model CscaSyllabusImport {
+  id              Int       @id @default(autoincrement())
+  subject         String    @db.VarChar(60)
+  syllabusVersion String    @map("syllabus_version") @db.VarChar(60)
+  sourceLabel     String?   @map("source_label") @db.VarChar(200)
+  sourceUrl       String?   @map("source_url") @db.Text
+  status          String    @default("draft") @db.VarChar(40)
+  rawJson         Json      @map("raw_json")
+  previewSummary  Json?     @map("preview_summary")
+  appliedAt       DateTime? @map("applied_at")
+  appliedBy       Int?      @map("applied_by")
+  createdBy       Int?      @map("created_by")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@index([subject, syllabusVersion, status], map: "idx_csca_syllabus_import_subject_version_status")
+  @@index([status, createdAt], map: "idx_csca_syllabus_import_status_created")
+  @@map("csca_syllabus_imports")
+}
+
+model CscaTopicMapping {
+  id         Int      @id @default(autoincrement())
+  sourceType String   @map("source_type") @db.VarChar(60)
+  sourceId   Int      @map("source_id")
+  topicId    Int      @map("topic_id")
+  confidence Float    @default(1)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  topic CscaExamTopic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@unique([sourceType, sourceId, topicId], map: "uq_csca_topic_mappings_source_topic")
+  @@index([sourceType, sourceId], map: "idx_csca_topic_mappings_source")
+  @@index([topicId], map: "idx_csca_topic_mappings_topic")
+  @@map("csca_topic_mappings")
+}
+
+model UserCscaTopicMastery {
+  id              Int       @id @default(autoincrement())
+  userId          Int       @map("user_id")
+  subject         String    @db.VarChar(60)
+  topicId         Int       @map("topic_id")
+  mastery         Float     @default(0.5)
+  confidence      Float     @default(0.2)
+  attemptCount    Int       @default(0) @map("attempt_count")
+  correctCount    Int       @default(0) @map("correct_count")
+  lastPracticedAt DateTime? @map("last_practiced_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@unique([userId, topicId], map: "uq_user_csca_topic_mastery_user_topic")
+  @@index([userId, subject], map: "idx_user_csca_topic_mastery_user_subject")
+  @@index([topicId], map: "idx_user_csca_topic_mastery_topic")
+  @@map("user_csca_topic_mastery")
+}
+
+model CscaAdaptiveSession {
+  id               Int       @id @default(autoincrement())
+  userId           Int       @map("user_id")
+  subject          String    @db.VarChar(60)
+  mode             String    @default("practice") @db.VarChar(40)
+  status           String    @default("active") @db.VarChar(40)
+  questionLanguage String    @default("zh") @map("question_language") @db.VarChar(20)
+  startedAt        DateTime  @default(now()) @map("started_at")
+  completedAt      DateTime? @map("completed_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  rounds CscaAdaptiveRound[]
+
+  @@index([userId, subject, createdAt], map: "idx_csca_adaptive_sessions_user_subject_created")
+  @@index([userId, status], map: "idx_csca_adaptive_sessions_user_status")
+  @@map("csca_adaptive_sessions")
+}
+
+model CscaAdaptiveRound {
+  id              Int       @id @default(autoincrement())
+  sessionId       Int       @map("session_id")
+  roundIndex      Int       @map("round_index")
+  status          String    @default("active") @db.VarChar(40)
+  plannerSnapshot Json?     @map("planner_snapshot")
+  answers         Json      @default("{}")
+  timeSpent       Json      @default("{}") @map("time_spent")
+  currentQuestion Int       @default(1) @map("current_question")
+  correctCount    Int       @default(0) @map("correct_count")
+  wrongCount      Int       @default(0) @map("wrong_count")
+  unansweredCount Int       @default(0) @map("unanswered_count")
+  startedAt       DateTime  @default(now()) @map("started_at")
+  submittedAt     DateTime? @map("submitted_at")
+  version         Int       @default(1)
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  session                  CscaAdaptiveSession               @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  items                    CscaAdaptiveRoundItem[]
+  interventionVerification LearningInterventionVerification?
+
+  @@unique([sessionId, roundIndex], map: "uq_csca_adaptive_round_session_index")
+  @@index([sessionId, createdAt], map: "idx_csca_adaptive_rounds_session_created")
+  @@map("csca_adaptive_rounds")
+}
+
+model CscaAdaptiveRoundItem {
+  id                Int      @id @default(autoincrement())
+  roundId           Int      @map("round_id")
+  questionId        Int      @map("question_id")
+  questionSource    String   @default("special_practice") @map("question_source") @db.VarChar(60)
+  topicId           Int      @map("topic_id")
+  plannedDifficulty String?  @map("planned_difficulty") @db.VarChar(40)
+  position          Int
+  selectedAnswer    String?  @map("selected_answer") @db.VarChar(50)
+  isCorrect         Boolean? @map("is_correct")
+  usedHint          Boolean  @default(false) @map("used_hint")
+  usedExplanation   Boolean  @default(false) @map("used_explanation")
+  timeSpentSeconds  Int      @default(0) @map("time_spent_seconds")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  round CscaAdaptiveRound @relation(fields: [roundId], references: [id], onDelete: Cascade)
+
+  @@unique([roundId, questionSource, questionId], map: "uq_csca_adaptive_round_items_round_source_question")
+  @@index([roundId, position], map: "idx_csca_adaptive_round_items_round_position")
+  @@index([questionId], map: "idx_csca_adaptive_round_items_question")
+  @@index([questionSource, questionId], map: "idx_csca_adaptive_round_items_source_question")
+  @@index([topicId], map: "idx_csca_adaptive_round_items_topic")
+  @@map("csca_adaptive_round_items")
+}
+
+model CscaQuestionExposure {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  questionId Int      @map("question_id")
+  source     String   @db.VarChar(60)
+  seenCount  Int      @default(1) @map("seen_count")
+  lastResult String?  @map("last_result") @db.VarChar(40)
+  lastSeenAt DateTime @default(now()) @map("last_seen_at")
+
+  @@unique([userId, questionId, source], map: "uq_csca_question_exposures_user_question_source")
+  @@index([userId, lastSeenAt], map: "idx_csca_question_exposures_user_seen")
+  @@index([questionId], map: "idx_csca_question_exposures_question")
+  @@map("csca_question_exposures")
+}
+
+model CscaQuestionBlueprint {
+  id           Int      @id @default(autoincrement())
+  subject      String   @db.VarChar(60)
+  topicId      Int      @map("topic_id")
+  difficulty   String   @db.VarChar(40)
+  questionType String   @map("question_type") @db.VarChar(100)
+  skill        String?  @db.VarChar(160)
+  source       String   @default("manual") @db.VarChar(60)
+  constraints  Json?
+  status       String   @default("active") @db.VarChar(40)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  topic          CscaExamTopic         @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  questions      CscaQuestion[]
+  generationJobs CscaAiGenerationJob[]
+
+  @@index([subject, status], map: "idx_csca_question_blueprints_subject_status")
+  @@index([topicId, status], map: "idx_csca_question_blueprints_topic_status")
+  @@map("csca_question_blueprints")
+}
+
+model CscaQuestion {
+  id                   Int      @id @default(autoincrement())
+  subject              String   @db.VarChar(60)
+  topicId              Int      @map("topic_id")
+  blueprintId          Int?     @map("blueprint_id")
+  sourceType           String   @map("source_type") @db.VarChar(60)
+  sourceQuestionId     Int?     @map("source_question_id")
+  generatedVariantOf   Int?     @map("generated_variant_of")
+  designedDifficulty   String   @map("designed_difficulty") @db.VarChar(40)
+  empiricalDifficulty  String?  @map("empirical_difficulty") @db.VarChar(40)
+  difficultyConfidence Float?   @map("difficulty_confidence")
+  questionType         String   @map("question_type") @db.VarChar(100)
+  prompt               String   @db.Text
+  options              Json
+  correctAnswer        String   @map("correct_answer") @db.VarChar(50)
+  explanation          String   @db.Text
+  knowledgeTags        Json     @default("[]") @map("knowledge_tags")
+  optionMetadata       Json?    @map("option_metadata")
+  syllabusVersion      String   @default("v1") @map("syllabus_version") @db.VarChar(60)
+  generationMetadata   Json?    @map("generation_metadata")
+  reviewMetadata       Json?    @map("review_metadata")
+  status               String   @default("draft") @db.VarChar(40)
+  version              Int      @default(1)
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  topic          CscaExamTopic              @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  blueprint      CscaQuestionBlueprint?     @relation(fields: [blueprintId], references: [id], onDelete: SetNull)
+  qualityMetric  CscaQuestionQualityMetric?
+  generationJobs CscaAiGenerationJob[]
+
+  @@index([subject, status], map: "idx_csca_questions_subject_status")
+  @@index([topicId, status], map: "idx_csca_questions_topic_status")
+  @@index([sourceType, sourceQuestionId], map: "idx_csca_questions_source")
+  @@index([syllabusVersion, status], map: "idx_csca_questions_syllabus_status")
+  @@map("csca_questions")
+}
+
+model CscaQuestionMisconception {
+  id          Int      @id @default(autoincrement())
+  slug        String   @unique @db.VarChar(140)
+  subject     String   @db.VarChar(60)
+  topicId     Int?     @map("topic_id")
+  label       String   @db.VarChar(160)
+  description String?  @db.Text
+  status      String   @default("active") @db.VarChar(40)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  topic        CscaExamTopic?    @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  conceptCards CscaConceptCard[]
+
+  @@index([subject, status], map: "idx_csca_question_misconceptions_subject_status")
+  @@index([topicId], map: "idx_csca_question_misconceptions_topic")
+  @@map("csca_question_misconceptions")
+}
+
+model CscaConceptCard {
+  id              Int      @id @default(autoincrement())
+  topicId         Int      @map("topic_id")
+  misconceptionId Int?     @map("misconception_id")
+  title           String   @db.VarChar(200)
+  body            String   @db.Text
+  exampleJson     Json?    @map("example_json")
+  status          String   @default("draft") @db.VarChar(40)
+  source          String   @default("manual") @db.VarChar(60)
+  reviewMetadata  Json?    @map("review_metadata")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  topic         CscaExamTopic              @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  misconception CscaQuestionMisconception? @relation(fields: [misconceptionId], references: [id], onDelete: SetNull)
+
+  @@index([topicId, status], map: "idx_csca_concept_cards_topic_status")
+  @@index([misconceptionId, status], map: "idx_csca_concept_cards_misconception_status")
+  @@map("csca_concept_cards")
+}
+
+model TeachingAsset {
+  id          String   @id @default(cuid())
+  stableKey   String   @unique @map("stable_key") @db.VarChar(160)
+  type        String   @db.VarChar(48)
+  subjectCode String   @map("subject_code") @db.VarChar(24)
+  status      String   @default("draft") @db.VarChar(24)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  versions  TeachingAssetVersion[]
+  topics    TeachingAssetTopic[]
+  exposures TeachingAssetExposure[]
+
+  @@index([subjectCode, type, status], map: "idx_teaching_assets_subject_type_status")
+  @@map("teaching_assets")
+}
+
+model TeachingAssetVersion {
+  id                   String    @id @default(cuid())
+  assetId              String    @map("asset_id")
+  version              Int
+  status               String    @default("draft") @db.VarChar(24)
+  language             String    @default("zh-CN") @db.VarChar(24)
+  difficultyBand       String    @map("difficulty_band") @db.VarChar(40)
+  estimatedMinutes     Int       @map("estimated_minutes")
+  renderer             String    @db.VarChar(40)
+  componentKey         String?   @map("component_key") @db.VarChar(120)
+  componentVersion     String?   @map("component_version") @db.VarChar(40)
+  payloadSchemaVersion String    @map("payload_schema_version") @db.VarChar(40)
+  payload              Json
+  fallbackPayload      Json      @map("fallback_payload")
+  sourceRefs           Json      @default("[]") @map("source_refs")
+  reviewState          String    @map("review_state") @db.VarChar(40)
+  reviewedByUserId     Int?      @map("reviewed_by_user_id")
+  reviewedAt           DateTime? @map("reviewed_at")
+  publishedAt          DateTime? @map("published_at")
+  retiredAt            DateTime? @map("retired_at")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  asset             TeachingAsset              @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  exposures         TeachingAssetExposure[]
+  interactionEvents TeachingInteractionEvent[]
+
+  @@unique([assetId, version], map: "uq_teaching_asset_version")
+  @@index([status, publishedAt], map: "idx_teaching_asset_versions_status_published")
+  @@map("teaching_asset_versions")
+}
+
+model TeachingAssetTopic {
+  id           String @id @default(cuid())
+  assetId      String @map("asset_id")
+  topicId      Int    @map("topic_id")
+  relationship String @default("primary") @db.VarChar(24)
+  sortOrder    Int    @default(0) @map("sort_order")
+
+  asset TeachingAsset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  topic CscaExamTopic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@unique([assetId, topicId, relationship], map: "uq_teaching_asset_topic_binding")
+  @@index([topicId, relationship], map: "idx_teaching_asset_topics_topic_relationship")
+  @@map("teaching_asset_topics")
+}
+
+model TeachingAssetExposure {
+  id             String    @id @default(cuid())
+  userId         Int       @map("user_id")
+  assetId        String    @map("asset_id")
+  assetVersionId String    @map("asset_version_id")
+  contextKey     String    @map("context_key") @db.VarChar(180)
+  source         String    @db.VarChar(40)
+  exposureLevel  String    @map("exposure_level") @db.VarChar(16)
+  status         String    @default("opened") @db.VarChar(24)
+  snapshot       Json
+  firstExposedAt DateTime  @default(now()) @map("first_exposed_at")
+  lastExposedAt  DateTime  @default(now()) @map("last_exposed_at")
+  completedAt    DateTime? @map("completed_at")
+
+  user         User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  asset        TeachingAsset        @relation(fields: [assetId], references: [id], onDelete: Restrict)
+  assetVersion TeachingAssetVersion @relation(fields: [assetVersionId], references: [id], onDelete: Restrict)
+
+  @@unique([userId, assetVersionId, contextKey], map: "uq_teaching_asset_exposure_context")
+  @@index([userId, lastExposedAt], map: "idx_teaching_asset_exposures_user_last")
+  @@map("teaching_asset_exposures")
+}
+
+model TeachingInteractionEvent {
+  id              String   @id @default(cuid())
+  userId          Int      @map("user_id")
+  assetVersionId  String   @map("asset_version_id")
+  contextKey      String   @map("context_key") @db.VarChar(180)
+  clientRequestId String   @map("client_request_id") @db.VarChar(120)
+  action          String   @db.VarChar(40)
+  payload         Json     @default("{}")
+  result          Json     @default("{}")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  user         User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assetVersion TeachingAssetVersion @relation(fields: [assetVersionId], references: [id], onDelete: Restrict)
+
+  @@unique([userId, clientRequestId], map: "uq_teaching_interaction_user_request")
+  @@index([userId, assetVersionId, createdAt], map: "idx_teaching_interactions_user_asset_created")
+  @@map("teaching_interaction_events")
+}
+
+model CscaQuestionQualityMetric {
+  id                      Int      @id @default(autoincrement())
+  questionId              Int      @unique @map("question_id")
+  attemptCount            Int      @default(0) @map("attempt_count")
+  correctRate             Float?   @map("correct_rate")
+  medianSeconds           Int?     @map("median_seconds")
+  unansweredRate          Float?   @map("unanswered_rate")
+  markedRate              Float?   @map("marked_rate")
+  optionSelectionStats    Json?    @map("option_selection_stats")
+  mostSelectedWrongOption String?  @map("most_selected_wrong_option") @db.VarChar(50)
+  empiricalDifficulty     String?  @map("empirical_difficulty") @db.VarChar(40)
+  difficultyConfidence    Float?   @map("difficulty_confidence")
+  needsReview             Boolean  @default(false) @map("needs_review")
+  reviewReason            String?  @map("review_reason") @db.Text
+  updatedAt               DateTime @updatedAt @map("updated_at")
+
+  question CscaQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([needsReview, updatedAt], map: "idx_csca_question_quality_review")
+  @@map("csca_question_quality_metrics")
+}
+
+model CscaAiGenerationJob {
+  id               Int      @id @default(autoincrement())
+  blueprintId      Int      @map("blueprint_id")
+  questionId       Int?     @map("question_id")
+  provider         String?  @db.VarChar(60)
+  model            String?  @db.VarChar(120)
+  requestHash      String?  @map("request_hash") @db.VarChar(120)
+  promptMetadata   Json?    @map("prompt_metadata")
+  rawOutput        Json?    @map("raw_output")
+  normalizedOutput Json?    @map("normalized_output")
+  reviewResult     Json?    @map("review_result")
+  status           String   @default("queued") @db.VarChar(40)
+  error            String?  @db.Text
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  blueprint CscaQuestionBlueprint @relation(fields: [blueprintId], references: [id], onDelete: Cascade)
+  question  CscaQuestion?         @relation(fields: [questionId], references: [id], onDelete: SetNull)
+
+  @@index([blueprintId, status], map: "idx_csca_ai_generation_jobs_blueprint_status")
+  @@index([status, createdAt], map: "idx_csca_ai_generation_jobs_status_created")
+  @@map("csca_ai_generation_jobs")
+}
+
+model CscaSubjectPracticeProductionRun {
+  id                  Int       @id @default(autoincrement())
+  subject             String    @db.VarChar(60)
+  status              String    @default("planned") @db.VarChar(40)
+  triggerType         String    @default("manual") @map("trigger_type") @db.VarChar(60)
+  syllabusVersion     String?   @map("syllabus_version") @db.VarChar(80)
+  targetPolicyVersion String    @default("subject-practice-matrix-v1") @map("target_policy_version") @db.VarChar(80)
+  targetTotal         Int       @default(0) @map("target_total")
+  publishedTotal      Int       @default(0) @map("published_total")
+  candidateTotal      Int       @default(0) @map("candidate_total")
+  failedTotal         Int       @default(0) @map("failed_total")
+  openTotal           Int       @default(0) @map("open_total")
+  noProgressRounds    Int       @default(0) @map("no_progress_rounds")
+  maxNoProgressRounds Int       @default(3) @map("max_no_progress_rounds")
+  blockedReasonCode   String?   @map("blocked_reason_code") @db.VarChar(120)
+  blockedMessage      String?   @map("blocked_message") @db.Text
+  plan                Json      @default("{}")
+  result              Json      @default("{}")
+  startedAt           DateTime? @map("started_at")
+  completedAt         DateTime? @map("completed_at")
+  createdById         Int?      @map("created_by_id")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+
+  cells CscaSubjectPracticeProductionCell[]
+
+  @@index([subject, status, updatedAt], map: "idx_subject_practice_prod_runs_subject_status")
+  @@map("csca_subject_practice_production_runs")
+}
+
+model CscaSubjectPracticeProductionCell {
+  id              Int      @id @default(autoincrement())
+  runId           Int      @map("run_id")
+  subject         String   @db.VarChar(60)
+  topicId         Int      @map("topic_id")
+  topicCode       String?  @map("topic_code") @db.VarChar(120)
+  topicTitle      String   @map("topic_title") @db.VarChar(500)
+  difficultyBand  String   @map("difficulty_band") @db.VarChar(40)
+  targetCount     Int      @default(0) @map("target_count")
+  candidateLimit  Int      @default(0) @map("candidate_limit")
+  publishedCount  Int      @default(0) @map("published_count")
+  candidateCount  Int      @default(0) @map("candidate_count")
+  runningJobCount Int      @default(0) @map("running_job_count")
+  failedCount     Int      @default(0) @map("failed_count")
+  status          String   @default("open") @db.VarChar(40)
+  targetProfile   Json     @default("{}") @map("target_profile")
+  lastJobId       Int?     @map("last_job_id")
+  failureCode     String?  @map("failure_code") @db.VarChar(120)
+  failureMessage  String?  @map("failure_message") @db.Text
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  run CscaSubjectPracticeProductionRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@index([runId, status], map: "idx_subject_practice_prod_cells_run_status")
+  @@index([subject, topicId, difficultyBand], map: "idx_subject_practice_prod_cells_topic_difficulty")
+  @@map("csca_subject_practice_production_cells")
+}
+
+model CscaAiQuestioningTask {
+  id                    String    @id @default(uuid()) @db.Uuid
+  taskType              String    @map("task_type") @db.VarChar(80)
+  action                String    @db.VarChar(80)
+  subject               String?   @db.VarChar(60)
+  resourceType          String?   @map("resource_type") @db.VarChar(80)
+  resourceId            String?   @map("resource_id") @db.VarChar(120)
+  filterSnapshot        Json      @default("{}") @map("filter_snapshot")
+  status                String    @default("queued") @db.VarChar(40)
+  requested             Int       @default(0)
+  succeeded             Int       @default(0)
+  skipped               Int       @default(0)
+  failed                Int       @default(0)
+  error                 String?   @db.Text
+  result                Json?
+  createdBy             Int?      @map("created_by")
+  executionOwnerId      String?   @map("execution_owner_id") @db.VarChar(160)
+  executionAttemptToken String?   @map("execution_attempt_token") @db.Uuid
+  lastHeartbeatAt       DateTime? @map("last_heartbeat_at")
+  cancelRequestedAt     DateTime? @map("cancel_requested_at")
+  startedAt             DateTime? @map("started_at")
+  completedAt           DateTime? @map("completed_at")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  @@index([taskType, status, updatedAt], map: "idx_csca_ai_questioning_tasks_type_status")
+  @@index([subject, action, updatedAt], map: "idx_csca_ai_questioning_tasks_subject_action")
+  @@map("csca_ai_questioning_tasks")
+}
+
+model CscaAiQuestioningSetting {
+  key       String   @id @db.VarChar(160)
+  subject   String?  @db.VarChar(60)
+  scope     String   @db.VarChar(80)
+  value     Json     @default("{}")
+  updatedBy Int?     @map("updated_by")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([subject, scope], map: "idx_csca_ai_questioning_settings_subject_scope")
+  @@map("csca_ai_questioning_settings")
+}
+
+model Organization {
+  id        Int      @id @default(autoincrement())
+  slug      String   @unique @db.VarChar(140)
+  name      String   @db.VarChar(200)
+  type      String   @default("partner") @db.VarChar(60)
+  status    String   @default("active") @db.VarChar(40)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  members            OrganizationMember[]
+  cohorts            OrganizationCohort[]
+  invites            OrganizationInvite[]
+  aiCreditPool       OrganizationAiCreditPool?
+  llmProviderConfigs OrganizationLlmProviderConfig[]
+
+  @@index([status, type], map: "idx_organizations_status_type")
+  @@map("organizations")
+}
+
+model OrganizationMember {
+  id             Int       @id @default(autoincrement())
+  organizationId Int       @map("organization_id")
+  userId         Int       @map("user_id")
+  cohortId       Int?      @map("cohort_id")
+  role           String    @default("student") @db.VarChar(60)
+  status         String    @default("active") @db.VarChar(40)
+  invitedBy      Int?      @map("invited_by")
+  joinedAt       DateTime? @map("joined_at")
+  expiresAt      DateTime? @map("expires_at")
+  metadata       Json?
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  organization Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  cohort       OrganizationCohort? @relation(fields: [cohortId], references: [id], onDelete: SetNull)
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId], map: "uq_organization_members_org_user")
+  @@index([userId, status], map: "idx_organization_members_user_status")
+  @@index([organizationId, cohortId, status], map: "idx_organization_members_org_cohort_status")
+  @@map("organization_members")
+}
+
+model OrganizationCohort {
+  id             Int      @id @default(autoincrement())
+  organizationId Int      @map("organization_id")
+  slug           String   @db.VarChar(140)
+  name           String   @db.VarChar(200)
+  status         String   @default("active") @db.VarChar(40)
+  metadata       Json?
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  organization Organization         @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  members      OrganizationMember[]
+  invites      OrganizationInvite[]
+
+  @@unique([organizationId, slug], map: "uq_organization_cohorts_org_slug")
+  @@index([organizationId, status], map: "idx_organization_cohorts_org_status")
+  @@map("organization_cohorts")
+}
+
+model OrganizationInvite {
+  id             Int       @id @default(autoincrement())
+  organizationId Int       @map("organization_id")
+  cohortId       Int?      @map("cohort_id")
+  email          String?   @db.VarChar(255)
+  role           String    @default("student") @db.VarChar(60)
+  tokenHash      String    @unique @map("token_hash") @db.VarChar(120)
+  shortCodeHash  String?   @unique @map("short_code_hash") @db.VarChar(120)
+  status         String    @default("pending") @db.VarChar(40)
+  maxUses        Int       @default(1) @map("max_uses")
+  usedCount      Int       @default(0) @map("used_count")
+  expiresAt      DateTime? @map("expires_at")
+  createdBy      Int?      @map("created_by")
+  acceptedBy     Int?      @map("accepted_by")
+  acceptedAt     DateTime? @map("accepted_at")
+  metadata       Json?
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  organization Organization                @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  cohort       OrganizationCohort?         @relation(fields: [cohortId], references: [id], onDelete: SetNull)
+  attempts     OrganizationInviteAttempt[]
+
+  @@index([organizationId, status], map: "idx_organization_invites_org_status")
+  @@index([email, status], map: "idx_organization_invites_email_status")
+  @@map("organization_invites")
+}
+
+model OrganizationInviteAttempt {
+  id         Int      @id @default(autoincrement())
+  userId     Int?     @map("user_id")
+  inviteId   Int?     @map("invite_id")
+  lookupMode String   @map("lookup_mode") @db.VarChar(40)
+  inviteHash String?  @map("invite_hash") @db.VarChar(120)
+  status     String   @db.VarChar(40)
+  reason     String?  @db.VarChar(160)
+  metadata   Json?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  user   User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  invite OrganizationInvite? @relation(fields: [inviteId], references: [id], onDelete: SetNull)
+
+  @@index([userId, lookupMode, status, createdAt], map: "idx_organization_invite_attempts_user_mode")
+  @@index([inviteHash, createdAt], map: "idx_organization_invite_attempts_hash")
+  @@map("organization_invite_attempts")
+}
+
+model OrganizationAiCreditPool {
+  id                Int       @id @default(autoincrement())
+  organizationId    Int       @unique @map("organization_id")
+  availableCredits  Int       @default(0) @map("available_credits")
+  reservedCredits   Int       @default(0) @map("reserved_credits")
+  expiresAt         DateTime? @map("expires_at")
+  perUserDailyLimit Int?      @map("per_user_daily_limit")
+  status            String    @default("active") @db.VarChar(40)
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@map("organization_ai_credit_pools")
+}
+
+model OrganizationLlmProviderConfig {
+  id              Int      @id @default(autoincrement())
+  organizationId  Int      @map("organization_id")
+  provider        String   @db.VarChar(60)
+  model           String   @db.VarChar(120)
+  encryptedApiKey String   @map("encrypted_api_key") @db.Text
+  baseUrl         String?  @map("base_url") @db.Text
+  status          String   @default("disabled") @db.VarChar(40)
+  usagePolicy     Json?    @map("usage_policy")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, status], map: "idx_org_llm_provider_configs_org_status")
+  @@map("organization_llm_provider_configs")
+}
+
+model CscaAIInteraction {
+  id               Int      @id @default(autoincrement())
+  userId           Int?     @map("user_id")
+  subject          String?  @db.VarChar(60)
+  topicId          Int?     @map("topic_id")
+  questionId       Int?     @map("question_id")
+  sessionId        Int?     @map("session_id")
+  roundId          Int?     @map("round_id")
+  type             String   @db.VarChar(60)
+  provider         String?  @db.VarChar(60)
+  model            String?  @db.VarChar(120)
+  promptVersion    String?  @map("prompt_version") @db.VarChar(60)
+  inputHash        String?  @map("input_hash") @db.VarChar(120)
+  output           String?  @db.Text
+  structuredOutput Json?    @map("structured_output")
+  tokenUsage       Json?    @map("token_usage")
+  costEstimate     Float?   @map("cost_estimate")
+  status           String   @default("success") @db.VarChar(40)
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  feedback        CscaAIInteractionFeedback[]
+  usageLedger     CscaAIUsageLedger[]
+  reviewDecisions CscaAIReviewDecision[]
+
+  @@index([userId, createdAt], map: "idx_csca_ai_interactions_user_created")
+  @@index([roundId], map: "idx_csca_ai_interactions_round")
+  @@index([questionId], map: "idx_csca_ai_interactions_question")
+  @@map("csca_ai_interactions")
+}
+
+model CscaAIReviewDecision {
+  id            Int      @id @default(autoincrement())
+  interactionId Int      @map("interaction_id")
+  actorId       Int?     @map("actor_id")
+  decision      String   @db.VarChar(60)
+  status        String   @default("posted") @db.VarChar(40)
+  note          String?  @db.Text
+  metadata      Json?
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  interaction CscaAIInteraction @relation(fields: [interactionId], references: [id], onDelete: Cascade)
+
+  @@index([interactionId, createdAt], map: "idx_csca_ai_review_decisions_interaction_created")
+  @@index([actorId, createdAt], map: "idx_csca_ai_review_decisions_actor_created")
+  @@index([decision, createdAt], map: "idx_csca_ai_review_decisions_decision_created")
+  @@map("csca_ai_review_decisions")
+}
+
+model CscaAIInteractionFeedback {
+  id            Int      @id @default(autoincrement())
+  interactionId Int      @map("interaction_id")
+  userId        Int?     @map("user_id")
+  rating        Int
+  reason        String?  @db.Text
+  reasonCode    String?  @map("reason_code") @db.VarChar(80)
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  interaction CscaAIInteraction @relation(fields: [interactionId], references: [id], onDelete: Cascade)
+
+  @@index([interactionId], map: "idx_csca_ai_feedback_interaction")
+  @@index([userId, createdAt], map: "idx_csca_ai_feedback_user_created")
+  @@index([reasonCode, createdAt], map: "idx_csca_ai_feedback_reason_created")
+  @@map("csca_ai_interaction_feedback")
+}
+
+model CscaAIEntitlementAccount {
+  id              Int      @id @default(autoincrement())
+  userId          Int      @unique @map("user_id")
+  balanceUnits    Int      @default(0) @map("balance_units")
+  lifetimeGranted Int      @default(0) @map("lifetime_granted")
+  lifetimeUsed    Int      @default(0) @map("lifetime_used")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  user   User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ledger CscaAIUsageLedger[]
+
+  @@index([userId], map: "idx_csca_ai_entitlement_accounts_user")
+  @@map("csca_ai_entitlement_accounts")
+}
+
+model CscaAIUsageLedger {
+  id            Int      @id @default(autoincrement())
+  userId        Int      @map("user_id")
+  accountId     Int?     @map("account_id")
+  interactionId Int?     @map("interaction_id")
+  abilityType   String   @map("ability_type") @db.VarChar(60)
+  provider      String?  @db.VarChar(60)
+  model         String?  @db.VarChar(120)
+  unitsDelta    Int      @map("units_delta")
+  reason        String   @db.VarChar(80)
+  status        String   @default("posted") @db.VarChar(40)
+  metadata      Json?
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  user        User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account     CscaAIEntitlementAccount? @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  interaction CscaAIInteraction?        @relation(fields: [interactionId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt], map: "idx_csca_ai_usage_ledger_user_created")
+  @@index([interactionId], map: "idx_csca_ai_usage_ledger_interaction")
+  @@index([status, createdAt], map: "idx_csca_ai_usage_ledger_status_created")
+  @@map("csca_ai_usage_ledger")
+}
+
+model AiGatewayCallLog {
+  id               Int      @id @default(autoincrement())
+  requestId        String   @unique @map("request_id")
+  taskType         String   @map("task_type") @db.VarChar(80)
+  sourceModule     String   @map("source_module") @db.VarChar(120)
+  providerId       String   @map("provider_id") @db.VarChar(80)
+  model            String   @db.VarChar(120)
+  keyId            String   @map("key_id") @db.VarChar(160)
+  userId           Int?     @map("user_id")
+  organizationId   Int?     @map("organization_id")
+  status           String   @db.VarChar(40)
+  errorCode        String?  @map("error_code") @db.VarChar(80)
+  errorMessage     String?  @map("error_message") @db.Text
+  latencyMs        Int      @map("latency_ms")
+  promptTokens     Int?     @map("prompt_tokens")
+  completionTokens Int?     @map("completion_tokens")
+  totalTokens      Int?     @map("total_tokens")
+  estimatedCost    Decimal? @map("estimated_cost")
+  metadata         Json?
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  @@index([taskType, createdAt], map: "idx_ai_gateway_call_logs_task_created")
+  @@index([providerId, createdAt], map: "idx_ai_gateway_call_logs_provider_created")
+  @@index([keyId, createdAt], map: "idx_ai_gateway_call_logs_key_created")
+  @@index([userId, createdAt], map: "idx_ai_gateway_call_logs_user_created")
+  @@index([organizationId, createdAt], map: "idx_ai_gateway_call_logs_org_created")
+  @@map("ai_gateway_call_logs")
+}
+
+model CscaTrainingEvent {
+  id         Int      @id @default(autoincrement())
+  userId     Int?     @map("user_id")
+  subject    String?  @db.VarChar(60)
+  sessionId  Int?     @map("session_id")
+  roundId    Int?     @map("round_id")
+  questionId Int?     @map("question_id")
+  eventType  String   @map("event_type") @db.VarChar(80)
+  source     String   @default("adaptive") @db.VarChar(40)
+  metadata   Json?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt], map: "idx_csca_training_events_user_created")
+  @@index([eventType, createdAt], map: "idx_csca_training_events_type_created")
+  @@index([sessionId, createdAt], map: "idx_csca_training_events_session_created")
+  @@index([roundId, createdAt], map: "idx_csca_training_events_round_created")
+  @@map("csca_training_events")
+}
+
+model CscaLearningCohort {
+  id                   Int       @id @default(autoincrement())
+  name                 String    @db.VarChar(200)
+  subject              String?   @db.VarChar(60)
+  source               String    @default("rolling") @db.VarChar(60)
+  status               String    @default("active") @db.VarChar(40)
+  organizationId       Int?      @map("organization_id")
+  organizationCohortId Int?      @map("organization_cohort_id")
+  teamKey              String?   @map("team_key") @db.VarChar(160)
+  startAt              DateTime? @map("start_at")
+  targetExamAt         DateTime? @map("target_exam_at")
+  endAt                DateTime? @map("end_at")
+  coolingStartedAt     DateTime? @map("cooling_started_at")
+  inactiveAt           DateTime? @map("inactive_at")
+  metadata             Json?
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  @@index([subject, status], map: "idx_csca_learning_cohorts_subject_status")
+  @@index([organizationId, organizationCohortId, status], map: "idx_csca_learning_cohorts_org_scope")
+  @@index([source, status], map: "idx_csca_learning_cohorts_source_status")
+  @@map("csca_learning_cohorts")
+}
+
+model CscaStudentLearningCycle {
+  id                   Int       @id @default(autoincrement())
+  userId               Int       @map("user_id")
+  cohortId             Int?      @map("cohort_id")
+  organizationId       Int?      @map("organization_id")
+  organizationCohortId Int?      @map("organization_cohort_id")
+  teamKey              String?   @map("team_key") @db.VarChar(160)
+  subject              String    @db.VarChar(60)
+  phase                String    @default("foundation") @db.VarChar(60)
+  status               String    @default("active") @db.VarChar(40)
+  startedAt            DateTime  @default(now()) @map("started_at")
+  lastActiveAt         DateTime? @map("last_active_at")
+  targetExamAt         DateTime? @map("target_exam_at")
+  completedTopicIds    Json?     @map("completed_topic_ids")
+  metadata             Json?
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  @@index([userId, subject, status], map: "idx_student_learning_cycles_user_subject")
+  @@index([cohortId, subject, status], map: "idx_student_learning_cycles_cohort_subject")
+  @@index([organizationId, organizationCohortId, status], map: "idx_student_learning_cycles_org_scope")
+  @@map("csca_student_learning_cycles")
+}
+
+model CscaAdaptiveUsageAggregate {
+  id                    Int      @id @default(autoincrement())
+  userId                Int?     @map("user_id")
+  cohortId              Int?     @map("cohort_id")
+  organizationId        Int?     @map("organization_id")
+  organizationCohortId  Int?     @map("organization_cohort_id")
+  teamKey               String?  @map("team_key") @db.VarChar(160)
+  subject               String   @db.VarChar(60)
+  topicId               Int      @map("topic_id")
+  difficultyBand        String   @map("difficulty_band") @db.VarChar(40)
+  questionType          String   @map("question_type") @db.VarChar(100)
+  windowStart           DateTime @map("window_start")
+  windowEnd             DateTime @map("window_end")
+  exposureCount         Int      @default(0) @map("exposure_count")
+  attemptCount          Int      @default(0) @map("attempt_count")
+  uniqueUserCount       Int      @default(0) @map("unique_user_count")
+  correctCount          Int      @default(0) @map("correct_count")
+  wrongCount            Int      @default(0) @map("wrong_count")
+  repeatExposureCount   Int      @default(0) @map("repeat_exposure_count")
+  fallbackDrawCount     Int      @default(0) @map("fallback_draw_count")
+  noQuestionErrorCount  Int      @default(0) @map("no_question_error_count")
+  averageResponseTimeMs Int?     @map("average_response_time_ms")
+  metadata              Json?
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, cohortId, subject, topicId, difficultyBand, questionType, windowStart, windowEnd], map: "uq_adaptive_usage_aggregates_window")
+  @@index([userId, subject, windowEnd], map: "idx_adaptive_usage_aggregates_user_window")
+  @@index([subject, topicId, difficultyBand], map: "idx_adaptive_usage_aggregates_inventory_key")
+  @@index([organizationId, organizationCohortId, windowEnd], map: "idx_adaptive_usage_aggregates_org_window")
+  @@index([windowEnd], map: "idx_adaptive_usage_aggregates_window_end")
+  @@map("csca_adaptive_usage_aggregates")
+}
+
+model CscaAdaptiveInventorySnapshot {
+  id                           Int      @id @default(autoincrement())
+  userId                       Int?     @map("user_id")
+  cohortId                     Int?     @map("cohort_id")
+  organizationId               Int?     @map("organization_id")
+  organizationCohortId         Int?     @map("organization_cohort_id")
+  teamKey                      String?  @map("team_key") @db.VarChar(160)
+  subject                      String   @db.VarChar(60)
+  topicId                      Int      @map("topic_id")
+  difficultyBand               String   @map("difficulty_band") @db.VarChar(40)
+  questionType                 String   @map("question_type") @db.VarChar(100)
+  globalEffectiveStock         Int      @default(0) @map("global_effective_stock")
+  manualStock                  Int      @default(0) @map("manual_stock")
+  aiFormalStock                Int      @default(0) @map("ai_formal_stock")
+  candidateCount               Int      @default(0) @map("candidate_count")
+  failedCount                  Int      @default(0) @map("failed_count")
+  safetyStock                  Int      @default(0) @map("safety_stock")
+  cycleTargetStock             Int      @default(0) @map("cycle_target_stock")
+  maxStockCap                  Int      @default(0) @map("max_stock_cap")
+  requiredPublishedCount       Int      @default(0) @map("required_published_count")
+  activeUserCount              Int      @default(0) @map("active_user_count")
+  teamActiveUserCount          Int      @default(0) @map("team_active_user_count")
+  userLowAvailabilityCount     Int      @default(0) @map("user_low_availability_count")
+  teamLowAvailabilityUserCount Int      @default(0) @map("team_low_availability_user_count")
+  userCoveragePressure         Float    @default(0) @map("user_coverage_pressure")
+  teamUserCoveragePressure     Float    @default(0) @map("team_user_coverage_pressure")
+  teamPressureScore            Float    @default(0) @map("team_pressure_score")
+  projectedDaysToSafety        Float?   @map("projected_days_to_safety")
+  riskLevel                    String   @default("low") @map("risk_level") @db.VarChar(40)
+  riskReasons                  Json     @default("[]") @map("risk_reasons")
+  snapshotAt                   DateTime @default(now()) @map("snapshot_at")
+  metadata                     Json?
+  createdAt                    DateTime @default(now()) @map("created_at")
+  updatedAt                    DateTime @updatedAt @map("updated_at")
+
+  @@index([subject, topicId, difficultyBand, questionType], map: "idx_adaptive_inventory_snapshots_key")
+  @@index([userId, riskLevel, snapshotAt], map: "idx_adaptive_inventory_snapshots_user_risk")
+  @@index([cohortId, riskLevel, snapshotAt], map: "idx_adaptive_inventory_snapshots_cohort_risk")
+  @@index([organizationId, organizationCohortId, riskLevel], map: "idx_adaptive_inventory_snapshots_org_risk")
+  @@index([riskLevel, snapshotAt], map: "idx_adaptive_inventory_snapshots_risk_time")
+  @@map("csca_adaptive_inventory_snapshots")
+}
+
+model CscaAdaptiveInventoryEvent {
+  id                   Int      @id @default(autoincrement())
+  userId               Int?     @map("user_id")
+  cohortId             Int?     @map("cohort_id")
+  organizationId       Int?     @map("organization_id")
+  organizationCohortId Int?     @map("organization_cohort_id")
+  teamKey              String?  @map("team_key") @db.VarChar(160)
+  subject              String   @db.VarChar(60)
+  topicId              Int?     @map("topic_id")
+  difficultyBand       String?  @map("difficulty_band") @db.VarChar(40)
+  questionType         String?  @map("question_type") @db.VarChar(100)
+  eventType            String   @map("event_type") @db.VarChar(80)
+  questionId           Int?     @map("question_id")
+  metadata             Json?
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  @@index([subject, topicId, difficultyBand, createdAt], map: "idx_adaptive_inventory_events_key_time")
+  @@index([eventType, createdAt], map: "idx_adaptive_inventory_events_type_time")
+  @@index([cohortId, eventType, createdAt], map: "idx_adaptive_inventory_events_cohort_type")
+  @@index([organizationId, organizationCohortId, createdAt], map: "idx_adaptive_inventory_events_org_time")
+  @@index([userId, createdAt], map: "idx_adaptive_inventory_events_user_time")
+  @@map("csca_adaptive_inventory_events")
+}
+
+model CscaLearningDailySnapshot {
+  id                 Int      @id @default(autoincrement())
+  userId             Int      @map("user_id")
+  localDate          DateTime @map("local_date")
+  timezone           String   @default("Asia/Shanghai") @db.VarChar(60)
+  subject            String   @default("all") @db.VarChar(60)
+  activeScore        Int      @default(0) @map("active_score")
+  answeredCount      Int      @default(0) @map("answered_count")
+  correctCount       Int      @default(0) @map("correct_count")
+  wrongCount         Int      @default(0) @map("wrong_count")
+  unansweredCount    Int      @default(0) @map("unanswered_count")
+  practiceSeconds    Int      @default(0) @map("practice_seconds")
+  mockSeconds        Int      @default(0) @map("mock_seconds")
+  aiInteractionCount Int      @default(0) @map("ai_interaction_count")
+  masteryAvg         Float?   @map("mastery_avg")
+  isStreakEligible   Boolean  @default(false) @map("is_streak_eligible")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, localDate, subject], map: "uq_csca_learning_daily_user_date_subject")
+  @@index([userId, localDate], map: "idx_csca_learning_daily_user_date")
+  @@map("csca_learning_daily_snapshots")
+}
+
+model CscaLearningStreak {
+  id                Int       @id @default(autoincrement())
+  userId            Int       @unique @map("user_id")
+  currentStreakDays Int       @default(0) @map("current_streak_days")
+  longestStreakDays Int       @default(0) @map("longest_streak_days")
+  lastEligibleDate  DateTime? @map("last_eligible_date")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("csca_learning_streaks")
+}
+
+model CscaLearningInsight {
+  id                 Int      @id @default(autoincrement())
+  userId             Int      @map("user_id")
+  periodType         String   @map("period_type") @db.VarChar(40)
+  periodStart        DateTime @map("period_start")
+  periodEnd          DateTime @map("period_end")
+  summary            String   @db.Text
+  strengths          Json     @default("[]")
+  weaknesses         Json     @default("[]")
+  recommendedActions Json     @default("[]") @map("recommended_actions")
+  provider           String?  @db.VarChar(60)
+  model              String?  @db.VarChar(120)
+  status             String   @default("success") @db.VarChar(40)
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, periodType, periodStart], map: "idx_csca_learning_insights_user_period")
+  @@map("csca_learning_insights")
+}
+
+model CscaReadinessActionCalibrationSnapshot {
+  id                  Int      @id @default(autoincrement())
+  snapshotDate        DateTime @map("snapshot_date")
+  actionType          String   @map("action_type") @db.VarChar(80)
+  windowDays          Int      @default(30) @map("window_days")
+  clickedCount        Int      @default(0) @map("clicked_count")
+  followedCount       Int      @default(0) @map("followed_count")
+  abilityLiftCount    Int      @default(0) @map("ability_lift_count")
+  followThroughRate   Float?   @map("follow_through_rate")
+  abilityLiftRate     Float?   @map("ability_lift_rate")
+  averageMasteryDelta Float?   @map("average_mastery_delta")
+  multiplier          Float    @default(1)
+  status              String   @default("insufficient") @db.VarChar(40)
+  metadata            Json?
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  @@unique([snapshotDate, actionType], map: "uq_readiness_action_calibration_date_type")
+  @@index([actionType, snapshotDate], map: "idx_readiness_action_calibration_type_date")
+  @@map("csca_readiness_action_calibration_snapshots")
+}
+
+model CscaWrongPattern {
+  id              Int       @id @default(autoincrement())
+  userId          Int       @map("user_id")
+  subject         String    @db.VarChar(60)
+  topicId         Int?      @map("topic_id")
+  patternType     String    @map("pattern_type") @db.VarChar(60)
+  recurrenceCount Int       @default(1) @map("recurrence_count")
+  lastWrongAt     DateTime? @map("last_wrong_at")
+  lastCorrectAt   DateTime? @map("last_correct_at")
+  nextReviewAt    DateTime? @map("next_review_at")
+  status          String    @default("active") @db.VarChar(40)
+  metadata        Json?
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  user  User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topic CscaExamTopic? @relation(fields: [topicId], references: [id], onDelete: SetNull)
+
+  @@index([userId, subject, status], map: "idx_csca_wrong_patterns_user_subject_status")
+  @@index([userId, nextReviewAt], map: "idx_csca_wrong_patterns_user_review")
+  @@index([topicId], map: "idx_csca_wrong_patterns_topic")
+  @@map("csca_wrong_patterns")
+}
+
+model MockExamPaper {
+  id              Int      @id @default(autoincrement())
+  subject         String   @db.VarChar(60)
+  slug            String   @unique @db.VarChar(120)
+  title           String   @db.VarChar(160)
+  description     String?  @db.Text
+  language        String   @default("zh") @db.VarChar(20)
+  questionCount   Int      @map("question_count")
+  durationMinutes Int      @map("duration_minutes")
+  priceLabel      String?  @map("price_label") @db.VarChar(80)
+  isFree          Boolean  @default(false) @map("is_free")
+  isLocked        Boolean  @default(true) @map("is_locked")
+  sortOrder       Int      @default(0) @map("sort_order")
+  status          String   @default("published") @db.VarChar(30)
+  version         Int      @default(1)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  questions  MockExamQuestion[]
+  attempts   MockExamAttempt[]
+  blueprints MockExamBlueprint[]
+
+  @@index([subject, status, sortOrder], map: "idx_mock_exam_papers_subject_status_sort")
+  @@index([status, sortOrder], map: "idx_mock_exam_papers_status_sort")
+  @@map("mock_exam_papers")
+}
+
+model MockExamQuestion {
+  id            Int      @id @default(autoincrement())
+  paperId       Int      @map("paper_id")
+  orderNumber   Int      @map("order_number")
+  questionType  String   @map("question_type") @db.VarChar(100)
+  prompt        String   @db.Text
+  options       Json
+  correctAnswer String   @map("correct_answer") @db.VarChar(50)
+  explanation   String   @db.Text
+  knowledgeTags Json     @default("[]") @map("knowledge_tags")
+  status        String   @default("published") @db.VarChar(30)
+  version       Int      @default(1)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  paper MockExamPaper @relation(fields: [paperId], references: [id], onDelete: Cascade)
+
+  @@unique([paperId, orderNumber], map: "uq_mock_exam_questions_paper_order")
+  @@index([paperId, status, orderNumber], map: "idx_mock_exam_questions_paper_status_order")
+  @@map("mock_exam_questions")
+}
+
+model MockExamBlueprint {
+  id               Int      @id @default(autoincrement())
+  subject          String   @db.VarChar(60)
+  title            String   @db.VarChar(180)
+  syllabusVersion  String   @default("current") @map("syllabus_version") @db.VarChar(80)
+  sourceProfileIds Json     @default("[]") @map("source_profile_ids")
+  sourcePaperId    Int?     @map("source_paper_id")
+  questionCount    Int      @map("question_count")
+  durationMinutes  Int      @map("duration_minutes")
+  totalScore       Int      @default(0) @map("total_score")
+  status           String   @default("draft") @db.VarChar(30)
+  profile          Json
+  createdBy        Int?     @map("created_by")
+  version          Int      @default(1)
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  sourcePaper    MockExamPaper?          @relation(fields: [sourcePaperId], references: [id], onDelete: SetNull)
+  slots          MockExamBlueprintSlot[]
+  generationJobs MockExamGenerationJob[]
+
+  @@index([subject, status, updatedAt], map: "idx_mock_exam_blueprints_subject_status")
+  @@index([sourcePaperId, status], map: "idx_mock_exam_blueprints_source_paper")
+  @@map("mock_exam_blueprints")
+}
+
+model MockExamBlueprintSlot {
+  id                    Int      @id @default(autoincrement())
+  blueprintId           Int      @map("blueprint_id")
+  slotNumber            Int      @map("slot_number")
+  topicIds              Json     @default("[]") @map("topic_ids")
+  module                String?  @db.VarChar(160)
+  difficultyBand        String   @default("medium") @map("difficulty_band") @db.VarChar(40)
+  cognitiveSkill        String   @default("unknown") @map("cognitive_skill") @db.VarChar(80)
+  readingLoad           String   @default("medium") @map("reading_load") @db.VarChar(40)
+  calculationLoad       String   @default("light") @map("calculation_load") @db.VarChar(40)
+  estimatedTimeSeconds  Int      @default(75) @map("estimated_time_seconds")
+  generationPromptHints Json     @default("[]") @map("generation_prompt_hints")
+  reviewerChecklist     Json     @default("[]") @map("reviewer_checklist")
+  status                String   @default("draft") @db.VarChar(30)
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  blueprint MockExamBlueprint @relation(fields: [blueprintId], references: [id], onDelete: Cascade)
+
+  @@unique([blueprintId, slotNumber], map: "uq_mock_exam_blueprint_slots_blueprint_slot")
+  @@index([blueprintId, status], map: "idx_mock_exam_blueprint_slots_blueprint_status")
+  @@map("mock_exam_blueprint_slots")
+}
+
+model MockExamGenerationJob {
+  id                   Int       @id @default(autoincrement())
+  blueprintId          Int       @map("blueprint_id")
+  targetPaperId        Int?      @map("target_paper_id")
+  status               String    @default("queued") @db.VarChar(40)
+  provider             String?   @db.VarChar(80)
+  model                String?   @db.VarChar(120)
+  requestedSlotNumbers Json      @default("[]") @map("requested_slot_numbers")
+  slotResults          Json      @default("[]") @map("slot_results")
+  error                String?   @db.Text
+  createdBy            Int?      @map("created_by")
+  startedAt            DateTime? @map("started_at")
+  completedAt          DateTime? @map("completed_at")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  blueprint MockExamBlueprint @relation(fields: [blueprintId], references: [id], onDelete: Cascade)
+
+  @@index([blueprintId, status, updatedAt], map: "idx_mock_exam_generation_jobs_blueprint_status")
+  @@index([status, updatedAt], map: "idx_mock_exam_generation_jobs_status")
+  @@map("mock_exam_generation_jobs")
+}
+
+model MockExamAttempt {
+  id               Int       @id @default(autoincrement())
+  userId           Int?      @map("user_id")
+  paperId          Int       @map("paper_id")
+  language         String    @default("zh") @db.VarChar(20)
+  answers          Json      @default("{}")
+  questionSnapshot Json?     @map("question_snapshot")
+  markedQuestions  Json      @default("[]") @map("marked_questions")
+  timeSpent        Json      @default("{}") @map("time_spent")
+  currentQuestion  Int       @default(1) @map("current_question")
+  score            Int?
+  correctCount     Int?      @map("correct_count")
+  wrongCount       Int?      @map("wrong_count")
+  unansweredCount  Int?      @map("unanswered_count")
+  startedAt        DateTime  @default(now()) @map("started_at")
+  submittedAt      DateTime? @map("submitted_at")
+  version          Int       @default(1)
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  user  User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  paper MockExamPaper @relation(fields: [paperId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt], map: "idx_mock_exam_attempts_user_created")
+  @@index([paperId, submittedAt], map: "idx_mock_exam_attempts_paper_submitted")
+  @@map("mock_exam_attempts")
+}
+
+model PastPaper {
+  id               Int       @id @default(autoincrement())
+  slug             String    @unique @db.VarChar(160)
+  title            String    @db.VarChar(240)
+  category         String    @default("past-paper") @db.VarChar(40)
+  subject          String    @db.VarChar(60)
+  examYear         Int?      @map("exam_year")
+  examMonth        String?   @map("exam_month") @db.VarChar(40)
+  sessionLabel     String?   @map("session_label") @db.VarChar(120)
+  language         String    @default("zh") @db.VarChar(20)
+  description      String?   @db.Text
+  questionCount    Int?      @map("question_count")
+  pageCount        Int?      @map("page_count")
+  hasAnswers       Boolean   @default(false) @map("has_answers")
+  hasSolutions     Boolean   @default(false) @map("has_solutions")
+  coverUrl         String?   @map("cover_url") @db.Text
+  isFree           Boolean   @default(true) @map("is_free")
+  isPublished      Boolean   @default(false) @map("is_published")
+  isFeatured       Boolean   @default(false) @map("is_featured")
+  sortOrder        Int       @default(0) @map("sort_order")
+  downloadCount    Int       @default(0) @map("download_count")
+  sourceDocumentId Int?      @map("source_document_id")
+  version          Int       @default(1)
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  deletedAt        DateTime? @map("deleted_at")
+
+  files          PastPaperFile[]
+  downloads      PastPaperDownload[]
+  bundleItems    ResourceBundleItem[]
+  sourceDocument CscaSourceDocument?     @relation(fields: [sourceDocumentId], references: [id], onDelete: SetNull)
+  agentAttempts  AgentPastPaperAttempt[]
+
+  @@index([category, subject, isPublished, sortOrder], map: "idx_past_papers_category_subject_published_sort")
+  @@index([isPublished, isFeatured, sortOrder], map: "idx_past_papers_featured_sort")
+  @@index([sourceDocumentId], map: "idx_past_papers_source_document")
+  @@map("past_papers")
+}
+
+model AgentPastPaperAttempt {
+  id                    String    @id @default(cuid())
+  userId                Int       @map("user_id")
+  conversationId        String    @map("conversation_id")
+  pastPaperId           Int       @map("past_paper_id")
+  sourceQuestionId      Int       @map("source_question_id")
+  status                String    @default("in_progress") @db.VarChar(24)
+  selectedAnswer        String?   @map("selected_answer") @db.VarChar(500)
+  outcome               String?   @db.VarChar(24)
+  usedAssistance        Boolean   @default(false) @map("used_assistance")
+  maxAssistanceLevel    String?   @map("max_assistance_level") @db.VarChar(8)
+  timeSpentSeconds      Int?      @map("time_spent_seconds")
+  evidenceStatus        String    @default("pending") @map("evidence_status") @db.VarChar(40)
+  evidenceReasonCode    String?   @map("evidence_reason_code") @db.VarChar(80)
+  evidenceId            String?   @map("evidence_id") @db.VarChar(120)
+  clientStartRequestId  String    @map("client_start_request_id") @db.VarChar(120)
+  clientSubmitRequestId String?   @map("client_submit_request_id") @db.VarChar(120)
+  startedAt             DateTime  @default(now()) @map("started_at")
+  submittedAt           DateTime? @map("submitted_at")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation   AgentConversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  pastPaper      PastPaper          @relation(fields: [pastPaperId], references: [id], onDelete: Restrict)
+  sourceQuestion CscaSourceQuestion @relation(fields: [sourceQuestionId], references: [id], onDelete: Restrict)
+
+  @@unique([userId, conversationId, pastPaperId, sourceQuestionId], map: "uq_agent_past_paper_attempt_context")
+  @@unique([userId, clientStartRequestId], map: "uq_agent_past_paper_attempt_start")
+  @@unique([userId, clientSubmitRequestId], map: "uq_agent_past_paper_attempt_submit")
+  @@index([userId, status, updatedAt], map: "idx_agent_past_paper_attempt_user_status")
+  @@index([conversationId, createdAt], map: "idx_agent_past_paper_attempt_conversation")
+  @@map("agent_past_paper_attempts")
+}
+
+model ResourceBundle {
+  id           Int       @id @default(autoincrement())
+  slug         String    @unique @db.VarChar(180)
+  title        String    @db.VarChar(240)
+  category     String    @default("past-paper") @db.VarChar(40)
+  subjectScope String    @default("mixed") @map("subject_scope") @db.VarChar(60)
+  language     String    @default("zh") @db.VarChar(20)
+  description  String?   @db.Text
+  coverUrl     String?   @map("cover_url") @db.Text
+  highlights   Json      @default("[]")
+  tags         Json      @default("[]")
+  isFeatured   Boolean   @default(false) @map("is_featured")
+  isPublished  Boolean   @default(false) @map("is_published")
+  sortOrder    Int       @default(0) @map("sort_order")
+  version      Int       @default(1)
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  deletedAt    DateTime? @map("deleted_at")
+
+  items ResourceBundleItem[]
+
+  @@index([category, subjectScope, isPublished, sortOrder], map: "idx_resource_bundles_category_subject_published_sort")
+  @@index([isPublished, isFeatured, sortOrder], map: "idx_resource_bundles_featured_sort")
+  @@map("resource_bundles")
+}
+
+model ResourceBundleItem {
+  id          Int      @id @default(autoincrement())
+  bundleId    Int      @map("bundle_id")
+  pastPaperId Int      @map("past_paper_id")
+  label       String?  @db.VarChar(160)
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  bundle    ResourceBundle @relation(fields: [bundleId], references: [id], onDelete: Cascade)
+  pastPaper PastPaper      @relation(fields: [pastPaperId], references: [id], onDelete: Cascade)
+
+  @@unique([bundleId, pastPaperId], map: "uq_resource_bundle_items_bundle_paper")
+  @@index([bundleId, sortOrder], map: "idx_resource_bundle_items_bundle_sort")
+  @@index([pastPaperId], map: "idx_resource_bundle_items_paper")
+  @@map("resource_bundle_items")
+}
+
+model PastPaperFile {
+  id               Int      @id @default(autoincrement())
+  pastPaperId      Int      @map("past_paper_id")
+  kind             String   @db.VarChar(40)
+  label            String   @db.VarChar(160)
+  fileUrl          String   @map("file_url") @db.Text
+  originalFilename String?  @map("original_filename") @db.VarChar(240)
+  mimeType         String   @default("application/pdf") @map("mime_type") @db.VarChar(120)
+  fileSizeBytes    Int?     @map("file_size_bytes")
+  checksum         String?  @db.VarChar(128)
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  pastPaper PastPaper           @relation(fields: [pastPaperId], references: [id], onDelete: Cascade)
+  downloads PastPaperDownload[]
+
+  @@index([pastPaperId, kind], map: "idx_past_paper_files_paper_kind")
+  @@map("past_paper_files")
+}
+
+model PastPaperDownload {
+  id            Int      @id @default(autoincrement())
+  pastPaperId   Int      @map("past_paper_id")
+  fileId        Int?     @map("file_id")
+  userId        Int?     @map("user_id")
+  ipHash        String?  @map("ip_hash") @db.VarChar(128)
+  userAgentHash String?  @map("user_agent_hash") @db.VarChar(128)
+  downloadedAt  DateTime @default(now()) @map("downloaded_at")
+
+  pastPaper PastPaper      @relation(fields: [pastPaperId], references: [id], onDelete: Cascade)
+  file      PastPaperFile? @relation(fields: [fileId], references: [id], onDelete: SetNull)
+  user      User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([pastPaperId, downloadedAt], map: "idx_past_paper_downloads_paper_time")
+  @@index([userId, downloadedAt], map: "idx_past_paper_downloads_user_time")
+  @@map("past_paper_downloads")
+}
+
+model CartItem {
+  id        Int          @id @default(autoincrement())
+  userId    Int          @map("user_id")
+  type      CartItemType
+  schoolId  Int?         @map("school_id")
+  dedupeKey String       @map("dedupe_key") @db.VarChar(120)
+  quantity  Int          @default(1)
+  createdAt DateTime     @default(now()) @map("created_at")
+  updatedAt DateTime     @updatedAt @map("updated_at")
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  school School? @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, dedupeKey], map: "uq_cart_items_user_dedupe")
+  @@index([userId, createdAt], map: "idx_cart_items_user_created")
+  @@index([schoolId], map: "idx_cart_items_school")
+  @@map("cart_items")
+}
+
+model Order {
+  id                 Int         @id @default(autoincrement())
+  userId             Int         @map("user_id")
+  status             OrderStatus @default(PENDING)
+  currency           String      @default("USD") @db.VarChar(3)
+  itemsTotalCents    Int         @map("items_total_cents")
+  discountTotalCents Int         @map("discount_total_cents")
+  payableTotalCents  Int         @map("payable_total_cents")
+  pricingBreakdown   Json        @map("pricing_breakdown")
+  checkoutKey        String?     @map("checkout_key") @db.VarChar(120)
+  createdAt          DateTime    @default(now()) @map("created_at")
+  updatedAt          DateTime    @updatedAt @map("updated_at")
+
+  user     User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items    OrderItem[]
+  payments Payment[]
+
+  @@unique([userId, checkoutKey], map: "uq_orders_user_checkout_key")
+  @@index([userId, createdAt], map: "idx_orders_user_created")
+  @@index([status, createdAt], map: "idx_orders_status_created")
+  @@map("orders")
+}
+
+model OrderItem {
+  id                  Int          @id @default(autoincrement())
+  orderId             Int          @map("order_id")
+  type                CartItemType
+  schoolId            Int?         @map("school_id")
+  title               String
+  quantity            Int          @default(1)
+  unitAmountCents     Int          @map("unit_amount_cents")
+  originalAmountCents Int          @map("original_amount_cents")
+  discountAmountCents Int          @map("discount_amount_cents")
+  payableAmountCents  Int          @map("payable_amount_cents")
+  metadata            Json?
+  createdAt           DateTime     @default(now()) @map("created_at")
+
+  order  Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  school School? @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+
+  @@index([orderId], map: "idx_order_items_order")
+  @@index([schoolId], map: "idx_order_items_school")
+  @@map("order_items")
+}
+
+model Payment {
+  id            Int           @id @default(autoincrement())
+  userId        Int           @map("user_id")
+  orderId       Int           @map("order_id")
+  providerTxnId String        @unique @map("provider_txn_id") @db.VarChar(120)
+  amountCents   Int           @map("amount_cents")
+  currency      String        @default("USD") @db.VarChar(3)
+  status        PaymentStatus @default(PENDING)
+  failureReason String?       @map("failure_reason") @db.Text
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  order     Order                @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  callbacks PaymentCallbackLog[]
+
+  @@index([userId, createdAt], map: "idx_payments_user_created")
+  @@index([orderId, createdAt], map: "idx_payments_order_created")
+  @@index([status, createdAt], map: "idx_payments_status_created")
+  @@map("payments")
+}
+
+model PaymentCallbackLog {
+  id            Int      @id @default(autoincrement())
+  paymentId     Int?     @map("payment_id")
+  providerTxnId String?  @map("provider_txn_id") @db.VarChar(120)
+  payload       Json
+  signatureOk   Boolean  @default(false) @map("signature_ok")
+  amountOk      Boolean  @default(false) @map("amount_ok")
+  result        String   @db.VarChar(80)
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  payment Payment? @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+
+  @@index([paymentId, createdAt], map: "idx_payment_callback_logs_payment_created")
+  @@index([providerTxnId, createdAt], map: "idx_payment_callback_logs_provider_created")
+  @@map("payment_callback_logs")
+}
+
+// LS-V1 additive foundation. All writers remain behind disabled-by-default flags.
+model StudentScoreGoal {
+  id                   String    @id @default(cuid())
+  userId               Int       @map("user_id")
+  examSystemCode       String    @map("exam_system_code") @db.VarChar(40)
+  examBatchCode        String    @map("exam_batch_code") @db.VarChar(80)
+  examDate             DateTime  @map("exam_date") @db.Date
+  version              Int
+  status               String    @default("active") @db.VarChar(24)
+  totalTargetScore     Float?    @map("total_target_score")
+  availabilityVersion  String    @map("availability_version") @db.VarChar(80)
+  scoringPolicyVersion String    @map("scoring_policy_version") @db.VarChar(80)
+  replacesGoalId       String?   @map("replaces_goal_id")
+  source               String    @default("user") @db.VarChar(40)
+  effectiveAt          DateTime  @default(now()) @map("effective_at")
+  supersededAt         DateTime? @map("superseded_at")
+  createdAt            DateTime  @default(now()) @map("created_at")
+
+  user                 User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subjects             StudentScoreGoalSubject[]
+  forecasts            ScoreReadinessForecast[]
+  predictionShadowRuns ScorePredictionShadowRun[]
+  gapSnapshots         TargetGapSnapshot[]
+  prescriptions        LearningPrescription[]
+  decisionCurrent      LearningDecisionCurrent?
+
+  @@unique([userId, examSystemCode, examBatchCode, version], map: "uq_student_score_goals_version")
+  @@index([userId, status, createdAt], map: "idx_student_score_goals_user_status_created")
+  @@map("student_score_goals")
+}
+
+model StudentScoreGoalSubject {
+  id          String   @id @default(cuid())
+  goalId      String   @map("goal_id")
+  subjectCode String   @map("subject_code") @db.VarChar(24)
+  targetScore Float    @map("target_score")
+  priority    Int      @default(1)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  goal StudentScoreGoal @relation(fields: [goalId], references: [id], onDelete: Cascade)
+
+  @@unique([goalId, subjectCode], map: "uq_student_score_goal_subjects_goal_subject")
+  @@index([subjectCode], map: "idx_student_score_goal_subjects_subject")
+  @@map("student_score_goal_subjects")
+}
+
+model StudyAvailabilityPreference {
+  id                    String    @id @default(cuid())
+  userId                Int       @map("user_id")
+  version               Int
+  status                String    @default("active") @db.VarChar(24)
+  timezone              String    @db.VarChar(80)
+  weeklyMinutesGoal     Int?      @map("weekly_minutes_goal")
+  preferredStudyDays    Json      @default("[]") @map("preferred_study_days")
+  defaultSessionMinutes Int?      @map("default_session_minutes")
+  source                String    @default("user") @db.VarChar(40)
+  effectiveAt           DateTime  @default(now()) @map("effective_at")
+  supersededAt          DateTime? @map("superseded_at")
+  createdAt             DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, version], map: "uq_study_availability_user_version")
+  @@index([userId, status, createdAt], map: "idx_study_availability_user_status_created")
+  @@map("study_availability_preferences")
+}
+
+model LearningEvidenceEvent {
+  id                        String   @id @default(cuid())
+  schemaVersion             String   @map("schema_version") @db.VarChar(16)
+  eventId                   String   @unique @map("event_id") @db.VarChar(80)
+  eventSequence             BigInt   @map("event_sequence")
+  userId                    Int      @map("user_id")
+  subjectCode               String   @map("subject_code") @db.VarChar(24)
+  occurredAt                DateTime @map("occurred_at")
+  recordedAt                DateTime @default(now()) @map("recorded_at")
+  sourceType                String   @map("source_type") @db.VarChar(40)
+  sourceId                  String   @map("source_id") @db.VarChar(120)
+  attemptSequence           Int      @map("attempt_sequence")
+  sessionId                 String?  @map("session_id") @db.VarChar(120)
+  questionId                String   @map("question_id") @db.VarChar(120)
+  questionVersion           Int      @map("question_version")
+  answerKeyVersion          String   @map("answer_key_version") @db.VarChar(80)
+  topicMappingVersion       String   @map("topic_mapping_version") @db.VarChar(80)
+  scoringRubricVersion      String?  @map("scoring_rubric_version") @db.VarChar(80)
+  exposureState             String   @map("exposure_state") @db.VarChar(32)
+  topicEvidence             Json     @map("topic_evidence")
+  outcome                   String   @db.VarChar(24)
+  firstAttempt              Boolean  @map("first_attempt")
+  usedHint                  Boolean  @default(false) @map("used_hint")
+  usedExplanation           Boolean  @default(false) @map("used_explanation")
+  timeSpentSeconds          Int?     @map("time_spent_seconds")
+  difficulty                String?  @db.VarChar(40)
+  questionQualityConfidence Float    @map("question_quality_confidence")
+  metadata                  Json?
+
+  user                        User                              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  outbox                      LearningEvidenceOutbox?
+  retraction                  LearningEvidenceRetraction?
+  attachmentEvidenceCandidate AgentAttachmentEvidenceCandidate?
+
+  @@unique([sourceType, sourceId, questionId, attemptSequence, schemaVersion], map: "uq_learning_evidence_business_key")
+  @@unique([userId, subjectCode, eventSequence], map: "uq_learning_evidence_subject_sequence")
+  @@index([userId, subjectCode, recordedAt], map: "idx_learning_evidence_user_subject_recorded")
+  @@map("learning_evidence_events")
+}
+
+model LearningEvidenceRetraction {
+  id              String   @id @default(cuid())
+  evidenceId      String   @unique @map("evidence_id")
+  userId          Int      @map("user_id")
+  reasonCode      String   @map("reason_code") @db.VarChar(80)
+  reason          String?  @db.VarChar(500)
+  clientRequestId String   @map("client_request_id") @db.VarChar(120)
+  metadata        Json?
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  evidence LearningEvidenceEvent @relation(fields: [evidenceId], references: [id], onDelete: Cascade)
+  user     User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, clientRequestId], map: "uq_learning_evidence_retraction_request")
+  @@index([userId, createdAt], map: "idx_learning_evidence_retractions_user_created")
+  @@map("learning_evidence_retractions")
+}
+
+model LearningEvidenceOutbox {
+  id            String    @id @default(cuid())
+  evidenceId    String    @unique @map("evidence_id")
+  eventType     String    @default("learning.evidence.recorded.v1") @map("event_type") @db.VarChar(80)
+  payload       Json
+  status        String    @default("pending") @db.VarChar(24)
+  attemptCount  Int       @default(0) @map("attempt_count")
+  availableAt   DateTime  @default(now()) @map("available_at")
+  claimedAt     DateTime? @map("claimed_at")
+  processedAt   DateTime? @map("processed_at")
+  lastErrorCode String?   @map("last_error_code") @db.VarChar(80)
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  evidence LearningEvidenceEvent @relation(fields: [evidenceId], references: [id], onDelete: Cascade)
+
+  @@index([status, availableAt], map: "idx_learning_evidence_outbox_status_available")
+  @@map("learning_evidence_outbox")
+}
+
+model UserCscaTopicStateV2 {
+  id                 String    @id @default(cuid())
+  userId             Int       @map("user_id")
+  subjectCode        String    @map("subject_code") @db.VarChar(24)
+  topicId            Int       @map("topic_id")
+  stateVersion       String    @map("state_version") @db.VarChar(80)
+  modelVersion       String    @map("model_version") @db.VarChar(80)
+  mastery            Float
+  confidence         Float
+  independence       Float
+  difficultyCeiling  String?   @map("difficulty_ceiling") @db.VarChar(40)
+  retention          Float
+  fluency            Float
+  transfer           Float
+  consistency        Float
+  coverage           Float
+  misconceptionState Json?     @map("misconception_state")
+  evidenceCount      Int       @default(0) @map("evidence_count")
+  lastEvidenceAt     DateTime? @map("last_evidence_at")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, subjectCode, topicId, modelVersion], map: "uq_user_topic_state_v2_model")
+  @@index([userId, subjectCode, updatedAt], map: "idx_user_topic_state_v2_user_subject_updated")
+  @@map("user_csca_topic_states_v2")
+}
+
+model LearningStateProjectionCheckpoint {
+  id                  String   @id @default(cuid())
+  userId              Int      @map("user_id")
+  subjectCode         String   @map("subject_code") @db.VarChar(24)
+  projectorVersion    String   @map("projector_version") @db.VarChar(80)
+  lastEventSequence   BigInt   @default(0) @map("last_event_sequence")
+  lastEvidenceVersion String?  @map("last_evidence_version") @db.VarChar(80)
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, subjectCode, projectorVersion], map: "uq_learning_projection_checkpoint")
+  @@map("learning_state_projection_checkpoints")
+}
+
+model TargetGapSnapshot {
+  id               String   @id @default(cuid())
+  userId           Int      @map("user_id")
+  goalId           String   @map("goal_id")
+  versionHash      String   @map("version_hash") @db.VarChar(128)
+  versions         Json
+  gaps             Json
+  evidenceCutoffAt DateTime @map("evidence_cutoff_at")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  user                User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goal                StudentScoreGoal          @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  currentPublications LearningDecisionCurrent[]
+
+  @@unique([userId, goalId, versionHash], map: "uq_target_gap_snapshot_versions")
+  @@index([userId, createdAt], map: "idx_target_gap_snapshots_user_created")
+  @@map("target_gap_snapshots")
+}
+
+model LearningPrescription {
+  id               String   @id @default(cuid())
+  userId           Int      @map("user_id")
+  goalId           String   @map("goal_id")
+  versionHash      String   @map("version_hash") @db.VarChar(128)
+  versions         Json
+  objective        String   @db.Text
+  reasonCodes      Json     @default("[]") @map("reason_codes")
+  reasonSummary    String   @map("reason_summary") @db.Text
+  confidence       String   @db.VarChar(24)
+  estimatedMinutes Int      @map("estimated_minutes")
+  tasks            Json
+  alternatives     Json     @default("[]")
+  validUntil       DateTime @map("valid_until")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  user                User                          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goal                StudentScoreGoal              @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  outcomes            LearningPrescriptionOutcome[]
+  currentPublications LearningDecisionCurrent[]
+
+  @@unique([userId, goalId, versionHash], map: "uq_learning_prescription_versions")
+  @@index([userId, validUntil], map: "idx_learning_prescriptions_user_valid")
+  @@map("learning_prescriptions")
+}
+
+model LearningDecisionCurrent {
+  id             String   @id @default(cuid())
+  userId         Int      @map("user_id")
+  goalId         String   @unique @map("goal_id")
+  versionHash    String   @map("version_hash") @db.VarChar(128)
+  gapSnapshotId  String   @map("gap_snapshot_id")
+  prescriptionId String   @map("prescription_id")
+  revision       Int      @default(1)
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  user         User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goal         StudentScoreGoal     @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  gapSnapshot  TargetGapSnapshot    @relation(fields: [gapSnapshotId], references: [id], onDelete: Cascade)
+  prescription LearningPrescription @relation(fields: [prescriptionId], references: [id], onDelete: Cascade)
+
+  @@index([userId, updatedAt], map: "idx_learning_decision_current_user_updated")
+  @@map("learning_decision_current")
+}
+
+model LearningIntervention {
+  id               String    @id @default(cuid())
+  decisionKey      String    @unique @map("decision_key") @db.VarChar(128)
+  userId           Int       @map("user_id")
+  subjectCode      String    @map("subject_code") @db.VarChar(24)
+  topicId          Int       @map("topic_id")
+  stateVersion     String    @map("state_version") @db.VarChar(80)
+  policyVersion    String    @map("policy_version") @db.VarChar(80)
+  action           String    @db.VarChar(40)
+  status           String    @default("shadow_proposed") @db.VarChar(32)
+  urgency          String    @db.VarChar(16)
+  placement        String    @db.VarChar(32)
+  triggerCodes     Json      @default("[]") @map("trigger_codes")
+  suppressionCodes Json      @default("[]") @map("suppression_codes")
+  contentPlan      Json?     @map("content_plan")
+  reasonSummary    String    @map("reason_summary") @db.Text
+  inputSnapshot    Json      @map("input_snapshot")
+  evidenceCutoffAt DateTime? @map("evidence_cutoff_at")
+  expiresAt        DateTime  @map("expires_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  user                 User                                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deliveries           LearningInterventionDelivery[]
+  verifications        LearningInterventionVerification[]
+  outcomes             LearningInterventionOutcome[]
+  stabilityAssessments LearningInterventionStabilityAssessment[]
+
+  @@index([userId, subjectCode, createdAt], map: "idx_learning_interventions_user_subject_created")
+  @@index([userId, topicId, status, createdAt], map: "idx_learning_interventions_topic_status")
+  @@index([status, expiresAt], map: "idx_learning_interventions_status_expires")
+  @@map("learning_interventions")
+}
+
+model LearningInterventionDelivery {
+  id                   String    @id @default(cuid())
+  interventionId       String    @map("intervention_id")
+  userId               Int       @map("user_id")
+  channel              String    @default("agent_web") @db.VarChar(32)
+  placement            String    @default("after_round") @db.VarChar(32)
+  status               String    @default("offered") @db.VarChar(32)
+  contentSourceType    String?   @map("content_source_type") @db.VarChar(40)
+  contentSourceId      String?   @map("content_source_id") @db.VarChar(120)
+  contentSourceVersion String?   @map("content_source_version") @db.VarChar(80)
+  contentSnapshot      Json?     @map("content_snapshot")
+  contextSnapshot      Json      @default("{}") @map("context_snapshot")
+  offeredAt            DateTime? @map("offered_at")
+  startedAt            DateTime? @map("started_at")
+  completedAt          DateTime? @map("completed_at")
+  deferredUntil        DateTime? @map("deferred_until")
+  skippedAt            DateTime? @map("skipped_at")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  intervention        LearningIntervention                     @relation(fields: [interventionId], references: [id], onDelete: Cascade)
+  user                User                                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  steps               LearningInterventionStep[]
+  verifications       LearningInterventionVerification[]
+  outcomes            LearningInterventionOutcome[]
+  stabilityAssessment LearningInterventionStabilityAssessment?
+
+  @@unique([interventionId, channel], map: "uq_learning_intervention_delivery_channel")
+  @@index([userId, status, updatedAt], map: "idx_learning_intervention_deliveries_user_status")
+  @@index([contentSourceType, contentSourceId], map: "idx_learning_intervention_delivery_content")
+  @@map("learning_intervention_deliveries")
+}
+
+model LearningInterventionStep {
+  id              String   @id @default(cuid())
+  deliveryId      String   @map("delivery_id")
+  userId          Int      @map("user_id")
+  clientRequestId String   @map("client_request_id") @db.VarChar(120)
+  action          String   @db.VarChar(32)
+  fromStatus      String?  @map("from_status") @db.VarChar(32)
+  toStatus        String   @map("to_status") @db.VarChar(32)
+  metadata        Json?
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  delivery LearningInterventionDelivery @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
+  user     User                         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, clientRequestId], map: "uq_learning_intervention_step_request")
+  @@index([deliveryId, createdAt], map: "idx_learning_intervention_steps_delivery")
+  @@map("learning_intervention_steps")
+}
+
+model LearningInterventionVerification {
+  id                   String    @id @default(cuid())
+  deliveryId           String    @map("delivery_id")
+  interventionId       String    @map("intervention_id")
+  userId               Int       @map("user_id")
+  subjectCode          String    @map("subject_code") @db.VarChar(24)
+  topicId              Int       @map("topic_id")
+  status               String    @default("recommended") @db.VarChar(32)
+  phase                String    @default("immediate") @db.VarChar(32)
+  selectionVersion     String    @map("selection_version") @db.VarChar(80)
+  measurementVersion   String    @map("measurement_version") @db.VarChar(80)
+  contentSourceVersion String    @map("content_source_version") @db.VarChar(80)
+  questionRefs         Json      @map("question_refs")
+  supplySnapshot       Json      @map("supply_snapshot")
+  selectionConstraints Json      @default("{}") @map("selection_constraints")
+  conversationId       String?   @map("conversation_id") @db.VarChar(120)
+  offerRequestId       String    @map("offer_request_id") @db.VarChar(120)
+  startRequestId       String?   @map("start_request_id") @db.VarChar(120)
+  roundId              Int?      @unique @map("round_id")
+  recommendedAt        DateTime  @default(now()) @map("recommended_at")
+  startedAt            DateTime? @map("started_at")
+  completedAt          DateTime? @map("completed_at")
+  expiresAt            DateTime  @map("expires_at")
+  dueAt                DateTime  @default(now()) @map("due_at")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  intervention   LearningIntervention         @relation(fields: [interventionId], references: [id], onDelete: Cascade)
+  sourceDelivery LearningInterventionDelivery @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
+  user           User                         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  round          CscaAdaptiveRound?           @relation(fields: [roundId], references: [id], onDelete: SetNull)
+  outcome        LearningInterventionOutcome?
+
+  @@unique([userId, offerRequestId], map: "uq_learning_intervention_verification_offer")
+  @@unique([userId, startRequestId], map: "uq_learning_intervention_verification_start")
+  @@unique([deliveryId, phase], map: "uq_learning_intervention_verification_delivery_phase")
+  @@index([userId, status, updatedAt], map: "idx_learning_intervention_verifications_user_status")
+  @@index([userId, status, dueAt], map: "idx_learning_intervention_verifications_user_due")
+  @@index([interventionId, createdAt], map: "idx_learning_intervention_verifications_intervention")
+  @@map("learning_intervention_verifications")
+}
+
+model LearningInterventionOutcome {
+  id                 String   @id @default(cuid())
+  verificationId     String   @unique @map("verification_id")
+  deliveryId         String   @map("delivery_id")
+  interventionId     String   @map("intervention_id")
+  userId             Int      @map("user_id")
+  result             String   @db.VarChar(32)
+  correctCount       Int      @map("correct_count")
+  totalCount         Int      @map("total_count")
+  accuracy           Float
+  independent        Boolean  @default(false)
+  evidenceRefs       Json     @map("evidence_refs")
+  measurementVersion String   @map("measurement_version") @db.VarChar(80)
+  metadata           Json?
+  evaluatedAt        DateTime @default(now()) @map("evaluated_at")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  verification LearningInterventionVerification @relation(fields: [verificationId], references: [id], onDelete: Cascade)
+  delivery     LearningInterventionDelivery     @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
+  intervention LearningIntervention             @relation(fields: [interventionId], references: [id], onDelete: Cascade)
+  user         User                             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, evaluatedAt], map: "idx_learning_intervention_outcomes_user_evaluated")
+  @@index([interventionId], map: "idx_learning_intervention_outcomes_intervention")
+  @@map("learning_intervention_outcomes")
+}
+
+model LearningInterventionStabilityAssessment {
+  id             String    @id @default(cuid())
+  deliveryId     String    @unique @map("delivery_id")
+  interventionId String    @map("intervention_id")
+  userId         Int       @map("user_id")
+  status         String    @default("pending") @db.VarChar(32)
+  result         String?   @db.VarChar(32)
+  policyVersion  String    @map("policy_version") @db.VarChar(80)
+  phaseResults   Json      @map("phase_results")
+  evidenceRefs   Json      @map("evidence_refs")
+  evaluatedAt    DateTime? @map("evaluated_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  delivery     LearningInterventionDelivery @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
+  intervention LearningIntervention         @relation(fields: [interventionId], references: [id], onDelete: Cascade)
+  user         User                         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status, updatedAt], map: "idx_learning_intervention_stability_user_status")
+  @@index([interventionId], map: "idx_learning_intervention_stability_intervention")
+  @@map("learning_intervention_stability_assessments")
+}
+
+model LearningPrescriptionOutcome {
+  id               String   @id @default(cuid())
+  prescriptionId   String   @map("prescription_id")
+  userId           Int      @map("user_id")
+  decision         String   @db.VarChar(32)
+  taskIndex        Int?     @map("task_index")
+  domainEntityType String?  @map("domain_entity_type") @db.VarChar(60)
+  domainEntityId   String?  @map("domain_entity_id") @db.VarChar(120)
+  metadata         Json?
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  prescription LearningPrescription @relation(fields: [prescriptionId], references: [id], onDelete: Cascade)
+  user         User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([prescriptionId, createdAt], map: "idx_learning_prescription_outcomes_prescription")
+  @@index([userId, createdAt], map: "idx_learning_prescription_outcomes_user")
+  @@map("learning_prescription_outcomes")
+}
+
+model QuestionSupplyRequest {
+  id                  String    @id @default(cuid())
+  requestKey          String    @unique @map("request_key") @db.VarChar(64)
+  schemaVersion       String    @default("1") @map("schema_version") @db.VarChar(16)
+  source              String    @db.VarChar(48)
+  subjectCode         String    @map("subject_code") @db.VarChar(24)
+  topicIds            Json      @map("topic_ids")
+  difficulty          String?   @db.VarChar(24)
+  taskType            String    @map("task_type") @db.VarChar(48)
+  verificationPhase   String?   @map("verification_phase") @db.VarChar(24)
+  sourcePolicy        String    @default("reviewed_published_only") @map("source_policy") @db.VarChar(48)
+  status              String    @default("open") @db.VarChar(24)
+  priority            String    @default("normal") @db.VarChar(16)
+  requestedCount      Int       @map("requested_count")
+  availableCount      Int       @map("available_count")
+  observationCount    Int       @default(1) @map("observation_count")
+  cycle               Int       @default(1)
+  lastContextSnapshot Json      @default("{}") @map("last_context_snapshot")
+  firstObservedAt     DateTime  @default(now()) @map("first_observed_at")
+  lastObservedAt      DateTime  @default(now()) @map("last_observed_at")
+  acknowledgedAt      DateTime? @map("acknowledged_at")
+  resolvedAt          DateTime? @map("resolved_at")
+  resolutionNote      String?   @map("resolution_note") @db.VarChar(500)
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+
+  events                QuestionSupplyRequestEvent[]
+  fulfillmentPlans      QuestionSupplyFulfillmentPlan[]
+  recoveryConfirmations QuestionSupplyRecoveryConfirmation[]
+  inventoryChecks       QuestionSupplyInventoryCheck[]
+
+  @@index([status, priority, lastObservedAt], map: "idx_question_supply_requests_status_priority")
+  @@index([subjectCode, status, lastObservedAt], map: "idx_question_supply_requests_subject_status")
+  @@map("question_supply_requests")
+}
+
+model QuestionSupplyFulfillmentPlan {
+  id              String    @id @default(cuid())
+  requestId       String    @map("request_id")
+  requestCycle    Int       @map("request_cycle")
+  contractVersion String    @default("1") @map("contract_version") @db.VarChar(16)
+  demandKey       String    @unique @map("demand_key") @db.VarChar(64)
+  status          String    @default("planned") @db.VarChar(32)
+  mode            String    @default("shadow") @db.VarChar(24)
+  adapterVersion  String    @default("question-supply-shadow-noop-v1") @map("adapter_version") @db.VarChar(80)
+  demandSnapshot  Json      @map("demand_snapshot")
+  attemptCount    Int       @default(0) @map("attempt_count")
+  leaseOwner      String?   @map("lease_owner") @db.VarChar(120)
+  leaseUntil      DateTime? @map("lease_until")
+  nextAttemptAt   DateTime  @default(now()) @map("next_attempt_at")
+  lastErrorCode   String?   @map("last_error_code") @db.VarChar(80)
+  dispatchedAt    DateTime? @map("dispatched_at")
+  completedAt     DateTime? @map("completed_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  request QuestionSupplyRequest            @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  events  QuestionSupplyFulfillmentEvent[]
+
+  @@unique([requestId, requestCycle], map: "uq_question_supply_fulfillment_request_cycle")
+  @@index([status, nextAttemptAt, leaseUntil], map: "idx_question_supply_fulfillment_dispatch")
+  @@map("question_supply_fulfillment_plans")
+}
+
+model QuestionSupplyFulfillmentEvent {
+  id          String   @id @default(cuid())
+  planId      String   @map("plan_id")
+  actorUserId Int?     @map("actor_user_id")
+  action      String   @db.VarChar(40)
+  fromStatus  String?  @map("from_status") @db.VarChar(32)
+  toStatus    String   @map("to_status") @db.VarChar(32)
+  metadata    Json     @default("{}")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  plan  QuestionSupplyFulfillmentPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  actor User?                         @relation(fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([planId, createdAt], map: "idx_question_supply_fulfillment_events_plan")
+  @@index([actorUserId, createdAt], map: "idx_question_supply_fulfillment_events_actor")
+  @@map("question_supply_fulfillment_events")
+}
+
+model QuestionSupplyRecoveryConfirmation {
+  id               String   @id @default(cuid())
+  requestId        String   @map("request_id")
+  requestCycle     Int      @map("request_cycle")
+  confirmationKind String   @map("confirmation_kind") @db.VarChar(40)
+  source           String   @db.VarChar(40)
+  subjectCode      String   @map("subject_code") @db.VarChar(24)
+  requestedCount   Int      @map("requested_count")
+  availableCount   Int      @map("available_count")
+  metadata         Json     @default("{}")
+  confirmedAt      DateTime @default(now()) @map("confirmed_at")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  request QuestionSupplyRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  @@unique([requestId, requestCycle, confirmationKind], map: "uq_question_supply_recovery_confirmation")
+  @@index([confirmedAt, confirmationKind], map: "idx_question_supply_recovery_confirmed_kind")
+  @@index([source, subjectCode, confirmedAt], map: "idx_question_supply_recovery_source_subject")
+  @@map("question_supply_recovery_confirmations")
+}
+
+model QuestionSupplyInventoryCheck {
+  id             String   @id @default(cuid())
+  requestId      String   @map("request_id")
+  requestCycle   Int      @map("request_cycle")
+  result         String   @db.VarChar(32)
+  checkerVersion String   @map("checker_version") @db.VarChar(80)
+  requestedCount Int      @map("requested_count")
+  availableCount Int?     @map("available_count")
+  errorCode      String?  @map("error_code") @db.VarChar(80)
+  checkedAt      DateTime @default(now()) @map("checked_at")
+
+  request QuestionSupplyRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  @@index([requestId, requestCycle, checkedAt], map: "idx_question_supply_inventory_request_cycle")
+  @@index([result, checkedAt], map: "idx_question_supply_inventory_result_checked")
+  @@map("question_supply_inventory_checks")
+}
+
+model QuestionSupplySchedulerState {
+  id              String    @id @db.VarChar(40)
+  leaseOwner      String?   @map("lease_owner") @db.VarChar(120)
+  leaseUntil      DateTime? @map("lease_until")
+  lastStatus      String    @default("idle") @map("last_status") @db.VarChar(24)
+  lastStartedAt   DateTime? @map("last_started_at")
+  lastCompletedAt DateTime? @map("last_completed_at")
+  lastSummary     Json      @default("{}") @map("last_summary")
+  lastErrorCode   String?   @map("last_error_code") @db.VarChar(80)
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@index([leaseUntil], map: "idx_question_supply_scheduler_lease")
+  @@map("question_supply_scheduler_states")
+}
+
+model QuestionSupplySchedulerRun {
+  id          String    @id @default(cuid())
+  schedulerId String    @map("scheduler_id") @db.VarChar(40)
+  workerId    String    @map("worker_id") @db.VarChar(120)
+  trigger     String    @db.VarChar(24)
+  status      String    @default("running") @db.VarChar(24)
+  summary     Json      @default("{}")
+  errorCode   String?   @map("error_code") @db.VarChar(80)
+  startedAt   DateTime  @default(now()) @map("started_at")
+  completedAt DateTime? @map("completed_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  @@index([schedulerId, startedAt], map: "idx_question_supply_scheduler_runs_started")
+  @@index([status, startedAt], map: "idx_question_supply_scheduler_runs_status")
+  @@map("question_supply_scheduler_runs")
+}
+
+model QuestionSupplyRequestEvent {
+  id          String   @id @default(cuid())
+  requestId   String   @map("request_id")
+  actorUserId Int?     @map("actor_user_id")
+  action      String   @db.VarChar(32)
+  fromStatus  String?  @map("from_status") @db.VarChar(24)
+  toStatus    String   @map("to_status") @db.VarChar(24)
+  reason      String?  @db.VarChar(500)
+  metadata    Json     @default("{}")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  request QuestionSupplyRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  actor   User?                 @relation(fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([requestId, createdAt], map: "idx_question_supply_request_events_request")
+  @@index([actorUserId, createdAt], map: "idx_question_supply_request_events_actor")
+  @@map("question_supply_request_events")
+}
+
+model AssessmentItemExposure {
+  id             String   @id @default(cuid())
+  userId         Int      @map("user_id")
+  itemType       String   @map("item_type") @db.VarChar(40)
+  itemId         String   @map("item_id") @db.VarChar(120)
+  itemVersion    String   @map("item_version") @db.VarChar(80)
+  subjectCode    String   @map("subject_code") @db.VarChar(24)
+  exposureState  String   @map("exposure_state") @db.VarChar(32)
+  firstExposedAt DateTime @default(now()) @map("first_exposed_at")
+  lastExposedAt  DateTime @default(now()) @map("last_exposed_at")
+  metadata       Json?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, itemType, itemId, itemVersion], map: "uq_assessment_item_exposure")
+  @@index([userId, subjectCode, exposureState], map: "idx_assessment_item_exposure_user_subject_state")
+  @@map("assessment_item_exposures")
+}
+
+model ScoreReadinessForecast {
+  id                          String   @id @default(cuid())
+  userId                      Int      @map("user_id")
+  goalId                      String   @map("goal_id")
+  subjectCode                 String   @map("subject_code") @db.VarChar(24)
+  versionHash                 String   @map("version_hash") @db.VarChar(128)
+  versions                    Json
+  expectedScoreBand           Json?    @map("expected_score_band")
+  targetAttainmentProbability Float?   @map("target_attainment_probability")
+  confidence                  String   @db.VarChar(24)
+  reasonCodes                 Json     @default("[]") @map("reason_codes")
+  nextValidationAction        String?  @map("next_validation_action") @db.VarChar(40)
+  evidenceCutoffAt            DateTime @map("evidence_cutoff_at")
+  createdAt                   DateTime @default(now()) @map("created_at")
+
+  user User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goal StudentScoreGoal @relation(fields: [goalId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, goalId, subjectCode, versionHash], map: "uq_score_readiness_forecast_versions")
+  @@index([userId, createdAt], map: "idx_score_readiness_forecasts_user_created")
+  @@map("score_readiness_forecasts")
+}
+
+model ScorePredictionShadowRun {
+  id                     String   @id @default(cuid())
+  userId                 Int      @map("user_id")
+  goalId                 String   @map("goal_id")
+  subjectCode            String   @map("subject_code") @db.VarChar(24)
+  versionHash            String   @map("version_hash") @db.VarChar(128)
+  modelVersion           String   @map("model_version") @db.VarChar(100)
+  scoringPolicyVersion   String   @map("scoring_policy_version") @db.VarChar(80)
+  itemCalibrationVersion String   @map("item_calibration_version") @db.VarChar(100)
+  status                 String   @db.VarChar(24)
+  featureSnapshot        Json     @map("feature_snapshot")
+  baselineOutput         Json?    @map("baseline_output")
+  candidateOutput        Json?    @map("candidate_output")
+  reasonCodes            Json     @default("[]") @map("reason_codes")
+  evidenceCutoffAt       DateTime @map("evidence_cutoff_at")
+  evaluationDate         DateTime @map("evaluation_date") @db.Date
+  createdAt              DateTime @default(now()) @map("created_at")
+
+  user                User                            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goal                StudentScoreGoal                @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  scoringPolicy       ExamScoringPolicy               @relation(fields: [scoringPolicyVersion], references: [policyVersion], onDelete: Restrict)
+  itemCalibration     ItemCalibrationSnapshot         @relation(fields: [itemCalibrationVersion], references: [calibrationVersion], onDelete: Restrict)
+  forecastDatasetRows ForecastCalibrationDatasetRow[]
+
+  @@unique([userId, goalId, subjectCode, versionHash], map: "uq_score_prediction_shadow_run_versions")
+  @@index([userId, subjectCode, createdAt], map: "idx_score_prediction_shadow_runs_user_subject")
+  @@index([status, modelVersion, createdAt], map: "idx_score_prediction_shadow_runs_status_model")
+  @@map("score_prediction_shadow_runs")
+}
+
+// Governance records are deliberately separate from student forecasts. A policy
+// or calibration may be reviewed without making numeric predictions visible.
+model ExamScoringPolicy {
+  id                 String    @id @default(cuid())
+  examSystemCode     String    @map("exam_system_code") @db.VarChar(40)
+  policyVersion      String    @unique @map("policy_version") @db.VarChar(80)
+  status             String    @default("draft") @db.VarChar(24)
+  sourceType         String    @map("source_type") @db.VarChar(24)
+  sourceTitle        String    @map("source_title") @db.VarChar(240)
+  sourceUrl          String?   @map("source_url") @db.VarChar(1000)
+  sourcePublishedAt  DateTime? @map("source_published_at") @db.Date
+  sourceSnapshotHash String    @map("source_snapshot_hash") @db.VarChar(128)
+  scoreScale         Json      @map("score_scale")
+  scoringRules       Json      @map("scoring_rules")
+  effectiveFrom      DateTime? @map("effective_from") @db.Date
+  effectiveTo        DateTime? @map("effective_to") @db.Date
+  reviewedByUserId   Int?      @map("reviewed_by_user_id")
+  createdByUserId    Int?      @map("created_by_user_id")
+  reviewedAt         DateTime? @map("reviewed_at")
+  activatedAt        DateTime? @map("activated_at")
+  supersedesPolicyId String?   @map("supersedes_policy_id")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  createdBy            User?                         @relation("ExamScoringPolicyCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  reviewedBy           User?                         @relation("ExamScoringPolicyReviewer", fields: [reviewedByUserId], references: [id], onDelete: Restrict)
+  supersedes           ExamScoringPolicy?            @relation("ExamScoringPolicyHistory", fields: [supersedesPolicyId], references: [id], onDelete: SetNull)
+  supersededBy         ExamScoringPolicy[]           @relation("ExamScoringPolicyHistory")
+  forecastSnapshots    ForecastCalibrationSnapshot[]
+  predictionShadowRuns ScorePredictionShadowRun[]
+  studentExamOutcomes  StudentExamOutcome[]
+
+  @@index([examSystemCode, status, activatedAt], map: "idx_exam_scoring_policies_system_status")
+  @@index([reviewedByUserId, reviewedAt], map: "idx_exam_scoring_policies_reviewer")
+  @@index([createdByUserId, createdAt], map: "idx_exam_scoring_policies_creator")
+  @@map("exam_scoring_policies")
+}
+
+model ItemCalibrationSnapshot {
+  id                 String    @id @default(cuid())
+  calibrationVersion String    @unique @map("calibration_version") @db.VarChar(100)
+  examSystemCode     String    @map("exam_system_code") @db.VarChar(40)
+  subjectCode        String    @map("subject_code") @db.VarChar(24)
+  itemBankVersion    String    @map("item_bank_version") @db.VarChar(100)
+  status             String    @default("shadow") @db.VarChar(24)
+  sampleCount        Int       @map("sample_count")
+  itemCount          Int       @map("item_count")
+  holdoutSampleCount Int       @map("holdout_sample_count")
+  metrics            Json
+  releaseCriteria    Json      @map("release_criteria")
+  criteriaResults    Json      @map("criteria_results")
+  allCriteriaPassed  Boolean   @default(false) @map("all_criteria_passed")
+  artifactHash       String    @map("artifact_hash") @db.VarChar(128)
+  dataWindowStart    DateTime  @map("data_window_start")
+  dataWindowEnd      DateTime  @map("data_window_end")
+  reviewedByUserId   Int?      @map("reviewed_by_user_id")
+  createdByUserId    Int?      @map("created_by_user_id")
+  reviewedAt         DateTime? @map("reviewed_at")
+  qualifiedAt        DateTime? @map("qualified_at")
+  createdAt          DateTime  @default(now()) @map("created_at")
+
+  createdBy            User?                         @relation("ItemCalibrationCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  reviewedBy           User?                         @relation("ItemCalibrationReviewer", fields: [reviewedByUserId], references: [id], onDelete: Restrict)
+  forecastSnapshots    ForecastCalibrationSnapshot[]
+  predictionShadowRuns ScorePredictionShadowRun[]
+
+  @@index([examSystemCode, subjectCode, status, qualifiedAt], map: "idx_item_calibration_scope_status")
+  @@index([reviewedByUserId, reviewedAt], map: "idx_item_calibration_reviewer")
+  @@index([createdByUserId, createdAt], map: "idx_item_calibration_creator")
+  @@map("item_calibration_snapshots")
+}
+
+model ForecastCalibrationSnapshot {
+  id                     String    @id @default(cuid())
+  calibrationVersion     String    @unique @map("calibration_version") @db.VarChar(100)
+  examSystemCode         String    @map("exam_system_code") @db.VarChar(40)
+  subjectCode            String    @map("subject_code") @db.VarChar(24)
+  languageCode           String?   @map("language_code") @db.VarChar(16)
+  examFormCode           String?   @map("exam_form_code") @db.VarChar(80)
+  forecastModelVersion   String    @map("forecast_model_version") @db.VarChar(100)
+  scoringPolicyVersion   String    @map("scoring_policy_version") @db.VarChar(80)
+  itemCalibrationVersion String    @map("item_calibration_version") @db.VarChar(100)
+  outcomeSource          String    @default("legacy_unknown") @map("outcome_source") @db.VarChar(32)
+  status                 String    @default("shadow") @db.VarChar(24)
+  sampleCount            Int       @map("sample_count")
+  holdoutSampleCount     Int       @map("holdout_sample_count")
+  metrics                Json
+  subgroupMetrics        Json      @map("subgroup_metrics")
+  releaseCriteria        Json      @map("release_criteria")
+  criteriaResults        Json      @map("criteria_results")
+  allCriteriaPassed      Boolean   @default(false) @map("all_criteria_passed")
+  artifactHash           String    @map("artifact_hash") @db.VarChar(128)
+  dataWindowStart        DateTime  @map("data_window_start")
+  dataWindowEnd          DateTime  @map("data_window_end")
+  reviewedByUserId       Int?      @map("reviewed_by_user_id")
+  createdByUserId        Int?      @map("created_by_user_id")
+  reviewedAt             DateTime? @map("reviewed_at")
+  qualifiedAt            DateTime? @map("qualified_at")
+  createdAt              DateTime  @default(now()) @map("created_at")
+  datasetManifestId      String?   @map("dataset_manifest_id")
+
+  scoringPolicy   ExamScoringPolicy                   @relation(fields: [scoringPolicyVersion], references: [policyVersion], onDelete: Restrict)
+  itemCalibration ItemCalibrationSnapshot             @relation(fields: [itemCalibrationVersion], references: [calibrationVersion], onDelete: Restrict)
+  createdBy       User?                               @relation("ForecastCalibrationCreator", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  reviewedBy      User?                               @relation("ForecastCalibrationReviewer", fields: [reviewedByUserId], references: [id], onDelete: Restrict)
+  datasetManifest ForecastCalibrationDatasetManifest? @relation(fields: [datasetManifestId], references: [id], onDelete: Restrict)
+
+  @@index([examSystemCode, subjectCode, status, qualifiedAt], map: "idx_forecast_calibration_scope_status")
+  @@index([forecastModelVersion, scoringPolicyVersion, itemCalibrationVersion], map: "idx_forecast_calibration_versions")
+  @@index([reviewedByUserId, reviewedAt], map: "idx_forecast_calibration_reviewer")
+  @@index([createdByUserId, createdAt], map: "idx_forecast_calibration_creator")
+  @@index([datasetManifestId], map: "idx_forecast_calibration_dataset_manifest")
+  @@map("forecast_calibration_snapshots")
+}
+
+// Real examination results are optional, consented evidence. Scores are immutable:
+// a correction creates a replacement and supersedes the previous record.
+model StudentExamOutcome {
+  id                   String    @id @default(cuid())
+  userId               Int       @map("user_id")
+  examSystemCode       String    @default("csca") @map("exam_system_code") @db.VarChar(40)
+  subjectCode          String    @map("subject_code") @db.VarChar(24)
+  examDate             DateTime  @map("exam_date") @db.Date
+  examFormCode         String?   @map("exam_form_code") @db.VarChar(80)
+  score                Float
+  scoringPolicyVersion String    @map("scoring_policy_version") @db.VarChar(80)
+  status               String    @default("submitted") @db.VarChar(24)
+  consentPurpose       String    @map("consent_purpose") @db.VarChar(80)
+  consentVersion       String    @map("consent_version") @db.VarChar(40)
+  consentedAt          DateTime  @map("consented_at")
+  consentWithdrawnAt   DateTime? @map("consent_withdrawn_at")
+  reviewedByUserId     Int?      @map("reviewed_by_user_id")
+  reviewedAt           DateTime? @map("reviewed_at")
+  verifiedByUserId     Int?      @map("verified_by_user_id")
+  verifiedAt           DateTime? @map("verified_at")
+  replacesOutcomeId    String?   @map("replaces_outcome_id")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  user            User                            @relation("StudentExamOutcomeOwner", fields: [userId], references: [id], onDelete: Cascade)
+  scoringPolicy   ExamScoringPolicy               @relation(fields: [scoringPolicyVersion], references: [policyVersion], onDelete: Restrict)
+  reviewedBy      User?                           @relation("StudentExamOutcomeReviewer", fields: [reviewedByUserId], references: [id], onDelete: Restrict)
+  verifiedBy      User?                           @relation("StudentExamOutcomeVerifier", fields: [verifiedByUserId], references: [id], onDelete: Restrict)
+  replaces        StudentExamOutcome?             @relation("StudentExamOutcomeCorrections", fields: [replacesOutcomeId], references: [id], onDelete: Restrict)
+  corrections     StudentExamOutcome[]            @relation("StudentExamOutcomeCorrections")
+  evidence        StudentExamOutcomeEvidence[]
+  events          StudentExamOutcomeEvent[]
+  calibrationRows ForecastCalibrationDatasetRow[]
+
+  @@index([userId, createdAt], map: "idx_student_exam_outcomes_user_created")
+  @@index([status, subjectCode, examDate], map: "idx_student_exam_outcomes_status_subject_exam")
+  @@index([scoringPolicyVersion, status], map: "idx_student_exam_outcomes_policy_status")
+  @@index([replacesOutcomeId], map: "idx_student_exam_outcomes_replaces")
+  @@map("student_exam_outcomes")
+}
+
+model StudentExamOutcomeEvidence {
+  id           String   @id @default(cuid())
+  outcomeId    String   @map("outcome_id")
+  attachmentId String   @map("attachment_id")
+  label        String?  @db.VarChar(120)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  outcome    StudentExamOutcome @relation(fields: [outcomeId], references: [id], onDelete: Cascade)
+  attachment AgentAttachment    @relation(fields: [attachmentId], references: [id], onDelete: Restrict)
+
+  @@unique([outcomeId, attachmentId], map: "uq_student_exam_outcome_evidence")
+  @@index([attachmentId], map: "idx_student_exam_outcome_evidence_attachment")
+  @@map("student_exam_outcome_evidence")
+}
+
+model StudentExamOutcomeEvent {
+  id          String   @id @default(cuid())
+  outcomeId   String   @map("outcome_id")
+  actorUserId Int      @map("actor_user_id")
+  actorRole   String   @map("actor_role") @db.VarChar(24)
+  action      String   @db.VarChar(40)
+  fromStatus  String?  @map("from_status") @db.VarChar(24)
+  toStatus    String   @map("to_status") @db.VarChar(24)
+  reason      String   @db.VarChar(500)
+  payload     Json     @default("{}")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  outcome StudentExamOutcome @relation(fields: [outcomeId], references: [id], onDelete: Restrict)
+  actor   User               @relation(fields: [actorUserId], references: [id], onDelete: Restrict)
+
+  @@index([outcomeId, createdAt], map: "idx_student_exam_outcome_events_outcome")
+  @@index([actorUserId, createdAt], map: "idx_student_exam_outcome_events_actor")
+  @@map("student_exam_outcome_events")
+}
+
+// Immutable manifests bind a verified calibration input to its exact private
+// outcomes. Withdrawal or correction invalidates the manifest and linked snapshots.
+model ForecastCalibrationDatasetManifest {
+  id                     String    @id @default(cuid())
+  sourceDatasetHash      String    @unique @map("source_dataset_hash") @db.VarChar(64)
+  forecastArtifactHash   String    @map("forecast_artifact_hash") @db.VarChar(64)
+  status                 String    @default("active") @db.VarChar(24)
+  outcomeSource          String    @default("verified_csca_exam") @map("outcome_source") @db.VarChar(32)
+  examSystemCode         String    @map("exam_system_code") @db.VarChar(40)
+  subjectCode            String    @map("subject_code") @db.VarChar(24)
+  scoringPolicyVersion   String    @map("scoring_policy_version") @db.VarChar(80)
+  itemCalibrationVersion String    @map("item_calibration_version") @db.VarChar(100)
+  learnerKeyVersion      String    @map("learner_key_version") @db.VarChar(80)
+  temporalCutoffDate     DateTime  @map("temporal_cutoff_date") @db.Date
+  dataWindowStart        DateTime  @map("data_window_start") @db.Date
+  dataWindowEnd          DateTime  @map("data_window_end") @db.Date
+  createdByUserId        Int       @map("created_by_user_id")
+  invalidatedAt          DateTime? @map("invalidated_at")
+  invalidationReason     String?   @map("invalidation_reason") @db.VarChar(500)
+  createdAt              DateTime  @default(now()) @map("created_at")
+
+  createdBy User                            @relation(fields: [createdByUserId], references: [id], onDelete: Restrict)
+  rows      ForecastCalibrationDatasetRow[]
+  snapshots ForecastCalibrationSnapshot[]
+
+  @@index([status, subjectCode, createdAt], map: "idx_forecast_dataset_manifests_status_subject")
+  @@map("forecast_calibration_dataset_manifests")
+}
+
+model ForecastCalibrationDatasetRow {
+  id             String   @id @default(cuid())
+  manifestId     String   @map("manifest_id")
+  outcomeId      String   @map("outcome_id")
+  shadowRunId    String   @map("shadow_run_id")
+  split          String   @db.VarChar(16)
+  learnerKeyHash String   @map("learner_key_hash") @db.VarChar(64)
+  rowHash        String   @map("row_hash") @db.VarChar(64)
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  manifest  ForecastCalibrationDatasetManifest @relation(fields: [manifestId], references: [id], onDelete: Cascade)
+  outcome   StudentExamOutcome                 @relation(fields: [outcomeId], references: [id], onDelete: Restrict)
+  shadowRun ScorePredictionShadowRun           @relation(fields: [shadowRunId], references: [id], onDelete: Restrict)
+
+  @@unique([manifestId, outcomeId], map: "uq_forecast_dataset_manifest_outcome")
+  @@unique([manifestId, learnerKeyHash], map: "uq_forecast_dataset_manifest_learner")
+  @@index([outcomeId], map: "idx_forecast_dataset_rows_outcome")
+  @@index([shadowRunId], map: "idx_forecast_dataset_rows_shadow_run")
+  @@map("forecast_calibration_dataset_rows")
+}
+
+model ScoreCalibrationGovernanceEvent {
+  id           String   @id @default(cuid())
+  resourceType String   @map("resource_type") @db.VarChar(40)
+  resourceId   String   @map("resource_id") @db.VarChar(120)
+  action       String   @db.VarChar(40)
+  fromStatus   String?  @map("from_status") @db.VarChar(24)
+  toStatus     String   @map("to_status") @db.VarChar(24)
+  actorUserId  Int      @map("actor_user_id")
+  reason       String   @db.VarChar(500)
+  payload      Json
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  actor User @relation(fields: [actorUserId], references: [id], onDelete: Restrict)
+
+  @@index([resourceType, resourceId, createdAt], map: "idx_score_calibration_events_resource")
+  @@index([actorUserId, createdAt], map: "idx_score_calibration_events_actor")
+  @@map("score_calibration_governance_events")
+}
+
+model AgentConversation {
+  id            String    @id @default(cuid())
+  userId        Int       @map("user_id")
+  status        String    @default("active") @db.VarChar(24)
+  title         String?   @db.VarChar(200)
+  lastMessageAt DateTime? @map("last_message_at")
+  deletedAt     DateTime? @map("deleted_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  user                         User                               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages                     AgentMessage[]
+  runs                         AgentRun[]
+  artifacts                    AgentArtifact[]
+  attachments                  AgentAttachment[]
+  attachmentAnalyses           AgentAttachmentAnalysis[]
+  attachmentEvidenceCandidates AgentAttachmentEvidenceCandidate[]
+  outbox                       AgentOutbox[]
+  pastPaperAttempts            AgentPastPaperAttempt[]
+
+  @@index([userId, status, lastMessageAt], map: "idx_agent_conversations_user_status_last")
+  @@map("agent_conversations")
+}
+
+model AgentMessage {
+  id              String   @id @default(cuid())
+  conversationId  String   @map("conversation_id")
+  role            String   @db.VarChar(24)
+  content         Json
+  clientMessageId String?  @map("client_message_id") @db.VarChar(120)
+  runId           String?  @map("run_id")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  conversation AgentConversation        @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  attachments  AgentMessageAttachment[]
+
+  @@unique([conversationId, clientMessageId], map: "uq_agent_messages_client_id")
+  @@index([conversationId, createdAt], map: "idx_agent_messages_conversation_created")
+  @@index([runId], map: "idx_agent_messages_run")
+  @@map("agent_messages")
+}
+
+model AgentAttachment {
+  id             String    @id @default(cuid())
+  userId         Int       @map("user_id")
+  conversationId String    @map("conversation_id")
+  status         String    @default("created") @db.VarChar(32)
+  kind           String    @db.VarChar(24)
+  originalName   String    @map("original_name") @db.VarChar(255)
+  declaredMime   String?   @map("declared_mime") @db.VarChar(120)
+  detectedMime   String?   @map("detected_mime") @db.VarChar(120)
+  sizeBytes      Int?      @map("size_bytes")
+  storageKey     String?   @map("storage_key") @db.VarChar(500)
+  sha256         String?   @db.VarChar(64)
+  pageCount      Int?      @map("page_count")
+  errorCode      String?   @map("error_code") @db.VarChar(80)
+  errorMessage   String?   @map("error_message") @db.VarChar(500)
+  metadata       Json?
+  retainedUntil  DateTime? @map("retained_until")
+  deletedAt      DateTime? @map("deleted_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  user                User                               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation        AgentConversation                  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  pages               AgentAttachmentPage[]
+  chunks              AgentAttachmentChunk[]
+  messages            AgentMessageAttachment[]
+  analyses            AgentAttachmentAnalysis[]
+  evidenceCandidates  AgentAttachmentEvidenceCandidate[]
+  examOutcomeEvidence StudentExamOutcomeEvidence[]
+
+  @@index([userId, status, createdAt], map: "idx_agent_attachments_user_status_created")
+  @@index([conversationId, createdAt], map: "idx_agent_attachments_conversation_created")
+  @@index([status, retainedUntil], map: "idx_agent_attachments_status_retention")
+  @@map("agent_attachments")
+}
+
+model AgentAttachmentPage {
+  id               String   @id @default(cuid())
+  attachmentId     String   @map("attachment_id")
+  pageNumber       Int      @map("page_number")
+  width            Int?
+  height           Int?
+  extractedText    String?  @map("extracted_text") @db.Text
+  extractionMethod String   @default("none") @map("extraction_method") @db.VarChar(32)
+  confidence       Float?
+  metadata         Json?
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  attachment AgentAttachment        @relation(fields: [attachmentId], references: [id], onDelete: Cascade)
+  chunks     AgentAttachmentChunk[]
+
+  @@unique([attachmentId, pageNumber], map: "uq_agent_attachment_pages_number")
+  @@index([attachmentId, createdAt], map: "idx_agent_attachment_pages_created")
+  @@map("agent_attachment_pages")
+}
+
+model AgentAttachmentChunk {
+  id               String   @id @default(cuid())
+  attachmentId     String   @map("attachment_id")
+  pageId           String?  @map("page_id")
+  ordinal          Int
+  text             String   @db.Text
+  charCount        Int      @map("char_count")
+  extractionMethod String   @map("extraction_method") @db.VarChar(32)
+  confidence       Float?
+  metadata         Json?
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  attachment AgentAttachment      @relation(fields: [attachmentId], references: [id], onDelete: Cascade)
+  page       AgentAttachmentPage? @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@unique([attachmentId, ordinal], map: "uq_agent_attachment_chunks_ordinal")
+  @@index([pageId, ordinal], map: "idx_agent_attachment_chunks_page")
+  @@map("agent_attachment_chunks")
+}
+
+model AgentMessageAttachment {
+  id           String   @id @default(cuid())
+  messageId    String   @map("message_id")
+  attachmentId String   @map("attachment_id")
+  snapshot     Json
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  message    AgentMessage    @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  attachment AgentAttachment @relation(fields: [attachmentId], references: [id], onDelete: Restrict)
+
+  @@unique([messageId, attachmentId], map: "uq_agent_message_attachments")
+  @@index([attachmentId, createdAt], map: "idx_agent_message_attachments_attachment")
+  @@map("agent_message_attachments")
+}
+
+model AgentAttachmentAnalysis {
+  id               String    @id @default(cuid())
+  userId           Int       @map("user_id")
+  conversationId   String    @map("conversation_id")
+  attachmentId     String    @map("attachment_id")
+  clientRequestId  String    @map("client_request_id") @db.VarChar(120)
+  status           String    @default("queued") @db.VarChar(24)
+  intent           String    @default("student_work_review") @db.VarChar(48)
+  promptVersion    String    @map("prompt_version") @db.VarChar(48)
+  attemptCount     Int       @default(0) @map("attempt_count")
+  gatewayRequestId String?   @map("gateway_request_id") @db.VarChar(120)
+  model            String?   @db.VarChar(120)
+  inputSnapshot    Json?     @map("input_snapshot")
+  result           Json?
+  errorCode        String?   @map("error_code") @db.VarChar(80)
+  errorMessage     String?   @map("error_message") @db.VarChar(500)
+  startedAt        DateTime? @map("started_at")
+  completedAt      DateTime? @map("completed_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  user               User                               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation       AgentConversation                  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  attachment         AgentAttachment                    @relation(fields: [attachmentId], references: [id], onDelete: Cascade)
+  items              AgentAttachmentAnalysisItem[]
+  evidenceCandidates AgentAttachmentEvidenceCandidate[]
+  questionMatches    AgentAttachmentQuestionMatch[]
+
+  @@unique([attachmentId, clientRequestId], map: "uq_agent_attachment_analysis_request")
+  @@index([userId, status, createdAt], map: "idx_agent_attachment_analyses_user_status")
+  @@index([conversationId, createdAt], map: "idx_agent_attachment_analyses_conversation")
+  @@map("agent_attachment_analyses")
+}
+
+model AgentAttachmentAnalysisItem {
+  id             String   @id @default(cuid())
+  analysisId     String   @map("analysis_id")
+  userId         Int      @map("user_id")
+  ordinal        Int
+  subjectCode    String?  @map("subject_code") @db.VarChar(24)
+  questionNumber String?  @map("question_number") @db.VarChar(80)
+  questionText   String   @map("question_text") @db.Text
+  studentAnswer  String?  @map("student_answer") @db.VarChar(500)
+  assessment     String   @db.VarChar(32)
+  errors         Json     @default("[]")
+  guidance       Json     @default("[]")
+  pageNumber     Int?     @map("page_number")
+  region         Json?
+  citations      Json     @default("[]")
+  uncertainty    String?  @db.VarChar(600)
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  analysis          AgentAttachmentAnalysis           @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+  user              User                              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questionMatch     AgentAttachmentQuestionMatch?
+  evidenceCandidate AgentAttachmentEvidenceCandidate?
+
+  @@unique([analysisId, ordinal], map: "uq_agent_attachment_analysis_items_ordinal")
+  @@index([userId, createdAt], map: "idx_agent_attachment_analysis_items_user")
+  @@map("agent_attachment_analysis_items")
+}
+
+model AgentAttachmentQuestionMatch {
+  id                  String   @id @default(cuid())
+  userId              Int      @map("user_id")
+  analysisId          String   @map("analysis_id")
+  analysisItemId      String?  @unique @map("analysis_item_id")
+  status              String   @db.VarChar(32)
+  sourceType          String?  @map("source_type") @db.VarChar(48)
+  sourceId            String?  @map("source_id") @db.VarChar(120)
+  sourceVersion       Int?     @map("source_version")
+  sourceTitle         String?  @map("source_title") @db.VarChar(240)
+  subjectCode         String?  @map("subject_code") @db.VarChar(24)
+  topicId             Int?     @map("topic_id")
+  promptScore         Float    @default(0) @map("prompt_score")
+  runnerUpScore       Float    @default(0) @map("runner_up_score")
+  extractedPromptHash String?  @map("extracted_prompt_hash") @db.VarChar(64)
+  extractedAnswer     String?  @map("extracted_answer") @db.VarChar(120)
+  correctAnswerHash   String?  @map("correct_answer_hash") @db.VarChar(64)
+  verifiedOutcome     String?  @map("verified_outcome") @db.VarChar(24)
+  matcherVersion      String   @map("matcher_version") @db.VarChar(64)
+  matchSnapshot       Json     @default("{}") @map("match_snapshot")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  user         User                         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  analysis     AgentAttachmentAnalysis      @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+  analysisItem AgentAttachmentAnalysisItem? @relation(fields: [analysisItemId], references: [id], onDelete: Cascade)
+
+  @@index([analysisId], map: "idx_agent_attachment_question_matches_analysis")
+  @@index([userId, status, createdAt], map: "idx_agent_attachment_question_matches_user_status")
+  @@index([sourceType, sourceId], map: "idx_agent_attachment_question_matches_source")
+  @@map("agent_attachment_question_matches")
+}
+
+model AgentAttachmentEvidenceCandidate {
+  id               String    @id @default(cuid())
+  userId           Int       @map("user_id")
+  conversationId   String    @map("conversation_id")
+  analysisId       String    @map("analysis_id")
+  analysisItemId   String?   @unique @map("analysis_item_id")
+  attachmentId     String    @map("attachment_id")
+  status           String    @default("pending_confirmation") @db.VarChar(32)
+  subjectCode      String?   @map("subject_code") @db.VarChar(24)
+  suggestedTopicId Int?      @map("suggested_topic_id")
+  confirmedTopicId Int?      @map("confirmed_topic_id")
+  outcome          String?   @db.VarChar(24)
+  confidence       Float     @default(0)
+  gateReasons      Json      @default("[]") @map("gate_reasons")
+  sourceSnapshot   Json      @map("source_snapshot")
+  evidenceId       String?   @unique @map("evidence_id")
+  decisionBefore   Json?     @map("decision_before")
+  decisionAfter    Json?     @map("decision_after")
+  confirmedAt      DateTime? @map("confirmed_at")
+  rejectedAt       DateTime? @map("rejected_at")
+  revokedAt        DateTime? @map("revoked_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  user         User                         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation AgentConversation            @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  analysis     AgentAttachmentAnalysis      @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+  analysisItem AgentAttachmentAnalysisItem? @relation(fields: [analysisItemId], references: [id], onDelete: Cascade)
+  attachment   AgentAttachment              @relation(fields: [attachmentId], references: [id], onDelete: Cascade)
+  evidence     LearningEvidenceEvent?       @relation(fields: [evidenceId], references: [id], onDelete: SetNull)
+
+  @@index([userId, status, createdAt], map: "idx_agent_attachment_evidence_candidates_user_status")
+  @@index([conversationId, createdAt], map: "idx_agent_attachment_evidence_candidates_conversation")
+  @@index([analysisId], map: "idx_agent_attachment_evidence_candidates_analysis")
+  @@map("agent_attachment_evidence_candidates")
+}
+
+model AgentRun {
+  id             String    @id @default(cuid())
+  conversationId String    @map("conversation_id")
+  userId         Int       @map("user_id")
+  status         String    @default("queued") @db.VarChar(24)
+  channel        String    @default("web") @db.VarChar(24)
+  traceId        String    @unique @map("trace_id") @db.VarChar(80)
+  inputSnapshot  Json?     @map("input_snapshot")
+  startedAt      DateTime? @map("started_at")
+  completedAt    DateTime? @map("completed_at")
+  leaseUntil     DateTime? @map("lease_until")
+  attemptCount   Int       @default(0) @map("attempt_count")
+  errorCode      String?   @map("error_code") @db.VarChar(80)
+  errorRetryable Boolean?  @map("error_retryable")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  conversation AgentConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  toolCalls    AgentToolCall[]
+  artifacts    AgentArtifact[]
+  outbox       AgentOutbox[]
+
+  @@index([conversationId, createdAt], map: "idx_agent_runs_conversation_created")
+  @@index([userId, status, createdAt], map: "idx_agent_runs_user_status_created")
+  @@index([status, leaseUntil], map: "idx_agent_runs_status_lease")
+  @@map("agent_runs")
+}
+
+model AgentToolCall {
+  id                 String    @id @default(cuid())
+  runId              String    @map("run_id")
+  userId             Int       @map("user_id")
+  toolName           String    @map("tool_name") @db.VarChar(100)
+  toolVersion        String    @map("tool_version") @db.VarChar(24)
+  status             String    @default("pending") @db.VarChar(24)
+  idempotencyKeyHash String?   @map("idempotency_key_hash") @db.VarChar(128)
+  input              Json
+  output             Json?
+  errorCode          String?   @map("error_code") @db.VarChar(80)
+  createdAt          DateTime  @default(now()) @map("created_at")
+  completedAt        DateTime? @map("completed_at")
+
+  run  AgentRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  user User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, toolName, toolVersion, idempotencyKeyHash], map: "uq_agent_tool_calls_idempotency")
+  @@index([runId, createdAt], map: "idx_agent_tool_calls_run_created")
+  @@map("agent_tool_calls")
+}
+
+model AgentArtifact {
+  id               String   @id @default(cuid())
+  conversationId   String   @map("conversation_id")
+  runId            String   @map("run_id")
+  userId           Int      @map("user_id")
+  type             String   @db.VarChar(60)
+  version          Int      @default(1)
+  status           String   @default("ready") @db.VarChar(24)
+  title            String   @db.VarChar(200)
+  summary          String?  @db.Text
+  domainEntityType String?  @map("domain_entity_type") @db.VarChar(60)
+  domainEntityId   String?  @map("domain_entity_id") @db.VarChar(120)
+  route            String?  @db.VarChar(500)
+  snapshot         Json?
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  conversation AgentConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  run          AgentRun          @relation(fields: [runId], references: [id], onDelete: Cascade)
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([runId, type, version], map: "uq_agent_artifacts_run_type_version")
+  @@index([userId, type, createdAt], map: "idx_agent_artifacts_user_type_created")
+  @@index([domainEntityType, domainEntityId], map: "idx_agent_artifacts_domain_entity")
+  @@map("agent_artifacts")
+}
+
+model AgentOutbox {
+  id             String    @id @default(cuid())
+  conversationId String?   @map("conversation_id")
+  runId          String?   @map("run_id")
+  eventType      String    @map("event_type") @db.VarChar(80)
+  sequence       Int?
+  eventKey       String?   @map("event_key") @db.VarChar(120)
+  payload        Json
+  status         String    @default("pending") @db.VarChar(24)
+  attemptCount   Int       @default(0) @map("attempt_count")
+  availableAt    DateTime  @default(now()) @map("available_at")
+  processedAt    DateTime? @map("processed_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  conversation AgentConversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  run          AgentRun?          @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@unique([runId, sequence], map: "uq_agent_outbox_run_sequence")
+  @@unique([runId, eventKey], map: "uq_agent_outbox_run_event_key")
+  @@index([status, availableAt], map: "idx_agent_outbox_status_available")
+  @@index([runId, createdAt], map: "idx_agent_outbox_run_created")
+  @@map("agent_outbox")
+}
