@@ -193,6 +193,15 @@
 - 新增 `test:live-golden-path-contract` 并纳入 `ci:contracts`，阻止旧端口、旧绝对路径和旧启动命令重新进入活动验收面；
 - 历史架构记录中的旧路径继续作为事实证据保留，不被当作当前操作说明。
 
+## 已完成：Phase 6C 根命令面治理
+
+- 331 个根命令全部进入机器可读分类：产品核心 41、题目生产 202、平台契约 41、兼容运维 47，未分类为 0；
+- 新增 `audit:command-surface` 与确定性 `artifacts/command-surface.json`，检查根命令调用关系、脚本文件存在性、重复命令和总量预算；
+- 删除与 `agent:build` 完全重复的旧 `build` 别名，`verify:quality` 不再重复构建前后端；
+- 删除无法形成完整插件的 `question-engine:plugin-bundle`、指向不存在服务器的 `question-engine:plugin-self-test` 及孤立 bundle 脚本；
+- 修复 `question-engine:portable-test` 的隐式构建依赖，并将 question-engine 构建入口改为跨平台 npm 命令；
+- 题目生产命令不因数量多而被误删；兼容运维命令进入后续逐项退役清单，不得直接用于真实生产或学生数据。
+
 ## 已完成验证
 
 - 根、后端和前端依赖均在本目录独立安装；

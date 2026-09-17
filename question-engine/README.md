@@ -53,14 +53,13 @@ scenarios, and it fails closed for unregistered families.
 Phase 9 adds an ES2022 package build, a backend-free portable runtime, and the
 `cscalite-question-engine` CLI. The distributable package contains compiled core JavaScript,
 declarations, the portable adapter, and offline runtime only. Catalog, readiness, and qualification
-remain available through the optional `@moodlelike/question-engine/cscalite` export inside the extracted Moodlelike workspace.
+remain available through the optional `@moodlelike/question-engine/cscalite` export inside the standalone Moodlelike workspace.
 
-Phase 10 vendors the portable package into the Codex plugin. Its MCP server is adaptive: full
-CSCALite mode exposes eight tools, while a detached installation exposes only five offline generation
-tools. Both modes were exercised with the same self-test; detached mode does not load backend code.
+The historical Codex plugin wrapper is not part of this standalone repository. Plugin packaging must
+be maintained as an independent, complete deliverable rather than creating a partial `plugins/`
+directory inside the product checkout.
 
-Run `npm test` in this directory, or use the root scripts `question-engine:test` and
-`question-engine:plugin-self-test`.
+Run `npm test` in this directory, or use the root script `question-engine:test`.
 
-`CSCALITE_ROOT` may point to the CSCALite checkout. When unset, the package resolves the repository
-root relative to its own source location.
+`CSCALITE_ROOT` is a retained compatibility variable that may point to the current Moodlelike
+checkout. When unset, the package resolves the repository root relative to its own source location.
