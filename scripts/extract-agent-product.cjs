@@ -1990,6 +1990,16 @@ write('EXTRACTION_STATUS.md', `# Agent 产品独立状态
 - 发布门禁拒绝真实 \`.env\`、dump、私钥、缺失关键文档和包身份漂移；
 - 旧 \`CSCA_*\`/\`CSCALITE_*\` 名称作为兼容契约保留，后续采用 alias/deprecation 迁移，不做破坏性批量重命名。
 
+## 已完成：Phase 4A 干净检出可复现性验证
+
+- 从首个独立提交 \`b362288\` 创建无硬链接干净克隆，不复用独立项目目录中的依赖或构建产物；
+- 在干净克隆中分别执行根、后端和前端三段 \`npm ci\`，锁文件安装全部成功；
+- 在干净克隆中执行完整 \`npm run ci:contracts\`，前后端构建、Prisma 生成、Agent runtime、壳层、教学资产、迁移策略、边界审计、环境审计和发布检查全部通过；
+- \`v0.1.0-alpha.1\` 标签指向实际接受该验证的提交；
+- 安装期 npm audit 观察到后端 10 项、前端 8 项上游依赖风险，未执行可能造成破坏性升级的自动修复，转入独立供应链治理阶段。
+
+详细证据和复现命令见 \`CLEAN_CHECKOUT_VERIFICATION.md\`。
+
 ## 已完成验证
 
 - 根、后端和前端依赖均在本目录独立安装；
@@ -2400,11 +2410,50 @@ Real data migration additionally requires an explicitly authorized source prefli
 - this prerelease is private and carries no open-source grant.
 `);
 
+write('CLEAN_CHECKOUT_VERIFICATION.md', `# Clean checkout verification
+
+## Accepted baseline
+
+- Version: \`0.1.0-alpha.1\`
+- Commit: \`b362288\`
+- Tag: \`v0.1.0-alpha.1\`
+- Verification date: 2026-09-17
+- Platform: Windows, Node.js 22 / npm 10 contract
+
+## Method
+
+The repository was cloned with \`git clone --no-hardlinks\` into a new temporary directory. The verification did not reuse source-workspace or target-workspace \`node_modules\`, build output, \`.local\` state, database dumps, or Git metadata.
+
+The following installation path completed from committed lockfiles:
+
+\`npm ci\`
+
+\`npm ci --prefix backend\`
+
+\`npm ci --prefix frontend\`
+
+The clean clone then passed:
+
+\`npm run ci:contracts\`
+
+This includes frontend and backend builds, Prisma Client generation, Agent runtime tests, standalone shell contracts, Teaching Asset Registry, Authoring boundary, CI contract, data migration and preflight policy tests, reachability and product-boundary audits, Prisma retention, environment inventory, and the release baseline gate.
+
+## Supply-chain observation
+
+The installation audit reported 10 backend dependency findings (4 moderate, 6 high) and 8 frontend dependency findings (2 low, 2 moderate, 4 high) at verification time. These counts are registry observations rather than proof of runtime exploitability. No automatic \`npm audit fix\` was applied because it may change locked major versions or runtime behavior.
+
+Before a public or production release, classify each finding by reachable production path, patch non-breaking items, explicitly document accepted exceptions with expiry, and rerun this clean-checkout gate.
+
+## Scope limit
+
+This gate proves repository and lockfile reproducibility for the core contract suite. Browser golden paths, live providers, production credentials, and real-data migration remain separate gates.
+`);
+
 write('SOURCE_PROVENANCE.md', `# Source provenance
 
 Initial extraction source: the private CSCALite workspace supplied by the project owner.
 
-Extraction date: ${new Date().toISOString()}
+Extraction baseline date: 2026-09-17
 
 This repository was created by the versioned extraction program in \`scripts/extract-agent-product.cjs\`. It intentionally starts with new Git history and does not copy source secrets, local databases, uploads, dependency directories, build artifacts, or original Git metadata.
 `);
