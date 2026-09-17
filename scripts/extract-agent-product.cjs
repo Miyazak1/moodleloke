@@ -2008,6 +2008,10 @@ Legacy \`CSCA_*\` feature flags remain internal compatibility contracts for the 
 - Redis: \`localhost:57379\`
 
 Stop the foreground command with Ctrl+C. PostgreSQL and Redis remain available for the next run; stop them explicitly with \`docker compose stop\` when desired.
+
+## Verified rehearsal
+
+The Windows rehearsal passed Docker/Compose doctor checks, deployed all 97 migrations, reran with no pending migrations, seeded the dedicated demo fixtures idempotently, started the stable compiled backend plus Vite frontend, passed both in-run and independent authenticated verification, and released application ports after Ctrl+C. PostgreSQL and Redis intentionally remained healthy for the next local run.
 `);
 
 write('README.md', `# Moodlelike Agent
@@ -2223,6 +2227,8 @@ write('EXTRACTION_STATUS.md', `# Agent 产品独立状态
 - \`local:acceptance\` 串联真实运行验证、安全审计、核心契约和三条浏览器黄金路径；
 - 后端健康身份改为 \`moodlelike-backend\`，演示账号与演示资产不再使用 CSCALite/CSCAPilot 品牌；
 - 本地交付静态契约纳入 \`ci:contracts\`。
+
+真实 Windows 彩排已完成：Docker 环境检查通过；97 条迁移成功部署且重复执行无待处理项；演示数据幂等生成；稳定后端与 Vite 前端成功启动；启动器内验证和独立 \`local:verify\` 均返回 pass；停止后 3100/5190 无监听残留。彩排过程中修复了带空格 Node 路径被 shell 截断、旧 backend watcher 自重启导致健康超时两项问题。
 
 ## 已完成验证
 

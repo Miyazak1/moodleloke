@@ -277,4 +277,8 @@
 - 本地数据库、端口、Compose project、volume 和演示凭据继续与 CSCALite 隔离；
 - 保留 `CSCA_*` 仅作为内部兼容特性开关，用户无需手工配置。
 
-实现和操作边界记录在 `LOCAL_DELIVERY.md`。下一步应先通过静态契约和 clean checkout 验证，再在本机 Docker 环境执行真实 `local:setup / local:start / local:verify` 彩排。
+实现和操作边界记录在 `LOCAL_DELIVERY.md`。
+
+Windows 真实彩排已经完成：doctor 通过；独立 PostgreSQL/Redis 健康；97 条迁移成功且二次执行无 pending；演示数据幂等生成；稳定构建后端与 Vite 前端成功启动；启动器内部验证及独立 `local:verify` 均通过；Ctrl+C 后应用端口无监听残留。过程中修复了 Node 安装路径含空格时被 shell 截断、旧 `node --watch` 自触发重启导致健康超时两项问题。
+
+下一阶段是 Phase 5B：从提交创建 clean checkout 重跑本地交付静态门禁，并为 Phase 5A 形成新的预发布候选；之后再规划兼容环境变量的 alias/deprecation 迁移。

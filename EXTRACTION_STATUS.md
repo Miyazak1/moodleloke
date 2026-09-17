@@ -166,6 +166,8 @@
 - 后端健康身份改为 `moodlelike-backend`，演示账号与演示资产不再使用 CSCALite/CSCAPilot 品牌；
 - 本地交付静态契约纳入 `ci:contracts`。
 
+真实 Windows 彩排已完成：Docker 环境检查通过；97 条迁移成功部署且重复执行无待处理项；演示数据幂等生成；稳定后端与 Vite 前端成功启动；启动器内验证和独立 `local:verify` 均返回 pass；停止后 3100/5190 无监听残留。彩排过程中修复了带空格 Node 路径被 shell 截断、旧 backend watcher 自重启导致健康超时两项问题。
+
 ## 已完成验证
 
 - 根、后端和前端依赖均在本目录独立安装；

@@ -26,3 +26,7 @@ Legacy `CSCA_*` feature flags remain internal compatibility contracts for the ex
 - Redis: `localhost:57379`
 
 Stop the foreground command with Ctrl+C. PostgreSQL and Redis remain available for the next run; stop them explicitly with `docker compose stop` when desired.
+
+## Verified rehearsal
+
+The Windows rehearsal passed Docker/Compose doctor checks, deployed all 97 migrations, reran with no pending migrations, seeded the dedicated demo fixtures idempotently, started the stable compiled backend plus Vite frontend, passed both in-run and independent authenticated verification, and released application ports after Ctrl+C. PostgreSQL and Redis intentionally remained healthy for the next local run.
