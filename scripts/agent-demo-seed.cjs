@@ -15,7 +15,7 @@ const fixtureDir = path.join(rootDir, '.local', 'agent-demo-fixtures');
 const handwrittenFixturePath = path.join(fixtureDir, 'handwritten-function-answer.png');
 const pdfFixturePath = path.join(fixtureDir, 'function-answer.pdf');
 const uploadDir = path.join(rootDir, 'backend', 'uploads', 'past-papers');
-const email = 'agent-investor-demo@cscalite.local';
+const email = 'agent-demo@moodlelike.local';
 const marker = 'LOCAL_DEMO_ONLY';
 const demoQuestionPrompt = 'If f(x) = 2x + 3, what is f(4)?';
 
@@ -97,7 +97,7 @@ function escapePdfText(value) {
 
 function buildDemoPdf() {
   const lines = [
-    'CSCAPilot student answer demo',
+    'Moodlelike Agent student answer demo',
     'Question 1',
     demoQuestionPrompt,
     'A. 9    B. 10    C. 11    D. 12',
@@ -140,7 +140,7 @@ function ensureDemoFixtures() {
   }
   context.fillStyle = '#13233a';
   context.font = '700 30px Arial';
-  context.fillText('CSCAPilot student answer demo', 70, 70);
+  context.fillText('Moodlelike Agent student answer demo', 70, 70);
   context.font = '24px Arial';
   context.fillText('Question 1', 75, 155);
   context.font = '700 34px Arial';

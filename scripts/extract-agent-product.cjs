@@ -91,13 +91,20 @@ updateJson('package.json', (pkg) => {
   pkg.description = 'AI-native training and teaching Agent extracted from CSCALite';
   pkg.engines = { node: '>=22 <23' };
   pkg.packageManager = 'npm@10.9.8';
-  pkg.scripts.dev = 'powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-agent-dev.ps1';
+  pkg.scripts.dev = 'npm run local:start';
   pkg.scripts['frontend:dev'] = 'npm --prefix frontend run dev:force -- --port 5190';
+  pkg.scripts['local:doctor'] = 'node scripts/moodlelike-local.cjs doctor';
+  pkg.scripts['local:setup'] = 'node scripts/moodlelike-local.cjs setup';
+  pkg.scripts['local:start'] = 'node scripts/moodlelike-local.cjs start';
+  pkg.scripts['local:verify'] = 'node scripts/moodlelike-local.cjs verify';
+  pkg.scripts['local:acceptance'] = 'npm run local:verify && npm run security:audit-dependencies && npm run ci:contracts && npm run ci:golden';
+  pkg.scripts['demo:seed'] = 'node scripts/agent-demo-seed.cjs --apply';
   pkg.scripts['agent:build'] = 'npm run frontend:build && npm run backend:build';
   pkg.scripts['audit:product-boundaries'] = 'node scripts/audit-product-boundaries.cjs';
   pkg.scripts['test:teaching-assets'] = 'node scripts/check-teaching-asset-registry.cjs';
   pkg.scripts['test:authoring-boundary'] = 'node scripts/check-authoring-boundary.cjs';
   pkg.scripts['test:ci-contract'] = 'node scripts/check-standalone-ci.cjs';
+  pkg.scripts['test:local-delivery'] = 'node scripts/check-local-delivery.cjs';
   pkg.scripts['test:data-migration-policy'] = 'node scripts/standalone-data-migration-policy-test.cjs';
   pkg.scripts['test:data-preflight-policy'] = 'node scripts/standalone-data-preflight-policy-test.cjs';
   pkg.scripts['audit:prisma-retention'] = 'node scripts/generate-prisma-retention-matrix.cjs';
@@ -111,7 +118,7 @@ updateJson('package.json', (pkg) => {
   pkg.scripts['audit:environment-contract'] = 'node scripts/audit-standalone-environment.cjs';
   pkg.scripts['security:audit-dependencies'] = 'npm audit --prefix backend --audit-level=high && npm audit --prefix frontend --audit-level=high';
   pkg.scripts['release:check'] = 'node scripts/check-release-baseline.cjs';
-  pkg.scripts['ci:contracts'] = 'npm run agent:build && npm --prefix backend run test:agent-runtime && npm --prefix frontend run test:minimal && npm --prefix frontend run test:standalone-shell && npm run test:teaching-assets && npm run test:authoring-boundary && npm run test:ci-contract && npm run test:data-migration-policy && npm run test:data-preflight-policy && npm --prefix frontend run audit:standalone-reachability && npm run audit:product-boundaries && npm run audit:prisma-retention && npm run audit:environment-contract && npm run release:check';
+  pkg.scripts['ci:contracts'] = 'npm run agent:build && npm --prefix backend run test:agent-runtime && npm --prefix frontend run test:minimal && npm --prefix frontend run test:standalone-shell && npm run test:teaching-assets && npm run test:authoring-boundary && npm run test:ci-contract && npm run test:local-delivery && npm run test:data-migration-policy && npm run test:data-preflight-policy && npm --prefix frontend run audit:standalone-reachability && npm run audit:product-boundaries && npm run audit:prisma-retention && npm run audit:environment-contract && npm run release:check';
   pkg.scripts['ci:golden'] = 'npm --prefix frontend run test:e2e:golden';
 });
 
@@ -183,6 +190,20 @@ for (const envFile of ['.env.example', '.env.production.example']) {
 let questionEngineReadme = read('question-engine/README.md');
 questionEngineReadme = questionEngineReadme.replaceAll('@cscalite/question-engine', '@moodlelike/question-engine').replaceAll('inside CSCALite', 'inside the extracted Moodlelike workspace');
 write('question-engine/README.md', questionEngineReadme);
+
+let demoSeed = read('scripts/agent-demo-seed.cjs')
+  .replaceAll('agent-investor-demo@cscalite.local', 'agent-demo@moodlelike.local')
+  .replaceAll('CSCAPilot student answer demo', 'Moodlelike Agent student answer demo');
+write('scripts/agent-demo-seed.cjs', demoSeed);
+
+let healthController = read('backend/src/health/health.controller.ts')
+  .replaceAll("service: 'cscalite-backend'", "service: 'moodlelike-backend'");
+write('backend/src/health/health.controller.ts', healthController);
+
+let backendDevStarter = read('backend/scripts/start-dev.cjs')
+  .replaceAll("health?.service === 'cscalite-backend'", "health?.service === 'moodlelike-backend'")
+  .replaceAll('CSCAlite backend is already running', 'Moodlelike backend is already running');
+write('backend/scripts/start-dev.cjs', backendDevStarter);
 
 const reducedAppModule = `import { Module } from '@nestjs/common';
 import { AgentModule } from './agent/agent.module';
@@ -1749,77 +1770,244 @@ let compose = read('docker-compose.yml')
   .replaceAll('55432:5432', '56432:5432')
   .replaceAll('cscalite_postgres_data', 'moodlelike_postgres_data')
   .replaceAll('pg_isready -U postgres -d cscalite', 'pg_isready -U postgres -d moodlelike')
-  .replaceAll('${CSC_REDIS_PORT:-56379}', '${CSC_REDIS_PORT:-57379}');
+  .replaceAll('${CSC_REDIS_PORT:-56379}', '${MOODLELIKE_REDIS_PORT:-57379}')
+  .replaceAll('${CSC_REDIS_PORT:-57379}', '${MOODLELIKE_REDIS_PORT:-57379}');
 write('docker-compose.yml', compose);
 
+write('scripts/moodlelike-local.cjs', `const { spawn, spawnSync } = require('node:child_process');
+const fs = require('node:fs');
+const path = require('node:path');
+
+const root = path.resolve(__dirname, '..');
+const command = process.argv[2] || 'start';
+const onWindows = process.platform === 'win32';
+const npmCommand = onWindows ? 'npm.cmd' : 'npm';
+const dockerCommand = onWindows ? 'docker.exe' : 'docker';
+const backendUrl = 'http://localhost:3100';
+const frontendUrl = 'http://localhost:5190';
+const runtimeEnv = {
+  ...process.env,
+  NODE_ENV: 'development',
+  CSC_ENV: 'development',
+  PORT: '3100',
+  DATABASE_URL: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:56432/moodlelike?schema=public',
+  REDIS_URL: process.env.REDIS_URL || 'redis://localhost:57379',
+  AUTH_SECRET: process.env.AUTH_SECRET || 'moodlelike-local-development-secret-change-before-production',
+  CORS_ORIGINS: process.env.CORS_ORIGINS || frontendUrl,
+  PUBLIC_APP_ORIGIN: process.env.PUBLIC_APP_ORIGIN || frontendUrl,
+  PUBLIC_API_ORIGIN: process.env.PUBLIC_API_ORIGIN || backendUrl,
+  VITE_API_BASE_URL: backendUrl,
+  VITE_STANDALONE_AGENT: '1',
+  AGENT_WEB_ENABLED: 'true',
+  VITE_AGENT_WEB_ENABLED: 'true',
+  CSCA_AGENT_FOUNDATION_ENABLED: 'true',
+  CSCA_LEARNING_EVIDENCE_WRITE_ENABLED: 'true',
+  CSCA_LEARNING_SHADOW_PROJECTION_ENABLED: 'true',
+  CSCA_TARGET_GAP_ENABLED: 'true',
+  CSCA_LEARNING_PRESCRIPTION_ENABLED: 'true',
+  CSCA_AGENT_PRACTICE_WRITE_ENABLED: 'true',
+  CSCA_AGENT_TEACHING_ASSET_ENABLED: 'true'
+};
+
+function fail(message) { throw new Error(message); }
+
+function run(label, executable, args, options = {}) {
+  process.stdout.write('[moodlelike] ' + label + '\\n');
+  const result = spawnSync(executable, args, {
+    cwd: options.cwd || root,
+    env: runtimeEnv,
+    stdio: 'inherit',
+    shell: options.shell ?? (onWindows && /\\.cmd$/i.test(executable))
+  });
+  if (result.error) fail(label + ' failed: ' + result.error.message);
+  if ((result.status ?? 1) !== 0) fail(label + ' exited with code ' + result.status + '.');
+}
+
+function probe(executable, args) {
+  const result = spawnSync(executable, args, { cwd: root, env: runtimeEnv, encoding: 'utf8', shell: onWindows && /\\.cmd$/i.test(executable) });
+  return { ok: !result.error && result.status === 0, output: String(result.stdout || result.stderr || '').trim().split(/\\r?\\n/)[0] || null };
+}
+
+function dependencyState() {
+  return {
+    root: fs.existsSync(path.join(root, 'node_modules', '.package-lock.json')),
+    backend: fs.existsSync(path.join(root, 'backend', 'node_modules', '.package-lock.json')),
+    frontend: fs.existsSync(path.join(root, 'frontend', 'node_modules', '.package-lock.json'))
+  };
+}
+
+function doctor() {
+  const nodeMajor = Number(process.versions.node.split('.')[0]);
+  const npm = probe(npmCommand, ['--version']);
+  const docker = probe(dockerCommand, ['version', '--format', '{{.Server.Version}}']);
+  const compose = probe(dockerCommand, ['compose', 'version', '--short']);
+  const dependencies = dependencyState();
+  const report = { schemaVersion: '1', node: process.versions.node, nodeSupported: nodeMajor === 22, npm, docker, compose, dependencies };
+  console.log(JSON.stringify(report, null, 2));
+  if (!report.nodeSupported) fail('Node.js 22 is required.');
+  if (!npm.ok) fail('npm is not available.');
+  if (!docker.ok || !compose.ok) fail('Docker Desktop with Compose is required and must be running.');
+  return report;
+}
+
+function ensureDependencies() {
+  const state = dependencyState();
+  if (!state.root) run('installing root dependencies', npmCommand, ['ci']);
+  if (!state.backend) run('installing backend dependencies', npmCommand, ['ci', '--prefix', 'backend']);
+  if (!state.frontend) run('installing frontend dependencies', npmCommand, ['ci', '--prefix', 'frontend']);
+}
+
+function setup() {
+  if (runtimeEnv.NODE_ENV === 'production' || runtimeEnv.CSC_ENV === 'production') fail('Local setup is disabled in production mode.');
+  doctor();
+  ensureDependencies();
+  run('starting isolated PostgreSQL and Redis', dockerCommand, ['compose', 'up', '-d', '--wait', 'postgres', 'redis']);
+  run('applying committed database migrations', npmCommand, ['run', 'db:migrate']);
+  run('building stable backend runtime', npmCommand, ['run', 'backend:build']);
+  run('creating idempotent local demo evidence', process.execPath, [path.join(root, 'scripts', 'agent-demo-seed.cjs'), '--apply']);
+  console.log('[moodlelike] local setup complete; no CSCALite database or volume was used.');
+}
+
+async function response(url, options = {}) {
+  const result = await fetch(url, { ...options, signal: AbortSignal.timeout(options.timeoutMs || 10000) });
+  const text = await result.text();
+  let body = text;
+  try { body = text ? JSON.parse(text) : {}; } catch {}
+  if (!result.ok) fail(url + ' returned HTTP ' + result.status + ': ' + text.slice(0, 200));
+  return body;
+}
+
+async function reachable(url) {
+  try { await response(url, { timeoutMs: 1500 }); return true; } catch { return false; }
+}
+
+async function waitFor(url, timeoutMs) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (await reachable(url)) return;
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+  fail('Timed out waiting for ' + url);
+}
+
+async function verify() {
+  const health = await response(backendUrl + '/api/v1/health');
+  if (health.status !== 'ok' || health.service !== 'moodlelike-backend') fail('Unexpected backend identity or health response.');
+  const html = await response(frontendUrl + '/zh/agent');
+  if (typeof html !== 'string' || !/<html|<!doctype/i.test(html)) fail('Frontend Agent route did not return an HTML shell.');
+  const credentialPath = path.join(root, '.local', 'agent-demo-credentials.json');
+  if (!fs.existsSync(credentialPath)) fail('Demo credentials are missing. Run npm run local:setup.');
+  const credentials = JSON.parse(fs.readFileSync(credentialPath, 'utf8'));
+  const login = await response(backendUrl + '/api/v1/auth/login', {
+    method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(credentials)
+  });
+  const token = login.tokens && login.tokens.accessToken;
+  if (!token) fail('Demo login did not return an access token.');
+  const headers = { authorization: 'Bearer ' + token };
+  const me = await response(backendUrl + '/api/v1/auth/me', { headers });
+  await response(backendUrl + '/api/v1/agent/conversations', { headers });
+  const report = { schemaVersion: '1', verdict: 'pass', backend: health.service, database: 'reachable-through-authenticated-demo', frontend: 'agent-shell-ok', demoUser: me.email || credentials.email };
+  console.log(JSON.stringify(report, null, 2));
+  return report;
+}
+
+async function start() {
+  setup();
+  const backendUp = await reachable(backendUrl + '/api/v1/health');
+  const frontendUp = await reachable(frontendUrl + '/zh/agent');
+  if (backendUp || frontendUp) {
+    if (!(backendUp && frontendUp)) fail('Only one Moodlelike service is reachable; free ports 3100 and 5190, then retry.');
+    await verify();
+    console.log('[moodlelike] services were already running.');
+    return;
+  }
+  const backend = spawn(npmCommand, ['--prefix', 'backend', 'run', 'start:prod'], { cwd: root, env: runtimeEnv, stdio: 'inherit', shell: onWindows });
+  const frontend = spawn(npmCommand, ['run', 'frontend:dev'], { cwd: root, env: runtimeEnv, stdio: 'inherit', shell: onWindows });
+  const children = [backend, frontend];
+  const stop = () => children.forEach((child) => { if (!child.killed) child.kill('SIGTERM'); });
+  process.once('SIGINT', () => { stop(); process.exit(130); });
+  process.once('SIGTERM', () => { stop(); process.exit(143); });
+  const earlyExit = new Promise((_, reject) => children.forEach((child, index) => child.once('exit', (code) => reject(new Error((index ? 'frontend' : 'backend') + ' exited early with code ' + code)))));
+  try {
+    await Promise.race([Promise.all([waitFor(backendUrl + '/api/v1/health', 90000), waitFor(frontendUrl + '/zh/agent', 90000)]), earlyExit]);
+    await verify();
+    console.log('[moodlelike] ready: ' + frontendUrl + '/zh/agent');
+    await earlyExit;
+  } finally {
+    stop();
+  }
+}
+
+Promise.resolve()
+  .then(() => {
+    if (command === 'doctor') return doctor();
+    if (command === 'setup') return setup();
+    if (command === 'verify') return verify();
+    if (command === 'start') return start();
+    fail('Unknown command: ' + command + '. Use doctor, setup, start, or verify.');
+  })
+  .catch((error) => { console.error('[moodlelike] ' + (error.message || error)); process.exitCode = 1; });
+`);
+
+write('scripts/check-local-delivery.cjs', `const fs = require('node:fs');
+const path = require('node:path');
+const root = path.resolve(__dirname, '..');
+const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+const runner = fs.readFileSync(path.join(root, 'scripts', 'moodlelike-local.cjs'), 'utf8');
+const batch = fs.readFileSync(path.join(root, 'start-moodlelike-dev.bat'), 'utf8');
+const health = fs.readFileSync(path.join(root, 'backend', 'src', 'health', 'health.controller.ts'), 'utf8');
+for (const name of ['local:doctor', 'local:setup', 'local:start', 'local:verify', 'local:acceptance', 'demo:seed']) if (!pkg.scripts[name]) throw new Error('Missing local delivery script: ' + name);
+for (const marker of ['docker', 'compose', 'db:migrate', 'backend:build', 'start:prod', 'agent-demo-seed.cjs', '/api/v1/health', '/api/v1/auth/login', '/api/v1/auth/me', '/api/v1/agent/conversations']) if (!runner.includes(marker)) throw new Error('Local runner is missing: ' + marker);
+if (!runner.includes('moodlelike-local-development-secret') || !runner.includes("CSC_ENV: 'development'")) throw new Error('Local runner must be explicitly development-only.');
+if (!batch.includes('npm run local:start') || batch.includes('scripts\\wait-for-http')) throw new Error('Windows launcher must delegate to the unified local runner.');
+if (!health.includes("service: 'moodlelike-backend'")) throw new Error('Health identity must be Moodlelike.');
+console.log('Moodlelike local delivery contract passed.');
+`);
+
 write('scripts/start-agent-dev.ps1', `$ErrorActionPreference = "Stop"
-
 $root = Split-Path -Parent $PSScriptRoot
-$frontend = Join-Path $root "frontend"
-
-$env:PORT = "3100"
-$env:VITE_API_BASE_URL = "http://localhost:3100"
-$env:VITE_STANDALONE_AGENT = "1"
-$env:AGENT_WEB_ENABLED = "true"
-$env:VITE_AGENT_WEB_ENABLED = "true"
-$env:CSCA_AGENT_FOUNDATION_ENABLED = "true"
-$env:CSCA_LEARNING_EVIDENCE_WRITE_ENABLED = "true"
-$env:CSCA_LEARNING_SHADOW_PROJECTION_ENABLED = "true"
-$env:CSCA_TARGET_GAP_ENABLED = "true"
-$env:CSCA_LEARNING_PRESCRIPTION_ENABLED = "true"
-$env:CSCA_AGENT_PRACTICE_WRITE_ENABLED = "true"
-$env:CSCA_AGENT_TEACHING_ASSET_ENABLED = "true"
-
-Write-Host "Starting Moodlelike Agent backend on http://localhost:3100 ..."
-Start-Process powershell -WindowStyle Hidden -ArgumentList @(
-  "-NoProfile",
-  "-ExecutionPolicy", "Bypass",
-  "-Command", "$env:PORT='3100'; Set-Location '$root'; npm run backend:dev"
-)
-
-Write-Host "Starting Moodlelike Agent frontend on http://localhost:5190 ..."
-Start-Process powershell -WindowStyle Hidden -ArgumentList @(
-  "-NoProfile",
-  "-ExecutionPolicy", "Bypass",
-  "-Command", "$env:VITE_API_BASE_URL='http://localhost:3100'; $env:VITE_STANDALONE_AGENT='1'; $env:VITE_AGENT_WEB_ENABLED='true'; Set-Location '$frontend'; npm run dev:force -- --port 5190"
-)
-
-Write-Host "Agent services launched. Open http://localhost:5190/zh/agent"
+Set-Location $root
+& npm.cmd run local:start
+exit $LASTEXITCODE
 `);
 
 write('start-moodlelike-dev.bat', `@echo off
 setlocal
 cd /d "%~dp0"
-set "PORT=3100"
-set "VITE_API_BASE_URL=http://localhost:3100"
-set "VITE_STANDALONE_AGENT=1"
-set "AGENT_WEB_ENABLED=true"
-set "VITE_AGENT_WEB_ENABLED=true"
-set "CSCA_AGENT_FOUNDATION_ENABLED=true"
-set "CSCA_LEARNING_EVIDENCE_WRITE_ENABLED=true"
-set "CSCA_LEARNING_SHADOW_PROJECTION_ENABLED=true"
-set "CSCA_TARGET_GAP_ENABLED=true"
-set "CSCA_LEARNING_PRESCRIPTION_ENABLED=true"
-set "CSCA_AGENT_PRACTICE_WRITE_ENABLED=true"
-set "CSCA_AGENT_TEACHING_ASSET_ENABLED=true"
+call npm run local:start
+set "exitCode=%errorlevel%"
+if not "%exitCode%"=="0" pause
+exit /b %exitCode%
+`);
 
-echo Starting Moodlelike PostgreSQL...
-docker compose up -d --wait postgres
-if errorlevel 1 exit /b 1
+write('LOCAL_DELIVERY.md', `# Moodlelike local delivery
 
-call npm run db:migrate
-if errorlevel 1 exit /b 1
+## Command model
 
-start "Moodlelike Agent Backend" cmd /k "cd /d %~dp0 && npm run backend:dev"
-node scripts\wait-for-http.cjs http://localhost:3100/health 90000
-if errorlevel 1 exit /b 1
+- \`npm run local:doctor\`: verify Node.js 22, npm, Docker Desktop/Compose and dependency installation state;
+- \`npm run local:setup\`: install missing locked dependencies, start the isolated Moodlelike PostgreSQL/Redis services, deploy committed migrations and create idempotent local demo evidence;
+- \`npm run local:start\`: run setup, start backend on 3100 and frontend on 5190, wait for both services, authenticate the dedicated demo user and keep both processes attached to the current terminal;
+- \`npm run local:verify\`: verify backend identity, Agent HTML shell, demo authentication and authenticated Agent conversation access against already running services;
+- \`npm run local:acceptance\`: run runtime verification, dependency security audit, complete core contracts and all three browser golden paths.
 
-start "Moodlelike Agent Frontend" cmd /k "cd /d %~dp0 && npm run frontend:dev"
-node scripts\wait-for-http.cjs http://localhost:5190/ 90000
-if errorlevel 1 exit /b 1
+Windows users may double-click \`start-moodlelike-dev.bat\`; it delegates to the same Node runner instead of maintaining a second startup implementation.
 
-echo Agent: http://localhost:5190/zh/agent
-endlocal
+## Isolation and safety
+
+The local environment uses Compose project \`moodlelike\`, PostgreSQL port 56432, Redis port 57379, database \`moodlelike\`, and its own named volume. Local setup rejects production mode, and the demo seed rejects non-loopback database hosts. It never reads the CSCALite environment file, database, Docker volume or uploads.
+
+The generated demo credentials live under ignored \`.local/\` and are never printed by the verifier. The default local auth secret is development-only and must never be used for deployment.
+
+Legacy \`CSCA_*\` feature flags remain internal compatibility contracts for the extracted runtime. Operators use the Moodlelike commands above and do not need to set them manually.
+
+## Expected URLs
+
+- Student Agent: \`http://localhost:5190/zh/agent\`
+- Backend health: \`http://localhost:3100/api/v1/health\`
+- PostgreSQL: \`localhost:56432\`
+- Redis: \`localhost:57379\`
+
+Stop the foreground command with Ctrl+C. PostgreSQL and Redis remain available for the next run; stop them explicitly with \`docker compose stop\` when desired.
 `);
 
 write('README.md', `# Moodlelike Agent
@@ -1838,22 +2026,25 @@ Moodlelike Agent 是从 CSCALite 中独立出的 AI 原生训练与教学产品�
 
 ## 本地启动
 
-1. 将 \`.env.example\` 复制为 \`.env\`，设置认证密钥并检查数据库地址。
-2. 安装依赖：
+1. 检查本机条件：
 
    \`\`\`powershell
-   npm install
-   npm --prefix backend install
-   npm --prefix frontend install
+   npm run local:doctor
    \`\`\`
 
-3. 启动：
+2. 一键启动（会按 lockfile 安装缺失依赖、启动独立数据库、执行迁移并生成本地演示数据）：
 
    \`\`\`powershell
    .\\start-moodlelike-dev.bat
    \`\`\`
 
+   或运行 \`npm run local:start\`。
+
+3. 服务启动后可单独验收：\`npm run local:verify\`。完整交付验收使用 \`npm run local:acceptance\`。
+
 默认地址：前端 \`http://localhost:5190/zh/agent\`，后端 \`http://localhost:3100\`，PostgreSQL \`localhost:56432\`。
+
+完整说明见 [LOCAL_DELIVERY.md](./LOCAL_DELIVERY.md)。
 
 ## 独立性
 
@@ -2021,6 +2212,17 @@ write('EXTRACTION_STATUS.md', `# Agent 产品独立状态
 - 学生任务创建、做题不中断的教学辅助、独立 Authoring 发布三条浏览器黄金路径全部通过；
 - 已创建不可变标签 \`v0.1.0-alpha.2\`，指向 \`973ff57\`；
 - 未配置远程仓库、未推送，也未连接真实业务数据库。
+
+## 已完成：Phase 5A 独立本地交付入口
+
+- 新增统一 Node 编排器，Windows 批处理、PowerShell 与 npm 均委托同一实现；
+- \`local:doctor\` 检查 Node.js 22、npm、Docker Compose 和依赖安装状态；
+- \`local:setup\` 只操作 Moodlelike 的数据库、缓存、迁移和幂等演示数据；
+- \`local:start\` 启动前后端、等待健康、验证产品身份和专用演示账号，并保持进程附着便于 Ctrl+C 停止；
+- \`local:verify\` 覆盖健康、Agent 壳、登录、当前用户和会话 API；
+- \`local:acceptance\` 串联真实运行验证、安全审计、核心契约和三条浏览器黄金路径；
+- 后端健康身份改为 \`moodlelike-backend\`，演示账号与演示资产不再使用 CSCALite/CSCAPilot 品牌；
+- 本地交付静态契约纳入 \`ci:contracts\`。
 
 ## 已完成验证
 

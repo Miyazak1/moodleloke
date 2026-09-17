@@ -24,7 +24,7 @@ services:
     container_name: moodlelike-redis
     restart: unless-stopped
     ports:
-      - "${CSC_REDIS_PORT:-57379}:6379"
+      - "${MOODLELIKE_REDIS_PORT:-57379}:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s

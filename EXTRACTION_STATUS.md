@@ -155,6 +155,17 @@
 - 已创建不可变标签 `v0.1.0-alpha.2`，指向 `973ff57`；
 - 未配置远程仓库、未推送，也未连接真实业务数据库。
 
+## 已完成：Phase 5A 独立本地交付入口
+
+- 新增统一 Node 编排器，Windows 批处理、PowerShell 与 npm 均委托同一实现；
+- `local:doctor` 检查 Node.js 22、npm、Docker Compose 和依赖安装状态；
+- `local:setup` 只操作 Moodlelike 的数据库、缓存、迁移和幂等演示数据；
+- `local:start` 启动前后端、等待健康、验证产品身份和专用演示账号，并保持进程附着便于 Ctrl+C 停止；
+- `local:verify` 覆盖健康、Agent 壳、登录、当前用户和会话 API；
+- `local:acceptance` 串联真实运行验证、安全审计、核心契约和三条浏览器黄金路径；
+- 后端健康身份改为 `moodlelike-backend`，演示账号与演示资产不再使用 CSCALite/CSCAPilot 品牌；
+- 本地交付静态契约纳入 `ci:contracts`。
+
 ## 已完成验证
 
 - 根、后端和前端依赖均在本目录独立安装；

@@ -263,3 +263,18 @@
 - 本阶段没有配置远程仓库、没有推送、没有访问真实业务数据库。
 
 下一阶段不再是“能否独立构建”，而是独立运行交付：建立 Moodlelike 自己的本地启动、健康检查、演示数据初始化和一键验收入口，并逐步移除仍保留的 CSCALite 兼容命名。
+
+## 20. Phase 5A：独立本地运行交付
+
+目标是让新开发者只面对 Moodlelike 命令，不需要理解 CSCALite 的旧启动拓扑：
+
+- 统一 `local:doctor / local:setup / local:start / local:verify / local:acceptance`；
+- `local:setup` 自动安装缺失的锁定依赖，启动独立 PostgreSQL/Redis，执行迁移并生成幂等演示数据；
+- `local:start` 统一传递运行环境、等待服务健康、执行认证验证并保持前后端进程附着；
+- Windows 批处理与 PowerShell 不再复制编排逻辑，只委托统一 Node runner；
+- `local:verify` 验证 Moodlelike 后端身份、Agent 页面、专用演示账号登录与 Agent 会话访问；
+- `local:acceptance` 串联运行验证、依赖审计、核心契约和浏览器黄金路径；
+- 本地数据库、端口、Compose project、volume 和演示凭据继续与 CSCALite 隔离；
+- 保留 `CSCA_*` 仅作为内部兼容特性开关，用户无需手工配置。
+
+实现和操作边界记录在 `LOCAL_DELIVERY.md`。下一步应先通过静态契约和 clean checkout 验证，再在本机 Docker 环境执行真实 `local:setup / local:start / local:verify` 彩排。

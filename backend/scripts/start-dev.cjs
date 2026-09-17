@@ -48,8 +48,8 @@ function canListen() {
 async function assertPortAvailable() {
   if (await canListen()) return;
   const health = await requestHealth();
-  if (health?.service === 'cscalite-backend') {
-    console.log(`CSCAlite backend is already running on http://localhost:${port}.`);
+  if (health?.service === 'moodlelike-backend') {
+    console.log(`Moodlelike backend is already running on http://localhost:${port}.`);
     process.exit(0);
   }
   console.error(`Port ${port} is already in use by another process. Stop it or set PORT to a free port before starting the backend.`);

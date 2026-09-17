@@ -14,22 +14,25 @@ Moodlelike Agent 是从 CSCALite 中独立出的 AI 原生训练与教学产品�
 
 ## 本地启动
 
-1. 将 `.env.example` 复制为 `.env`，设置认证密钥并检查数据库地址。
-2. 安装依赖：
+1. 检查本机条件：
 
    ```powershell
-   npm install
-   npm --prefix backend install
-   npm --prefix frontend install
+   npm run local:doctor
    ```
 
-3. 启动：
+2. 一键启动（会按 lockfile 安装缺失依赖、启动独立数据库、执行迁移并生成本地演示数据）：
 
    ```powershell
    .\start-moodlelike-dev.bat
    ```
 
+   或运行 `npm run local:start`。
+
+3. 服务启动后可单独验收：`npm run local:verify`。完整交付验收使用 `npm run local:acceptance`。
+
 默认地址：前端 `http://localhost:5190/zh/agent`，后端 `http://localhost:3100`，PostgreSQL `localhost:56432`。
+
+完整说明见 [LOCAL_DELIVERY.md](./LOCAL_DELIVERY.md)。
 
 ## 独立性
 

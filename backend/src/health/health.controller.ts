@@ -26,14 +26,14 @@ export class HealthController {
     if (this.shouldUseMinimalHealth()) {
       return {
         status: 'ok',
-        service: 'cscalite-backend',
+        service: 'moodlelike-backend',
         appVersion: getAppVersion(),
         timestamp: new Date().toISOString()
       };
     }
     return {
       status: 'ok',
-      service: 'cscalite-backend',
+      service: 'moodlelike-backend',
       appVersion: getAppVersion(),
       cspMode: getCspMode(),
       metricsEnabled: isMetricsEnabled(),
