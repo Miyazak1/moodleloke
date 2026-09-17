@@ -1,4 +1,4 @@
-# Release baseline 0.1.0-alpha.2
+# Release baseline 0.1.0-alpha.3
 
 This prerelease establishes the first independently buildable Moodlelike Agent repository baseline.
 
@@ -12,6 +12,7 @@ This prerelease establishes the first independently buildable Moodlelike Agent r
 - Prisma retention matrix, safe migration/rollback tooling, disposable migration rehearsal and read-only data preflight;
 - environment inventory, secret hygiene gate and source provenance.
 - zero-known-vulnerability backend/frontend lockfiles at the Phase 4B audit point and a high/critical CI dependency gate.
+- one-command Windows local delivery with isolated PostgreSQL/Redis defaults, idempotent demo seeding, runtime verification and an acceptance workflow.
 
 ## Required release gates
 

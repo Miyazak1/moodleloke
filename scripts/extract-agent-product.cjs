@@ -86,7 +86,7 @@ function updateJson(relativePath, mutate) {
 
 updateJson('package.json', (pkg) => {
   pkg.name = 'moodlelike-agent';
-  pkg.version = '0.1.0-alpha.2';
+  pkg.version = '0.1.0-alpha.3';
   pkg.private = true;
   pkg.description = 'AI-native training and teaching Agent extracted from CSCALite';
   pkg.engines = { node: '>=22 <23' };
@@ -124,8 +124,8 @@ updateJson('package.json', (pkg) => {
 
 updateJson('package-lock.json', (lock) => {
   lock.name = 'moodlelike-agent';
-  lock.version = '0.1.0-alpha.2';
-  if (lock.packages?.['']) Object.assign(lock.packages[''], { name: 'moodlelike-agent', version: '0.1.0-alpha.2' });
+  lock.version = '0.1.0-alpha.3';
+  if (lock.packages?.['']) Object.assign(lock.packages[''], { name: 'moodlelike-agent', version: '0.1.0-alpha.3' });
   for (const item of Object.values(lock.packages || {})) {
     if (item?.name === '@cscalite/backend') item.name = '@moodlelike/backend';
     if (item?.name === '@cscalite/frontend') item.name = '@moodlelike/frontend';
@@ -135,7 +135,7 @@ updateJson('package-lock.json', (lock) => {
 
 updateJson('backend/package.json', (pkg) => {
   pkg.name = '@moodlelike/backend';
-  pkg.version = '0.1.0-alpha.2';
+  pkg.version = '0.1.0-alpha.3';
   pkg.private = true;
   pkg.engines = { node: '>=22 <23' };
   pkg.scripts.build = 'node scripts/clean-dist.cjs && npm run prisma:generate && nest build';
@@ -143,14 +143,14 @@ updateJson('backend/package.json', (pkg) => {
 });
 updateJson('backend/package-lock.json', (lock) => {
   lock.name = '@moodlelike/backend';
-  lock.version = '0.1.0-alpha.2';
-  if (lock.packages?.['']) Object.assign(lock.packages[''], { name: '@moodlelike/backend', version: '0.1.0-alpha.2' });
+  lock.version = '0.1.0-alpha.3';
+  if (lock.packages?.['']) Object.assign(lock.packages[''], { name: '@moodlelike/backend', version: '0.1.0-alpha.3' });
   for (const item of Object.values(lock.packages || {})) { if (item?.name === 'cscalite-rebuild') item.name = 'moodlelike-agent'; if (item?.name === '@cscalite/frontend') item.name = '@moodlelike/frontend'; }
 });
 
 updateJson('frontend/package.json', (pkg) => {
   pkg.name = '@moodlelike/frontend';
-  pkg.version = '0.1.0-alpha.2';
+  pkg.version = '0.1.0-alpha.3';
   pkg.private = true;
   pkg.engines = { node: '>=22 <23' };
   pkg.scripts['test:minimal'] = 'node scripts/test-standalone-minimal.cjs';
@@ -163,14 +163,14 @@ updateJson('frontend/package.json', (pkg) => {
 });
 updateJson('frontend/package-lock.json', (lock) => {
   lock.name = '@moodlelike/frontend';
-  lock.version = '0.1.0-alpha.2';
-  if (lock.packages?.['']) Object.assign(lock.packages[''], { name: '@moodlelike/frontend', version: '0.1.0-alpha.2' });
+  lock.version = '0.1.0-alpha.3';
+  if (lock.packages?.['']) Object.assign(lock.packages[''], { name: '@moodlelike/frontend', version: '0.1.0-alpha.3' });
   for (const item of Object.values(lock.packages || {})) { if (item?.name === 'cscalite-rebuild') item.name = 'moodlelike-agent'; if (item?.name === '@cscalite/backend') item.name = '@moodlelike/backend'; }
 });
 
 updateJson('question-engine/package.json', (pkg) => {
   pkg.name = '@moodlelike/question-engine';
-  pkg.version = '0.1.0-alpha.2';
+  pkg.version = '0.1.0-alpha.3';
   pkg.private = true;
   pkg.engines = { node: '>=22 <23' };
 });
@@ -1170,7 +1170,7 @@ const root = path.resolve(__dirname, '..');
 const expected = ['LICENSE', 'SECURITY.md', 'RELEASE_BASELINE.md', 'ENVIRONMENT_CONTRACT.md', 'SOURCE_PROVENANCE.md', 'VERSION', '.gitattributes', '.gitignore', '.env.example', '.env.production.example', 'artifacts/environment-contract.json'];
 for (const item of expected) if (!fs.existsSync(path.join(root, item))) throw new Error('Release baseline file missing: ' + item);
 const packages = [['package.json', 'moodlelike-agent'], ['backend/package.json', '@moodlelike/backend'], ['frontend/package.json', '@moodlelike/frontend'], ['question-engine/package.json', '@moodlelike/question-engine']];
-for (const [file, name] of packages) { const value = JSON.parse(fs.readFileSync(path.join(root, file), 'utf8')); if (value.name !== name || value.version !== '0.1.0-alpha.2' || value.private !== true) throw new Error('Package identity mismatch: ' + file); if (value.engines?.node !== '>=22 <23') throw new Error('Node engine missing: ' + file); }
+for (const [file, name] of packages) { const value = JSON.parse(fs.readFileSync(path.join(root, file), 'utf8')); if (value.name !== name || value.version !== '0.1.0-alpha.3' || value.private !== true) throw new Error('Package identity mismatch: ' + file); if (value.engines?.node !== '>=22 <23') throw new Error('Node engine missing: ' + file); }
 const ignore = fs.readFileSync(path.join(root, '.gitignore'), 'utf8');
 for (const marker of ['node_modules/', '.env', '.local/', 'dist/', '*.log']) if (!ignore.includes(marker)) throw new Error('.gitignore missing: ' + marker);
 const prohibited = [];
@@ -1181,7 +1181,7 @@ const provenance = fs.readFileSync(path.join(root, 'SOURCE_PROVENANCE.md'), 'utf
 if (/[A-Z]:\\\\/i.test(provenance)) throw new Error('Source provenance must not expose a local absolute path.');
 const envReport = JSON.parse(fs.readFileSync(path.join(root, 'artifacts/environment-contract.json'), 'utf8'));
 if (envReport.missingRequiredDevelopment.length || envReport.missingRequiredProduction.length || envReport.unsafeExampleValues.length) throw new Error('Environment contract has release blockers.');
-console.log(JSON.stringify({ version: '0.1.0-alpha.2', packages: packages.length, environmentVariables: envReport.runtimeVariableCount, prohibitedFiles: 0 }));
+console.log(JSON.stringify({ version: '0.1.0-alpha.3', packages: packages.length, environmentVariables: envReport.runtimeVariableCount, prohibitedFiles: 0 }));
 `);
 
 write('scripts/lib/standalone-data-migration-policy.cjs', `const path = require('node:path');
@@ -2537,7 +2537,7 @@ write('DATA_CUTOVER_CHECKLIST.md', `# 数据切换与回退清单
 - 不使用生产凭据填充 Issue、聊天记录或版本库文件。
 `);
 
-write('VERSION', `0.1.0-alpha.2
+write('VERSION', `0.1.0-alpha.3
 `);
 
 write('.nvmrc', `22
@@ -2586,7 +2586,7 @@ Do not open a public issue containing credentials, database URLs, private studen
 
 ## Supported baseline
 
-The current supported prerelease is \`0.1.0-alpha.2\` on Node.js 22 and PostgreSQL 16. This is not yet a public production support commitment.
+The current supported prerelease is \`0.1.0-alpha.3\` on Node.js 22 and PostgreSQL 16. This is not yet a public production support commitment.
 `);
 
 write('ENVIRONMENT_CONTRACT.md', `# Environment contract
@@ -2608,7 +2608,7 @@ The machine-generated inventory at \`artifacts/environment-contract.md\` lists e
 Legacy \`CSCA_*\`, \`CSCALITE_*\` and \`CSC_ENV\` names remain versioned compatibility contracts. They should be renamed only through an explicit alias/deprecation migration, never by a broad search-and-replace.
 `);
 
-write('RELEASE_BASELINE.md', `# Release baseline 0.1.0-alpha.2
+write('RELEASE_BASELINE.md', `# Release baseline 0.1.0-alpha.3
 
 This prerelease establishes the first independently buildable Moodlelike Agent repository baseline.
 
@@ -2622,6 +2622,7 @@ This prerelease establishes the first independently buildable Moodlelike Agent r
 - Prisma retention matrix, safe migration/rollback tooling, disposable migration rehearsal and read-only data preflight;
 - environment inventory, secret hygiene gate and source provenance.
 - zero-known-vulnerability backend/frontend lockfiles at the Phase 4B audit point and a high/critical CI dependency gate.
+- one-command Windows local delivery with isolated PostgreSQL/Redis defaults, idempotent demo seeding, runtime verification and an acceptance workflow.
 
 ## Required release gates
 

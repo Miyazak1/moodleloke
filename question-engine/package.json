@@ -1,6 +1,6 @@
 {
   "name": "@moodlelike/question-engine",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.3",
   "private": true,
   "description": "Stable read-only boundary around CSCALite's verified question-generation engine.",
   "type": "commonjs",
