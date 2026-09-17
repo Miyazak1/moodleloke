@@ -16,7 +16,7 @@ The local environment uses Compose project `moodlelike`, PostgreSQL port 56432, 
 
 The generated demo credentials live under ignored `.local/` and are never printed by the verifier. The default local auth secret is development-only and must never be used for deployment.
 
-Legacy `CSCA_*` feature flags remain internal compatibility contracts for the extracted runtime. Operators use the Moodlelike commands above and do not need to set them manually.
+Legacy `CSCA_*` feature flags remain internal compatibility contracts for the standalone runtime. Operators use the Moodlelike commands above and do not need to set them manually.
 
 ## Expected URLs
 

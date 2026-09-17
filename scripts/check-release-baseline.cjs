@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const root = path.resolve(__dirname, '..');
-const expected = ['LICENSE', 'SECURITY.md', 'RELEASE_BASELINE.md', 'ENVIRONMENT_CONTRACT.md', 'SOURCE_PROVENANCE.md', 'VERSION', '.gitattributes', '.gitignore', '.env.example', '.env.production.example', 'artifacts/environment-contract.json'];
+const expected = ['LICENSE', 'SECURITY.md', 'RELEASE_BASELINE.md', 'ENVIRONMENT_CONTRACT.md', 'SOURCE_PROVENANCE.md', 'REPOSITORY_OWNERSHIP.md', 'VERSION', '.gitattributes', '.gitignore', '.env.example', '.env.production.example', 'artifacts/environment-contract.json'];
 for (const item of expected) if (!fs.existsSync(path.join(root, item))) throw new Error('Release baseline file missing: ' + item);
 const packages = [['package.json', 'moodlelike-agent'], ['backend/package.json', '@moodlelike/backend'], ['frontend/package.json', '@moodlelike/frontend'], ['question-engine/package.json', '@moodlelike/question-engine']];
 for (const [file, name] of packages) { const value = JSON.parse(fs.readFileSync(path.join(root, file), 'utf8')); if (value.name !== name || value.version !== '0.1.0-alpha.3' || value.private !== true) throw new Error('Package identity mismatch: ' + file); if (value.engines?.node !== '>=22 <23') throw new Error('Node engine missing: ' + file); }

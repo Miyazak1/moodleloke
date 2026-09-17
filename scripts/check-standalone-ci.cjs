@@ -10,7 +10,7 @@ for (const marker of ['npm run security:audit-dependencies', 'npm run ci:contrac
 for (const script of ['test:e2e:golden:student', 'test:e2e:golden:teaching', 'test:e2e:golden:authoring', 'test:e2e:golden']) {
   if (!frontendPackage.scripts[script]) throw new Error('Frontend golden-path script is missing: ' + script);
 }
-for (const script of ['ci:contracts', 'ci:golden', 'security:audit-dependencies', 'test:teaching-assets', 'test:authoring-boundary']) {
+for (const script of ['ci:contracts', 'ci:golden', 'security:audit-dependencies', 'test:teaching-assets', 'test:authoring-boundary', 'test:repository-ownership']) {
   if (!rootPackage.scripts[script]) throw new Error('Root CI gate is missing: ' + script);
 }
 if (/DATABASE_URL:s*postgres/i.test(workflow) || /OPENAI_API_KEY:s*S+/i.test(workflow)) throw new Error('CI workflow must not embed service credentials.');

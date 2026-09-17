@@ -4,4 +4,4 @@ Initial extraction source: the private CSCALite workspace supplied by the projec
 
 Extraction baseline date: 2026-09-17
 
-This repository was created by the versioned extraction program in `scripts/extract-agent-product.cjs`. It intentionally starts with new Git history and does not copy source secrets, local databases, uploads, dependency directories, build artifacts, or original Git metadata.
+This is historical provenance, not a continuing upstream relationship. The initial repository was produced by a versioned extraction program, but that program is intentionally absent from the standalone repository. The initial transfer did not copy source secrets, local databases, uploads, dependency directories, build artifacts, or original Git metadata.

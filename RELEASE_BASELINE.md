@@ -13,6 +13,7 @@ This prerelease establishes the first independently buildable Moodlelike Agent r
 - environment inventory, secret hygiene gate and source provenance.
 - zero-known-vulnerability backend/frontend lockfiles at the Phase 4B audit point and a high/critical CI dependency gate.
 - one-command Windows local delivery with isolated PostgreSQL/Redis defaults, idempotent demo seeding, runtime verification and an acceptance workflow.
+- standalone repository ownership contract that rejects extraction tooling and active references to the former workspace path.
 
 ## Required release gates
 
