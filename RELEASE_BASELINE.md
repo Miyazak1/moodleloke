@@ -16,6 +16,7 @@ This prerelease establishes the first independently buildable Moodlelike Agent r
 - standalone repository ownership contract that rejects extraction tooling and active references to the former workspace path.
 - live Agent, attachment and teaching browser checks aligned with the standalone 5190/3100 local-delivery contract.
 - classified root command surface with file/reference integrity, bounded growth and duplicate-command governance.
+- compatibility-operation registry that blocks the former release/Docker/staging chain by default and separates controlled data writes from retained validation.
 
 ## Required release gates
 

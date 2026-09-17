@@ -6,7 +6,7 @@ The standalone repository inherited a large operational command set alongside th
 
 `npm run audit:command-surface` classifies every root package command, checks direct script-file references, verifies root-to-root `npm run` calls, rejects unexpected duplicate commands and writes a deterministic inventory to `artifacts/command-surface.json`.
 
-The accepted Phase 6C inventory contains 331 commands: 41 product-core, 202 question-production, 41 platform-contract and 47 compatibility-operation entries. Nothing is unclassified. The large question-production surface remains intentional for now; it is governed separately from the everyday student application rather than being mistaken for dead code.
+The accepted inventory contains 331 commands: 42 product-core, 202 question-production, 41 platform-contract and 46 compatibility-operation entries. Nothing is unclassified. The large question-production surface remains intentional for now; it is governed separately from the everyday student application rather than being mistaken for dead code.
 
 ## Categories
 

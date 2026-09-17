@@ -3,16 +3,17 @@
   "total": 331,
   "budget": 331,
   "counts": {
-    "product-core": 41,
+    "product-core": 42,
     "question-production": 202,
     "platform-contracts": 41,
-    "compatibility-operations": 47,
+    "compatibility-operations": 46,
     "unclassified": 0
   },
   "categories": {
     "product-core": [
       "agent:build",
       "audit:command-surface",
+      "audit:compatibility-operations",
       "audit:environment-contract",
       "audit:prisma-retention",
       "audit:product-boundaries",
@@ -302,7 +303,6 @@
     ],
     "compatibility-operations": [
       "admin:bootstrap",
-      "backend:build:with-prisma",
       "backend:dev",
       "backend:dev:observation",
       "backend:dev:observation:local-shadow",

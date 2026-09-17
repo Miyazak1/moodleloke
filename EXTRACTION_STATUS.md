@@ -202,6 +202,14 @@
 - 修复 `question-engine:portable-test` 的隐式构建依赖，并将 question-engine 构建入口改为跨平台 npm 命令；
 - 题目生产命令不因数量多而被误删；兼容运维命令进入后续逐项退役清单，不得直接用于真实生产或学生数据。
 
+## 已完成：Phase 6D 兼容运维隔离
+
+- 46 个兼容运维入口进一步分为：旧发布链阻断 14、受控数据写入 7、本地/一次性数据安全 4、旧运行时 3、保留验证 18，未分类为 0；
+- 旧 CSCALite Docker、Staging、Release、旧端口和占位 dump 链不再执行真实实现，命令名仅作为安全哨兵保留；
+- 安全哨兵无环境变量绕过，误执行会明确失败并指向 `local:acceptance`、`ci:contracts`、`ci:golden` 和数据切换清单；
+- 删除已由当前后端构建完全覆盖的 `backend:build:with-prisma` 根入口；
+- 新增 `COMPATIBILITY_OPERATIONS.md`、确定性风险清单和 CI 审计，真实数据写入仍需独立授权。
+
 ## 已完成验证
 
 - 根、后端和前端依赖均在本目录独立安装；

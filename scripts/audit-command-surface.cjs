@@ -7,7 +7,7 @@ const scripts = pkg.scripts || {};
 
 const coreExact = new Set([
   'dev', 'frontend:dev', 'frontend:build', 'backend:build', 'prisma:generate', 'prisma:validate',
-  'demo:seed', 'agent:build', 'audit:product-boundaries', 'audit:command-surface',
+  'demo:seed', 'agent:build', 'audit:product-boundaries', 'audit:command-surface', 'audit:compatibility-operations',
   'audit:prisma-retention', 'audit:environment-contract', 'security:audit-dependencies',
   'release:check', 'ci:contracts', 'ci:golden'
 ]);
@@ -20,7 +20,7 @@ const platformPrefixes = [
   'csca-byok:', 'organization-', 'admin-audit:', 'governance-gates:',
   'ai-provider:', 'ai-credits:'
 ];
-const legacyExact = new Set(['backend:build:with-prisma', 'admin:bootstrap', 'schools:import']);
+const legacyExact = new Set(['admin:bootstrap', 'schools:import']);
 const legacyPrefixes = ['backend:dev', 'db:', 'verify:'];
 
 function classify(name) {

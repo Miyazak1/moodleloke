@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "1",
+  "total": 46,
+  "counts": {
+    "blockedLegacyRelease": 14,
+    "controlledDataWrite": 7,
+    "localOrDisposableDataSafety": 4,
+    "legacyRuntime": 3,
+    "retainedValidation": 18,
+    "unclassified": 0
+  },
+  "categories": {
+    "blockedLegacyRelease": [
+      "db:backup:docker",
+      "verify:ci",
+      "verify:docker",
+      "verify:docker:staging-local",
+      "verify:docker:status",
+      "verify:launch",
+      "verify:local",
+      "verify:ops",
+      "verify:release",
+      "verify:release-candidate",
+      "verify:release-window",
+      "verify:release-window:local",
+      "verify:staging",
+      "verify:staging:full"
+    ],
+    "controlledDataWrite": [
+      "admin:bootstrap",
+      "db:cleanup-security",
+      "db:migrate",
+      "db:migrate:dev",
+      "db:restore",
+      "db:seed",
+      "schools:import"
+    ],
+    "localOrDisposableDataSafety": [
+      "db:backup",
+      "db:migrate:status",
+      "db:restore:smoke",
+      "verify:backup-restore-drill"
+    ],
+    "legacyRuntime": [
+      "backend:dev",
+      "backend:dev:observation",
+      "backend:dev:observation:local-shadow"
+    ],
+    "retainedValidation": [
+      "verify:admin-concurrency",
+      "verify:backend",
+      "verify:concurrency",
+      "verify:cookie-only",
+      "verify:csca-ai-questioning",
+      "verify:csca-source-profile-rollout",
+      "verify:db-security",
+      "verify:e2e",
+      "verify:e2e:fixed-bank",
+      "verify:fixed-bank",
+      "verify:frontend-concurrency",
+      "verify:governance",
+      "verify:i18n",
+      "verify:quality",
+      "verify:race",
+      "verify:release-concurrency",
+      "verify:security",
+      "verify:supply-chain"
+    ],
+    "unclassified": []
+  }
+}
