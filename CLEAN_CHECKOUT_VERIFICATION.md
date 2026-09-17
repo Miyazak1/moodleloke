@@ -37,3 +37,7 @@ Phase 4B subsequently resolved these observed findings through same-major direct
 ## Scope limit
 
 This gate proves repository and lockfile reproducibility for the core contract suite. Browser golden paths, live providers, production credentials, and real-data migration remain separate gates.
+
+## Alpha.2 acceptance
+
+Commit `973ff57` was independently cloned and passed deterministic installation, zero-vulnerability dependency auditing, the complete core contract suite, and all three browser golden paths. It is tagged `v0.1.0-alpha.2`.

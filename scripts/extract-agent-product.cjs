@@ -2013,6 +2013,15 @@ write('EXTRACTION_STATUS.md', `# Agent 产品独立状态
 
 详细矩阵见 \`SUPPLY_CHAIN_STATUS.md\`。
 
+## 已完成：Phase 4C alpha.2 发布验收
+
+- 从候选提交 \`973ff57\` 创建无硬链接干净克隆并执行根、后端、前端三段 \`npm ci\`；
+- 三段安装与独立安全门禁均报告 0 个已知漏洞；
+- 干净克隆完整 \`ci:contracts\` 通过；
+- 学生任务创建、做题不中断的教学辅助、独立 Authoring 发布三条浏览器黄金路径全部通过；
+- 已创建不可变标签 \`v0.1.0-alpha.2\`，指向 \`973ff57\`；
+- 未配置远程仓库、未推送，也未连接真实业务数据库。
+
 ## 已完成验证
 
 - 根、后端和前端依赖均在本目录独立安装；
@@ -2465,6 +2474,10 @@ Phase 4B subsequently resolved these observed findings through same-major direct
 ## Scope limit
 
 This gate proves repository and lockfile reproducibility for the core contract suite. Browser golden paths, live providers, production credentials, and real-data migration remain separate gates.
+
+## Alpha.2 acceptance
+
+Commit \`973ff57\` was independently cloned and passed deterministic installation, zero-vulnerability dependency auditing, the complete core contract suite, and all three browser golden paths. It is tagged \`v0.1.0-alpha.2\`.
 `);
 
 write('SUPPLY_CHAIN_STATUS.md', `# Supply-chain security status
@@ -2477,6 +2490,8 @@ On 2026-09-17 the committed dependency graph was upgraded without forced major-v
 | --- | ---: | ---: | --- |
 | Backend | 10 findings | 0 findings | Nest 11.2.5, Express 4.22.3 |
 | Frontend | 8 findings | 0 findings | Vite 7.3.6 |
+
+Accepted release tag: \`v0.1.0-alpha.2\` at commit \`973ff57\`.
 
 Important remediated transitive versions include Multer 2.4.0, body-parser 1.20.8, qs 6.16.0, fast-uri 3.1.8, js-yaml 4.3.2, browserslist 4.29.0, brace-expansion 1.1.21, esbuild 0.28.2, PostCSS 8.5.28, nanoid 3.3.19, Babel Core 7.29.7 and fflate 0.8.3.
 
