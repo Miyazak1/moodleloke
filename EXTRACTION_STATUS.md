@@ -163,6 +163,7 @@
 - `local:start` 启动前后端、等待健康、验证产品身份和专用演示账号，并保持进程附着便于 Ctrl+C 停止；
 - `local:verify` 覆盖健康、Agent 壳、登录、当前用户和会话 API；
 - `local:acceptance` 串联真实运行验证、安全审计、核心契约和三条浏览器黄金路径；
+- `local:acceptance` 先执行零 Provider 的真实浏览器只读门禁，验证独立登录、学习数据读取和旧浏览器身份自动迁移，再进入安全审计与确定性黄金路径；
 - 后端健康身份改为 `moodlelike-backend`，演示账号与演示资产不再使用 CSCALite/CSCAPilot 品牌；
 - 本地交付静态契约纳入 `ci:contracts`。
 
@@ -241,6 +242,14 @@
 - 旧 `cscalite.*`/`cscalite:*` 浏览器值采用首次读取复制、写新删旧的单向迁移，退出登录同时清理两代认证键；
 - 新增共享存储迁移 helper、`BROWSER_IDENTITY_MIGRATION.md` 和静态契约，旧键只允许出现在显式迁移文件中；
 - 数据库标识、CSCA API 路径和 Prometheus metric 名保持兼容，不在浏览器身份阶段破坏性改名。
+
+## 已完成：Phase 6I 独立运行与零 Provider 真实浏览器门禁
+
+- 已从 Moodlelike 仓库独立启动前端 `5190`、后端 `3100`、PostgreSQL `56432` 与 Redis `57379`，97 个迁移无待执行项；
+- 启动器使用隔离演示账号完成真实登录、当前用户和 Agent 会话读取，未连接 CSCALite 数据库或卷；
+- 新增零 Provider 的只读浏览器门禁，真实加载 Agent 与学习数据且不发送 Agent 消息，不产生模型调用费用；
+- 门禁发现并修复 URL 已含语言前缀时旧语言键未迁移的问题，同时将 Agent 布局断言切换到 Moodlelike 规范键；
+- `local:acceptance` 现在先执行真实只读浏览器门禁，再运行安全审计、核心契约与三条确定性浏览器黄金路径。
 
 ## 已完成验证
 

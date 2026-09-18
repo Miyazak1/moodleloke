@@ -11,6 +11,7 @@
     "test:e2e": "playwright test --config playwright.config.ts",
     "test:e2e:agent": "playwright test --config playwright.agent.config.ts",
     "test:e2e:agent:live": "playwright test --config playwright.agent-live.config.ts",
+    "test:e2e:agent:readonly-live": "playwright test --config playwright.agent-readonly-live.config.ts",
     "test:e2e:agent:attachment:live": "playwright test --config playwright.agent-attachment-live.config.ts",
     "test:e2e:agent:handwriting:live": "playwright test --config playwright.agent-handwriting-live.config.ts",
     "test:e2e:fixed-bank": "playwright test --config playwright.config.ts e2e/public-routes.spec.ts e2e/onboarding.spec.ts e2e/i18n-smoke.spec.ts e2e/interaction-stability.spec.ts e2e/style-primitives.spec.ts --workers=2",

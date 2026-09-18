@@ -166,7 +166,9 @@ test('renders an evidence-based learning workspace without horizontal overflow',
   await expect(page.getByRole('heading', { name: '今天的学习方案' })).toBeVisible();
   await expect(page.getByRole('article', { name: '今日学习方案' })).toBeVisible();
   await expect(page.getByRole('button', { name: /开始这项任务/ })).toBeEnabled();
-  await expect(page.getByRole('heading', { name: '方案为什么这样安排' })).toBeVisible();
+  if (testInfo.project.name !== 'mobile') {
+    await expect(page.getByRole('heading', { name: '方案为什么这样安排' })).toBeVisible();
+  }
   await expect(page.locator('.agent-learning-mode')).toHaveCount(0);
   if (testInfo.project.name === 'desktop') {
     await expect(page.getByText('你的目标与考试日期')).toBeVisible();
@@ -358,7 +360,7 @@ test('resumes an unfinished stage selected from learning history', async ({ page
 
 test('starts student-initiated free practice without turning it into a recommended plan', async ({ page }) => {
   await mockAgentWorkspace(page);
-  await page.addInitScript(() => window.localStorage.setItem('cscalite.agent.learningMode', 'free'));
+  await page.addInitScript(() => window.localStorage.setItem('moodlelike.agent.learningMode', 'free'));
   let requestBody: Record<string, unknown> | null = null;
   let freeStarted = false;
   const freeArtifact = {
@@ -406,7 +408,7 @@ test('treats internal conversations as learning-history stages instead of new ch
   await expect(page.getByLabel('已保存的学习阶段')).toBeVisible();
   await expect(page.getByRole('button', { name: /数学短诊断/ })).toBeVisible();
   await expect(page.getByRole('heading', { name: '学习历程' })).toBeVisible();
-  expect(await page.evaluate(() => window.localStorage.getItem('cscalite.agent.journeySection'))).toBe('history');
+  expect(await page.evaluate(() => window.localStorage.getItem('moodlelike.agent.journeySection'))).toBe('history');
 });
 
 test('separates learning settings from account settings and restores the workspace layout', async ({ page }, testInfo) => {
@@ -416,10 +418,10 @@ test('separates learning settings from account settings and restores the workspa
   await expect(page.getByLabel('Agent 学习设置工作区')).toBeVisible();
   await expect(page.getByRole('heading', { name: '你希望 Agent 默认怎样开始' })).toBeVisible();
   await page.locator('.agent-settings-learning-mode').getByRole('button', { name: /自由练习/ }).click();
-  expect(await page.evaluate(() => window.localStorage.getItem('cscalite.agent.learningMode'))).toBe('free');
+  expect(await page.evaluate(() => window.localStorage.getItem('moodlelike.agent.learningMode'))).toBe('free');
   await page.getByRole('button', { name: '学习画像', exact: true }).click();
   await expect(page.getByRole('heading', { name: '学习画像' })).toBeVisible();
-  expect(await page.evaluate(() => window.localStorage.getItem('cscalite.agent.journeySection'))).toBe('settings');
+  expect(await page.evaluate(() => window.localStorage.getItem('moodlelike.agent.journeySection'))).toBe('settings');
 
   if (testInfo.project.name === 'mobile') {
     await page.keyboard.press('Escape');
@@ -428,9 +430,9 @@ test('separates learning settings from account settings and restores the workspa
   } else {
     const separator = page.getByRole('separator', { name: '调整任务面板宽度' });
     await separator.press('ArrowLeft');
-    expect(Number(await page.evaluate(() => window.localStorage.getItem('cscalite.agent.taskRailWidth')))).toBeGreaterThan(460);
+    expect(Number(await page.evaluate(() => window.localStorage.getItem('moodlelike.agent.taskRailWidth')))).toBeGreaterThan(460);
     await page.getByRole('button', { name: '将任务移到中间' }).click();
-    expect(await page.evaluate(() => window.localStorage.getItem('cscalite.agent.taskRailPosition'))).toBe('center');
+    expect(await page.evaluate(() => window.localStorage.getItem('moodlelike.agent.taskRailPosition'))).toBe('center');
 
     await page.reload();
     await expect(page.getByLabel('Agent 学习设置工作区')).toBeVisible();

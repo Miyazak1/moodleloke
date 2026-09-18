@@ -307,7 +307,7 @@
     "local:setup": "node scripts/moodlelike-local.cjs setup",
     "local:start": "node scripts/moodlelike-local.cjs start",
     "local:verify": "node scripts/moodlelike-local.cjs verify",
-    "local:acceptance": "npm run local:verify && npm run security:audit-dependencies && npm run ci:contracts && npm run ci:golden",
+    "local:acceptance": "npm run local:verify && npm --prefix frontend run test:e2e:agent:readonly-live && npm run security:audit-dependencies && npm run ci:contracts && npm run ci:golden",
     "demo:seed": "node scripts/agent-demo-seed.cjs --apply",
     "agent:build": "npm run frontend:build && npm run backend:build",
     "audit:command-surface": "node scripts/audit-command-surface.cjs",

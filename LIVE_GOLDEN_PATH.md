@@ -25,11 +25,12 @@ Use a second terminal at the repository root:
 
 ```powershell
 node scripts/agent-demo-gate.cjs
+npm --prefix frontend run test:e2e:agent:readonly-live
 npm --prefix frontend run test:e2e:agent:live
 npm --prefix frontend run test:e2e:agent:attachment:live
 ```
 
-The demo gate is read-only unless `--live` is explicitly supplied. Browser tests may call configured Providers and can incur cost. They require the ignored local demo credentials produced by setup and never fall back to a real student account.
+The demo gate and `test:e2e:agent:readonly-live` are read-only and never submit an Agent message. The read-only browser gate performs a real demo login, loads the independent Agent against the local API and database, and verifies migration from legacy browser storage keys to the Moodlelike namespace. The other live browser tests may call configured Providers and can incur cost. They require the ignored local demo credentials produced by setup and never fall back to a real student account.
 
 Custom deployments may set `AGENT_LIVE_FRONTEND_URL`, `AGENT_LIVE_BACKEND_URL`, `AGENT_DEMO_FRONTEND_URL` or `AGENT_DEMO_BACKEND_URL`. Defaults must remain aligned with the standalone local-delivery ports.
 

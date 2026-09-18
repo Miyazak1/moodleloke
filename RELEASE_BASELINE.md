@@ -21,6 +21,7 @@ This prerelease establishes the first independently buildable Moodlelike Agent r
 - canonical `MOODLELIKE_ENV` platform selector with production-safe `CSC_ENV` fallback and a static migration contract across local and deployment entry points.
 - Moodlelike-owned deployment, storage-volume and session-Cookie defaults with an explicit no-implicit-data-migration boundary.
 - Moodlelike-visible browser identity with one-way migration of legacy authentication, locale and Agent preference storage keys.
+- zero-Provider real-browser acceptance for independent demo login, live local learning-data reads and browser-identity migration.
 
 ## Required release gates
 

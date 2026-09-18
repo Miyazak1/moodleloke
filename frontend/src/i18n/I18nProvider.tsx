@@ -30,22 +30,23 @@ function detectBrowserLocale(): Locale {
 }
 
 function detectInitialLocale(): Locale {
+  const currentLocale = window.localStorage.getItem(LOCALE_STORAGE_KEY);
+  const legacyLocale = window.localStorage.getItem(LEGACY_LOCALE_STORAGE_KEY);
+  const currentSource = window.localStorage.getItem(LOCALE_SOURCE_STORAGE_KEY);
+  const legacySource = window.localStorage.getItem(LEGACY_LOCALE_SOURCE_STORAGE_KEY);
+  if (!currentLocale && legacyLocale) window.localStorage.setItem(LOCALE_STORAGE_KEY, legacyLocale);
+  if (!currentSource && legacySource) window.localStorage.setItem(LOCALE_SOURCE_STORAGE_KEY, legacySource);
+  if (legacyLocale) window.localStorage.removeItem(LEGACY_LOCALE_STORAGE_KEY);
+  if (legacySource) window.localStorage.removeItem(LEGACY_LOCALE_SOURCE_STORAGE_KEY);
+
   const pathLocale = getLocaleFromPathname(window.location.pathname);
   if (pathLocale) return pathLocale;
 
   const queryLocale = normalizeLocale(new URLSearchParams(window.location.search).get('lang'));
   if (queryLocale) return queryLocale;
 
-  const currentLocale = window.localStorage.getItem(LOCALE_STORAGE_KEY);
-  const legacyLocale = window.localStorage.getItem(LEGACY_LOCALE_STORAGE_KEY);
   const storedLocale = normalizeLocale(currentLocale || legacyLocale);
-  const currentSource = window.localStorage.getItem(LOCALE_SOURCE_STORAGE_KEY);
-  const legacySource = window.localStorage.getItem(LEGACY_LOCALE_SOURCE_STORAGE_KEY);
   const storedSource = currentSource || legacySource;
-  if (!currentLocale && legacyLocale) window.localStorage.setItem(LOCALE_STORAGE_KEY, legacyLocale);
-  if (!currentSource && legacySource) window.localStorage.setItem(LOCALE_SOURCE_STORAGE_KEY, legacySource);
-  if (legacyLocale) window.localStorage.removeItem(LEGACY_LOCALE_STORAGE_KEY);
-  if (legacySource) window.localStorage.removeItem(LEGACY_LOCALE_SOURCE_STORAGE_KEY);
   if (storedLocale && storedSource === 'manual' && getLocaleOption(storedLocale).enabled) {
     return storedLocale;
   }
