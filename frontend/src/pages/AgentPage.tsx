@@ -902,6 +902,10 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     practiceAssistanceBusy,
     practiceAssistanceEvents.length,
     practiceTeachingEvent?.id,
+    learningWorkspace?.phase,
+    learningWorkspace?.roundId,
+    mockExamWorkspace?.phase,
+    mockExamWorkspace?.attemptId,
     runStatus,
     scrollConversationToLatest,
     teachingDeliveryId
@@ -1804,7 +1808,13 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     );
   }
 
-  const hasTaskWorkspace = Boolean(journeySection === 'settings' || standaloneTeachingWorkspace || learningWorkspace || mockExamWorkspace || pastPaperWorkspace);
+  const hasTaskWorkspace = Boolean(
+    journeySection === 'settings'
+    || standaloneTeachingWorkspace
+    || learningWorkspace?.phase === 'practice'
+    || mockExamWorkspace?.phase === 'taking'
+    || pastPaperWorkspace
+  );
   const taskRailResizeHandle = (
     <div
       className="agent-task-rail-resizer"
@@ -2040,6 +2050,60 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                     </div>
                   </div>
                 )}
+                {learningWorkspace?.phase === 'report' && (
+                  <div className="agent-message-block assistant agent-chat-report-message">
+                    <div className="agent-message-avatar"><span><Icon name="lucide:chart-no-axes-combined" /></span></div>
+                    <div className="agent-message-content">
+                      <span className="agent-message-author">{t('agent.message.agent', 'CSCA 学习 Agent')}</span>
+                      <section className="agent-chat-report-panel" aria-label={t('agent.workspace.chatReportAria', '聊天区学习报告')}>
+                        <header className="agent-chat-report-header">
+                          <span>{t('agent.workspace.completedKicker', '本轮已完成')}</span>
+                          <strong>{t('agent.workspace.chatReportTitle', '结果、学习证据与下一步')}</strong>
+                          <small>{t('agent.workspace.chatReportHint', '报告回到聊天区；做题区只在需要继续作答时出现。')}</small>
+                        </header>
+                        <AdaptiveRoundReportView
+                          roundId={String(learningWorkspace.roundId)}
+                          onNavigate={(path) => void handleLearningWorkspaceNavigation(path)}
+                          onAgentIntervention={setIntervention}
+                          agentManagedFooter={workspaceTaskType === 'free_practice' ? (
+                            <div className="agent-free-practice-continuation">
+                              <div className="agent-free-practice-continuation-head">
+                                <div><span className="agent-kicker">{t('agent.freePractice.nextKicker', '自由练习 · 下一批')}</span><strong>{t('agent.freePractice.nextTitle', '继续、调整，或在这里结束')}</strong><small>{t('agent.freePractice.nextHint', '每一批独立结算并写入同一次学习历程。')}</small></div>
+                                <div className="agent-free-practice-continuation-actions">
+                                  <button type="button" disabled={freePracticeContinuationBusy !== null} onClick={() => void continueFreePracticeBatch()}><Icon name={freePracticeContinuationBusy === 'continue' ? 'lucide:loader-circle' : 'lucide:play'} />{t('agent.freePractice.continueSame', '按当前设置继续')}</button>
+                                  <button type="button" className="secondary" disabled={freePracticeContinuationBusy !== null} onClick={() => setIsAdjustingFreePractice((value) => !value)}><Icon name="lucide:sliders-horizontal" />{t('agent.freePractice.adjust', '调整下一批')}</button>
+                                  <button type="button" className="ghost" disabled={freePracticeContinuationBusy !== null} onClick={() => void endFreePracticeJourney()}><Icon name="lucide:square" />{freePracticeContinuationBusy === 'end' ? t('agent.freePractice.ending', '正在结束') : t('agent.freePractice.end', '结束本次学习')}</button>
+                                </div>
+                              </div>
+                              {isAdjustingFreePractice && <div className="agent-free-practice-adjust">
+                                <fieldset><legend>{t('agent.freePractice.subject', '选择科目')}</legend><div>{(['math', 'physics', 'chemistry'] as const).map((subject) => <button key={subject} type="button" className={freePracticeSubject === subject ? 'active' : ''} onClick={() => setFreePracticeSubject(subject)}>{subjectLabel(subject, t)}</button>)}</div></fieldset>
+                                <fieldset><legend>{t('agent.freePractice.batch', '本批题量')}</legend><div>{([3, 5, 10] as const).map((count) => <button key={count} type="button" className={freePracticeCount === count ? 'active' : ''} onClick={() => setFreePracticeCount(count)}>{count} {t('agent.freePractice.questions', '题')}</button>)}</div></fieldset>
+                                <button type="button" className="confirm" disabled={freePracticeContinuationBusy !== null} onClick={() => void continueFreePracticeBatch()}><Icon name="lucide:arrow-right" />{t('agent.freePractice.startAdjusted', '开始调整后的下一批')}</button>
+                              </div>}
+                            </div>
+                          ) : undefined}
+                        />
+                      </section>
+                    </div>
+                  </div>
+                )}
+                {mockExamWorkspace?.phase === 'report' && (
+                  <div className="agent-message-block assistant agent-chat-report-message">
+                    <div className="agent-message-avatar"><span><Icon name="lucide:clipboard-check" /></span></div>
+                    <div className="agent-message-content">
+                      <span className="agent-message-author">{t('agent.message.agent', 'CSCA 学习 Agent')}</span>
+                      <section className="agent-chat-report-panel" aria-label={t('agent.mockExam.chatReportAria', '聊天区模考报告')}>
+                        <header className="agent-chat-report-header">
+                          <span>{t('agent.mockExam.reportKicker', '模考已完成')}</span>
+                          <strong>{t('agent.mockExam.chatReportTitle', '模考结果与下一步建议')}</strong>
+                          <small>{t('agent.mockExam.chatReportHint', '报告和后续安排留在聊天区；考试区只用于专注作答。')}</small>
+                        </header>
+                        <AgentMockExamLearningReview settlement={mockExamSettlement} isContinuing={isSending} onContinue={() => void continueAfterMockExam()} />
+                        <MockExamReportView attemptId={String(mockExamWorkspace.attemptId)} agentMode onNavigate={(path) => void handleMockExamWorkspaceNavigation(path)} />
+                      </section>
+                    </div>
+                  </div>
+                )}
                 {isSending && (
                   <div className="agent-message-block assistant is-thinking">
                     <div className="agent-message-avatar"><span><Icon name="lucide:sparkles" /></span></div>
@@ -2250,7 +2314,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
               />
             </div>
           </aside>
-        ) : learningWorkspace ? (
+        ) : learningWorkspace?.phase === 'practice' ? (
           <aside className="agent-task-rail" aria-label={t('agent.workspace.aria', 'Agent 学习任务工作区')}>
             {taskRailPosition === 'right' ? taskRailResizeHandle : null}
             <div className="agent-task-rail-header">
@@ -2266,55 +2330,32 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
               </div>
             </div>
             <div className="agent-task-rail-body">
-              {learningWorkspace.phase === 'report'
-                ? <AdaptiveRoundReportView
-                    roundId={String(learningWorkspace.roundId)}
-                    onNavigate={(path) => void handleLearningWorkspaceNavigation(path)}
-                    onAgentIntervention={setIntervention}
-                    agentManagedFooter={workspaceTaskType === 'free_practice' ? (
-                      <div className="agent-free-practice-continuation">
-                        <div className="agent-free-practice-continuation-head">
-                          <div><span className="agent-kicker">{t('agent.freePractice.nextKicker', '自由练习 · 下一批')}</span><strong>{t('agent.freePractice.nextTitle', '继续、调整，或在这里结束')}</strong><small>{t('agent.freePractice.nextHint', '聊天区始终保留；每一批都独立结算并写入同一次学习历程。')}</small></div>
-                          <div className="agent-free-practice-continuation-actions">
-                            <button type="button" disabled={freePracticeContinuationBusy !== null} onClick={() => void continueFreePracticeBatch()}><Icon name={freePracticeContinuationBusy === 'continue' ? 'lucide:loader-circle' : 'lucide:play'} />{t('agent.freePractice.continueSame', '按当前设置继续')}</button>
-                            <button type="button" className="secondary" disabled={freePracticeContinuationBusy !== null} onClick={() => setIsAdjustingFreePractice((value) => !value)}><Icon name="lucide:sliders-horizontal" />{t('agent.freePractice.adjust', '调整下一批')}</button>
-                            <button type="button" className="ghost" disabled={freePracticeContinuationBusy !== null} onClick={() => void endFreePracticeJourney()}><Icon name="lucide:square" />{freePracticeContinuationBusy === 'end' ? t('agent.freePractice.ending', '正在结束') : t('agent.freePractice.end', '结束本次学习')}</button>
-                          </div>
-                        </div>
-                        {isAdjustingFreePractice && <div className="agent-free-practice-adjust">
-                          <fieldset><legend>{t('agent.freePractice.subject', '选择科目')}</legend><div>{(['math', 'physics', 'chemistry'] as const).map((subject) => <button key={subject} type="button" className={freePracticeSubject === subject ? 'active' : ''} onClick={() => setFreePracticeSubject(subject)}>{subjectLabel(subject, t)}</button>)}</div></fieldset>
-                          <fieldset><legend>{t('agent.freePractice.batch', '本批题量')}</legend><div>{([3, 5, 10] as const).map((count) => <button key={count} type="button" className={freePracticeCount === count ? 'active' : ''} onClick={() => setFreePracticeCount(count)}>{count} {t('agent.freePractice.questions', '题')}</button>)}</div></fieldset>
-                          <button type="button" className="confirm" disabled={freePracticeContinuationBusy !== null} onClick={() => void continueFreePracticeBatch()}><Icon name="lucide:arrow-right" />{t('agent.freePractice.startAdjusted', '开始调整后的下一批')}</button>
-                        </div>}
-                      </div>
-                    ) : undefined}
-                  />
-                : <AdaptiveRoundView
-                    roundId={String(learningWorkspace.roundId)}
-                    onNavigate={(path) => void handleLearningWorkspaceNavigation(path)}
-                    onRoundUnavailable={() => {
-                      const conversationId = learningWorkspace.conversationId;
-                      setLearningWorkspace(null);
-                      setPracticeQuestionContext(null);
-                      syncWorkspaceUrl(null, conversationId);
-                      setError(t('agent.workspace.unavailable', '之前的学习任务已经失效，已返回学习工作台。你可以重新开始自由练习或获取新的推荐。'));
-                      void loadJourneyState().catch(() => null);
-                    }}
-                    agentConversationId={learningWorkspace.conversationId}
-                    agentAssistanceCommand={practiceAssistanceCommand}
-                    onAgentQuestionContext={setPracticeQuestionContext}
-                    onAgentAssistance={receivePracticeAssistance}
-                    onAgentAssistanceSettled={settlePracticeAssistance}
-                    onAgentTeachingAsset={setPracticeTeachingEvent}
-                  />}
+              <AdaptiveRoundView
+                roundId={String(learningWorkspace.roundId)}
+                onNavigate={(path) => void handleLearningWorkspaceNavigation(path)}
+                onRoundUnavailable={() => {
+                  const conversationId = learningWorkspace.conversationId;
+                  setLearningWorkspace(null);
+                  setPracticeQuestionContext(null);
+                  syncWorkspaceUrl(null, conversationId);
+                  setError(t('agent.workspace.unavailable', '之前的学习任务已经失效，已返回学习工作台。你可以重新开始自由练习或获取新的推荐。'));
+                  void loadJourneyState().catch(() => null);
+                }}
+                agentConversationId={learningWorkspace.conversationId}
+                agentAssistanceCommand={practiceAssistanceCommand}
+                onAgentQuestionContext={setPracticeQuestionContext}
+                onAgentAssistance={receivePracticeAssistance}
+                onAgentAssistanceSettled={settlePracticeAssistance}
+                onAgentTeachingAsset={setPracticeTeachingEvent}
+              />
             </div>
           </aside>
-        ) : mockExamWorkspace ? (
+        ) : mockExamWorkspace?.phase === 'taking' ? (
           <aside className="agent-task-rail agent-mock-task-rail" aria-label={t('agent.mockExam.workspaceAria', 'Agent 在线模考工作区')}>
             {taskRailPosition === 'right' ? taskRailResizeHandle : null}
             <div className="agent-task-rail-header">
               <div>
-                <span className="agent-kicker">{mockExamWorkspace.phase === 'report' ? t('agent.mockExam.reportKicker', '模考已完成') : t('agent.mockExam.kicker', '专注考试模式')}</span>
+                <span className="agent-kicker">{t('agent.mockExam.kicker', '专注考试模式')}</span>
                 <strong>{workspaceHeading}</strong>
                 {workspaceArtifact?.summary ? <small>{workspaceArtifact.summary}</small> : null}
               </div>
@@ -2324,9 +2365,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
               </div>
             </div>
             <div className="agent-task-rail-body is-mock-exam">
-              {mockExamWorkspace.phase === 'report'
-                ? <><AgentMockExamLearningReview settlement={mockExamSettlement} isContinuing={isSending} onContinue={() => void continueAfterMockExam()} /><MockExamReportView attemptId={String(mockExamWorkspace.attemptId)} agentMode onNavigate={(path) => void handleMockExamWorkspaceNavigation(path)} /></>
-                : <MockExamTakingView attemptId={String(mockExamWorkspace.attemptId)} onNavigate={(path) => void handleMockExamWorkspaceNavigation(path)} />}
+              <MockExamTakingView attemptId={String(mockExamWorkspace.attemptId)} onNavigate={(path) => void handleMockExamWorkspaceNavigation(path)} />
             </div>
           </aside>
         ) : pastPaperWorkspace ? (

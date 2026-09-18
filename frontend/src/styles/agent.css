@@ -875,6 +875,14 @@
 .agent-intervention-teaching-wrap .agent-micro-feedback.wrong,
 .agent-intervention-teaching-wrap .agent-micro-error { background: rgba(255,112,95,.1); color: #a33b2d; }
 .agent-chat-teaching-message .agent-message-content { width: min(760px, 100%); }
+.agent-chat-report-message .agent-message-content { width: 100%; }
+.agent-chat-report-panel { width: 100%; overflow: hidden; border: 1px solid rgba(49, 93, 255, .15); border-radius: 18px; background: #f7faf9; box-shadow: 0 16px 42px rgba(31, 77, 67, .08); }
+.agent-chat-report-header { display: grid; gap: 4px; padding: 15px 17px; border-bottom: 1px solid rgba(49, 93, 255, .12); background: rgba(255, 255, 255, .9); }
+.agent-chat-report-header span { color: var(--agent-blue); font-size: 8px; font-weight: 900; letter-spacing: .05em; }
+.agent-chat-report-header strong { color: var(--agent-ink); font-size: 15px; line-height: 1.4; }
+.agent-chat-report-header small { color: var(--agent-muted); font-size: 9px; line-height: 1.55; }
+.agent-chat-report-panel > .special-practice-page,
+.agent-chat-report-panel > .mock-report-page { width: auto; margin: 0; padding: 16px; }
 .agent-chat-teaching-panel { width: 100%; margin: 0; box-shadow: 0 14px 34px rgba(31, 77, 67, .08); }
 .agent-chat-teaching-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; padding: 13px 15px; border-bottom: 1px solid rgba(19, 199, 163, .16); background: rgba(255, 255, 255, .78); }
 .agent-chat-teaching-header > div { display: grid; min-width: 0; gap: 3px; }

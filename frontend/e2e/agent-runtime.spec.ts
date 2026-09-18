@@ -580,6 +580,19 @@ test('creates the recommended practice and opens it inside the Agent workspace',
   expect(typeof requestBody?.clientRequestId).toBe('string');
 });
 
+test('moves a completed practice report into chat and closes the focused question workspace', async ({ page }) => {
+  await mockAgentWorkspace(page);
+  await page.route('**/api/v1/csca-special-practice/adaptive/rounds/81/report**', (route) => json(route, { message: 'Report fixture intentionally omitted' }, 503));
+  await page.route('**/api/v1/csca-special-practice/adaptive/ai/entitlement', (route) => json(route, { enabled: false, unlimited: false, balanceUnits: 0 }));
+
+  await page.goto(`/zh/agent?conversation=${conversationId}&agentConversationId=${conversationId}&agentArtifactId=${artifactId}&agentRoundId=81&agentView=report&agentTaskType=diagnostic&agentSubject=math`);
+
+  await expect(page.getByLabel('聊天区学习报告')).toBeVisible();
+  await expect(page.getByText('结果、学习证据与下一步')).toBeVisible();
+  await expect(page.getByLabel('Agent 学习任务工作区')).toHaveCount(0);
+  await expect(page.getByLabel('向学习 Agent 提问')).toBeVisible();
+});
+
 test('binds the active practice question to the composer and renders assistance in the chat', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the contextual assistance contract.');
   await mockAgentWorkspace(page);
@@ -768,7 +781,9 @@ test('starts a recommended mock exam and keeps the timed attempt inside the Agen
   await page.getByRole('button', { name: '交卷', exact: true }).click();
   await page.getByRole('button', { name: '确认交卷', exact: true }).click();
   await expect(page).toHaveURL(new RegExp(`/zh/agent\\?.*agentView=mock-report`));
-  await expect(page.getByText('模考报告与下一步')).toBeVisible();
+  await expect(page.getByLabel('聊天区模考报告')).toBeVisible();
+  await expect(page.getByText('模考结果与下一步建议')).toBeVisible();
+  await expect(page.getByLabel('Agent 在线模考工作区')).toHaveCount(0);
   await expect(page.getByText('学习证据已更新')).toBeVisible();
   await expect(page.getByText('本次已接收 1 条可信答题证据')).toBeVisible();
   await expect(page.getByText('下一步优先稳定函数应用。')).toBeVisible();
@@ -777,7 +792,8 @@ test('starts a recommended mock exam and keeps the timed attempt inside the Agen
   await expect(page.getByRole('button', { name: /返回套卷列表/ })).toHaveCount(0);
   expect(settlementCalled).toBe(true);
   await page.reload();
-  await expect(page.getByText('模考报告与下一步')).toBeVisible();
+  await expect(page.getByLabel('聊天区模考报告')).toBeVisible();
+  await expect(page.getByLabel('Agent 在线模考工作区')).toHaveCount(0);
   await page.getByRole('button', { name: '生成并查看下一项任务' }).click();
   await expect(page).toHaveURL(new RegExp(`/zh/agent\\?conversation=${conversationId}$`));
   await expect(page.getByText('模考后的数学巩固任务')).toBeVisible();
