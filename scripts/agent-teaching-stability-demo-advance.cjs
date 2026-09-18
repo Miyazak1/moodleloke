@@ -16,7 +16,7 @@ function assert(value, message) {
 
 function assertLocalWrite() {
   assert(process.argv.includes('--apply'), 'Refusing to write without --apply.');
-  assert(process.env.NODE_ENV !== 'production' && process.env.CSC_ENV !== 'production', 'Agent stability demo advance is disabled in production.');
+  assert(process.env.NODE_ENV !== 'production' && process.env.MOODLELIKE_ENV !== 'production' && process.env.CSC_ENV !== 'production', 'Agent stability demo advance is disabled in production.');
   const databaseUrl = new URL(process.env.DATABASE_URL || '');
   assert(['localhost', '127.0.0.1', '::1'].includes(databaseUrl.hostname), `Demo advance only accepts a local database, received ${databaseUrl.hostname || 'unset'}.`);
   assert(fs.existsSync(scenarioPath), 'Missing teaching scenario. Run agent-teaching-browser-demo-prepare.cjs --apply first.');

@@ -18,6 +18,7 @@ This prerelease establishes the first independently buildable Moodlelike Agent r
 - classified root command surface with file/reference integrity, bounded growth and duplicate-command governance.
 - compatibility-operation registry that blocks the former release/Docker/staging chain by default and separates controlled data writes from retained validation.
 - archived-operations boundary that removes the unreachable former implementations while retaining non-bypassable command-name sentinels and explicit warnings on historical runbooks.
+- canonical `MOODLELIKE_ENV` platform selector with production-safe `CSC_ENV` fallback and a static migration contract across local and deployment entry points.
 
 ## Required release gates
 
@@ -33,7 +34,7 @@ Real data migration additionally requires an explicitly authorized source prefli
 
 ## Known compatibility debt
 
-- runtime environment names and internal CSCA domain types retain legacy prefixes;
+- internal CSCA domain flags and types retain legacy prefixes; the platform environment selector has migrated to `MOODLELIKE_ENV` while `CSC_ENV` remains a deprecated safety fallback;
 - Prisma initially copies all 147 models; archive candidates are not deleted;
 - root operational scripts still include retained question-production, validation and controlled migration utilities; further cleanup must follow the governed command inventory and data-authorization boundary;
 - this prerelease is private and carries no open-source grant.

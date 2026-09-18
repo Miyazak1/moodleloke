@@ -7,14 +7,11 @@ import { AppModule } from './app.module';
 import { getCspMode, recordRequestMetrics } from './common/ops-metrics';
 import { runWithRequestContext } from './common/request-context';
 import { StructuredErrorFilter } from './common/structured-error.filter';
+import { isProductionRuntime } from './common/runtime-environment';
 
 const logger = new Logger('Bootstrap');
 const express = require('express');
 const { json, urlencoded } = express;
-
-function isProductionRuntime() {
-  return process.env.NODE_ENV === 'production' || process.env.CSC_ENV === 'production';
-}
 
 function getAuthSecretConfigured() {
   return Boolean(process.env.AUTH_SECRET || process.env.JWT_SECRET);

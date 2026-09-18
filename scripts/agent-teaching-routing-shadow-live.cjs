@@ -21,7 +21,7 @@ async function request(pathname, { method = 'GET', token, body, expected = [200,
 async function hashPassword(value) { const salt = randomBytes(16).toString('hex'); const key = await scrypt(value, salt, 64); return `scrypt:${salt}:${Buffer.from(key).toString('hex')}`; }
 
 async function main() {
-  assert(process.env.NODE_ENV !== 'production' && process.env.CSC_ENV !== 'production', 'PR12I rehearsal is disabled in production.');
+  assert(process.env.NODE_ENV !== 'production' && process.env.MOODLELIKE_ENV !== 'production' && process.env.CSC_ENV !== 'production', 'PR12I rehearsal is disabled in production.');
   const databaseUrl = new URL(process.env.DATABASE_URL || '');
   assert(['localhost', '127.0.0.1', '::1'].includes(databaseUrl.hostname), 'PR12I rehearsal only accepts a local database.');
   const credentialPath = path.resolve(__dirname, '..', '.local', 'agent-demo-credentials.json');

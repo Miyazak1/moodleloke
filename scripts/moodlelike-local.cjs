@@ -12,7 +12,7 @@ const frontendUrl = 'http://localhost:5190';
 const runtimeEnv = {
   ...process.env,
   NODE_ENV: 'development',
-  CSC_ENV: 'development',
+  MOODLELIKE_ENV: 'development',
   PORT: '3100',
   DATABASE_URL: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:56432/moodlelike?schema=public',
   REDIS_URL: process.env.REDIS_URL || 'redis://localhost:57379',
@@ -82,7 +82,7 @@ function ensureDependencies() {
 }
 
 function setup() {
-  if (runtimeEnv.NODE_ENV === 'production' || runtimeEnv.CSC_ENV === 'production') fail('Local setup is disabled in production mode.');
+  if (runtimeEnv.NODE_ENV === 'production' || runtimeEnv.MOODLELIKE_ENV === 'production' || runtimeEnv.CSC_ENV === 'production') fail('Local setup is disabled in production mode.');
   doctor();
   ensureDependencies();
   run('starting isolated PostgreSQL and Redis', dockerCommand, ['compose', 'up', '-d', '--wait', 'postgres', 'redis']);

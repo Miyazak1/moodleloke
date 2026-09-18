@@ -316,7 +316,7 @@
     "test:teaching-assets": "node scripts/check-teaching-asset-registry.cjs",
     "test:authoring-boundary": "node scripts/check-authoring-boundary.cjs",
     "test:ci-contract": "node scripts/check-standalone-ci.cjs",
-    "test:local-delivery": "node scripts/check-local-delivery.cjs",
+    "test:local-delivery": "node scripts/check-local-delivery.cjs && node scripts/check-runtime-environment-contract.cjs",
     "test:repository-ownership": "node scripts/check-repository-ownership.cjs",
     "test:live-golden-path-contract": "node scripts/check-live-golden-path-contract.cjs",
     "test:data-migration-policy": "node scripts/standalone-data-migration-policy-test.cjs",

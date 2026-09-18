@@ -50,7 +50,7 @@ services:
     restart: unless-stopped
     environment:
       NODE_ENV: production
-      CSC_ENV: production
+      MOODLELIKE_ENV: production
       PORT: 3000
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-cscalite}?schema=public&connection_limit=${PRISMA_CONNECTION_LIMIT:-12}&pool_timeout=${PRISMA_POOL_TIMEOUT:-30}
       AUTH_SECRET: ${AUTH_SECRET:-replace-with-production-auth-secret}

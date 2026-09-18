@@ -13,6 +13,7 @@ function hasStorageSecret() {
 function dbCheckEnabled() {
   return process.env.CSCA_BYOK_SECURITY_CHECK_DB === '1'
     || process.env.NODE_ENV === 'production'
+    || process.env.MOODLELIKE_ENV === 'production'
     || process.env.CSC_ENV === 'production';
 }
 

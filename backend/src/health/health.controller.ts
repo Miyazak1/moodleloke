@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Headers, Logger, NotFoundException, Optional, Post, Query, Res, UnauthorizedException } from '@nestjs/common';
 import { getAppVersion, getCspMode, getMetricsPrometheusText, getMetricsSnapshot, isMetricsEnabled } from '../common/ops-metrics';
 import { getRateLimitReadiness } from '../common/rate-limit';
+import { isProductionRuntime } from '../common/runtime-environment';
 import { PrismaService } from '../prisma/prisma.service';
 
 type HealthChecks = {
@@ -112,8 +113,7 @@ export class HealthController {
   }
 
   private shouldUseMinimalHealth() {
-    const production = process.env.NODE_ENV === 'production' || process.env.CSC_ENV === 'production';
-    return production && process.env.OPS_HEALTH_DETAILS_ENABLED !== 'true';
+    return isProductionRuntime() && process.env.OPS_HEALTH_DETAILS_ENABLED !== 'true';
   }
 
   private assertReadyAccess(authorization?: string) {

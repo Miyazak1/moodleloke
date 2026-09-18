@@ -21,7 +21,7 @@ const demoQuestionPrompt = 'If f(x) = 2x + 3, what is f(4)?';
 
 function assertLocalDatabase() {
   if (!process.argv.includes('--apply')) throw new Error('Refusing to write without --apply.');
-  if (process.env.NODE_ENV === 'production' || process.env.CSC_ENV === 'production') throw new Error('Demo seed is disabled in production.');
+  if (process.env.NODE_ENV === 'production' || process.env.MOODLELIKE_ENV === 'production' || process.env.CSC_ENV === 'production') throw new Error('Demo seed is disabled in production.');
   const databaseUrl = new URL(process.env.DATABASE_URL || '');
   if (!['localhost', '127.0.0.1', '::1'].includes(databaseUrl.hostname)) {
     throw new Error(`Demo seed only accepts a local database host, received ${databaseUrl.hostname || 'unset'}.`);

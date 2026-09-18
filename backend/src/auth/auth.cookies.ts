@@ -1,12 +1,9 @@
 import { ForbiddenException } from '@nestjs/common';
 import { randomBytes, timingSafeEqual } from 'node:crypto';
+import { isProductionRuntime } from '../common/runtime-environment';
 
 const REFRESH_COOKIE_TTL_SECONDS = 30 * 24 * 60 * 60;
 const OAUTH_STATE_COOKIE_TTL_SECONDS = 10 * 60;
-
-function isProductionRuntime() {
-  return process.env.NODE_ENV === 'production' || process.env.CSC_ENV === 'production';
-}
 
 function parseCorsOrigins() {
   return (process.env.CORS_ORIGINS || '')

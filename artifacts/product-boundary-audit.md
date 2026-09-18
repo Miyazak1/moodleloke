@@ -19,7 +19,7 @@ Generated: 2026-09-17T13:37:24.968Z
 | ai-gateway | 12 | 12 | 0 |
 | ai-questioning | 83 | 60 | 23 |
 | auth | 12 | 12 | 0 |
-| common | 5 | 4 | 1 |
+| common | 6 | 5 | 1 |
 | csca-learning | 3 | 3 | 0 |
 | csca-mock-exam | 6 | 6 | 0 |
 | csca-special-practice | 19 | 19 | 0 |

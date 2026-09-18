@@ -22,7 +22,7 @@ RUN apt-get update \
 
 WORKDIR /app
 ENV NODE_ENV=production
-ENV CSC_ENV=production
+ENV MOODLELIKE_ENV=production
 ENV PORT=3000
 
 COPY package*.json ./

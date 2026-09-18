@@ -1,9 +1,10 @@
 {
   "schemaVersion": "1",
   "generatedAt": "2026-09-17T13:37:26.055Z",
-  "reachableFilesScanned": 287,
-  "runtimeVariableCount": 156,
+  "reachableFilesScanned": 288,
+  "runtimeVariableCount": 157,
   "requiredProduction": [
+    "MOODLELIKE_ENV",
     "DATABASE_URL",
     "AUTH_SECRET",
     "CORS_ORIGINS",
@@ -18,6 +19,7 @@
     "AGENT_PRIVATE_UPLOADS_DIR",
     "API_BASE_URL",
     "AUTH_EMAIL_CAPTURE",
+    "CSC_ENV",
     "CSCA_AI_QUESTION_GENERATOR_AGENT",
     "CSCA_AI_QUESTION_GENERATOR_PROMPT_VERSION",
     "CSCA_AI_QUESTION_REVIEW_PRO_MODEL",
@@ -297,11 +299,10 @@
     {
       "key": "CSC_ENV",
       "category": "runtime-config",
-      "documentedDevelopment": true,
-      "documentedProduction": true,
+      "documentedDevelopment": false,
+      "documentedProduction": false,
       "sources": [
-        "backend/src/auth/auth.cookies.ts",
-        "backend/src/health/health.controller.ts"
+        "backend/src/common/runtime-environment.ts"
       ]
     },
     {
@@ -1256,6 +1257,15 @@
       ]
     },
     {
+      "key": "MOODLELIKE_ENV",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/common/runtime-environment.ts"
+      ]
+    },
+    {
       "key": "NODE_ENV",
       "category": "runtime-config",
       "documentedDevelopment": false,
@@ -1263,8 +1273,7 @@
       "sources": [
         "backend/src/agent/agent-intervention-verification.service.ts",
         "backend/src/auth/auth-email.sender.ts",
-        "backend/src/auth/auth.cookies.ts",
-        "backend/src/health/health.controller.ts"
+        "backend/src/common/runtime-environment.ts"
       ]
     },
     {

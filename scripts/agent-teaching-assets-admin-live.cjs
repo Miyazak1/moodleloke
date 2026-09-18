@@ -18,7 +18,7 @@ const versionIds = [];
 function assert(value, message) { if (!value) throw new Error(message); }
 function assertLocalDatabase() {
   assert(process.argv.includes('--apply'), 'Refusing to write without --apply.');
-  assert(process.env.NODE_ENV !== 'production' && process.env.CSC_ENV !== 'production', 'PR12E live test is disabled in production.');
+  assert(process.env.NODE_ENV !== 'production' && process.env.MOODLELIKE_ENV !== 'production' && process.env.CSC_ENV !== 'production', 'PR12E live test is disabled in production.');
   const url = new URL(process.env.DATABASE_URL || '');
   assert(['localhost', '127.0.0.1', '::1'].includes(url.hostname), `PR12E live test only accepts a local database, received ${url.hostname || 'unset'}.`);
 }

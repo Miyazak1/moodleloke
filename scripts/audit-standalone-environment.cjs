@@ -14,7 +14,7 @@ for (const file of files) {
 function parseExample(name) { const result = new Map(); for (const line of fs.readFileSync(path.join(root, name), 'utf8').split(/\r?\n/)) { const match = line.match(/^([A-Z][A-Z0-9_]*)=(.*)$/); if (match) result.set(match[1], match[2].replace(/^"|"$/g, '')); } return result; }
 const development = parseExample('.env.example');
 const production = parseExample('.env.production.example');
-const requiredProduction = ['DATABASE_URL', 'AUTH_SECRET', 'CORS_ORIGINS', 'PUBLIC_APP_ORIGIN', 'PUBLIC_API_ORIGIN'];
+const requiredProduction = ['MOODLELIKE_ENV', 'DATABASE_URL', 'AUTH_SECRET', 'CORS_ORIGINS', 'PUBLIC_APP_ORIGIN', 'PUBLIC_API_ORIGIN'];
 const secretPattern = /(SECRET|PASSWORD|TOKEN|API_KEY|API_KEYS|PRIVATE_KEY)$/;
 const safePlaceholder = (value) => value === '' || /replace|example|change|placeholder/i.test(value);
 const unsafeExampleValues = [];

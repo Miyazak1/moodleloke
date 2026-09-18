@@ -29,7 +29,7 @@ Generated from the reachable Agent runtime. Values are never included.
 | AUTH_REFRESH_COOKIE_NAME | runtime-config | yes | yes |
 | AUTH_SECRET | secret | yes | yes |
 | CORS_ORIGINS | runtime-config | yes | yes |
-| CSC_ENV | runtime-config | yes | yes |
+| CSC_ENV | runtime-config | no | no |
 | CSCA_AI_API_KEY | secret | yes | yes |
 | CSCA_AI_BASE_URL | runtime-config | yes | yes |
 | CSCA_AI_COACH_ENABLED | runtime-config | yes | yes |
@@ -131,6 +131,7 @@ Generated from the reachable Agent runtime. Values are never included.
 | GUMROAD_ACCESS_TOKEN | secret | no | yes |
 | GUMROAD_PRODUCT_URL | runtime-config | no | yes |
 | JWT_SECRET | secret | yes | yes |
+| MOODLELIKE_ENV | runtime-config | yes | yes |
 | NODE_ENV | runtime-config | no | yes |
 | OPS_HEALTH_DETAILS_ENABLED | runtime-config | yes | yes |
 | OPS_METRICS_ENABLED | runtime-config | yes | yes |

@@ -244,8 +244,8 @@
   "backend": {
     "entry": "backend/src/app.module.ts",
     "totals": {
-      "all": 246,
-      "reachable": 208,
+      "all": 247,
+      "reachable": 209,
       "unreachable": 38
     },
     "areas": {
@@ -280,8 +280,8 @@
         "unreachable": 0
       },
       "common": {
-        "total": 5,
-        "reachable": 4,
+        "total": 6,
+        "reachable": 5,
         "unreachable": 1
       },
       "csca-learning": {
@@ -470,6 +470,7 @@
       "backend/src/common/ops-metrics.ts",
       "backend/src/common/rate-limit.ts",
       "backend/src/common/request-context.ts",
+      "backend/src/common/runtime-environment.ts",
       "backend/src/common/validation.ts",
       "backend/src/csca-learning/csca-learning.module.ts",
       "backend/src/csca-learning/csca-learning.service.ts",

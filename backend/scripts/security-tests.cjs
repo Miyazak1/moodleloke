@@ -425,8 +425,8 @@ async function run() {
   assert.equal(health.status, 'ok');
   assert.equal(health.checks.databaseUrlConfigured, true);
   assert.equal(JSON.stringify(health).includes('secret'), false, 'health response must not leak secret values');
-  process.env.NODE_ENV = 'production';
-  process.env.CSC_ENV = 'production';
+  process.env.NODE_ENV = 'test';
+  process.env.MOODLELIKE_ENV = 'production';
   delete process.env.OPS_HEALTH_DETAILS_ENABLED;
   const minimalHealth = new HealthController().check();
   assert.equal(minimalHealth.status, 'ok');
@@ -440,8 +440,12 @@ async function run() {
   assert.equal(protectedReady.status, 'degraded', 'ready token allows protected readiness response');
   delete process.env.OPS_READY_TOKEN;
   delete process.env.OPS_HEALTH_DETAILS_ENABLED;
-  delete process.env.NODE_ENV;
+  delete process.env.MOODLELIKE_ENV;
+  process.env.CSC_ENV = 'production';
+  const legacyMinimalHealth = new HealthController().check();
+  assert.equal(legacyMinimalHealth.checks, undefined, 'legacy CSC_ENV must remain a production-safe fallback');
   delete process.env.CSC_ENV;
+  delete process.env.NODE_ENV;
 
   const backupDryRun = spawnSync(process.execPath, [path.resolve(__dirname, '..', '..', 'scripts', 'db-backup.cjs'), '--dry-run'], {
     cwd: path.resolve(__dirname, '..', '..'),

@@ -14,7 +14,7 @@ function assert(value, message) {
 }
 
 function assertLocalDatabase() {
-  assert(process.env.NODE_ENV !== 'production' && process.env.CSC_ENV !== 'production', 'TeachingAsset live rehearsal is disabled in production.');
+  assert(process.env.NODE_ENV !== 'production' && process.env.MOODLELIKE_ENV !== 'production' && process.env.CSC_ENV !== 'production', 'TeachingAsset live rehearsal is disabled in production.');
   const databaseUrl = new URL(process.env.DATABASE_URL || '');
   assert(['localhost', '127.0.0.1', '::1'].includes(databaseUrl.hostname), `TeachingAsset live rehearsal only accepts a local database, received ${databaseUrl.hostname || 'unset'}.`);
 }

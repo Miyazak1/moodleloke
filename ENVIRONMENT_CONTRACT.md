@@ -2,6 +2,7 @@
 
 ## Required in production
 
+- `MOODLELIKE_ENV`: canonical application environment (`production` in deployed runtimes); `CSC_ENV` is accepted only as a deprecated fallback;
 - `DATABASE_URL`: dedicated Moodlelike PostgreSQL database;
 - `AUTH_SECRET`: long, random signing secret unique to this deployment;
 - `CORS_ORIGINS`: exact permitted web origins;
@@ -14,4 +15,6 @@ Variables exposed through `VITE_*` are public browser configuration and must nev
 
 The machine-generated inventory at `artifacts/environment-contract.md` lists every direct environment reference reachable from the current Agent runtime. Variables not present in examples rely on code defaults and are compatibility debt, not implicitly required production configuration.
 
-Legacy `CSCA_*`, `CSCALITE_*` and `CSC_ENV` names remain versioned compatibility contracts. They should be renamed only through an explicit alias/deprecation migration, never by a broad search-and-replace.
+`MOODLELIKE_ENV` is now the canonical platform-level environment selector. Production safety checks treat any of `MOODLELIKE_ENV`, legacy `CSC_ENV`, or `NODE_ENV` set to `production` as production, so a conflicting legacy value cannot weaken safeguards.
+
+Legacy `CSCA_*` and `CSCALITE_*` names remain versioned domain compatibility contracts. `CSC_ENV` remains a read-only fallback during the deprecation window. These names should be migrated through explicit aliases and tests, never by a broad search-and-replace.
