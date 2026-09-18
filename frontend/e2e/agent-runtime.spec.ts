@@ -452,6 +452,24 @@ test('separates learning settings from account settings and restores the workspa
   }
 });
 
+test('does not request verified-user AI credits for an unverified account', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'Account permission coverage only needs one browser viewport.');
+  await mockAgentWorkspace(page);
+  await page.route('**/api/v1/auth/me**', (route) => json(route, {
+    id: '42', email: 'student@example.com', role: 'student', displayName: '林澈', emailVerifiedAt: null
+  }));
+  let creditRequestCount = 0;
+  await page.route('**/api/v1/me/ai-credits', (route) => {
+    creditRequestCount += 1;
+    return json(route, { message: 'Email verification required' }, 403);
+  });
+
+  await page.goto('/zh/me?section=settings');
+  await expect(page.getByRole('heading', { name: '账号与机构' })).toBeVisible();
+  await expect(page.getByText('验证邮箱后读取', { exact: true })).toBeVisible();
+  expect(creditRequestCount).toBe(0);
+});
+
 test('renders the saved learning plan as an Agent-native data view', async ({ page }) => {
   await mockAgentWorkspace(page);
   await page.goto('/zh/agent');

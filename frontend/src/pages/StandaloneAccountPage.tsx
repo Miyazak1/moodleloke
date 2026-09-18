@@ -41,7 +41,10 @@ export function StandaloneAccountPage({ currentUser, isResolvingAuth, onCurrentU
   useEffect(() => setDisplayName(currentUser?.displayName || ''), [currentUser?.displayName]);
 
   useEffect(() => {
-    if (!currentUser) return;
+    if (isResolvingAuth || !currentUser || !currentUser.emailVerifiedAt) {
+      setCredits(null);
+      return;
+    }
     let current = true;
     void getMyAICredits().then((value) => {
       if (current) setCredits(value);
@@ -49,7 +52,7 @@ export function StandaloneAccountPage({ currentUser, isResolvingAuth, onCurrentU
       if (current) setCredits(null);
     });
     return () => { current = false; };
-  }, [currentUser?.id]);
+  }, [currentUser?.emailVerifiedAt, currentUser?.id, isResolvingAuth]);
 
   if (isResolvingAuth) return <div className="standalone-account-state" role="status">{t('me.common.loading', '正在读取账号…')}</div>;
   if (!currentUser) {
@@ -57,7 +60,11 @@ export function StandaloneAccountPage({ currentUser, isResolvingAuth, onCurrentU
   }
 
   const organizationName = credits?.organization?.name || credits?.organizationOptions?.find((item) => item.current)?.name || t('me.settings.noOrganization', '未加入机构');
-  const creditLabel = credits ? (credits.unlimited ? t('me.credit.unlimited', '不限') : String(credits.balanceUnits ?? 0)) : t('me.common.notLoaded', '暂未读取');
+  const creditLabel = !currentUser.emailVerifiedAt
+    ? t('me.credit.verifyToLoad', '验证邮箱后读取')
+    : credits
+      ? (credits.unlimited ? t('me.credit.unlimited', '不限') : String(credits.balanceUnits ?? 0))
+      : t('me.common.notLoaded', '暂未读取');
 
   async function saveProfile(event: FormEvent) {
     event.preventDefault();
