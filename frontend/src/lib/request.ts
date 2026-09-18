@@ -3,7 +3,7 @@ export const TOKEN_KEY = 'cscalite.accessToken';
 export const REFRESH_TOKEN_KEY = 'cscalite.refreshToken';
 export const AUTH_CHANGE_EVENT = 'cscalite:auth-changed';
 export const EMAIL_UNVERIFIED_EVENT = 'cscalite:email-unverified';
-const CSRF_COOKIE_NAME = (import.meta.env.VITE_AUTH_CSRF_COOKIE_NAME as string | undefined)?.trim() || 'cscalite_csrf';
+const CSRF_COOKIE_NAME = (import.meta.env.VITE_AUTH_CSRF_COOKIE_NAME as string | undefined)?.trim() || 'moodlelike_csrf';
 const CSRF_HEADER_NAME = (import.meta.env.VITE_AUTH_CSRF_HEADER_NAME as string | undefined)?.trim() || 'X-CSRF-Token';
 
 type JsonRequestOptions = RequestInit & {

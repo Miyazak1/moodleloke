@@ -9,7 +9,7 @@ const root = path.resolve(__dirname, '..');
 const credentialsPath = path.join(root, '.local', 'agent-demo-credentials.json');
 const scenarioPath = path.join(root, '.local', 'agent-teaching-browser-demo.json');
 const marker = 'LOCAL_DEMO_ONLY_AGENT_TEACHING_BROWSER';
-const demoEmail = 'agent-investor-demo@cscalite.local';
+const demoEmail = 'agent-investor-demo@moodlelike.local';
 
 loadEnv();
 const prisma = new PrismaClient();

@@ -6,7 +6,7 @@ function shouldUseJsonLogs() {
 
 function sanitizePath(rawUrl: string) {
   try {
-    const parsed = new URL(rawUrl, 'http://cscalite.local');
+    const parsed = new URL(rawUrl, 'http://moodlelike.local');
     for (const [key] of parsed.searchParams) {
       if (/token|password|secret|signature|authorization/i.test(key)) {
         parsed.searchParams.set(key, '[redacted]');

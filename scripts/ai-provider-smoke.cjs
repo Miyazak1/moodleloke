@@ -6,7 +6,7 @@ loadEnv();
 const prisma = new PrismaClient();
 const baseUrl = process.env.SMOKE_BASE_URL || 'http://localhost:3000';
 const stamp = `ai-provider-smoke-${Date.now()}`;
-const email = `${stamp}@cscalite.local`;
+const email = `${stamp}@moodlelike.local`;
 const password = 'AI-provider-smoke-12345';
 const allowExternal = process.env.AI_PROVIDER_SMOKE_ALLOW_EXTERNAL === '1';
 const requireAdmin = process.env.AI_PROVIDER_SMOKE_REQUIRE_ADMIN === '1';

@@ -55,7 +55,7 @@ function encodeBase64Body(value: string) {
 
 function messageIdDomain(from: string) {
   const domain = from.split('@')[1]?.replace(/[>\s]/g, '').trim();
-  return domain || 'cscalite.local';
+  return domain || 'moodlelike.local';
 }
 
 function isCompleteSmtpResponse(value: string) {
@@ -133,7 +133,7 @@ async function sendViaSmtp(config: SmtpConfig, message: AppEmailMessage) {
   try {
     const greeting = await readLine(socket);
     if (Number(greeting.slice(0, 3)) !== 220) throw new Error('SMTP server did not accept connection.');
-    await command(socket, 'EHLO cscalite.local', [250]);
+    await command(socket, 'EHLO moodlelike.local', [250]);
     if (config.user && config.password) {
       await command(socket, 'AUTH LOGIN', [334]);
       await command(socket, Buffer.from(config.user).toString('base64'), [334]);

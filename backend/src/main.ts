@@ -41,6 +41,7 @@ function assertProductionEnv() {
     process.env.PAYMENT_CALLBACK_SECRET
   ].filter(Boolean);
   const knownLocalOrPlaceholderSecrets = new Set([
+    'moodlelike-local-development-secret-change-before-production',
     'cscalite-local-rebuild-secret',
     'cscalite-local-payment-callback-secret',
     'local-dev-rebuild-secret-change-before-production',
@@ -95,7 +96,7 @@ function shouldUseJsonLogs() {
 
 function sanitizeRequestUrl(rawUrl: string) {
   try {
-    const parsed = new URL(rawUrl, 'http://cscalite.local');
+    const parsed = new URL(rawUrl, 'http://moodlelike.local');
     for (const [key] of parsed.searchParams) {
       if (/token|password|secret|signature/i.test(key)) {
         parsed.searchParams.set(key, '[redacted]');

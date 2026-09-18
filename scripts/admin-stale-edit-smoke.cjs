@@ -13,8 +13,8 @@ const baseUrl = process.env.ADMIN_STALE_SMOKE_BASE_URL || `http://127.0.0.1:${po
 const backendEntry = process.env.SMOKE_BACKEND_ENTRY || 'backend/dist/main.js';
 const startupTimeoutMs = Number(process.env.SMOKE_STARTUP_TIMEOUT_MS || 20000);
 const stamp = `admin-stale-smoke-${Date.now()}`;
-const adminEmail = `${stamp}@cscalite.local`;
-const peerAdminEmail = `${stamp}-peer@cscalite.local`;
+const adminEmail = `${stamp}@moodlelike.local`;
+const peerAdminEmail = `${stamp}-peer@moodlelike.local`;
 const adminPassword = 'AdminStaleSmoke123';
 
 function assert(condition, message) {

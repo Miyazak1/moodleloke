@@ -12,7 +12,7 @@ import { AdminUserCreateInput, AuthPayload, AuthResult, ForgotPasswordInput, MeP
 const scrypt = promisify(scryptCallback);
 const ACCESS_TOKEN_TTL_SECONDS = 15 * 60;
 const REFRESH_TOKEN_TTL_SECONDS = 30 * 24 * 60 * 60;
-const LOCAL_AUTH_SECRET = 'cscalite-local-rebuild-secret';
+const LOCAL_AUTH_SECRET = 'moodlelike-local-development-secret-change-before-production';
 const AUTH_WINDOW_MS = 15 * 60 * 1000;
 const ADMIN_USER_STATUS_LOCK_NAMESPACE = 43021;
 const GOOGLE_OAUTH_STATE_TTL_SECONDS = 10 * 60;
@@ -373,7 +373,7 @@ export class AuthService {
   }
 
   private addGoogleLinkedMarker(path: string) {
-    const url = new URL(path, 'https://cscalite.local');
+    const url = new URL(path, 'https://moodlelike.local');
     url.searchParams.set('linked', 'google');
     url.searchParams.set('section', 'settings');
     return `${url.pathname}${url.search}${url.hash}`;
@@ -604,7 +604,7 @@ export class AuthService {
     return {
       items: users.map((user) => ({
         id: String(user.id),
-        email: user.email ?? user.loginName ?? `user-${user.id}@cscalite.local`,
+        email: user.email ?? user.loginName ?? `user-${user.id}@moodlelike.local`,
         role: user.role,
         status: user.status,
         aiBalanceUnits: user.cscaAIEntitlementAccount?.balanceUnits ?? 0,
@@ -705,7 +705,7 @@ export class AuthService {
     });
     return {
       id: String(updated.id),
-      email: updated.email ?? updated.loginName ?? `user-${updated.id}@cscalite.local`,
+      email: updated.email ?? updated.loginName ?? `user-${updated.id}@moodlelike.local`,
       role: updated.role,
       status: updated.status,
       createdAt: updated.createdAt.toISOString(),
@@ -776,7 +776,7 @@ export class AuthService {
     });
     return {
       id: String(user.id),
-      email: user.email ?? user.loginName ?? `user-${user.id}@cscalite.local`,
+      email: user.email ?? user.loginName ?? `user-${user.id}@moodlelike.local`,
       role: user.role,
       displayName: user.displayName ?? undefined,
       emailVerifiedAt: user.emailVerifiedAt?.toISOString(),
@@ -811,12 +811,12 @@ export class AuthService {
     try {
       const result = await sendAuthEmail({
         to: email,
-        subject: 'Verify your CSCAPilot email / 验证你的 CSCAPilot 邮箱',
+        subject: 'Verify your Moodlelike email / 验证你的 Moodlelike 邮箱',
         text: [
-          'Please verify your CSCAPilot email address within 24 hours:',
+          'Please verify your Moodlelike email address within 24 hours:',
           verifyUrl,
           '',
-          '请在 24 小时内验证你的 CSCAPilot 登录邮箱：',
+          '请在 24 小时内验证你的 Moodlelike 登录邮箱：',
           verifyUrl
         ].join('\n')
       });
@@ -841,12 +841,12 @@ export class AuthService {
     try {
       await sendAuthEmail({
         to: email,
-        subject: 'Reset your CSCAPilot password / 重置你的 CSCAPilot 密码',
+        subject: 'Reset your Moodlelike password / 重置你的 Moodlelike 密码',
         text: [
-          'Use this link to reset your CSCAPilot password within 30 minutes:',
+          'Use this link to reset your Moodlelike password within 30 minutes:',
           resetUrl,
           '',
-          '请在 30 分钟内使用这个链接重置你的 CSCAPilot 密码：',
+          '请在 30 分钟内使用这个链接重置你的 Moodlelike 密码：',
           resetUrl
         ].join('\n')
       });

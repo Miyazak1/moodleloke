@@ -17,13 +17,13 @@ function isLocalDevOrigin(origin: string) {
 }
 
 function normalizeCookieName(value: string | undefined) {
-  const name = value?.trim() || 'cscalite_refresh';
-  return /^[A-Za-z0-9._-]+$/.test(name) ? name : 'cscalite_refresh';
+  const name = value?.trim() || 'moodlelike_refresh';
+  return /^[A-Za-z0-9._-]+$/.test(name) ? name : 'moodlelike_refresh';
 }
 
 function normalizeCsrfCookieName(value: string | undefined) {
-  const name = value?.trim() || 'cscalite_csrf';
-  return /^[A-Za-z0-9._-]+$/.test(name) ? name : 'cscalite_csrf';
+  const name = value?.trim() || 'moodlelike_csrf';
+  return /^[A-Za-z0-9._-]+$/.test(name) ? name : 'moodlelike_csrf';
 }
 
 function normalizeCsrfHeaderName(value: string | undefined) {
@@ -32,8 +32,8 @@ function normalizeCsrfHeaderName(value: string | undefined) {
 }
 
 function normalizeOAuthStateCookieName(value: string | undefined) {
-  const name = value?.trim() || 'cscalite_oauth_state';
-  return /^[A-Za-z0-9._-]+$/.test(name) ? name : 'cscalite_oauth_state';
+  const name = value?.trim() || 'moodlelike_oauth_state';
+  return /^[A-Za-z0-9._-]+$/.test(name) ? name : 'moodlelike_oauth_state';
 }
 
 function getHeaderValue(headers: Record<string, string | string[] | undefined> | undefined, name: string) {

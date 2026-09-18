@@ -10,10 +10,10 @@ const port = Number(process.env.COOKIE_ONLY_SMOKE_PORT || 3020);
 const baseUrl = `http://127.0.0.1:${port}`;
 const backendEntry = process.env.SMOKE_BACKEND_ENTRY || 'backend/dist/main.js';
 const startupTimeoutMs = Number(process.env.SMOKE_STARTUP_TIMEOUT_MS || 20000);
-const email = `cookie-only-${Date.now()}@cscalite.local`;
+const email = `cookie-only-${Date.now()}@moodlelike.local`;
 const password = 'CookieOnly123';
-const refreshCookieName = process.env.AUTH_REFRESH_COOKIE_NAME || 'cscalite_refresh';
-const csrfCookieName = process.env.AUTH_CSRF_COOKIE_NAME || 'cscalite_csrf';
+const refreshCookieName = process.env.AUTH_REFRESH_COOKIE_NAME || 'moodlelike_refresh';
+const csrfCookieName = process.env.AUTH_CSRF_COOKIE_NAME || 'moodlelike_csrf';
 const csrfHeaderName = process.env.AUTH_CSRF_HEADER_NAME || 'x-csrf-token';
 
 function assert(condition, message) {
@@ -226,7 +226,7 @@ async function main() {
       AUTH_CSRF_HEADER_NAME: csrfHeaderName,
       CORS_ORIGINS: baseUrl,
       PUBLIC_APP_ORIGIN: baseUrl,
-      ADMIN_BOOTSTRAP_EMAIL: process.env.ADMIN_BOOTSTRAP_EMAIL || 'admin@cscalite.local',
+      ADMIN_BOOTSTRAP_EMAIL: process.env.ADMIN_BOOTSTRAP_EMAIL || 'admin@moodlelike.local',
       ADMIN_BOOTSTRAP_PASSWORD: process.env.ADMIN_BOOTSTRAP_PASSWORD || 'AdminBootstrap123',
       APP_VERSION: process.env.APP_VERSION || 'cookie-only-smoke'
     },

@@ -667,7 +667,7 @@ export class AIEntitlementService {
     });
     return {
       userId,
-      email: result.user.email ?? result.user.loginName ?? `user-${userId}@cscalite.local`,
+      email: result.user.email ?? result.user.loginName ?? `user-${userId}@moodlelike.local`,
       balanceUnits: result.account.balanceUnits,
       lifetimeGranted: result.account.lifetimeGranted,
       lifetimeUsed: result.account.lifetimeUsed,

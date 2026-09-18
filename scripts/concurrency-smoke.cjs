@@ -105,7 +105,7 @@ async function waitUntilReady(child) {
 }
 
 async function registerStudent(label) {
-  const email = `${stamp}-${label}@cscalite.local`;
+  const email = `${stamp}-${label}@moodlelike.local`;
   const result = await request('/api/v1/auth/register', {
     method: 'POST',
     body: { email, password: 'concurrency-smoke-pass' }

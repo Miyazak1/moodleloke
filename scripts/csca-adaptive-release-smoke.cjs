@@ -6,7 +6,7 @@ loadEnv();
 const prisma = new PrismaClient();
 const baseUrl = process.env.SMOKE_BASE_URL || 'http://localhost:3000';
 const stamp = `adaptive-release-smoke-${Date.now()}`;
-const email = `${stamp}@cscalite.local`;
+const email = `${stamp}@moodlelike.local`;
 const password = 'Adaptive-release-smoke-12345';
 const requireAdmin = process.env.ADAPTIVE_RELEASE_SMOKE_REQUIRE_ADMIN === '1';
 
