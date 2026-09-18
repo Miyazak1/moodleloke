@@ -71,7 +71,7 @@ export default function StandaloneAgentApp() {
     else if (internalPath === routes.me) nextRoute = 'me';
     const localizedPath = buildLocalizedPath(locale, canonicalPath(nextRoute));
     window.history.pushState({}, '', localizedPath + nextUrl.search + nextUrl.hash);
-    window.dispatchEvent(new Event('cscalite:navigation'));
+    window.dispatchEvent(new Event('moodlelike:navigation'));
     setRoute(nextRoute);
   }
 

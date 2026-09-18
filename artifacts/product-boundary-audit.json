@@ -3,7 +3,7 @@
   "generatedAt": "2026-09-17T13:37:24.968Z",
   "frontend": {
     "totals": {
-      "student-agent": 77,
+      "student-agent": 78,
       "admin-authoring": 94,
       "teaching-assets": 52,
       "obsolete-candidate": 0
@@ -46,6 +46,7 @@
         "src/lib/locale-routing.ts",
         "src/lib/request.ts",
         "src/lib/routes.ts",
+        "src/lib/storage-compat.ts",
         "src/lib/use-auth-session.ts",
         "src/main.tsx",
         "src/pages/AgentPage.tsx",

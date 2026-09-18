@@ -1,8 +1,11 @@
 export const API_BASE = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim() || (import.meta.env.DEV ? 'http://localhost:3000' : '');
-export const TOKEN_KEY = 'cscalite.accessToken';
-export const REFRESH_TOKEN_KEY = 'cscalite.refreshToken';
-export const AUTH_CHANGE_EVENT = 'cscalite:auth-changed';
-export const EMAIL_UNVERIFIED_EVENT = 'cscalite:email-unverified';
+export const TOKEN_KEY = 'moodlelike.accessToken';
+export const REFRESH_TOKEN_KEY = 'moodlelike.refreshToken';
+export const AUTH_CHANGE_EVENT = 'moodlelike:auth-changed';
+export const EMAIL_UNVERIFIED_EVENT = 'moodlelike:email-unverified';
+const LEGACY_TOKEN_KEY = 'cscalite.accessToken';
+const LEGACY_REFRESH_TOKEN_KEY = 'cscalite.refreshToken';
+export const AUTH_STORAGE_KEYS = [TOKEN_KEY, REFRESH_TOKEN_KEY, LEGACY_TOKEN_KEY, LEGACY_REFRESH_TOKEN_KEY] as const;
 const CSRF_COOKIE_NAME = (import.meta.env.VITE_AUTH_CSRF_COOKIE_NAME as string | undefined)?.trim() || 'moodlelike_csrf';
 const CSRF_HEADER_NAME = (import.meta.env.VITE_AUTH_CSRF_HEADER_NAME as string | undefined)?.trim() || 'X-CSRF-Token';
 
@@ -36,24 +39,52 @@ function emitAuthChange() {
   window.dispatchEvent(new CustomEvent(AUTH_CHANGE_EVENT));
 }
 
+function readAndMigrateStorageValue(primaryKey: string, legacyKey: string) {
+  const current = window.localStorage.getItem(primaryKey);
+  if (current) return current;
+  const legacy = window.localStorage.getItem(legacyKey);
+  if (!legacy) return null;
+  window.localStorage.setItem(primaryKey, legacy);
+  window.localStorage.removeItem(legacyKey);
+  return legacy;
+}
+
+function writeAccessToken(token: string) {
+  window.localStorage.setItem(TOKEN_KEY, token);
+  window.localStorage.removeItem(LEGACY_TOKEN_KEY);
+}
+
 export function readStoredToken() {
-  return window.localStorage.getItem(TOKEN_KEY);
+  return readAndMigrateStorageValue(TOKEN_KEY, LEGACY_TOKEN_KEY);
 }
 
 export function readStoredRefreshToken() {
-  return window.localStorage.getItem(REFRESH_TOKEN_KEY);
+  return readAndMigrateStorageValue(REFRESH_TOKEN_KEY, LEGACY_REFRESH_TOKEN_KEY);
 }
 
 export function storeAuthTokens(tokens: TokenPair) {
-  window.localStorage.setItem(TOKEN_KEY, tokens.accessToken);
+  writeAccessToken(tokens.accessToken);
   window.localStorage.removeItem(REFRESH_TOKEN_KEY);
+  window.localStorage.removeItem(LEGACY_REFRESH_TOKEN_KEY);
+  emitAuthChange();
+}
+
+export function storeAccessToken(token: string) {
+  writeAccessToken(token);
   emitAuthChange();
 }
 
 export function clearStoredAuthTokens() {
-  const hadStoredTokens = Boolean(window.localStorage.getItem(TOKEN_KEY) || window.localStorage.getItem(REFRESH_TOKEN_KEY));
+  const hadStoredTokens = Boolean(
+    window.localStorage.getItem(TOKEN_KEY)
+    || window.localStorage.getItem(REFRESH_TOKEN_KEY)
+    || window.localStorage.getItem(LEGACY_TOKEN_KEY)
+    || window.localStorage.getItem(LEGACY_REFRESH_TOKEN_KEY)
+  );
   window.localStorage.removeItem(TOKEN_KEY);
   window.localStorage.removeItem(REFRESH_TOKEN_KEY);
+  window.localStorage.removeItem(LEGACY_TOKEN_KEY);
+  window.localStorage.removeItem(LEGACY_REFRESH_TOKEN_KEY);
   if (hadStoredTokens) emitAuthChange();
 }
 
@@ -134,8 +165,9 @@ export async function refreshStoredAccessToken(options: { clearOnFailure?: boole
         if (cookieResponse.ok) {
           const body = (await cookieResponse.json()) as { tokens?: Partial<TokenPair> };
           if (body.tokens?.accessToken) {
-            window.localStorage.setItem(TOKEN_KEY, body.tokens.accessToken);
+            writeAccessToken(body.tokens.accessToken);
             window.localStorage.removeItem(REFRESH_TOKEN_KEY);
+            window.localStorage.removeItem(LEGACY_REFRESH_TOKEN_KEY);
             emitAuthChange();
             return body.tokens.accessToken;
           }
@@ -165,8 +197,9 @@ export async function refreshStoredAccessToken(options: { clearOnFailure?: boole
         if (shouldClearOnFailure) clearStoredAuthTokens();
         return null;
       }
-      window.localStorage.setItem(TOKEN_KEY, body.tokens.accessToken);
+      writeAccessToken(body.tokens.accessToken);
       window.localStorage.removeItem(REFRESH_TOKEN_KEY);
+      window.localStorage.removeItem(LEGACY_REFRESH_TOKEN_KEY);
       emitAuthChange();
       return body.tokens.accessToken;
     })().finally(() => {

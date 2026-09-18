@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react';
 import { type User } from './api';
 import { AUTH_CHANGE_EVENT, getMe, getStoredToken } from './auth';
-import { ApiError, clearStoredAuthTokens, refreshStoredAccessToken } from './request';
+import { AUTH_STORAGE_KEYS, ApiError, clearStoredAuthTokens, refreshStoredAccessToken } from './request';
+import { readMigratedLocalStorage, removeMigratedLocalStorage, writeMigratedLocalStorage } from './storage-compat';
 
 let pendingAuthProbe: { token: string; promise: Promise<User> } | null = null;
-const AUTH_USER_CACHE_KEY = 'cscalite.currentUser';
+const AUTH_USER_CACHE_KEY = 'moodlelike.currentUser';
+const LEGACY_AUTH_USER_CACHE_KEY = 'cscalite.currentUser';
 const AUTH_PROBE_RETRY_DELAYS_MS = [1200, 2500];
 
 function readCachedUser() {
   try {
-    const raw = window.localStorage.getItem(AUTH_USER_CACHE_KEY);
+    const raw = readMigratedLocalStorage(AUTH_USER_CACHE_KEY, LEGACY_AUTH_USER_CACHE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<User>;
     if (typeof parsed.id !== 'string' || typeof parsed.email !== 'string' || typeof parsed.role !== 'string') return null;
@@ -20,11 +22,11 @@ function readCachedUser() {
 }
 
 function cacheUser(user: User) {
-  window.localStorage.setItem(AUTH_USER_CACHE_KEY, JSON.stringify(user));
+  writeMigratedLocalStorage(AUTH_USER_CACHE_KEY, LEGACY_AUTH_USER_CACHE_KEY, JSON.stringify(user));
 }
 
 function clearCachedUser() {
-  window.localStorage.removeItem(AUTH_USER_CACHE_KEY);
+  removeMigratedLocalStorage(AUTH_USER_CACHE_KEY, LEGACY_AUTH_USER_CACHE_KEY);
 }
 
 function isUnauthenticatedError(error: unknown) {
@@ -143,7 +145,7 @@ export function useAuthSession(enabled = true) {
 
     const handleAuthChange = () => syncAuthState();
     const handleStorage = (event: StorageEvent) => {
-      if (!event.key || event.key === 'cscalite.accessToken' || event.key === 'cscalite.refreshToken') {
+      if (!event.key || AUTH_STORAGE_KEYS.includes(event.key as typeof AUTH_STORAGE_KEYS[number])) {
         syncAuthState();
       }
     };

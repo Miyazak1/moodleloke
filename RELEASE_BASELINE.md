@@ -20,6 +20,7 @@ This prerelease establishes the first independently buildable Moodlelike Agent r
 - archived-operations boundary that removes the unreachable former implementations while retaining non-bypassable command-name sentinels and explicit warnings on historical runbooks.
 - canonical `MOODLELIKE_ENV` platform selector with production-safe `CSC_ENV` fallback and a static migration contract across local and deployment entry points.
 - Moodlelike-owned deployment, storage-volume and session-Cookie defaults with an explicit no-implicit-data-migration boundary.
+- Moodlelike-visible browser identity with one-way migration of legacy authentication, locale and Agent preference storage keys.
 
 ## Required release gates
 

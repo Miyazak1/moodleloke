@@ -208,7 +208,7 @@ function markdown(report) {
     const rows = report.stages.filter((item) => item.path === pathName);
     return `| ${pathName} | ${rows.filter((item) => item.status === 'passed').length}/${rows.length} | ${rows.reduce((sum, item) => sum + item.durationMs, 0)} |`;
   }).join('\n');
-  return `# CSCAPilot Agent DEMO-V1 Release Gate\n\n- Verdict: **${report.verdict.toUpperCase()}**\n- Started: ${report.startedAt}\n- Completed: ${report.completedAt}\n- Repetitions: ${report.repetitions}\n- Reset each run: ${report.resetEachRun}\n- Commit: ${report.git.commit}\n\n| Path | Passed | Duration ms |\n|---|---:|---:|\n${pathRows}\n\n## Runtime metrics\n\n\`\`\`json\n${JSON.stringify(report.metrics, null, 2)}\n\`\`\`\n\n## Failed stage\n\n${report.failedStage ? `\`${report.failedStage.id}\`: ${report.failedStage.outputTail}` : 'None.'}\n`;
+  return `# Moodlelike Agent DEMO-V1 Release Gate\n\n- Verdict: **${report.verdict.toUpperCase()}**\n- Started: ${report.startedAt}\n- Completed: ${report.completedAt}\n- Repetitions: ${report.repetitions}\n- Reset each run: ${report.resetEachRun}\n- Commit: ${report.git.commit}\n\n| Path | Passed | Duration ms |\n|---|---:|---:|\n${pathRows}\n\n## Runtime metrics\n\n\`\`\`json\n${JSON.stringify(report.metrics, null, 2)}\n\`\`\`\n\n## Failed stage\n\n${report.failedStage ? `\`${report.failedStage.id}\`: ${report.failedStage.outputTail}` : 'None.'}\n`;
 }
 
 function saveReport(report) {

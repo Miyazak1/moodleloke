@@ -9,8 +9,10 @@ export type LocaleOption = {
 };
 
 export const DEFAULT_LOCALE: Locale = 'zh-CN';
-export const LOCALE_STORAGE_KEY = 'cscalite.locale';
-export const LOCALE_SOURCE_STORAGE_KEY = 'cscalite.localeSource';
+export const LOCALE_STORAGE_KEY = 'moodlelike.locale';
+export const LOCALE_SOURCE_STORAGE_KEY = 'moodlelike.localeSource';
+export const LEGACY_LOCALE_STORAGE_KEY = 'cscalite.locale';
+export const LEGACY_LOCALE_SOURCE_STORAGE_KEY = 'cscalite.localeSource';
 
 export const SUPPORTED_LOCALES: LocaleOption[] = [
   { code: 'zh-CN', shortCode: 'CN', label: 'Chinese', nativeName: '中文', enabled: true },

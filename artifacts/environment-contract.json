@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1",
   "generatedAt": "2026-09-17T13:37:26.055Z",
-  "reachableFilesScanned": 288,
+  "reachableFilesScanned": 289,
   "runtimeVariableCount": 157,
   "requiredProduction": [
     "MOODLELIKE_ENV",

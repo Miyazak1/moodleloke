@@ -45,7 +45,7 @@ type AdminConsoleShellProps = {
 const ADMIN_CONSOLE_COPY = {
   zh: {
     product: '管理员后台',
-    subtitle: 'CSCAPilot Console',
+    subtitle: 'Moodlelike Console',
     navLabel: '后台工作区导航',
     workspace: '工作区',
     account: '当前账号',
@@ -73,7 +73,7 @@ const ADMIN_CONSOLE_COPY = {
   },
   en: {
     product: 'Admin Console',
-    subtitle: 'CSCAPilot Console',
+    subtitle: 'Moodlelike Console',
     navLabel: 'Admin workspace navigation',
     workspace: 'Workspace',
     account: 'Current account',

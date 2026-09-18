@@ -10,8 +10,8 @@ import {
   readStoredToken,
   refreshStoredAccessToken,
   requestJson,
-  storeAuthTokens,
-  TOKEN_KEY
+  storeAccessToken,
+  storeAuthTokens
 } from './request';
 
 export { AUTH_CHANGE_EVENT } from './request';
@@ -43,8 +43,7 @@ export function getStoredToken() {
 }
 
 export function storeToken(token: string) {
-  window.localStorage.setItem(TOKEN_KEY, token);
-  emitAuthChange();
+  storeAccessToken(token);
 }
 
 export function startGoogleLogin(redirectTo?: string) {

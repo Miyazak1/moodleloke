@@ -67,6 +67,7 @@ import {
 import { MockExamReportView, MockExamTakingView } from './CscaMockExamPage';
 import type { User } from '../lib/api';
 import { routes } from '../lib/routes';
+import { readMigratedLocalStorage, writeMigratedLocalStorage } from '../lib/storage-compat';
 import '../styles/agent.css';
 
 type AgentPageProps = {
@@ -79,12 +80,18 @@ type AgentPageProps = {
 const TERMINAL_RUN_STATUSES = new Set(['completed', 'failed', 'cancelled', 'expired']);
 const AGENT_TASK_RAIL_DEFAULT_WIDTH = 520;
 const AGENT_TASK_RAIL_MIN_WIDTH = 380;
-const AGENT_TASK_RAIL_STORAGE_KEY = 'cscalite.agent.taskRailWidth';
-const AGENT_TASK_RAIL_POSITION_STORAGE_KEY = 'cscalite.agent.taskRailPosition';
-const AGENT_JOURNEY_SECTION_STORAGE_KEY = 'cscalite.agent.journeySection';
-const AGENT_LEARNING_MODE_STORAGE_KEY = 'cscalite.agent.learningMode';
-const AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY = 'cscalite.agent.freePracticeSubject';
-const AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY = 'cscalite.agent.freePracticeCount';
+const AGENT_TASK_RAIL_STORAGE_KEY = 'moodlelike.agent.taskRailWidth';
+const AGENT_TASK_RAIL_POSITION_STORAGE_KEY = 'moodlelike.agent.taskRailPosition';
+const AGENT_JOURNEY_SECTION_STORAGE_KEY = 'moodlelike.agent.journeySection';
+const AGENT_LEARNING_MODE_STORAGE_KEY = 'moodlelike.agent.learningMode';
+const AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY = 'moodlelike.agent.freePracticeSubject';
+const AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY = 'moodlelike.agent.freePracticeCount';
+const LEGACY_AGENT_TASK_RAIL_STORAGE_KEY = 'cscalite.agent.taskRailWidth';
+const LEGACY_AGENT_TASK_RAIL_POSITION_STORAGE_KEY = 'cscalite.agent.taskRailPosition';
+const LEGACY_AGENT_JOURNEY_SECTION_STORAGE_KEY = 'cscalite.agent.journeySection';
+const LEGACY_AGENT_LEARNING_MODE_STORAGE_KEY = 'cscalite.agent.learningMode';
+const LEGACY_AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY = 'cscalite.agent.freePracticeSubject';
+const LEGACY_AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY = 'cscalite.agent.freePracticeCount';
 const AGENT_INITIAL_LOAD_RETRY_MAX_DELAY_MS = 5000;
 
 type AgentJourneySection = 'today' | 'plan' | 'history' | 'weakness' | 'resources' | 'settings';
@@ -713,7 +720,7 @@ function AgentUnavailable({ onNavigate }: { onNavigate: (path: string) => void }
     <div className="agent-gate-page">
       <section className="agent-gate-card">
         <span className="agent-gate-mark"><Icon name="lucide:bot" /></span>
-        <p className="agent-kicker">CSCAPilot Lab</p>
+        <p className="agent-kicker">Moodlelike Lab</p>
         <h1>{t('agent.disabled.title', '学习 Agent 正在内测。')}</h1>
         <p>{t('agent.disabled.body', '当前入口默认关闭，原有模考、科目训练、错题和真题功能不受影响。')}</p>
         <button type="button" onClick={() => onNavigate(routes.home)}>{t('common.backHome', '回到首页')}</button>
@@ -794,42 +801,42 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   }, []);
   const [taskRailWidth, setTaskRailWidth] = useState(() => {
     if (typeof window === 'undefined') return AGENT_TASK_RAIL_DEFAULT_WIDTH;
-    const saved = Number(window.localStorage.getItem(AGENT_TASK_RAIL_STORAGE_KEY));
+    const saved = Number(readMigratedLocalStorage(AGENT_TASK_RAIL_STORAGE_KEY, LEGACY_AGENT_TASK_RAIL_STORAGE_KEY));
     return Number.isFinite(saved) && saved >= AGENT_TASK_RAIL_MIN_WIDTH ? saved : AGENT_TASK_RAIL_DEFAULT_WIDTH;
   });
   const [isTaskRailResizing, setIsTaskRailResizing] = useState(false);
   const [taskRailPosition, setTaskRailPosition] = useState<'right' | 'center'>(() => {
     if (typeof window === 'undefined') return 'right';
-    return window.localStorage.getItem(AGENT_TASK_RAIL_POSITION_STORAGE_KEY) === 'center' ? 'center' : 'right';
+    return readMigratedLocalStorage(AGENT_TASK_RAIL_POSITION_STORAGE_KEY, LEGACY_AGENT_TASK_RAIL_POSITION_STORAGE_KEY) === 'center' ? 'center' : 'right';
   });
   const [journeySection, setJourneySection] = useState<AgentJourneySection>(() => {
     if (typeof window === 'undefined') return 'today';
-    const saved = window.localStorage.getItem(AGENT_JOURNEY_SECTION_STORAGE_KEY);
+    const saved = readMigratedLocalStorage(AGENT_JOURNEY_SECTION_STORAGE_KEY, LEGACY_AGENT_JOURNEY_SECTION_STORAGE_KEY);
     return saved === 'plan' || saved === 'history' || saved === 'weakness' || saved === 'resources' || saved === 'settings' ? saved : 'today';
   });
   const [learningMode, setLearningMode] = useState<'recommended' | 'free'>(() => {
     if (typeof window === 'undefined') return 'recommended';
-    return window.localStorage.getItem(AGENT_LEARNING_MODE_STORAGE_KEY) === 'free' ? 'free' : 'recommended';
+    return readMigratedLocalStorage(AGENT_LEARNING_MODE_STORAGE_KEY, LEGACY_AGENT_LEARNING_MODE_STORAGE_KEY) === 'free' ? 'free' : 'recommended';
   });
   const [sessionLearningModeOverride, setSessionLearningModeOverride] = useState<'free' | null>(null);
   const [defaultFreePracticeSubject, setDefaultFreePracticeSubject] = useState<'math' | 'physics' | 'chemistry'>(() => {
     if (typeof window === 'undefined') return 'math';
-    const saved = window.localStorage.getItem(AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY);
+    const saved = readMigratedLocalStorage(AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY, LEGACY_AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY);
     return saved === 'physics' || saved === 'chemistry' ? saved : 'math';
   });
   const [defaultFreePracticeCount, setDefaultFreePracticeCount] = useState(() => {
     if (typeof window === 'undefined') return 5;
-    const saved = Number(window.localStorage.getItem(AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY));
+    const saved = Number(readMigratedLocalStorage(AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY, LEGACY_AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY));
     return saved === 3 || saved === 10 ? saved : 5;
   });
   const [freePracticeSubject, setFreePracticeSubject] = useState<'math' | 'physics' | 'chemistry'>(() => {
     if (typeof window === 'undefined') return 'math';
-    const saved = window.localStorage.getItem(AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY);
+    const saved = readMigratedLocalStorage(AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY, LEGACY_AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY);
     return saved === 'physics' || saved === 'chemistry' ? saved : 'math';
   });
   const [freePracticeCount, setFreePracticeCount] = useState(() => {
     if (typeof window === 'undefined') return 5;
-    const saved = Number(window.localStorage.getItem(AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY));
+    const saved = Number(readMigratedLocalStorage(AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY, LEGACY_AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY));
     return saved === 3 || saved === 10 ? saved : 5;
   });
   const [isStartingFreePractice, setIsStartingFreePractice] = useState(false);
@@ -1198,7 +1205,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   }, []);
 
   const persistTaskRailWidth = useCallback((width: number) => {
-    if (typeof window !== 'undefined') window.localStorage.setItem(AGENT_TASK_RAIL_STORAGE_KEY, String(Math.round(width)));
+    if (typeof window !== 'undefined') writeMigratedLocalStorage(AGENT_TASK_RAIL_STORAGE_KEY, LEGACY_AGENT_TASK_RAIL_STORAGE_KEY, String(Math.round(width)));
   }, []);
 
   useEffect(() => {
@@ -1252,7 +1259,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   function toggleTaskRailPosition() {
     setTaskRailPosition((current) => {
       const next = current === 'right' ? 'center' : 'right';
-      window.localStorage.setItem(AGENT_TASK_RAIL_POSITION_STORAGE_KEY, next);
+      writeMigratedLocalStorage(AGENT_TASK_RAIL_POSITION_STORAGE_KEY, LEGACY_AGENT_TASK_RAIL_POSITION_STORAGE_KEY, next);
       return next;
     });
   }
@@ -1397,7 +1404,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
 
   function chooseJourneySection(section: AgentJourneySection) {
     setJourneySection(section);
-    window.localStorage.setItem(AGENT_JOURNEY_SECTION_STORAGE_KEY, section);
+    writeMigratedLocalStorage(AGENT_JOURNEY_SECTION_STORAGE_KEY, LEGACY_AGENT_JOURNEY_SECTION_STORAGE_KEY, section);
     if ((section === 'today' || section === 'plan') && conversations[0] && conversations[0].id !== activeConversationId) {
       void chooseConversation(conversations[0].id);
     }
@@ -1467,19 +1474,19 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   function updateDefaultLearningMode(mode: 'recommended' | 'free') {
     setLearningMode(mode);
     setSessionLearningModeOverride(null);
-    window.localStorage.setItem(AGENT_LEARNING_MODE_STORAGE_KEY, mode);
+    writeMigratedLocalStorage(AGENT_LEARNING_MODE_STORAGE_KEY, LEGACY_AGENT_LEARNING_MODE_STORAGE_KEY, mode);
   }
 
   function updateDefaultFreePracticeSubject(subject: 'math' | 'physics' | 'chemistry') {
     setDefaultFreePracticeSubject(subject);
     setFreePracticeSubject(subject);
-    window.localStorage.setItem(AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY, subject);
+    writeMigratedLocalStorage(AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY, LEGACY_AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY, subject);
   }
 
   function updateDefaultFreePracticeCount(count: number) {
     setDefaultFreePracticeCount(count);
     setFreePracticeCount(count);
-    window.localStorage.setItem(AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY, String(count));
+    writeMigratedLocalStorage(AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY, LEGACY_AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY, String(count));
   }
 
   async function beginFreePractice() {
@@ -1864,7 +1871,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
             </button>
             <button type="button" className="agent-back-home" onClick={() => onNavigate(routes.home)}>
               <Icon name="lucide:arrow-left" />
-              <span>{t('agent.account.backHome', '返回 CSCAPilot 主站')}</span>
+              <span>{t('agent.account.backHome', '返回 Moodlelike 首页')}</span>
             </button>
           </div>
         </aside>

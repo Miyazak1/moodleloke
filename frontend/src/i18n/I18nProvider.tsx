@@ -1,6 +1,8 @@
 import { createContext, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import {
   DEFAULT_LOCALE,
+  LEGACY_LOCALE_SOURCE_STORAGE_KEY,
+  LEGACY_LOCALE_STORAGE_KEY,
   LOCALE_SOURCE_STORAGE_KEY,
   LOCALE_STORAGE_KEY,
   SUPPORTED_LOCALES,
@@ -34,8 +36,16 @@ function detectInitialLocale(): Locale {
   const queryLocale = normalizeLocale(new URLSearchParams(window.location.search).get('lang'));
   if (queryLocale) return queryLocale;
 
-  const storedLocale = normalizeLocale(window.localStorage.getItem(LOCALE_STORAGE_KEY));
-  const storedSource = window.localStorage.getItem(LOCALE_SOURCE_STORAGE_KEY);
+  const currentLocale = window.localStorage.getItem(LOCALE_STORAGE_KEY);
+  const legacyLocale = window.localStorage.getItem(LEGACY_LOCALE_STORAGE_KEY);
+  const storedLocale = normalizeLocale(currentLocale || legacyLocale);
+  const currentSource = window.localStorage.getItem(LOCALE_SOURCE_STORAGE_KEY);
+  const legacySource = window.localStorage.getItem(LEGACY_LOCALE_SOURCE_STORAGE_KEY);
+  const storedSource = currentSource || legacySource;
+  if (!currentLocale && legacyLocale) window.localStorage.setItem(LOCALE_STORAGE_KEY, legacyLocale);
+  if (!currentSource && legacySource) window.localStorage.setItem(LOCALE_SOURCE_STORAGE_KEY, legacySource);
+  if (legacyLocale) window.localStorage.removeItem(LEGACY_LOCALE_STORAGE_KEY);
+  if (legacySource) window.localStorage.removeItem(LEGACY_LOCALE_SOURCE_STORAGE_KEY);
   if (storedLocale && storedSource === 'manual' && getLocaleOption(storedLocale).enabled) {
     return storedLocale;
   }
@@ -67,6 +77,8 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     if (!option.enabled) return;
     window.localStorage.setItem(LOCALE_STORAGE_KEY, nextLocale);
     window.localStorage.setItem(LOCALE_SOURCE_STORAGE_KEY, 'manual');
+    window.localStorage.removeItem(LEGACY_LOCALE_STORAGE_KEY);
+    window.localStorage.removeItem(LEGACY_LOCALE_SOURCE_STORAGE_KEY);
     setLocaleState(nextLocale);
   }, []);
 

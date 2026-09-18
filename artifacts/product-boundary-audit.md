@@ -4,7 +4,7 @@ Generated: 2026-09-17T13:37:24.968Z
 
 ## Frontend
 
-- student-agent: 77
+- student-agent: 78
 - admin-authoring: 94
 - teaching-assets: 52
 - obsolete-candidate: 0

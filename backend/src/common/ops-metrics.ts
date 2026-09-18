@@ -83,7 +83,7 @@ export function getMetricsSnapshot(): MetricsSnapshot {
 export function getMetricsPrometheusText() {
   const snapshot = getMetricsSnapshot();
   const lines = [
-    '# HELP cscalite_requests_total Total HTTP requests observed by the CSCAPilot process.',
+    '# HELP cscalite_requests_total Total HTTP requests observed by the Moodlelike process.',
     '# TYPE cscalite_requests_total counter',
     `cscalite_requests_total ${snapshot.requests.total}`,
     '# HELP cscalite_requests_status_total HTTP requests by status family.',

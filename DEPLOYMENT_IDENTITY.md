@@ -25,4 +25,4 @@ Changing Cookie names starts a new browser session namespace. An existing deploy
 
 `deploy/docker-compose.prod.yml` is an identity-clean deployment template, not a restored release pipeline. The former release, staging and Docker commands remain blocked as documented in `COMPATIBILITY_OPERATIONS.md`. A production rollout still requires a reviewed current release implementation, secrets, backup/rollback evidence and explicit target authorization.
 
-Internal CSCA domain identifiers, persisted schema names, API paths, Prometheus metric names and browser storage keys are not deployment defaults and are intentionally outside this phase. They require separate compatibility plans before renaming.
+Internal CSCA domain identifiers, persisted schema names, API paths and Prometheus metric names are not deployment defaults and remain compatibility debt. Browser storage keys now use a one-way compatibility migration documented in `BROWSER_IDENTITY_MIGRATION.md`.

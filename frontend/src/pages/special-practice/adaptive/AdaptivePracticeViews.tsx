@@ -32,6 +32,7 @@ import {
 } from '../../../lib/api';
 import { adaptivePracticePoolExhaustedCopy, isAdaptivePracticePoolExhaustedError } from '../../../lib/adaptive-practice-pool';
 import { ApiError } from '../../../lib/request';
+import { readMigratedLocalStorage, removeMigratedLocalStorage, writeMigratedLocalStorage } from '../../../lib/storage-compat';
 import {
   abandonAgentTask,
   actOnAgentIntervention,
@@ -199,17 +200,21 @@ function normalizeQuestionLanguage(value: unknown, locale = 'zh-CN'): AdaptiveQu
 }
 
 function adaptiveQuestionLanguageStorageKey(subject: string) {
+  return `moodlelike:adaptive-question-language:${subject}`;
+}
+
+function legacyAdaptiveQuestionLanguageStorageKey(subject: string) {
   return `cscalite:adaptive-question-language:${subject}`;
 }
 
 function readStoredQuestionLanguage(subject: string, locale: string) {
   if (typeof window === 'undefined') return defaultQuestionLanguage(locale);
-  return normalizeQuestionLanguage(window.localStorage.getItem(adaptiveQuestionLanguageStorageKey(subject)), locale);
+  return normalizeQuestionLanguage(readMigratedLocalStorage(adaptiveQuestionLanguageStorageKey(subject), legacyAdaptiveQuestionLanguageStorageKey(subject)), locale);
 }
 
 function writeStoredQuestionLanguage(subject: string, language: AdaptiveQuestionLanguage) {
   if (typeof window === 'undefined') return;
-  window.localStorage.setItem(adaptiveQuestionLanguageStorageKey(subject), language);
+  writeMigratedLocalStorage(adaptiveQuestionLanguageStorageKey(subject), legacyAdaptiveQuestionLanguageStorageKey(subject), language);
 }
 
 function coachResponseLanguage(locale: string) {
@@ -1312,7 +1317,7 @@ export function AdaptiveRoundView({
         const conversation = await createAgentConversation({ title: adaptiveText(locale, '练习手写过程', 'Handwritten practice work', 'Bài làm viết tay') });
         conversationId = conversation.id;
         handwritingConversationRef.current = conversation.id;
-        window.localStorage.setItem(`cscalite.agent.handwritingConversation.${detail.round.id}`, conversation.id);
+        writeMigratedLocalStorage(`moodlelike.agent.handwritingConversation.${detail.round.id}`, `cscalite.agent.handwritingConversation.${detail.round.id}`, conversation.id);
       }
       const attachment = await uploadAgentAttachment(conversationId, file);
       if (attachment.status !== 'ready') throw new Error(attachment.error?.message || adaptiveText(locale, '图片尚未准备好。', 'The image is not ready.', 'Ảnh chưa sẵn sàng.'));
@@ -1369,8 +1374,9 @@ export function AdaptiveRoundView({
 
   useEffect(() => {
     if (!detail || !isAgentLearningRound) return;
-    const storageKey = `cscalite.agent.handwritingConversation.${detail.round.id}`;
-    const conversationId = agentConversationId || window.localStorage.getItem(storageKey);
+    const storageKey = `moodlelike.agent.handwritingConversation.${detail.round.id}`;
+    const legacyStorageKey = `cscalite.agent.handwritingConversation.${detail.round.id}`;
+    const conversationId = agentConversationId || readMigratedLocalStorage(storageKey, legacyStorageKey);
     if (!conversationId) return;
     handwritingConversationRef.current = conversationId;
     let alive = true;
@@ -1404,7 +1410,7 @@ export function AdaptiveRoundView({
       if (Object.keys(restored).length) setHandwritingReviews((current) => ({ ...current, ...restored }));
     }).catch(() => {
       handwritingConversationRef.current = null;
-      window.localStorage.removeItem(storageKey);
+      removeMigratedLocalStorage(storageKey, legacyStorageKey);
     });
     return () => { alive = false; };
   }, [agentConversationId, detail?.round.id, isAgentLearningRound, locale, onAgentAssistance]);

@@ -3,8 +3,8 @@
   "entry": "src/main.tsx",
   "generatedAt": "2026-09-17T13:37:23.606Z",
   "totals": {
-    "all": 223,
-    "reachable": 77,
+    "all": 224,
+    "reachable": 78,
     "unreachable": 146
   },
   "reachable": [
@@ -44,6 +44,7 @@
     "src/lib/locale-routing.ts",
     "src/lib/request.ts",
     "src/lib/routes.ts",
+    "src/lib/storage-compat.ts",
     "src/lib/use-auth-session.ts",
     "src/main.tsx",
     "src/pages/AgentPage.tsx",
