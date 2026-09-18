@@ -15,6 +15,22 @@ const controlledWrites = [
   'admin:bootstrap', 'db:cleanup-security', 'db:migrate', 'db:migrate:dev',
   'db:restore', 'db:seed', 'schools:import'
 ].sort();
+const retiredImplementations = [
+  'scripts/db-backup-docker.cjs',
+  'scripts/verify-staging.cjs',
+  'scripts/verify-docker-status.cjs',
+  'scripts/verify-docker-staging-local.cjs',
+  'scripts/verify-docker.cjs',
+  'scripts/verify-release-window-local.cjs',
+  'scripts/launch-smoke.cjs',
+  'scripts/verify-release.cjs',
+  'scripts/ops-smoke.cjs',
+  'scripts/smoke-check.cjs'
+];
+const archivedRunbooks = [
+  'docs/ops-runbook.md',
+  'docs/backup-restore.md'
+];
 
 const categories = {
   blockedLegacyRelease: [],
@@ -38,6 +54,14 @@ const expectedBlockedCommand = (name) => 'node scripts/blocked-compatibility-ope
 for (const name of blocked) {
   if (pkg.scripts?.[name] !== expectedBlockedCommand(name)) throw new Error('Blocked operation became executable: ' + name);
 }
+for (const relativePath of retiredImplementations) {
+  if (fs.existsSync(path.join(root, relativePath))) throw new Error('Retired legacy implementation was restored: ' + relativePath);
+}
+for (const relativePath of archivedRunbooks) {
+  const contents = fs.readFileSync(path.join(root, relativePath), 'utf8');
+  if (!contents.includes('Archived compatibility document.')) throw new Error('Historical runbook lost its archive warning: ' + relativePath);
+}
+if (!fs.existsSync(path.join(root, 'docs', 'ARCHIVED_CSCA_OPERATIONS.md'))) throw new Error('Archived operations boundary is missing.');
 if (categories.unclassified.length) throw new Error('Unclassified compatibility operations: ' + categories.unclassified.join(', '));
 if (JSON.stringify(categories.controlledDataWrite) !== JSON.stringify(controlledWrites)) throw new Error('Controlled data-write registry drifted.');
 if (compatibility.length !== 46) throw new Error('Compatibility operation budget drifted: ' + compatibility.length + ' !== 46');
@@ -45,6 +69,7 @@ if (compatibility.length !== 46) throw new Error('Compatibility operation budget
 const report = {
   schemaVersion: '1',
   total: compatibility.length,
+  retiredImplementationCount: retiredImplementations.length,
   counts: Object.fromEntries(Object.entries(categories).map(([name, values]) => [name, values.length])),
   categories
 };

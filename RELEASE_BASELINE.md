@@ -17,6 +17,7 @@ This prerelease establishes the first independently buildable Moodlelike Agent r
 - live Agent, attachment and teaching browser checks aligned with the standalone 5190/3100 local-delivery contract.
 - classified root command surface with file/reference integrity, bounded growth and duplicate-command governance.
 - compatibility-operation registry that blocks the former release/Docker/staging chain by default and separates controlled data writes from retained validation.
+- archived-operations boundary that removes the unreachable former implementations while retaining non-bypassable command-name sentinels and explicit warnings on historical runbooks.
 
 ## Required release gates
 
@@ -34,5 +35,5 @@ Real data migration additionally requires an explicitly authorized source prefli
 
 - runtime environment names and internal CSCA domain types retain legacy prefixes;
 - Prisma initially copies all 147 models; archive candidates are not deleted;
-- root operational scripts still include retained question-production and migration utilities and require a later allowlist cleanup;
+- root operational scripts still include retained question-production, validation and controlled migration utilities; further cleanup must follow the governed command inventory and data-authorization boundary;
 - this prerelease is private and carries no open-source grant.

@@ -29,3 +29,5 @@ The Moodlelike local workflow uses `db:migrate` internally against its isolated 
 ## Historical runbooks
 
 Documents describing CSCALite Docker, staging and release procedures are retained as historical evidence. They are not current Moodlelike instructions. Current entry points are `LOCAL_DELIVERY.md`, `LIVE_GOLDEN_PATH.md`, `REPOSITORY_OWNERSHIP.md` and this document.
+
+The unreachable implementations behind the blocked chain have been removed, while the 14 command-name sentinels remain to fail safely when old instructions are followed. `docs/ARCHIVED_CSCA_OPERATIONS.md` records the retirement boundary and the deleted implementation paths. The compatibility audit rejects restoration of those files or removal of archive warnings from the generic-looking historical runbooks.

@@ -1,6 +1,7 @@
 {
   "schemaVersion": "1",
   "total": 46,
+  "retiredImplementationCount": 10,
   "counts": {
     "blockedLegacyRelease": 14,
     "controlledDataWrite": 7,

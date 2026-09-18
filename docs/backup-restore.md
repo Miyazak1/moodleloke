@@ -1,5 +1,7 @@
 # CSCAlite Backup And Restore
 
+> **Archived compatibility document.** This file records the former CSCAlite backup and restore procedure. It is not a Moodlelike production runbook and does not authorize any data operation. The old Docker backup entry is intentionally blocked. For current local delivery use [`../LOCAL_DELIVERY.md`](../LOCAL_DELIVERY.md); for any real-data migration or rollback use [`../DATA_CUTOVER_CHECKLIST.md`](../DATA_CUTOVER_CHECKLIST.md) only after explicit target authorization. See [`ARCHIVED_CSCA_OPERATIONS.md`](ARCHIVED_CSCA_OPERATIONS.md).
+
 ## Backup
 
 Create a dry-run first:

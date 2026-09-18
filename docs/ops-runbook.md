@@ -1,5 +1,7 @@
 # CSCAlite Ops Runbook
 
+> **Archived compatibility document.** This runbook describes the former CSCAlite release and operations chain. Its release, staging and Docker commands are intentionally blocked in Moodlelike and must not be used as current instructions. Start with [`../LOCAL_DELIVERY.md`](../LOCAL_DELIVERY.md), [`../LIVE_GOLDEN_PATH.md`](../LIVE_GOLDEN_PATH.md) and [`../COMPATIBILITY_OPERATIONS.md`](../COMPATIBILITY_OPERATIONS.md). See [`ARCHIVED_CSCA_OPERATIONS.md`](ARCHIVED_CSCA_OPERATIONS.md) for the retirement boundary.
+
 ## Release Gate
 
 Run the same gate locally and in CI:
