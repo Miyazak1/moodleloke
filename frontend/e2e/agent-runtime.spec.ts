@@ -447,6 +447,8 @@ test('separates learning settings from account settings and restores the workspa
     await expect(page.getByRole('button', { name: '个人设置', exact: true })).toBeVisible();
     await page.getByRole('button', { name: '个人设置', exact: true }).click();
     await expect(page).toHaveURL(/\/zh\/me\?section=settings$/);
+    await expect(page.getByRole('heading', { name: '账号与机构' })).toBeVisible();
+    await expect(page.locator('.standalone-account-card.profile')).toContainText('林澈');
   }
 });
 

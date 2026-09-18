@@ -129,7 +129,7 @@ export function StandaloneAccountPage({ currentUser, isResolvingAuth, onCurrentU
 
       <div className="standalone-account-grid">
         <section className="standalone-account-card profile">
-          <div className="identity"><UserAvatar displayName={currentUser.displayName} email={currentUser.email} /><div><strong>{currentUser.displayName || currentUser.email}</strong><span>{currentUser.email}</span></div></div>
+          <div className="identity"><UserAvatar user={currentUser} /><div><strong>{currentUser.displayName || currentUser.email}</strong><span>{currentUser.email}</span></div></div>
           <form onSubmit={(event) => void saveProfile(event)}>
             <label><span>{t('me.settings.displayName', '显示名')}</span><input value={displayName} maxLength={40} onChange={(event) => setDisplayName(event.target.value)} /></label>
             <button type="submit" disabled={pending === 'profile'}>{pending === 'profile' ? t('me.common.saving', '保存中…') : t('me.actions.saveAccount', '保存账号资料')}</button>

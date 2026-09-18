@@ -54,5 +54,10 @@ test('loads the independent Agent with real read data and migrates browser ident
   expect(storage.legacyToken).toBeNull();
   expect(storage.legacyLocale).toBeNull();
   expect(storage.legacyLocaleSource).toBeNull();
+
+  await page.getByRole('button', { name: '个人设置', exact: true }).click();
+  await expect(page).toHaveURL(/\/zh\/me\?section=settings$/);
+  await expect(page.getByRole('heading', { name: '账号与机构' })).toBeVisible();
+  await expect(page.locator('.standalone-account-card.profile')).toBeVisible();
   expect(pageErrors).toEqual([]);
 });

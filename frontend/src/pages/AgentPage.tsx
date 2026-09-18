@@ -1265,7 +1265,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   }
 
   useEffect(() => {
-    if (!enabled || !currentUser) return;
+    if (!enabled || isResolvingAuth || !currentUser) return;
     let current = true;
     setIsLoading(true);
     setError('');
@@ -1310,20 +1310,20 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       }
     })();
     return () => { current = false; };
-  }, [currentUser?.id, enabled, loadConversation, loadJourneyState, loadSummaries, restoreJourneyWorkspace, t]);
+  }, [currentUser?.id, enabled, isResolvingAuth, loadConversation, loadJourneyState, loadSummaries, restoreJourneyWorkspace, t]);
 
   useEffect(() => {
-    if (journeySection !== 'history') return;
+    if (isResolvingAuth || !currentUser || journeySection !== 'history') return;
     let current = true;
     setIsJourneyHistoryLoading(true);
     void loadJourneyState()
       .catch(() => null)
       .finally(() => { if (current) setIsJourneyHistoryLoading(false); });
     return () => { current = false; };
-  }, [journeySection, loadJourneyState]);
+  }, [currentUser?.id, isResolvingAuth, journeySection, loadJourneyState]);
 
   useEffect(() => {
-    if (journeySection !== 'weakness' && journeySection !== 'resources') return;
+    if (isResolvingAuth || !currentUser || (journeySection !== 'weakness' && journeySection !== 'resources')) return;
     let current = true;
     setIsJourneyOverviewLoading(true);
     setJourneyOverviewError('');
@@ -1332,10 +1332,10 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       .catch((loadError) => { if (current) setJourneyOverviewError(loadError instanceof Error ? loadError.message : t('agent.journey.dataUnavailable', '暂时无法读取')); })
       .finally(() => { if (current) setIsJourneyOverviewLoading(false); });
     return () => { current = false; };
-  }, [journeySection, locale, t]);
+  }, [currentUser?.id, isResolvingAuth, journeySection, locale, t]);
 
   useEffect(() => {
-    if (!conversation || isSending) return;
+    if (isResolvingAuth || !currentUser || !conversation || isSending) return;
     const runId = [...conversation.messages].reverse().find((message) => message.runId)?.runId;
     if (!runId || observedRunRef.current === runId) return;
     observedRunRef.current = runId;
@@ -1345,10 +1345,10 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
         void followRun(runId, conversation.id);
       }
     }).catch(() => undefined);
-  }, [conversation, followRun, isSending]);
+  }, [conversation, currentUser?.id, followRun, isResolvingAuth, isSending]);
 
   useEffect(() => {
-    if (!mockExamWorkspace || mockExamWorkspace.phase !== 'report') {
+    if (isResolvingAuth || !currentUser || !mockExamWorkspace || mockExamWorkspace.phase !== 'report') {
       setMockExamSettlement(null);
       return;
     }
@@ -1364,10 +1364,10 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
         if (current) setError(nextError instanceof Error ? nextError.message : t('agent.mockExam.settleFailed', '模考已提交，但学习方案暂未同步。'));
       });
     return () => { current = false; };
-  }, [loadConversation, mockExamWorkspace?.attemptId, mockExamWorkspace?.conversationId, mockExamWorkspace?.phase, t]);
+  }, [currentUser?.id, isResolvingAuth, loadConversation, mockExamWorkspace?.attemptId, mockExamWorkspace?.conversationId, mockExamWorkspace?.phase, t]);
 
   useEffect(() => {
-    if (!conversation?.id || !conversation.messages.length || isSending) return;
+    if (isResolvingAuth || !currentUser || !conversation?.id || !conversation.messages.length || isSending) return;
     let current = true;
     void offerAgentIntervention({ clientRequestId: clientRequestId(), context: 'agent_conversation', conversationId: conversation.id, language: locale === 'zh-CN' ? 'zh-CN' : 'en' })
       .then((result) => { if (current) setIntervention(result.item); })
@@ -1376,7 +1376,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       .then((result) => { if (current) setInterventionVerification(result.item); })
       .catch(() => { if (current) setInterventionVerification(null); });
     return () => { current = false; };
-  }, [conversation?.id, conversation?.messages.length, isSending, locale]);
+  }, [conversation?.id, conversation?.messages.length, currentUser?.id, isResolvingAuth, isSending, locale]);
 
   async function chooseConversation(id: string) {
     if (id === activeConversationId && !learningWorkspace && !mockExamWorkspace && !pastPaperWorkspace) return;
