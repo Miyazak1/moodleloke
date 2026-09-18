@@ -3,6 +3,7 @@ import { Icon } from '../components/Icon';
 import { UserAvatar } from '../components/UserAvatar';
 import { AgentPastPaperWorkspace } from '../components/agent/AgentPastPaperWorkspace';
 import { AgentLearningSettingsView } from '../components/agent/AgentLearningSettingsView';
+import { AgentAdaptiveResultMessage, AgentMockExamResultMessage } from '../components/agent/AgentStructuredReportMessage';
 import { useI18n } from '../i18n/useI18n';
 import { isAgentWebEnabled } from '../lib/agent-feature';
 import {
@@ -57,14 +58,13 @@ import {
 } from '../lib/api-agent';
 import { TeachingAssetRenderer } from '../components/agent/TeachingAssetRegistry';
 import {
-  AdaptiveRoundReportView,
   AdaptiveRoundView,
   type AgentPracticeAssistanceCommand,
   type AgentPracticeAssistanceEvent,
   type AgentPracticeQuestionContext,
   type AgentPracticeTeachingEvent
 } from './special-practice/adaptive/AdaptivePracticeViews';
-import { MockExamReportView, MockExamTakingView } from './CscaMockExamPage';
+import { MockExamTakingView } from './CscaMockExamPage';
 import type { User } from '../lib/api';
 import { routes } from '../lib/routes';
 import { readMigratedLocalStorage, writeMigratedLocalStorage } from '../lib/storage-compat';
@@ -249,62 +249,6 @@ type AgentMockExamWorkspace = {
 };
 
 type AgentTaskLaunch = AgentPracticeLaunch | AgentMockExamLaunch;
-
-function AgentMockExamLearningReview({
-  settlement,
-  isContinuing,
-  onContinue
-}: {
-  settlement: AgentMockExamSettlement | null;
-  isContinuing: boolean;
-  onContinue: () => void;
-}) {
-  const { t } = useI18n();
-  if (!settlement) {
-    return (
-      <section className="agent-mock-learning-review is-loading" aria-live="polite">
-        <Icon name="lucide:loader-circle" />
-        <div><strong>{t('agent.mockExam.syncing', '正在更新学习判断')}</strong><span>{t('agent.mockExam.syncingBody', '系统正在接收本次模考证据，并重新计算下一步。')}</span></div>
-      </section>
-    );
-  }
-  const review = settlement.learningReview;
-  const nextTask = review.nextDecision?.primaryTask;
-  const ready = review.status === 'ready';
-  return (
-    <section className="agent-mock-learning-review" aria-label={t('agent.mockExam.learningReview', '模考后的学习判断')}>
-      <header>
-        <span><Icon name={ready ? 'lucide:badge-check' : 'lucide:refresh-cw'} />{ready ? t('agent.mockExam.evidenceUpdated', '学习证据已更新') : t('agent.mockExam.decisionPending', '学习判断待更新')}</span>
-        <small>{t('agent.mockExam.evidenceAccepted', '本次已接收 {count} 条可信答题证据').replace('{count}', String(review.evidence.acceptedCount))}</small>
-      </header>
-      <div className="agent-mock-review-grid">
-        <article>
-          <span>{t('agent.mockExam.focusTopics', '本次优先复盘')}</span>
-          {review.focusTopics.length ? (
-            <div className="agent-mock-focus-list">
-              {review.focusTopics.slice(0, 3).map((item) => (
-                <p key={item.title}><strong>{item.title}</strong><em>{item.incorrectCount}/{item.attemptedCount} {t('agent.mockExam.incorrect', '错题')} · {item.accuracy}%</em></p>
-              ))}
-            </div>
-          ) : <p>{t('agent.mockExam.noFocusTopics', '本次没有形成可用的知识点聚合，仍可按逐题解析复盘。')}</p>}
-        </article>
-        <article>
-          <span>{t('agent.mockExam.currentGap', '当前目标差距')}</span>
-          {review.targetGap ? (
-            <><strong>{review.targetGap.subjectGapCount} {t('agent.mockExam.subjectGaps', '项本学科差距')}</strong><p>{review.targetGap.priorityGapCount} {t('agent.mockExam.priorityGaps', '项高优先级差距，来自当前目标与累计学习证据。')}</p></>
-          ) : <p>{review.status === 'goal_unset' ? t('agent.mockExam.goalUnset', '请先设置考试目标，系统才能计算目标差距。') : t('agent.mockExam.gapUpdating', '证据正在投影，稍后会刷新目标差距。')}</p>}
-        </article>
-        <article className="agent-mock-next-decision">
-          <span>{t('agent.mockExam.nextDecision', '系统判定的下一步')}</span>
-          {nextTask ? (
-            <><strong>{taskLabel(nextTask.type, t)} · {subjectLabel(nextTask.subject, t)}</strong><p>{review.nextDecision?.reasonSummary}</p><small>{review.nextDecision?.estimatedMinutes} {t('agent.minutes', '分钟')} · {t('agent.mockExam.confidence', '置信度')} {review.nextDecision?.confidence}</small><button type="button" disabled={isContinuing} onClick={onContinue}>{isContinuing ? t('agent.mockExam.materializing', '正在生成任务卡') : t('agent.mockExam.continue', '生成并查看下一项任务')}<Icon name="lucide:arrow-right" /></button></>
-          ) : <p>{review.status === 'updating' ? t('agent.mockExam.nextUpdating', '系统仍在处理本次证据，请稍后返回对话刷新方案。') : t('agent.mockExam.nextUnavailable', '当前没有可发布的下一项任务。')}</p>}
-        </article>
-      </div>
-      <footer><Icon name="lucide:database" />{t('agent.mockExam.noPrediction', '卷面分数来自本次已提交模考；这里不展示未经校准的能力分预测。')}</footer>
-    </section>
-  );
-}
 
 function PlanArtifactCard({ artifact, onLaunch, onUseFreePractice }: { artifact: AgentArtifact; onLaunch: (launch: AgentTaskLaunch) => void; onUseFreePractice?: () => void }) {
   const { locale, t } = useI18n();
@@ -2055,35 +1999,25 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                     <div className="agent-message-avatar"><span><Icon name="lucide:chart-no-axes-combined" /></span></div>
                     <div className="agent-message-content">
                       <span className="agent-message-author">{t('agent.message.agent', 'CSCA 学习 Agent')}</span>
-                      <section className="agent-chat-report-panel" aria-label={t('agent.workspace.chatReportAria', '聊天区学习报告')}>
-                        <header className="agent-chat-report-header">
-                          <span>{t('agent.workspace.completedKicker', '本轮已完成')}</span>
-                          <strong>{t('agent.workspace.chatReportTitle', '结果、学习证据与下一步')}</strong>
-                          <small>{t('agent.workspace.chatReportHint', '报告回到聊天区；做题区只在需要继续作答时出现。')}</small>
-                        </header>
-                        <AdaptiveRoundReportView
-                          roundId={String(learningWorkspace.roundId)}
-                          onNavigate={(path) => void handleLearningWorkspaceNavigation(path)}
-                          onAgentIntervention={setIntervention}
-                          agentManagedFooter={workspaceTaskType === 'free_practice' ? (
-                            <div className="agent-free-practice-continuation">
-                              <div className="agent-free-practice-continuation-head">
-                                <div><span className="agent-kicker">{t('agent.freePractice.nextKicker', '自由练习 · 下一批')}</span><strong>{t('agent.freePractice.nextTitle', '继续、调整，或在这里结束')}</strong><small>{t('agent.freePractice.nextHint', '每一批独立结算并写入同一次学习历程。')}</small></div>
-                                <div className="agent-free-practice-continuation-actions">
-                                  <button type="button" disabled={freePracticeContinuationBusy !== null} onClick={() => void continueFreePracticeBatch()}><Icon name={freePracticeContinuationBusy === 'continue' ? 'lucide:loader-circle' : 'lucide:play'} />{t('agent.freePractice.continueSame', '按当前设置继续')}</button>
-                                  <button type="button" className="secondary" disabled={freePracticeContinuationBusy !== null} onClick={() => setIsAdjustingFreePractice((value) => !value)}><Icon name="lucide:sliders-horizontal" />{t('agent.freePractice.adjust', '调整下一批')}</button>
-                                  <button type="button" className="ghost" disabled={freePracticeContinuationBusy !== null} onClick={() => void endFreePracticeJourney()}><Icon name="lucide:square" />{freePracticeContinuationBusy === 'end' ? t('agent.freePractice.ending', '正在结束') : t('agent.freePractice.end', '结束本次学习')}</button>
-                                </div>
-                              </div>
-                              {isAdjustingFreePractice && <div className="agent-free-practice-adjust">
-                                <fieldset><legend>{t('agent.freePractice.subject', '选择科目')}</legend><div>{(['math', 'physics', 'chemistry'] as const).map((subject) => <button key={subject} type="button" className={freePracticeSubject === subject ? 'active' : ''} onClick={() => setFreePracticeSubject(subject)}>{subjectLabel(subject, t)}</button>)}</div></fieldset>
-                                <fieldset><legend>{t('agent.freePractice.batch', '本批题量')}</legend><div>{([3, 5, 10] as const).map((count) => <button key={count} type="button" className={freePracticeCount === count ? 'active' : ''} onClick={() => setFreePracticeCount(count)}>{count} {t('agent.freePractice.questions', '题')}</button>)}</div></fieldset>
-                                <button type="button" className="confirm" disabled={freePracticeContinuationBusy !== null} onClick={() => void continueFreePracticeBatch()}><Icon name="lucide:arrow-right" />{t('agent.freePractice.startAdjusted', '开始调整后的下一批')}</button>
-                              </div>}
+                      <AgentAdaptiveResultMessage
+                        roundId={learningWorkspace.roundId}
+                        taskType={workspaceTaskType}
+                        onNavigate={(path) => void handleLearningWorkspaceNavigation(path)}
+                        customActions={workspaceTaskType === 'free_practice' ? (
+                          <div className="agent-report-free-actions">
+                            <div className="agent-report-actions">
+                              <button type="button" className="primary" disabled={freePracticeContinuationBusy !== null} onClick={() => void continueFreePracticeBatch()}><Icon name={freePracticeContinuationBusy === 'continue' ? 'lucide:loader-circle' : 'lucide:play'} />{t('agent.freePractice.continueSame', '继续下一批')}</button>
+                              <button type="button" disabled={freePracticeContinuationBusy !== null} onClick={() => setIsAdjustingFreePractice((value) => !value)}><Icon name="lucide:sliders-horizontal" />{t('agent.freePractice.adjust', '调整')}</button>
+                              <button type="button" className="quiet" disabled={freePracticeContinuationBusy !== null} onClick={() => void endFreePracticeJourney()}>{freePracticeContinuationBusy === 'end' ? t('agent.freePractice.ending', '正在结束') : t('agent.freePractice.end', '结束学习')}</button>
                             </div>
-                          ) : undefined}
-                        />
-                      </section>
+                            {isAdjustingFreePractice && <div className="agent-report-adjustment">
+                              <label>{t('agent.freePractice.subject', '科目')}<span>{(['math', 'physics', 'chemistry'] as const).map((subject) => <button key={subject} type="button" className={freePracticeSubject === subject ? 'active' : ''} onClick={() => setFreePracticeSubject(subject)}>{subjectLabel(subject, t)}</button>)}</span></label>
+                              <label>{t('agent.freePractice.batch', '题量')}<span>{([3, 5, 10] as const).map((count) => <button key={count} type="button" className={freePracticeCount === count ? 'active' : ''} onClick={() => setFreePracticeCount(count)}>{count}</button>)}</span></label>
+                              <button type="button" className="confirm" disabled={freePracticeContinuationBusy !== null} onClick={() => void continueFreePracticeBatch()}>{t('agent.freePractice.startAdjusted', '按新设置开始')}<Icon name="lucide:arrow-right" /></button>
+                            </div>}
+                          </div>
+                        ) : undefined}
+                      />
                     </div>
                   </div>
                 )}
@@ -2092,15 +2026,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                     <div className="agent-message-avatar"><span><Icon name="lucide:clipboard-check" /></span></div>
                     <div className="agent-message-content">
                       <span className="agent-message-author">{t('agent.message.agent', 'CSCA 学习 Agent')}</span>
-                      <section className="agent-chat-report-panel" aria-label={t('agent.mockExam.chatReportAria', '聊天区模考报告')}>
-                        <header className="agent-chat-report-header">
-                          <span>{t('agent.mockExam.reportKicker', '模考已完成')}</span>
-                          <strong>{t('agent.mockExam.chatReportTitle', '模考结果与下一步建议')}</strong>
-                          <small>{t('agent.mockExam.chatReportHint', '报告和后续安排留在聊天区；考试区只用于专注作答。')}</small>
-                        </header>
-                        <AgentMockExamLearningReview settlement={mockExamSettlement} isContinuing={isSending} onContinue={() => void continueAfterMockExam()} />
-                        <MockExamReportView attemptId={String(mockExamWorkspace.attemptId)} agentMode onNavigate={(path) => void handleMockExamWorkspaceNavigation(path)} />
-                      </section>
+                      <AgentMockExamResultMessage attemptId={mockExamWorkspace.attemptId} settlement={mockExamSettlement} isContinuing={isSending} onContinue={() => void continueAfterMockExam()} />
                     </div>
                   </div>
                 )}

@@ -582,15 +582,29 @@ test('creates the recommended practice and opens it inside the Agent workspace',
 
 test('moves a completed practice report into chat and closes the focused question workspace', async ({ page }) => {
   await mockAgentWorkspace(page);
-  await page.route('**/api/v1/csca-special-practice/adaptive/rounds/81/report**', (route) => json(route, { message: 'Report fixture intentionally omitted' }, 503));
-  await page.route('**/api/v1/csca-special-practice/adaptive/ai/entitlement', (route) => json(route, { enabled: false, unlimited: false, balanceUnits: 0 }));
+  const now = '2026-09-15T10:00:00.000Z';
+  await page.route('**/api/v1/csca-special-practice/adaptive/rounds/81/report**', (route) => json(route, {
+    session: { id: 51, userId: 42, subject: 'math', mode: 'diagnostic', status: 'completed', questionLanguage: 'zh', startedAt: now, completedAt: now, createdAt: now, updatedAt: now },
+    round: { id: 81, sessionId: 51, roundIndex: 1, status: 'completed', plannerSnapshot: { mode: 'diagnostic' }, answers: { '101': 'A' }, timeSpent: { '101': 16 }, currentQuestion: 1, correctCount: 0, wrongCount: 1, unansweredCount: 0, startedAt: now, submittedAt: now, version: 2 },
+    summary: { correctCount: 2, wrongCount: 3, unansweredCount: 0, total: 5, accuracy: 40, totalSeconds: 16 },
+    weakTopics: [{ topicId: 67, code: 'function', title: '函数与方程' }],
+    diagnosticCoverage: { subject: 'math', coveredCount: 2, totalCount: 4, coverageRate: 50, confidenceReadyCount: 2, lowConfidenceCount: 2, coveredDimensions: [], insufficientDimensions: [] },
+    nextRecommendation: 'continue_weak_topics', remediationPlan: { triggered: false, trigger: null, conceptCards: [], variantPractice: { availableCount: 0, questionIds: [] }, nextAction: 'continue' },
+    items: [{ id: 101, orderNumber: 1, position: 1, difficulty: 'basic', questionType: 'single-choice', prompt: '函数 y=2x+1 的斜率是多少？', options: [{ id: 'A', text: '1' }, { id: 'B', text: '2' }], topicId: 67, topicCode: 'function', topicTitle: '函数与方程', selectedAnswer: 'A', correctAnswer: 'B', isCorrect: false, isUnanswered: false, explanation: '一次函数中 x 的系数是斜率。', knowledgeTags: ['函数'], timeSpentSeconds: 16, mastery: .32 }]
+  }));
 
   await page.goto(`/zh/agent?conversation=${conversationId}&agentConversationId=${conversationId}&agentArtifactId=${artifactId}&agentRoundId=81&agentView=report&agentTaskType=diagnostic&agentSubject=math`);
 
   await expect(page.getByLabel('聊天区学习报告')).toBeVisible();
   await expect(page.getByText('结果、学习证据与下一步')).toBeVisible();
+  await expect(page.getByText('先处理一个最关键的薄弱点。')).toBeVisible();
+  await expect(page.getByText('你答对 2/5 题，目前最值得优先复盘的是“函数与方程”。')).toBeVisible();
+  await expect(page.getByRole('button', { name: '继续下一轮' })).toBeVisible();
+  await expect(page.getByText('一次函数中 x 的系数是斜率。')).toBeHidden();
   await expect(page.getByLabel('Agent 学习任务工作区')).toHaveCount(0);
   await expect(page.getByLabel('向学习 Agent 提问')).toBeVisible();
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
 });
 
 test('binds the active practice question to the composer and renders assistance in the chat', async ({ page }, testInfo) => {
@@ -784,17 +798,15 @@ test('starts a recommended mock exam and keeps the timed attempt inside the Agen
   await expect(page.getByLabel('聊天区模考报告')).toBeVisible();
   await expect(page.getByText('模考结果与下一步建议')).toBeVisible();
   await expect(page.getByLabel('Agent 在线模考工作区')).toHaveCount(0);
-  await expect(page.getByText('学习证据已更新')).toBeVisible();
-  await expect(page.getByText('本次已接收 1 条可信答题证据')).toBeVisible();
+  await expect(page.getByText('这套卷完成得比较稳定。')).toBeVisible();
+  await expect(page.getByText('Agent 建议')).toBeVisible();
   await expect(page.getByText('下一步优先稳定函数应用。')).toBeVisible();
-  await expect(page.getByText('卷面分数来自本次已提交模考；这里不展示未经校准的能力分预测。')).toBeVisible();
-  await expect(page.getByText('模考成绩报告')).toBeVisible();
   await expect(page.getByRole('button', { name: /返回套卷列表/ })).toHaveCount(0);
   expect(settlementCalled).toBe(true);
   await page.reload();
   await expect(page.getByLabel('聊天区模考报告')).toBeVisible();
   await expect(page.getByLabel('Agent 在线模考工作区')).toHaveCount(0);
-  await page.getByRole('button', { name: '生成并查看下一项任务' }).click();
+  await page.getByRole('button', { name: '开始建议任务' }).click();
   await expect(page).toHaveURL(new RegExp(`/zh/agent\\?conversation=${conversationId}$`));
   await expect(page.getByText('模考后的数学巩固任务')).toBeVisible();
   await expect(page.getByText('先完成一次函数针对性练习，再观察稳定性。')).toBeVisible();

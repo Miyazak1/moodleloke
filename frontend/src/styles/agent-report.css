@@ -1,0 +1,101 @@
+.agent-chat-report-message .agent-message-content { width: min(720px, 100%); }
+.agent-structured-report { display: grid; gap: 14px; width: 100%; }
+.agent-report-intro { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 12px; align-items: start; }
+.agent-report-signal { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 12px; background: rgba(49, 93, 255, .09); color: var(--agent-blue); }
+.agent-report-signal[data-tone="good"] { background: var(--agent-mint-soft); color: var(--agent-mint-dark); }
+.agent-report-signal[data-tone="steady"] { background: #fff6db; color: #9b6c06; }
+.agent-report-signal svg { width: 18px; height: 18px; }
+.agent-report-intro > div { display: grid; gap: 4px; padding-top: 1px; }
+.agent-report-kicker { color: var(--agent-blue); font-size: 9px; font-weight: 900; letter-spacing: .04em; }
+.agent-report-intro h3 { margin: 0; color: var(--agent-ink); font-size: 18px; line-height: 1.35; text-wrap: balance; }
+.agent-report-intro p { max-width: 640px; margin: 0; color: var(--agent-muted); font-size: 12px; line-height: 1.7; }
+
+.agent-report-object { display: grid; gap: 0; overflow: hidden; border: 1px solid rgba(28, 67, 62, .14); border-radius: 15px; background: rgba(255, 255, 255, .88); box-shadow: 0 12px 32px rgba(35, 70, 64, .06); }
+.agent-report-object-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; padding: 17px 18px 13px; }
+.agent-report-object-head > div { display: grid; min-width: 0; gap: 4px; }
+.agent-report-object-head span { color: var(--agent-faint); font-size: 9px; font-weight: 850; }
+.agent-report-object-head strong { overflow: hidden; color: var(--agent-ink); font-size: 14px; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
+.agent-report-object-head > b { flex: 0 0 auto; color: var(--agent-blue); font-size: 29px; font-weight: 950; line-height: 1; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.agent-report-object-head > b small { margin-left: 2px; color: var(--agent-faint); font-size: 9px; letter-spacing: 0; }
+.agent-report-progress { height: 3px; margin: 0 18px; overflow: hidden; border-radius: 999px; background: #edf2f1; }
+.agent-report-progress i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--agent-blue), var(--agent-mint)); }
+.agent-report-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 14px 18px 15px; }
+.agent-report-metric { display: grid; gap: 4px; padding: 0 13px; border-left: 1px solid var(--agent-line); }
+.agent-report-metric:first-child { padding-left: 0; border-left: 0; }
+.agent-report-metric small { color: var(--agent-faint); font-size: 8px; font-weight: 800; }
+.agent-report-metric strong { color: var(--agent-ink); font-size: 13px; font-weight: 900; font-variant-numeric: tabular-nums; }
+.agent-report-metric[data-tone="good"] strong { color: var(--agent-mint-dark); }
+.agent-report-metric[data-tone="warn"] strong { color: #b35443; }
+
+.agent-report-insight { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; align-items: center; margin: 0 18px 15px; padding: 11px 12px; border-left: 3px solid var(--agent-mint); background: rgba(223, 250, 243, .46); }
+.agent-report-insight > svg { width: 17px; height: 17px; color: var(--agent-mint-dark); }
+.agent-report-insight > div { display: grid; gap: 2px; }
+.agent-report-insight small { color: var(--agent-mint-dark); font-size: 8px; font-weight: 900; }
+.agent-report-insight strong { color: #344c47; font-size: 10px; line-height: 1.55; }
+
+.agent-report-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; padding: 0 18px 16px; }
+.agent-report-actions > button,
+.agent-report-action-menu > summary { display: inline-flex; min-height: 35px; align-items: center; justify-content: center; gap: 7px; padding: 0 12px; border: 1px solid var(--agent-line-strong); border-radius: 9px; background: #fff; color: var(--agent-muted); font-size: 9px; font-weight: 850; cursor: pointer; list-style: none; }
+.agent-report-actions > button.primary { order: -1; border-color: var(--agent-blue); background: var(--agent-blue); color: #fff; }
+.agent-report-actions > button.quiet { border-color: transparent; background: transparent; color: var(--agent-faint); }
+.agent-report-actions > button:hover:not(:disabled),
+.agent-report-action-menu > summary:hover { border-color: rgba(49, 93, 255, .35); color: var(--agent-blue); }
+.agent-report-actions > button.primary:hover:not(:disabled) { background: var(--agent-blue-dark); color: #fff; }
+.agent-report-actions > button:disabled { opacity: .55; cursor: wait; }
+.agent-report-actions svg,
+.agent-report-action-menu > summary svg { width: 13px; height: 13px; }
+.agent-report-action-menu { display: contents; }
+.agent-report-action-menu > summary::-webkit-details-marker { display: none; }
+.agent-report-action-menu[open] { display: grid; width: 100%; }
+.agent-report-action-menu[open] > summary { width: fit-content; }
+.agent-report-action-menu[open] > .agent-report-question-list { margin-top: 8px; border: 1px solid var(--agent-line); border-radius: 11px; }
+
+.agent-report-disclosures,
+.agent-report-evidence-row { border-top: 1px solid var(--agent-line); }
+.agent-report-disclosures { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.agent-report-disclosures > details + details { border-left: 1px solid var(--agent-line); }
+.agent-report-disclosures > details[open] { grid-column: 1 / -1; }
+.agent-report-disclosures > details[open] + details { border-top: 1px solid var(--agent-line); border-left: 0; }
+.agent-report-disclosures summary,
+.agent-report-evidence-row > summary { display: flex; min-height: 42px; align-items: center; justify-content: space-between; gap: 12px; padding: 0 18px; color: var(--agent-muted); font-size: 9px; font-weight: 850; cursor: pointer; list-style: none; }
+.agent-report-disclosures summary::-webkit-details-marker,
+.agent-report-evidence-row > summary::-webkit-details-marker { display: none; }
+.agent-report-disclosures summary span,
+.agent-report-evidence-row > summary span { display: inline-flex; align-items: center; gap: 7px; }
+.agent-report-disclosures summary svg,
+.agent-report-evidence-row > summary svg { width: 13px; height: 13px; color: var(--agent-faint); transition: transform .18s ease; }
+.agent-report-disclosures details[open] > summary > svg:last-child,
+.agent-report-evidence-row[open] > summary > svg:last-child { transform: rotate(180deg); }
+.agent-report-disclosures summary em { display: inline-grid; min-width: 18px; height: 18px; place-items: center; border-radius: 999px; background: #eff3f2; color: var(--agent-faint); font-size: 8px; font-style: normal; }
+.agent-report-detail-body { display: grid; gap: 13px; padding: 3px 18px 16px; }
+.agent-report-detail-body section { display: grid; gap: 6px; }
+.agent-report-detail-body section > small { color: var(--agent-faint); font-size: 8px; font-weight: 900; }
+.agent-report-detail-body p { margin: 0; color: var(--agent-muted); font-size: 10px; line-height: 1.65; }
+.agent-report-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.agent-report-tags span { padding: 5px 8px; border-radius: 999px; background: #f1f4ff; color: #3e57a6; font-size: 8px; font-weight: 800; }
+.agent-report-tags span.is-good { background: var(--agent-mint-soft); color: var(--agent-mint-dark); }
+
+.agent-report-question-list { display: grid; max-height: 420px; overflow-y: auto; }
+.agent-report-question-list article { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 10px; padding: 13px 18px; border-top: 1px solid var(--agent-line); }
+.agent-report-question-list article:first-child { border-top: 0; }
+.agent-report-question-list article > span { display: grid; width: 24px; height: 24px; place-items: center; border-radius: 8px; background: rgba(255, 113, 94, .1); color: #b44d3f; font-size: 9px; font-weight: 900; }
+.agent-report-question-list article > span.is-correct { background: var(--agent-mint-soft); color: var(--agent-mint-dark); }
+.agent-report-question-list article > span svg { width: 12px; height: 12px; }
+.agent-report-question-list article > div { display: grid; min-width: 0; gap: 5px; }
+.agent-report-question-list strong { color: var(--agent-ink); font-size: 10px; line-height: 1.55; }
+.agent-report-question-list small { color: #a25143; font-size: 8px; font-weight: 800; }
+.agent-report-question-list p { margin: 2px 0 0; color: var(--agent-muted); font-size: 9px; line-height: 1.65; }
+
+.agent-structured-report-state { display: flex; min-height: 74px; align-items: center; gap: 9px; padding: 14px; border: 1px solid var(--agent-line); border-radius: 13px; background: rgba(255, 255, 255, .8); color: var(--agent-muted); font-size: 10px; }
+.agent-structured-report-state svg { width: 16px; height: 16px; color: var(--agent-blue); animation: agentThinking 1.2s linear infinite; }
+.agent-structured-report-state.is-error { border-color: rgba(255, 113, 94, .24); color: #a33f32; }
+.agent-structured-report-state.is-error svg { color: currentColor; animation: none; }
+
+.agent-report-free-actions { display: grid; gap: 10px; }
+.agent-report-adjustment { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .8fr) auto; gap: 10px; align-items: end; margin: -4px 18px 16px; padding: 11px 12px; border-radius: 11px; background: #f5f8f7; }
+.agent-report-adjustment label { display: grid; gap: 6px; color: var(--agent-faint); font-size: 8px; font-weight: 850; }
+.agent-report-adjustment label > span { display: flex; gap: 5px; }
+.agent-report-adjustment label button { min-height: 27px; padding: 0 8px; border: 1px solid var(--agent-line); border-radius: 7px; background: #fff; color: var(--agent-muted); font-size: 8px; font-weight: 850; }
+.agent-report-adjustment label button.active { border-color: rgba(49, 93, 255, .35); background: var(--agent-blue-soft); color: var(--agent-blue); }
+.agent-report-adjustment > button { min-height: 31px; padding: 0 10px; border: 0; border-radius: 8px; background: var(--agent-blue); color: #fff; font-size: 8px; font-weight: 900; white-space: nowrap; }
+.agent-report-adjustment > button svg { width: 12px; height: 12px; margin-left: 5px; }
