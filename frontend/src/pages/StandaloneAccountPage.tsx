@@ -2,8 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { Icon } from '../components/Icon';
 import { UserAvatar } from '../components/UserAvatar';
 import { useI18n } from '../i18n/useI18n';
-import type { MyAICredits, User } from '../lib/api-types';
-import { acceptOrganizationInvite, acceptOrganizationInviteCode, getMyAICredits } from '../lib/api-me';
+import type { User } from '../lib/api-types';
 import { getMe, logout, resendEmailVerification, updateMeProfile } from '../lib/auth';
 import { routes } from '../lib/routes';
 import '../styles/standalone-account.css';
@@ -15,56 +14,18 @@ type Props = {
   onNavigate: (path: string) => void;
 };
 
-function inviteValue(value: string) {
-  const text = value.trim();
-  if (!text) return '';
-  try {
-    const url = new URL(text, window.location.origin);
-    return url.searchParams.get('token')?.trim() || text;
-  } catch {
-    return text;
-  }
-}
-
-function isShortCode(value: string) {
-  return /^[2-9A-HJ-NP-Z]{8,12}$/.test(value.replace(/[\s-]+/g, '').toUpperCase());
-}
-
 export function StandaloneAccountPage({ currentUser, isResolvingAuth, onCurrentUserChange, onNavigate }: Props) {
   const { t } = useI18n();
   const [displayName, setDisplayName] = useState(currentUser?.displayName || '');
-  const [credits, setCredits] = useState<MyAICredits | null>(null);
-  const [invite, setInvite] = useState('');
   const [status, setStatus] = useState<string | null>(null);
   const [pending, setPending] = useState<string | null>(null);
 
   useEffect(() => setDisplayName(currentUser?.displayName || ''), [currentUser?.displayName]);
 
-  useEffect(() => {
-    if (isResolvingAuth || !currentUser || !currentUser.emailVerifiedAt) {
-      setCredits(null);
-      return;
-    }
-    let current = true;
-    void getMyAICredits().then((value) => {
-      if (current) setCredits(value);
-    }).catch(() => {
-      if (current) setCredits(null);
-    });
-    return () => { current = false; };
-  }, [currentUser?.emailVerifiedAt, currentUser?.id, isResolvingAuth]);
-
   if (isResolvingAuth) return <div className="standalone-account-state" role="status">{t('me.common.loading', '正在读取账号…')}</div>;
   if (!currentUser) {
     return <div className="standalone-account-state"><h1>{t('me.auth.title', '登录后管理个人设置')}</h1><button type="button" onClick={() => onNavigate(routes.auth)}>{t('agent.auth.action', '登录并进入')}</button></div>;
   }
-
-  const organizationName = credits?.organization?.name || credits?.organizationOptions?.find((item) => item.current)?.name || t('me.settings.noOrganization', '未加入机构');
-  const creditLabel = !currentUser.emailVerifiedAt
-    ? t('me.credit.verifyToLoad', '验证邮箱后读取')
-    : credits
-      ? (credits.unlimited ? t('me.credit.unlimited', '不限') : String(credits.balanceUnits ?? 0))
-      : t('me.common.notLoaded', '暂未读取');
 
   async function saveProfile(event: FormEvent) {
     event.preventDefault();
@@ -98,26 +59,6 @@ export function StandaloneAccountPage({ currentUser, isResolvingAuth, onCurrentU
     }
   }
 
-  async function joinOrganization(event: FormEvent) {
-    event.preventDefault();
-    const token = inviteValue(invite);
-    if (!token) {
-      setStatus(t('me.status.inviteRequired', '请输入机构邀请码、邀请链接或 token。'));
-      return;
-    }
-    setPending('organization');
-    try {
-      const result = isShortCode(token) ? await acceptOrganizationInviteCode(token) : await acceptOrganizationInvite(token);
-      setInvite('');
-      setStatus(t('me.status.joinedOrganization', '已加入 {name}。').replace('{name}', result.organization.name));
-      setCredits(await getMyAICredits());
-    } catch {
-      setStatus(t('me.status.inviteFailed', '机构邀请码暂时无法使用。'));
-    } finally {
-      setPending(null);
-    }
-  }
-
   async function signOut() {
     setPending('logout');
     await logout();
@@ -129,7 +70,7 @@ export function StandaloneAccountPage({ currentUser, isResolvingAuth, onCurrentU
     <div className="standalone-account-page">
       <header className="standalone-account-header">
         <button type="button" className="back" onClick={() => onNavigate(routes.agent)}><Icon name="lucide:arrow-left" color="currentColor" />{t('agent.account.back', '返回学习 Agent')}</button>
-        <div><p>{t('agent.account.kicker', '个人设置')}</p><h1>{t('agent.account.title', '账号与机构')}</h1><span>{t('agent.account.body', '这里只管理你的身份、登录和机构关系；学习目标与学习方式在 Agent 的学习设置中管理。')}</span></div>
+        <div><p>{t('agent.account.kicker', '个人设置')}</p><h1>{t('agent.account.title', '账号设置')}</h1><span>{t('agent.account.body', '这里只管理你的身份与登录安全；学习目标与学习方式在 Agent 的学习设置中管理。')}</span></div>
       </header>
 
       {status && <div className="standalone-account-status" role="status">{status}</div>}
@@ -146,11 +87,6 @@ export function StandaloneAccountPage({ currentUser, isResolvingAuth, onCurrentU
         <section className="standalone-account-card">
           <header><Icon name={currentUser.emailVerifiedAt ? 'lucide:badge-check' : 'lucide:mail-warning'} color="currentColor" /><div><h2>{t('agent.account.security', '登录与验证')}</h2><p>{currentUser.emailVerifiedAt ? t('me.profile.emailVerified', '邮箱已验证') : t('me.profile.emailUnverified', '邮箱未验证')}</p></div></header>
           <div className="actions">{!currentUser.emailVerifiedAt && <button type="button" onClick={() => void resendVerification()} disabled={pending === 'verification'}>{t('me.actions.resendVerification', '重新发送验证邮件')}</button>}<button type="button" className="secondary" onClick={() => onNavigate(routes.auth + '?mode=forgot')}>{t('auth.forgotPassword', '重置密码')}</button></div>
-        </section>
-
-        <section className="standalone-account-card organization">
-          <header><Icon name="lucide:building-2" color="currentColor" /><div><h2>{t('me.settings.organizationTitle', '机构与 AI 额度')}</h2><p>{organizationName}</p></div><strong className="credit">{creditLabel}</strong></header>
-          <form onSubmit={(event) => void joinOrganization(event)}><input value={invite} onChange={(event) => setInvite(event.target.value)} placeholder={t('me.settings.invitePlaceholder', '粘贴邀请链接、token 或短邀请码')} /><button type="submit" disabled={pending === 'organization'}>{pending === 'organization' ? t('me.common.joining', '加入中…') : t('me.actions.joinOrganization', '加入机构')}</button></form>
         </section>
 
         <section className="standalone-account-card boundary">

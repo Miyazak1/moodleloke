@@ -57,7 +57,8 @@ test('loads the independent Agent with real read data and migrates browser ident
 
   await page.getByRole('button', { name: '个人设置', exact: true }).click();
   await expect(page).toHaveURL(/\/zh\/me\?section=settings$/);
-  await expect(page.getByRole('heading', { name: '账号与机构' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '账号设置' })).toBeVisible();
+  await expect(page.getByText('机构与 AI 额度', { exact: true })).toHaveCount(0);
   await expect(page.locator('.standalone-account-card.profile')).toBeVisible();
   expect(pageErrors).toEqual([]);
 });
