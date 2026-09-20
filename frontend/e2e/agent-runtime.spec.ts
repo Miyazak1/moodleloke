@@ -403,8 +403,9 @@ test('stops polling and exits an unavailable restored round', async ({ page }, t
 test('shows a continue-learning entry for an interrupted stage', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the history resume contract.');
   await mockAgentWorkspace(page);
+  const resumedConversationId = 'conversation-resume-1';
   const resume = {
-    kind: 'adaptive_round', conversationId, artifactId, roundId: 81,
+    kind: 'adaptive_round', conversationId: resumedConversationId, artifactId, roundId: 81,
     phase: 'practice', taskType: 'diagnostic', subject: 'math'
   };
   await page.route('**/api/v1/agent/journey/state', (route) => json(route, {
@@ -412,12 +413,17 @@ test('shows a continue-learning entry for an interrupted stage', async ({ page }
     activeWorkspace: resume,
     stages: journeyState.stages.map((stage) => ({ ...stage, status: 'active', completedAt: null, resume }))
   }));
+  await page.route(new RegExp(`/api/v1/agent/conversations/${resumedConversationId}(?:\\?.*)?$`), async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 900));
+    return json(route, { ...conversation, id: resumedConversationId, messages: conversation.messages.map((message) => ({ ...message, conversationId: resumedConversationId })) });
+  });
   await page.route('**/api/v1/csca-special-practice/**', (route) => json(route, { message: 'mock round intentionally unavailable' }, 503));
   await page.goto(`/zh/agent?conversation=${conversationId}`);
   const continueLearning = page.getByRole('button', { name: '继续学习', exact: true });
   await expect(continueLearning).toBeVisible();
   await expect(page.getByText('保留原科目、题目位置和作答状态。')).toBeVisible();
   await continueLearning.click();
+  await expect(page).toHaveURL(new RegExp(`conversation=${resumedConversationId}.*agentRoundId=81`), { timeout: 500 });
   await expect(page).toHaveURL(new RegExp('agentRoundId=81'));
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
   await expect(page.getByLabel('Agent 学习动态')).toBeVisible();

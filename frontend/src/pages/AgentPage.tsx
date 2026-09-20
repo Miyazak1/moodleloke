@@ -1782,11 +1782,18 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     if (isStartingLearning || isStartingFreePractice) return;
     setLearningEntryError('');
     if (journeyState?.activeWorkspace) {
-      if (journeyState.activeWorkspace.conversationId !== activeConversationId) {
-        setActiveConversationId(journeyState.activeWorkspace.conversationId);
-        await loadConversation(journeyState.activeWorkspace.conversationId).catch(() => undefined);
+      const workspace = journeyState.activeWorkspace;
+      const changesConversation = workspace.conversationId !== activeConversationId;
+      setIsStartingLearning(true);
+      if (changesConversation) setActiveConversationId(workspace.conversationId);
+      restoreJourneyWorkspace(workspace);
+      if (changesConversation) {
+        void loadConversation(workspace.conversationId)
+          .catch(() => setLearningEntryError(t('agent.learningEntry.resumeRefreshFailed', '任务已恢复，但学习动态暂时没有刷新。')))
+          .finally(() => setIsStartingLearning(false));
+      } else {
+        window.setTimeout(() => setIsStartingLearning(false), 250);
       }
-      restoreJourneyWorkspace(journeyState.activeWorkspace);
       return;
     }
     if (effectiveLearningMode === 'free') {
@@ -2434,7 +2441,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                 <div>{[3, 5, 10].map((count) => <button key={count} type="button" className={freePracticeCount === count ? 'active' : ''} aria-pressed={freePracticeCount === count} onClick={() => setFreePracticeCount(count)}>{count} {t('agent.freePractice.questions', '题')}</button>)}</div>
               </fieldset>
               <button type="button" className="agent-free-practice-start" disabled={isStartingFreePractice || isStartingLearning} onClick={() => void startOrResumeLearning()}>
-                <Icon name={isStartingFreePractice || isStartingLearning ? 'lucide:loader-circle' : journeyState?.activeWorkspace ? 'lucide:rotate-ccw' : 'lucide:play'} />{isStartingFreePractice || isStartingLearning ? t('agent.freePractice.starting', '正在准备题目') : journeyState?.activeWorkspace ? t('agent.learningEntry.resume', '继续学习') : t('agent.learningEntry.start', '开始学习')}
+                <Icon name={isStartingFreePractice || isStartingLearning ? 'lucide:loader-circle' : journeyState?.activeWorkspace ? 'lucide:rotate-ccw' : 'lucide:play'} />{isStartingLearning && journeyState?.activeWorkspace ? t('agent.learningEntry.resuming', '正在恢复') : isStartingFreePractice || isStartingLearning ? t('agent.freePractice.starting', '正在准备题目') : journeyState?.activeWorkspace ? t('agent.learningEntry.resume', '继续学习') : t('agent.learningEntry.start', '开始学习')}
               </button>
               <p><Icon name="lucide:shield-check" />{sessionLearningModeOverride === 'free' && learningMode === 'recommended'
                 ? t('agent.freePractice.sessionOverride', '只调整本次学习，不会修改你在学习设置中的默认模式。')
@@ -2453,7 +2460,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
             <section className="agent-learning-entry-card" data-state={journeyState?.activeWorkspace ? 'resume' : 'start'}>
               <div><span><Icon name={journeyState?.activeWorkspace ? 'lucide:rotate-ccw' : 'lucide:play'} /></span><div><small>{journeyState?.activeWorkspace ? t('agent.learningEntry.interrupted', '上次学习尚未完成') : t('agent.learningEntry.ready', '现在可以开始')}</small><strong>{journeyState?.activeWorkspace ? t('agent.learningEntry.resumeTitle', '从中断位置继续') : t('agent.learningEntry.startTitle', '开始一次新的学习')}</strong></div></div>
               <p>{journeyState?.activeWorkspace ? t('agent.learningEntry.resumeBody', '保留原科目、题目位置和作答状态。') : t('agent.learningEntry.startBody', '优先执行当前推荐任务；没有待执行方案时使用你的默认练习设置。')}</p>
-              <button type="button" disabled={isStartingLearning || isStartingFreePractice} onClick={() => void startOrResumeLearning()}><Icon name={isStartingLearning || isStartingFreePractice ? 'lucide:loader-circle' : journeyState?.activeWorkspace ? 'lucide:rotate-ccw' : 'lucide:play'} />{isStartingLearning || isStartingFreePractice ? t('agent.learningEntry.preparing', '正在准备') : journeyState?.activeWorkspace ? t('agent.learningEntry.resume', '继续学习') : t('agent.learningEntry.start', '开始学习')}</button>
+              <button type="button" disabled={isStartingLearning || isStartingFreePractice} onClick={() => void startOrResumeLearning()}><Icon name={isStartingLearning || isStartingFreePractice ? 'lucide:loader-circle' : journeyState?.activeWorkspace ? 'lucide:rotate-ccw' : 'lucide:play'} />{isStartingLearning && journeyState?.activeWorkspace ? t('agent.learningEntry.resuming', '正在恢复') : isStartingLearning || isStartingFreePractice ? t('agent.learningEntry.preparing', '正在准备') : journeyState?.activeWorkspace ? t('agent.learningEntry.resume', '继续学习') : t('agent.learningEntry.start', '开始学习')}</button>
               {learningEntryError ? <small role="alert">{learningEntryError}</small> : null}
             </section>
             <section className="agent-context-card sources">
