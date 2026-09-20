@@ -20,9 +20,20 @@ export const SubmitAgentMessageInputSchema = z.strictObject({
   clientRequestId: z.string().trim().min(1).max(120),
   text: z.string().trim().max(8000).default(''),
   locale: z.enum(['zh-CN', 'en']).default('zh-CN'),
+  surface: z.enum(['learning_workspace', 'subject_qa']).default('learning_workspace'),
   attachmentIds: z.array(z.string().trim().min(1).max(120)).max(5).default([]),
   pageContext: AgentPageContextSchema.optional()
-}).refine((input) => Boolean(input.text || input.attachmentIds.length), { message: 'Message text or attachments are required.' });
+}).superRefine((input, context) => {
+  if (!input.text && !input.attachmentIds.length) {
+    context.addIssue({ code: z.ZodIssueCode.custom, message: 'Message text or attachments are required.' });
+  }
+  if (input.surface === 'subject_qa' && input.attachmentIds.length) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ['attachmentIds'], message: 'Subject Q&A currently accepts text questions only.' });
+  }
+  if (input.surface === 'subject_qa' && input.pageContext) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ['pageContext'], message: 'Subject Q&A cannot control an active learning task.' });
+  }
+});
 
 export const StartAgentPracticeInputSchema = z.strictObject({
   clientRequestId: z.string().trim().min(1).max(120),

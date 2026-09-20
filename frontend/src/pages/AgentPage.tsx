@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from 'react';
 import { Icon } from '../components/Icon';
+import { MathContent } from '../components/MathContent';
 import { UserAvatar } from '../components/UserAvatar';
 import { AgentPastPaperWorkspace } from '../components/agent/AgentPastPaperWorkspace';
 import { AgentLearningSettingsView } from '../components/agent/AgentLearningSettingsView';
@@ -7,26 +8,20 @@ import { AgentAdaptiveResultMessage, AgentMockExamResultMessage } from '../compo
 import { useI18n } from '../i18n/useI18n';
 import { isAgentWebEnabled } from '../lib/agent-feature';
 import {
-  analyzeAgentAttachment,
   actOnAgentIntervention,
   confirmAgentAttachmentEvidence,
   continueAgentFreePractice,
   createAgentConversation,
-  deleteAgentAttachment,
   endAgentFreePractice,
   getAgentConversation,
   getAgentJourneyOverview,
   getAgentJourneyState,
-  getAgentAttachmentAnalysis,
-  getAgentAttachmentEvidenceCandidate,
   getAgentRun,
-  listAgentAttachments,
   listAgentConversations,
   offerAgentIntervention,
   offerAgentInterventionVerification,
   recordAgentInterventionTeachingInteraction,
   previewAgentAttachment,
-  retryAgentAttachment,
   rejectAgentAttachmentEvidence,
   revokeAgentAttachmentEvidence,
   settleAgentPractice,
@@ -37,9 +32,7 @@ import {
   startAgentInterventionVerification,
   streamAgentRunEvents,
   submitAgentMessage,
-  uploadAgentAttachment,
   type AgentAttachment,
-  type AgentAttachmentLimits,
   type AgentAttachmentEvidenceCandidate,
   type AgentArtifact,
   type AgentConversation,
@@ -94,7 +87,7 @@ const LEGACY_AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY = 'cscalite.agent.freePract
 const LEGACY_AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY = 'cscalite.agent.freePracticeCount';
 const AGENT_INITIAL_LOAD_RETRY_MAX_DELAY_MS = 5000;
 
-type AgentJourneySection = 'today' | 'plan' | 'history' | 'weakness' | 'resources' | 'settings';
+type AgentJourneySection = 'today' | 'plan' | 'history' | 'weakness' | 'resources' | 'qa' | 'settings';
 
 function clientRequestId() {
   return globalThis.crypto?.randomUUID?.() ?? `agent-${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -121,16 +114,6 @@ function journeyDateLabel(value: string | null | undefined, locale: string) {
     month: 'short', day: 'numeric'
   }).format(date);
 }
-
-type DraftAttachment = AgentAttachment & { progress?: number; localId?: string };
-
-const DEFAULT_ATTACHMENT_LIMITS: AgentAttachmentLimits = {
-  maxFileBytes: 50 * 1024 * 1024,
-  maxFilesPerMessage: 5,
-  maxMessageBytes: 100 * 1024 * 1024,
-  maxDocumentPages: 200,
-  acceptedMimeTypes: ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/png', 'image/jpeg', 'image/webp']
-};
 
 function formatFileSize(value: number | null) {
   if (!value) return '';
@@ -380,7 +363,7 @@ function AgentJourneyPlanView({ conversation }: { conversation: AgentConversatio
           <footer><Icon name="lucide:shield-check" />{t('agent.plan.source', '来自学习证据、目标与已发布题源')}</footer>
         </section>
       ) : (
-        <section className="agent-journey-empty"><Icon name="lucide:calendar-days" /><strong>{t('agent.journey.noPlan', '还没有可用计划')}</strong><p>{t('agent.journey.noPlanBody', '在聊天中询问今天学什么，系统会先核对目标、证据和题源。')}</p></section>
+        <section className="agent-journey-empty"><Icon name="lucide:calendar-days" /><strong>{t('agent.journey.noPlan', '还没有可用计划')}</strong><p>{t('agent.journey.noPlanBody', '返回学习工作台生成今日方案，系统会先核对目标、证据和题源。')}</p></section>
       )}
       {plans.length > 1 && (
         <section className="agent-context-card agent-plan-versions">
@@ -661,6 +644,23 @@ function AgentEmptyState({ user, onPrompt }: { user: User; onPrompt: (value: str
   );
 }
 
+function SubjectQaEmptyState() {
+  const { t } = useI18n();
+  return (
+    <section className="agent-subject-qa-empty">
+      <span><Icon name="lucide:messages-square" /></span>
+      <p className="agent-kicker">{t('agent.subjectQa.kicker', '独立学科问答')}</p>
+      <h1>{t('agent.subjectQa.title', '有学科问题，直接问。')}</h1>
+      <p>{t('agent.subjectQa.body', '这里仅回答数学、物理和化学知识，不控制做题、学习计划、进度或账号设置。普通问答不会改变掌握度。')}</p>
+      <div>
+        <span><Icon name="lucide:sigma" />{t('subjects.math', '数学')}</span>
+        <span><Icon name="lucide:atom" />{t('subjects.physics', '物理')}</span>
+        <span><Icon name="lucide:flask-conical" />{t('subjects.chemistry', '化学')}</span>
+      </div>
+    </section>
+  );
+}
+
 function AgentUnavailable({ onNavigate }: { onNavigate: (path: string) => void }) {
   const { t } = useI18n();
   return (
@@ -680,6 +680,7 @@ type AgentErrorAction = {
   kind: 'send' | 'free-start' | 'free-continue' | 'free-end' | 'mock-continue';
   label: string;
   value?: string;
+  surface?: 'learning_workspace' | 'subject_qa';
   subject?: 'math' | 'physics' | 'chemistry';
   questionCount?: number;
 };
@@ -695,8 +696,6 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   const [runStatus, setRunStatus] = useState('');
   const [error, setError] = useState('');
   const [errorAction, setErrorAction] = useState<AgentErrorAction | null>(null);
-  const [draftAttachments, setDraftAttachments] = useState<DraftAttachment[]>([]);
-  const [attachmentLimits, setAttachmentLimits] = useState(DEFAULT_ATTACHMENT_LIMITS);
   const [intervention, setIntervention] = useState<AgentInterventionDelivery | null>(null);
   const [interventionVerification, setInterventionVerification] = useState<AgentInterventionVerification | null>(null);
   const [teachingDeliveryId, setTeachingDeliveryId] = useState<string | null>(() => {
@@ -749,7 +748,6 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   } | null>(null);
   const streamAbortRef = useRef<AbortController | null>(null);
   const observedRunRef = useRef<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const composerInputRef = useRef<HTMLTextAreaElement | null>(null);
   const threadScrollRef = useRef<HTMLDivElement | null>(null);
   const messageListRef = useRef<HTMLDivElement | null>(null);
@@ -770,7 +768,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
 
   function runErrorAction(action: AgentErrorAction) {
     clearErrorNotice();
-    if (action.kind === 'send') return void sendMessage(action.value);
+    if (action.kind === 'send') return void sendMessage(action.value, action.surface);
     if (action.kind === 'free-start') return void beginFreePractice();
     if (action.kind === 'free-continue') return void continueFreePracticeBatch(action.subject && action.questionCount ? { subject: action.subject, questionCount: action.questionCount } : undefined);
     if (action.kind === 'free-end') return void endFreePracticeJourney();
@@ -789,7 +787,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   const [journeySection, setJourneySection] = useState<AgentJourneySection>(() => {
     if (typeof window === 'undefined') return 'today';
     const saved = readMigratedLocalStorage(AGENT_JOURNEY_SECTION_STORAGE_KEY, LEGACY_AGENT_JOURNEY_SECTION_STORAGE_KEY);
-    return saved === 'plan' || saved === 'history' || saved === 'weakness' || saved === 'resources' || saved === 'settings' ? saved : 'today';
+    return saved === 'plan' || saved === 'history' || saved === 'weakness' || saved === 'resources' || saved === 'qa' || saved === 'settings' ? saved : 'today';
   });
   const [learningMode, setLearningMode] = useState<'recommended' | 'free'>(() => {
     if (typeof window === 'undefined') return 'recommended';
@@ -1040,17 +1038,15 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     setPastPaperWorkspace(null);
     syncWorkspaceUrl(null, conversationId);
     if (prompt && context) {
-      setDraft(prompt);
-      setDraftPageContext({
-        route: `${window.location.pathname}?conversation=${encodeURIComponent(conversationId)}&agentPastPaper=${encodeURIComponent(context.slug)}&agentQuestionId=${context.questionId}`,
-        entityRef: { type: 'past_paper', id: context.slug },
-        selectedQuestionId: context.questionId
-      });
+      setJourneySection('today');
+      writeMigratedLocalStorage(AGENT_JOURNEY_SECTION_STORAGE_KEY, LEGACY_AGENT_JOURNEY_SECTION_STORAGE_KEY, 'today');
+      setDraft('');
+      setDraftPageContext(null);
+      void sendMessage(prompt, 'learning_workspace', null);
     } else {
       setDraftPageContext(null);
     }
-    focusComposer();
-  }, [focusComposer, syncWorkspaceUrl]);
+  }, [syncWorkspaceUrl]);
 
   const restoreJourneyWorkspace = useCallback((workspace: AgentJourneyResumeWorkspace) => {
     setJourneySection('today');
@@ -1109,13 +1105,8 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   }, []);
 
   const loadConversation = useCallback(async (id: string) => {
-    const [item, attachmentResult] = await Promise.all([
-      getAgentConversation(id),
-      listAgentAttachments(id).catch(() => ({ items: [], limits: DEFAULT_ATTACHMENT_LIMITS }))
-    ]);
+    const item = await getAgentConversation(id);
     setConversation(item);
-    setAttachmentLimits(attachmentResult.limits);
-    setDraftAttachments(attachmentResult.items.filter((attachment) => !attachment.sent && attachment.status !== 'deleted'));
     return item;
   }, []);
 
@@ -1401,13 +1392,22 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     focusComposer();
   }
 
-  async function sendMessage(value?: string) {
+  async function sendMessage(
+    value?: string,
+    requestedSurface?: 'learning_workspace' | 'subject_qa',
+    requestedPageContext?: {
+      route: string;
+      artifactId?: string;
+      entityRef?: { type: 'adaptive_round' | 'intervention_verification' | 'mock_attempt' | 'past_paper'; id: string };
+      selectedQuestionId?: number;
+    } | null
+  ) {
     const text = String(value ?? draft).trim();
-    const readyAttachmentIds = draftAttachments.filter((item) => item.status === 'ready').map((item) => item.id);
-    if ((!text && !readyAttachmentIds.length) || draftAttachments.some((item) => ['uploading', 'uploaded', 'extracting'].includes(item.status)) || isSending || !currentUser) return;
+    const surface = requestedSurface ?? (journeySection === 'qa' ? 'subject_qa' : 'learning_workspace');
+    if (!text || isSending || !currentUser) return;
     clearErrorNotice();
     setIsSending(true);
-    setRunStatus(t('agent.status.queued', '正在准备分析'));
+    setRunStatus(surface === 'subject_qa' ? t('agent.subjectQa.preparing', '正在准备学科回答') : t('agent.status.queued', '正在准备分析'));
     try {
       let conversationId = activeConversationId;
       if (!conversationId) {
@@ -1428,34 +1428,22 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
         clientRequestId: clientRequestId(),
         text,
         locale: locale === 'zh-CN' ? 'zh-CN' : 'en',
-        attachmentIds: readyAttachmentIds,
-        pageContext: draftPageContext ?? contextualPageContext
+        surface,
+        attachmentIds: [],
+        ...(surface === 'learning_workspace' && requestedPageContext !== null
+          ? { pageContext: requestedPageContext ?? draftPageContext ?? contextualPageContext }
+          : {})
       });
       setDraft('');
       setDraftPageContext(null);
-      setDraftAttachments([]);
       void followRun(submission.runId, conversationId);
       await loadConversation(conversationId).catch(() => {
         showError(t('agent.error.sentRefreshPending', '消息已经发送，但最新对话暂未刷新；分析完成后会自动同步。'));
       });
-      readyAttachmentIds.forEach((attachmentId) => {
-        void analyzeAgentAttachment(attachmentId, { clientRequestId: clientRequestId(), studentNote: text }).then(async (analysis) => {
-          for (let attempt = 0; attempt < 60; attempt += 1) {
-            const current = attempt ? await getAgentAttachmentAnalysis(analysis.id) : analysis;
-            if (current.status === 'completed') { await getAgentAttachmentEvidenceCandidate(current.id); await loadConversation(conversationId); return; }
-            if (['failed', 'timeout'].includes(current.status)) {
-              showError(current.error?.message || t('agent.attachment.analysisFailed', '附件分析失败，请稍后重试。'));
-              return;
-            }
-            await wait(1500);
-          }
-          showError(t('agent.attachment.analysisTimeout', '附件仍在分析，可稍后重新打开本对话查看。'));
-        }).catch((nextError) => showError(nextError instanceof Error ? nextError.message : t('agent.attachment.analysisFailed', '附件分析失败，请稍后重试。')));
-      });
     } catch {
       showError(
         t('agent.error.sendRecoverable', '消息未发送；你的输入仍保留，可以再次发送。'),
-        { kind: 'send', label: t('agent.error.retrySend', '再次发送'), value: text }
+        { kind: 'send', label: t('agent.error.retrySend', '再次发送'), value: text, surface }
       );
       setIsSending(false);
       setRunStatus('');
@@ -1617,77 +1605,6 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     }
   }
 
-  async function ensureConversationForAttachment() {
-    if (activeConversationId) return activeConversationId;
-    const created = await createAgentConversation({ title: t('agent.attachment.conversationTitle', '附件分析') });
-    setActiveConversationId(created.id);
-    setConversations((items) => [created, ...items]);
-    await loadConversation(created.id);
-    return created.id;
-  }
-
-  async function addFiles(fileList: FileList | File[]) {
-    const files = Array.from(fileList);
-    if (!files.length || isSending) return;
-    const available = Math.max(0, attachmentLimits.maxFilesPerMessage - draftAttachments.length);
-    if (!available) return showError(t('agent.attachment.maxFiles', '每条消息最多添加 5 个附件。'));
-    const selected = files.slice(0, available);
-    const oversized = selected.find((file) => file.size > attachmentLimits.maxFileBytes);
-    if (oversized) return showError(`${oversized.name} ${t('agent.attachment.tooLarge', '超过单文件大小限制')} (${formatFileSize(attachmentLimits.maxFileBytes)})`);
-    const existingBytes = draftAttachments.reduce((sum, item) => sum + Number(item.sizeBytes || 0), 0);
-    if (existingBytes + selected.reduce((sum, file) => sum + file.size, 0) > attachmentLimits.maxMessageBytes) {
-      return showError(`${t('agent.attachment.totalTooLarge', '单条消息附件总量不能超过')} ${formatFileSize(attachmentLimits.maxMessageBytes)}`);
-    }
-    clearErrorNotice();
-    try {
-      const conversationId = await ensureConversationForAttachment();
-      for (const file of selected) {
-        const localId = `upload-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-        const placeholder: DraftAttachment = {
-          id: localId, localId, conversationId, status: 'uploading', kind: file.type.startsWith('image/') ? 'image' : 'document',
-          name: file.name, declaredMime: file.type || null, detectedMime: null, sizeBytes: file.size, pageCount: null,
-          error: null, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), previewUrl: null, progress: 0
-        };
-        setDraftAttachments((items) => [...items, placeholder]);
-        try {
-          const uploaded = await uploadAgentAttachment(conversationId, file, (progress) => {
-            setDraftAttachments((items) => items.map((item) => item.id === localId ? { ...item, progress } : item));
-          });
-          setDraftAttachments((items) => items.map((item) => item.id === localId ? { ...uploaded, progress: 100 } : item));
-        } catch (uploadError) {
-          setDraftAttachments((items) => items.map((item) => item.id === localId
-            ? { ...item, status: 'failed', error: { code: 'upload_failed', message: uploadError instanceof Error ? uploadError.message : t('agent.attachment.uploadFailed', '附件上传失败。') } }
-            : item));
-        }
-      }
-    } catch (nextError) {
-      showError(nextError instanceof Error ? nextError.message : t('agent.attachment.uploadFailed', '附件上传失败。'));
-    }
-  }
-
-  async function removeAttachment(item: DraftAttachment) {
-    if (item.localId) return setDraftAttachments((items) => items.filter((next) => next.id !== item.id));
-    try {
-      await deleteAgentAttachment(item.id);
-      setDraftAttachments((items) => items.filter((next) => next.id !== item.id));
-    } catch (nextError) {
-      showError(nextError instanceof Error ? nextError.message : t('agent.attachment.deleteFailed', '附件移除失败。'));
-    }
-  }
-
-  async function retryAttachment(item: DraftAttachment) {
-    if (item.localId) return setDraftAttachments((items) => items.filter((next) => next.id !== item.id));
-    setDraftAttachments((items) => items.map((next) => next.id === item.id ? { ...next, status: 'extracting', error: null } : next));
-    try {
-      const retried = await retryAgentAttachment(item.id);
-      setDraftAttachments((items) => items.map((next) => next.id === item.id ? retried : next));
-    } catch (nextError) {
-      setDraftAttachments((items) => items.map((next) => next.id === item.id
-        ? { ...next, status: 'failed', error: { code: 'retry_failed', message: nextError instanceof Error ? nextError.message : t('agent.attachment.retryFailed', '重试失败。') } }
-        : next));
-    }
-  }
-
   function submit(event: FormEvent) {
     event.preventDefault();
     void sendMessage();
@@ -1783,6 +1700,10 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   const latestTask = latestSnapshot.task && typeof latestSnapshot.task === 'object'
     ? latestSnapshot.task as Record<string, unknown>
     : null;
+  const isSubjectQa = journeySection === 'qa';
+  const subjectQaMessages = conversation?.messages.filter((message) => message.content.surface === 'subject_qa') ?? [];
+  const activityMessages = conversation?.messages.filter((message) => message.content.surface !== 'subject_qa' && message.role !== 'user') ?? [];
+  const visibleMessages = isSubjectQa ? subjectQaMessages : activityMessages;
   const effectiveLearningMode = sessionLearningModeOverride ?? learningMode;
   const workspaceArtifactId = learningWorkspace?.artifactId ?? mockExamWorkspace?.artifactId;
   const workspaceArtifact = workspaceArtifactId
@@ -1838,11 +1759,11 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   }
 
   const hasTaskWorkspace = Boolean(
-    journeySection === 'settings'
+    journeySection !== 'qa' && (journeySection === 'settings'
     || standaloneTeachingWorkspace
     || learningWorkspace?.phase === 'practice'
     || mockExamWorkspace?.phase === 'taking'
-    || pastPaperWorkspace
+    || pastPaperWorkspace)
   );
   const taskRailResizeHandle = (
     <div
@@ -1894,6 +1815,9 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
             <button type="button" className={journeySection === 'resources' ? 'active' : ''} aria-label={t('agent.journey.resources', '学习资料')} aria-current={journeySection === 'resources' ? 'page' : undefined} onClick={() => chooseJourneySection('resources')}>
               <Icon name="lucide:library" /><span><strong>{t('agent.journey.resources', '学习资料')}</strong><small>{t('agent.journey.resourcesHint', '真题与可信资料')}</small></span>
             </button>
+            <button type="button" className={journeySection === 'qa' ? 'active' : ''} aria-label={t('agent.journey.subjectQa', '学科问答')} aria-current={journeySection === 'qa' ? 'page' : undefined} onClick={() => chooseJourneySection('qa')}>
+              <Icon name="lucide:messages-square" /><span><strong>{t('agent.journey.subjectQa', '学科问答')}</strong><small>{t('agent.journey.subjectQaHint', '数学、物理与化学')}</small></span>
+            </button>
             <button type="button" className={journeySection === 'settings' ? 'active' : ''} aria-label={t('agent.journey.settings', '学习设置')} aria-current={journeySection === 'settings' ? 'page' : undefined} onClick={() => chooseJourneySection('settings')}>
               <Icon name="lucide:settings" /><span><strong>{t('agent.journey.settings', '学习设置')}</strong><small>{t('agent.journey.settingsHint', '目标与学习偏好')}</small></span>
             </button>
@@ -1919,7 +1843,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
           {hasTaskWorkspace && taskRailPosition === 'center' ? taskRailResizeHandle : null}
           <header className="agent-thread-header">
             <div>
-              <span className="agent-kicker">{t('agent.thread.kicker', 'Learning workspace')}</span>
+              <span className="agent-kicker">{isSubjectQa ? t('agent.subjectQa.kicker', '独立学科问答') : t('agent.thread.kicker', 'Learning workspace')}</span>
               <h2>{journeySection === 'history'
                 ? t('agent.journey.history', '学习历程')
                 : journeySection === 'plan'
@@ -1928,31 +1852,40 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                     ? t('agent.journey.weakness', '错题与薄弱点')
                     : journeySection === 'resources'
                       ? t('agent.journey.resources', '学习资料')
+                      : journeySection === 'qa'
+                        ? t('agent.journey.subjectQa', '学科问答')
                       : journeySection === 'settings'
                         ? t('agent.journey.settings', '学习设置')
-                  : t('agent.thread.title', '今天的学习方案')}</h2>
+                  : t('agent.thread.title', '学习工作台')}</h2>
             </div>
-            <span className={isSending ? 'agent-live-status running' : 'agent-live-status'} role="status" aria-live="polite"><i />{isSending ? runStatus : t('agent.status.ready', '学习数据已连接')}</span>
+            <span className={isSending ? 'agent-live-status running' : 'agent-live-status'} role="status" aria-live="polite"><i />{isSending ? runStatus : isSubjectQa ? t('agent.subjectQa.ready', '数理化问答边界已启用') : t('agent.status.ready', '学习数据已连接')}</span>
           </header>
 
           <div ref={threadScrollRef} className="agent-thread-scroll" aria-live="polite">
             {error && <div className="agent-inline-error" role="alert"><Icon name="lucide:circle-alert" /><span>{error}</span><div className="agent-inline-error-actions">{errorAction ? <button type="button" className="primary" onClick={() => runErrorAction(errorAction)}><Icon name="lucide:refresh-cw" />{errorAction.label}</button> : null}<button type="button" onClick={clearErrorNotice}>{t('agent.error.dismiss', '关闭')}</button></div></div>}
             {isLoading ? (
               <div className="agent-loading-card"><Icon name="lucide:loader-circle" />{t('agent.loadingConversation', '正在加载学习对话')}</div>
-            ) : !conversation?.messages.length ? (
+            ) : isSubjectQa && !visibleMessages.length ? (
+              <SubjectQaEmptyState />
+            ) : !isSubjectQa && !visibleMessages.length ? (
               <AgentEmptyState user={currentUser} onPrompt={(value) => void sendMessage(value)} />
             ) : (
-              <div ref={messageListRef} className="agent-message-list">
-                {conversation.messages.map((message) => {
+              <div ref={messageListRef} className={`agent-message-list${isSubjectQa ? ' is-subject-qa' : ' is-activity-stream'}`} aria-label={isSubjectQa ? t('agent.subjectQa.conversation', '学科问答对话') : t('agent.activity.aria', 'Agent 学习动态')}>
+                {!isSubjectQa && <section className="agent-activity-intro">
+                  <span><Icon name="lucide:activity" /></span>
+                  <div><strong>{t('agent.activity.title', 'Agent 动态')}</strong><small>{t('agent.activity.body', '推荐、题内辅助、讲解和学习结果会按发生顺序记录在这里。')}</small></div>
+                </section>}
+                {visibleMessages.map((message) => {
                   const artifactIds = message.content.artifactIds ?? [];
                   return (
-                    <div key={message.id} className={`agent-message-block ${message.role}`}>
+                    <div key={message.id} className={`agent-message-block ${message.role}${isSubjectQa ? '' : ' agent-activity-event'}`}>
                       <div className="agent-message-avatar">
                         {message.role === 'user' ? <UserAvatar user={currentUser} size="sm" /> : <span><Icon name="lucide:sparkles" /></span>}
                       </div>
                       <div className="agent-message-content">
                         <span className="agent-message-author">{message.role === 'user' ? (currentUser.displayName || t('agent.message.you', '你')) : t('agent.message.agent', 'CSCA 学习 Agent')}</span>
-                        <p>{message.content.text}</p>
+                        {isSubjectQa && message.role === 'assistant' && <small className="agent-subject-qa-disclosure"><Icon name={message.content.subjectQa?.generatedByAI === false || message.content.subjectQa?.decision === 'out_of_scope' ? 'lucide:circle-alert' : 'lucide:shield-check'} />{message.content.subjectQa?.generatedByAI === false ? t('agent.subjectQa.unavailable', '学科问答暂时不可用') : message.content.subjectQa?.decision === 'out_of_scope' ? t('agent.subjectQa.outOfScope', '已按学科边界处理') : t('agent.subjectQa.noMastery', '自由问答，不改变掌握度')}</small>}
+                        <p>{isSubjectQa ? <MathContent text={message.content.text} /> : message.content.text}</p>
                         {!!message.content.attachmentAnalysisItems?.length && (
                           <div className="agent-analysis-items" aria-label={t('agent.analysis.items', '识别到的题目')}>
                             {message.content.attachmentAnalysisItems.map((item, index) => (
@@ -2036,7 +1969,17 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                     </div>
                   );
                 })}
-                {practiceAssistanceEvents
+                {!isSubjectQa && learningWorkspace?.phase === 'practice' && practiceQuestionContext && (
+                  <section className="agent-practice-action-panel" aria-label={t('agent.practiceAssistance.context', '当前练习题上下文')}>
+                    <div><Icon name="lucide:focus" /><span><strong>{t('agent.practiceAssistance.currentQuestion', '当前第 {current}/{total} 题').replace('{current}', String(practiceQuestionContext.questionNumber)).replace('{total}', String(practiceQuestionContext.questionCount))}</strong><small>{practiceQuestionContext.topicTitle} · {t('agent.practiceAssistance.activityHint', '题内帮助会记录在 Agent 动态中')}</small></span></div>
+                    <nav>
+                      <button type="button" disabled={Boolean(practiceAssistanceBusy) || practiceQuestionContext.availableActions.find((item) => item.action === 'recall_concept')?.enabled !== true} onClick={() => requestPracticeAssistance('recall_concept')}><Icon name="lucide:book-open" />{t('agent.practiceAssistance.recall', '回忆知识点')}</button>
+                      <button type="button" disabled={Boolean(practiceAssistanceBusy) || practiceQuestionContext.answered || practiceQuestionContext.availableActions.find((item) => item.action === 'next_step_hint')?.enabled !== true} onClick={() => requestPracticeAssistance('next_step_hint')}><Icon name="lucide:route" />{t('agent.practiceAssistance.nextHint', '下一步提示')}</button>
+                      <button type="button" disabled={Boolean(practiceAssistanceBusy)} onClick={() => requestPracticeAssistance('check_work')}><Icon name="lucide:scan-line" />{t('agent.practiceAssistance.checkWork', '检查手写过程')}</button>
+                    </nav>
+                  </section>
+                )}
+                {!isSubjectQa && practiceAssistanceEvents
                   .filter((item) => item.roundId === learningWorkspace?.roundId)
                   .map((item) => {
                     const title = item.action === 'recall_concept'
@@ -2058,20 +2001,20 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                       </div>
                     );
                   })}
-                {practiceAssistanceBusy && (
+                {!isSubjectQa && practiceAssistanceBusy && (
                   <div className="agent-message-block assistant is-thinking agent-practice-assistance-message">
                     <div className="agent-message-avatar"><span><Icon name="lucide:sparkles" /></span></div>
                     <div className="agent-message-content"><span className="agent-message-author">{t('agent.message.agent', 'CSCA 学习 Agent')}</span><p><i /><i /><i />{practiceAssistanceBusy === 'check_work' ? t('agent.practiceAssistance.waitingUpload', '正在选择或检查手写图片') : t('agent.practiceAssistance.loading', '正在结合当前题准备帮助')}</p></div>
                   </div>
                 )}
-                {visiblePracticeTeachingEvent && (
+                {!isSubjectQa && visiblePracticeTeachingEvent && (
                   <div className="agent-message-block assistant agent-chat-teaching-message">
                     <div className="agent-message-avatar"><span><Icon name="lucide:book-open-check" /></span></div>
                     <div className="agent-message-content">
                       <span className="agent-message-author">{t('agent.message.agent', 'CSCA 学习 Agent')}</span>
                       <section className="agent-chat-teaching-panel agent-intervention-teaching-wrap" aria-label={t('agent.practiceTeaching.aria', '当前题知识讲解')}>
                         <header className="agent-chat-teaching-header">
-                          <div><span>{t('agent.practiceTeaching.kicker', '当前题辅助')}</span><strong>{t('agent.practiceTeaching.title', '把讲解留在聊天区，题目保持不动')}</strong><small>{t('agent.practiceTeaching.hint', '第 {number} 题答错后匹配的已审核交互微课').replace('{number}', String(visiblePracticeTeachingEvent.questionNumber))}</small></div>
+                          <div><span>{t('agent.practiceTeaching.kicker', '当前题辅助')}</span><strong>{t('agent.practiceTeaching.title', '讲解进入 Agent 动态，题目保持不动')}</strong><small>{t('agent.practiceTeaching.hint', '第 {number} 题答错后匹配的已审核交互微课').replace('{number}', String(visiblePracticeTeachingEvent.questionNumber))}</small></div>
                           <button type="button" onClick={() => setPracticeTeachingEvent(null)} aria-label={t('agent.practiceTeaching.dismiss', '收起知识讲解')}><Icon name="lucide:x" /></button>
                         </header>
                         <TeachingAssetRenderer asset={visiblePracticeTeachingEvent.asset} roundId={visiblePracticeTeachingEvent.roundId} questionId={visiblePracticeTeachingEvent.questionId} />
@@ -2079,7 +2022,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                     </div>
                   </div>
                 )}
-                {learningWorkspace?.phase === 'report' && (
+                {!isSubjectQa && learningWorkspace?.phase === 'report' && (
                   <div className="agent-message-block assistant agent-chat-report-message">
                     <div className="agent-message-avatar"><span><Icon name="lucide:chart-no-axes-combined" /></span></div>
                     <div className="agent-message-content">
@@ -2107,7 +2050,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                     </div>
                   </div>
                 )}
-                {mockExamWorkspace?.phase === 'report' && (
+                {!isSubjectQa && mockExamWorkspace?.phase === 'report' && (
                   <div className="agent-message-block assistant agent-chat-report-message">
                     <div className="agent-message-avatar"><span><Icon name="lucide:clipboard-check" /></span></div>
                     <div className="agent-message-content">
@@ -2129,7 +2072,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                     <div className="agent-message-content"><span className="agent-message-author">{t('agent.message.agent', 'CSCA 学习 Agent')}</span><p><i /><i /><i />{runStatus}</p></div>
                   </div>
                 )}
-                {intervention && (
+                {!isSubjectQa && intervention && (
                   <InterventionCard
                     item={intervention}
                     onChanged={setIntervention}
@@ -2138,12 +2081,12 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                     onOpenTeaching={openTeachingWorkspace}
                   />
                 )}
-                {chatTeachingWorkspace && (
+                {!isSubjectQa && chatTeachingWorkspace && (
                   <div className="agent-message-block assistant agent-chat-teaching-message">
                     <div className="agent-message-avatar"><span><Icon name="lucide:graduation-cap" /></span></div>
                     <div className="agent-message-content">
                       <span className="agent-message-author">{t('agent.message.agent', 'CSCA 学习 Agent')}</span>
-                      <section className="agent-chat-teaching-panel agent-intervention-teaching-wrap" aria-label={t('agent.intervention.chatWorkspaceAria', '聊天区知识讲解')}>
+                      <section className="agent-chat-teaching-panel agent-intervention-teaching-wrap" aria-label={t('agent.intervention.chatWorkspaceAria', 'Agent 动态知识讲解')}>
                         <header className="agent-chat-teaching-header">
                           <div><span>{t('agent.intervention.chatKicker', '随时可用的学习辅助')}</span><strong>{chatTeachingWorkspace.content.title || chatTeachingWorkspace.content.topicTitle}</strong><small>{t('agent.intervention.chatHint', '当前任务保持在旁边；你可以边做边看，也可以稍后继续')}</small></div>
                           <button type="button" onClick={closeTeachingWorkspace} aria-label={t('agent.practiceTeaching.dismiss', '收起知识讲解')}><Icon name="lucide:x" /></button>
@@ -2162,7 +2105,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                     </div>
                   </div>
                 )}
-                {interventionVerification && conversation && (
+                {!isSubjectQa && interventionVerification && conversation && (
                   <InterventionVerificationCard
                     key={interventionVerification.id}
                     item={interventionVerification}
@@ -2174,93 +2117,16 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
             )}
           </div>
 
-          <form className="agent-composer" onSubmit={submit}>
-            <label className="agent-composer-label" htmlFor="agent-message">{t('agent.composer.label', '向学习 Agent 提问')}</label>
-            <div
-              className="agent-composer-box"
-              onDragOver={(event) => { event.preventDefault(); event.dataTransfer.dropEffect = 'copy'; }}
-              onDrop={(event) => { event.preventDefault(); void addFiles(event.dataTransfer.files); }}
-              onPaste={(event) => {
-                const files = Array.from(event.clipboardData.files);
-                if (files.length) { event.preventDefault(); void addFiles(files); }
-              }}
-            >
-              <input
-                ref={fileInputRef}
-                className="agent-file-input"
-                type="file"
-                multiple
-                accept=".pdf,.docx,.png,.jpg,.jpeg,.webp,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/png,image/jpeg,image/webp"
-                onChange={(event) => {
-                  if (event.target.files) void addFiles(event.target.files);
-                  event.target.value = '';
-                }}
-              />
-              {!!draftAttachments.length && (
-                <div className="agent-attachment-queue" aria-label={t('agent.attachment.queue', '待发送附件')}>
-                  {draftAttachments.map((item) => {
-                    const busy = ['uploading', 'uploaded', 'extracting'].includes(item.status);
-                    const failed = ['failed', 'rejected'].includes(item.status);
-                    return (
-                      <div key={item.id} className={`agent-attachment-item ${failed ? 'failed' : ''}`}>
-                        <span className="agent-attachment-icon"><Icon name={item.kind === 'image' ? 'lucide:image' : 'lucide:file-text'} /></span>
-                        <span className="agent-attachment-copy">
-                          <strong>{item.name}</strong>
-                          <small>
-                            {item.status === 'uploading'
-                              ? `${t('agent.attachment.uploading', '上传中')} ${item.progress ?? 0}%`
-                              : item.status === 'extracting' || item.status === 'uploaded'
-                                ? t('agent.attachment.parsing', '正在识别文档')
-                                : failed ? item.error?.message : [formatFileSize(item.sizeBytes), item.pageCount ? `${item.pageCount} ${t('agent.attachment.pages', '页')}` : ''].filter(Boolean).join(' · ')}
-                          </small>
-                          {item.status === 'uploading' && <i style={{ width: `${item.progress ?? 0}%` }} />}
-                        </span>
-                        <span className="agent-attachment-actions">
-                          {item.previewUrl && <button type="button" onClick={() => void previewAgentAttachment(item)} aria-label={t('agent.attachment.preview', '预览')}><Icon name="lucide:eye" /></button>}
-                          {failed && !item.localId && <button type="button" onClick={() => void retryAttachment(item)} aria-label={t('agent.attachment.retry', '重试')}><Icon name="lucide:refresh-cw" /></button>}
-                          <button type="button" disabled={busy} onClick={() => void removeAttachment(item)} aria-label={t('agent.attachment.remove', '移除')}><Icon name="lucide:x" /></button>
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-              {draftPageContext && (
-                <div className="agent-composer-context" aria-label={t('agent.pastPaper.boundContext', '已绑定真题题目上下文')}>
-                  <Icon name="lucide:scan-search" />
-                  <span><strong>{t('agent.pastPaper.boundQuestion', '已绑定当前真题题目')}</strong><small>{t('agent.pastPaper.boundQuestionHint', '发送时由服务端重新核验题号、页码和来源')}</small></span>
-                  <button type="button" onClick={() => setDraftPageContext(null)} aria-label={t('agent.pastPaper.removeContext', '移除真题上下文')}><Icon name="lucide:x" /></button>
-                </div>
-              )}
-              {!draftPageContext && learningWorkspace?.phase === 'practice' && practiceQuestionContext && (
-                <div className="agent-practice-composer-context" aria-label={t('agent.practiceAssistance.context', '当前练习题上下文')}>
-                  <div className="agent-practice-context-copy">
-                    <Icon name="lucide:focus" />
-                    <span>
-                      <strong>{t('agent.practiceAssistance.currentQuestion', '当前第 {current}/{total} 题').replace('{current}', String(practiceQuestionContext.questionNumber)).replace('{total}', String(practiceQuestionContext.questionCount))}</strong>
-                      <small>{practiceQuestionContext.topicTitle} · {t('agent.practiceAssistance.serverVerified', '发送时由服务端重新核验题目上下文')}</small>
-                    </span>
-                  </div>
-                  <div className="agent-practice-context-actions">
-                    <button type="button" disabled={Boolean(practiceAssistanceBusy) || practiceQuestionContext.availableActions.find((item) => item.action === 'recall_concept')?.enabled !== true} onClick={() => requestPracticeAssistance('recall_concept')}>
-                      <Icon name="lucide:book-open" /><span>{t('agent.practiceAssistance.recall', '回忆知识点')}</span>
-                    </button>
-                    <button type="button" disabled={Boolean(practiceAssistanceBusy) || practiceQuestionContext.answered || practiceQuestionContext.availableActions.find((item) => item.action === 'next_step_hint')?.enabled !== true} onClick={() => requestPracticeAssistance('next_step_hint')}>
-                      <Icon name="lucide:route" /><span>{t('agent.practiceAssistance.nextHint', '下一步提示')}</span>
-                    </button>
-                    <button type="button" disabled={Boolean(practiceAssistanceBusy)} onClick={() => requestPracticeAssistance('check_work')}>
-                      <Icon name="lucide:scan-line" /><span>{t('agent.practiceAssistance.checkWork', '检查手写过程')}</span>
-                    </button>
-                  </div>
-                </div>
-              )}
+          {isSubjectQa && <form className="agent-composer agent-subject-qa-composer" onSubmit={submit}>
+            <label className="agent-composer-label" htmlFor="agent-message">{t('agent.subjectQa.composerLabel', '询问数学、物理或化学')}</label>
+            <div className="agent-composer-box">
               <textarea
                 ref={composerInputRef}
                 id="agent-message"
                 value={draft}
                 rows={1}
                 maxLength={8000}
-                placeholder={t('agent.composer.placeholder', '问我今天该学什么…')}
+                placeholder={t('agent.subjectQa.placeholder', '例如：为什么加速度可以是负数？')}
                 disabled={isSending}
                 onChange={(event) => setDraft(event.target.value)}
                 onKeyDown={(event) => {
@@ -2272,28 +2138,24 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
               />
               <div className="agent-composer-toolbar">
                 <div className="agent-composer-tools">
-                  <button type="button" className="agent-attach-button" disabled={isSending || draftAttachments.length >= attachmentLimits.maxFilesPerMessage} onClick={() => fileInputRef.current?.click()} title={t('agent.composer.attachmentHint', '上传 PDF、DOCX 或图片')}>
-                    <Icon name="lucide:paperclip" />
-                    <span>{t('agent.composer.attach', '添加附件')}</span>
-                  </button>
-                  <span className="agent-mode-chip"><Icon name="lucide:sparkles" />{t('agent.composer.mode', '学习模式')}</span>
+                  <span className="agent-mode-chip"><Icon name="lucide:shield-check" />{t('agent.subjectQa.scope', '仅限数学、物理和化学')}</span>
                 </div>
-                <button type="submit" className="agent-send-button" disabled={(!draft.trim() && !draftAttachments.some((item) => item.status === 'ready')) || draftAttachments.some((item) => ['uploading', 'uploaded', 'extracting'].includes(item.status)) || isSending} aria-label={t('agent.composer.send', '发送')}>
+                <button type="submit" className="agent-send-button" disabled={!draft.trim() || isSending} aria-label={t('agent.composer.send', '发送')}>
                   <Icon name={isSending ? 'lucide:loader-circle' : 'lucide:arrow-up'} />
                 </button>
               </div>
             </div>
-            <small>{t('agent.composer.helper', '可拖放或粘贴 PDF、DOCX、PNG、JPEG、WebP；文件仅对你的当前对话可见。')}</small>
-          </form>
+            <small>{t('agent.subjectQa.helper', '仅支持文字提问；自由问答不会改变掌握度。学习计划、做题、进度和设置请返回学习工作台。')}</small>
+          </form>}
         </main>
 
-        {journeySection === 'settings' ? (
+        {journeySection === 'qa' ? null : journeySection === 'settings' ? (
           <aside className="agent-task-rail agent-settings-task-rail" aria-label={t('agent.settings.workspaceAria', 'Agent 学习设置工作区')}>
             {taskRailPosition === 'right' ? taskRailResizeHandle : null}
             <div className="agent-task-rail-header">
               <div><span className="agent-kicker">{t('agent.settings.kicker', 'Agent 使用的信息')}</span><strong>{t('agent.settings.title', '目标、画像与学习时间')}</strong><small>{t('agent.settings.hint', '保存后用于后续方案；不会改写已经发生的学习证据')}</small></div>
               <div className="agent-task-rail-actions">
-                <button type="button" onClick={toggleTaskRailPosition} aria-label={taskRailPosition === 'right' ? t('agent.workspace.moveTaskCenter', '将任务移到中间') : t('agent.workspace.moveChatCenter', '将聊天移到中间')} title={t('agent.workspace.swap', '交换聊天与任务位置')}><Icon name="lucide:arrow-left-right" /></button>
+                <button type="button" onClick={toggleTaskRailPosition} aria-label={taskRailPosition === 'right' ? t('agent.workspace.moveTaskCenter', '将任务移到中间') : t('agent.workspace.moveChatCenter', '将工作台移到中间')} title={t('agent.workspace.swap', '交换工作台与任务位置')}><Icon name="lucide:arrow-left-right" /></button>
                 <button type="button" onClick={closeSettingsWorkspace} aria-label={t('agent.workspace.close', '关闭任务面板')}><Icon name="lucide:x" /></button>
               </div>
             </div>
@@ -2316,7 +2178,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                 <small>{standaloneTeachingWorkspace.content.topicTitle} · {t('agent.intervention.workspaceHint', '完成讲解后将安排独立新题验证')}</small>
               </div>
               <div className="agent-task-rail-actions">
-                <button type="button" onClick={toggleTaskRailPosition} aria-label={taskRailPosition === 'right' ? t('agent.workspace.moveTaskCenter', '将任务移到中间') : t('agent.workspace.moveChatCenter', '将聊天移到中间')} title={t('agent.workspace.swap', '交换聊天与任务位置')}><Icon name="lucide:arrow-left-right" /></button>
+                <button type="button" onClick={toggleTaskRailPosition} aria-label={taskRailPosition === 'right' ? t('agent.workspace.moveTaskCenter', '将任务移到中间') : t('agent.workspace.moveChatCenter', '将工作台移到中间')} title={t('agent.workspace.swap', '交换工作台与任务位置')}><Icon name="lucide:arrow-left-right" /></button>
                 <button type="button" onClick={closeTeachingWorkspace} aria-label={t('agent.workspace.close', '关闭任务面板')}><Icon name="lucide:x" /></button>
               </div>
             </div>
@@ -2343,7 +2205,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                 {workspaceArtifact?.summary ? <small>{workspaceArtifact.summary}</small> : null}
               </div>
               <div className="agent-task-rail-actions">
-                <button type="button" onClick={toggleTaskRailPosition} aria-label={taskRailPosition === 'right' ? t('agent.workspace.moveTaskCenter', '将任务移到中间') : t('agent.workspace.moveChatCenter', '将聊天移到中间')} title={t('agent.workspace.swap', '交换聊天与任务位置')}><Icon name="lucide:arrow-left-right" /></button>
+                <button type="button" onClick={toggleTaskRailPosition} aria-label={taskRailPosition === 'right' ? t('agent.workspace.moveTaskCenter', '将任务移到中间') : t('agent.workspace.moveChatCenter', '将工作台移到中间')} title={t('agent.workspace.swap', '交换工作台与任务位置')}><Icon name="lucide:arrow-left-right" /></button>
                 {workspaceTaskType === 'free_practice' && <button type="button" disabled={freePracticeContinuationBusy !== null} onClick={() => void endFreePracticeJourney()} aria-label={t('agent.freePractice.end', '结束本次学习')} title={t('agent.freePractice.end', '结束本次学习')}><Icon name="lucide:square" /></button>}
                 <button type="button" onClick={() => void handleLearningWorkspaceNavigation(`${routes.cscaSubjects}/close`)} aria-label={t('agent.workspace.close', '关闭任务面板')}><Icon name="lucide:x" /></button>
               </div>
@@ -2379,7 +2241,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                 {workspaceArtifact?.summary ? <small>{workspaceArtifact.summary}</small> : null}
               </div>
               <div className="agent-task-rail-actions">
-                <button type="button" onClick={toggleTaskRailPosition} aria-label={taskRailPosition === 'right' ? t('agent.workspace.moveTaskCenter', '将任务移到中间') : t('agent.workspace.moveChatCenter', '将聊天移到中间')} title={t('agent.workspace.swap', '交换聊天与任务位置')}><Icon name="lucide:arrow-left-right" /></button>
+                <button type="button" onClick={toggleTaskRailPosition} aria-label={taskRailPosition === 'right' ? t('agent.workspace.moveTaskCenter', '将任务移到中间') : t('agent.workspace.moveChatCenter', '将工作台移到中间')} title={t('agent.workspace.swap', '交换工作台与任务位置')}><Icon name="lucide:arrow-left-right" /></button>
                 <button type="button" onClick={() => void handleMockExamWorkspaceNavigation(routes.cscaMockExam)} aria-label={t('agent.workspace.close', '关闭任务面板')}><Icon name="lucide:x" /></button>
               </div>
             </div>
@@ -2393,7 +2255,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
             <div className="agent-task-rail-header">
               <div><span className="agent-kicker">{t('agent.pastPaper.kicker', '真题资料')}</span><strong>{t('agent.pastPaper.workspaceTitle', '阅读、定位与提问')}</strong></div>
               <div className="agent-task-rail-actions">
-                <button type="button" onClick={toggleTaskRailPosition} aria-label={taskRailPosition === 'right' ? t('agent.workspace.moveTaskCenter', '将任务移到中间') : t('agent.workspace.moveChatCenter', '将聊天移到中间')} title={t('agent.workspace.swap', '交换聊天与任务位置')}><Icon name="lucide:arrow-left-right" /></button>
+                <button type="button" onClick={toggleTaskRailPosition} aria-label={taskRailPosition === 'right' ? t('agent.workspace.moveTaskCenter', '将任务移到中间') : t('agent.workspace.moveChatCenter', '将工作台移到中间')} title={t('agent.workspace.swap', '交换工作台与任务位置')}><Icon name="lucide:arrow-left-right" /></button>
                 <button type="button" onClick={() => closePastPaperWorkspace(pastPaperWorkspace.conversationId)} aria-label={t('agent.workspace.close', '关闭任务面板')}><Icon name="lucide:x" /></button>
               </div>
             </div>

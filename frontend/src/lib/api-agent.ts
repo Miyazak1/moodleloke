@@ -10,6 +10,8 @@ export type AgentMessageContent = {
   schemaVersion: '1';
   text: string;
   locale?: 'zh-CN' | 'en';
+  surface?: 'learning_workspace' | 'subject_qa';
+  subjectQa?: { decision: 'answer' | 'out_of_scope' | 'unavailable'; subject: 'math' | 'physics' | 'chemistry' | null; generatedByAI: boolean; masteryChanged: false };
   artifactIds?: string[];
   pageContext?: unknown;
   attachmentIds?: string[];
@@ -776,6 +778,7 @@ export function submitAgentMessage(
     clientRequestId: string;
     text: string;
     locale: 'zh-CN' | 'en';
+    surface?: 'learning_workspace' | 'subject_qa';
     attachmentIds?: string[];
     pageContext?: {
       route: string;

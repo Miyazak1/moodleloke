@@ -217,7 +217,7 @@ test('recovers the Agent workspace automatically after a transient backend outag
   expect(conversationListAttempts).toBeGreaterThanOrEqual(2);
 });
 
-test('keeps the latest Agent message anchored directly above the composer', async ({ page }) => {
+test('keeps the latest Agent activity anchored at the end of the workbench', async ({ page }) => {
   await mockAgentWorkspace(page);
   const longConversation = {
     ...conversation,
@@ -248,33 +248,85 @@ test('keeps the latest Agent message anchored directly above the composer', asyn
     const scroller = document.querySelector('.agent-thread-scroll')!.getBoundingClientRect();
     const latestMessages = document.querySelectorAll('.agent-message-list > .agent-message-block');
     const latest = latestMessages[latestMessages.length - 1]!.getBoundingClientRect();
-    const composer = document.querySelector('.agent-composer')!.getBoundingClientRect();
-    return { latestBottom: latest.bottom, scrollerBottom: scroller.bottom, composerTop: composer.top };
+    return { latestBottom: latest.bottom, scrollerBottom: scroller.bottom };
   });
   expect(positions.latestBottom).toBeLessThanOrEqual(positions.scrollerBottom + 1);
-  expect(positions.scrollerBottom).toBeLessThanOrEqual(positions.composerTop + 1);
 });
 
-test('keeps journey navigation, thread, plan action, and composer usable on each viewport', async ({ page }) => {
+test('keeps the workbench and standalone subject Q&A usable on each viewport', async ({ page }) => {
   await mockAgentWorkspace(page);
   await page.goto('/zh/agent');
   for (const locator of [
     page.getByRole('button', { name: '下一步', exact: true }),
-    page.getByRole('button', { name: /开始这项任务/ }),
-    page.getByLabel('向学习 Agent 提问'),
-    page.getByRole('button', { name: '发送' })
+    page.getByRole('button', { name: /开始这项任务/ })
   ]) {
     const box = await locator.boundingBox();
     expect(box?.width ?? 0).toBeGreaterThanOrEqual(32);
     expect(box?.height ?? 0).toBeGreaterThanOrEqual(32);
   }
+  await expect(page.getByLabel('Agent 学习动态')).toBeVisible();
+  await expect(page.locator('.agent-composer')).toHaveCount(0);
+  await page.getByRole('button', { name: '学科问答', exact: true }).click();
+  const questionInput = page.getByLabel('询问数学、物理或化学');
+  await expect(questionInput).toBeVisible();
   await expect(page.getByRole('button', { name: '发送' })).toBeDisabled();
-  await expect(page.locator('.agent-attach-button')).toBeEnabled();
-  await expect(page.locator('.agent-file-input')).toBeHidden();
+  await expect(page.getByText('仅支持文字提问；自由问答不会改变掌握度。')).toBeVisible();
   await expect(page.getByRole('button', { name: '新建学习对话' })).toHaveCount(0);
   const composer = await page.locator('.agent-composer').boundingBox();
   const viewport = page.viewportSize();
   expect((composer?.y ?? 0) + (composer?.height ?? 0)).toBeLessThanOrEqual(viewport?.height ?? 0);
+});
+
+test('keeps subject Q&A separate from the learning workspace and preserves its boundary', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the subject Q&A request contract.');
+  await mockAgentWorkspace(page);
+  let submitted = false;
+  let submittedBody: Record<string, unknown> | null = null;
+  const qaConversation = {
+    ...conversation,
+    messages: [
+      ...conversation.messages,
+      {
+        id: 'qa-user-1', conversationId, role: 'user', runId, clientMessageId: 'qa-client-1', createdAt: '2026-09-13T09:00:00.000Z',
+        content: { schemaVersion: '1', surface: 'subject_qa', text: '为什么加速度可以是负数？' }
+      },
+      {
+        id: 'qa-assistant-1', conversationId, role: 'assistant', runId, clientMessageId: null, createdAt: '2026-09-13T09:00:01.000Z',
+        content: {
+          schemaVersion: '1', surface: 'subject_qa', text: '负号表示加速度方向与选定的正方向相反，并不表示加速度大小小于零。',
+          subjectQa: { decision: 'answer', subject: 'physics', generatedByAI: true, masteryChanged: false }
+        }
+      }
+    ]
+  };
+  await page.route(new RegExp(`/api/v1/agent/conversations/${conversationId}/messages(?:\\?.*)?$`), async (route) => {
+    submittedBody = await route.request().postDataJSON();
+    submitted = true;
+    return json(route, { messageId: 'qa-user-1', runId, status: 'queued', eventsUrl: `/api/v1/agent/runs/${runId}/events` });
+  });
+  await page.route(new RegExp(`/api/v1/agent/runs/${runId}/events(?:\\?.*)?$`), (route) => {
+    const event = { eventId: 'qa-event-1', runId, conversationId, sequence: 1, type: 'run.completed', createdAt: '2026-09-13T09:00:01.000Z', data: {} };
+    return route.fulfill({ status: 200, contentType: 'text/event-stream', body: `id: 1\ndata: ${JSON.stringify(event)}\n\n` });
+  });
+  await page.route(new RegExp(`/api/v1/agent/conversations/${conversationId}(?:\\?.*)?$`), (route) => json(route, submitted ? qaConversation : conversation));
+
+  await page.goto('/zh/agent');
+  await expect(page.locator('.agent-composer')).toHaveCount(0);
+  await page.getByRole('button', { name: '学科问答', exact: true }).click();
+  await expect(page.getByRole('heading', { name: '有学科问题，直接问。' })).toBeVisible();
+  await page.getByLabel('询问数学、物理或化学').fill('为什么加速度可以是负数？');
+  await page.getByRole('button', { name: '发送' }).click();
+  await expect(page.getByText('负号表示加速度方向与选定的正方向相反，并不表示加速度大小小于零。')).toBeVisible();
+  expect(submittedBody).toMatchObject({ surface: 'subject_qa', text: '为什么加速度可以是负数？' });
+  expect(submittedBody).not.toHaveProperty('pageContext');
+  expect(submittedBody).toMatchObject({ attachmentIds: [] });
+  await expect(page.getByText('自由问答，不改变掌握度')).toBeVisible();
+
+  await page.getByRole('button', { name: '下一步', exact: true }).click();
+  await expect(page.getByLabel('Agent 学习动态')).toBeVisible();
+  await expect(page.locator('.agent-composer')).toHaveCount(0);
+  await page.getByRole('button', { name: '学科问答', exact: true }).click();
+  await expect(page.getByText('负号表示加速度方向与选定的正方向相反，并不表示加速度大小小于零。')).toBeVisible();
 });
 
 test('falls back to a temporary free-practice entry when the recommended task lacks supply', async ({ page }, testInfo) => {
@@ -324,7 +376,7 @@ test('restores an active verification without an artifact or saved browser URL',
   await expect(page).toHaveURL(new RegExp('agentInterventionVerificationId=verification-1'));
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
   await expect(page.getByText('阶段验证 · 数学')).toBeVisible();
-  await expect(page.getByLabel('向学习 Agent 提问')).toBeVisible();
+  await expect(page.getByLabel('Agent 学习动态')).toBeVisible();
 });
 
 test('stops polling and exits an unavailable restored round', async ({ page }, testInfo) => {
@@ -366,7 +418,7 @@ test('resumes an unfinished stage selected from learning history', async ({ page
   await page.getByRole('button', { name: /数学短诊断/ }).click();
   await expect(page).toHaveURL(new RegExp('agentRoundId=81'));
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
-  await expect(page.getByLabel('向学习 Agent 提问')).toBeVisible();
+  await expect(page.getByLabel('Agent 学习动态')).toBeVisible();
 });
 
 test('starts student-initiated free practice without turning it into a recommended plan', async ({ page }, testInfo) => {
@@ -474,7 +526,7 @@ test('separates learning settings from account settings and restores the workspa
   await page.getByRole('button', { name: '学习设置', exact: true }).click();
   await expect(page.getByLabel('Agent 学习设置工作区')).toBeVisible();
   await expect(page.getByRole('heading', { name: '你希望 Agent 默认怎样开始' })).toBeVisible();
-  await expect(page.getByLabel('Agent 学习设置工作区')).toContainText('任务区只用于正在作答，讲解、动画和学习结果回到聊天中');
+  await expect(page.getByLabel('Agent 学习设置工作区')).toContainText('讲解、动画和学习结果进入 Agent 动态。学科问答独立保留');
   await page.locator('.agent-settings-learning-mode').getByRole('button', { name: /自由练习/ }).click();
   expect(await page.evaluate(() => window.localStorage.getItem('moodlelike.agent.learningMode'))).toBe('free');
   await page.getByRole('button', { name: '学习画像', exact: true }).click();
@@ -484,7 +536,7 @@ test('separates learning settings from account settings and restores the workspa
   if (testInfo.project.name === 'mobile') {
     await page.keyboard.press('Escape');
     await expect(page.getByLabel('Agent 学习设置工作区')).toHaveCount(0);
-    await expect(page.getByLabel('向学习 Agent 提问')).toBeFocused();
+    await expect(page.getByRole('button', { name: '下一步', exact: true })).toHaveAttribute('aria-current', 'page');
   } else {
     const separator = page.getByRole('separator', { name: '调整任务面板宽度' });
     await separator.press('ArrowLeft');
@@ -497,11 +549,11 @@ test('separates learning settings from account settings and restores the workspa
     await expect(page.locator('.agent-workspace')).toHaveClass(/is-task-first/);
     await page.getByRole('button', { name: '关闭任务面板' }).click();
     await expect(page.getByLabel('Agent 学习设置工作区')).toHaveCount(0);
-    await expect(page.getByLabel('向学习 Agent 提问')).toBeFocused();
+    await expect(page.getByRole('button', { name: '下一步', exact: true })).toHaveAttribute('aria-current', 'page');
     await page.getByRole('button', { name: '学习设置', exact: true }).click();
     await page.keyboard.press('Escape');
     await expect(page.getByLabel('Agent 学习设置工作区')).toHaveCount(0);
-    await expect(page.getByLabel('向学习 Agent 提问')).toBeFocused();
+    await expect(page.locator('.agent-composer')).toHaveCount(0);
     await expect(page.getByRole('button', { name: '个人设置', exact: true })).toBeVisible();
     await page.getByRole('button', { name: '个人设置', exact: true }).click();
     await expect(page).toHaveURL(/\/zh\/me\?section=settings$/);
@@ -588,7 +640,7 @@ test('keeps learning settings open when a versioned save conflicts', async ({ pa
   await page.getByRole('button', { name: '保存学习时间', exact: true }).click();
   await expect(page.locator('.agent-settings-status')).toContainText('学习时间暂时无法保存，请刷新后重试');
   await expect(page.getByLabel('Agent 学习设置工作区')).toBeVisible();
-  await expect(page.getByLabel('向学习 Agent 提问')).toBeVisible();
+  await expect(page.locator('.agent-composer')).toHaveCount(0);
 });
 
 test('submits the recommended prompt and consumes the resumable event stream', async ({ page }, testInfo) => {
@@ -704,11 +756,11 @@ test('keeps free-practice defaults separate and preserves the current batch when
   await expect(page.getByRole('alert')).toContainText('学习结果还没有载入');
   await expect(page.getByRole('alert')).toContainText('本轮结果暂时无法加载');
   await page.getByRole('button', { name: '重试加载' }).click();
-  await expect(page.getByLabel('聊天区学习报告')).toBeVisible();
+  await expect(page.getByLabel('Agent 动态学习报告')).toBeVisible();
   await expect(page.getByText('结果、学习证据与下一步')).toBeVisible();
   await expect(page.getByText('先处理一个最关键的薄弱点。')).toBeVisible();
   await expect(page.getByText('你答对 2/5 题，目前最值得优先复盘的是“函数与方程”。')).toBeVisible();
-  await expect(page.getByLabel('聊天区学习报告')).toContainText('作答证据5 项');
+  await expect(page.getByLabel('Agent 动态学习报告')).toContainText('作答证据5 项');
   await expect(page.getByRole('button', { name: '继续下一批' })).toBeVisible();
   await expect(page.getByText('一次函数中 x 的系数是斜率。')).toBeHidden();
   await expect(page.getByLabel('Agent 学习任务工作区')).toHaveCount(0);
@@ -725,13 +777,13 @@ test('keeps free-practice defaults separate and preserves the current batch when
   await expect(page.getByRole('button', { name: '下一步', exact: true })).toHaveAttribute('aria-current', 'page');
   await expect(page).toHaveURL(/agentRoundId=82/);
   expect(continuationBody).toMatchObject({ subject: 'math', questionCount: 5, questionLanguage: 'zh' });
-  await expect(page.getByLabel('向学习 Agent 提问')).toBeVisible();
+  await expect(page.locator('.agent-composer')).toHaveCount(0);
   expect(reportAttempts).toBe(2);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });
 
-test('binds the active practice question to the composer and renders assistance in the chat', async ({ page }, testInfo) => {
+test('keeps the active question stable while rendering assistance in Agent activity', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the contextual assistance contract.');
   await mockAgentWorkspace(page);
   const now = '2026-09-15T10:00:00.000Z';
@@ -802,7 +854,7 @@ test('binds the active practice question to the composer and renders assistance 
   await expect(page.locator('.agent-practice-assistance-message')).toContainText('一次函数 y=kx+b 中，k 表示斜率。');
   expect(requestedAction).toBe('recall_concept');
   await page.getByLabel('Agent 学习任务工作区').getByRole('button', { name: 'A 1', exact: true }).click();
-  await expect(page.getByLabel('当前题知识讲解')).toContainText('把讲解留在聊天区，题目保持不动');
+  await expect(page.getByLabel('当前题知识讲解')).toContainText('讲解进入 Agent 动态，题目保持不动');
   await expect(page.getByLabel('Agent 学习任务工作区').locator('.agent-micro-lesson-card')).toHaveCount(0);
   await page.reload();
   await expect(page.locator('.agent-practice-assistance-message')).toContainText('一次函数 y=kx+b 中，k 表示斜率。');
@@ -929,13 +981,13 @@ test('starts a recommended mock exam and keeps the timed attempt inside the Agen
   await page.getByRole('button', { name: '交卷', exact: true }).click();
   await page.getByRole('button', { name: '确认交卷', exact: true }).click();
   await expect(page).toHaveURL(new RegExp(`/zh/agent\\?.*agentView=mock-report`));
-  await expect(page.getByLabel('聊天区模考报告')).toBeVisible();
+  await expect(page.getByLabel('Agent 动态模考报告')).toBeVisible();
   await expect(page.getByText('模考结果与下一步建议')).toBeVisible();
   await expect(page.getByLabel('Agent 在线模考工作区')).toHaveCount(0);
   await expect(page.locator('.agent-context-rail')).toHaveCount(0);
   await expect(page.getByText('这套卷完成得比较稳定。')).toBeVisible();
-  await expect(page.getByLabel('聊天区模考报告')).toContainText('正确1/1');
-  await expect(page.getByLabel('聊天区模考报告')).toContainText('总用时1:00');
+  await expect(page.getByLabel('Agent 动态模考报告')).toContainText('正确1/1');
+  await expect(page.getByLabel('Agent 动态模考报告')).toContainText('总用时1:00');
   await expect(page.getByText('Agent 建议')).toBeVisible();
   await expect(page.getByText('成绩已记录；学习证据同步未完成，可重试同步或先复盘错题。')).toBeVisible();
   await page.getByRole('button', { name: '重试同步' }).click();
@@ -943,7 +995,7 @@ test('starts a recommended mock exam and keeps the timed attempt inside the Agen
   await expect(page.getByRole('button', { name: /返回套卷列表/ })).toHaveCount(0);
   expect(settlementAttempts).toBe(2);
   await page.reload();
-  await expect(page.getByLabel('聊天区模考报告')).toBeVisible();
+  await expect(page.getByLabel('Agent 动态模考报告')).toBeVisible();
   await expect(page.getByLabel('Agent 在线模考工作区')).toHaveCount(0);
   await page.getByRole('button', { name: '开始建议任务' }).click();
   await expect(page).toHaveURL(new RegExp(`/zh/agent\\?conversation=${conversationId}$`));
@@ -977,7 +1029,7 @@ test('opens an intervention verification inside the Agent workspace', async ({ p
   await expect(page.getByText('在 Agent 内完成练习')).toBeVisible();
 });
 
-test('keeps active practice mounted while a teaching lesson opens in chat', async ({ page }, testInfo) => {
+test('keeps active practice mounted while a teaching lesson opens in Agent activity', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the teaching and practice workspace contract.');
   await mockAgentWorkspace(page);
   const deliveryId = 'delivery-teaching-1';
@@ -1038,19 +1090,19 @@ test('keeps active practice mounted while a teaching lesson opens in chat', asyn
   await expect(page).toHaveURL(new RegExp(`agentTeachingDeliveryId=${deliveryId}`));
   await expect(page).toHaveURL(/agentRoundId=81/);
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
-  await expect(page.getByLabel('聊天区知识讲解')).toBeVisible();
+  await expect(page.getByLabel('Agent 动态知识讲解')).toBeVisible();
   await expect(page.getByLabel('Agent 知识讲解工作区')).toHaveCount(0);
   await expect(page.locator('.agent-intervention-card')).toContainText('继续学习');
 
   await page.reload();
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
-  await expect(page.getByLabel('聊天区知识讲解')).toBeVisible();
+  await expect(page.getByLabel('Agent 动态知识讲解')).toBeVisible();
   await page.getByRole('button', { name: '开始讲解' }).click();
   await page.getByRole('radio', { name: '向右平移 2' }).check();
   await page.getByRole('button', { name: '检查我的判断' }).click();
   await expect(page.getByText('正确，括号内减 2 表示图像向右平移。')).toBeVisible();
   await page.getByRole('button', { name: '我理解了，完成微课' }).click();
-  await expect(page.getByLabel('聊天区知识讲解')).toHaveCount(0);
+  await expect(page.getByLabel('Agent 动态知识讲解')).toHaveCount(0);
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
   await expect(page.getByRole('button', { name: /开始验证/ })).toBeVisible();
 });
@@ -1181,9 +1233,9 @@ test('opens a grounded past paper inside the Agent workspace', async ({ page }, 
     decision: { status: 'ready', prescriptionId: 'rx-review', reasonSummary: 'Review the highest-priority gap.', confidence: 'high', estimatedMinutes: 15, primaryTask: { type: 'review', subject: 'chemistry', topicIds: [12], questionCount: 5, priority: 1 } },
     provenance: { resultSource: 'agent_past_paper_attempts', nextTaskSource: 'learning_prescription', automaticQuestionGenerationInvoked: false }
   }));
-  let submittedPageContext: Record<string, unknown> | null = null;
+  let submittedMessageBody: Record<string, unknown> | null = null;
   await page.route(new RegExp(`/api/v1/agent/conversations/${conversationId}/messages(?:\\?.*)?$`), async (route) => {
-    submittedPageContext = (await route.request().postDataJSON()).pageContext ?? null;
+    submittedMessageBody = await route.request().postDataJSON();
     return json(route, { messageId: 'message-question', runId, status: 'queued', eventsUrl: `/api/v1/agent/runs/${runId}/events` });
   });
 
@@ -1215,10 +1267,7 @@ test('opens a grounded past paper inside the Agent workspace', async ({ page }, 
   await expect(page.getByLabel('整卷复盘')).toContainText('100%');
   await expect(page.getByText(/优先巩固.*酸碱反应/)).toBeVisible();
   await page.getByRole('button', { name: /让 Agent 安排下一步/ }).click();
-  await expect(page.getByLabel('向学习 Agent 提问')).toHaveValue(/接下来学什么/);
-  await page.getByRole('button', { name: '发送' }).click();
-  await expect.poll(() => submittedPageContext).toMatchObject({
-    entityRef: { type: 'past_paper', id: 'chemistry-2026-01' },
-    selectedQuestionId: 7102
-  });
+  await expect(page.getByRole('button', { name: '下一步', exact: true })).toHaveAttribute('aria-current', 'page');
+  await expect.poll(() => submittedMessageBody).toMatchObject({ surface: 'learning_workspace' });
+  expect(submittedMessageBody).not.toHaveProperty('pageContext');
 });

@@ -10,6 +10,7 @@ import { AgentIntentRouterService, AgentRoutingDecision } from './agent-intent-r
 import { AgentIntent, AgentResolvedIntent } from './agent.types';
 import { AgentGroundedFact, AgentGroundedResponseService } from './agent-grounded-response.service';
 import { AgentPastPaperQuestionService } from './agent-past-paper-question.service';
+import { AgentSubjectQaService } from './agent-subject-qa.service';
 
 type InputSnapshot = {
   schemaVersion: '1';
@@ -17,6 +18,7 @@ type InputSnapshot = {
   text: string;
   locale: 'zh-CN' | 'en';
   clientRequestId: string;
+  surface?: 'learning_workspace' | 'subject_qa';
   attachmentIds?: string[];
   pageContext?: unknown;
 };
@@ -64,7 +66,8 @@ export class AgentRunnerService {
     @Optional() private readonly supplyRequests?: QuestionSupplyRequestService,
     @Optional() private readonly intentRouter?: AgentIntentRouterService,
     @Optional() private readonly groundedResponses?: AgentGroundedResponseService,
-    @Optional() private readonly pastPaperQuestions?: AgentPastPaperQuestionService
+    @Optional() private readonly pastPaperQuestions?: AgentPastPaperQuestionService,
+    @Optional() private readonly subjectQa?: AgentSubjectQaService
   ) {}
 
   dispatch(runId: string, userId: number): void {
@@ -103,6 +106,30 @@ export class AgentRunnerService {
       await this.prisma.$transaction((tx) => this.events.append(tx, {
         runId, conversationId: run.conversationId, eventKey: 'run:started', eventType: 'run.started', data: {}
       }));
+      if (input.surface === 'subject_qa') {
+        const historyRows = await this.prisma.agentMessage.findMany({
+          where: { conversationId: run.conversationId },
+          orderBy: { createdAt: 'desc' },
+          take: 20,
+          select: { role: true, content: true, runId: true }
+        });
+        const history = historyRows.reverse().flatMap((message) => {
+          if (message.role !== 'user' && message.role !== 'assistant') return [];
+          if (message.role === 'user' && message.runId === run.id) return [];
+          const content = message.content as Record<string, unknown> | null;
+          if (content?.surface !== 'subject_qa' || typeof content.text !== 'string') return [];
+          return [{ role: message.role as 'user' | 'assistant', text: content.text }];
+        });
+        const response = this.subjectQa
+          ? await this.subjectQa.answer({ runId: run.id, userId: run.userId, locale: input.locale, question: input.text, history })
+          : { text: input.locale === 'zh-CN' ? '学科问答暂时无法连接。你仍可以返回学习工作台继续做题。' : 'Subject Q&A is temporarily unavailable. You can still return to the learning workspace and continue practicing.', decision: 'unavailable' as const, subject: null, generatedByAI: false };
+        await this.prisma.$transaction((tx) => this.events.append(tx, {
+          runId, conversationId: run.conversationId, eventKey: 'plan:created', eventType: 'plan.created',
+          data: { intent: 'subject_qa', source: response.generatedByAI ? 'llm' : 'rule', confidence: 1, reasonCode: response.decision, routerVersion: 'agent-subject-qa-v1' }
+        }));
+        await this.complete(run, response.text, null, { surface: 'subject_qa', subjectQa: { decision: response.decision, subject: response.subject, generatedByAI: response.generatedByAI, masteryChanged: false } });
+        return;
+      }
       if (input.attachmentIds?.length) {
         await this.prisma.$transaction((tx) => this.events.append(tx, {
           runId, conversationId: run.conversationId, eventKey: 'plan:created', eventType: 'plan.created',

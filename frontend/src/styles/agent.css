@@ -684,6 +684,35 @@
 .agent-method-strip b { color: var(--agent-blue); font-size: 15px; font-variant-numeric: tabular-nums; }
 
 .agent-message-list { display: grid; width: min(900px, 100%); gap: 28px; margin: 0 auto; }
+.agent-activity-intro { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 11px; align-items: center; padding: 13px 14px; border: 1px solid rgba(19, 199, 163, .2); border-radius: 14px; background: linear-gradient(135deg, rgba(242, 255, 250, .95), rgba(244, 248, 255, .92)); }
+.agent-activity-intro > span { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 11px; background: linear-gradient(145deg, var(--agent-blue), var(--agent-mint)); color: #fff; }
+.agent-activity-intro svg { width: 18px; }
+.agent-activity-intro div { display: grid; gap: 3px; }
+.agent-activity-intro strong { color: var(--agent-ink); font-size: 13px; }
+.agent-activity-intro small { color: var(--agent-muted); font-size: 9px; line-height: 1.5; }
+.agent-message-list.is-activity-stream .agent-activity-event { grid-template-columns: 28px minmax(0, 1fr); padding-left: 4px; border-left: 2px solid rgba(49, 93, 255, .12); }
+.agent-message-list.is-activity-stream .agent-activity-event .agent-message-avatar > span { width: 27px; height: 27px; border-radius: 9px; }
+.agent-message-list.is-activity-stream .agent-activity-event .agent-message-author { text-transform: none; }
+.agent-subject-qa-empty { display: grid; width: min(680px, 100%); min-height: 100%; align-content: center; justify-items: start; margin: 0 auto; padding: 32px 0; }
+.agent-subject-qa-empty > span { display: grid; width: 54px; height: 54px; place-items: center; margin-bottom: 16px; border-radius: 16px; background: linear-gradient(145deg, var(--agent-blue), var(--agent-mint)); color: #fff; box-shadow: 0 14px 30px rgba(49, 93, 255, .16); }
+.agent-subject-qa-empty > span svg { width: 25px; height: 25px; }
+.agent-subject-qa-empty h1 { margin: 8px 0 10px; color: var(--agent-ink); font-size: clamp(28px, 4vw, 42px); line-height: 1.12; }
+.agent-subject-qa-empty > p:not(.agent-kicker) { max-width: 610px; margin: 0; color: var(--agent-muted); font-size: 13px; line-height: 1.75; }
+.agent-subject-qa-empty > div { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.agent-subject-qa-empty > div span { display: inline-flex; min-height: 34px; align-items: center; gap: 6px; padding: 0 10px; border: 1px solid var(--agent-line); border-radius: 10px; background: #fff; color: var(--agent-ink); font-size: 10px; font-weight: 850; }
+.agent-subject-qa-empty > div svg { width: 14px; color: var(--agent-blue); }
+.agent-subject-qa-disclosure { display: inline-flex; align-items: center; gap: 5px; margin: 0 0 8px; color: var(--agent-mint-dark); font-size: 8px; font-weight: 800; }
+.agent-subject-qa-disclosure svg { width: 12px; height: 12px; }
+.agent-practice-action-panel { display: grid; gap: 11px; padding: 14px; border: 1px solid rgba(49, 93, 255, .18); border-radius: 14px; background: linear-gradient(135deg, rgba(241, 245, 255, .92), rgba(240, 255, 250, .9)); }
+.agent-practice-action-panel > div { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 9px; align-items: center; }
+.agent-practice-action-panel > div > svg { width: 17px; justify-self: center; color: var(--agent-blue); }
+.agent-practice-action-panel > div span { display: grid; gap: 2px; }
+.agent-practice-action-panel strong { color: var(--agent-ink); font-size: 11px; }
+.agent-practice-action-panel small { color: var(--agent-muted); font-size: 8px; }
+.agent-practice-action-panel nav { display: flex; flex-wrap: wrap; gap: 7px; padding-left: 37px; }
+.agent-practice-action-panel button { display: inline-flex; min-height: 32px; align-items: center; gap: 6px; padding: 0 10px; border: 1px solid rgba(49, 93, 255, .18); border-radius: 9px; background: #fff; color: var(--agent-blue); font-size: 9px; font-weight: 850; }
+.agent-practice-action-panel button:disabled { color: var(--agent-faint); opacity: .5; }
+.agent-practice-action-panel button svg { width: 13px; }
 .agent-message-end { width: 100%; height: 1px; margin-top: -28px; overflow-anchor: auto; pointer-events: none; }
 .agent-message-block { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; align-items: start; }
 .agent-message-avatar > span { display: inline-grid; width: 32px; height: 32px; place-items: center; border-radius: 10px; background: linear-gradient(145deg, var(--agent-blue), var(--agent-mint)); color: #fff; }

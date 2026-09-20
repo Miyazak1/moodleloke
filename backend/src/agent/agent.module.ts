@@ -38,6 +38,7 @@ import { AgentPastPaperQuestionService } from './agent-past-paper-question.servi
 import { AgentPastPaperAssistanceService } from './agent-past-paper-assistance.service';
 import { AgentPastPaperAttemptService } from './agent-past-paper-attempt.service';
 import { AgentJourneyReadService } from './agent-journey-read.service';
+import { AgentSubjectQaService } from './agent-subject-qa.service';
 import { CscaMockExamModule } from '../csca-mock-exam/csca-mock-exam.module';
 import { PastPapersModule } from '../past-papers/past-papers.module';
 
@@ -69,6 +70,7 @@ import { PastPapersModule } from '../past-papers/past-papers.module';
     AgentPastPaperAssistanceService,
     AgentPastPaperAttemptService,
     AgentJourneyReadService,
+    AgentSubjectQaService,
     AgentLearningAssistanceService,
     AgentTeachingAssetService,
     TeachingAssetRoutingOutcomeService,

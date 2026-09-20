@@ -78,7 +78,7 @@ export function AgentAdaptiveResultMessage({
   }, [loadRevision, locale, roundId, t]);
 
   if (error) return <ReportState status="error" title={t('agent.report.loadFailedTitle', '学习结果还没有载入')} body={error} actionLabel={t('agent.report.retryLoad', '重试加载')} onAction={() => setLoadRevision((current) => current + 1)} />;
-  if (!report) return <ReportState status="loading" title={t('agent.report.loading', '正在整理本轮学习结果')} body={t('agent.report.loadingBody', '完成后会在聊天中显示结果、学习证据和下一步。')} />;
+  if (!report) return <ReportState status="loading" title={t('agent.report.loading', '正在整理本轮学习结果')} body={t('agent.report.loadingBody', '完成后会在 Agent 动态中显示结果、学习证据和下一步。')} />;
 
   const summary = report.summary;
   const primaryWeakTopic = report.weakTopics[0]?.title
@@ -124,7 +124,7 @@ export function AgentAdaptiveResultMessage({
   }
 
   return (
-    <section className="agent-structured-report" aria-label={t('agent.workspace.chatReportAria', '聊天区学习报告')}>
+    <section className="agent-structured-report" aria-label={t('agent.workspace.chatReportAria', 'Agent 动态学习报告')}>
       <header className="agent-report-intro">
         <span className="agent-report-signal" data-tone={isStrong ? 'good' : isDeveloping ? 'steady' : 'focus'}><Icon name={isStrong ? 'lucide:badge-check' : 'lucide:target'} /></span>
         <div>
@@ -236,7 +236,7 @@ export function AgentMockExamResultMessage({
   }, [attemptId, loadRevision, locale, t]);
 
   if (error) return <ReportState status="error" title={t('agent.mockExam.reportUnavailableTitle', '模考结果还没有载入')} body={error} actionLabel={t('agent.report.retryLoad', '重试加载')} onAction={() => setLoadRevision((current) => current + 1)} />;
-  if (!report) return <ReportState status="loading" title={t('agent.mockExam.loadingReport', '正在整理模考结果')} body={t('agent.mockExam.loadingReportBody', '成绩就绪后会在聊天中显示失分点、学习证据和下一步。')} />;
+  if (!report) return <ReportState status="loading" title={t('agent.mockExam.loadingReport', '正在整理模考结果')} body={t('agent.mockExam.loadingReportBody', '成绩就绪后会在 Agent 动态中显示失分点、学习证据和下一步。')} />;
 
   const countedTotal = report.summary.correctCount + report.summary.wrongCount + report.summary.unansweredCount;
   const total = report.summary.total > 0 ? report.summary.total : countedTotal > 0 ? countedTotal : report.attempt.paper.questionCount;
@@ -257,7 +257,7 @@ export function AgentMockExamResultMessage({
       : t('agent.mockExam.nextUnavailable', '成绩已记录；学习证据同步未完成，可重试同步或先复盘错题。');
 
   return (
-    <section className="agent-structured-report" aria-label={t('agent.mockExam.chatReportAria', '聊天区模考报告')}>
+    <section className="agent-structured-report" aria-label={t('agent.mockExam.chatReportAria', 'Agent 动态模考报告')}>
       <header className="agent-report-intro">
         <span className="agent-report-signal" data-tone={accuracy >= 80 ? 'good' : 'focus'}><Icon name="lucide:clipboard-check" /></span>
         <div>

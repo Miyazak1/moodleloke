@@ -138,8 +138,9 @@ export class AgentService {
     });
     if (duplicate) {
       const storedText = (duplicate.content as Record<string, unknown> | null)?.text;
+      const storedSurface = (duplicate.content as Record<string, unknown> | null)?.surface ?? 'learning_workspace';
       const storedAttachmentIds = (duplicate.content as Record<string, unknown> | null)?.attachmentIds;
-      if (storedText !== input.text || JSON.stringify(storedAttachmentIds ?? []) !== JSON.stringify(attachmentIds) || !duplicate.runId) {
+      if (storedText !== input.text || storedSurface !== input.surface || JSON.stringify(storedAttachmentIds ?? []) !== JSON.stringify(attachmentIds) || !duplicate.runId) {
         throw new ConflictException('clientRequestId was already used with different content.');
       }
       const existingRun = await this.prisma.agentRun.findFirst({
@@ -170,6 +171,7 @@ export class AgentService {
               intent: routeAgentIntent(input.text),
               text: input.text,
               locale: input.locale,
+              surface: input.surface,
               clientRequestId: input.clientRequestId,
               attachmentIds,
               ...(input.pageContext ? { pageContext: input.pageContext } : {})
@@ -187,6 +189,7 @@ export class AgentService {
               schemaVersion: AGENT_RUNTIME_SCHEMA_VERSION,
               text: input.text,
               locale: input.locale,
+              surface: input.surface,
               attachmentIds,
               ...(input.pageContext ? { pageContext: input.pageContext } : {})
             }
@@ -225,6 +228,7 @@ export class AgentService {
       const racedContent = racedMessage?.content as Record<string, unknown> | null;
       if (racedMessage?.runId
         && racedContent?.text === input.text
+        && (racedContent?.surface ?? 'learning_workspace') === input.surface
         && JSON.stringify(racedContent?.attachmentIds ?? []) === JSON.stringify(attachmentIds)) {
         const racedRun = await this.prisma.agentRun.findFirst({
           where: { id: racedMessage.runId, conversationId, userId },

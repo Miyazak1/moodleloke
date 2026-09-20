@@ -256,7 +256,7 @@ export function AgentLearningSettingsView({
             <div>{([3, 5, 10] as const).map((count) => <button key={count} type="button" disabled={saving === 'mode'} className={defaultFreePracticeCount === count ? 'selected' : ''} aria-pressed={defaultFreePracticeCount === count} onClick={() => void saveLearningPreference({ defaultFreePracticeCount: count })}>{count} {t('agent.freePractice.questions', '题')}</button>)}</div>
           </fieldset>
         </div>}
-        <div className="agent-settings-note"><Icon name="lucide:message-circle" /><span>{t('me.settings.modeNote', '学习过程中聊天区始终保留；任务区只用于正在作答，讲解、动画和学习结果回到聊天中。')}</span></div>
+        <div className="agent-settings-note"><Icon name="lucide:activity" /><span>{t('me.settings.modeNote', '做题区只负责当前作答；讲解、动画和学习结果进入 Agent 动态。学科问答独立保留。')}</span></div>
         <footer><small>{saving === 'mode' ? t('me.common.saving', '保存中…') : t('me.settings.modeSaved', '默认方式已保存到账号，可跨设备和 Agent 插件同步。')}</small></footer>
       </section>}
 
@@ -276,10 +276,10 @@ export function AgentLearningSettingsView({
       </form>}
 
       {panel === 'schedule' && <form aria-label={t('me.settings.schedulePanel', '学习时间')} onSubmit={(event) => void saveSchedule(event)}>
-        <header><span className="agent-kicker">{t('me.settings.scheduleKicker', '可执行计划')}</span><h3>{t('me.settings.scheduleTitle', '学习时间与节奏')}</h3><p>{t('me.settings.scheduleBody', 'Agent 会在真实时间容量内安排任务；临时变化仍可直接在聊天里告诉它。')}</p></header>
+        <header><span className="agent-kicker">{t('me.settings.scheduleKicker', '可执行计划')}</span><h3>{t('me.settings.scheduleTitle', '学习时间与节奏')}</h3><p>{t('me.settings.scheduleBody', 'Agent 会在真实时间容量内安排任务；本次学习可在工作台内临时调整。')}</p></header>
         <div className="agent-settings-fields"><label><span>{t('me.settings.timezone', '时区')}</span><input required value={timezone} onChange={(event) => setTimezone(event.target.value)} /></label><label><span>{t('me.settings.weeklyMinutes', '每周学习分钟')}</span><input type="number" min="1" max="10080" value={weeklyMinutes} onChange={(event) => setWeeklyMinutes(event.target.value)} /></label><label><span>{t('me.settings.sessionMinutes', '默认单次时长')}</span><input type="number" min="1" max="480" value={sessionMinutes} onChange={(event) => setSessionMinutes(event.target.value)} /></label></div>
         <fieldset className="agent-settings-days"><legend>{t('me.settings.studyDays', '通常可学习的星期')}</legend><div>{WEEKDAYS.map(([zh, en], index) => { const day = index + 1; const selected = studyDays.includes(day); return <button key={day} type="button" className={selected ? 'selected' : ''} aria-pressed={selected} onClick={() => setStudyDays(selected ? studyDays.filter((item) => item !== day) : [...studyDays, day])}>{isZh ? `周${zh}` : en}</button>; })}</div></fieldset>
-        <div className="agent-settings-note"><Icon name="lucide:clock-3" /><span>{t('me.settings.temporaryConstraintNote', '“今天只有 10 分钟”属于当前对话约束，不会覆盖这里的长期设置。')}</span></div>
+        <div className="agent-settings-note"><Icon name="lucide:clock-3" /><span>{t('me.settings.temporaryConstraintNote', '本次学习的临时调整不会覆盖这里的长期设置。')}</span></div>
         <footer><small>{settings?.studyAvailability.source === 'user' ? t('me.settings.scheduleConfigured', '正在使用你的长期时间设置') : t('me.settings.scheduleUnset', '当前使用系统默认时间')}</small><button type="submit" disabled={saving !== null}><Icon name="lucide:save" />{saving === 'schedule' ? t('me.common.saving', '保存中…') : t('me.actions.saveSchedule', '保存学习时间')}</button></footer>
       </form>}
     </div>

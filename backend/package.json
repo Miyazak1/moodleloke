@@ -24,6 +24,7 @@
     "test:agent-learning-settings": "npm run build && node scripts/agent-learning-settings-test.cjs",
     "test:agent-runtime": "npm run build && node scripts/agent-runtime-today-plan-test.cjs",
     "test:agent-intent-router": "npm run build && node scripts/agent-intent-router-test.cjs",
+    "test:agent-subject-qa": "npm run build && node scripts/agent-subject-qa-test.cjs",
     "test:agent-grounded-response": "npm run build && node scripts/agent-grounded-response-test.cjs",
     "test:agent-past-paper-assistance": "npm run build && node scripts/agent-past-paper-assistance-test.cjs",
     "test:agent-past-paper-attempt": "npm run build && node scripts/agent-past-paper-attempt-test.cjs",
