@@ -1209,6 +1209,7 @@ export function AdaptiveRoundView({
   const onNavigateRef = useRef(onNavigate);
   const onRoundUnavailableRef = useRef(onRoundUnavailable);
   const { locale } = useI18n();
+  const isAgentLearningRound = Boolean(agentConversationId);
 
   useEffect(() => {
     onNavigateRef.current = onNavigate;
@@ -1256,17 +1257,17 @@ export function AdaptiveRoundView({
           onRoundUnavailableRef.current?.();
         }
       });
-    void getAdaptiveAIEntitlement()
-      .then((result) => { if (alive) setEntitlement(result); })
-      .catch(() => { if (alive) setEntitlement(null); });
+    if (!isAgentLearningRound) {
+      void getAdaptiveAIEntitlement()
+        .then((result) => { if (alive) setEntitlement(result); })
+        .catch(() => { if (alive) setEntitlement(null); });
+    }
     return () => { alive = false; };
-  }, [roundId, locale]);
+  }, [isAgentLearningRound, roundId, locale]);
 
   const currentQuestion = detail?.questions[currentIndex] ?? null;
   const currentQuestionLanguage = normalizeQuestionLanguage(detail?.session.questionLanguage, locale);
   const currentCoachLanguage = coachResponseLanguage(locale);
-  const isAgentLearningRound = typeof window !== 'undefined' && Boolean(new URLSearchParams(window.location.search).get('agentArtifactId'));
-
   async function refreshLearningAssistance(question = currentQuestion) {
     if (!detail || !question || !isAgentLearningRound) return null;
     const result = await getAgentLearningAssistance(detail.round.id, question.id);
@@ -1832,7 +1833,7 @@ export function AdaptiveRoundView({
               : adaptiveText(locale, '讲解后独立验证', 'Independent post-lesson check', 'Xác minh độc lập sau bài học')}</span>}
           <strong>{copy.answeredProgress(answeredCount, detail.questions.length)}</strong>
           <span className="special-taking-question-time">{copy.currentQuestionTime(formatSeconds(currentSeconds))}</span>
-          {!isInterventionVerification && <span className={aiCreditEmpty ? 'special-ai-credit-chip empty' : 'special-ai-credit-chip'}>{aiCreditLabel}</span>}
+          {!isInterventionVerification && !isAgentLearningRound && <span className={aiCreditEmpty ? 'special-ai-credit-chip empty' : 'special-ai-credit-chip'}>{aiCreditLabel}</span>}
           <button type="button" className={isPaused ? 'active' : ''} onClick={() => setIsPaused((value) => !value)} disabled={isFinishing}>{isPaused ? copy.resume : copy.pause}</button>
           <details className="special-taking-status-more">
             <summary>{adaptiveText(locale, '状态', 'Status', 'Trạng thái')}</summary>

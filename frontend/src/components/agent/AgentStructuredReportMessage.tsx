@@ -80,7 +80,8 @@ export function AgentAdaptiveResultMessage({
     ? t('agent.report.strongBody', '正确率达到 {accuracy}%，下一轮可以继续扩大覆盖面。').replace('{accuracy}', String(summary.accuracy))
     : t('agent.report.focusBody', '你答对 {correct}/{total} 题，目前最值得优先复盘的是“{topic}”。')
       .replace('{correct}', String(summary.correctCount)).replace('{total}', String(summary.total)).replace('{topic}', primaryWeakTopic);
-  const evidenceCount = report.diagnosticCoverage?.coveredCount ?? Math.max(0, summary.total - summary.unansweredCount);
+  const evidenceCount = Math.max(0, summary.total - summary.unansweredCount);
+  const isDiagnostic = taskType === 'diagnostic';
   const wrongItems = report.items.filter((item) => !item.isCorrect);
 
   async function startNextRound() {
@@ -112,7 +113,7 @@ export function AgentAdaptiveResultMessage({
       <header className="agent-report-intro">
         <span className="agent-report-signal" data-tone={isStrong ? 'good' : isDeveloping ? 'steady' : 'focus'}><Icon name={isStrong ? 'lucide:badge-check' : 'lucide:target'} /></span>
         <div>
-          <span className="agent-report-kicker">{taskType === 'diagnostic' ? t('agent.report.diagnosticComplete', '诊断已完成') : t('agent.report.roundComplete', '本轮已完成')}</span>
+          <span className="agent-report-kicker">{isDiagnostic ? t('agent.report.diagnosticComplete', '诊断已完成') : t('agent.report.roundComplete', '本轮已完成')}</span>
           <h3>{title}</h3>
           <p>{body}</p>
         </div>
@@ -127,7 +128,7 @@ export function AgentAdaptiveResultMessage({
         <div className="agent-report-metrics">
           <Metric label={t('agent.report.correct', '答对')} value={`${summary.correctCount}/${summary.total}`} tone={isStrong ? 'good' : undefined} />
           <Metric label={t('agent.report.duration', '本轮用时')} value={formatDuration(summary.totalSeconds)} />
-          <Metric label={t('agent.report.evidence', '有效证据')} value={`${evidenceCount} ${t('agent.report.items', '项')}`} />
+          <Metric label={t('agent.report.answerEvidence', '作答证据')} value={`${evidenceCount} ${t('agent.report.items', '项')}`} />
         </div>
 
         <div className="agent-report-insight">
@@ -144,7 +145,7 @@ export function AgentAdaptiveResultMessage({
 
         <div className="agent-report-disclosures">
           <details open={detailsOpen} onToggle={(event) => setDetailsOpen(event.currentTarget.open)}>
-            <summary><span><Icon name="lucide:scan-search" />{t('agent.report.viewEvidence', '查看诊断依据')}</span><Icon name="lucide:chevron-down" /></summary>
+            <summary><span><Icon name="lucide:scan-search" />{isDiagnostic ? t('agent.report.viewDiagnosticEvidence', '查看诊断依据') : t('agent.report.viewLearningEvidence', '查看学习依据')}</span><Icon name="lucide:chevron-down" /></summary>
             <div className="agent-report-detail-body">
               <section>
                 <small>{t('agent.report.weakTopics', '优先关注')}</small>
@@ -154,7 +155,9 @@ export function AgentAdaptiveResultMessage({
               </section>
               {report.diagnosticCoverage && <section>
                 <small>{t('agent.report.coverage', '证据覆盖')}</small>
-                <p>{t('agent.report.coverageCopy', '已覆盖 {covered}/{total} 个诊断维度，仍有 {remaining} 个维度需要后续补充证据。')
+                <p>{(isDiagnostic
+                  ? t('agent.report.diagnosticCoverageCopy', '已覆盖 {covered}/{total} 个诊断维度，仍有 {remaining} 个维度需要后续补充证据。')
+                  : t('agent.report.learningCoverageCopy', '本轮覆盖 {covered}/{total} 个知识维度，仍有 {remaining} 个维度需要后续补充证据。'))
                   .replace('{covered}', String(report.diagnosticCoverage.coveredCount))
                   .replace('{total}', String(report.diagnosticCoverage.totalCount))
                   .replace('{remaining}', String(report.diagnosticCoverage.lowConfidenceCount))}</p>
@@ -215,9 +218,18 @@ export function AgentMockExamResultMessage({
   if (error) return <ReportError message={error} />;
   if (!report) return <ReportLoading label={t('agent.mockExam.loadingReport', '正在整理模考结果')} />;
 
-  const accuracy = report.summary.total ? Math.round((report.summary.correctCount / report.summary.total) * 100) : 0;
+  const countedTotal = report.summary.correctCount + report.summary.wrongCount + report.summary.unansweredCount;
+  const total = report.summary.total > 0 ? report.summary.total : countedTotal > 0 ? countedTotal : report.attempt.paper.questionCount;
+  const startedMs = Date.parse(report.attempt.startedAt);
+  const submittedMs = report.attempt.submittedAt ? Date.parse(report.attempt.submittedAt) : Number.NaN;
+  const timestampSeconds = Number.isFinite(startedMs) && Number.isFinite(submittedMs)
+    ? Math.max(0, Math.round((submittedMs - startedMs) / 1000))
+    : 0;
+  const totalSeconds = report.summary.totalSeconds > 0 ? report.summary.totalSeconds : timestampSeconds;
+  const accuracy = total ? Math.round((report.summary.correctCount / total) * 100) : 0;
   const focus = settlement?.learningReview.focusTopics[0]?.title ?? report.knowledgeStats.slice().sort((a, b) => (b.wrong / Math.max(1, b.total)) - (a.wrong / Math.max(1, a.total)))[0]?.tag;
   const nextTask = settlement?.learningReview.nextDecision?.primaryTask;
+  const wrongItems = report.items.filter((item) => !item.isCorrect);
 
   return (
     <section className="agent-structured-report" aria-label={t('agent.mockExam.chatReportAria', '聊天区模考报告')}>
@@ -236,23 +248,23 @@ export function AgentMockExamResultMessage({
         <div className="agent-report-object-head"><div><span>{t('agent.mockExam.chatReportTitle', '模考结果与下一步建议')}</span><strong>{report.attempt.paper.title}</strong></div><b>{report.summary.score}<small>/100</small></b></div>
         <div className="agent-report-progress" aria-hidden="true"><i style={{ width: `${Math.max(3, report.summary.score)}%` }} /></div>
         <div className="agent-report-metrics">
-          <Metric label={t('agent.mockExam.correct', '正确')} value={`${report.summary.correctCount}/${report.summary.total}`} tone={accuracy >= 80 ? 'good' : undefined} />
+          <Metric label={t('agent.mockExam.correct', '正确')} value={`${report.summary.correctCount}/${total}`} tone={accuracy >= 80 ? 'good' : undefined} />
           <Metric label={t('agent.mockExam.wrong', '错误')} value={report.summary.wrongCount} tone={report.summary.wrongCount ? 'warn' : 'good'} />
-          <Metric label={t('agent.mockExam.totalTime', '总用时')} value={formatDuration(report.summary.totalSeconds)} />
+          <Metric label={t('agent.mockExam.totalTime', '总用时')} value={formatDuration(totalSeconds)} />
         </div>
 
         <div className="agent-report-insight">
           <Icon name="lucide:route" />
-          <div><small>{t('agent.mockExam.nextDecision', 'Agent 建议')}</small><strong>{nextTask ? `${nextTask.type === 'targeted_practice' ? t('agent.task.targetedPractice', '针对性练习') : t('agent.task.learning', '下一项学习任务')} · ${settlement?.learningReview.nextDecision?.reasonSummary ?? ''}` : t('agent.mockExam.nextUpdating', '学习证据已记录，下一步建议正在更新。')}</strong></div>
+          <div><small>{t('agent.mockExam.nextDecision', 'Agent 建议')}</small><strong>{nextTask ? `${nextTask.type === 'targeted_practice' ? t('agent.task.targetedPractice', '针对性练习') : t('agent.task.learning', '下一项学习任务')} · ${settlement?.learningReview.nextDecision?.reasonSummary ?? ''}` : t('agent.mockExam.nextUnavailable', '学习证据已记录；下一步建议暂未返回，可先复盘已有错题。')}</strong></div>
         </div>
 
         <div className="agent-report-actions">
-          <details className="agent-report-action-menu">
+          {wrongItems.length ? <details className="agent-report-action-menu">
             <summary><Icon name="lucide:list-checks" />{t('agent.report.reviewQuestions', '查看错题')}</summary>
             <div className="agent-report-question-list">
-              {report.items.filter((item) => !item.isCorrect).map((item) => <article key={item.id}><span className="is-wrong">{item.orderNumber}</span><div><strong><MathContent text={item.prompt} /></strong><small>{item.isUnanswered ? t('agent.report.unanswered', '未作答') : `${item.selected} → ${item.correctAnswer}`}</small><p><MathContent text={item.explanation} /></p></div></article>)}
+              {wrongItems.map((item) => <article key={item.id}><span className="is-wrong">{item.orderNumber}</span><div><strong><MathContent text={item.prompt} /></strong><small>{item.isUnanswered ? t('agent.report.unanswered', '未作答') : `${item.selected} → ${item.correctAnswer}`}</small><p><MathContent text={item.explanation} /></p></div></article>)}
             </div>
-          </details>
+          </details> : <span className="agent-report-detail-unavailable"><Icon name="lucide:info" />{t('agent.mockExam.questionDetailsUnavailable', '本次仅保留了汇总成绩，逐题明细暂不可用。')}</span>}
           {nextTask && <button type="button" className="primary" disabled={isContinuing} onClick={onContinue}><Icon name={isContinuing ? 'lucide:loader-circle' : 'lucide:arrow-right'} />{isContinuing ? t('agent.mockExam.materializing', '正在生成') : t('agent.mockExam.continue', '开始建议任务')}</button>}
         </div>
 

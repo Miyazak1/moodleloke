@@ -262,16 +262,17 @@ function PlanArtifactCard({ artifact, onLaunch, onUseFreePractice }: { artifact:
   const minutes = Number(snapshot.estimatedMinutes ?? 0);
   const questionCount = Number(task.questionCount ?? 0);
   const confidence = String(snapshot.confidence ?? 'medium');
+  const isFreePractice = task.type === 'free_practice';
   const isInterventionVerification = task.type === 'intervention_verification';
   const canStart = snapshot.canStart === true && Boolean(artifact.route) && artifact.status === 'ready';
-  const canUseFreePractice = !canStart && !isInterventionVerification && artifact.status === 'ready' && Boolean(onUseFreePractice);
+  const canUseFreePractice = !isFreePractice && !canStart && !isInterventionVerification && artifact.status === 'ready' && Boolean(onUseFreePractice);
   return (
-    <article className="agent-plan-card" aria-label={t('agent.plan.aria', '今日学习方案')}>
+    <article className="agent-plan-card" aria-label={isFreePractice ? t('agent.freePractice.taskAria', '自由练习任务') : t('agent.plan.aria', '今日学习方案')}>
       <div className="agent-plan-ribbon" aria-hidden="true" />
       <header className="agent-plan-head">
         <span className="agent-plan-subject" data-subject={String(task.subject ?? '')}>{subject.slice(0, 1)}</span>
         <div>
-          <span className="agent-kicker"><Icon name="lucide:sparkles" />{t('agent.plan.kicker', '系统推荐 · 今日首选')}</span>
+          <span className="agent-kicker"><Icon name={isFreePractice ? 'lucide:infinity' : 'lucide:sparkles'} />{isFreePractice ? t('agent.freePractice.taskKicker', '学生主动 · 自由练习') : t('agent.plan.kicker', '系统推荐 · 今日首选')}</span>
           <h3>{artifact.title}</h3>
           {artifact.summary && <p>{artifact.summary}</p>}
         </div>
@@ -285,13 +286,13 @@ function PlanArtifactCard({ artifact, onLaunch, onUseFreePractice }: { artifact:
       <div className="agent-plan-reason">
         <Icon name="lucide:route" />
         <span>
-          <small>{t('agent.plan.basis', '推荐依据')}</small>
-          <strong>{t('agent.plan.basisValue', '当前最高优先级学习差距')} · {t(`agent.confidence.${confidence}`, confidence)}</strong>
+          <small>{isFreePractice ? t('agent.freePractice.startBasis', '开始方式') : t('agent.plan.basis', '推荐依据')}</small>
+          <strong>{isFreePractice ? t('agent.freePractice.studentChoice', '由你选择科目和本批题量') : <>{t('agent.plan.basisValue', '当前最高优先级学习差距')} · {t(`agent.confidence.${confidence}`, confidence)}</>}</strong>
           {review && <em>{String(review.title ?? '')} · {t('agent.plan.repeated', '累计错误')} {Number(review.recurrenceCount ?? 1)} {t('agent.plan.times', '次')}</em>}
         </span>
       </div>
       <footer>
-        <span className="agent-source-note"><Icon name="lucide:shield-check" />{t('agent.plan.source', '来自学习证据、目标与已发布题源')}</span>
+        <span className="agent-source-note"><Icon name="lucide:shield-check" />{isFreePractice ? t('agent.freePractice.taskSource', '共用已发布题源与同一学习历程') : t('agent.plan.source', '来自学习证据、目标与已发布题源')}</span>
         <button
           type="button"
           disabled={(!canStart && !canUseFreePractice) || isStarting}
@@ -324,6 +325,8 @@ function PlanArtifactCard({ artifact, onLaunch, onUseFreePractice }: { artifact:
                   ? t('agent.plan.abandoned', '任务已放弃')
                   : artifact.status === 'superseded'
                     ? t('agent.plan.superseded', '方案已更新')
+                    : isFreePractice
+                      ? t('agent.freePractice.inProgress', '本次练习已开始')
                     : isInterventionVerification
                       ? t('agent.plan.useVerificationCard', '请在下方开始阶段验证')
                       : canStart
@@ -331,7 +334,7 @@ function PlanArtifactCard({ artifact, onLaunch, onUseFreePractice }: { artifact:
                         : canUseFreePractice
                           ? t('agent.plan.useFreePractice', '改做自由练习')
                           : t('agent.plan.unavailable', '题源暂不足')}
-          <Icon name={canStart ? 'lucide:arrow-right' : canUseFreePractice ? 'lucide:shuffle' : isInterventionVerification ? 'lucide:clock-3' : 'lucide:circle-alert'} />
+          <Icon name={canStart ? 'lucide:arrow-right' : canUseFreePractice ? 'lucide:shuffle' : isFreePractice ? 'lucide:circle-check' : isInterventionVerification ? 'lucide:clock-3' : 'lucide:circle-alert'} />
         </button>
       </footer>
       {startError && <p className="agent-plan-error" role="alert">{startError}</p>}
@@ -2313,7 +2316,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
               />
             </div>
           </aside>
-        ) : <aside className={journeySection === 'today' ? `agent-context-rail${effectiveLearningMode === 'free' ? ' is-free-practice' : ''}` : 'agent-context-rail is-journey-view'} aria-label={journeySection === 'history' ? t('agent.journey.history', '学习历程') : journeySection === 'plan' ? t('agent.journey.plan', '学习计划') : journeySection === 'weakness' ? t('agent.journey.weakness', '错题与薄弱点') : journeySection === 'resources' ? t('agent.journey.resources', '学习资料') : t('agent.context.aria', '当前学习上下文')}>
+        ) : learningWorkspace?.phase === 'report' || mockExamWorkspace?.phase === 'report' ? null : <aside className={journeySection === 'today' ? `agent-context-rail${effectiveLearningMode === 'free' ? ' is-free-practice' : ''}` : 'agent-context-rail is-journey-view'} aria-label={journeySection === 'history' ? t('agent.journey.history', '学习历程') : journeySection === 'plan' ? t('agent.journey.plan', '学习计划') : journeySection === 'weakness' ? t('agent.journey.weakness', '错题与薄弱点') : journeySection === 'resources' ? t('agent.journey.resources', '学习资料') : t('agent.context.aria', '当前学习上下文')}>
           {journeySection === 'plan' ? <AgentJourneyPlanView conversation={conversation} /> : journeySection === 'history' ? (
             <AgentJourneyHistoryView
               stages={journeyState?.stages ?? []}

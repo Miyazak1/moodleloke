@@ -256,7 +256,7 @@ export function AgentLearningSettingsView({
             <div>{([3, 5, 10] as const).map((count) => <button key={count} type="button" disabled={saving === 'mode'} className={defaultFreePracticeCount === count ? 'selected' : ''} aria-pressed={defaultFreePracticeCount === count} onClick={() => void saveLearningPreference({ defaultFreePracticeCount: count })}>{count} {t('agent.freePractice.questions', '题')}</button>)}</div>
           </fieldset>
         </div>}
-        <div className="agent-settings-note"><Icon name="lucide:message-circle" /><span>{t('me.settings.modeNote', '学习过程中聊天区始终保留；题目、讲解、动画和报告只在任务区切换。')}</span></div>
+        <div className="agent-settings-note"><Icon name="lucide:message-circle" /><span>{t('me.settings.modeNote', '学习过程中聊天区始终保留；任务区只用于正在作答，讲解、动画和学习结果回到聊天中。')}</span></div>
         <footer><small>{saving === 'mode' ? t('me.common.saving', '保存中…') : t('me.settings.modeSaved', '默认方式已保存到账号，可跨设备和 Agent 插件同步。')}</small></footer>
       </section>}
 

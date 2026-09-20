@@ -49,6 +49,8 @@
 .agent-report-action-menu[open] { display: grid; width: 100%; }
 .agent-report-action-menu[open] > summary { width: fit-content; }
 .agent-report-action-menu[open] > .agent-report-question-list { margin-top: 8px; border: 1px solid var(--agent-line); border-radius: 11px; }
+.agent-report-detail-unavailable { display: inline-flex; align-items: center; gap: 6px; color: var(--agent-faint); font-size: 9px; line-height: 1.5; }
+.agent-report-detail-unavailable svg { width: 13px; height: 13px; flex: none; }
 
 .agent-report-disclosures,
 .agent-report-evidence-row { border-top: 1px solid var(--agent-line); }

@@ -375,9 +375,17 @@ test('starts student-initiated free practice without turning it into a recommend
       roundId: 41
     }
   };
-  await page.route(new RegExp(`/api/v1/agent/conversations/${conversationId}(?:\\?.*)?$`), (route) => json(route, {
+  const freeConversation = {
     ...conversation,
-    artifacts: freeStarted ? [artifact, freeArtifact] : [artifact]
+    messages: [...conversation.messages, {
+      id: 'message-free-task-1', conversationId, role: 'assistant', clientMessageId: null, runId: null,
+      createdAt: '2026-09-15T08:35:00.000Z',
+      content: { schemaVersion: '1', text: '已开始物理自由练习。', artifactIds: [freeArtifact.id] }
+    }],
+    artifacts: [artifact, freeArtifact]
+  };
+  await page.route(new RegExp(`/api/v1/agent/conversations/${conversationId}(?:\\?.*)?$`), (route) => json(route, {
+    ...(freeStarted ? freeConversation : conversation)
   }));
   await page.route('**/api/v1/agent/free-practice/start', async (route) => {
     requestBody = await route.request().postDataJSON();
@@ -399,6 +407,12 @@ test('starts student-initiated free practice without turning it into a recommend
   await expect.poll(() => requestBody).not.toBeNull();
   expect(requestBody).toMatchObject({ conversationId, subject: 'physics', questionCount: 3, questionLanguage: 'zh' });
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
+  const freeTask = page.getByLabel('自由练习任务');
+  await expect(freeTask).toContainText('学生主动 · 自由练习');
+  await expect(freeTask).toContainText('由你选择科目和本批题量');
+  await expect(freeTask).toContainText('本次练习已开始');
+  await expect(freeTask).not.toContainText('系统推荐 · 今日首选');
+  await expect(freeTask).not.toContainText('题源暂不足');
 });
 
 test('treats internal conversations as learning-history stages instead of new chats', async ({ page }) => {
@@ -417,6 +431,7 @@ test('separates learning settings from account settings and restores the workspa
   await page.getByRole('button', { name: '学习设置', exact: true }).click();
   await expect(page.getByLabel('Agent 学习设置工作区')).toBeVisible();
   await expect(page.getByRole('heading', { name: '你希望 Agent 默认怎样开始' })).toBeVisible();
+  await expect(page.getByLabel('Agent 学习设置工作区')).toContainText('任务区只用于正在作答，讲解、动画和学习结果回到聊天中');
   await page.locator('.agent-settings-learning-mode').getByRole('button', { name: /自由练习/ }).click();
   expect(await page.evaluate(() => window.localStorage.getItem('moodlelike.agent.learningMode'))).toBe('free');
   await page.getByRole('button', { name: '学习画像', exact: true }).click();
@@ -599,9 +614,11 @@ test('moves a completed practice report into chat and closes the focused questio
   await expect(page.getByText('结果、学习证据与下一步')).toBeVisible();
   await expect(page.getByText('先处理一个最关键的薄弱点。')).toBeVisible();
   await expect(page.getByText('你答对 2/5 题，目前最值得优先复盘的是“函数与方程”。')).toBeVisible();
+  await expect(page.getByLabel('聊天区学习报告')).toContainText('作答证据5 项');
   await expect(page.getByRole('button', { name: '继续下一轮' })).toBeVisible();
   await expect(page.getByText('一次函数中 x 的系数是斜率。')).toBeHidden();
   await expect(page.getByLabel('Agent 学习任务工作区')).toHaveCount(0);
+  await expect(page.locator('.agent-context-rail')).toHaveCount(0);
   await expect(page.getByLabel('向学习 Agent 提问')).toBeVisible();
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(1);
@@ -663,6 +680,7 @@ test('binds the active practice question to the composer and renders assistance 
   });
   await page.goto(`/zh/agent?conversation=${conversationId}&agentConversationId=${conversationId}&agentArtifactId=${artifactId}&agentRoundId=81&agentView=practice&agentTaskType=diagnostic&agentSubject=math`);
   await expect(page.getByLabel('当前练习题上下文')).toContainText('当前第 1/1 题');
+  await expect(page.getByLabel('Agent 学习任务工作区')).not.toContainText(/AI\s*\d+\s*次|AI\s*额度/);
   await expect(page.getByLabel('Agent 学习任务工作区').locator('.agent-assistance-panel')).toHaveCount(0);
   await expect(page.getByLabel('Agent 学习任务工作区').locator('.agent-assistance-bridge')).toBeVisible();
   await page.getByLabel('当前练习题上下文').getByRole('button', { name: '回忆知识点' }).click();
@@ -716,10 +734,10 @@ test('starts a recommended mock exam and keeps the timed attempt inside the Agen
       questions: [{ id: 101, orderNumber: 1, questionType: 'single-choice', prompt: '函数 y=2x+1 与 y 轴交于哪一点？', options: [{ id: 'A', text: '(0, 1)' }, { id: 'B', text: '(1, 0)' }] }]
     });
   });
-  const submittedAttempt = { ...attempt, submittedAt: '2026-09-15T08:30:00.000Z', answers: { '101': 'A' }, version: 2 };
+  const submittedAttempt = { ...attempt, startedAt: '2026-09-15T08:29:00.000Z', submittedAt: '2026-09-15T08:30:00.000Z', answers: { '101': 'A' }, version: 2 };
   const report = {
     attempt: submittedAttempt,
-    summary: { score: 100, correctCount: 1, wrongCount: 0, unansweredCount: 0, total: 1, totalSeconds: 30, averageSeconds: 30 },
+    summary: { score: 100, correctCount: 1, wrongCount: 0, unansweredCount: 0, total: 0, totalSeconds: 0, averageSeconds: 0 },
     knowledgeStats: [{ tag: '一次函数', total: 1, wrong: 0 }],
     items: [{ id: 101, orderNumber: 1, questionType: 'single-choice', prompt: '函数 y=2x+1 与 y 轴交于哪一点？', options: [{ id: 'A', text: '(0, 1)' }, { id: 'B', text: '(1, 0)' }], selected: 'A', correctAnswer: 'A', isCorrect: true, isUnanswered: false, isMarked: false, explanation: '令 x=0。', knowledgeTags: ['一次函数'], secondsSpent: 30 }]
   };
@@ -798,7 +816,10 @@ test('starts a recommended mock exam and keeps the timed attempt inside the Agen
   await expect(page.getByLabel('聊天区模考报告')).toBeVisible();
   await expect(page.getByText('模考结果与下一步建议')).toBeVisible();
   await expect(page.getByLabel('Agent 在线模考工作区')).toHaveCount(0);
+  await expect(page.locator('.agent-context-rail')).toHaveCount(0);
   await expect(page.getByText('这套卷完成得比较稳定。')).toBeVisible();
+  await expect(page.getByLabel('聊天区模考报告')).toContainText('正确1/1');
+  await expect(page.getByLabel('聊天区模考报告')).toContainText('总用时1:00');
   await expect(page.getByText('Agent 建议')).toBeVisible();
   await expect(page.getByText('下一步优先稳定函数应用。')).toBeVisible();
   await expect(page.getByRole('button', { name: /返回套卷列表/ })).toHaveCount(0);
