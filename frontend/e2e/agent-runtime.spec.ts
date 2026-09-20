@@ -400,7 +400,7 @@ test('stops polling and exits an unavailable restored round', async ({ page }, t
   expect(entitlementRequests).toBeLessThanOrEqual(2);
 });
 
-test('resumes an unfinished stage selected from learning history', async ({ page }, testInfo) => {
+test('shows a continue-learning entry for an interrupted stage', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the history resume contract.');
   await mockAgentWorkspace(page);
   const resume = {
@@ -414,8 +414,10 @@ test('resumes an unfinished stage selected from learning history', async ({ page
   }));
   await page.route('**/api/v1/csca-special-practice/**', (route) => json(route, { message: 'mock round intentionally unavailable' }, 503));
   await page.goto(`/zh/agent?conversation=${conversationId}`);
-  await page.getByRole('button', { name: '学习历程', exact: true }).click();
-  await page.getByRole('button', { name: /数学短诊断/ }).click();
+  const continueLearning = page.getByRole('button', { name: '继续学习', exact: true });
+  await expect(continueLearning).toBeVisible();
+  await expect(page.getByText('保留原科目、题目位置和作答状态。')).toBeVisible();
+  await continueLearning.click();
   await expect(page).toHaveURL(new RegExp('agentRoundId=81'));
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
   await expect(page.getByLabel('Agent 学习动态')).toBeVisible();
@@ -695,7 +697,9 @@ test('creates the recommended practice and opens it inside the Agent workspace',
   });
   await page.route('**/api/v1/csca-special-practice/**', (route) => json(route, { message: 'mock round intentionally unavailable' }, 503));
   await page.goto('/zh/agent');
-  await page.getByRole('button', { name: /开始这项任务/ }).click();
+  const startLearning = page.getByRole('button', { name: '开始学习', exact: true });
+  await expect(startLearning).toBeVisible();
+  await startLearning.click();
   await expect(page).toHaveURL(new RegExp(`/zh/agent\\?.*agentRoundId=81`));
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
   await expect(page.getByText('短诊断 · 数学')).toBeVisible();

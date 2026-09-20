@@ -842,6 +842,8 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     return saved === 3 || saved === 10 ? saved : 5;
   });
   const [isStartingFreePractice, setIsStartingFreePractice] = useState(false);
+  const [isStartingLearning, setIsStartingLearning] = useState(false);
+  const [learningEntryError, setLearningEntryError] = useState('');
   const [freePracticeContinuationBusy, setFreePracticeContinuationBusy] = useState<'continue' | 'end' | null>(null);
   const [isAdjustingFreePractice, setIsAdjustingFreePractice] = useState(false);
   const [journeyState, setJourneyState] = useState<AgentJourneyState | null>(null);
@@ -1523,8 +1525,9 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     setIsAdjustingFreePractice((value) => !value);
   }
 
-  async function beginFreePractice() {
+  async function beginFreePractice(selection?: { subject: 'math' | 'physics' | 'chemistry'; questionCount: number }) {
     if (isStartingFreePractice || !currentUser) return;
+    const next = selection ?? { subject: freePracticeSubject, questionCount: freePracticeCount };
     clearErrorNotice();
     setIsStartingFreePractice(true);
     try {
@@ -1537,7 +1540,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       }
       const launch = await startAgentFreePractice({
         clientRequestId: clientRequestId(), conversationId,
-        subject: freePracticeSubject, questionCount: freePracticeCount,
+        subject: next.subject, questionCount: next.questionCount,
         questionLanguage: locale === 'en' ? 'en' : 'zh'
       });
       await Promise.all([loadConversation(conversationId), loadSummaries()]);
@@ -1724,6 +1727,13 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     const artifacts = conversation?.artifacts.filter((item) => item.type === 'learning_plan') ?? [];
     return artifacts[artifacts.length - 1] ?? null;
   }, [conversation]);
+  const startablePlanArtifact = useMemo(() => {
+    const artifacts = [...(conversation?.artifacts ?? [])].sort((left, right) => right.createdAt.localeCompare(left.createdAt));
+    return artifacts.find((item) => {
+      const snapshot = item.snapshot ?? {};
+      return item.type === 'learning_plan' && item.status === 'ready' && snapshot.canStart === true && Boolean(item.route);
+    }) ?? null;
+  }, [conversation]);
   const latestSnapshot = latestArtifact?.snapshot ?? {};
   const latestTask = latestSnapshot.task && typeof latestSnapshot.task === 'object'
     ? latestSnapshot.task as Record<string, unknown>
@@ -1767,6 +1777,47 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     && practiceTeachingEvent.questionId === practiceQuestionContext?.questionId
     ? practiceTeachingEvent
     : null;
+
+  async function startOrResumeLearning() {
+    if (isStartingLearning || isStartingFreePractice) return;
+    setLearningEntryError('');
+    if (journeyState?.activeWorkspace) {
+      if (journeyState.activeWorkspace.conversationId !== activeConversationId) {
+        setActiveConversationId(journeyState.activeWorkspace.conversationId);
+        await loadConversation(journeyState.activeWorkspace.conversationId).catch(() => undefined);
+      }
+      restoreJourneyWorkspace(journeyState.activeWorkspace);
+      return;
+    }
+    if (effectiveLearningMode === 'free') {
+      await beginFreePractice();
+      return;
+    }
+    if (!startablePlanArtifact) {
+      setSessionLearningModeOverride('free');
+      setFreePracticeSubject(defaultFreePracticeSubject);
+      setFreePracticeCount(defaultFreePracticeCount);
+      await beginFreePractice({ subject: defaultFreePracticeSubject, questionCount: defaultFreePracticeCount });
+      return;
+    }
+    setIsStartingLearning(true);
+    try {
+      const task = startablePlanArtifact.snapshot.task && typeof startablePlanArtifact.snapshot.task === 'object'
+        ? startablePlanArtifact.snapshot.task as Record<string, unknown>
+        : {};
+      const start = task.type === 'mock_exam' ? startAgentMockExam : startAgentPractice;
+      const launch = await start(startablePlanArtifact.id, {
+        clientRequestId: clientRequestId(),
+        questionLanguage: locale === 'zh-CN' ? 'zh' : 'en'
+      });
+      openTaskWorkspace(launch);
+      await loadJourneyState().catch(() => undefined);
+    } catch (nextError) {
+      setLearningEntryError(nextError instanceof Error ? nextError.message : t('agent.learningEntry.startFailed', '暂时无法开始学习，请重试。'));
+    } finally {
+      setIsStartingLearning(false);
+    }
+  }
 
   if (!enabled) return <AgentUnavailable onNavigate={onNavigate} />;
   if (isResolvingAuth) {
@@ -2382,8 +2433,8 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                 <legend>{t('agent.freePractice.batch', '本批题量')}</legend>
                 <div>{[3, 5, 10].map((count) => <button key={count} type="button" className={freePracticeCount === count ? 'active' : ''} aria-pressed={freePracticeCount === count} onClick={() => setFreePracticeCount(count)}>{count} {t('agent.freePractice.questions', '题')}</button>)}</div>
               </fieldset>
-              <button type="button" className="agent-free-practice-start" disabled={isStartingFreePractice} onClick={() => void beginFreePractice()}>
-                <Icon name={isStartingFreePractice ? 'lucide:loader-circle' : 'lucide:play'} />{isStartingFreePractice ? t('agent.freePractice.starting', '正在准备题目') : t('agent.freePractice.start', '开始自由练习')}
+              <button type="button" className="agent-free-practice-start" disabled={isStartingFreePractice || isStartingLearning} onClick={() => void startOrResumeLearning()}>
+                <Icon name={isStartingFreePractice || isStartingLearning ? 'lucide:loader-circle' : journeyState?.activeWorkspace ? 'lucide:rotate-ccw' : 'lucide:play'} />{isStartingFreePractice || isStartingLearning ? t('agent.freePractice.starting', '正在准备题目') : journeyState?.activeWorkspace ? t('agent.learningEntry.resume', '继续学习') : t('agent.learningEntry.start', '开始学习')}
               </button>
               <p><Icon name="lucide:shield-check" />{sessionLearningModeOverride === 'free' && learningMode === 'recommended'
                 ? t('agent.freePractice.sessionOverride', '只调整本次学习，不会修改你在学习设置中的默认模式。')
@@ -2398,6 +2449,12 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
             <section className="agent-context-card">
               <header><Icon name="lucide:target" /><strong>{t('agent.context.currentTask', '当前推荐任务')}</strong></header>
               {latestTask ? <><b>{subjectLabel(latestTask.subject, t)} · {taskLabel(latestTask.type, t)}</b><span>{Number(latestSnapshot.estimatedMinutes ?? 0)} min · {t(`agent.confidence.${String(latestSnapshot.confidence ?? 'medium')}`, String(latestSnapshot.confidence ?? 'medium'))}</span></> : <p>{t('agent.context.waiting', '询问下一步后，这里会同步任务、预计时间和依据。')}</p>}
+            </section>
+            <section className="agent-learning-entry-card" data-state={journeyState?.activeWorkspace ? 'resume' : 'start'}>
+              <div><span><Icon name={journeyState?.activeWorkspace ? 'lucide:rotate-ccw' : 'lucide:play'} /></span><div><small>{journeyState?.activeWorkspace ? t('agent.learningEntry.interrupted', '上次学习尚未完成') : t('agent.learningEntry.ready', '现在可以开始')}</small><strong>{journeyState?.activeWorkspace ? t('agent.learningEntry.resumeTitle', '从中断位置继续') : t('agent.learningEntry.startTitle', '开始一次新的学习')}</strong></div></div>
+              <p>{journeyState?.activeWorkspace ? t('agent.learningEntry.resumeBody', '保留原科目、题目位置和作答状态。') : t('agent.learningEntry.startBody', '优先执行当前推荐任务；没有待执行方案时使用你的默认练习设置。')}</p>
+              <button type="button" disabled={isStartingLearning || isStartingFreePractice} onClick={() => void startOrResumeLearning()}><Icon name={isStartingLearning || isStartingFreePractice ? 'lucide:loader-circle' : journeyState?.activeWorkspace ? 'lucide:rotate-ccw' : 'lucide:play'} />{isStartingLearning || isStartingFreePractice ? t('agent.learningEntry.preparing', '正在准备') : journeyState?.activeWorkspace ? t('agent.learningEntry.resume', '继续学习') : t('agent.learningEntry.start', '开始学习')}</button>
+              {learningEntryError ? <small role="alert">{learningEntryError}</small> : null}
             </section>
             <section className="agent-context-card sources">
               <header><Icon name="lucide:database" /><strong>{t('agent.context.sources', '事实来源')}</strong></header>
