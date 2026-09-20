@@ -279,6 +279,14 @@ export class AgentController {
     return this.interventionDeliveries.offer(user.id, body);
   }
 
+  @Get('intervention-deliveries/:deliveryId')
+  getIntervention(
+    @CurrentUser() user: PrismaUser,
+    @Param('deliveryId') deliveryId: string
+  ) {
+    return this.interventionDeliveries.get(user.id, deliveryId);
+  }
+
   @Post('intervention-deliveries/:deliveryId/actions')
   actOnIntervention(
     @CurrentUser() user: PrismaUser,

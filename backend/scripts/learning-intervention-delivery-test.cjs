@@ -141,6 +141,9 @@ async function testActionsAreOwnedAndIdempotent() {
     $transaction: async (callback) => callback(prisma)
   };
   const service = new AgentInterventionDeliveryService(prisma, { isEnabled: () => true }, { resolvePublishedForTopic: async () => null });
+  const loaded = await service.get(42, row.id);
+  assert.equal(loaded.id, row.id);
+  assert.equal(loaded.status, 'offered');
   const started = await service.act(42, row.id, { clientRequestId: 'start-action-1', action: 'start' });
   assert.equal(started.status, 'in_progress');
   assert.equal(started.content.body, '审核后的讲解正文');
@@ -148,6 +151,9 @@ async function testActionsAreOwnedAndIdempotent() {
   const replay = await service.act(42, row.id, { clientRequestId: 'start-action-1', action: 'start' });
   assert.equal(replay.status, 'in_progress');
   assert.equal(updates, 1, 'replayed client request must not apply the transition twice');
+  const disabledService = new AgentInterventionDeliveryService(prisma, { isEnabled: () => false }, { resolvePublishedForTopic: async () => null });
+  const completed = await disabledService.act(42, row.id, { clientRequestId: 'complete-after-disable-1', action: 'complete' });
+  assert.equal(completed.status, 'completed', 'an in-progress lesson remains finishable after new offers are disabled');
   await assert.rejects(() => service.act(7, row.id, { clientRequestId: 'other-user-1', action: 'complete' }), /学习讲解建议不存在/);
 }
 

@@ -92,6 +92,18 @@ export class AgentInterventionDeliveryService {
     return { intervention: true } as const;
   }
 
+  async get(userId: number, deliveryId: string) {
+    const delivery = await this.prisma.learningInterventionDelivery.findFirst({
+      where: { id: deliveryId, userId }, include: this.includeIntervention()
+    });
+    if (!delivery) throw new NotFoundException('学习讲解建议不存在。');
+    const content = jsonObject(delivery.contentSnapshot);
+    if (isPlaceholderContent(content.title, content.body, content.topicTitle, delivery.contentSourceId)) {
+      throw new NotFoundException('当前讲解内容不可用。');
+    }
+    return this.serialize(delivery);
+  }
+
   private async resolveContent(userId: number, topicId: number, subject: string, language: unknown, contentPlan?: unknown, routingContext?: { type: string; key: string }): Promise<ResolvedContent | null> {
     const teachingAsset = await this.teachingAssets.resolvePublishedForTopic(userId, topicId, subject, language, contentPlan, routingContext);
     if (teachingAsset && !isPlaceholderContent(teachingAsset.title, teachingAsset.summary, teachingAsset.topicTitle, teachingAsset.stableKey)) return {
@@ -242,13 +254,7 @@ export class AgentInterventionDeliveryService {
   }
 
   async act(userId: number, deliveryId: string, body: unknown) {
-    if (!this.flags.isEnabled('interventionDelivery')) {
-      throw new ServiceUnavailableException({ code: 'LEARNING_INTERVENTION_DELIVERY_DISABLED', message: '学习讲解建议暂未开放。' });
-    }
     const input = ActionInputSchema.parse(body);
-    if (await this.hasActiveFormalMock(userId)) {
-      throw new ConflictException({ code: 'FORMAL_MOCK_ACTIVE', message: '正式模考期间不会展示或推进知识讲解。' });
-    }
     const priorStep = await this.prisma.learningInterventionStep.findUnique({
       where: { userId_clientRequestId: { userId, clientRequestId: input.clientRequestId } }, include: { delivery: { include: this.includeIntervention() } }
     });
@@ -260,6 +266,13 @@ export class AgentInterventionDeliveryService {
       where: { id: deliveryId, userId }, include: this.includeIntervention()
     });
     if (!delivery) throw new NotFoundException('学习讲解建议不存在。');
+    const canFinishExisting = delivery.status === 'in_progress' && ['complete', 'defer', 'skip'].includes(input.action);
+    if (!this.flags.isEnabled('interventionDelivery') && !canFinishExisting) {
+      throw new ServiceUnavailableException({ code: 'LEARNING_INTERVENTION_DELIVERY_DISABLED', message: '学习讲解建议暂未开放。' });
+    }
+    if (await this.hasActiveFormalMock(userId)) {
+      throw new ConflictException({ code: 'FORMAL_MOCK_ACTIVE', message: '正式模考期间不会展示或推进知识讲解。' });
+    }
     if (input.action === 'complete' && delivery.contentSourceType === 'teaching_asset') {
       const completedAsset = delivery.contentSourceVersion ? await this.prisma.teachingInteractionEvent.findFirst({
         where: {

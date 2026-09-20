@@ -1084,6 +1084,50 @@ test('opens an intervention verification inside the Agent workspace', async ({ p
   await expect(page.getByText('在 Agent 内完成练习')).toBeVisible();
 });
 
+test('hydrates an interrupted teaching workspace by delivery id when continuing', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the teaching resume contract.');
+  await mockAgentWorkspace(page);
+  const deliveryId = 'delivery-resume-1';
+  const activeWorkspace = { kind: 'teaching', conversationId, deliveryId };
+  await page.route('**/api/v1/agent/journey/state', (route) => json(route, {
+    ...journeyState,
+    activeWorkspace,
+    stages: [{
+      ...journeyState.stages[0], id: `teaching:${deliveryId}`, kind: 'teaching', journeyId: deliveryId,
+      title: '看懂函数的水平平移', taskType: 'concept_learning', status: 'active', completedAt: null,
+      metrics: { ...journeyState.stages[0].metrics, allocatedQuestionCount: 0, answeredQuestionCount: 0 }, resume: activeWorkspace
+    }]
+  }));
+  const teachingAsset = {
+    id: 'asset-resume-1', stableKey: 'math-function-shift-resume', type: 'interactive_visualizer', subjectCode: 'math',
+    versionId: 'asset-version-resume-1', version: 1, language: 'zh-CN', difficultyBand: 'foundation', estimatedMinutes: 4,
+    renderer: 'interactive_component', payloadSchemaVersion: '1', resolverVersion: 'teaching-asset-resolver-v2', topicTitle: '函数平移',
+    title: '看懂函数的水平平移', summary: '拖动参数，观察顶点如何移动。', instructions: ['拖动水平参数 h。'],
+    component: { key: 'math.function-horizontal-shift', version: '1', props: { baseExpression: 'x^2', shiftMin: -4, shiftMax: 4, initialShift: 2 } },
+    activePrompt: { id: 'prompt-resume-1', prompt: 'y=(x-2)² 如何移动？', options: [{ id: 'right', label: '向右平移 2' }, { id: 'left', label: '向左平移 2' }] },
+    verificationPolicy: { required: true, mode: 'next_fresh_question', completionIsMasteryEvidence: false }, fallback: {}, sourceRefs: [], reviewState: 'published', publishedAt: '2026-09-12T00:00:00.000Z'
+  };
+  const delivery = {
+    schemaVersion: '1', id: deliveryId, interventionId: 'intervention-resume-1', status: 'in_progress', placement: 'between_sets',
+    subjectCode: 'math', topicId: 12, action: 'concept_learning', urgency: 'medium', reasonSummary: '继续完成上次函数平移讲解。', triggerCodes: ['REPEATED_TOPIC_ERROR'],
+    content: { sourceType: 'teaching_asset', sourceId: teachingAsset.id, sourceVersion: teachingAsset.versionId, title: teachingAsset.title, body: teachingAsset.summary, example: null, topicTitle: teachingAsset.topicTitle, teachingAsset },
+    offeredAt: '2026-09-13T08:02:00.000Z', startedAt: '2026-09-13T08:03:00.000Z', completedAt: null, deferredUntil: null, skippedAt: null, masteryChanged: false
+  };
+  let directLoads = 0;
+  await page.route('**/api/v1/agent/interventions/offer', (route) => json(route, { code: 'LEARNING_INTERVENTION_DELIVERY_DISABLED', message: '学习讲解建议暂未开放。' }, 503));
+  await page.route(`**/api/v1/agent/intervention-deliveries/${deliveryId}`, (route) => {
+    directLoads += 1;
+    return json(route, delivery);
+  });
+
+  await page.goto(`/zh/agent?conversation=${conversationId}`);
+  await page.getByRole('button', { name: '继续学习', exact: true }).click();
+  await expect(page).toHaveURL(new RegExp(`agentTeachingDeliveryId=${deliveryId}`));
+  await expect(page.getByLabel('Agent 知识讲解工作区')).toBeVisible();
+  await expect(page.getByLabel('Agent 知识讲解工作区')).toContainText('看懂函数的水平平移');
+  expect(directLoads).toBeGreaterThanOrEqual(1);
+});
+
 test('keeps active practice mounted while a teaching lesson opens in current assistance', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the teaching and practice workspace contract.');
   await mockAgentWorkspace(page);
@@ -1118,6 +1162,7 @@ test('keeps active practice mounted while a teaching lesson opens in current ass
     expiresAt: '2026-09-14T08:05:00.000Z', startedAt: null, completedAt: null, route: null, outcome: null, stability: null
   };
   await page.route('**/api/v1/agent/interventions/offer', (route) => json(route, { schemaVersion: '1', item: delivery(), suppressedReason: null }));
+  await page.route(`**/api/v1/agent/intervention-deliveries/${deliveryId}`, (route) => json(route, delivery()));
   await page.route(`**/api/v1/agent/intervention-deliveries/${deliveryId}/actions`, async (route) => {
     const action = String((await route.request().postDataJSON()).action ?? '');
     if (action === 'start') deliveryStatus = 'in_progress';

@@ -868,6 +868,12 @@ export function offerAgentIntervention(input: {
   });
 }
 
+export function getAgentInterventionDelivery(deliveryId: string) {
+  return requestJson<AgentInterventionDelivery>(`/api/v1/agent/intervention-deliveries/${encodeURIComponent(deliveryId)}`, {
+    withAuth: true
+  });
+}
+
 export function recordAgentInterventionTeachingInteraction(
   deliveryId: string,
   input: { clientRequestId: string; action: 'opened' | 'parameter_changed' | 'active_prompt_answered' | 'completed'; value?: string | number | boolean }

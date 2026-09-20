@@ -16,6 +16,7 @@ import {
   getAgentConversation,
   getAgentJourneyOverview,
   getAgentJourneyState,
+  getAgentInterventionDelivery,
   getAgentRun,
   listAgentConversations,
   offerAgentIntervention,
@@ -1266,16 +1267,31 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   }, [currentUser?.id, isResolvingAuth, loadConversation, mockExamSettlementRevision, mockExamWorkspace?.attemptId, mockExamWorkspace?.conversationId, mockExamWorkspace?.phase]);
 
   useEffect(() => {
-    if (isResolvingAuth || !currentUser || !conversation?.id || !conversation.messages.length || isSending) return;
+    if (isResolvingAuth || !currentUser || !conversation?.id || isSending) return;
+    if (!teachingDeliveryId && !conversation.messages.length) return;
     let current = true;
-    void offerAgentIntervention({ clientRequestId: clientRequestId(), context: 'agent_conversation', conversationId: conversation.id, language: locale === 'zh-CN' ? 'zh-CN' : 'en' })
-      .then((result) => { if (current) setIntervention(isDisplayableIntervention(result.item) ? result.item : null); })
-      .catch(() => { if (current) setIntervention(null); });
+    if (teachingDeliveryId) {
+      void getAgentInterventionDelivery(teachingDeliveryId)
+        .then((item) => {
+          if (!current) return;
+          setIntervention(isDisplayableIntervention(item) ? item : null);
+          if (!isDisplayableIntervention(item)) setLearningEntryError(t('agent.learningEntry.teachingUnavailable', '上次讲解已经结束，无法继续恢复。'));
+        })
+        .catch((loadError) => {
+          if (!current) return;
+          setIntervention(null);
+          setLearningEntryError(loadError instanceof Error ? loadError.message : t('agent.learningEntry.resumeFailed', '暂时无法恢复上次学习，请重试。'));
+        });
+    } else {
+      void offerAgentIntervention({ clientRequestId: clientRequestId(), context: 'agent_conversation', conversationId: conversation.id, language: locale === 'zh-CN' ? 'zh-CN' : 'en' })
+        .then((result) => { if (current) setIntervention(isDisplayableIntervention(result.item) ? result.item : null); })
+        .catch(() => { if (current) setIntervention(null); });
+    }
     void offerAgentInterventionVerification({ clientRequestId: clientRequestId(), conversationId: conversation.id })
       .then((result) => { if (current) setInterventionVerification(result.item); })
       .catch(() => { if (current) setInterventionVerification(null); });
     return () => { current = false; };
-  }, [conversation?.id, conversation?.messages.length, currentUser?.id, isResolvingAuth, isSending, locale]);
+  }, [conversation?.id, conversation?.messages.length, currentUser?.id, isResolvingAuth, isSending, locale, teachingDeliveryId, t]);
 
   async function chooseConversation(id: string) {
     if (id === activeConversationId && !learningWorkspace && !mockExamWorkspace && !pastPaperWorkspace) return;
@@ -1694,6 +1710,21 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       setIsStartingLearning(true);
       if (changesConversation) setActiveConversationId(workspace.conversationId);
       restoreJourneyWorkspace(workspace);
+      if (workspace.kind === 'teaching') {
+        try {
+          const [delivery] = await Promise.all([
+            getAgentInterventionDelivery(workspace.deliveryId),
+            changesConversation ? loadConversation(workspace.conversationId) : Promise.resolve(conversation)
+          ]);
+          if (!isDisplayableIntervention(delivery)) throw new Error(t('agent.learningEntry.teachingUnavailable', '上次讲解已经结束，无法继续恢复。'));
+          setIntervention(delivery);
+        } catch (resumeError) {
+          setLearningEntryError(resumeError instanceof Error ? resumeError.message : t('agent.learningEntry.resumeFailed', '暂时无法恢复上次学习，请重试。'));
+        } finally {
+          setIsStartingLearning(false);
+        }
+        return;
+      }
       if (changesConversation) {
         void loadConversation(workspace.conversationId)
           .catch(() => setLearningEntryError(t('agent.learningEntry.resumeRefreshFailed', '任务已恢复，但学习动态暂时没有刷新。')))
