@@ -233,6 +233,13 @@ type AgentMockExamWorkspace = {
 
 type AgentTaskLaunch = AgentPracticeLaunch | AgentMockExamLaunch;
 
+function isActivelyResumableWorkspace(workspace: AgentJourneyResumeWorkspace | null | undefined): workspace is AgentJourneyResumeWorkspace {
+  if (!workspace) return false;
+  if (workspace.kind === 'adaptive_round') return workspace.phase === 'practice';
+  if (workspace.kind === 'mock_exam') return workspace.phase === 'taking';
+  return true;
+}
+
 function PlanArtifactCard({ artifact, onLaunch, onUseFreePractice }: { artifact: AgentArtifact; onLaunch: (launch: AgentTaskLaunch) => void; onUseFreePractice?: () => void }) {
   const { locale, t } = useI18n();
   const [isStarting, setIsStarting] = useState(false);
@@ -389,7 +396,7 @@ function AgentJourneyHistoryView({ stages, activeId, loading, onSelect }: { stag
       <section className="agent-context-intro">
         <span className="agent-kicker">{t('agent.journey.historyKicker', '学习历程')}</span>
         <h2>{t('agent.journey.historyTitle', '看见做过什么，以及下一步如何变化')}</h2>
-        <p>{t('agent.journey.historyBody', '内部会话只作为可恢复的学习阶段，不要求你管理多个聊天。')}</p>
+        <p>{t('agent.journey.historyBody', '这里按学习阶段记录做题、讲解与结果；只有学科问答属于对话。')}</p>
       </section>
       <section className="agent-journey-history-view" aria-label={t('agent.journey.savedStages', '已保存的学习阶段')}>
         {loading ? <div className="agent-journey-loading"><Icon name="lucide:loader-circle" />{t('agent.journey.loadingHistory', '正在整理学习历程')}</div> : stages.length ? stages.map((stage) => {
@@ -1284,7 +1291,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
             const requestedId = params.get('conversation');
             const selectedId = items.some((item) => item.id === requestedId)
               ? requestedId!
-              : state?.activeWorkspace?.conversationId ?? items[0].id;
+              : isActivelyResumableWorkspace(state?.activeWorkspace) ? state.activeWorkspace.conversationId : items[0].id;
             setActiveConversationId(selectedId);
             await loadConversation(selectedId);
             if (!current) return;
@@ -1293,7 +1300,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
               || params.has('agentMockExamAttemptId')
               || params.has('agentPastPaper')
               || params.has('agentTeachingDeliveryId');
-            if (state?.activeWorkspace && !hasExplicitContext) restoreJourneyWorkspace(state.activeWorkspace);
+            if (isActivelyResumableWorkspace(state?.activeWorkspace) && !hasExplicitContext) restoreJourneyWorkspace(state.activeWorkspace);
           }
           clearErrorNotice();
           setIsLoading(false);
@@ -1743,6 +1750,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   const activityMessages = conversation?.messages.filter((message) => message.content.surface !== 'subject_qa' && message.role !== 'user') ?? [];
   const visibleMessages = isSubjectQa ? subjectQaMessages : activityMessages;
   const effectiveLearningMode = sessionLearningModeOverride ?? learningMode;
+  const resumableWorkspace = isActivelyResumableWorkspace(journeyState?.activeWorkspace) ? journeyState.activeWorkspace : null;
   const workspaceArtifactId = learningWorkspace?.artifactId ?? mockExamWorkspace?.artifactId;
   const workspaceArtifact = workspaceArtifactId
     ? conversation?.artifacts.find((item) => item.id === workspaceArtifactId) ?? null
@@ -1781,8 +1789,8 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   async function startOrResumeLearning() {
     if (isStartingLearning || isStartingFreePractice) return;
     setLearningEntryError('');
-    if (journeyState?.activeWorkspace) {
-      const workspace = journeyState.activeWorkspace;
+    if (resumableWorkspace) {
+      const workspace = resumableWorkspace;
       const changesConversation = workspace.conversationId !== activeConversationId;
       setIsStartingLearning(true);
       if (changesConversation) setActiveConversationId(workspace.conversationId);
@@ -2441,7 +2449,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                 <div>{[3, 5, 10].map((count) => <button key={count} type="button" className={freePracticeCount === count ? 'active' : ''} aria-pressed={freePracticeCount === count} onClick={() => setFreePracticeCount(count)}>{count} {t('agent.freePractice.questions', '题')}</button>)}</div>
               </fieldset>
               <button type="button" className="agent-free-practice-start" disabled={isStartingFreePractice || isStartingLearning} onClick={() => void startOrResumeLearning()}>
-                <Icon name={isStartingFreePractice || isStartingLearning ? 'lucide:loader-circle' : journeyState?.activeWorkspace ? 'lucide:rotate-ccw' : 'lucide:play'} />{isStartingLearning && journeyState?.activeWorkspace ? t('agent.learningEntry.resuming', '正在恢复') : isStartingFreePractice || isStartingLearning ? t('agent.freePractice.starting', '正在准备题目') : journeyState?.activeWorkspace ? t('agent.learningEntry.resume', '继续学习') : t('agent.learningEntry.start', '开始学习')}
+                <Icon name={isStartingFreePractice || isStartingLearning ? 'lucide:loader-circle' : resumableWorkspace ? 'lucide:rotate-ccw' : 'lucide:play'} />{isStartingLearning && resumableWorkspace ? t('agent.learningEntry.resuming', '正在恢复') : isStartingFreePractice || isStartingLearning ? t('agent.freePractice.starting', '正在准备题目') : resumableWorkspace ? t('agent.learningEntry.resume', '继续学习') : t('agent.learningEntry.start', '开始学习')}
               </button>
               <p><Icon name="lucide:shield-check" />{sessionLearningModeOverride === 'free' && learningMode === 'recommended'
                 ? t('agent.freePractice.sessionOverride', '只调整本次学习，不会修改你在学习设置中的默认模式。')
@@ -2457,10 +2465,10 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
               <header><Icon name="lucide:target" /><strong>{t('agent.context.currentTask', '当前推荐任务')}</strong></header>
               {latestTask ? <><b>{subjectLabel(latestTask.subject, t)} · {taskLabel(latestTask.type, t)}</b><span>{Number(latestSnapshot.estimatedMinutes ?? 0)} min · {t(`agent.confidence.${String(latestSnapshot.confidence ?? 'medium')}`, String(latestSnapshot.confidence ?? 'medium'))}</span></> : <p>{t('agent.context.waiting', '询问下一步后，这里会同步任务、预计时间和依据。')}</p>}
             </section>
-            <section className="agent-learning-entry-card" data-state={journeyState?.activeWorkspace ? 'resume' : 'start'}>
-              <div><span><Icon name={journeyState?.activeWorkspace ? 'lucide:rotate-ccw' : 'lucide:play'} /></span><div><small>{journeyState?.activeWorkspace ? t('agent.learningEntry.interrupted', '上次学习尚未完成') : t('agent.learningEntry.ready', '现在可以开始')}</small><strong>{journeyState?.activeWorkspace ? t('agent.learningEntry.resumeTitle', '从中断位置继续') : t('agent.learningEntry.startTitle', '开始一次新的学习')}</strong></div></div>
-              <p>{journeyState?.activeWorkspace ? t('agent.learningEntry.resumeBody', '保留原科目、题目位置和作答状态。') : t('agent.learningEntry.startBody', '优先执行当前推荐任务；没有待执行方案时使用你的默认练习设置。')}</p>
-              <button type="button" disabled={isStartingLearning || isStartingFreePractice} onClick={() => void startOrResumeLearning()}><Icon name={isStartingLearning || isStartingFreePractice ? 'lucide:loader-circle' : journeyState?.activeWorkspace ? 'lucide:rotate-ccw' : 'lucide:play'} />{isStartingLearning && journeyState?.activeWorkspace ? t('agent.learningEntry.resuming', '正在恢复') : isStartingLearning || isStartingFreePractice ? t('agent.learningEntry.preparing', '正在准备') : journeyState?.activeWorkspace ? t('agent.learningEntry.resume', '继续学习') : t('agent.learningEntry.start', '开始学习')}</button>
+            <section className="agent-learning-entry-card" data-state={resumableWorkspace ? 'resume' : 'start'}>
+              <div><span><Icon name={resumableWorkspace ? 'lucide:rotate-ccw' : 'lucide:play'} /></span><div><small>{resumableWorkspace ? t('agent.learningEntry.interrupted', '上次学习尚未完成') : t('agent.learningEntry.ready', '现在可以开始')}</small><strong>{resumableWorkspace ? t('agent.learningEntry.resumeTitle', '从中断位置继续') : t('agent.learningEntry.startTitle', '开始一次新的学习')}</strong></div></div>
+              <p>{resumableWorkspace ? t('agent.learningEntry.resumeBody', '保留原科目、题目位置和作答状态。') : t('agent.learningEntry.startBody', '优先执行当前推荐任务；没有待执行方案时使用你的默认练习设置。')}</p>
+              <button type="button" disabled={isStartingLearning || isStartingFreePractice} onClick={() => void startOrResumeLearning()}><Icon name={isStartingLearning || isStartingFreePractice ? 'lucide:loader-circle' : resumableWorkspace ? 'lucide:rotate-ccw' : 'lucide:play'} />{isStartingLearning && resumableWorkspace ? t('agent.learningEntry.resuming', '正在恢复') : isStartingLearning || isStartingFreePractice ? t('agent.learningEntry.preparing', '正在准备') : resumableWorkspace ? t('agent.learningEntry.resume', '继续学习') : t('agent.learningEntry.start', '开始学习')}</button>
               {learningEntryError ? <small role="alert">{learningEntryError}</small> : null}
             </section>
             <section className="agent-context-card sources">

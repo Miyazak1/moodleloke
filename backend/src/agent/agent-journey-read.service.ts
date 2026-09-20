@@ -35,6 +35,13 @@ type ResumeWorkspace =
   | { kind: 'past_paper'; conversationId: string; slug: string; questionId: number }
   | { kind: 'teaching'; conversationId: string; deliveryId: string };
 
+function isActiveLearningWorkspace(workspace: ResumeWorkspace | null): workspace is ResumeWorkspace {
+  if (!workspace) return false;
+  if (workspace.kind === 'adaptive_round') return workspace.phase === 'practice';
+  if (workspace.kind === 'mock_exam') return workspace.phase === 'taking';
+  return true;
+}
+
 type JourneyStage = {
   id: string;
   kind: 'practice' | 'free_practice' | 'mock_exam' | 'past_paper' | 'teaching';
@@ -374,7 +381,10 @@ export class AgentJourneyReadService {
     }
 
     stages.sort((left, right) => right.updatedAt.localeCompare(left.updatedAt));
-    const activeWorkspace = stages.find((item) => item.resume)?.resume ?? null;
+    // A submitted round may still expose a report route, but it is no longer an
+    // interrupted task. Only workspaces with a genuinely active learning action
+    // should drive the global "continue learning" entry.
+    const activeWorkspace = stages.map((item) => item.resume).find(isActiveLearningWorkspace) ?? null;
     return {
       schemaVersion: '1' as const,
       generatedAt: new Date().toISOString(),

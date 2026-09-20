@@ -417,7 +417,14 @@ test('shows a continue-learning entry for an interrupted stage', async ({ page }
     await new Promise((resolve) => setTimeout(resolve, 900));
     return json(route, { ...conversation, id: resumedConversationId, messages: conversation.messages.map((message) => ({ ...message, conversationId: resumedConversationId })) });
   });
-  await page.route('**/api/v1/csca-special-practice/**', (route) => json(route, { message: 'mock round intentionally unavailable' }, 503));
+  const now = '2026-09-15T10:00:00.000Z';
+  const resumedRound = {
+    session: { id: 51, userId: 42, subject: 'math', mode: 'adaptive', status: 'active', questionLanguage: 'zh', startedAt: now, completedAt: null, createdAt: now, updatedAt: now },
+    round: { id: 81, sessionId: 51, roundIndex: 1, status: 'active', plannerSnapshot: { mode: 'diagnostic' }, answers: {}, timeSpent: {}, currentQuestion: 1, correctCount: 0, wrongCount: 0, unansweredCount: 1, startedAt: now, submittedAt: null, version: 1 },
+    questions: [{ id: 101, orderNumber: 1, difficulty: 'basic', questionType: 'single-choice', prompt: '恢复后应当直接看到这道函数题。', options: [{ id: 'A', text: '1' }, { id: 'B', text: '2' }], topicId: 67, topicCode: 'function', topicTitle: '函数', position: 1 }]
+  };
+  await page.route('**/api/v1/csca-special-practice/adaptive/ai/entitlement', (route) => json(route, { enabled: true, unlimited: false, balanceUnits: 50 }));
+  await page.route('**/api/v1/csca-special-practice/adaptive/rounds/81**', (route) => json(route, resumedRound));
   await page.goto(`/zh/agent?conversation=${conversationId}`);
   const continueLearning = page.getByRole('button', { name: '继续学习', exact: true });
   await expect(continueLearning).toBeVisible();
@@ -426,7 +433,26 @@ test('shows a continue-learning entry for an interrupted stage', async ({ page }
   await expect(page).toHaveURL(new RegExp(`conversation=${resumedConversationId}.*agentRoundId=81`), { timeout: 500 });
   await expect(page).toHaveURL(new RegExp('agentRoundId=81'));
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
+  await expect(page.getByLabel('Agent 学习任务工作区')).toContainText('恢复后应当直接看到这道函数题。');
   await expect(page.getByLabel('Agent 学习动态')).toBeVisible();
+});
+
+test('does not present a submitted report as an interrupted learning task', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the lifecycle state contract.');
+  await mockAgentWorkspace(page);
+  const reportWorkspace = {
+    kind: 'adaptive_round', conversationId, artifactId, roundId: 81,
+    phase: 'report', taskType: 'diagnostic', subject: 'math'
+  };
+  await page.route('**/api/v1/agent/journey/state', (route) => json(route, {
+    ...journeyState,
+    activeWorkspace: reportWorkspace,
+    stages: journeyState.stages.map((stage) => ({ ...stage, status: 'report_ready', resume: reportWorkspace }))
+  }));
+  await page.goto(`/zh/agent?conversation=${conversationId}`);
+  await expect(page.getByRole('button', { name: '继续学习', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: '开始学习', exact: true })).toBeVisible();
+  await expect(page).not.toHaveURL(/agentRoundId=/);
 });
 
 test('starts student-initiated free practice without turning it into a recommended plan', async ({ page }, testInfo) => {
@@ -701,13 +727,21 @@ test('creates the recommended practice and opens it inside the Agent workspace',
       workspace: { kind: 'adaptive_round', phase: 'practice', taskType: 'diagnostic', subject: 'math', reasonCodes: [], objective: null }
     });
   });
-  await page.route('**/api/v1/csca-special-practice/**', (route) => json(route, { message: 'mock round intentionally unavailable' }, 503));
+  const now = '2026-09-15T10:00:00.000Z';
+  const startedRound = {
+    session: { id: 51, userId: 42, subject: 'math', mode: 'adaptive', status: 'active', questionLanguage: 'zh', startedAt: now, completedAt: null, createdAt: now, updatedAt: now },
+    round: { id: 81, sessionId: 51, roundIndex: 1, status: 'active', plannerSnapshot: { mode: 'diagnostic' }, answers: {}, timeSpent: {}, currentQuestion: 1, correctCount: 0, wrongCount: 0, unansweredCount: 1, startedAt: now, submittedAt: null, version: 1 },
+    questions: [{ id: 101, orderNumber: 1, difficulty: 'basic', questionType: 'single-choice', prompt: '开始后应当直接看到这道函数题。', options: [{ id: 'A', text: '1' }, { id: 'B', text: '2' }], topicId: 67, topicCode: 'function', topicTitle: '函数', position: 1 }]
+  };
+  await page.route('**/api/v1/csca-special-practice/adaptive/ai/entitlement', (route) => json(route, { enabled: true, unlimited: false, balanceUnits: 50 }));
+  await page.route('**/api/v1/csca-special-practice/adaptive/rounds/81**', (route) => json(route, startedRound));
   await page.goto('/zh/agent');
   const startLearning = page.getByRole('button', { name: '开始学习', exact: true });
   await expect(startLearning).toBeVisible();
   await startLearning.click();
   await expect(page).toHaveURL(new RegExp(`/zh/agent\\?.*agentRoundId=81`));
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
+  await expect(page.getByLabel('Agent 学习任务工作区')).toContainText('开始后应当直接看到这道函数题。');
   await expect(page.getByText('短诊断 · 数学')).toBeVisible();
   await expect(page.getByLabel('Agent 学习任务工作区').getByText('先完成一次短诊断，再根据结果调整训练。')).toBeVisible();
   expect(requestBody?.questionLanguage).toBe('zh');
