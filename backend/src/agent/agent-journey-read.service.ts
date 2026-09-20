@@ -4,9 +4,17 @@ import { AgentRuntimeFeatureFlagsService } from './agent-runtime-feature-flags.s
 
 const TERMINAL_ARTIFACT_STATUSES = new Set(['completed', 'failed', 'abandoned', 'cancelled', 'expired']);
 const ASSISTANCE_TOOLS = ['request_learning_assistance', 'request_past_paper_assistance'];
+const PLACEHOLDER_CONTENT_PATTERN = /(?:local\s+demo\s+data|golden\s+path|placeholder|fixture|seed(?:ed)?\s+data|test\s+data)/i;
 
 function objectValue(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
+}
+
+function hasUnavailableTeachingContent(delivery: { contentSnapshot: unknown; contentSourceId: string | null }) {
+  const content = objectValue(delivery.contentSnapshot);
+  return PLACEHOLDER_CONTENT_PATTERN.test([
+    content.title, content.body, content.topicTitle, delivery.contentSourceId
+  ].map((value) => String(value ?? '')).join(' '));
 }
 
 function positiveInteger(value: unknown): number | null {
@@ -325,15 +333,16 @@ export class AgentJourneyReadService {
       const context = objectValue(delivery.contextSnapshot);
       const conversationId = String(context.conversationId ?? '');
       if (!conversationId) continue;
-      const resume: ResumeWorkspace | null = delivery.status === 'in_progress'
+      const unavailableContent = hasUnavailableTeachingContent(delivery);
+      const resume: ResumeWorkspace | null = delivery.status === 'in_progress' && !unavailableContent
         ? { kind: 'teaching', conversationId, deliveryId: delivery.id }
         : null;
       const outcomeCorrect = delivery.outcomes.reduce((sum, item) => sum + item.correctCount, 0);
       const outcomeTotal = delivery.outcomes.reduce((sum, item) => sum + item.totalCount, 0);
       stages.push({
         id: `teaching:${delivery.id}`, kind: 'teaching', conversationId, journeyId: delivery.id,
-        title: String(objectValue(delivery.contentSnapshot).title ?? delivery.intervention.reasonSummary ?? '知识点讲解'),
-        subject: delivery.intervention.subjectCode, taskType: 'concept_learning', status: delivery.status,
+        title: unavailableContent ? '历史讲解（内容已失效）' : String(objectValue(delivery.contentSnapshot).title ?? delivery.intervention.reasonSummary ?? '知识点讲解'),
+        subject: delivery.intervention.subjectCode, taskType: 'concept_learning', status: unavailableContent ? 'content_unavailable' : delivery.status,
         startedAt: (delivery.startedAt ?? delivery.offeredAt ?? delivery.createdAt).toISOString(),
         updatedAt: delivery.updatedAt.toISOString(), completedAt: iso(delivery.completedAt),
         metrics: {

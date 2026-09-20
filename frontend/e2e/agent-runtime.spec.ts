@@ -1128,6 +1128,49 @@ test('hydrates an interrupted teaching workspace by delivery id when continuing'
   expect(directLoads).toBeGreaterThanOrEqual(1);
 });
 
+test('retires an interrupted teaching workspace when its content is no longer available', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the stale teaching recovery contract.');
+  await mockAgentWorkspace(page);
+  const deliveryId = 'delivery-stale-1';
+  const activeWorkspace = { kind: 'teaching', conversationId, deliveryId };
+  let journeyLoads = 0;
+  await page.route('**/api/v1/agent/journey/state', (route) => {
+    journeyLoads += 1;
+    return json(route, journeyLoads === 1 ? {
+      ...journeyState,
+      activeWorkspace,
+      stages: [{
+        ...journeyState.stages[0], id: `teaching:${deliveryId}`, kind: 'teaching', journeyId: deliveryId,
+        title: '历史讲解', taskType: 'concept_learning', status: 'active', completedAt: null,
+        metrics: { ...journeyState.stages[0].metrics, allocatedQuestionCount: 0, answeredQuestionCount: 0 }, resume: activeWorkspace
+      }]
+    } : {
+      ...journeyState,
+      activeWorkspace: null,
+      stages: [{
+        ...journeyState.stages[0], id: `teaching:${deliveryId}`, kind: 'teaching', journeyId: deliveryId,
+        title: '历史讲解（内容已失效）', taskType: 'concept_learning', status: 'content_unavailable', completedAt: null,
+        metrics: { ...journeyState.stages[0].metrics, allocatedQuestionCount: 0, answeredQuestionCount: 0 }, resume: null
+      }]
+    });
+  });
+  await page.route(`**/api/v1/agent/intervention-deliveries/${deliveryId}`, (route) => json(route, {
+    statusCode: 404,
+    errorCode: 'NOT_FOUND',
+    message: '学习讲解建议不存在。'
+  }, 404));
+
+  await page.goto(`/zh/agent?conversation=${conversationId}`);
+  await page.getByRole('button', { name: '继续学习', exact: true }).click();
+
+  await expect(page).toHaveURL(new RegExp(`/zh/agent\\?conversation=${conversationId}$`));
+  await expect(page.getByRole('button', { name: '继续学习', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: '开始学习', exact: true })).toBeVisible();
+  await expect(page.getByRole('alert')).toHaveText('上次讲解内容已失效，已返回当前可开始的学习任务。');
+  await expect(page.getByLabel('Agent 知识讲解工作区')).toHaveCount(0);
+  expect(journeyLoads).toBeGreaterThanOrEqual(2);
+});
+
 test('keeps active practice mounted while a teaching lesson opens in current assistance', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the teaching and practice workspace contract.');
   await mockAgentWorkspace(page);

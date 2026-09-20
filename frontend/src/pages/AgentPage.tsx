@@ -62,6 +62,7 @@ import { MockExamTakingView } from './CscaMockExamPage';
 import type { AdaptiveRoundReport, User } from '../lib/api';
 import { routes } from '../lib/routes';
 import { readMigratedLocalStorage, writeMigratedLocalStorage } from '../lib/storage-compat';
+import { ApiError } from '../lib/request';
 import '../styles/agent.css';
 
 type AgentPageProps = {
@@ -248,6 +249,11 @@ function isActivelyResumableWorkspace(workspace: AgentJourneyResumeWorkspace | n
   if (workspace.kind === 'adaptive_round') return workspace.phase === 'practice';
   if (workspace.kind === 'mock_exam') return workspace.phase === 'taking';
   return true;
+}
+
+function isUnavailableTeachingWorkspace(error: unknown) {
+  return error instanceof ApiError
+    && (error.code === 'INTERVENTION_CONTENT_UNAVAILABLE' || error.status === 404);
 }
 
 function AgentJourneyPlanView({ conversation }: { conversation: AgentConversation | null }) {
@@ -1280,6 +1286,13 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
         .catch((loadError) => {
           if (!current) return;
           setIntervention(null);
+          if (isUnavailableTeachingWorkspace(loadError)) {
+            setTeachingDeliveryId(null);
+            syncTeachingWorkspaceUrl(null, conversation.id);
+            setLearningEntryError(t('agent.learningEntry.staleTeaching', '上次讲解内容已失效，已返回当前可开始的学习任务。'));
+            void loadJourneyState().catch(() => undefined);
+            return;
+          }
           setLearningEntryError(loadError instanceof Error ? loadError.message : t('agent.learningEntry.resumeFailed', '暂时无法恢复上次学习，请重试。'));
         });
     } else {
@@ -1291,7 +1304,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       .then((result) => { if (current) setInterventionVerification(result.item); })
       .catch(() => { if (current) setInterventionVerification(null); });
     return () => { current = false; };
-  }, [conversation?.id, conversation?.messages.length, currentUser?.id, isResolvingAuth, isSending, locale, teachingDeliveryId, t]);
+  }, [conversation?.id, conversation?.messages.length, currentUser?.id, isResolvingAuth, isSending, loadJourneyState, locale, syncTeachingWorkspaceUrl, teachingDeliveryId, t]);
 
   async function chooseConversation(id: string) {
     if (id === activeConversationId && !learningWorkspace && !mockExamWorkspace && !pastPaperWorkspace) return;
@@ -1719,7 +1732,14 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
           if (!isDisplayableIntervention(delivery)) throw new Error(t('agent.learningEntry.teachingUnavailable', '上次讲解已经结束，无法继续恢复。'));
           setIntervention(delivery);
         } catch (resumeError) {
-          setLearningEntryError(resumeError instanceof Error ? resumeError.message : t('agent.learningEntry.resumeFailed', '暂时无法恢复上次学习，请重试。'));
+          if (isUnavailableTeachingWorkspace(resumeError)) {
+            setTeachingDeliveryId(null);
+            syncTeachingWorkspaceUrl(null, workspace.conversationId);
+            setLearningEntryError(t('agent.learningEntry.staleTeaching', '上次讲解内容已失效，已返回当前可开始的学习任务。'));
+            await loadJourneyState().catch(() => undefined);
+          } else {
+            setLearningEntryError(resumeError instanceof Error ? resumeError.message : t('agent.learningEntry.resumeFailed', '暂时无法恢复上次学习，请重试。'));
+          }
         } finally {
           setIsStartingLearning(false);
         }

@@ -99,7 +99,7 @@ export class AgentInterventionDeliveryService {
     if (!delivery) throw new NotFoundException('学习讲解建议不存在。');
     const content = jsonObject(delivery.contentSnapshot);
     if (isPlaceholderContent(content.title, content.body, content.topicTitle, delivery.contentSourceId)) {
-      throw new NotFoundException('当前讲解内容不可用。');
+      throw new ConflictException({ code: 'INTERVENTION_CONTENT_UNAVAILABLE', message: '当前讲解内容不可用。' });
     }
     return this.serialize(delivery);
   }

@@ -118,6 +118,7 @@ async function testExistingPlaceholderDeliveryIsSuppressed() {
   const result = await service.offer(42, { clientRequestId: 'existing-placeholder-1', context: 'agent_conversation', conversationId: 'conversation-1' });
   assert.equal(result.item, null);
   assert.equal(result.suppressedReason, 'PLACEHOLDER_CONTENT_REJECTED');
+  await assert.rejects(() => service.get(42, 'delivery-1'), (error) => error?.response?.code === 'INTERVENTION_CONTENT_UNAVAILABLE');
 }
 
 async function testActionsAreOwnedAndIdempotent() {

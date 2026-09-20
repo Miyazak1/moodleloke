@@ -131,8 +131,8 @@ async function parseApiError(response: Response) {
   let code: string | undefined;
   let message = `Request failed: ${response.status}`;
   try {
-    const body = (await response.clone().json()) as { code?: string; message?: string | string[] };
-    code = body.code;
+    const body = (await response.clone().json()) as { code?: string; errorCode?: string; message?: string | string[] };
+    code = body.code ?? body.errorCode;
     if (Array.isArray(body.message)) message = body.message.join(' ');
     else if (body.message) message = body.message;
   } catch {
