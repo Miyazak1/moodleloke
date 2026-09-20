@@ -222,8 +222,11 @@ export class AgentPracticeActionService {
       where: { conversationId: previous.conversationId, userId, type: 'learning_task' },
       select: { id: true, snapshot: true }
     });
-    if (journeyArtifacts.some((item) => objectValue(item.snapshot).previousArtifactId === previous.id)) {
-      throw new ConflictException({ code: 'FREE_PRACTICE_SUCCESSOR_EXISTS', message: '下一批练习已经创建，请直接继续。' });
+    const existingSuccessor = journeyArtifacts.find((item) => objectValue(item.snapshot).previousArtifactId === previous.id);
+    if (existingSuccessor) {
+      const launch = objectValue(existingSuccessor.snapshot).launch;
+      if (launch && typeof launch === 'object' && !Array.isArray(launch)) return launch;
+      throw new ConflictException({ code: 'FREE_PRACTICE_SUCCESSOR_INCOMPLETE', message: '下一批练习正在恢复，请稍后重试。' });
     }
 
     const toolName = 'continue_student_initiated_practice';

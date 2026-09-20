@@ -626,8 +626,12 @@ test('creates the recommended practice and opens it inside the Agent workspace',
   expect(typeof requestBody?.clientRequestId).toBe('string');
 });
 
-test('moves a completed practice report into chat and closes the focused question workspace', async ({ page }) => {
+test('keeps free-practice defaults separate and preserves the current batch when continuing', async ({ page }) => {
   await mockAgentWorkspace(page);
+  await page.addInitScript(() => {
+    window.localStorage.setItem('moodlelike.agent.freePracticeSubject', 'physics');
+    window.localStorage.setItem('moodlelike.agent.freePracticeCount', '10');
+  });
   const now = '2026-09-15T10:00:00.000Z';
   const roundReport = {
     session: { id: 51, userId: 42, subject: 'math', mode: 'diagnostic', status: 'completed', questionLanguage: 'zh', startedAt: now, completedAt: now, createdAt: now, updatedAt: now },
@@ -639,12 +643,37 @@ test('moves a completed practice report into chat and closes the focused questio
     items: [{ id: 101, orderNumber: 1, position: 1, difficulty: 'basic', questionType: 'single-choice', prompt: '函数 y=2x+1 的斜率是多少？', options: [{ id: 'A', text: '1' }, { id: 'B', text: '2' }], topicId: 67, topicCode: 'function', topicTitle: '函数与方程', selectedAnswer: 'A', correctAnswer: 'B', isCorrect: false, isUnanswered: false, explanation: '一次函数中 x 的系数是斜率。', knowledgeTags: ['函数'], timeSpentSeconds: 16, mastery: .32 }]
   };
   let reportAttempts = 0;
+  let continuationBody: Record<string, unknown> | null = null;
+  const freeTaskArtifact = {
+    ...artifact,
+    id: 'free-task-1',
+    type: 'learning_task',
+    status: 'completed',
+    snapshot: {
+      schemaVersion: '1', source: 'student_initiated',
+      task: { type: 'free_practice', subject: 'math', questionCount: 5 },
+      freePracticeJourneyId: 'free-task-1', batchIndex: 1, journeyStatus: 'active', roundId: 81
+    }
+  };
+  await page.route(new RegExp(`/api/v1/agent/conversations/${conversationId}(?:\\?.*)?$`), (route) => json(route, { ...conversation, artifacts: [...conversation.artifacts, freeTaskArtifact] }));
   await page.route('**/api/v1/csca-special-practice/adaptive/rounds/81/report**', (route) => {
     reportAttempts += 1;
     return reportAttempts === 1 ? json(route, { message: 'temporary report outage' }, 503) : json(route, roundReport);
   });
+  await page.route('**/api/v1/agent/practice-rounds/81/settle', (route) => json(route, { schemaVersion: '1', artifactId: 'free-task-1', roundId: 81, decision: 'completed' }));
+  await page.route('**/api/v1/agent/free-practice/free-task-1/continue', async (route) => {
+    continuationBody = await route.request().postDataJSON();
+    return json(route, {
+      schemaVersion: '1', artifactId: 'free-task-2', conversationId, sessionId: 52, roundId: 82,
+      mode: 'practice', questionCount: 5, subject: 'math', questionLanguage: 'zh', toolName: 'continue_student_initiated_practice', taskType: 'free_practice',
+      route: `/agent?conversation=${conversationId}&agentConversationId=${conversationId}&agentArtifactId=free-task-2&agentRoundId=82&agentView=practice&agentTaskType=free_practice&agentSubject=math`,
+      legacyRoute: '/csca-subjects/math/practice/rounds/82', journeyId: 'free-task-1', batchIndex: 2,
+      workspace: { kind: 'adaptive_round', phase: 'practice', taskType: 'free_practice', subject: 'math', reasonCodes: ['student_initiated', 'continuous_batch'], objective: null }
+    });
+  });
+  await page.route('**/api/v1/csca-special-practice/adaptive/rounds/82**', (route) => json(route, { message: 'mock next round intentionally unavailable' }, 503));
 
-  await page.goto(`/zh/agent?conversation=${conversationId}&agentConversationId=${conversationId}&agentArtifactId=${artifactId}&agentRoundId=81&agentView=report&agentTaskType=diagnostic&agentSubject=math`);
+  await page.goto(`/zh/agent?conversation=${conversationId}&agentConversationId=${conversationId}&agentArtifactId=free-task-1&agentRoundId=81&agentView=report&agentTaskType=free_practice&agentSubject=math`);
 
   await expect(page.getByRole('alert')).toContainText('学习结果还没有载入');
   await expect(page.getByRole('alert')).toContainText('本轮结果暂时无法加载');
@@ -654,13 +683,22 @@ test('moves a completed practice report into chat and closes the focused questio
   await expect(page.getByText('先处理一个最关键的薄弱点。')).toBeVisible();
   await expect(page.getByText('你答对 2/5 题，目前最值得优先复盘的是“函数与方程”。')).toBeVisible();
   await expect(page.getByLabel('聊天区学习报告')).toContainText('作答证据5 项');
-  await expect(page.getByRole('button', { name: '继续下一轮' })).toBeVisible();
+  await expect(page.getByRole('button', { name: '继续下一批' })).toBeVisible();
   await expect(page.getByText('一次函数中 x 的系数是斜率。')).toBeHidden();
   await expect(page.getByLabel('Agent 学习任务工作区')).toHaveCount(0);
   await expect(page.locator('.agent-context-rail')).toHaveCount(0);
+  await expect(page.getByText('继续下一批会沿用本批科目和题量；如需改变，只调整下一批。')).toBeVisible();
   await page.getByRole('button', { name: '学习历程', exact: true }).click();
   await expect(page.getByRole('complementary', { name: '学习历程' })).toBeVisible();
   await expect(page.getByRole('button', { name: /数学短诊断/ })).toBeVisible();
+  await page.getByRole('button', { name: '学习设置', exact: true }).click();
+  await expect(page.getByLabel('Agent 学习设置工作区')).toBeVisible();
+  await page.getByRole('button', { name: '关闭任务面板' }).click();
+  await page.getByRole('button', { name: '继续下一批', exact: true }).click();
+  await expect(page.getByLabel('Agent 学习设置工作区')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: '下一步', exact: true })).toHaveAttribute('aria-current', 'page');
+  await expect(page).toHaveURL(/agentRoundId=82/);
+  expect(continuationBody).toMatchObject({ subject: 'math', questionCount: 5, questionLanguage: 'zh' });
   await expect(page.getByLabel('向学习 Agent 提问')).toBeVisible();
   expect(reportAttempts).toBe(2);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);

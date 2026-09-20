@@ -680,6 +680,8 @@ type AgentErrorAction = {
   kind: 'send' | 'free-start' | 'free-continue' | 'free-end' | 'mock-continue';
   label: string;
   value?: string;
+  subject?: 'math' | 'physics' | 'chemistry';
+  questionCount?: number;
 };
 
 export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedirect }: AgentPageProps) {
@@ -770,7 +772,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     clearErrorNotice();
     if (action.kind === 'send') return void sendMessage(action.value);
     if (action.kind === 'free-start') return void beginFreePractice();
-    if (action.kind === 'free-continue') return void continueFreePracticeBatch();
+    if (action.kind === 'free-continue') return void continueFreePracticeBatch(action.subject && action.questionCount ? { subject: action.subject, questionCount: action.questionCount } : undefined);
     if (action.kind === 'free-end') return void endFreePracticeJourney();
     return void continueAfterMockExam();
   }
@@ -966,6 +968,8 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       if (workspace.subject === 'math' || workspace.subject === 'physics' || workspace.subject === 'chemistry') setFreePracticeSubject(workspace.subject);
       if (launch.questionCount === 3 || launch.questionCount === 5 || launch.questionCount === 10) setFreePracticeCount(launch.questionCount);
     }
+    setJourneySection('today');
+    writeMigratedLocalStorage(AGENT_JOURNEY_SECTION_STORAGE_KEY, LEGACY_AGENT_JOURNEY_SECTION_STORAGE_KEY, 'today');
     setLearningWorkspace(workspace);
     syncWorkspaceUrl(workspace);
   }, [syncWorkspaceUrl]);
@@ -1466,14 +1470,41 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
 
   function updateDefaultFreePracticeSubject(subject: 'math' | 'physics' | 'chemistry') {
     setDefaultFreePracticeSubject(subject);
-    setFreePracticeSubject(subject);
+    if (learningWorkspace?.taskType !== 'free_practice') setFreePracticeSubject(subject);
     writeMigratedLocalStorage(AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY, LEGACY_AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY, subject);
   }
 
   function updateDefaultFreePracticeCount(count: number) {
     setDefaultFreePracticeCount(count);
-    setFreePracticeCount(count);
+    if (learningWorkspace?.taskType !== 'free_practice') setFreePracticeCount(count);
     writeMigratedLocalStorage(AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY, LEGACY_AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY, String(count));
+  }
+
+  function currentFreePracticeConfig() {
+    const artifact = learningWorkspace?.artifactId
+      ? conversation?.artifacts.find((item) => item.id === learningWorkspace.artifactId)
+      : null;
+    const snapshot = artifact?.snapshot ?? {};
+    const task = snapshot.task && typeof snapshot.task === 'object' && !Array.isArray(snapshot.task)
+      ? snapshot.task as Record<string, unknown>
+      : {};
+    const subject = learningWorkspace?.subject === 'math' || learningWorkspace?.subject === 'physics' || learningWorkspace?.subject === 'chemistry'
+      ? learningWorkspace.subject
+      : task.subject === 'math' || task.subject === 'physics' || task.subject === 'chemistry'
+        ? task.subject
+        : freePracticeSubject;
+    const storedCount = Number(task.questionCount);
+    const questionCount = storedCount === 3 || storedCount === 5 || storedCount === 10 ? storedCount : freePracticeCount;
+    return { subject, questionCount };
+  }
+
+  function toggleFreePracticeAdjustment() {
+    if (!isAdjustingFreePractice) {
+      const current = currentFreePracticeConfig();
+      setFreePracticeSubject(current.subject);
+      setFreePracticeCount(current.questionCount);
+    }
+    setIsAdjustingFreePractice((value) => !value);
   }
 
   async function beginFreePractice() {
@@ -1505,14 +1536,15 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     }
   }
 
-  async function continueFreePracticeBatch() {
+  async function continueFreePracticeBatch(selection?: { subject: 'math' | 'physics' | 'chemistry'; questionCount: number }) {
     if (!learningWorkspace?.artifactId || freePracticeContinuationBusy) return;
+    const next = selection ?? currentFreePracticeConfig();
     clearErrorNotice();
     setFreePracticeContinuationBusy('continue');
     try {
       await settleAgentPractice(learningWorkspace.roundId);
       const launch = await continueAgentFreePractice(learningWorkspace.artifactId, {
-        clientRequestId: clientRequestId(), subject: freePracticeSubject, questionCount: freePracticeCount,
+        clientRequestId: clientRequestId(), subject: next.subject, questionCount: next.questionCount,
         questionLanguage: locale === 'en' ? 'en' : 'zh'
       });
       setIsAdjustingFreePractice(false);
@@ -1521,7 +1553,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     } catch {
       showError(
         t('agent.freePractice.continueRecoverable', '下一批尚未创建；本批结果已经保留。'),
-        { kind: 'free-continue', label: t('agent.freePractice.retryContinue', '重试继续') }
+        { kind: 'free-continue', label: t('agent.freePractice.retryContinue', '重试继续'), subject: next.subject, questionCount: next.questionCount }
       );
     } finally {
       setFreePracticeContinuationBusy(null);
@@ -2058,15 +2090,16 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                         onNavigate={(path) => void handleLearningWorkspaceNavigation(path)}
                         customActions={workspaceTaskType === 'free_practice' ? (
                           <div className="agent-report-free-actions">
+                            <p className="agent-report-free-next-hint">{t('agent.freePractice.nextBatchHint', '继续下一批会沿用本批科目和题量；如需改变，只调整下一批。')}</p>
                             <div className="agent-report-actions">
                               <button type="button" className="primary" disabled={freePracticeContinuationBusy !== null} onClick={() => void continueFreePracticeBatch()}><Icon name={freePracticeContinuationBusy === 'continue' ? 'lucide:loader-circle' : 'lucide:play'} />{t('agent.freePractice.continueSame', '继续下一批')}</button>
-                              <button type="button" disabled={freePracticeContinuationBusy !== null} onClick={() => setIsAdjustingFreePractice((value) => !value)}><Icon name="lucide:sliders-horizontal" />{t('agent.freePractice.adjust', '调整')}</button>
+                              <button type="button" disabled={freePracticeContinuationBusy !== null} onClick={toggleFreePracticeAdjustment}><Icon name="lucide:sliders-horizontal" />{t('agent.freePractice.adjust', '调整下一批')}</button>
                               <button type="button" className="quiet" disabled={freePracticeContinuationBusy !== null} onClick={() => void endFreePracticeJourney()}>{freePracticeContinuationBusy === 'end' ? t('agent.freePractice.ending', '正在结束') : t('agent.freePractice.end', '结束学习')}</button>
                             </div>
                             {isAdjustingFreePractice && <div className="agent-report-adjustment">
                               <label>{t('agent.freePractice.subject', '科目')}<span>{(['math', 'physics', 'chemistry'] as const).map((subject) => <button key={subject} type="button" className={freePracticeSubject === subject ? 'active' : ''} onClick={() => setFreePracticeSubject(subject)}>{subjectLabel(subject, t)}</button>)}</span></label>
                               <label>{t('agent.freePractice.batch', '题量')}<span>{([3, 5, 10] as const).map((count) => <button key={count} type="button" className={freePracticeCount === count ? 'active' : ''} onClick={() => setFreePracticeCount(count)}>{count}</button>)}</span></label>
-                              <button type="button" className="confirm" disabled={freePracticeContinuationBusy !== null} onClick={() => void continueFreePracticeBatch()}>{t('agent.freePractice.startAdjusted', '按新设置开始')}<Icon name="lucide:arrow-right" /></button>
+                              <button type="button" className="confirm" disabled={freePracticeContinuationBusy !== null} onClick={() => void continueFreePracticeBatch({ subject: freePracticeSubject, questionCount: freePracticeCount })}>{t('agent.freePractice.startAdjusted', '按新设置开始')}<Icon name="lucide:arrow-right" /></button>
                             </div>}
                           </div>
                         ) : undefined}
