@@ -369,7 +369,7 @@ test('resumes an unfinished stage selected from learning history', async ({ page
   await expect(page.getByLabel('向学习 Agent 提问')).toBeVisible();
 });
 
-test('starts student-initiated free practice without turning it into a recommended plan', async ({ page }) => {
+test('starts student-initiated free practice without turning it into a recommended plan', async ({ page }, testInfo) => {
   await mockAgentWorkspace(page);
   await page.addInitScript(() => window.localStorage.setItem('moodlelike.agent.learningMode', 'free'));
   let requestBody: Record<string, unknown> | null = null;
@@ -396,6 +396,11 @@ test('starts student-initiated free practice without turning it into a recommend
     }],
     artifacts: [artifact, freeArtifact]
   };
+  const freeRoundDetail = {
+    session: { id: 31, userId: 42, subject: 'physics', mode: 'adaptive', status: 'active', questionLanguage: 'zh', startedAt: '2026-09-15T08:35:00.000Z', completedAt: null, createdAt: '2026-09-15T08:35:00.000Z', updatedAt: '2026-09-15T08:35:00.000Z' },
+    round: { id: 41, sessionId: 31, roundIndex: 1, status: 'active', plannerSnapshot: { mode: 'practice' }, answers: {}, timeSpent: {}, currentQuestion: 1, correctCount: 0, wrongCount: 0, unansweredCount: 1, startedAt: '2026-09-15T08:35:00.000Z', submittedAt: null, version: 1 },
+    questions: [{ id: 401, orderNumber: 1, difficulty: 'basic', questionType: 'single-choice', prompt: '速度由 2 m/s 增加到 5 m/s，速度变化量是多少？', options: [{ id: 'A', text: '2 m/s' }, { id: 'B', text: '3 m/s' }], topicId: 47, topicCode: 'motion', topicTitle: '运动学', position: 1 }]
+  };
   await page.route(new RegExp(`/api/v1/agent/conversations/${conversationId}(?:\\?.*)?$`), (route) => json(route, {
     ...(freeStarted ? freeConversation : conversation)
   }));
@@ -412,7 +417,15 @@ test('starts student-initiated free practice without turning it into a recommend
       workspace: { kind: 'adaptive_round', phase: 'practice', taskType: 'free_practice', subject: 'physics', reasonCodes: ['student_initiated'], objective: null }
     });
   });
-  await page.route('**/api/v1/csca-special-practice/**', (route) => json(route, { message: 'mock round intentionally unavailable' }, 503));
+  await page.route('**/api/v1/csca-special-practice/adaptive/ai/entitlement', (route) => json(route, { enabled: true, unlimited: false, balanceUnits: 50 }));
+  await page.route('**/api/v1/csca-special-practice/adaptive/rounds/41**', (route) => {
+    if (route.request().method() === 'PATCH') return json(route, freeRoundDetail.round);
+    return json(route, freeRoundDetail);
+  });
+  await page.route('**/api/v1/csca-special-practice/adaptive/rounds/41/check', (route) => json(route, {
+    questionId: 401, selected: 'A', correctAnswer: 'B', isCorrect: false,
+    explanation: '速度变化量等于末速度减初速度。', knowledgeTags: ['运动学']
+  }));
   await page.goto('/zh/agent');
   await expect(page.getByRole('heading', { name: '你决定现在练什么、练多少' })).toBeVisible();
   await page.getByRole('button', { name: '物理', exact: true }).click();
@@ -429,6 +442,19 @@ test('starts student-initiated free practice without turning it into a recommend
   await expect(freeTask).toContainText('本次练习已开始');
   await expect(freeTask).not.toContainText('系统推荐 · 今日首选');
   await expect(freeTask).not.toContainText('题源暂不足');
+  await expect(page.getByLabel('Agent 学习任务工作区')).toContainText('速度由 2 m/s 增加到 5 m/s');
+  if (testInfo.project.name === 'desktop') {
+    await page.getByRole('button', { name: '学习设置', exact: true }).click();
+    await page.locator('.agent-settings-learning-mode').getByRole('button', { name: /智能推荐/ }).click();
+    await page.getByRole('button', { name: '关闭任务面板' }).click();
+    await expect(page.getByLabel('Agent 学习任务工作区')).toContainText('速度由 2 m/s 增加到 5 m/s');
+    await page.getByRole('button', { name: '学习设置', exact: true }).click();
+    await page.locator('.agent-settings-learning-mode').getByRole('button', { name: /自由练习/ }).click();
+    await page.getByRole('button', { name: '关闭任务面板' }).click();
+    await expect(page.getByLabel('Agent 学习任务工作区')).toContainText('速度由 2 m/s 增加到 5 m/s');
+    await page.getByLabel('Agent 学习任务工作区').getByRole('button', { name: 'A 2 m/s', exact: true }).click();
+    await expect(page.getByLabel('Agent 学习任务工作区').locator('.special-answer-result')).toContainText('正确答案是 B');
+  }
   expect(startAttempts).toBe(2);
 });
 
@@ -761,6 +787,14 @@ test('binds the active practice question to the composer and renders assistance 
   });
   await page.goto(`/zh/agent?conversation=${conversationId}&agentConversationId=${conversationId}&agentArtifactId=${artifactId}&agentRoundId=81&agentView=practice&agentTaskType=diagnostic&agentSubject=math`);
   await expect(page.getByLabel('当前练习题上下文')).toContainText('当前第 1/1 题');
+  await page.getByRole('button', { name: '学习设置', exact: true }).click();
+  await page.locator('.agent-settings-learning-mode').getByRole('button', { name: /自由练习/ }).click();
+  await page.getByRole('button', { name: '关闭任务面板' }).click();
+  await expect(page.getByLabel('Agent 学习任务工作区')).toContainText('函数 y=2x+1 的斜率是多少？');
+  await page.getByRole('button', { name: '学习设置', exact: true }).click();
+  await page.locator('.agent-settings-learning-mode').getByRole('button', { name: /智能推荐/ }).click();
+  await page.getByRole('button', { name: '关闭任务面板' }).click();
+  await expect(page.getByLabel('Agent 学习任务工作区')).toContainText('函数 y=2x+1 的斜率是多少？');
   await expect(page.getByLabel('Agent 学习任务工作区')).not.toContainText(/AI\s*\d+\s*次|AI\s*额度/);
   await expect(page.getByLabel('Agent 学习任务工作区').locator('.agent-assistance-panel')).toHaveCount(0);
   await expect(page.getByLabel('Agent 学习任务工作区').locator('.agent-assistance-bridge')).toBeVisible();
