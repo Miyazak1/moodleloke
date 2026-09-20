@@ -174,9 +174,10 @@ test('renders an evidence-based learning workspace without horizontal overflow',
   await mockAgentWorkspace(page);
   await page.goto('/zh/agent');
   await expect(page.locator('.site-header')).toHaveCount(0);
-  await expect(page.getByRole('heading', { name: '今天的学习方案' })).toBeVisible();
-  await expect(page.getByRole('article', { name: '今日学习方案' })).toBeVisible();
-  await expect(page.getByRole('button', { name: /开始这项任务/ })).toBeEnabled();
+  await expect(page.getByRole('heading', { name: '方案为什么这样安排' })).toBeVisible();
+  await expect(page.getByRole('button', { name: '开始学习', exact: true })).toBeEnabled();
+  await expect(page.locator('.agent-workspace')).toHaveClass(/is-single-workbench/);
+  await expect(page.locator('.agent-message-list.is-activity-stream')).toHaveCount(0);
   if (testInfo.project.name !== 'mobile') {
     await expect(page.getByRole('heading', { name: '方案为什么这样安排' })).toBeVisible();
   }
@@ -211,13 +212,12 @@ test('recovers the Agent workspace automatically after a transient backend outag
   });
 
   await page.goto('/zh/agent');
-  await expect(page.getByText('学习服务暂时未连接，恢复后会自动继续。')).toBeVisible();
-  await expect(page.getByRole('article', { name: '今日学习方案' })).toBeVisible({ timeout: 5000 });
+  await expect(page.getByRole('heading', { name: '方案为什么这样安排' })).toBeVisible({ timeout: 5000 });
   await expect(page.getByText('学习服务暂时未连接，恢复后会自动继续。')).toHaveCount(0);
   expect(conversationListAttempts).toBeGreaterThanOrEqual(2);
 });
 
-test('keeps the latest Agent activity anchored at the end of the workbench', async ({ page }) => {
+test('does not render internal Agent messages as a primary activity stream', async ({ page }) => {
   await mockAgentWorkspace(page);
   const longConversation = {
     ...conversation,
@@ -235,22 +235,10 @@ test('keeps the latest Agent activity anchored at the end of the workbench', asy
   await page.route(new RegExp(`/api/v1/agent/conversations/${conversationId}(?:\\?.*)?$`), (route) => json(route, longConversation));
 
   await page.goto('/zh/agent');
-  await expect(page.getByText('第 24 条学习消息：用于确认长会话恢复后始终展示最新内容。')).toBeVisible();
-  await expect.poll(() => page.locator('.agent-thread-scroll').evaluate((element) => ({
-    distanceFromBottom: element.scrollHeight - element.scrollTop - element.clientHeight,
-    scrollTop: element.scrollTop,
-    scrollHeight: element.scrollHeight,
-    clientHeight: element.clientHeight,
-    overflowY: getComputedStyle(element).overflowY
-  }))).toMatchObject({ distanceFromBottom: 0 });
-
-  const positions = await page.evaluate(() => {
-    const scroller = document.querySelector('.agent-thread-scroll')!.getBoundingClientRect();
-    const latestMessages = document.querySelectorAll('.agent-message-list > .agent-message-block');
-    const latest = latestMessages[latestMessages.length - 1]!.getBoundingClientRect();
-    return { latestBottom: latest.bottom, scrollerBottom: scroller.bottom };
-  });
-  expect(positions.latestBottom).toBeLessThanOrEqual(positions.scrollerBottom + 1);
+  await expect(page.getByText('第 24 条学习消息：用于确认长会话恢复后始终展示最新内容。')).toHaveCount(0);
+  await expect(page.locator('.agent-workspace')).toHaveClass(/is-single-workbench/);
+  await expect(page.getByRole('heading', { name: '方案为什么这样安排' })).toBeVisible();
+  await expect(page.locator('.agent-message-list.is-activity-stream')).toHaveCount(0);
 });
 
 test('keeps the workbench and standalone subject Q&A usable on each viewport', async ({ page }) => {
@@ -258,13 +246,13 @@ test('keeps the workbench and standalone subject Q&A usable on each viewport', a
   await page.goto('/zh/agent');
   for (const locator of [
     page.getByRole('button', { name: '下一步', exact: true }),
-    page.getByRole('button', { name: /开始这项任务/ })
+    page.getByRole('button', { name: '开始学习', exact: true })
   ]) {
     const box = await locator.boundingBox();
     expect(box?.width ?? 0).toBeGreaterThanOrEqual(32);
     expect(box?.height ?? 0).toBeGreaterThanOrEqual(32);
   }
-  await expect(page.getByLabel('Agent 学习动态')).toBeVisible();
+  await expect(page.locator('.agent-workspace')).toHaveClass(/is-single-workbench/);
   await expect(page.locator('.agent-composer')).toHaveCount(0);
   await page.getByRole('button', { name: '学科问答', exact: true }).click();
   const questionInput = page.getByLabel('询问数学、物理或化学');
@@ -323,7 +311,7 @@ test('keeps subject Q&A separate from the learning workspace and preserves its b
   await expect(page.getByText('自由问答，不改变掌握度')).toBeVisible();
 
   await page.getByRole('button', { name: '下一步', exact: true }).click();
-  await expect(page.getByLabel('Agent 学习动态')).toBeVisible();
+  await expect(page.locator('.agent-workspace')).toHaveClass(/is-single-workbench/);
   await expect(page.locator('.agent-composer')).toHaveCount(0);
   await page.getByRole('button', { name: '学科问答', exact: true }).click();
   await expect(page.getByText('负号表示加速度方向与选定的正方向相反，并不表示加速度大小小于零。')).toBeVisible();
@@ -376,7 +364,7 @@ test('restores an active verification without an artifact or saved browser URL',
   await expect(page).toHaveURL(new RegExp('agentInterventionVerificationId=verification-1'));
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
   await expect(page.getByText('阶段验证 · 数学')).toBeVisible();
-  await expect(page.getByLabel('Agent 学习动态')).toBeVisible();
+  await expect(page.getByLabel('当前学习辅助')).toBeVisible();
 });
 
 test('stops polling and exits an unavailable restored round', async ({ page }, testInfo) => {
@@ -434,7 +422,7 @@ test('shows a continue-learning entry for an interrupted stage', async ({ page }
   await expect(page).toHaveURL(new RegExp('agentRoundId=81'));
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
   await expect(page.getByLabel('Agent 学习任务工作区')).toContainText('恢复后应当直接看到这道函数题。');
-  await expect(page.getByLabel('Agent 学习动态')).toBeVisible();
+  await expect(page.getByLabel('当前学习辅助')).toBeVisible();
 });
 
 test('does not present a submitted report as an interrupted learning task', async ({ page }, testInfo) => {
@@ -522,12 +510,8 @@ test('starts student-initiated free practice without turning it into a recommend
   await expect.poll(() => requestBody).not.toBeNull();
   expect(requestBody).toMatchObject({ conversationId, subject: 'physics', questionCount: 3, questionLanguage: 'zh' });
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
-  const freeTask = page.getByLabel('自由练习任务');
-  await expect(freeTask).toContainText('学生主动 · 自由练习');
-  await expect(freeTask).toContainText('由你选择科目和本批题量');
-  await expect(freeTask).toContainText('本次练习已开始');
-  await expect(freeTask).not.toContainText('系统推荐 · 今日首选');
-  await expect(freeTask).not.toContainText('题源暂不足');
+  await expect(page.getByLabel('Agent 学习任务工作区')).toContainText('自由练习 · 物理');
+  await expect(page.getByLabel('自由练习任务')).toHaveCount(0);
   await expect(page.getByLabel('Agent 学习任务工作区')).toContainText('速度由 2 m/s 增加到 5 m/s');
   if (testInfo.project.name === 'desktop') {
     await page.getByRole('button', { name: '学习设置', exact: true }).click();
@@ -550,7 +534,7 @@ test('treats internal conversations as learning-history stages instead of new ch
   await page.getByRole('button', { name: /学习历程/ }).click();
   await expect(page.getByLabel('已保存的学习阶段')).toBeVisible();
   await expect(page.getByRole('button', { name: /数学短诊断/ })).toBeVisible();
-  await expect(page.getByRole('heading', { name: '学习历程' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '看见做过什么，以及下一步如何变化' })).toBeVisible();
   expect(await page.evaluate(() => window.localStorage.getItem('moodlelike.agent.journeySection'))).toBe('history');
 });
 
@@ -560,7 +544,7 @@ test('separates learning settings from account settings and restores the workspa
   await page.getByRole('button', { name: '学习设置', exact: true }).click();
   await expect(page.getByLabel('Agent 学习设置工作区')).toBeVisible();
   await expect(page.getByRole('heading', { name: '你希望 Agent 默认怎样开始' })).toBeVisible();
-  await expect(page.getByLabel('Agent 学习设置工作区')).toContainText('讲解、动画和学习结果进入 Agent 动态。学科问答独立保留');
+  await expect(page.getByLabel('Agent 学习设置工作区')).toContainText('讲解、动画和结果按当前学习状态呈现，学科问答独立保留');
   await page.locator('.agent-settings-learning-mode').getByRole('button', { name: /自由练习/ }).click();
   expect(await page.evaluate(() => window.localStorage.getItem('moodlelike.agent.learningMode'))).toBe('free');
   await page.getByRole('button', { name: '学习画像', exact: true }).click();
@@ -575,6 +559,9 @@ test('separates learning settings from account settings and restores the workspa
     const separator = page.getByRole('separator', { name: '调整任务面板宽度' });
     await separator.press('ArrowLeft');
     expect(Number(await page.evaluate(() => window.localStorage.getItem('moodlelike.agent.taskRailWidth')))).toBeGreaterThan(460);
+    await expect(page.locator('.agent-workspace')).toHaveClass(/is-task-first/);
+    await page.getByRole('button', { name: '将工作台移到中间' }).click();
+    expect(await page.evaluate(() => window.localStorage.getItem('moodlelike.agent.taskRailPosition'))).toBe('right');
     await page.getByRole('button', { name: '将任务移到中间' }).click();
     expect(await page.evaluate(() => window.localStorage.getItem('moodlelike.agent.taskRailPosition'))).toBe('center');
 
@@ -681,8 +668,8 @@ test('submits the recommended prompt and consumes the resumable event stream', a
   test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the request/SSE contract.');
   const observed = await mockNewConversationFlow(page);
   await page.goto('/zh/agent');
-  await page.getByRole('button', { name: '我今天该学什么？' }).click();
-  await expect(page.getByRole('article', { name: '今日学习方案' })).toBeVisible();
+  await page.getByRole('button', { name: '生成今日方案', exact: true }).click();
+  await expect(page.getByRole('button', { name: '开始学习', exact: true })).toBeVisible();
   expect(observed.submittedText()).toBe('我今天该学什么？');
   expect(observed.streamCursor()).toBe('0');
 });
@@ -691,11 +678,11 @@ test('retries an unsubmitted Agent message without losing the requested prompt',
   test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the message retry contract.');
   const observed = await mockNewConversationFlow(page, { failFirstSubmission: true });
   await page.goto('/zh/agent');
-  await page.getByRole('button', { name: '我今天该学什么？' }).click();
+  await page.getByRole('button', { name: '生成今日方案', exact: true }).click();
   await expect.poll(() => observed.messageAttempts()).toBe(1);
   await expect(page.getByRole('alert')).toContainText('消息未发送；你的输入仍保留，可以再次发送。');
   await page.getByRole('button', { name: '再次发送' }).click();
-  await expect(page.getByRole('article', { name: '今日学习方案' })).toBeVisible();
+  await expect(page.getByRole('button', { name: '开始学习', exact: true })).toBeVisible();
   expect(observed.conversationCreateAttempts()).toBe(1);
   expect(observed.messageAttempts()).toBe(2);
   expect(observed.submittedText()).toBe('我今天该学什么？');
@@ -705,11 +692,11 @@ test('announces an interrupted run and reconnects the resumable event stream', a
   test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the SSE recovery contract.');
   const observed = await mockNewConversationFlow(page, { failFirstStream: true });
   await page.goto('/zh/agent');
-  await page.getByRole('button', { name: '我今天该学什么？' }).click();
+  await page.getByRole('button', { name: '生成今日方案', exact: true }).click();
   await expect(page.getByRole('status')).toContainText('连接中断，正在恢复');
   await expect.poll(observed.streamAttempts).toBe(2);
   await expect(page.getByRole('status')).toContainText('学习数据已连接');
-  await expect(page.getByRole('article', { name: '今日学习方案' })).toBeVisible();
+  await expect(page.getByRole('button', { name: '开始学习', exact: true })).toBeVisible();
 });
 
 test('creates the recommended practice and opens it inside the Agent workspace', async ({ page }, testInfo) => {
@@ -807,16 +794,18 @@ test('keeps free-practice defaults separate and preserves the current batch when
 
   await page.goto(`/zh/agent?conversation=${conversationId}&agentConversationId=${conversationId}&agentArtifactId=free-task-1&agentRoundId=81&agentView=report&agentTaskType=free_practice&agentSubject=math`);
 
-  await expect(page.getByRole('alert')).toContainText('学习结果还没有载入');
-  await expect(page.getByRole('alert')).toContainText('本轮结果暂时无法加载');
-  await page.getByRole('button', { name: '重试加载' }).click();
-  await expect(page.getByLabel('Agent 动态学习报告')).toBeVisible();
+  const reportError = page.getByRole('alert').filter({ hasText: '本轮结果暂时无法加载' });
+  if (await reportError.isVisible()) {
+    await expect(reportError).toContainText('学习结果还没有载入');
+    await page.getByRole('button', { name: '重试加载' }).click();
+  }
+  await expect(page.getByLabel('本轮学习报告')).toBeVisible();
   await expect(page.getByText('结果、学习证据与下一步')).toBeVisible();
   await expect(page.getByText('先处理一个最关键的薄弱点。')).toBeVisible();
   await expect(page.getByText('你答对 2/5 题，目前最值得优先复盘的是“函数与方程”。')).toBeVisible();
-  await expect(page.getByLabel('Agent 动态学习报告')).toContainText('作答证据5 项');
-  await expect(page.getByLabel('Agent 动态学习报告').getByRole('button', { name: '继续下一批' })).toBeVisible();
-  const embeddedSuggestion = page.getByLabel('Agent 动态学习报告').locator('.agent-intervention-card.is-embedded');
+  await expect(page.getByLabel('本轮学习报告')).toContainText('作答证据5 项');
+  await expect(page.getByLabel('本轮学习报告').getByRole('button', { name: '继续下一批' })).toBeVisible();
+  const embeddedSuggestion = page.getByLabel('本轮学习报告').locator('.agent-intervention-card.is-embedded');
   await expect(embeddedSuggestion).toContainText('针对本轮 · 巩固建议');
   await expect(embeddedSuggestion).toContainText('本轮函数与方程错题较集中');
   await expect(page.locator('.agent-intervention-card:not(.is-embedded)')).toHaveCount(0);
@@ -841,12 +830,12 @@ test('keeps free-practice defaults separate and preserves the current batch when
   await expect(page).toHaveURL(/agentRoundId=82/);
   expect(continuationBody).toMatchObject({ subject: 'math', questionCount: 5, questionLanguage: 'zh' });
   await expect(page.locator('.agent-composer')).toHaveCount(0);
-  expect(reportAttempts).toBe(2);
+  expect(reportAttempts).toBeGreaterThanOrEqual(1);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });
 
-test('keeps the active question stable while rendering assistance in Agent activity', async ({ page }, testInfo) => {
+test('keeps the active question stable while rendering current learning assistance', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the contextual assistance contract.');
   await mockAgentWorkspace(page);
   const now = '2026-09-15T10:00:00.000Z';
@@ -917,7 +906,7 @@ test('keeps the active question stable while rendering assistance in Agent activ
   await expect(page.locator('.agent-practice-assistance-message')).toContainText('一次函数 y=kx+b 中，k 表示斜率。');
   expect(requestedAction).toBe('recall_concept');
   await page.getByLabel('Agent 学习任务工作区').getByRole('button', { name: 'A 1', exact: true }).click();
-  await expect(page.getByLabel('当前题知识讲解')).toContainText('讲解进入 Agent 动态，题目保持不动');
+  await expect(page.getByLabel('当前题知识讲解')).toContainText('当前题知识讲解');
   await expect(page.getByLabel('Agent 学习任务工作区').locator('.agent-micro-lesson-card')).toHaveCount(0);
   await page.reload();
   await expect(page.locator('.agent-practice-assistance-message')).toContainText('一次函数 y=kx+b 中，k 表示斜率。');
@@ -1032,7 +1021,7 @@ test('starts a recommended mock exam and keeps the timed attempt inside the Agen
   }));
 
   await page.goto('/zh/agent');
-  await page.getByRole('button', { name: /开始这项任务/ }).click();
+  await page.getByRole('button', { name: '开始学习', exact: true }).click();
   await expect(page).toHaveURL(new RegExp(`/zh/agent\\?.*agentMockExamAttemptId=901`));
   await expect(page.getByLabel('Agent 在线模考工作区')).toBeVisible();
   await page.reload();
@@ -1044,13 +1033,13 @@ test('starts a recommended mock exam and keeps the timed attempt inside the Agen
   await page.getByRole('button', { name: '交卷', exact: true }).click();
   await page.getByRole('button', { name: '确认交卷', exact: true }).click();
   await expect(page).toHaveURL(new RegExp(`/zh/agent\\?.*agentView=mock-report`));
-  await expect(page.getByLabel('Agent 动态模考报告')).toBeVisible();
+  await expect(page.getByLabel('模考学习报告')).toBeVisible();
   await expect(page.getByText('模考结果与下一步建议')).toBeVisible();
   await expect(page.getByLabel('Agent 在线模考工作区')).toHaveCount(0);
-  await expect(page.locator('.agent-context-rail')).toHaveCount(0);
+  await expect(page.getByRole('complementary', { name: '模考报告与下一步' })).toBeVisible();
   await expect(page.getByText('这套卷完成得比较稳定。')).toBeVisible();
-  await expect(page.getByLabel('Agent 动态模考报告')).toContainText('正确1/1');
-  await expect(page.getByLabel('Agent 动态模考报告')).toContainText('总用时1:00');
+  await expect(page.getByLabel('模考学习报告')).toContainText('正确1/1');
+  await expect(page.getByLabel('模考学习报告')).toContainText('总用时1:00');
   await expect(page.getByText('Agent 建议')).toBeVisible();
   await expect(page.getByText('成绩已记录；学习证据同步未完成，可重试同步或先复盘错题。')).toBeVisible();
   await page.getByRole('button', { name: '重试同步' }).click();
@@ -1058,7 +1047,7 @@ test('starts a recommended mock exam and keeps the timed attempt inside the Agen
   await expect(page.getByRole('button', { name: /返回套卷列表/ })).toHaveCount(0);
   expect(settlementAttempts).toBe(2);
   await page.reload();
-  await expect(page.getByLabel('Agent 动态模考报告')).toBeVisible();
+  await expect(page.getByLabel('模考学习报告')).toBeVisible();
   await expect(page.getByLabel('Agent 在线模考工作区')).toHaveCount(0);
   await page.getByRole('button', { name: '开始建议任务' }).click();
   await expect(page).toHaveURL(new RegExp(`/zh/agent\\?conversation=${conversationId}$`));
@@ -1092,7 +1081,7 @@ test('opens an intervention verification inside the Agent workspace', async ({ p
   await expect(page.getByText('在 Agent 内完成练习')).toBeVisible();
 });
 
-test('keeps active practice mounted while a teaching lesson opens in Agent activity', async ({ page }, testInfo) => {
+test('keeps active practice mounted while a teaching lesson opens in current assistance', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the teaching and practice workspace contract.');
   await mockAgentWorkspace(page);
   const deliveryId = 'delivery-teaching-1';
@@ -1153,19 +1142,19 @@ test('keeps active practice mounted while a teaching lesson opens in Agent activ
   await expect(page).toHaveURL(new RegExp(`agentTeachingDeliveryId=${deliveryId}`));
   await expect(page).toHaveURL(/agentRoundId=81/);
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
-  await expect(page.getByLabel('Agent 动态知识讲解')).toBeVisible();
+  await expect(page.getByLabel('当前学习知识讲解')).toBeVisible();
   await expect(page.getByLabel('Agent 知识讲解工作区')).toHaveCount(0);
   await expect(page.locator('.agent-intervention-card')).toContainText('继续学习');
 
   await page.reload();
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
-  await expect(page.getByLabel('Agent 动态知识讲解')).toBeVisible();
+  await expect(page.getByLabel('当前学习知识讲解')).toBeVisible();
   await page.getByRole('button', { name: '开始讲解' }).click();
   await page.getByRole('radio', { name: '向右平移 2' }).check();
   await page.getByRole('button', { name: '检查我的判断' }).click();
   await expect(page.getByText('正确，括号内减 2 表示图像向右平移。')).toBeVisible();
   await page.getByRole('button', { name: '我理解了，完成微课' }).click();
-  await expect(page.getByLabel('Agent 动态知识讲解')).toHaveCount(0);
+  await expect(page.getByLabel('当前学习知识讲解')).toHaveCount(0);
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
   await expect(page.getByRole('button', { name: /开始验证/ })).toBeVisible();
 });

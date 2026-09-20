@@ -256,7 +256,7 @@ export function AgentLearningSettingsView({
             <div>{([3, 5, 10] as const).map((count) => <button key={count} type="button" disabled={saving === 'mode'} className={defaultFreePracticeCount === count ? 'selected' : ''} aria-pressed={defaultFreePracticeCount === count} onClick={() => void saveLearningPreference({ defaultFreePracticeCount: count })}>{count} {t('agent.freePractice.questions', '题')}</button>)}</div>
           </fieldset>
         </div>}
-        <div className="agent-settings-note"><Icon name="lucide:activity" /><span>{t('me.settings.modeNote', '做题区只负责当前作答；讲解、动画和学习结果进入 Agent 动态。学科问答独立保留。')}</span></div>
+        <div className="agent-settings-note"><Icon name="lucide:activity" /><span>{t('me.settings.modeNote', '做题区负责当前作答；讲解、动画和结果按当前学习状态呈现，学科问答独立保留。')}</span></div>
         <footer><small>{saving === 'mode' ? t('me.common.saving', '保存中…') : t('me.settings.modeSaved', '默认方式已保存到账号，可跨设备和 Agent 插件同步。')}</small></footer>
       </section>}
 
