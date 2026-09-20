@@ -174,12 +174,12 @@ test('renders an evidence-based learning workspace without horizontal overflow',
   await mockAgentWorkspace(page);
   await page.goto('/zh/agent');
   await expect(page.locator('.site-header')).toHaveCount(0);
-  await expect(page.getByRole('heading', { name: '方案为什么这样安排' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '今天从这一项开始' })).toBeVisible();
   await expect(page.getByRole('button', { name: '开始学习', exact: true })).toBeEnabled();
   await expect(page.locator('.agent-workspace')).toHaveClass(/is-single-workbench/);
   await expect(page.locator('.agent-message-list.is-activity-stream')).toHaveCount(0);
   if (testInfo.project.name !== 'mobile') {
-    await expect(page.getByRole('heading', { name: '方案为什么这样安排' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '今天从这一项开始' })).toBeVisible();
   }
   await expect(page.locator('.agent-learning-mode')).toHaveCount(0);
   if (testInfo.project.name === 'desktop') {
@@ -212,7 +212,7 @@ test('recovers the Agent workspace automatically after a transient backend outag
   });
 
   await page.goto('/zh/agent');
-  await expect(page.getByRole('heading', { name: '方案为什么这样安排' })).toBeVisible({ timeout: 5000 });
+  await expect(page.getByRole('heading', { name: '今天从这一项开始' })).toBeVisible({ timeout: 5000 });
   await expect(page.getByText('学习服务暂时未连接，恢复后会自动继续。')).toHaveCount(0);
   expect(conversationListAttempts).toBeGreaterThanOrEqual(2);
 });
@@ -237,7 +237,7 @@ test('does not render internal Agent messages as a primary activity stream', asy
   await page.goto('/zh/agent');
   await expect(page.getByText('第 24 条学习消息：用于确认长会话恢复后始终展示最新内容。')).toHaveCount(0);
   await expect(page.locator('.agent-workspace')).toHaveClass(/is-single-workbench/);
-  await expect(page.getByRole('heading', { name: '方案为什么这样安排' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '今天从这一项开始' })).toBeVisible();
   await expect(page.locator('.agent-message-list.is-activity-stream')).toHaveCount(0);
 });
 
@@ -416,6 +416,9 @@ test('shows a continue-learning entry for an interrupted stage', async ({ page }
   await page.goto(`/zh/agent?conversation=${conversationId}`);
   const continueLearning = page.getByRole('button', { name: '继续学习', exact: true });
   await expect(continueLearning).toBeVisible();
+  await expect(page.getByRole('heading', { name: '继续完成上次学习' })).toBeVisible();
+  await expect(page.getByText('完成后建议')).toBeVisible();
+  await expect(page.getByText('当前推荐任务')).toHaveCount(0);
   await expect(page.getByText('保留原科目、题目位置和作答状态。')).toBeVisible();
   await continueLearning.click();
   await expect(page).toHaveURL(new RegExp(`conversation=${resumedConversationId}.*agentRoundId=81`), { timeout: 500 });

@@ -141,6 +141,15 @@ function taskLabel(value: unknown, t: (key: string, fallback?: string) => string
   return labels[String(value)] ?? t('agent.task.learning', '学习任务');
 }
 
+function localizedTaskTitle(value: string | null | undefined, locale: string, t: (key: string, fallback?: string) => string) {
+  if (!value) return '';
+  if (locale !== 'zh-CN') return value;
+  return value
+    .replace(/\bchemistry\b/gi, t('agent.subject.chemistry', '化学'))
+    .replace(/\bphysics\b/gi, t('agent.subject.physics', '物理'))
+    .replace(/\bmath\b/gi, t('agent.subject.math', '数学'));
+}
+
 type AgentDecisionImpact = {
   status: 'stable_mastery_confirmed' | 'consolidation_required' | 'evidence_inconclusive' | 'verification_scheduled' | 'phase_recorded' | string;
   currentPhase?: 'immediate' | 'retention' | 'transfer';
@@ -1635,6 +1644,11 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   const workspaceOutputMessages = currentWorkspaceOutput ? [currentWorkspaceOutput] : [];
   const effectiveLearningMode = sessionLearningModeOverride ?? learningMode;
   const resumableWorkspace = isActivelyResumableWorkspace(journeyState?.activeWorkspace) ? journeyState.activeWorkspace : null;
+  const resumableStage = resumableWorkspace
+    ? journeyState?.stages.find((stage) => stage.resume?.conversationId === resumableWorkspace.conversationId && stage.status === 'active') ?? null
+    : null;
+  const resumableSubject = resumableWorkspace && 'subject' in resumableWorkspace ? resumableWorkspace.subject : resumableStage?.subject;
+  const resumableTaskType = resumableWorkspace && 'taskType' in resumableWorkspace ? resumableWorkspace.taskType : resumableStage?.taskType;
   const workspaceArtifactId = learningWorkspace?.artifactId ?? mockExamWorkspace?.artifactId;
   const workspaceArtifact = workspaceArtifactId
     ? conversation?.artifacts.find((item) => item.id === workspaceArtifactId) ?? null
@@ -2283,7 +2297,6 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
             <button type="button" className="agent-report-rail-qa" onClick={() => chooseJourneySection('qa')}><Icon name="lucide:messages-square" /><span><strong>{t('agent.reportRail.askTitle', '这轮有疑问？')}</strong><small>{t('agent.reportRail.askBody', '去学科问答，自由询问数学、物理或化学知识。')}</small></span><Icon name="lucide:arrow-right" /></button>
           </aside>
         ) : <aside className={journeySection === 'today' ? `agent-context-rail${effectiveLearningMode === 'free' ? ' is-free-practice' : ''}` : 'agent-context-rail is-journey-view'} aria-label={journeySection === 'history' ? t('agent.journey.history', '学习历程') : journeySection === 'plan' ? t('agent.journey.plan', '学习计划') : journeySection === 'weakness' ? t('agent.journey.weakness', '错题与薄弱点') : journeySection === 'resources' ? t('agent.journey.resources', '学习资料') : t('agent.context.aria', '当前学习上下文')}>
-          {journeySection === 'today' && <span className={isSending ? 'agent-live-status running agent-workbench-status' : 'agent-live-status agent-workbench-status'} role="status" aria-live="polite"><i />{isSending ? runStatus : t('agent.status.ready', '学习数据已连接')}</span>}
           {journeySection === 'plan' ? <AgentJourneyPlanView conversation={conversation} /> : journeySection === 'history' ? (
             <AgentJourneyHistoryView
               stages={journeyState?.stages ?? []}
@@ -2299,10 +2312,11 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
             <AgentJourneyResourcesView overview={journeyOverview} loading={isJourneyOverviewLoading} error={journeyOverviewError} onOpen={(item) => activeConversationId && openPastPaperWorkspace(item.slug, activeConversationId)} />
           ) : <>
           {effectiveLearningMode === 'free' ? <>
-            <section className="agent-context-intro">
-              <span className="agent-kicker">{t('agent.freePractice.kicker', '学生主动学习')}</span>
+            <section className="agent-context-intro agent-workbench-heading">
+              <div><span className="agent-kicker">{t('agent.freePractice.kicker', '学生主动学习')}</span>
               <h2>{t('agent.freePractice.title', '你决定现在练什么、练多少')}</h2>
-              <p>{t('agent.freePractice.body', '每次只取一个小批次，做完可以继续，也可以随时结束；作答仍进入同一学习证据。')}</p>
+              <p>{t('agent.freePractice.body', '每次只取一个小批次，做完可以继续，也可以随时结束；作答仍进入同一学习证据。')}</p></div>
+              <span className={isSending ? 'agent-live-status running agent-workbench-status' : 'agent-live-status agent-workbench-status'} role="status" aria-live="polite"><i />{isSending ? runStatus : t('agent.status.ready', '学习数据已连接')}</span>
               {sessionLearningModeOverride === 'free' && learningMode === 'recommended' ? (
                 <button type="button" className="agent-session-mode-reset" onClick={() => setSessionLearningModeOverride(null)}>
                   <Icon name="lucide:undo-2" />{t('agent.freePractice.backToRecommendation', '返回系统推荐')}
@@ -2326,30 +2340,35 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                 : t('agent.freePractice.evidence', '自由练习与系统推荐共用题源、辅助规则和学习证据。')}</p>
             </section>
           </> : <>
-            <section className="agent-context-intro">
-              <span className="agent-kicker">{t('agent.context.kicker', '学习上下文')}</span>
-              <h2>{t('agent.context.title', '为什么推荐这个下一步')}</h2>
-              <p>{t('agent.context.body', '这里只展示有事实来源的状态；建议可以接受或忽略，默认学习方式可在学习设置中调整。')}</p>
+            <section className="agent-context-intro agent-workbench-heading">
+              <div><span className="agent-kicker">{t('agent.context.today', '今日学习')}</span>
+              <h2>{resumableWorkspace ? t('agent.context.resumeHeading', '继续完成上次学习') : t('agent.context.startHeading', '今天从这一项开始')}</h2>
+              <p>{resumableWorkspace ? t('agent.context.resumeLead', '先回到中断位置；完成后再执行新的学习建议。') : t('agent.context.body', '根据你的目标、真实作答和当前题源安排下一步。')}</p></div>
+              <span className={isSending ? 'agent-live-status running agent-workbench-status' : 'agent-live-status agent-workbench-status'} role="status" aria-live="polite"><i />{isSending ? runStatus : t('agent.status.ready', '学习数据已连接')}</span>
             </section>
-            <section className="agent-context-card">
-              <header><Icon name="lucide:target" /><strong>{t('agent.context.currentTask', '当前推荐任务')}</strong></header>
-              {latestTask ? <>
-                <h3>{latestArtifact?.title || `${subjectLabel(latestTask.subject, t)} · ${taskLabel(latestTask.type, t)}`}</h3>
-                {latestArtifact?.summary ? <p>{latestArtifact.summary}</p> : null}
-                <b>{subjectLabel(latestTask.subject, t)} · {taskLabel(latestTask.type, t)}</b>
-                <span>{Number(latestSnapshot.estimatedMinutes ?? 0)} min · {t(`agent.confidence.${String(latestSnapshot.confidence ?? 'medium')}`, String(latestSnapshot.confidence ?? 'medium'))}</span>
-              </> : <><p>{t('agent.context.waiting', '生成今日方案后，这里会同步任务、预计时间和依据。')}</p><button type="button" className="agent-generate-plan" disabled={isSending} onClick={() => void sendMessage(t('agent.empty.primaryPrompt', '我今天该学什么？'))}><Icon name={isSending ? 'lucide:loader-circle' : 'lucide:wand-sparkles'} />{isSending ? t('agent.context.generating', '正在生成方案') : t('agent.context.generate', '生成今日方案')}</button></>}
-            </section>
-            {(latestTask || resumableWorkspace) && <section className="agent-learning-entry-card" data-state={resumableWorkspace ? 'resume' : 'start'}>
-              <div><span><Icon name={resumableWorkspace ? 'lucide:rotate-ccw' : 'lucide:play'} /></span><div><small>{resumableWorkspace ? t('agent.learningEntry.interrupted', '上次学习尚未完成') : t('agent.learningEntry.ready', '现在可以开始')}</small><strong>{resumableWorkspace ? t('agent.learningEntry.resumeTitle', '从中断位置继续') : t('agent.learningEntry.startTitle', '开始一次新的学习')}</strong></div></div>
-              <p>{resumableWorkspace ? t('agent.learningEntry.resumeBody', '保留原科目、题目位置和作答状态。') : recommendationUnavailable ? t('agent.learningEntry.unavailableBody', '当前推荐任务暂时没有足够题源，你可以改用自由练习。') : t('agent.learningEntry.startBody', '优先执行当前推荐任务；没有待执行方案时使用你的默认练习设置。')}</p>
-              <button type="button" disabled={isStartingLearning || isStartingFreePractice} onClick={() => void startOrResumeLearning()}><Icon name={isStartingLearning || isStartingFreePractice ? 'lucide:loader-circle' : recommendationUnavailable ? 'lucide:shuffle' : resumableWorkspace ? 'lucide:rotate-ccw' : 'lucide:play'} />{isStartingLearning && resumableWorkspace ? t('agent.learningEntry.resuming', '正在恢复') : isStartingLearning || isStartingFreePractice ? t('agent.learningEntry.preparing', '正在准备') : resumableWorkspace ? t('agent.learningEntry.resume', '继续学习') : recommendationUnavailable ? t('agent.plan.useFreePractice', '改做自由练习') : t('agent.learningEntry.start', '开始学习')}</button>
+            {resumableWorkspace && <section className="agent-learning-entry-card agent-primary-learning-card" data-state="resume">
+              <div><span><Icon name="lucide:rotate-ccw" /></span><div><small>{t('agent.learningEntry.interrupted', '上次学习尚未完成')}</small><strong>{resumableStage?.title || `${subjectLabel(resumableSubject, t)} · ${taskLabel(resumableTaskType, t)}`}</strong></div></div>
+              {resumableStage?.metrics.allocatedQuestionCount ? <div className="agent-resume-progress"><span><b>{resumableStage.metrics.answeredQuestionCount}</b>/{resumableStage.metrics.allocatedQuestionCount} {t('agent.freePractice.questions', '题')}</span><i><em style={{ width: `${Math.min(100, Math.round((resumableStage.metrics.answeredQuestionCount / resumableStage.metrics.allocatedQuestionCount) * 100))}%` }} /></i></div> : null}
+              <p>{t('agent.learningEntry.resumeBody', '保留原科目、题目位置和作答状态。')}</p>
+              <button type="button" disabled={isStartingLearning || isStartingFreePractice} onClick={() => void startOrResumeLearning()}><Icon name={isStartingLearning ? 'lucide:loader-circle' : 'lucide:rotate-ccw'} />{isStartingLearning ? t('agent.learningEntry.resuming', '正在恢复') : t('agent.learningEntry.resume', '继续学习')}</button>
               {learningEntryError ? <small role="alert">{learningEntryError}</small> : null}
             </section>}
+            <div className={`agent-workbench-support-grid${resumableWorkspace ? '' : ' is-primary'}`}>
+            <section className="agent-context-card agent-recommendation-card">
+              <header><Icon name="lucide:target" /><strong>{resumableWorkspace ? t('agent.context.afterResume', '完成后建议') : t('agent.context.currentTask', '当前推荐任务')}</strong></header>
+              {latestTask ? <>
+                <h3>{localizedTaskTitle(latestArtifact?.title, locale, t) || `${subjectLabel(latestTask.subject, t)} · ${taskLabel(latestTask.type, t)}`}</h3>
+                {latestArtifact?.summary ? <p>{latestArtifact.summary}</p> : null}
+                <div className="agent-task-meta"><span>{subjectLabel(latestTask.subject, t)} · {taskLabel(latestTask.type, t)}</span><span>{Number(latestSnapshot.estimatedMinutes ?? 0)} min · {t(`agent.confidence.${String(latestSnapshot.confidence ?? 'medium')}`, String(latestSnapshot.confidence ?? 'medium'))}</span></div>
+                {!resumableWorkspace ? <button type="button" className="agent-primary-start" disabled={isStartingLearning || isStartingFreePractice} onClick={() => void startOrResumeLearning()}><Icon name={isStartingLearning || isStartingFreePractice ? 'lucide:loader-circle' : recommendationUnavailable ? 'lucide:shuffle' : 'lucide:play'} />{isStartingLearning || isStartingFreePractice ? t('agent.learningEntry.preparing', '正在准备') : recommendationUnavailable ? t('agent.plan.useFreePractice', '改做自由练习') : t('agent.learningEntry.start', '开始学习')}</button> : null}
+                {!resumableWorkspace && learningEntryError ? <small role="alert">{learningEntryError}</small> : null}
+              </> : <><p>{t('agent.context.waiting', '生成今日方案后，这里会同步任务、预计时间和依据。')}</p><button type="button" className="agent-generate-plan" disabled={isSending} onClick={() => void sendMessage(t('agent.empty.primaryPrompt', '我今天该学什么？'))}><Icon name={isSending ? 'lucide:loader-circle' : 'lucide:wand-sparkles'} />{isSending ? t('agent.context.generating', '正在生成方案') : t('agent.context.generate', '生成今日方案')}</button></>}
+            </section>
             <section className="agent-context-card sources">
               <header><Icon name="lucide:database" /><strong>{t('agent.context.sources', '事实来源')}</strong></header>
               <ul><li><i />{t('agent.context.sourceGoal', '你的目标与考试日期')}</li><li><i />{t('agent.context.sourceEvidence', '练习、错题和模考证据')}</li><li><i />{t('agent.context.sourceSupply', '当前已发布合格题源')}</li></ul>
             </section>
+            </div>
             <section className="agent-context-note"><Icon name="lucide:info" /><p>{t('agent.context.note', 'Agent 不直接改写掌握度。每次状态变化必须来自真实学习事件。')}</p></section>
           </>}
           </>}
