@@ -723,6 +723,8 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     };
   });
   const [mockExamSettlement, setMockExamSettlement] = useState<AgentMockExamSettlement | null>(null);
+  const [mockExamSettlementStatus, setMockExamSettlementStatus] = useState<'idle' | 'loading' | 'ready' | 'unavailable'>('idle');
+  const [mockExamSettlementRevision, setMockExamSettlementRevision] = useState(0);
   const [pastPaperWorkspace, setPastPaperWorkspace] = useState<{ slug: string; conversationId: string; questionId?: number } | null>(() => {
     if (typeof window === 'undefined') return null;
     const params = new URLSearchParams(window.location.search);
@@ -1301,21 +1303,24 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   useEffect(() => {
     if (isResolvingAuth || !currentUser || !mockExamWorkspace || mockExamWorkspace.phase !== 'report') {
       setMockExamSettlement(null);
+      setMockExamSettlementStatus('idle');
       return;
     }
     let current = true;
     setMockExamSettlement(null);
+    setMockExamSettlementStatus('loading');
     void settleAgentMockExam(mockExamWorkspace.attemptId)
       .then(async (result) => {
         if (!current) return;
         setMockExamSettlement(result);
+        setMockExamSettlementStatus('ready');
         await loadConversation(mockExamWorkspace.conversationId).catch(() => undefined);
       })
-      .catch((nextError) => {
-        if (current) setError(nextError instanceof Error ? nextError.message : t('agent.mockExam.settleFailed', '模考已提交，但学习方案暂未同步。'));
+      .catch(() => {
+        if (current) setMockExamSettlementStatus('unavailable');
       });
     return () => { current = false; };
-  }, [currentUser?.id, isResolvingAuth, loadConversation, mockExamWorkspace?.attemptId, mockExamWorkspace?.conversationId, mockExamWorkspace?.phase, t]);
+  }, [currentUser?.id, isResolvingAuth, loadConversation, mockExamSettlementRevision, mockExamWorkspace?.attemptId, mockExamWorkspace?.conversationId, mockExamWorkspace?.phase]);
 
   useEffect(() => {
     if (isResolvingAuth || !currentUser || !conversation?.id || !conversation.messages.length || isSending) return;
@@ -2029,7 +2034,14 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                     <div className="agent-message-avatar"><span><Icon name="lucide:clipboard-check" /></span></div>
                     <div className="agent-message-content">
                       <span className="agent-message-author">{t('agent.message.agent', 'CSCA 学习 Agent')}</span>
-                      <AgentMockExamResultMessage attemptId={mockExamWorkspace.attemptId} settlement={mockExamSettlement} isContinuing={isSending} onContinue={() => void continueAfterMockExam()} />
+                      <AgentMockExamResultMessage
+                        attemptId={mockExamWorkspace.attemptId}
+                        settlement={mockExamSettlement}
+                        settlementStatus={mockExamSettlementStatus === 'ready' ? 'ready' : mockExamSettlementStatus === 'unavailable' ? 'unavailable' : 'loading'}
+                        isContinuing={isSending}
+                        onContinue={() => void continueAfterMockExam()}
+                        onRetrySettlement={() => setMockExamSettlementRevision((current) => current + 1)}
+                      />
                     </div>
                   </div>
                 )}

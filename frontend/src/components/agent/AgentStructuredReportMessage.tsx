@@ -25,12 +25,26 @@ function Metric({ label, value, tone }: { label: string; value: ReactNode; tone?
   return <span className="agent-report-metric" data-tone={tone}><small>{label}</small><strong>{value}</strong></span>;
 }
 
-function ReportLoading({ label }: { label: string }) {
-  return <div className="agent-structured-report-state"><Icon name="lucide:loader-circle" /><span>{label}</span></div>;
-}
-
-function ReportError({ message }: { message: string }) {
-  return <div className="agent-structured-report-state is-error"><Icon name="lucide:circle-alert" /><span>{message}</span></div>;
+function ReportState({
+  status,
+  title,
+  body,
+  actionLabel,
+  onAction
+}: {
+  status: 'loading' | 'error';
+  title: string;
+  body: string;
+  actionLabel?: string;
+  onAction?: () => void;
+}) {
+  return (
+    <div className={`agent-structured-report-state${status === 'error' ? ' is-error' : ''}`} role={status === 'error' ? 'alert' : 'status'}>
+      <Icon name={status === 'error' ? 'lucide:circle-alert' : 'lucide:loader-circle'} />
+      <span><strong>{title}</strong><small>{body}</small></span>
+      {actionLabel && onAction ? <button type="button" onClick={onAction}><Icon name="lucide:refresh-cw" />{actionLabel}</button> : null}
+    </div>
+  );
 }
 
 export function AgentAdaptiveResultMessage({
@@ -47,6 +61,7 @@ export function AgentAdaptiveResultMessage({
   const { locale, t } = useI18n();
   const [report, setReport] = useState<AdaptiveRoundReport | null>(null);
   const [error, setError] = useState('');
+  const [loadRevision, setLoadRevision] = useState(0);
   const [isContinuing, setIsContinuing] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [questionsOpen, setQuestionsOpen] = useState(false);
@@ -58,12 +73,12 @@ export function AgentAdaptiveResultMessage({
     setError('');
     void getAdaptivePracticeRoundReport(roundId, locale === 'zh-CN' ? 'zh' : locale)
       .then((result) => { if (active) setReport(result); })
-      .catch((nextError) => { if (active) setError(nextError instanceof Error ? nextError.message : t('agent.report.loadFailed', '本轮结果暂时无法加载。')); });
+      .catch(() => { if (active) setError(t('agent.report.loadFailed', '本轮结果暂时无法加载。')); });
     return () => { active = false; };
-  }, [locale, roundId, t]);
+  }, [loadRevision, locale, roundId, t]);
 
-  if (error) return <ReportError message={error} />;
-  if (!report) return <ReportLoading label={t('agent.report.loading', '正在整理本轮学习结果')} />;
+  if (error) return <ReportState status="error" title={t('agent.report.loadFailedTitle', '学习结果还没有载入')} body={error} actionLabel={t('agent.report.retryLoad', '重试加载')} onAction={() => setLoadRevision((current) => current + 1)} />;
+  if (!report) return <ReportState status="loading" title={t('agent.report.loading', '正在整理本轮学习结果')} body={t('agent.report.loadingBody', '完成后会在聊天中显示结果、学习证据和下一步。')} />;
 
   const summary = report.summary;
   const primaryWeakTopic = report.weakTopics[0]?.title
@@ -193,17 +208,22 @@ export function AgentAdaptiveResultMessage({
 export function AgentMockExamResultMessage({
   attemptId,
   settlement,
+  settlementStatus,
   isContinuing,
-  onContinue
+  onContinue,
+  onRetrySettlement
 }: {
   attemptId: number;
   settlement: AgentMockExamSettlement | null;
+  settlementStatus: 'loading' | 'ready' | 'unavailable';
   isContinuing: boolean;
   onContinue: () => void;
+  onRetrySettlement: () => void;
 }) {
   const { locale, t } = useI18n();
   const [report, setReport] = useState<MockExamReport | null>(null);
   const [error, setError] = useState('');
+  const [loadRevision, setLoadRevision] = useState(0);
 
   useEffect(() => {
     let active = true;
@@ -211,12 +231,12 @@ export function AgentMockExamResultMessage({
     setError('');
     void getMockExamReport(String(attemptId), { locale })
       .then((result) => { if (active) setReport(result); })
-      .catch((nextError) => { if (active) setError(nextError instanceof Error ? nextError.message : t('agent.mockExam.reportUnavailable', '模考结果暂时无法加载。')); });
+      .catch(() => { if (active) setError(t('agent.mockExam.reportUnavailable', '模考结果暂时无法加载。')); });
     return () => { active = false; };
-  }, [attemptId, locale, t]);
+  }, [attemptId, loadRevision, locale, t]);
 
-  if (error) return <ReportError message={error} />;
-  if (!report) return <ReportLoading label={t('agent.mockExam.loadingReport', '正在整理模考结果')} />;
+  if (error) return <ReportState status="error" title={t('agent.mockExam.reportUnavailableTitle', '模考结果还没有载入')} body={error} actionLabel={t('agent.report.retryLoad', '重试加载')} onAction={() => setLoadRevision((current) => current + 1)} />;
+  if (!report) return <ReportState status="loading" title={t('agent.mockExam.loadingReport', '正在整理模考结果')} body={t('agent.mockExam.loadingReportBody', '成绩就绪后会在聊天中显示失分点、学习证据和下一步。')} />;
 
   const countedTotal = report.summary.correctCount + report.summary.wrongCount + report.summary.unansweredCount;
   const total = report.summary.total > 0 ? report.summary.total : countedTotal > 0 ? countedTotal : report.attempt.paper.questionCount;
@@ -230,6 +250,11 @@ export function AgentMockExamResultMessage({
   const focus = settlement?.learningReview.focusTopics[0]?.title ?? report.knowledgeStats.slice().sort((a, b) => (b.wrong / Math.max(1, b.total)) - (a.wrong / Math.max(1, a.total)))[0]?.tag;
   const nextTask = settlement?.learningReview.nextDecision?.primaryTask;
   const wrongItems = report.items.filter((item) => !item.isCorrect);
+  const nextDecisionCopy = nextTask
+    ? `${nextTask.type === 'targeted_practice' ? t('agent.task.targetedPractice', '针对性练习') : t('agent.task.learning', '下一项学习任务')} · ${settlement?.learningReview.nextDecision?.reasonSummary ?? ''}`
+    : settlementStatus === 'loading'
+      ? t('agent.mockExam.nextSyncing', '正在把本次模考纳入学习历程；你现在可以先复盘错题。')
+      : t('agent.mockExam.nextUnavailable', '成绩已记录；学习证据同步未完成，可重试同步或先复盘错题。');
 
   return (
     <section className="agent-structured-report" aria-label={t('agent.mockExam.chatReportAria', '聊天区模考报告')}>
@@ -255,7 +280,7 @@ export function AgentMockExamResultMessage({
 
         <div className="agent-report-insight">
           <Icon name="lucide:route" />
-          <div><small>{t('agent.mockExam.nextDecision', 'Agent 建议')}</small><strong>{nextTask ? `${nextTask.type === 'targeted_practice' ? t('agent.task.targetedPractice', '针对性练习') : t('agent.task.learning', '下一项学习任务')} · ${settlement?.learningReview.nextDecision?.reasonSummary ?? ''}` : t('agent.mockExam.nextUnavailable', '学习证据已记录；下一步建议暂未返回，可先复盘已有错题。')}</strong></div>
+          <div><small>{t('agent.mockExam.nextDecision', 'Agent 建议')}</small><strong>{nextDecisionCopy}</strong></div>
         </div>
 
         <div className="agent-report-actions">
@@ -265,6 +290,7 @@ export function AgentMockExamResultMessage({
               {wrongItems.map((item) => <article key={item.id}><span className="is-wrong">{item.orderNumber}</span><div><strong><MathContent text={item.prompt} /></strong><small>{item.isUnanswered ? t('agent.report.unanswered', '未作答') : `${item.selected} → ${item.correctAnswer}`}</small><p><MathContent text={item.explanation} /></p></div></article>)}
             </div>
           </details> : <span className="agent-report-detail-unavailable"><Icon name="lucide:info" />{t('agent.mockExam.questionDetailsUnavailable', '本次仅保留了汇总成绩，逐题明细暂不可用。')}</span>}
+          {settlementStatus === 'unavailable' ? <button type="button" onClick={onRetrySettlement}><Icon name="lucide:refresh-cw" />{t('agent.mockExam.retrySettlement', '重试同步')}</button> : null}
           {nextTask && <button type="button" className="primary" disabled={isContinuing} onClick={onContinue}><Icon name={isContinuing ? 'lucide:loader-circle' : 'lucide:arrow-right'} />{isContinuing ? t('agent.mockExam.materializing', '正在生成') : t('agent.mockExam.continue', '开始建议任务')}</button>}
         </div>
 
@@ -272,7 +298,11 @@ export function AgentMockExamResultMessage({
           <summary><span><Icon name="lucide:database" />{t('agent.report.viewEvidence', '查看学习证据')}</span><Icon name="lucide:chevron-down" /></summary>
           <div className="agent-report-detail-body">
             <section><small>{t('agent.mockExam.focusTopics', '优先复盘')}</small><div className="agent-report-tags">{report.knowledgeStats.slice(0, 5).map((item) => <span key={item.tag}>{item.tag} · {item.wrong}/{item.total}</span>)}</div></section>
-            <section><small>{t('agent.mockExam.evidenceUpdated', '学习证据')}</small><p>{settlement ? t('agent.mockExam.evidenceAccepted', '本次已接收 {count} 条可信答题证据').replace('{count}', String(settlement.learningReview.evidence.acceptedCount)) : t('agent.mockExam.syncingBody', '系统正在接收本次模考证据。')}</p></section>
+            <section><small>{t('agent.mockExam.evidenceUpdated', '学习证据')}</small><p>{settlement
+              ? t('agent.mockExam.evidenceAccepted', '本次已接收 {count} 条可信答题证据').replace('{count}', String(settlement.learningReview.evidence.acceptedCount))
+              : settlementStatus === 'loading'
+                ? t('agent.mockExam.syncingBody', '系统正在接收本次模考证据。')
+                : t('agent.mockExam.syncUnavailableBody', '成绩已经保留，但本次学习证据尚未同步；可返回报告重试。')}</p></section>
           </div>
         </details>
       </div>

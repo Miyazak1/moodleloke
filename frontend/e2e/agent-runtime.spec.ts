@@ -598,7 +598,7 @@ test('creates the recommended practice and opens it inside the Agent workspace',
 test('moves a completed practice report into chat and closes the focused question workspace', async ({ page }) => {
   await mockAgentWorkspace(page);
   const now = '2026-09-15T10:00:00.000Z';
-  await page.route('**/api/v1/csca-special-practice/adaptive/rounds/81/report**', (route) => json(route, {
+  const roundReport = {
     session: { id: 51, userId: 42, subject: 'math', mode: 'diagnostic', status: 'completed', questionLanguage: 'zh', startedAt: now, completedAt: now, createdAt: now, updatedAt: now },
     round: { id: 81, sessionId: 51, roundIndex: 1, status: 'completed', plannerSnapshot: { mode: 'diagnostic' }, answers: { '101': 'A' }, timeSpent: { '101': 16 }, currentQuestion: 1, correctCount: 0, wrongCount: 1, unansweredCount: 0, startedAt: now, submittedAt: now, version: 2 },
     summary: { correctCount: 2, wrongCount: 3, unansweredCount: 0, total: 5, accuracy: 40, totalSeconds: 16 },
@@ -606,10 +606,18 @@ test('moves a completed practice report into chat and closes the focused questio
     diagnosticCoverage: { subject: 'math', coveredCount: 2, totalCount: 4, coverageRate: 50, confidenceReadyCount: 2, lowConfidenceCount: 2, coveredDimensions: [], insufficientDimensions: [] },
     nextRecommendation: 'continue_weak_topics', remediationPlan: { triggered: false, trigger: null, conceptCards: [], variantPractice: { availableCount: 0, questionIds: [] }, nextAction: 'continue' },
     items: [{ id: 101, orderNumber: 1, position: 1, difficulty: 'basic', questionType: 'single-choice', prompt: '函数 y=2x+1 的斜率是多少？', options: [{ id: 'A', text: '1' }, { id: 'B', text: '2' }], topicId: 67, topicCode: 'function', topicTitle: '函数与方程', selectedAnswer: 'A', correctAnswer: 'B', isCorrect: false, isUnanswered: false, explanation: '一次函数中 x 的系数是斜率。', knowledgeTags: ['函数'], timeSpentSeconds: 16, mastery: .32 }]
-  }));
+  };
+  let reportAttempts = 0;
+  await page.route('**/api/v1/csca-special-practice/adaptive/rounds/81/report**', (route) => {
+    reportAttempts += 1;
+    return reportAttempts === 1 ? json(route, { message: 'temporary report outage' }, 503) : json(route, roundReport);
+  });
 
   await page.goto(`/zh/agent?conversation=${conversationId}&agentConversationId=${conversationId}&agentArtifactId=${artifactId}&agentRoundId=81&agentView=report&agentTaskType=diagnostic&agentSubject=math`);
 
+  await expect(page.getByRole('alert')).toContainText('学习结果还没有载入');
+  await expect(page.getByRole('alert')).toContainText('本轮结果暂时无法加载');
+  await page.getByRole('button', { name: '重试加载' }).click();
   await expect(page.getByLabel('聊天区学习报告')).toBeVisible();
   await expect(page.getByText('结果、学习证据与下一步')).toBeVisible();
   await expect(page.getByText('先处理一个最关键的薄弱点。')).toBeVisible();
@@ -620,6 +628,7 @@ test('moves a completed practice report into chat and closes the focused questio
   await expect(page.getByLabel('Agent 学习任务工作区')).toHaveCount(0);
   await expect(page.locator('.agent-context-rail')).toHaveCount(0);
   await expect(page.getByLabel('向学习 Agent 提问')).toBeVisible();
+  expect(reportAttempts).toBe(2);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });
@@ -743,9 +752,10 @@ test('starts a recommended mock exam and keeps the timed attempt inside the Agen
   };
   await page.route('**/api/v1/csca-mock-exam/attempts/901/submit', (route) => json(route, report));
   await page.route('**/api/v1/csca-mock-exam/attempts/901/report**', (route) => json(route, report));
-  let settlementCalled = false;
+  let settlementAttempts = 0;
   await page.route('**/api/v1/agent/mock-exam-attempts/901/settle', (route) => {
-    settlementCalled = true;
+    settlementAttempts += 1;
+    if (settlementAttempts === 1) return json(route, { message: 'temporary settlement outage' }, 503);
     return json(route, {
       schemaVersion: '1', artifactId, attemptId: 901, decision: 'completed', subject: 'math', paperSlug: 'math-mock-1', paperTitle: '数学在线模考 1', score: 100, correctCount: 1, wrongCount: 0, unansweredCount: 0, submittedAt: submittedAttempt.submittedAt,
       learningReview: {
@@ -821,9 +831,11 @@ test('starts a recommended mock exam and keeps the timed attempt inside the Agen
   await expect(page.getByLabel('聊天区模考报告')).toContainText('正确1/1');
   await expect(page.getByLabel('聊天区模考报告')).toContainText('总用时1:00');
   await expect(page.getByText('Agent 建议')).toBeVisible();
+  await expect(page.getByText('成绩已记录；学习证据同步未完成，可重试同步或先复盘错题。')).toBeVisible();
+  await page.getByRole('button', { name: '重试同步' }).click();
   await expect(page.getByText('下一步优先稳定函数应用。')).toBeVisible();
   await expect(page.getByRole('button', { name: /返回套卷列表/ })).toHaveCount(0);
-  expect(settlementCalled).toBe(true);
+  expect(settlementAttempts).toBe(2);
   await page.reload();
   await expect(page.getByLabel('聊天区模考报告')).toBeVisible();
   await expect(page.getByLabel('Agent 在线模考工作区')).toHaveCount(0);

@@ -88,10 +88,16 @@
 .agent-report-question-list small { color: #a25143; font-size: 8px; font-weight: 800; }
 .agent-report-question-list p { margin: 2px 0 0; color: var(--agent-muted); font-size: 9px; line-height: 1.65; }
 
-.agent-structured-report-state { display: flex; min-height: 74px; align-items: center; gap: 9px; padding: 14px; border: 1px solid var(--agent-line); border-radius: 13px; background: rgba(255, 255, 255, .8); color: var(--agent-muted); font-size: 10px; }
-.agent-structured-report-state svg { width: 16px; height: 16px; color: var(--agent-blue); animation: agentThinking 1.2s linear infinite; }
+.agent-structured-report-state { display: grid; min-height: 74px; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 14px; border: 1px solid var(--agent-line); border-radius: 13px; background: rgba(255, 255, 255, .8); color: var(--agent-muted); font-size: 10px; }
+.agent-structured-report-state > svg { width: 16px; height: 16px; color: var(--agent-blue); animation: agentThinking 1.2s linear infinite; }
+.agent-structured-report-state > span { display: grid; gap: 3px; }
+.agent-structured-report-state strong { color: var(--agent-ink); font-size: 11px; }
+.agent-structured-report-state small { color: var(--agent-muted); font-size: 9px; line-height: 1.5; }
+.agent-structured-report-state button { display: inline-flex; min-height: 32px; align-items: center; gap: 6px; padding: 0 10px; border: 1px solid currentColor; border-radius: 8px; background: #fff; color: inherit; font-size: 9px; font-weight: 850; cursor: pointer; }
+.agent-structured-report-state button svg { width: 13px; height: 13px; }
 .agent-structured-report-state.is-error { border-color: rgba(255, 113, 94, .24); color: #a33f32; }
-.agent-structured-report-state.is-error svg { color: currentColor; animation: none; }
+.agent-structured-report-state.is-error > svg { color: currentColor; animation: none; }
+.agent-structured-report-state.is-error strong { color: #8f3329; }
 
 .agent-report-free-actions { display: grid; gap: 10px; }
 .agent-report-adjustment { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .8fr) auto; gap: 10px; align-items: end; margin: -4px 18px 16px; padding: 11px 12px; border-radius: 11px; background: #f5f8f7; }
