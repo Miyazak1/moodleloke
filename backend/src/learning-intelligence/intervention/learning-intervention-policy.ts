@@ -54,7 +54,7 @@ export function decideLearningIntervention(input: InterventionPolicyInput): Inte
     return {
       action: 'offer_micro_lesson', triggerCodes: ['EXPLANATION_FAILED', 'MISCONCEPTION_REPEATED'], urgency: 'high', placement: 'between_sets',
       contentPlan: { format: handwritingError ? 'guided_correction' : 'mini_lesson', depth: 'guided', verificationRequired: true },
-      reasonSummary: 'The same topic remains incorrect after explanation, so more repetition is unlikely to be sufficient.'
+      reasonSummary: '讲解后同一知识点仍然答错，继续机械刷题的收益有限，建议先完成一次针对性巩固。'
     };
   }
   if (input.mastery >= 0.75 && recentIncorrect >= 2) {

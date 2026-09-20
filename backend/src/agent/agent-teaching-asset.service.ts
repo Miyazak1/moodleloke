@@ -106,8 +106,13 @@ export class AgentTeachingAssetService {
       orderBy: { createdAt: 'desc' }
     });
     const artifactId = String(objectValue(accepted?.metadata).artifactId ?? '');
-    const artifact = artifactId ? await this.prisma.agentArtifact.findFirst({ where: { id: artifactId, userId, type: 'learning_plan' } }) : null;
-    if (!accepted || !artifact) throw new NotFoundException('该轮次不是当前用户的 Agent 学习任务。');
+    const prescribedArtifact = artifactId ? await this.prisma.agentArtifact.findFirst({ where: { id: artifactId, userId, type: 'learning_plan' } }) : null;
+    const freePracticeArtifact = prescribedArtifact ? null : await this.prisma.agentArtifact.findFirst({
+      where: { userId, type: 'learning_task', domainEntityType: 'csca_adaptive_round', domainEntityId: String(roundId) },
+      orderBy: { createdAt: 'desc' }
+    });
+    const artifact = prescribedArtifact ?? freePracticeArtifact;
+    if (!artifact) throw new NotFoundException('该轮次不是当前用户的 Agent 学习任务。');
     const round = await this.prisma.cscaAdaptiveRound.findFirst({
       where: { id: roundId, session: { userId } },
       include: { session: { select: { id: true, subject: true } }, items: true }

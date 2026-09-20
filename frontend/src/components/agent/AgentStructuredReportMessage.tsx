@@ -196,7 +196,7 @@ export function AgentAdaptiveResultMessage({
           </details>
 
           <details ref={questionDetailsRef} open={questionsOpen} onToggle={(event) => setQuestionsOpen(event.currentTarget.open)}>
-            <summary><span><Icon name="lucide:list-checks" />{t('agent.report.viewQuestions', '查看题目明细')}<em>{wrongItems.length}</em></span><Icon name="lucide:chevron-down" /></summary>
+            <summary><span><Icon name="lucide:list-checks" />{t('agent.report.viewQuestions', '查看题目明细')}<em>{report.items.length}</em></span><Icon name="lucide:chevron-down" /></summary>
             <div className="agent-report-question-list">
               {(wrongItems.length ? wrongItems : report.items).map((item) => (
                 <article key={item.id}>

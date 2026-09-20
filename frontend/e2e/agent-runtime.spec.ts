@@ -807,7 +807,8 @@ test('keeps free-practice defaults separate and preserves the current batch when
   await expect(page.getByText('先处理一个最关键的薄弱点。')).toBeVisible();
   await expect(page.getByText('你答对 2/5 题，目前最值得优先复盘的是“函数与方程”。')).toBeVisible();
   await expect(page.getByLabel('本轮学习报告')).toContainText('作答证据5 项');
-  await expect(page.getByLabel('本轮学习报告').getByRole('button', { name: '继续下一批' })).toBeVisible();
+  await expect(page.getByLabel('本轮学习报告').getByRole('button', { name: '继续下一批' })).toHaveCount(0);
+  await expect(page.getByLabel('本轮学习报告').locator('.agent-report-disclosures details').nth(1)).toContainText('查看题目明细1');
   const embeddedSuggestion = page.getByLabel('本轮学习报告').locator('.agent-intervention-card.is-embedded');
   await expect(embeddedSuggestion).toContainText('针对本轮 · 巩固建议');
   await expect(embeddedSuggestion).toContainText('本轮函数与方程错题较集中');
@@ -820,7 +821,7 @@ test('keeps free-practice defaults separate and preserves the current batch when
   await expect(reportRail).toContainText('函数与方程');
   await expect(reportRail.getByRole('button', { name: '继续下一批' })).toBeVisible();
   await expect(reportRail.getByRole('button', { name: /这轮有疑问/ })).toBeVisible();
-  await expect(page.getByText('继续下一批会沿用本批科目和题量；如需改变，只调整下一批。')).toBeVisible();
+  await expect(page.getByText('继续下一批会沿用本批科目和题量；如需改变，只调整下一批。')).toHaveCount(0);
   await page.getByRole('button', { name: '学习历程', exact: true }).click();
   await expect(page.getByRole('complementary', { name: '学习历程' })).toBeVisible();
   await expect(page.getByRole('button', { name: /数学短诊断/ })).toBeVisible();

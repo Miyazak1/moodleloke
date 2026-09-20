@@ -17,7 +17,7 @@ const pdfFixturePath = path.join(fixtureDir, 'function-answer.pdf');
 const uploadDir = path.join(rootDir, 'backend', 'uploads', 'past-papers');
 const email = 'agent-demo@moodlelike.local';
 const marker = 'LOCAL_DEMO_ONLY';
-const demoQuestionPrompt = 'If f(x) = 2x + 3, what is f(4)?';
+const demoQuestionPrompt = '已知函数 f(x)=2x+3，则 f(4) 的值是（ ）';
 
 function assertLocalDatabase() {
   if (!process.argv.includes('--apply')) throw new Error('Refusing to write without --apply.');
@@ -165,13 +165,13 @@ function ensureDemoFixtures() {
 }
 
 async function ensureTrustedDemoQuestion(topic) {
-  const existing = await prisma.cscaQuestion.findFirst({ where: { sourceType: 'agent_local_demo', prompt: demoQuestionPrompt } });
+  const existing = await prisma.cscaQuestion.findFirst({ where: { sourceType: 'agent_local_demo' }, orderBy: { id: 'asc' } });
   const data = {
     subject: 'math', topicId: topic.id, sourceType: 'agent_local_demo', syllabusVersion: topic.syllabusVersion, designedDifficulty: 'easy',
     questionType: 'single_choice', prompt: demoQuestionPrompt,
     options: [{ id: 'A', text: '9' }, { id: 'B', text: '10' }, { id: 'C', text: '11' }, { id: 'D', text: '12' }],
-    correctAnswer: 'C', explanation: 'Substitute x = 4: f(4) = 2 × 4 + 3 = 11.',
-    knowledgeTags: ['function_evaluation', marker], generationMetadata: { marker },
+    correctAnswer: 'C', explanation: '把 x=4 代入，f(4)=2×4+3=11。',
+    knowledgeTags: ['函数求值'], generationMetadata: { marker },
     reviewMetadata: { marker, approvedFor: 'local_agent_attachment_demo' }, status: 'approved'
   };
   return existing
@@ -180,6 +180,13 @@ async function ensureTrustedDemoQuestion(topic) {
 }
 
 async function ensureAgentPracticeQuestions(topics) {
+  // Keep local demo data representative of the real learning experience. Older
+  // arithmetic placeholders remain referenced by historical rounds, so retire
+  // them instead of deleting rows that may be protected by foreign keys.
+  await prisma.cscaQuestion.updateMany({
+    where: { sourceType: 'agent_local_demo_practice' },
+    data: { status: 'retired' }
+  });
   for (const topic of topics) {
     const existingQuestions = await prisma.cscaQuestion.findMany({
       where: { sourceType: 'agent_local_demo_practice', topicId: topic.id },
@@ -200,6 +207,36 @@ async function ensureAgentPracticeQuestions(topics) {
           { prompt: '某拱门轮廓可写成 y=-(x-h)²+6，最高点位于 x=4。h 的值是（ ）', options: ['-4', '4', '2', '6'], correctAnswer: 'B', explanation: '顶点横坐标就是 h；最高点横坐标为 4，所以 h=4。', taskFamily: 'horizontal_shift_application' },
           { prompt: '一条抛物线轨迹的顶点从 (0,3) 移到 (-2,3)，解析式中的 x 应替换为（ ）', options: ['x-2', 'x+2', 'x-3', 'x+3'], correctAnswer: 'B', explanation: '顶点向左移动 2 个单位，因此自变量替换为 x+2。', taskFamily: 'horizontal_shift_application' },
           { prompt: '传感器曲线 y=f(x) 的峰值出现在 x=1。校准后曲线变为 y=f(x-3)，峰值将出现在（ ）', options: ['x=-2', 'x=4', 'x=3', 'x=-3'], correctAnswer: 'B', explanation: 'f(x-3) 表示整条曲线向右平移 3 个单位，峰值从 1 移到 4。', taskFamily: 'horizontal_shift_application' }
+        ]
+      : null;
+    const demoMathFunctionQuestions = topic.code === 'DEMO-MATH-FUNCTIONS'
+      ? [
+          { prompt: '已知函数 f(x)=2x+3，则 f(4) 的值是（ ）', options: ['8', '10', '11', '12'], correctAnswer: 'C', explanation: '把 x=4 代入，f(4)=2×4+3=11。' },
+          { prompt: '方程 2x-5=9 的解是（ ）', options: ['x=2', 'x=7', 'x=9', 'x=12'], correctAnswer: 'B', explanation: '移项得 2x=14，所以 x=7。' },
+          { prompt: '函数 y=√(x-1) 的定义域是（ ）', options: ['x≥1', 'x>1', 'x≤1', '全体实数'], correctAnswer: 'A', explanation: '被开方数必须非负，因此 x-1≥0，即 x≥1。' },
+          { prompt: '一次函数 y=3x-2 与 y 轴的交点坐标是（ ）', options: ['(0,3)', '(0,-2)', '(3,0)', '(-2,0)'], correctAnswer: 'B', explanation: '令 x=0，得到 y=-2，所以交点为 (0,-2)。' },
+          { prompt: '方程 x²-5x+6=0 的两个根是（ ）', options: ['1 和 6', '2 和 3', '-2 和 -3', '3 和 5'], correctAnswer: 'B', explanation: 'x²-5x+6=(x-2)(x-3)，所以 x=2 或 x=3。' },
+          { prompt: '若正比例函数 y=kx 的图像经过点 (2,6)，则 k 的值是（ ）', options: ['2', '3', '4', '6'], correctAnswer: 'B', explanation: '代入点 (2,6)，6=2k，因此 k=3。' }
+        ]
+      : null;
+    const demoMathGeometryQuestions = topic.code === 'DEMO-MATH-GEOMETRY'
+      ? [
+          { prompt: '经过点 (1,2) 和 (3,6) 的直线斜率是（ ）', options: ['1', '2', '3', '4'], correctAnswer: 'B', explanation: '斜率 k=(6-2)/(3-1)=2。' },
+          { prompt: '直线 y=2x+1 与 y 轴的交点是（ ）', options: ['(1,0)', '(0,1)', '(2,0)', '(0,2)'], correctAnswer: 'B', explanation: '令 x=0，得到 y=1，所以交点为 (0,1)。' },
+          { prompt: '圆 (x-2)²+(y+1)²=9 的圆心是（ ）', options: ['(-2,1)', '(2,-1)', '(2,1)', '(-2,-1)'], correctAnswer: 'B', explanation: '标准式 (x-a)²+(y-b)²=r² 的圆心为 (a,b)，因此圆心为 (2,-1)。' },
+          { prompt: '点 A(1,3) 与点 B(5,7) 的中点坐标是（ ）', options: ['(2,4)', '(3,5)', '(4,6)', '(6,10)'], correctAnswer: 'B', explanation: '中点为 ((1+5)/2,(3+7)/2)=(3,5)。' },
+          { prompt: '与直线 y=-3x+2 平行的直线斜率是（ ）', options: ['-3', '-1/3', '1/3', '3'], correctAnswer: 'A', explanation: '两条非重合平行直线的斜率相同，所以斜率为 -3。' },
+          { prompt: '点 (2,-1) 到原点的距离是（ ）', options: ['√3', '√5', '3', '5'], correctAnswer: 'B', explanation: '距离为 √(2²+(-1)²)=√5。' }
+        ]
+      : null;
+    const physicsMechanicsQuestions = topic.code === 'P-MECH-002'
+      ? [
+          { prompt: '质量为 2 kg 的物体获得 3 m/s² 的加速度，所受合力为（ ）', options: ['3 N', '5 N', '6 N', '9 N'], correctAnswer: 'C', explanation: '由 F=ma，F=2×3=6 N。' },
+          { prompt: '物体同时受到向右 10 N 和向左 4 N 的力，合力为（ ）', options: ['14 N，向右', '6 N，向右', '6 N，向左', '4 N，向左'], correctAnswer: 'B', explanation: '相反方向的力相减，10-4=6 N，方向向右。' },
+          { prompt: '在合力不变时，物体质量变为原来的 2 倍，加速度将变为原来的（ ）', options: ['1/2', '2 倍', '4 倍', '不变'], correctAnswer: 'A', explanation: '由 a=F/m，质量加倍时加速度减半。' },
+          { prompt: '汽车急刹车时乘客会向前倾，主要体现了物体的（ ）', options: ['弹性', '惯性', '重力', '摩擦力'], correctAnswer: 'B', explanation: '乘客身体仍倾向保持原来的运动状态，这是惯性。' },
+          { prompt: '取 g=10 N/kg，质量为 2 kg 的物体重力是（ ）', options: ['5 N', '10 N', '20 N', '40 N'], correctAnswer: 'C', explanation: '重力 G=mg=2×10=20 N。' },
+          { prompt: '物体所受合力为零时，它可能（ ）', options: ['只能静止', '静止或做匀速直线运动', '一定加速', '一定减速'], correctAnswer: 'B', explanation: '合力为零时加速度为零，物体可静止或保持匀速直线运动。' }
         ]
       : null;
     const chemistryConcentrationQuestions = topic.code === 'C-BASIC-003'
@@ -236,25 +273,39 @@ async function ensureAgentPracticeQuestions(topics) {
           }
         ]
       : null;
-    const questionCount = mathFunctionShiftQuestions?.length ?? 6;
+    const chemistryRedoxQuestions = topic.code === 'DEMO-CHEM-REDOX'
+      ? [
+          { prompt: 'KMnO₄ 中 Mn 元素的化合价是（ ）', options: ['+2', '+4', '+6', '+7'], correctAnswer: 'D', explanation: 'K 为 +1、O 为 -2，根据化合价代数和为零可得 Mn 为 +7。' },
+          { prompt: '在氧化还原反应中，物质被氧化意味着它（ ）', options: ['得到电子', '失去电子', '化合价降低', '一定与氧气反应'], correctAnswer: 'B', explanation: '被氧化的本质是失去电子，元素化合价升高。' },
+          { prompt: '反应 Zn+CuSO₄=ZnSO₄+Cu 中，还原剂是（ ）', options: ['Zn', 'CuSO₄', 'ZnSO₄', 'Cu'], correctAnswer: 'A', explanation: 'Zn 失去电子、化合价升高，因此 Zn 是还原剂。' },
+          { prompt: '反应 Cl₂+2Br⁻=2Cl⁻+Br₂ 中，氧化剂是（ ）', options: ['Cl₂', 'Br⁻', 'Cl⁻', 'Br₂'], correctAnswer: 'A', explanation: 'Cl₂ 得到电子生成 Cl⁻，因此 Cl₂ 是氧化剂。' },
+          { prompt: 'Fe²⁺ 转化为 Fe³⁺ 的过程中（ ）', options: ['得到 1 个电子', '失去 1 个电子', '得到 2 个电子', '化合价降低'], correctAnswer: 'B', explanation: 'Fe²⁺→Fe³⁺，化合价升高 1，说明失去 1 个电子。' },
+          { prompt: '下列反应中属于氧化还原反应的是（ ）', options: ['HCl+NaOH=NaCl+H₂O', 'CaCO₃=CaO+CO₂', '2H₂+O₂=2H₂O', 'AgNO₃+NaCl=AgCl↓+NaNO₃'], correctAnswer: 'C', explanation: 'H 和 O 的化合价发生变化，因此氢气燃烧属于氧化还原反应。' }
+        ]
+      : null;
+    const fixtureQuestions = mathFunctionShiftQuestions
+      ?? demoMathFunctionQuestions
+      ?? demoMathGeometryQuestions
+      ?? physicsMechanicsQuestions
+      ?? chemistryConcentrationQuestions
+      ?? chemistryRedoxQuestions;
+    if (!fixtureQuestions) continue;
+    const questionCount = fixtureQuestions.length;
     for (let index = 1; index <= questionCount; index += 1) {
-      const left = index + 2;
-      const right = index;
-      const answer = left + right;
-      const fixture = mathFunctionShiftQuestions?.[index - 1] ?? chemistryConcentrationQuestions?.[index - 1];
-      const prompt = fixture?.prompt ?? `[Local demo · ${topic.code}] What is ${left} + ${right}?`;
-      const values = fixture?.options ?? [answer - 1, answer, answer + 1, answer + 2].map(String);
+      const fixture = fixtureQuestions[index - 1];
+      const prompt = fixture.prompt;
+      const values = fixture.options;
       const existing = existingQuestions[index - 1]
         ?? await prisma.cscaQuestion.findFirst({ where: { sourceType: 'agent_local_demo_practice', prompt } });
       const data = {
         subject: topic.subject, topicId: topic.id, sourceType: 'agent_local_demo_practice', syllabusVersion: topic.syllabusVersion, designedDifficulty: index <= 2 ? '基础' : index <= 5 ? '中等' : '较难',
         questionType: 'single_choice', prompt,
         options: values.map((text, optionIndex) => ({ id: String.fromCharCode(65 + optionIndex), text })),
-        correctAnswer: fixture?.correctAnswer ?? 'B', explanation: fixture?.explanation ?? `${left} + ${right} = ${answer}. This item is local demo data for the Agent golden path.`,
-        knowledgeTags: [topic.code, marker], generationMetadata: {
+        correctAnswer: fixture.correctAnswer, explanation: fixture.explanation,
+        knowledgeTags: [topic.title], generationMetadata: {
           marker,
           purpose: 'agent_practice_golden_path',
-          ...(fixture?.taskFamily ? { questionPlan: { taskFamily: fixture.taskFamily } } : {})
+          ...(fixture.taskFamily ? { questionPlan: { taskFamily: fixture.taskFamily } } : {})
         },
         reviewMetadata: { marker, approvedFor: 'local_agent_practice_demo' }, status: 'approved'
       };
@@ -537,6 +588,15 @@ async function main() {
   })).map((item) => item.id);
   await prisma.cscaQuestionQualityMetric.deleteMany({ where: { questionId: { in: demoQuestionIds } } });
   await prisma.cscaQuestionExposure.deleteMany({ where: { userId: user.id, questionId: { in: demoQuestionIds } } });
+  const resetAt = new Date();
+  await prisma.cscaAdaptiveRound.updateMany({
+    where: { session: { userId: user.id }, submittedAt: null },
+    data: { status: 'abandoned' }
+  });
+  await prisma.cscaAdaptiveSession.updateMany({
+    where: { userId: user.id, status: 'active' },
+    data: { status: 'completed', completedAt: resetAt }
+  });
   ensureDemoFixtures();
   await prisma.agentConversation.deleteMany({ where: { userId: user.id } });
 

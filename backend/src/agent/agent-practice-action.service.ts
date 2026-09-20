@@ -338,9 +338,12 @@ export class AgentPracticeActionService {
       throw new ConflictException({ code: 'AGENT_FREE_PRACTICE_END_IN_PROGRESS', message: '自由练习正在结束，请稍后重试。' });
     });
     if ('output' in reserved) return reserved.output;
+    const endedAt = new Date();
+    const activeRoundId = positiveInteger(snapshot.roundId);
+    const activeSessionId = positiveInteger(snapshot.sessionId);
     const output = {
       schemaVersion: '1', journeyId, artifactId, status: 'ended', batchCount: journey.length,
-      completedBatchCount: settledBatches.length, totalQuestions, allocatedQuestionCount, endedAt: new Date().toISOString()
+      completedBatchCount: settledBatches.length, totalQuestions, allocatedQuestionCount, endedAt: endedAt.toISOString()
     };
     await this.prisma.$transaction(async (tx) => {
       await tx.agentArtifact.update({
@@ -350,6 +353,16 @@ export class AgentPracticeActionService {
           snapshot: { ...snapshot, journeyStatus: 'ended', endedAt: output.endedAt } as Prisma.InputJsonValue
         }
       });
+      if (activeRoundId && activeSessionId) {
+        await tx.cscaAdaptiveRound.updateMany({
+          where: { id: activeRoundId, sessionId: activeSessionId, submittedAt: null },
+          data: { status: 'abandoned' }
+        });
+        await tx.cscaAdaptiveSession.updateMany({
+          where: { id: activeSessionId, userId, status: 'active' },
+          data: { status: 'completed', completedAt: endedAt }
+        });
+      }
       await tx.agentToolCall.update({ where: { id: reserved.call.id }, data: { status: 'completed', output, completedAt: new Date() } });
       await tx.agentRun.update({ where: { id: reserved.run.id }, data: { status: 'completed', completedAt: new Date() } });
       await tx.agentMessage.create({ data: {

@@ -2060,21 +2060,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                         taskType={workspaceTaskType}
                         onReportLoaded={setAdaptiveReport}
                         onNavigate={(path) => void handleLearningWorkspaceNavigation(path)}
-                        customActions={workspaceTaskType === 'free_practice' ? (
-                          <div className="agent-report-free-actions">
-                            <p className="agent-report-free-next-hint">{t('agent.freePractice.nextBatchHint', '继续下一批会沿用本批科目和题量；如需改变，只调整下一批。')}</p>
-                            <div className="agent-report-actions">
-                              <button type="button" className="primary" disabled={freePracticeContinuationBusy !== null} onClick={() => void continueFreePracticeBatch()}><Icon name={freePracticeContinuationBusy === 'continue' ? 'lucide:loader-circle' : 'lucide:play'} />{t('agent.freePractice.continueSame', '继续下一批')}</button>
-                              <button type="button" disabled={freePracticeContinuationBusy !== null} onClick={toggleFreePracticeAdjustment}><Icon name="lucide:sliders-horizontal" />{t('agent.freePractice.adjust', '调整下一批')}</button>
-                              <button type="button" className="quiet" disabled={freePracticeContinuationBusy !== null} onClick={() => void endFreePracticeJourney()}>{freePracticeContinuationBusy === 'end' ? t('agent.freePractice.ending', '正在结束') : t('agent.freePractice.end', '结束学习')}</button>
-                            </div>
-                            {isAdjustingFreePractice && <div className="agent-report-adjustment">
-                              <label>{t('agent.freePractice.subject', '科目')}<span>{(['math', 'physics', 'chemistry'] as const).map((subject) => <button key={subject} type="button" className={freePracticeSubject === subject ? 'active' : ''} onClick={() => setFreePracticeSubject(subject)}>{subjectLabel(subject, t)}</button>)}</span></label>
-                              <label>{t('agent.freePractice.batch', '题量')}<span>{([3, 5, 10] as const).map((count) => <button key={count} type="button" className={freePracticeCount === count ? 'active' : ''} onClick={() => setFreePracticeCount(count)}>{count}</button>)}</span></label>
-                              <button type="button" className="confirm" disabled={freePracticeContinuationBusy !== null} onClick={() => void continueFreePracticeBatch({ subject: freePracticeSubject, questionCount: freePracticeCount })}>{t('agent.freePractice.startAdjusted', '按新设置开始')}<Icon name="lucide:arrow-right" /></button>
-                            </div>}
-                          </div>
-                        ) : undefined}
+                        customActions={workspaceTaskType === 'free_practice' ? <></> : undefined}
                         renderFollowUp={intervention ? (report) => isInterventionRelevantToReport(intervention, report) ? (
                           <InterventionCard
                             embedded
