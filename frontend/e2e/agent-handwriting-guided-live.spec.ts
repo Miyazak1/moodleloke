@@ -73,6 +73,12 @@ test('binds a handwritten review to the current question and preserves the forma
   await page.goto(launch.route);
   const checkButton = page.getByRole('button', { name: '检查手写过程' });
   await expect(checkButton).toBeVisible({ timeout: 45_000 });
+  await checkButton.click();
+  const pickerBusyMessage = page.getByText('正在选择或检查手写图片');
+  await expect(pickerBusyMessage).toBeVisible();
+  await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+  await expect(pickerBusyMessage).toBeHidden();
+  await expect(checkButton).toBeEnabled();
   await page.locator('.agent-handwriting-input').setInputFiles(handwritingFixture);
   const review = page.locator('.agent-handwriting-review');
   await page.waitForFunction(() => {

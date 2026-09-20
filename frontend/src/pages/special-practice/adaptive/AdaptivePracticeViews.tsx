@@ -1203,6 +1203,8 @@ export function AdaptiveRoundView({
   const autoSavePromiseRef = useRef<Promise<unknown> | null>(null);
   const timeSpentRef = useRef<Record<string, number>>({});
   const handwritingInputRef = useRef<HTMLInputElement | null>(null);
+  const handwritingPickerPendingRef = useRef(false);
+  const handwritingPickerFocusTimerRef = useRef<number | null>(null);
   const handwritingConversationRef = useRef<string | null>(null);
   const handledAssistanceCommandRef = useRef<string | null>(null);
   const hydratedAssistanceRoundRef = useRef<number | null>(null);
@@ -1219,6 +1221,24 @@ export function AdaptiveRoundView({
   useEffect(() => {
     timeSpentRef.current = timeSpent;
   }, [timeSpent]);
+
+  useEffect(() => {
+    const settleCancelledPicker = () => {
+      if (!handwritingPickerPendingRef.current) return;
+      if (handwritingPickerFocusTimerRef.current !== null) window.clearTimeout(handwritingPickerFocusTimerRef.current);
+      handwritingPickerFocusTimerRef.current = window.setTimeout(() => {
+        handwritingPickerFocusTimerRef.current = null;
+        if (!handwritingPickerPendingRef.current || handwritingInputRef.current?.files?.length) return;
+        handwritingPickerPendingRef.current = false;
+        onAgentAssistanceSettled?.();
+      }, 200);
+    };
+    window.addEventListener('focus', settleCancelledPicker);
+    return () => {
+      window.removeEventListener('focus', settleCancelledPicker);
+      if (handwritingPickerFocusTimerRef.current !== null) window.clearTimeout(handwritingPickerFocusTimerRef.current);
+    };
+  }, [onAgentAssistanceSettled]);
 
   async function refreshEntitlement() {
     try {
@@ -1443,7 +1463,21 @@ export function AdaptiveRoundView({
     handledAssistanceCommandRef.current = agentAssistanceCommand.id;
     if (agentAssistanceCommand.action === 'recall_concept') void recallConcept();
     else if (agentAssistanceCommand.action === 'next_step_hint') void askCoach('hint');
-    else handwritingInputRef.current?.click();
+    else {
+      const input = handwritingInputRef.current;
+      if (!input) {
+        onAgentAssistanceSettled?.();
+        return;
+      }
+      input.value = '';
+      handwritingPickerPendingRef.current = true;
+      try {
+        input.click();
+      } catch {
+        handwritingPickerPendingRef.current = false;
+        onAgentAssistanceSettled?.();
+      }
+    }
   }, [agentAssistanceCommand, currentQuestion, detail]);
 
   useEffect(() => {
@@ -1960,8 +1994,16 @@ export function AdaptiveRoundView({
               className="agent-handwriting-input"
               type="file"
               accept="image/png,image/jpeg,image/webp"
-              onChange={(event) => { const file = event.target.files?.[0]; if (file) void reviewHandwrittenWork(file); else onAgentAssistanceSettled?.(); }}
-              onCancel={() => onAgentAssistanceSettled?.()}
+              onChange={(event) => {
+                handwritingPickerPendingRef.current = false;
+                const file = event.target.files?.[0];
+                if (file) void reviewHandwrittenWork(file);
+                else onAgentAssistanceSettled?.();
+              }}
+              onCancel={() => {
+                handwritingPickerPendingRef.current = false;
+                onAgentAssistanceSettled?.();
+              }}
             />
           )}
           {!isInterventionVerification && isAgentLearningRound && !selectedAnswer && (
