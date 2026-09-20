@@ -229,7 +229,7 @@ async function ensureAgentPracticeQuestions(topics) {
           { prompt: '点 (2,-1) 到原点的距离是（ ）', options: ['√3', '√5', '3', '5'], correctAnswer: 'B', explanation: '距离为 √(2²+(-1)²)=√5。' }
         ]
       : null;
-    const physicsMechanicsQuestions = topic.code === 'P-MECH-002'
+    const physicsMechanicsQuestions = ['P-MECH-002', 'DEMO-PHYSICS-MECHANICS'].includes(topic.code)
       ? [
           { prompt: '质量为 2 kg 的物体获得 3 m/s² 的加速度，所受合力为（ ）', options: ['3 N', '5 N', '6 N', '9 N'], correctAnswer: 'C', explanation: '由 F=ma，F=2×3=6 N。' },
           { prompt: '物体同时受到向右 10 N 和向左 4 N 的力，合力为（ ）', options: ['14 N，向右', '6 N，向右', '6 N，向左', '4 N，向左'], correctAnswer: 'B', explanation: '相反方向的力相减，10-4=6 N，方向向右。' },
@@ -537,10 +537,12 @@ async function main() {
 
   const mathWeak = await ensureTopic('math', 'DEMO-MATH-FUNCTIONS', '函数与方程');
   const mathDeveloping = await ensureTopic('math', 'DEMO-MATH-GEOMETRY', '解析几何', 1);
+  const physicsDeveloping = await ensureTopic('physics', 'DEMO-PHYSICS-MECHANICS', '力与运动');
   const chemistryStrong = await ensureTopic('chemistry', 'DEMO-CHEM-REDOX', '氧化还原反应');
   const masteryRows = [
     [mathWeak, 0.46, 0.88, 12, 5],
     [mathDeveloping, 0.68, 0.81, 10, 7],
+    [physicsDeveloping, 0.62, 0.79, 9, 5],
     [chemistryStrong, 0.84, 0.86, 8, 7]
   ];
   for (const [topic, mastery, confidence, attemptCount, correctCount] of masteryRows) {
@@ -578,7 +580,13 @@ async function main() {
   ]);
   const assetTopicIds = teachingAssets.filter(Boolean).map((item) => item.topicId);
   const demoPracticeTopics = await prisma.cscaExamTopic.findMany({
-    where: { status: 'published', OR: [{ subject: 'math', syllabusVersion: mathWeak.syllabusVersion }, { id: { in: assetTopicIds } }] },
+    where: {
+      status: 'published',
+      OR: [
+        { subject: { in: ['math', 'physics', 'chemistry'] } },
+        { id: { in: assetTopicIds } }
+      ]
+    },
     orderBy: { id: 'asc' }
   });
   await ensureAgentPracticeQuestions(demoPracticeTopics.length ? demoPracticeTopics : [mathWeak]);
