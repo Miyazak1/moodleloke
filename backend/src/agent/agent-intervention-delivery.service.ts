@@ -33,6 +33,12 @@ function jsonObject(value: unknown): Record<string, any> {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, any> : {};
 }
 
+const PLACEHOLDER_CONTENT_PATTERN = /(?:local\s+demo\s+data|golden\s+path|placeholder|fixture|seed(?:ed)?\s+data|test\s+data)/i;
+
+function isPlaceholderContent(...values: unknown[]) {
+  return PLACEHOLDER_CONTENT_PATTERN.test(values.map((value) => String(value ?? '')).join(' '));
+}
+
 @Injectable()
 export class AgentInterventionDeliveryService {
   constructor(
@@ -88,7 +94,7 @@ export class AgentInterventionDeliveryService {
 
   private async resolveContent(userId: number, topicId: number, subject: string, language: unknown, contentPlan?: unknown, routingContext?: { type: string; key: string }): Promise<ResolvedContent | null> {
     const teachingAsset = await this.teachingAssets.resolvePublishedForTopic(userId, topicId, subject, language, contentPlan, routingContext);
-    if (teachingAsset) return {
+    if (teachingAsset && !isPlaceholderContent(teachingAsset.title, teachingAsset.summary, teachingAsset.topicTitle, teachingAsset.stableKey)) return {
       sourceType: 'teaching_asset', sourceId: teachingAsset.id, sourceVersion: teachingAsset.versionId,
       snapshot: {
         schemaVersion: '1', resolverVersion: teachingAsset.resolverVersion, reviewStatus: teachingAsset.reviewState,
@@ -101,7 +107,7 @@ export class AgentInterventionDeliveryService {
       include: { topic: { select: { title: true, syllabusVersion: true } } },
       orderBy: [{ updatedAt: 'desc' }, { id: 'desc' }]
     });
-    if (card) return {
+    if (card && !isPlaceholderContent(card.title, card.body, card.source, card.topic.title)) return {
       sourceType: 'concept_card', sourceId: String(card.id), sourceVersion: card.updatedAt.toISOString(),
       snapshot: {
         schemaVersion: '1', resolverVersion: CONTENT_RESOLVER_VERSION, reviewStatus: card.status,
@@ -116,7 +122,7 @@ export class AgentInterventionDeliveryService {
       include: { topic: { select: { title: true, syllabusVersion: true } } },
       orderBy: [{ updatedAt: 'desc' }, { id: 'desc' }]
     });
-    if (!question) return null;
+    if (!question || isPlaceholderContent(question.prompt, question.explanation, question.sourceType, question.topic.title)) return null;
     return {
       sourceType: 'standard_explanation', sourceId: String(question.id), sourceVersion: String(question.version),
       snapshot: {
@@ -151,6 +157,10 @@ export class AgentInterventionDeliveryService {
       include: this.includeIntervention(), orderBy: { updatedAt: 'desc' }
     });
     if (existing) {
+      const existingContent = jsonObject(existing.contentSnapshot);
+      if (isPlaceholderContent(existingContent.title, existingContent.body, existingContent.topicTitle, existing.contentSourceId)) {
+        return { schemaVersion: OFFER_SCHEMA_VERSION, item: null, suppressedReason: 'PLACEHOLDER_CONTENT_REJECTED' };
+      }
       if (existing.status === 'deferred') {
         const updated = await this.prisma.$transaction(async (tx) => {
           const row = await tx.learningInterventionDelivery.update({

@@ -51,12 +51,14 @@ export function AgentAdaptiveResultMessage({
   roundId,
   taskType,
   onNavigate,
-  customActions
+  customActions,
+  renderFollowUp
 }: {
   roundId: number;
   taskType?: string;
   onNavigate: (path: string) => void;
   customActions?: ReactNode;
+  renderFollowUp?: (report: AdaptiveRoundReport) => ReactNode;
 }) {
   const { locale, t } = useI18n();
   const [report, setReport] = useState<AdaptiveRoundReport | null>(null);
@@ -157,6 +159,8 @@ export function AgentAdaptiveResultMessage({
             <button type="button" className="primary" disabled={isContinuing} onClick={() => void startNextRound()}><Icon name={isContinuing ? 'lucide:loader-circle' : 'lucide:play'} />{isContinuing ? t('agent.report.preparing', '正在准备') : t('agent.report.nextRound', '继续下一轮')}</button>
           </div>
         )}
+
+        {renderFollowUp ? <div className="agent-report-follow-up">{renderFollowUp(report)}</div> : null}
 
         <div className="agent-report-disclosures">
           <details open={detailsOpen} onToggle={(event) => setDetailsOpen(event.currentTarget.open)}>

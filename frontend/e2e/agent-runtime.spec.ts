@@ -739,6 +739,16 @@ test('keeps free-practice defaults separate and preserves the current batch when
     return reportAttempts === 1 ? json(route, { message: 'temporary report outage' }, 503) : json(route, roundReport);
   });
   await page.route('**/api/v1/agent/practice-rounds/81/settle', (route) => json(route, { schemaVersion: '1', artifactId: 'free-task-1', roundId: 81, decision: 'completed' }));
+  await page.route('**/api/v1/agent/interventions/offer', (route) => json(route, {
+    schemaVersion: '1', suppressedReason: null,
+    item: {
+      schemaVersion: '1', id: 'delivery-report-1', interventionId: 'intervention-report-1', status: 'offered', placement: 'after_round',
+      subjectCode: 'math', topicId: 67, action: 'concept_learning', urgency: 'medium',
+      reasonSummary: '本轮函数与方程错题较集中，建议先用 4 分钟巩固共同错因。', triggerCodes: ['ROUND_WEAK_TOPIC'],
+      content: { sourceType: 'concept_card', sourceId: 'card-67', sourceVersion: 'v1', title: '函数与方程巩固', body: '', example: null, topicTitle: '函数与方程', teachingAsset: null },
+      offeredAt: now, startedAt: null, completedAt: null, deferredUntil: null, skippedAt: null, masteryChanged: false
+    }
+  }));
   await page.route('**/api/v1/agent/free-practice/free-task-1/continue', async (route) => {
     continuationBody = await route.request().postDataJSON();
     return json(route, {
@@ -762,6 +772,10 @@ test('keeps free-practice defaults separate and preserves the current batch when
   await expect(page.getByText('你答对 2/5 题，目前最值得优先复盘的是“函数与方程”。')).toBeVisible();
   await expect(page.getByLabel('Agent 动态学习报告')).toContainText('作答证据5 项');
   await expect(page.getByRole('button', { name: '继续下一批' })).toBeVisible();
+  const embeddedSuggestion = page.getByLabel('Agent 动态学习报告').locator('.agent-intervention-card.is-embedded');
+  await expect(embeddedSuggestion).toContainText('针对本轮 · 巩固建议');
+  await expect(embeddedSuggestion).toContainText('本轮函数与方程错题较集中');
+  await expect(page.locator('.agent-intervention-card:not(.is-embedded)')).toHaveCount(0);
   await expect(page.getByText('一次函数中 x 的系数是斜率。')).toBeHidden();
   await expect(page.getByLabel('Agent 学习任务工作区')).toHaveCount(0);
   await expect(page.locator('.agent-context-rail')).toHaveCount(0);

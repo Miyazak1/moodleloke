@@ -58,7 +58,7 @@ import {
   type AgentPracticeTeachingEvent
 } from './special-practice/adaptive/AdaptivePracticeViews';
 import { MockExamTakingView } from './CscaMockExamPage';
-import type { User } from '../lib/api';
+import type { AdaptiveRoundReport, User } from '../lib/api';
 import { routes } from '../lib/routes';
 import { readMigratedLocalStorage, writeMigratedLocalStorage } from '../lib/storage-compat';
 import '../styles/agent.css';
@@ -517,12 +517,31 @@ function EvidenceCandidateCard({ candidate, onChanged }: { candidate: AgentAttac
   );
 }
 
-function InterventionCard({ item, onChanged, onDismissed, onCompleted, onOpenTeaching }: {
+const INTERVENTION_PLACEHOLDER_PATTERN = /(?:local\s+demo\s+data|golden\s+path|placeholder|fixture|seed(?:ed)?\s+data|test\s+data)/i;
+
+function isDisplayableIntervention(item: AgentInterventionDelivery | null): item is AgentInterventionDelivery {
+  if (!item) return false;
+  return !INTERVENTION_PLACEHOLDER_PATTERN.test([
+    item.content.title,
+    item.content.body,
+    item.content.topicTitle,
+    item.reasonSummary,
+    item.content.sourceId
+  ].join(' '));
+}
+
+function isInterventionRelevantToReport(item: AgentInterventionDelivery, report: AdaptiveRoundReport) {
+  const weakTopicIds = new Set(report.weakTopics.map((topic) => topic.topicId));
+  return weakTopicIds.has(item.topicId);
+}
+
+function InterventionCard({ item, onChanged, onDismissed, onCompleted, onOpenTeaching, embedded = false }: {
   item: AgentInterventionDelivery;
   onChanged: (item: AgentInterventionDelivery) => void;
   onDismissed: () => void;
   onCompleted?: () => void;
   onOpenTeaching: (item: AgentInterventionDelivery) => void;
+  embedded?: boolean;
 }) {
   const { t } = useI18n();
   const [busy, setBusy] = useState(false);
@@ -545,10 +564,10 @@ function InterventionCard({ item, onChanged, onDismissed, onCompleted, onOpenTea
   };
   const isReading = item.status === 'in_progress';
   return (
-    <article className={`agent-intervention-card ${isReading ? 'is-reading' : ''}`}>
+    <article className={`agent-intervention-card${embedded ? ' is-embedded' : ''}${isReading ? ' is-reading' : ''}`}>
       <div className="agent-intervention-mark"><Icon name="lucide:book-open-check" /></div>
       <div className="agent-intervention-copy">
-        <span className="agent-kicker">{t('agent.intervention.kicker', '学习间隔 · 系统建议')}</span>
+        <span className="agent-kicker">{embedded ? t('agent.intervention.reportKicker', '针对本轮 · 巩固建议') : t('agent.intervention.kicker', '学习间隔 · 系统建议')}</span>
         <h3>{item.content.title || item.content.topicTitle}</h3>
         <p>{isReading ? item.content.body : item.reasonSummary}</p>
         <small><Icon name="lucide:shield-check" />{item.content.sourceType === 'teaching_asset'
@@ -565,7 +584,7 @@ function InterventionCard({ item, onChanged, onDismissed, onCompleted, onOpenTea
           <button type="button" disabled={busy} onClick={() => void run('start')}>{t('agent.intervention.start', '开始学习')}</button>
         )}
         <button type="button" disabled={busy} onClick={() => void run('defer')}>{t('agent.intervention.later', '稍后')}</button>
-        <button type="button" disabled={busy} onClick={() => void run('skip')}>{t('agent.intervention.skip', '跳过')}</button>
+        <button type="button" disabled={busy} onClick={() => void run('skip')}>{embedded ? t('agent.intervention.notNeeded', '不需要') : t('agent.intervention.skip', '跳过')}</button>
       </div>
     </article>
   );
@@ -1354,7 +1373,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     if (isResolvingAuth || !currentUser || !conversation?.id || !conversation.messages.length || isSending) return;
     let current = true;
     void offerAgentIntervention({ clientRequestId: clientRequestId(), context: 'agent_conversation', conversationId: conversation.id, language: locale === 'zh-CN' ? 'zh-CN' : 'en' })
-      .then((result) => { if (current) setIntervention(result.item); })
+      .then((result) => { if (current) setIntervention(isDisplayableIntervention(result.item) ? result.item : null); })
       .catch(() => { if (current) setIntervention(null); });
     void offerAgentInterventionVerification({ clientRequestId: clientRequestId(), conversationId: conversation.id })
       .then((result) => { if (current) setInterventionVerification(result.item); })
@@ -2053,6 +2072,16 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                             </div>}
                           </div>
                         ) : undefined}
+                        renderFollowUp={intervention ? (report) => isInterventionRelevantToReport(intervention, report) ? (
+                          <InterventionCard
+                            embedded
+                            item={intervention}
+                            onChanged={setIntervention}
+                            onDismissed={() => { setIntervention(null); closeTeachingWorkspace(); }}
+                            onCompleted={() => conversation?.id && void loadInterventionVerification(conversation.id)}
+                            onOpenTeaching={openTeachingWorkspace}
+                          />
+                        ) : null : undefined}
                       />
                     </div>
                   </div>
@@ -2079,7 +2108,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                     <div className="agent-message-content"><span className="agent-message-author">{t('agent.message.agent', 'CSCA 学习 Agent')}</span><p><i /><i /><i />{runStatus}</p></div>
                   </div>
                 )}
-                {!isSubjectQa && intervention && (
+                {!isSubjectQa && intervention && learningWorkspace?.phase !== 'report' && (
                   <InterventionCard
                     item={intervention}
                     onChanged={setIntervention}

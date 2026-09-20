@@ -44,6 +44,12 @@
 .agent-report-actions > button:disabled { opacity: .55; cursor: wait; }
 .agent-report-actions svg,
 .agent-report-action-menu > summary svg { width: 13px; height: 13px; }
+.agent-report-follow-up:empty { display: none; }
+.agent-report-follow-up:not(:empty) { margin: 0 18px 16px; }
+.agent-report-follow-up .agent-intervention-card.is-embedded { width: 100%; margin: 0; padding: 11px 12px; border-color: rgba(19, 199, 163, .22); border-radius: 10px; background: linear-gradient(90deg, rgba(237, 255, 248, .82), rgba(248, 251, 255, .82)); box-shadow: none; }
+.agent-report-follow-up .agent-intervention-card.is-embedded::before { width: 2px; }
+.agent-report-follow-up .agent-intervention-card.is-embedded .agent-intervention-mark { width: 30px; height: 30px; }
+.agent-report-follow-up .agent-intervention-card.is-embedded .agent-intervention-actions button { min-height: 29px; }
 .agent-report-action-menu { display: contents; }
 .agent-report-action-menu > summary::-webkit-details-marker { display: none; }
 .agent-report-action-menu[open] { display: grid; width: 100%; }

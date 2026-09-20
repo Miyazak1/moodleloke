@@ -84,6 +84,42 @@ async function testMissingContentAndFormalMockSuppression() {
   assert.equal(mock.suppressedReason, 'FORMAL_MOCK_ACTIVE');
 }
 
+async function testPlaceholderContentIsNeverDelivered() {
+  let status;
+  const prisma = {
+    mockExamAttempt: { findFirst: async () => null },
+    agentConversation: { findFirst: async () => ({ id: 'conversation-1' }) },
+    learningInterventionDelivery: {
+      findFirst: async () => null,
+      create: async ({ data }) => { status = data.status; return deliveryRow({ ...data }); }
+    },
+    learningIntervention: { findMany: async () => [proposal()] },
+    cscaConceptCard: { findFirst: async () => ({ ...card(), body: 'This item is local demo data for the Agent golden path.' }) },
+    cscaQuestion: { findFirst: async () => null },
+    learningInterventionStep: { create: async ({ data }) => data },
+    $transaction: async (callback) => callback(prisma)
+  };
+  const service = new AgentInterventionDeliveryService(prisma, { isEnabled: () => true }, { resolvePublishedForTopic: async () => null });
+  const result = await service.offer(42, { clientRequestId: 'placeholder-content-1', context: 'after_round' });
+  assert.equal(result.item, null);
+  assert.equal(result.suppressedReason, 'REVIEWED_CONTENT_UNAVAILABLE');
+  assert.equal(status, 'content_unavailable');
+}
+
+async function testExistingPlaceholderDeliveryIsSuppressed() {
+  const prisma = {
+    mockExamAttempt: { findFirst: async () => null },
+    agentConversation: { findFirst: async () => ({ id: 'conversation-1' }) },
+    learningInterventionDelivery: {
+      findFirst: async () => deliveryRow({ contentSnapshot: { title: '解析几何', body: 'This item is local demo data for the Agent golden path.', topicTitle: '解析几何' } })
+    }
+  };
+  const service = new AgentInterventionDeliveryService(prisma, { isEnabled: () => true }, { resolvePublishedForTopic: async () => null });
+  const result = await service.offer(42, { clientRequestId: 'existing-placeholder-1', context: 'agent_conversation', conversationId: 'conversation-1' });
+  assert.equal(result.item, null);
+  assert.equal(result.suppressedReason, 'PLACEHOLDER_CONTENT_REJECTED');
+}
+
 async function testActionsAreOwnedAndIdempotent() {
   let row = deliveryRow();
   const steps = new Map();
@@ -123,6 +159,8 @@ function testIsolationGuard() {
 async function main() {
   await testReviewedOfferAndContentGate();
   await testMissingContentAndFormalMockSuppression();
+  await testPlaceholderContentIsNeverDelivered();
+  await testExistingPlaceholderDeliveryIsSuppressed();
   await testActionsAreOwnedAndIdempotent();
   testIsolationGuard();
   console.log('LEARNING_INTERVENTION_DELIVERY_OK');
