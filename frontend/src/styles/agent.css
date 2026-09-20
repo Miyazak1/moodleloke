@@ -947,9 +947,13 @@
 .agent-send-button:disabled svg { color: #9aa5ad; }
 .agent-composer > small { width: min(900px, 100%); margin: 0 auto; color: var(--agent-faint); font-size: 9px; line-height: 1.45; text-align: center; }
 
-.agent-inline-error { display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; gap: 9px; align-items: center; width: min(900px, 100%); margin: 0 auto 18px; padding: 10px 12px; border: 1px solid rgba(255, 113, 94, .23); border-radius: 10px; background: rgba(255, 233, 228, .72); color: #914a3f; font-size: 11px; line-height: 1.5; }
+.agent-inline-error { position: relative; z-index: 13; display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; gap: 9px; align-items: center; width: min(900px, 100%); margin: 0 auto 18px; padding: 10px 12px; border: 1px solid rgba(255, 113, 94, .23); border-radius: 10px; background: rgba(255, 233, 228, .96); color: #914a3f; font-size: 11px; line-height: 1.5; box-shadow: 0 10px 30px rgba(83, 42, 37, .12); }
 .agent-inline-error svg { width: 16px; height: 16px; }
 .agent-inline-error button { border: 0; background: transparent; color: #a44c3e; font-size: 10px; font-weight: 900; }
+.agent-inline-error-actions { display: flex; align-items: center; gap: 5px; }
+.agent-inline-error-actions button { display: inline-flex; min-height: 30px; align-items: center; gap: 5px; padding: 0 8px; border-radius: 7px; cursor: pointer; }
+.agent-inline-error-actions button.primary { background: #a44c3e; color: #fff; }
+.agent-inline-error-actions button svg { width: 12px; height: 12px; }
 
 .agent-context-rail { display: grid; align-content: start; gap: 13px; padding: 23px 18px; border-left: 1px solid var(--agent-line); overflow-y: auto; }
 .agent-context-intro h2 { margin: 5px 0 8px; font-size: 20px; line-height: 1.2; }

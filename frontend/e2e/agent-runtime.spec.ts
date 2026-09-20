@@ -114,11 +114,13 @@ async function mockAgentWorkspace(page: Page) {
   }));
 }
 
-async function mockNewConversationFlow(page: Page, options: { failFirstStream?: boolean } = {}) {
+async function mockNewConversationFlow(page: Page, options: { failFirstStream?: boolean; failFirstSubmission?: boolean } = {}) {
   let created = false;
+  let conversationCreateAttempts = 0;
   let submittedText = '';
   let streamCursor = '';
   let streamAttempts = 0;
+  let messageAttempts = 0;
   await page.addInitScript(() => {
     window.localStorage.setItem('cscalite.locale', 'zh-CN');
     window.localStorage.setItem('cscalite.localeSource', 'manual');
@@ -131,6 +133,7 @@ async function mockNewConversationFlow(page: Page, options: { failFirstStream?: 
   await page.route('**/api/v1/agent/journey/state', (route) => json(route, journeyState));
   await page.route(/\/api\/v1\/agent\/conversations(?:\?.*)?$/, async (route) => {
     if (route.request().method() === 'POST') {
+      conversationCreateAttempts += 1;
       created = true;
       return json(route, { ...conversation, messages: undefined, artifacts: undefined });
     }
@@ -139,7 +142,9 @@ async function mockNewConversationFlow(page: Page, options: { failFirstStream?: 
   await page.route(new RegExp(`/api/v1/agent/conversations/${conversationId}(?:\\?.*)?$`), (route) => json(route, conversation));
   await page.route(new RegExp(`/api/v1/agent/conversations/${conversationId}/attachments(?:\\?.*)?$`), (route) => json(route, attachmentList));
   await page.route(new RegExp(`/api/v1/agent/conversations/${conversationId}/messages(?:\\?.*)?$`), async (route) => {
+    messageAttempts += 1;
     submittedText = String((await route.request().postDataJSON()).text ?? '');
+    if (options.failFirstSubmission && messageAttempts === 1) return json(route, { message: 'temporary message outage' }, 503);
     return json(route, { messageId: 'message-1', runId, status: 'queued', eventsUrl: `/api/v1/agent/runs/${runId}/events` });
   });
   await page.route(new RegExp(`/api/v1/agent/runs/${runId}/events(?:\\?.*)?$`), (route) => {
@@ -156,7 +161,13 @@ async function mockNewConversationFlow(page: Page, options: { failFirstStream?: 
     startedAt: '2026-09-13T08:00:00.000Z', completedAt: '2026-09-13T08:01:00.000Z', errorCode: null, errorRetryable: null,
     artifacts: [artifact], toolCalls: []
   }));
-  return { submittedText: () => submittedText, streamCursor: () => streamCursor, streamAttempts: () => streamAttempts };
+  return {
+    submittedText: () => submittedText,
+    conversationCreateAttempts: () => conversationCreateAttempts,
+    messageAttempts: () => messageAttempts,
+    streamCursor: () => streamCursor,
+    streamAttempts: () => streamAttempts
+  };
 }
 
 test('renders an evidence-based learning workspace without horizontal overflow', async ({ page }, testInfo) => {
@@ -363,6 +374,7 @@ test('starts student-initiated free practice without turning it into a recommend
   await page.addInitScript(() => window.localStorage.setItem('moodlelike.agent.learningMode', 'free'));
   let requestBody: Record<string, unknown> | null = null;
   let freeStarted = false;
+  let startAttempts = 0;
   const freeArtifact = {
     ...artifact,
     id: 'free-task-1',
@@ -388,7 +400,9 @@ test('starts student-initiated free practice without turning it into a recommend
     ...(freeStarted ? freeConversation : conversation)
   }));
   await page.route('**/api/v1/agent/free-practice/start', async (route) => {
+    startAttempts += 1;
     requestBody = await route.request().postDataJSON();
+    if (startAttempts === 1) return json(route, { message: 'temporary free-practice outage' }, 503);
     freeStarted = true;
     return json(route, {
       schemaVersion: '1', artifactId: 'free-task-1', conversationId,
@@ -404,6 +418,8 @@ test('starts student-initiated free practice without turning it into a recommend
   await page.getByRole('button', { name: '物理', exact: true }).click();
   await page.getByRole('button', { name: '3 题', exact: true }).click();
   await page.getByRole('button', { name: '开始自由练习', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText('自由练习还没有开始；科目和题量已保留。');
+  await page.getByRole('button', { name: '重试开始' }).click();
   await expect.poll(() => requestBody).not.toBeNull();
   expect(requestBody).toMatchObject({ conversationId, subject: 'physics', questionCount: 3, questionLanguage: 'zh' });
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
@@ -413,6 +429,7 @@ test('starts student-initiated free practice without turning it into a recommend
   await expect(freeTask).toContainText('本次练习已开始');
   await expect(freeTask).not.toContainText('系统推荐 · 今日首选');
   await expect(freeTask).not.toContainText('题源暂不足');
+  expect(startAttempts).toBe(2);
 });
 
 test('treats internal conversations as learning-history stages instead of new chats', async ({ page }) => {
@@ -556,6 +573,20 @@ test('submits the recommended prompt and consumes the resumable event stream', a
   await expect(page.getByRole('article', { name: '今日学习方案' })).toBeVisible();
   expect(observed.submittedText()).toBe('我今天该学什么？');
   expect(observed.streamCursor()).toBe('0');
+});
+
+test('retries an unsubmitted Agent message without losing the requested prompt', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the message retry contract.');
+  const observed = await mockNewConversationFlow(page, { failFirstSubmission: true });
+  await page.goto('/zh/agent');
+  await page.getByRole('button', { name: '我今天该学什么？' }).click();
+  await expect.poll(() => observed.messageAttempts()).toBe(1);
+  await expect(page.getByRole('alert')).toContainText('消息未发送；你的输入仍保留，可以再次发送。');
+  await page.getByRole('button', { name: '再次发送' }).click();
+  await expect(page.getByRole('article', { name: '今日学习方案' })).toBeVisible();
+  expect(observed.conversationCreateAttempts()).toBe(1);
+  expect(observed.messageAttempts()).toBe(2);
+  expect(observed.submittedText()).toBe('我今天该学什么？');
 });
 
 test('announces an interrupted run and reconnects the resumable event stream', async ({ page }, testInfo) => {

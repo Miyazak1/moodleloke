@@ -676,6 +676,12 @@ function AgentUnavailable({ onNavigate }: { onNavigate: (path: string) => void }
   );
 }
 
+type AgentErrorAction = {
+  kind: 'send' | 'free-start' | 'free-continue' | 'free-end' | 'mock-continue';
+  label: string;
+  value?: string;
+};
+
 export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedirect }: AgentPageProps) {
   const { locale, t } = useI18n();
   const [conversations, setConversations] = useState<AgentConversationSummary[]>([]);
@@ -686,6 +692,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   const [isSending, setIsSending] = useState(false);
   const [runStatus, setRunStatus] = useState('');
   const [error, setError] = useState('');
+  const [errorAction, setErrorAction] = useState<AgentErrorAction | null>(null);
   const [draftAttachments, setDraftAttachments] = useState<DraftAttachment[]>([]);
   const [attachmentLimits, setAttachmentLimits] = useState(DEFAULT_ATTACHMENT_LIMITS);
   const [intervention, setIntervention] = useState<AgentInterventionDelivery | null>(null);
@@ -748,6 +755,25 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   const focusComposer = useCallback(() => {
     window.requestAnimationFrame(() => composerInputRef.current?.focus());
   }, []);
+
+  function clearErrorNotice() {
+    setError('');
+    setErrorAction(null);
+  }
+
+  function showError(message: string, action?: AgentErrorAction) {
+    setError(message);
+    setErrorAction(action ?? null);
+  }
+
+  function runErrorAction(action: AgentErrorAction) {
+    clearErrorNotice();
+    if (action.kind === 'send') return void sendMessage(action.value);
+    if (action.kind === 'free-start') return void beginFreePractice();
+    if (action.kind === 'free-continue') return void continueFreePracticeBatch();
+    if (action.kind === 'free-end') return void endFreePracticeJourney();
+    return void continueAfterMockExam();
+  }
   const [taskRailWidth, setTaskRailWidth] = useState(() => {
     if (typeof window === 'undefined') return AGENT_TASK_RAIL_DEFAULT_WIDTH;
     const saved = Number(readMigratedLocalStorage(AGENT_TASK_RAIL_STORAGE_KEY, LEGACY_AGENT_TASK_RAIL_STORAGE_KEY));
@@ -1140,7 +1166,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
         await Promise.all([loadConversation(conversationId), loadSummaries()]);
         setRunStatus(run.status === 'completed' ? t('agent.status.completed', '方案已就绪') : t('agent.status.failed', '本次分析没有完成'));
       } else {
-        setError(t('agent.error.stream', '暂时无法同步分析进度，请稍后重试。'));
+        showError(t('agent.error.stream', '暂时无法同步分析进度，请稍后重试。'));
       }
       setIsSending(false);
     }
@@ -1221,7 +1247,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     if (!enabled || isResolvingAuth || !currentUser) return;
     let current = true;
     setIsLoading(true);
-    setError('');
+    clearErrorNotice();
     void (async () => {
       let retryAttempt = 0;
       while (current) {
@@ -1244,17 +1270,17 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
               || params.has('agentTeachingDeliveryId');
             if (state?.activeWorkspace && !hasExplicitContext) restoreJourneyWorkspace(state.activeWorkspace);
           }
-          setError('');
+          clearErrorNotice();
           setIsLoading(false);
           return;
         } catch (loadError) {
           if (!current) return;
           if (!isAgentConnectionError(loadError)) {
-            setError(loadError instanceof Error ? loadError.message : t('agent.error.load', '无法加载学习对话。'));
+            showError(loadError instanceof Error ? loadError.message : t('agent.error.load', '无法加载学习对话。'));
             setIsLoading(false);
             return;
           }
-          setError(t('agent.error.reconnecting', '学习服务暂时未连接，恢复后会自动继续。'));
+          showError(t('agent.error.reconnecting', '学习服务暂时未连接，恢复后会自动继续。'));
           setIsLoading(false);
           const retryDelay = Math.min(1000 * (2 ** retryAttempt), AGENT_INITIAL_LOAD_RETRY_MAX_DELAY_MS);
           retryAttempt += 1;
@@ -1263,7 +1289,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       }
     })();
     return () => { current = false; };
-  }, [currentUser?.id, enabled, isResolvingAuth, loadConversation, loadJourneyState, loadSummaries, restoreJourneyWorkspace, t]);
+  }, [currentUser?.id, enabled, isResolvingAuth, locale]);
 
   useEffect(() => {
     if (isResolvingAuth || !currentUser || journeySection !== 'history') return;
@@ -1347,12 +1373,12 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     syncWorkspaceUrl(null, id);
     setActiveConversationId(id);
     setConversation(null);
-    setError('');
+    clearErrorNotice();
     setIsLoading(true);
     try {
       await loadConversation(id);
     } catch (loadError) {
-      setError(loadError instanceof Error ? loadError.message : t('agent.error.load', '无法加载学习对话。'));
+      showError(loadError instanceof Error ? loadError.message : t('agent.error.load', '无法加载学习对话。'));
     } finally {
       setIsLoading(false);
     }
@@ -1375,7 +1401,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     const text = String(value ?? draft).trim();
     const readyAttachmentIds = draftAttachments.filter((item) => item.status === 'ready').map((item) => item.id);
     if ((!text && !readyAttachmentIds.length) || draftAttachments.some((item) => ['uploading', 'uploaded', 'extracting'].includes(item.status)) || isSending || !currentUser) return;
-    setError('');
+    clearErrorNotice();
     setIsSending(true);
     setRunStatus(t('agent.status.queued', '正在准备分析'));
     try {
@@ -1404,24 +1430,29 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       setDraft('');
       setDraftPageContext(null);
       setDraftAttachments([]);
-      await loadConversation(conversationId);
+      void followRun(submission.runId, conversationId);
+      await loadConversation(conversationId).catch(() => {
+        showError(t('agent.error.sentRefreshPending', '消息已经发送，但最新对话暂未刷新；分析完成后会自动同步。'));
+      });
       readyAttachmentIds.forEach((attachmentId) => {
         void analyzeAgentAttachment(attachmentId, { clientRequestId: clientRequestId(), studentNote: text }).then(async (analysis) => {
           for (let attempt = 0; attempt < 60; attempt += 1) {
             const current = attempt ? await getAgentAttachmentAnalysis(analysis.id) : analysis;
             if (current.status === 'completed') { await getAgentAttachmentEvidenceCandidate(current.id); await loadConversation(conversationId); return; }
             if (['failed', 'timeout'].includes(current.status)) {
-              setError(current.error?.message || t('agent.attachment.analysisFailed', '附件分析失败，请稍后重试。'));
+              showError(current.error?.message || t('agent.attachment.analysisFailed', '附件分析失败，请稍后重试。'));
               return;
             }
             await wait(1500);
           }
-          setError(t('agent.attachment.analysisTimeout', '附件仍在分析，可稍后重新打开本对话查看。'));
-        }).catch((nextError) => setError(nextError instanceof Error ? nextError.message : t('agent.attachment.analysisFailed', '附件分析失败，请稍后重试。')));
+          showError(t('agent.attachment.analysisTimeout', '附件仍在分析，可稍后重新打开本对话查看。'));
+        }).catch((nextError) => showError(nextError instanceof Error ? nextError.message : t('agent.attachment.analysisFailed', '附件分析失败，请稍后重试。')));
       });
-      void followRun(submission.runId, conversationId);
-    } catch (sendError) {
-      setError(sendError instanceof Error ? sendError.message : t('agent.error.send', '消息发送失败。'));
+    } catch {
+      showError(
+        t('agent.error.sendRecoverable', '消息未发送；你的输入仍保留，可以再次发送。'),
+        { kind: 'send', label: t('agent.error.retrySend', '再次发送'), value: text }
+      );
       setIsSending(false);
       setRunStatus('');
     }
@@ -1447,7 +1478,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
 
   async function beginFreePractice() {
     if (isStartingFreePractice || !currentUser) return;
-    setError('');
+    clearErrorNotice();
     setIsStartingFreePractice(true);
     try {
       let conversationId = activeConversationId;
@@ -1464,8 +1495,11 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       });
       await Promise.all([loadConversation(conversationId), loadSummaries()]);
       openLearningWorkspace(launch);
-    } catch (startError) {
-      setError(startError instanceof Error ? startError.message : t('agent.freePractice.startFailed', '暂时无法开始自由练习，请重试。'));
+    } catch {
+      showError(
+        t('agent.freePractice.startRecoverable', '自由练习还没有开始；科目和题量已保留。'),
+        { kind: 'free-start', label: t('agent.freePractice.retryStart', '重试开始') }
+      );
     } finally {
       setIsStartingFreePractice(false);
     }
@@ -1473,7 +1507,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
 
   async function continueFreePracticeBatch() {
     if (!learningWorkspace?.artifactId || freePracticeContinuationBusy) return;
-    setError('');
+    clearErrorNotice();
     setFreePracticeContinuationBusy('continue');
     try {
       await settleAgentPractice(learningWorkspace.roundId);
@@ -1484,8 +1518,11 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       setIsAdjustingFreePractice(false);
       await Promise.all([loadConversation(learningWorkspace.conversationId), loadSummaries(), loadJourneyState()]);
       openLearningWorkspace(launch);
-    } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : t('agent.freePractice.continueFailed', '暂时无法准备下一批练习，请重试。'));
+    } catch {
+      showError(
+        t('agent.freePractice.continueRecoverable', '下一批尚未创建；本批结果已经保留。'),
+        { kind: 'free-continue', label: t('agent.freePractice.retryContinue', '重试继续') }
+      );
     } finally {
       setFreePracticeContinuationBusy(null);
     }
@@ -1493,7 +1530,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
 
   async function endFreePracticeJourney() {
     if (!learningWorkspace?.artifactId || freePracticeContinuationBusy) return;
-    setError('');
+    clearErrorNotice();
     setFreePracticeContinuationBusy('end');
     try {
       if (learningWorkspace.phase === 'report') await settleAgentPractice(learningWorkspace.roundId);
@@ -1504,8 +1541,11 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       syncWorkspaceUrl(null, conversationId);
       await Promise.all([loadConversation(conversationId), loadSummaries(), loadJourneyState()]);
       focusComposer();
-    } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : t('agent.freePractice.endFailed', '暂时无法结束本次自由练习，请重试。'));
+    } catch {
+      showError(
+        t('agent.freePractice.endRecoverable', '本次学习还没有结束；已完成批次不会丢失。'),
+        { kind: 'free-end', label: t('agent.freePractice.retryEnd', '重试结束') }
+      );
     } finally {
       setFreePracticeContinuationBusy(null);
     }
@@ -1514,7 +1554,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   async function continueAfterMockExam() {
     if (!mockExamWorkspace || !mockExamSettlement?.learningReview.nextDecision?.primaryTask || isSending) return;
     const workspace = mockExamWorkspace;
-    setError('');
+    clearErrorNotice();
     setIsSending(true);
     setRunStatus(t('agent.status.queued', '正在准备分析'));
     try {
@@ -1531,10 +1571,15 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       setMockExamSettlement(null);
       setActiveConversationId(workspace.conversationId);
       syncMockExamWorkspaceUrl(null, workspace.conversationId);
-      await loadConversation(workspace.conversationId);
       void followRun(submission.runId, workspace.conversationId);
-    } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : t('agent.mockExam.continueFailed', '下一项任务暂时无法生成，请稍后重试。'));
+      await loadConversation(workspace.conversationId).catch(() => {
+        showError(t('agent.error.sentRefreshPending', '消息已经发送，但最新对话暂未刷新；分析完成后会自动同步。'));
+      });
+    } catch {
+      showError(
+        t('agent.mockExam.continueRecoverable', '下一项任务尚未生成；模考结果已经保留。'),
+        { kind: 'mock-continue', label: t('agent.mockExam.retryContinue', '重试生成') }
+      );
       setIsSending(false);
       setRunStatus('');
     }
@@ -1553,15 +1598,15 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     const files = Array.from(fileList);
     if (!files.length || isSending) return;
     const available = Math.max(0, attachmentLimits.maxFilesPerMessage - draftAttachments.length);
-    if (!available) return setError(t('agent.attachment.maxFiles', '每条消息最多添加 5 个附件。'));
+    if (!available) return showError(t('agent.attachment.maxFiles', '每条消息最多添加 5 个附件。'));
     const selected = files.slice(0, available);
     const oversized = selected.find((file) => file.size > attachmentLimits.maxFileBytes);
-    if (oversized) return setError(`${oversized.name} ${t('agent.attachment.tooLarge', '超过单文件大小限制')} (${formatFileSize(attachmentLimits.maxFileBytes)})`);
+    if (oversized) return showError(`${oversized.name} ${t('agent.attachment.tooLarge', '超过单文件大小限制')} (${formatFileSize(attachmentLimits.maxFileBytes)})`);
     const existingBytes = draftAttachments.reduce((sum, item) => sum + Number(item.sizeBytes || 0), 0);
     if (existingBytes + selected.reduce((sum, file) => sum + file.size, 0) > attachmentLimits.maxMessageBytes) {
-      return setError(`${t('agent.attachment.totalTooLarge', '单条消息附件总量不能超过')} ${formatFileSize(attachmentLimits.maxMessageBytes)}`);
+      return showError(`${t('agent.attachment.totalTooLarge', '单条消息附件总量不能超过')} ${formatFileSize(attachmentLimits.maxMessageBytes)}`);
     }
-    setError('');
+    clearErrorNotice();
     try {
       const conversationId = await ensureConversationForAttachment();
       for (const file of selected) {
@@ -1584,7 +1629,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
         }
       }
     } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : t('agent.attachment.uploadFailed', '附件上传失败。'));
+      showError(nextError instanceof Error ? nextError.message : t('agent.attachment.uploadFailed', '附件上传失败。'));
     }
   }
 
@@ -1594,7 +1639,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       await deleteAgentAttachment(item.id);
       setDraftAttachments((items) => items.filter((next) => next.id !== item.id));
     } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : t('agent.attachment.deleteFailed', '附件移除失败。'));
+      showError(nextError instanceof Error ? nextError.message : t('agent.attachment.deleteFailed', '附件移除失败。'));
     }
   }
 
@@ -1859,7 +1904,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
           </header>
 
           <div ref={threadScrollRef} className="agent-thread-scroll" aria-live="polite">
-            {error && <div className="agent-inline-error"><Icon name="lucide:circle-alert" /><span>{error}</span><button type="button" onClick={() => setError('')}>{t('agent.error.dismiss', '关闭')}</button></div>}
+            {error && <div className="agent-inline-error" role="alert"><Icon name="lucide:circle-alert" /><span>{error}</span><div className="agent-inline-error-actions">{errorAction ? <button type="button" className="primary" onClick={() => runErrorAction(errorAction)}><Icon name="lucide:refresh-cw" />{errorAction.label}</button> : null}<button type="button" onClick={clearErrorNotice}>{t('agent.error.dismiss', '关闭')}</button></div></div>}
             {isLoading ? (
               <div className="agent-loading-card"><Icon name="lucide:loader-circle" />{t('agent.loadingConversation', '正在加载学习对话')}</div>
             ) : !conversation?.messages.length ? (
@@ -2279,7 +2324,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                   setLearningWorkspace(null);
                   setPracticeQuestionContext(null);
                   syncWorkspaceUrl(null, conversationId);
-                  setError(t('agent.workspace.unavailable', '之前的学习任务已经失效，已返回学习工作台。你可以重新开始自由练习或获取新的推荐。'));
+                  showError(t('agent.workspace.unavailable', '之前的学习任务已经失效，已返回学习工作台。你可以重新开始自由练习或获取新的推荐。'));
                   void loadJourneyState().catch(() => null);
                 }}
                 agentConversationId={learningWorkspace.conversationId}
