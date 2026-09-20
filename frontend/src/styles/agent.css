@@ -1007,6 +1007,49 @@
 .agent-context-card ul { display: grid; gap: 10px; margin: 4px 0 0; padding: 0; list-style: none; }
 .agent-context-card li { display: grid; grid-template-columns: 7px minmax(0, 1fr); gap: 8px; align-items: center; color: #566a66; font-size: 10px; font-weight: 760; line-height: 1.45; }
 .agent-context-card li i { width: 7px; height: 7px; border-radius: 2px; background: var(--agent-mint); transform: rotate(45deg); }
+.agent-report-rail { gap: 12px; background: linear-gradient(180deg, rgba(249, 253, 252, .96), rgba(245, 249, 255, .94)); }
+.agent-report-rail-summary,
+.agent-report-rail-next { display: grid; gap: 12px; padding: 14px; border: 1px solid var(--agent-line); border-radius: 14px; background: rgba(255, 255, 255, .9); box-shadow: 0 10px 28px rgba(35, 70, 64, .05); }
+.agent-report-rail-summary > header { display: grid; grid-template-columns: 34px minmax(0, 1fr); align-items: center; gap: 9px; }
+.agent-report-rail-summary > header > span { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 10px; background: var(--agent-blue-soft); color: var(--agent-blue); }
+.agent-report-rail-summary > header svg { width: 16px; height: 16px; }
+.agent-report-rail-summary > header div,
+.agent-report-rail-next > header { display: grid; min-width: 0; gap: 2px; }
+.agent-report-rail-summary small,
+.agent-report-rail-next small,
+.agent-report-rail-topics > small { color: var(--agent-faint); font-size: 8px; font-weight: 850; }
+.agent-report-rail-summary header strong,
+.agent-report-rail-next header strong { overflow: hidden; color: var(--agent-ink); font-size: 11px; line-height: 1.4; text-overflow: ellipsis; white-space: nowrap; }
+.agent-report-rail-score { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; padding: 12px 0 10px; border-block: 1px solid var(--agent-line); }
+.agent-report-rail-score strong { color: var(--agent-blue); font-size: 34px; line-height: 1; letter-spacing: -.04em; }
+.agent-report-rail-score span { color: var(--agent-muted); font-size: 9px; font-weight: 800; }
+.agent-report-rail-topics { display: grid; gap: 7px; }
+.agent-report-rail-topics > div { display: flex; flex-wrap: wrap; gap: 5px; }
+.agent-report-rail-topics span,
+.agent-report-rail-config span { padding: 5px 7px; border-radius: 999px; background: var(--agent-blue-soft); color: var(--agent-blue); font-size: 8px; font-weight: 850; }
+.agent-report-rail-topics span.is-good { background: var(--agent-mint-soft); color: var(--agent-mint-dark); }
+.agent-report-rail-loading { display: flex; align-items: center; gap: 7px; min-height: 70px; color: var(--agent-muted); font-size: 9px; }
+.agent-report-rail-loading svg { width: 15px; color: var(--agent-blue); animation: agentSpin 1s linear infinite; }
+.agent-report-rail-next > p { margin: 0; color: var(--agent-muted); font-size: 9px; line-height: 1.55; }
+.agent-report-rail-config { display: flex; gap: 5px; }
+.agent-report-rail-config span { background: var(--agent-mint-soft); color: var(--agent-mint-dark); }
+.agent-report-rail-next > button,
+.agent-report-rail-adjust > button { display: inline-flex; min-height: 34px; align-items: center; justify-content: center; gap: 6px; border: 1px solid var(--agent-line-strong); border-radius: 9px; background: #fff; color: var(--agent-blue); font-size: 9px; font-weight: 850; }
+.agent-report-rail-next > button.primary,
+.agent-report-rail-adjust > button.confirm { border-color: var(--agent-blue); background: var(--agent-blue); color: #fff; }
+.agent-report-rail-next button:disabled { cursor: wait; opacity: .58; }
+.agent-report-rail-next button svg { width: 13px; height: 13px; }
+.agent-report-rail-adjust { display: grid; gap: 10px; padding-top: 11px; border-top: 1px solid var(--agent-line); }
+.agent-report-rail-adjust label { display: grid; gap: 6px; }
+.agent-report-rail-adjust label > span { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
+.agent-report-rail-adjust label button { min-height: 29px; border: 1px solid var(--agent-line); border-radius: 8px; background: #fff; color: var(--agent-muted); font-size: 8px; font-weight: 800; }
+.agent-report-rail-adjust label button.active { border-color: var(--agent-mint); background: var(--agent-mint-soft); color: var(--agent-mint-dark); }
+.agent-report-rail-qa { display: grid; grid-template-columns: 30px minmax(0, 1fr) 14px; align-items: center; gap: 9px; width: 100%; padding: 11px; border: 1px solid rgba(49, 93, 255, .16); border-radius: 12px; background: rgba(241, 245, 255, .84); color: var(--agent-blue); text-align: left; }
+.agent-report-rail-qa > svg:first-child { width: 17px; justify-self: center; }
+.agent-report-rail-qa > svg:last-child { width: 13px; }
+.agent-report-rail-qa span { display: grid; min-width: 0; gap: 2px; }
+.agent-report-rail-qa strong { color: var(--agent-ink); font-size: 10px; }
+.agent-report-rail-qa small { color: var(--agent-muted); font-size: 8px; line-height: 1.4; }
 .agent-journey-plan-card { display: grid; gap: 11px; padding: 15px; border: 1px solid rgba(49, 93, 255, .18); border-radius: 14px; background: linear-gradient(145deg, rgba(255, 255, 255, .96), rgba(238, 255, 249, .88)); box-shadow: 0 12px 28px rgba(32, 55, 78, .06); }
 .agent-journey-plan-card > header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .agent-journey-plan-card > header > span { display: grid; width: 32px; height: 32px; place-items: center; border-radius: 9px; background: var(--agent-blue-soft); color: var(--agent-blue); }

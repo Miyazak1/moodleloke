@@ -724,6 +724,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   const [errorAction, setErrorAction] = useState<AgentErrorAction | null>(null);
   const [intervention, setIntervention] = useState<AgentInterventionDelivery | null>(null);
   const [interventionVerification, setInterventionVerification] = useState<AgentInterventionVerification | null>(null);
+  const [adaptiveReport, setAdaptiveReport] = useState<AdaptiveRoundReport | null>(null);
   const [teachingDeliveryId, setTeachingDeliveryId] = useState<string | null>(() => {
     if (typeof window === 'undefined') return null;
     return new URLSearchParams(window.location.search).get('agentTeachingDeliveryId');
@@ -930,6 +931,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   }, [conversation?.id, scrollConversationToLatest]);
 
   useEffect(() => {
+    setAdaptiveReport(null);
     setPracticeQuestionContext(null);
     setPracticeAssistanceEvents([]);
     setPracticeAssistanceCommand(null);
@@ -2056,6 +2058,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                       <AgentAdaptiveResultMessage
                         roundId={learningWorkspace.roundId}
                         taskType={workspaceTaskType}
+                        onReportLoaded={setAdaptiveReport}
                         onNavigate={(path) => void handleLearningWorkspaceNavigation(path)}
                         customActions={workspaceTaskType === 'free_practice' ? (
                           <div className="agent-report-free-actions">
@@ -2304,7 +2307,47 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
               />
             </div>
           </aside>
-        ) : journeySection === 'today' && (learningWorkspace?.phase === 'report' || mockExamWorkspace?.phase === 'report') ? null : <aside className={journeySection === 'today' ? `agent-context-rail${effectiveLearningMode === 'free' ? ' is-free-practice' : ''}` : 'agent-context-rail is-journey-view'} aria-label={journeySection === 'history' ? t('agent.journey.history', '学习历程') : journeySection === 'plan' ? t('agent.journey.plan', '学习计划') : journeySection === 'weakness' ? t('agent.journey.weakness', '错题与薄弱点') : journeySection === 'resources' ? t('agent.journey.resources', '学习资料') : t('agent.context.aria', '当前学习上下文')}>
+        ) : journeySection === 'today' && learningWorkspace?.phase === 'report' ? (
+          <aside className="agent-context-rail agent-report-rail" aria-label={t('agent.reportRail.aria', '本轮结果与下一步')}>
+            <section className="agent-report-rail-summary">
+              <header><span><Icon name="lucide:chart-no-axes-combined" /></span><div><small>{t('agent.reportRail.kicker', '本轮概览')}</small><strong>{subjectLabel(workspaceSubject, t)} · {workspaceTaskType === 'free_practice' ? t('agent.freePractice.titleShort', '自由练习') : taskLabel(workspaceTaskType, t)}</strong></div></header>
+              {adaptiveReport ? <>
+                <div className="agent-report-rail-score"><strong>{adaptiveReport.summary.accuracy}%</strong><span>{t('agent.report.correct', '答对')} {adaptiveReport.summary.correctCount}/{adaptiveReport.summary.total}</span></div>
+                <div className="agent-report-rail-topics">
+                  <small>{t('agent.reportRail.focus', '优先巩固')}</small>
+                  <div>{adaptiveReport.weakTopics.length ? adaptiveReport.weakTopics.slice(0, 3).map((topic) => <span key={topic.topicId}>{topic.title}</span>) : <span className="is-good">{t('agent.report.noObviousWeakness', '暂无明显薄弱点')}</span>}</div>
+                </div>
+              </> : <div className="agent-report-rail-loading"><Icon name="lucide:loader-circle" />{t('agent.report.loading', '正在整理本轮学习结果')}</div>}
+            </section>
+
+            {workspaceTaskType === 'free_practice' ? <section className="agent-report-rail-next">
+              <header><small>{t('agent.reportRail.next', '下一步')}</small><strong>{t('agent.freePractice.nextBatch', '继续下一批')}</strong></header>
+              <p>{t('agent.freePractice.nextBatchRailHint', '默认沿用本批科目和题量，也可以只调整下一批。')}</p>
+              <div className="agent-report-rail-config"><span>{subjectLabel(currentFreePracticeConfig().subject, t)}</span><span>{currentFreePracticeConfig().questionCount} {t('agent.freePractice.questions', '题')}</span></div>
+              <button type="button" className="primary" disabled={freePracticeContinuationBusy !== null} onClick={() => void continueFreePracticeBatch()}><Icon name={freePracticeContinuationBusy === 'continue' ? 'lucide:loader-circle' : 'lucide:play'} />{t('agent.freePractice.continueSame', '继续下一批')}</button>
+              <button type="button" disabled={freePracticeContinuationBusy !== null} onClick={toggleFreePracticeAdjustment}><Icon name="lucide:sliders-horizontal" />{isAdjustingFreePractice ? t('agent.freePractice.finishAdjust', '收起调整') : t('agent.freePractice.adjust', '调整下一批')}</button>
+              {isAdjustingFreePractice ? <div className="agent-report-rail-adjust">
+                <label><small>{t('agent.freePractice.subject', '科目')}</small><span>{(['math', 'physics', 'chemistry'] as const).map((subject) => <button key={subject} type="button" className={freePracticeSubject === subject ? 'active' : ''} onClick={() => setFreePracticeSubject(subject)}>{subjectLabel(subject, t)}</button>)}</span></label>
+                <label><small>{t('agent.freePractice.batch', '题量')}</small><span>{([3, 5, 10] as const).map((count) => <button key={count} type="button" className={freePracticeCount === count ? 'active' : ''} onClick={() => setFreePracticeCount(count)}>{count}</button>)}</span></label>
+                <button type="button" className="confirm" disabled={freePracticeContinuationBusy !== null} onClick={() => void continueFreePracticeBatch({ subject: freePracticeSubject, questionCount: freePracticeCount })}>{t('agent.freePractice.startAdjusted', '按新设置开始')}<Icon name="lucide:arrow-right" /></button>
+              </div> : null}
+            </section> : null}
+
+            <button type="button" className="agent-report-rail-qa" onClick={() => chooseJourneySection('qa')}><Icon name="lucide:messages-square" /><span><strong>{t('agent.reportRail.askTitle', '这轮有疑问？')}</strong><small>{t('agent.reportRail.askBody', '去学科问答，自由询问数学、物理或化学知识。')}</small></span><Icon name="lucide:arrow-right" /></button>
+            <section className="agent-context-note"><Icon name="lucide:shield-check" /><p>{t('agent.reportRail.evidence', '报告来自本轮真实作答；自由问答不会直接修改掌握度。')}</p></section>
+          </aside>
+        ) : journeySection === 'today' && mockExamWorkspace?.phase === 'report' ? (
+          <aside className="agent-context-rail agent-report-rail" aria-label={t('agent.mockExam.report', '模考报告与下一步')}>
+            <section className="agent-report-rail-summary">
+              <header><span><Icon name="lucide:clipboard-check" /></span><div><small>{t('agent.mockExam.report', '模考报告与下一步')}</small><strong>{mockExamSettlement?.paperTitle ?? t('agent.task.mockExam', '在线模考')}</strong></div></header>
+              {mockExamSettlement ? <>
+                <div className="agent-report-rail-score"><strong>{mockExamSettlement.score}</strong><span>{t('agent.report.correct', '答对')} {mockExamSettlement.correctCount}/{mockExamSettlement.correctCount + mockExamSettlement.wrongCount + mockExamSettlement.unansweredCount}</span></div>
+                <div className="agent-report-rail-topics"><small>{t('agent.reportRail.focus', '优先巩固')}</small><div>{mockExamSettlement.learningReview.focusTopics.slice(0, 3).map((topic) => <span key={topic.title}>{topic.title}</span>)}</div></div>
+              </> : <div className="agent-report-rail-loading"><Icon name="lucide:loader-circle" />{t('agent.mockExam.loadingReport', '正在整理模考结果')}</div>}
+            </section>
+            <button type="button" className="agent-report-rail-qa" onClick={() => chooseJourneySection('qa')}><Icon name="lucide:messages-square" /><span><strong>{t('agent.reportRail.askTitle', '这轮有疑问？')}</strong><small>{t('agent.reportRail.askBody', '去学科问答，自由询问数学、物理或化学知识。')}</small></span><Icon name="lucide:arrow-right" /></button>
+          </aside>
+        ) : <aside className={journeySection === 'today' ? `agent-context-rail${effectiveLearningMode === 'free' ? ' is-free-practice' : ''}` : 'agent-context-rail is-journey-view'} aria-label={journeySection === 'history' ? t('agent.journey.history', '学习历程') : journeySection === 'plan' ? t('agent.journey.plan', '学习计划') : journeySection === 'weakness' ? t('agent.journey.weakness', '错题与薄弱点') : journeySection === 'resources' ? t('agent.journey.resources', '学习资料') : t('agent.context.aria', '当前学习上下文')}>
           {journeySection === 'plan' ? <AgentJourneyPlanView conversation={conversation} /> : journeySection === 'history' ? (
             <AgentJourneyHistoryView
               stages={journeyState?.stages ?? []}

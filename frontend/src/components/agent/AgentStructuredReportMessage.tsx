@@ -52,13 +52,15 @@ export function AgentAdaptiveResultMessage({
   taskType,
   onNavigate,
   customActions,
-  renderFollowUp
+  renderFollowUp,
+  onReportLoaded
 }: {
   roundId: number;
   taskType?: string;
   onNavigate: (path: string) => void;
   customActions?: ReactNode;
   renderFollowUp?: (report: AdaptiveRoundReport) => ReactNode;
+  onReportLoaded?: (report: AdaptiveRoundReport | null) => void;
 }) {
   const { locale, t } = useI18n();
   const [report, setReport] = useState<AdaptiveRoundReport | null>(null);
@@ -72,12 +74,17 @@ export function AgentAdaptiveResultMessage({
   useEffect(() => {
     let active = true;
     setReport(null);
+    onReportLoaded?.(null);
     setError('');
     void getAdaptivePracticeRoundReport(roundId, locale === 'zh-CN' ? 'zh' : locale)
-      .then((result) => { if (active) setReport(result); })
+      .then((result) => {
+        if (!active) return;
+        setReport(result);
+        onReportLoaded?.(result);
+      })
       .catch(() => { if (active) setError(t('agent.report.loadFailed', '本轮结果暂时无法加载。')); });
     return () => { active = false; };
-  }, [loadRevision, locale, roundId, t]);
+  }, [loadRevision, locale, onReportLoaded, roundId, t]);
 
   if (error) return <ReportState status="error" title={t('agent.report.loadFailedTitle', '学习结果还没有载入')} body={error} actionLabel={t('agent.report.retryLoad', '重试加载')} onAction={() => setLoadRevision((current) => current + 1)} />;
   if (!report) return <ReportState status="loading" title={t('agent.report.loading', '正在整理本轮学习结果')} body={t('agent.report.loadingBody', '完成后会在 Agent 动态中显示结果、学习证据和下一步。')} />;
