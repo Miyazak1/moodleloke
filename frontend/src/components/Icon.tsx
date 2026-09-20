@@ -142,7 +142,18 @@ const ICON_PATHS: Record<string, string[]> = {
   'lucide:save': ['M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2', 'M17 21v-8H7v8', 'M7 3v5h8'],
   'lucide:tag': ['M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8', 'M7.5 7.5h.01'],
   'lucide:x': ['M18 6 6 18', 'M6 6l12 12'],
-  'lucide:zap': ['M13 2 3 14h7l-1 8 12-14h-7l1-6z']
+  'lucide:zap': ['M13 2 3 14h7l-1 8 12-14h-7l1-6z'],
+  'lucide:alert-triangle': ['M10.3 2.9 1.8 17a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3l-8.5-15a2 2 0 0 0-3.5 0z', 'M12 9v4', 'M12 17h.01'],
+  'lucide:circle-help': ['M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20', 'M9.1 9a3 3 0 1 1 5.8 1c0 2-2.9 2-2.9 4', 'M12 18h.01'],
+  'lucide:file-json': ['M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z', 'M14 2v6h6', 'M10 12a2 2 0 0 0-2 2v1a2 2 0 0 1-2 2', 'M14 12a2 2 0 0 1 2 2v1a2 2 0 0 0 2 2'],
+  'lucide:focus': ['M8 3H5a2 2 0 0 0-2 2v3', 'M16 3h3a2 2 0 0 1 2 2v3', 'M8 21H5a2 2 0 0 1-2-2v-3', 'M16 21h3a2 2 0 0 0 2-2v-3', 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8'],
+  'lucide:infinity': ['M18.2 7c-2.4 0-4.3 2.2-6.2 5-1.9-2.8-3.8-5-6.2-5A5 5 0 0 0 6 17c2.4 0 4.3-2.2 6-5 1.9 2.8 3.8 5 6.2 5a5 5 0 0 0 0-10z'],
+  'lucide:mail-warning': ['M4 4h16v10', 'M4 4v16h10', 'm4 7 4 4 4-4', 'M19 16v3', 'M19 22h.01'],
+  'lucide:message-circle-question': ['M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z', 'M9.5 9a2.5 2.5 0 1 1 4 2c-1 .7-1.5 1.1-1.5 2', 'M12 16h.01'],
+  'lucide:presentation': ['M2 3h20', 'M4 3v13h16V3', 'M8 21l4-5 4 5', 'm8 11 3-3 2 2 3-3'],
+  'lucide:sliders-horizontal': ['M21 4h-7', 'M10 4H3', 'M21 12h-9', 'M8 12H3', 'M21 20h-5', 'M12 20H3', 'M14 2v4', 'M12 10v4', 'M16 18v4'],
+  'lucide:square': ['M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2'],
+  'lucide:undo-2': ['M9 14 4 9l5-5', 'M4 9h10.5a5.5 5.5 0 0 1 0 11H11']
 };
 
 function normalizeColor(color: string) {
@@ -152,13 +163,13 @@ function normalizeColor(color: string) {
 
 export function iconUrl(name: string, color = '243a32') {
   const stroke = normalizeColor(color).replace('#', '%23');
-  const paths = ICON_PATHS[name] ?? ['M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20'];
+  const paths = ICON_PATHS[name] ?? ICON_PATHS['lucide:circle-help'];
   const body = paths.map((path) => `<path d="${path}" />`).join('');
   return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='${stroke}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E${body}%3C/svg%3E`;
 }
 
 export function Icon({ name, color = '243a32', className }: IconProps) {
-  const paths = ICON_PATHS[name] ?? ['M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20'];
+  const paths = ICON_PATHS[name] ?? ICON_PATHS['lucide:circle-help'];
   return (
     <svg
       className={className}

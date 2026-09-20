@@ -21,6 +21,7 @@
     "test:i18n-messages": "node scripts/check-i18n-message-parity.cjs",
     "test:i18n-vi": "node scripts/check-i18n-vi-coverage.cjs",
     "test:i18n-content": "node scripts/check-i18n-content-parity.cjs",
+    "test:icons": "node scripts/check-icon-coverage.cjs",
     "test:organization-invites": "node --loader ../backend/node_modules/ts-node/esm.mjs scripts/check-organization-invite-export.mjs",
     "test:organization-governance": "node --loader ../backend/node_modules/ts-node/esm.mjs scripts/check-organization-governance-summary.mjs",
     "test:admin-audit-summaries": "node --loader ../backend/node_modules/ts-node/esm.mjs scripts/check-admin-audit-summaries.mjs",
