@@ -658,6 +658,9 @@ test('moves a completed practice report into chat and closes the focused questio
   await expect(page.getByText('一次函数中 x 的系数是斜率。')).toBeHidden();
   await expect(page.getByLabel('Agent 学习任务工作区')).toHaveCount(0);
   await expect(page.locator('.agent-context-rail')).toHaveCount(0);
+  await page.getByRole('button', { name: '学习历程', exact: true }).click();
+  await expect(page.getByRole('complementary', { name: '学习历程' })).toBeVisible();
+  await expect(page.getByRole('button', { name: /数学短诊断/ })).toBeVisible();
   await expect(page.getByLabel('向学习 Agent 提问')).toBeVisible();
   expect(reportAttempts).toBe(2);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);

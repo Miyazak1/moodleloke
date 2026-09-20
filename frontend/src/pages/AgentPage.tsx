@@ -2373,7 +2373,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
               />
             </div>
           </aside>
-        ) : learningWorkspace?.phase === 'report' || mockExamWorkspace?.phase === 'report' ? null : <aside className={journeySection === 'today' ? `agent-context-rail${effectiveLearningMode === 'free' ? ' is-free-practice' : ''}` : 'agent-context-rail is-journey-view'} aria-label={journeySection === 'history' ? t('agent.journey.history', '学习历程') : journeySection === 'plan' ? t('agent.journey.plan', '学习计划') : journeySection === 'weakness' ? t('agent.journey.weakness', '错题与薄弱点') : journeySection === 'resources' ? t('agent.journey.resources', '学习资料') : t('agent.context.aria', '当前学习上下文')}>
+        ) : journeySection === 'today' && (learningWorkspace?.phase === 'report' || mockExamWorkspace?.phase === 'report') ? null : <aside className={journeySection === 'today' ? `agent-context-rail${effectiveLearningMode === 'free' ? ' is-free-practice' : ''}` : 'agent-context-rail is-journey-view'} aria-label={journeySection === 'history' ? t('agent.journey.history', '学习历程') : journeySection === 'plan' ? t('agent.journey.plan', '学习计划') : journeySection === 'weakness' ? t('agent.journey.weakness', '错题与薄弱点') : journeySection === 'resources' ? t('agent.journey.resources', '学习资料') : t('agent.context.aria', '当前学习上下文')}>
           {journeySection === 'plan' ? <AgentJourneyPlanView conversation={conversation} /> : journeySection === 'history' ? (
             <AgentJourneyHistoryView
               stages={journeyState?.stages ?? []}

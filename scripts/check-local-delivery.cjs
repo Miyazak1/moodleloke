@@ -7,6 +7,7 @@ const batch = fs.readFileSync(path.join(root, 'start-moodlelike-dev.bat'), 'utf8
 const health = fs.readFileSync(path.join(root, 'backend', 'src', 'health', 'health.controller.ts'), 'utf8');
 for (const name of ['local:doctor', 'local:setup', 'local:start', 'local:verify', 'local:acceptance', 'demo:seed']) if (!pkg.scripts[name]) throw new Error('Missing local delivery script: ' + name);
 for (const marker of ['docker', 'compose', 'db:migrate', 'backend:build', 'start:prod', 'agent-demo-seed.cjs', '/api/v1/health', '/api/v1/auth/login', '/api/v1/auth/me', '/api/v1/agent/conversations']) if (!runner.includes(marker)) throw new Error('Local runner is missing: ' + marker);
+for (const flag of ['CSCA_LEARNING_INTERVENTION_SHADOW_ENABLED', 'CSCA_LEARNING_INTERVENTION_DELIVERY_ENABLED', 'CSCA_LEARNING_INTERVENTION_VERIFICATION_ENABLED', 'CSCA_AGENT_TEACHING_ASSET_ENABLED']) if (!runner.includes(`${flag}: 'true'`)) throw new Error('Local Agent teaching flow is missing: ' + flag);
 if (!runner.includes('moodlelike-local-development-secret') || !runner.includes("MOODLELIKE_ENV: 'development'")) throw new Error('Local runner must be explicitly Moodlelike development-only.');
 if (!batch.includes('npm run local:start') || batch.includes('scripts\wait-for-http')) throw new Error('Windows launcher must delegate to the unified local runner.');
 if (!health.includes("service: 'moodlelike-backend'")) throw new Error('Health identity must be Moodlelike.');
