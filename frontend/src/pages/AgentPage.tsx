@@ -249,8 +249,15 @@ function PlanArtifactCard({ artifact, onLaunch, onUseFreePractice }: { artifact:
   const isInterventionVerification = task.type === 'intervention_verification';
   const canStart = snapshot.canStart === true && Boolean(artifact.route) && artifact.status === 'ready';
   const canUseFreePractice = !isFreePractice && !canStart && !isInterventionVerification && artifact.status === 'ready' && Boolean(onUseFreePractice);
+  const stateClass = artifact.status === 'completed'
+    ? 'is-completed'
+    : isFreePractice
+      ? 'is-in-progress'
+      : canStart
+        ? 'is-actionable'
+        : 'is-unavailable';
   return (
-    <article className="agent-plan-card" aria-label={isFreePractice ? t('agent.freePractice.taskAria', '自由练习任务') : t('agent.plan.aria', '今日学习方案')}>
+    <article className={`agent-plan-card ${stateClass}`} aria-label={isFreePractice ? t('agent.freePractice.taskAria', '自由练习任务') : t('agent.plan.aria', '今日学习方案')}>
       <div className="agent-plan-ribbon" aria-hidden="true" />
       <header className="agent-plan-head">
         <span className="agent-plan-subject" data-subject={String(task.subject ?? '')}>{subject.slice(0, 1)}</span>
