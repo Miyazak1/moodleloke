@@ -236,7 +236,17 @@ export class AgentLearningAssistanceService {
       return { content: context.question.explanation, generatedByAI: false, interaction: null };
     }
     const tags = Array.isArray(context.question.knowledgeTags) ? context.question.knowledgeTags.map(String).filter(Boolean) : [];
-    const topic = String(context.question.topicTitle ?? tags[0] ?? '当前知识点');
+    const broadTopic = String(context.question.topicTitle ?? '').trim();
+    const specificTag = tags.find((tag) => tag.trim() && tag.trim() !== broadTopic);
+    const questionEvidence = `${context.question.prompt ?? ''} ${context.question.explanation ?? ''}`.toLowerCase();
+    const inferredConcept = /(?:重力|weight).{0,40}(?:g\s*=\s*m\s*g|mg)|(?:g\s*=\s*m\s*g|mg).{0,40}(?:重力|weight)/i.test(questionEvidence)
+      ? '重力公式 G=mg、质量与重力的区别'
+      : /(?:牛顿第二定律|f\s*=\s*m\s*a|a\s*=\s*f\s*\/\s*m|newton.?s second law)/i.test(questionEvidence)
+        ? '牛顿第二定律 F=ma'
+        : /(?:惯性|牛顿第一定律|inertia)/i.test(questionEvidence)
+          ? '惯性与牛顿第一定律'
+          : null;
+    const topic = String(inferredConcept ?? specificTag ?? broadTopic ?? tags[0] ?? '当前知识点');
     const content = input.language === 'en'
       ? `Recall the definition, conditions, and common boundary cases of “${topic}”. Before calculating, name the exact concept this question is testing.${tags.length ? ` Focus: ${tags.slice(0, 3).join(', ')}.` : ''}`
       : `先回忆“${topic}”的定义、适用条件和常见边界。动笔前，用一句话说清这题具体在考什么。${tags.length ? `重点：${tags.slice(0, 3).join('、')}。` : ''}`;

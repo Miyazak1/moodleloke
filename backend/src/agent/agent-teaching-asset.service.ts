@@ -6,7 +6,7 @@ import { AgentRuntimeFeatureFlagsService } from './agent-runtime-feature-flags.s
 import { RecordTeachingDeliveryInteractionInputSchema, RecordTeachingInteractionInputSchema } from './agent.types';
 import { selectTeachingAssetCandidate, TeachingAssetSelectionCandidate } from './teaching-asset-selection-policy';
 import { TeachingAssetRoutingOutcomeService } from './teaching-asset-routing-outcome.service';
-import { getTeachingAssetCapability, TEACHING_VISUALIZER_COMPONENT_KEYS } from './teaching-asset-registry';
+import { getTeachingAssetCapability, teachingAssetMatchesQuestion, TEACHING_VISUALIZER_COMPONENT_KEYS } from './teaching-asset-registry';
 
 const RESOLVER_VERSION = 'teaching-asset-resolver-v2';
 const LEGACY_RESOLVER_VERSION = 'teaching-asset-resolver-v1';
@@ -123,7 +123,15 @@ export class AgentTeachingAssetService {
     });
     const item = round?.items.find((candidate) => candidate.questionId === questionId);
     if (!round || !item) throw new NotFoundException('训练题目不存在。');
-    return { roundId, questionId, round, item, artifact, subject: round.session.subject, topicId: item.topicId };
+    const question = await this.prisma.cscaQuestion.findUnique({
+      where: { id: questionId },
+      select: { prompt: true, explanation: true, knowledgeTags: true, generationMetadata: true }
+    });
+    if (!question) throw new NotFoundException('训练题目不存在。');
+    const generationMetadata = objectValue(question.generationMetadata);
+    const questionPlan = objectValue(generationMetadata.questionPlan);
+    const taskFamily = String(questionPlan.taskFamily ?? generationMetadata.taskFamily ?? '').trim() || null;
+    return { roundId, questionId, round, item, question, taskFamily, artifact, subject: round.session.subject, topicId: item.topicId };
   }
 
   private presentation(asset: any, version: any, topicTitle: string, resolverVersion = RESOLVER_VERSION) {
@@ -179,7 +187,15 @@ export class AgentTeachingAssetService {
     }
   }
 
-  private async resolve(userId: number, topicId: number, subject: string, language: unknown, contentPlan?: unknown, routingContext?: { type: string; key: string }) {
+  private async resolve(
+    userId: number,
+    topicId: number,
+    subject: string,
+    language: unknown,
+    contentPlan?: unknown,
+    routingContext?: { type: string; key: string },
+    questionContext?: { prompt: string; explanation?: string | null; knowledgeTags?: unknown; taskFamily?: string | null }
+  ) {
     const startedAt = Date.now();
     const configuredMode = this.flags.teachingAssetRoutingMode();
     const rolloutMode = this.flags.teachingAssetRoutingModeFor(userId, subject);
@@ -206,16 +222,21 @@ export class AgentTeachingAssetService {
       },
       orderBy: [{ updatedAt: 'desc' }, { id: 'desc' }]
     });
-    const renderable = assets.flatMap((asset) => {
+    const allRenderable = assets.flatMap((asset) => {
       const version = asset.versions[0];
       const presentation = version ? this.presentation(asset, version, asset.topics[0]?.topic.title ?? '') : null;
       return version && presentation ? [{ asset, version, presentation }] : [];
     });
+    const renderable = questionContext
+      ? allRenderable.filter(({ version }) => teachingAssetMatchesQuestion(String(version.componentKey ?? ''), questionContext))
+      : allRenderable;
     if (!renderable.length) {
       if (mode !== 'legacy') await this.recordRoutingDecision(userId, subject, topicId, routingContext, {
         routingMode: mode, configuredMode, policyVersion: 'teaching-asset-selection-v1', legacyVersionId: null,
         personalizedVersionId: null, servedVersionId: null, diverged: false, personalizedFallback: true,
-        boundedExploration: false, reasonCodes: ['no_renderable_candidate', ...(circuitReason ? [circuitReason] : [])], candidateCount: 0,
+        boundedExploration: false,
+        reasonCodes: [allRenderable.length ? 'no_semantically_relevant_candidate' : 'no_renderable_candidate', ...(circuitReason ? [circuitReason] : [])],
+        candidateCount: allRenderable.length,
         eligibleCandidateCount: 0, latencyMs: Date.now() - startedAt, decision: null
       });
       return null;
@@ -309,8 +330,16 @@ export class AgentTeachingAssetService {
     if (context.item.isCorrect !== false) {
       return { schemaVersion: '1' as const, item: null, gapReason: context.item.selectedAnswer ? 'CORRECT_ANSWER' : 'ANSWER_REQUIRED' };
     }
-    const item = await this.resolve(userId, context.topicId, context.subject, language, undefined, { type: 'practice_question', key: `adaptive_round:${context.roundId}:question:${context.questionId}` });
-    return { schemaVersion: '1' as const, item, gapReason: item ? null : 'NO_PUBLISHED_ASSET' };
+    const item = await this.resolve(
+      userId,
+      context.topicId,
+      context.subject,
+      language,
+      undefined,
+      { type: 'practice_question', key: `adaptive_round:${context.roundId}:question:${context.questionId}` },
+      { ...context.question, taskFamily: context.taskFamily }
+    );
+    return { schemaVersion: '1' as const, item, gapReason: item ? null : 'NO_RELEVANT_ASSET' };
   }
 
   async byStableKey(stableKey: string, language?: unknown) {

@@ -231,12 +231,12 @@ async function ensureAgentPracticeQuestions(topics) {
       : null;
     const physicsMechanicsQuestions = ['P-MECH-002', 'DEMO-PHYSICS-MECHANICS'].includes(topic.code)
       ? [
-          { prompt: '质量为 2 kg 的物体获得 3 m/s² 的加速度，所受合力为（ ）', options: ['3 N', '5 N', '6 N', '9 N'], correctAnswer: 'C', explanation: '由 F=ma，F=2×3=6 N。' },
-          { prompt: '物体同时受到向右 10 N 和向左 4 N 的力，合力为（ ）', options: ['14 N，向右', '6 N，向右', '6 N，向左', '4 N，向左'], correctAnswer: 'B', explanation: '相反方向的力相减，10-4=6 N，方向向右。' },
-          { prompt: '在合力不变时，物体质量变为原来的 2 倍，加速度将变为原来的（ ）', options: ['1/2', '2 倍', '4 倍', '不变'], correctAnswer: 'A', explanation: '由 a=F/m，质量加倍时加速度减半。' },
-          { prompt: '汽车急刹车时乘客会向前倾，主要体现了物体的（ ）', options: ['弹性', '惯性', '重力', '摩擦力'], correctAnswer: 'B', explanation: '乘客身体仍倾向保持原来的运动状态，这是惯性。' },
-          { prompt: '取 g=10 N/kg，质量为 2 kg 的物体重力是（ ）', options: ['5 N', '10 N', '20 N', '40 N'], correctAnswer: 'C', explanation: '重力 G=mg=2×10=20 N。' },
-          { prompt: '物体所受合力为零时，它可能（ ）', options: ['只能静止', '静止或做匀速直线运动', '一定加速', '一定减速'], correctAnswer: 'B', explanation: '合力为零时加速度为零，物体可静止或保持匀速直线运动。' }
+          { prompt: '质量为 2 kg 的物体获得 3 m/s² 的加速度，所受合力为（ ）', options: ['3 N', '5 N', '6 N', '9 N'], correctAnswer: 'C', explanation: '由 F=ma，F=2×3=6 N。', knowledgeTags: ['牛顿第二定律', '合力', '加速度'] },
+          { prompt: '物体同时受到向右 10 N 和向左 4 N 的力，合力为（ ）', options: ['14 N，向右', '6 N，向右', '6 N，向左', '4 N，向左'], correctAnswer: 'B', explanation: '相反方向的力相减，10-4=6 N，方向向右。', knowledgeTags: ['力的合成', '合力'] },
+          { prompt: '在合力不变时，物体质量变为原来的 2 倍，加速度将变为原来的（ ）', options: ['1/2', '2 倍', '4 倍', '不变'], correctAnswer: 'A', explanation: '由 a=F/m，质量加倍时加速度减半。', knowledgeTags: ['牛顿第二定律', '质量与加速度'] },
+          { prompt: '汽车急刹车时乘客会向前倾，主要体现了物体的（ ）', options: ['弹性', '惯性', '重力', '摩擦力'], correctAnswer: 'B', explanation: '乘客身体仍倾向保持原来的运动状态，这是惯性。', knowledgeTags: ['惯性', '牛顿第一定律'] },
+          { prompt: '取 g=10 N/kg，质量为 2 kg 的物体重力是（ ）', options: ['5 N', '10 N', '20 N', '40 N'], correctAnswer: 'C', explanation: '重力 G=mg=2×10=20 N。', knowledgeTags: ['重力', '重力公式 G=mg'] },
+          { prompt: '物体所受合力为零时，它可能（ ）', options: ['只能静止', '静止或做匀速直线运动', '一定加速', '一定减速'], correctAnswer: 'B', explanation: '合力为零时加速度为零，物体可静止或保持匀速直线运动。', knowledgeTags: ['平衡状态', '牛顿第一定律'] }
         ]
       : null;
     const chemistryConcentrationQuestions = topic.code === 'C-BASIC-003'
@@ -302,7 +302,7 @@ async function ensureAgentPracticeQuestions(topics) {
         questionType: 'single_choice', prompt,
         options: values.map((text, optionIndex) => ({ id: String.fromCharCode(65 + optionIndex), text })),
         correctAnswer: fixture.correctAnswer, explanation: fixture.explanation,
-        knowledgeTags: [topic.title], generationMetadata: {
+        knowledgeTags: fixture.knowledgeTags ?? [topic.title], generationMetadata: {
           marker,
           purpose: 'agent_practice_golden_path',
           ...(fixture.taskFamily ? { questionPlan: { taskFamily: fixture.taskFamily } } : {})

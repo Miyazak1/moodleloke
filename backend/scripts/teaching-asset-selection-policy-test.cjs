@@ -1,5 +1,6 @@
 const assert = require('node:assert/strict');
 const { selectTeachingAssetCandidate, TEACHING_ASSET_SELECTION_POLICY_VERSION } = require('../dist/backend/src/agent/teaching-asset-selection-policy');
+const { teachingAssetMatchesQuestion } = require('../dist/backend/src/agent/teaching-asset-registry');
 
 function candidate(versionId, overrides = {}) {
   return {
@@ -54,6 +55,23 @@ for (let day = 1; day <= 31 && (!exploration || !exploitation); day += 1) {
 }
 assert.equal(exploration.candidate.versionId, 'new');
 assert.equal(exploitation.candidate.versionId, 'established');
+
+const gravityQuestion = {
+  prompt: '取 g=10 N/kg，质量为 2 kg 的物体重力是（ ）',
+  explanation: '重力 G=mg=2×10=20 N。',
+  knowledgeTags: ['力与运动']
+};
+assert.equal(teachingAssetMatchesQuestion('visualizer.physics.circular-motion', gravityQuestion), false, 'a gravity calculation must never match circular motion');
+assert.equal(teachingAssetMatchesQuestion('visualizer.physics.newton-second-law', gravityQuestion), false, 'a gravity calculation must not be treated as a Newton-second-law simulation merely because it mentions mass');
+assert.equal(teachingAssetMatchesQuestion('visualizer.physics.newton-second-law', {
+  prompt: '质量为 2 kg 的物体获得 3 m/s² 的加速度，所受合力为（ ）',
+  explanation: '由 F=ma 计算。',
+  knowledgeTags: ['牛顿第二定律']
+}), true);
+assert.equal(teachingAssetMatchesQuestion('visualizer.physics.circular-motion', {
+  prompt: '物体做匀速圆周运动，已知速度和半径，求向心加速度。',
+  knowledgeTags: ['圆周运动', '向心加速度']
+}), true);
 
 console.log(JSON.stringify({
   status: 'ok',
