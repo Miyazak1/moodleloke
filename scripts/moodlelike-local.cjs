@@ -1,6 +1,9 @@
 const { spawn, spawnSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
+const { loadRootEnv } = require('../backend/scripts/load-root-env.cjs');
+
+loadRootEnv();
 
 const root = path.resolve(__dirname, '..');
 const command = process.argv[2] || 'start';

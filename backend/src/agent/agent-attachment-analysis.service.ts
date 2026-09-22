@@ -239,7 +239,7 @@ export class AgentAttachmentAnalysisService {
         taskType: 'admin_assistant',
         sourceModule: 'agent_attachment_analysis',
         messages: prepared.messages as any,
-        modelHint: prepared.vision ? (process.env.CSCA_ATTACHMENT_VISION_MODEL || 'deepseek-v4-flash-vision-exp') : process.env.CSCA_ATTACHMENT_TEXT_MODEL,
+        modelHint: prepared.vision ? (process.env.CSCA_ATTACHMENT_VISION_MODEL || 'deepseek-flash') : process.env.CSCA_ATTACHMENT_TEXT_MODEL,
         responseFormat: 'json',
         temperature: 0.1,
         thinking: 'disabled',

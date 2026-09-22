@@ -3,7 +3,7 @@ import { createHash } from 'crypto';
 import { AiProviderKey, AiRuntimeProviderConfig, AiTaskPolicy, AiTaskType } from './ai-gateway.types';
 
 const DEFAULT_DEEPSEEK_BASE_URL = 'https://api.deepseek.com';
-const DEFAULT_DEEPSEEK_MODEL = 'deepseek-v4-flash';
+const DEFAULT_DEEPSEEK_MODEL = 'deepseek-flash';
 type PlatformKeyPool = 'background' | 'personal' | 'legacy';
 
 const TASK_POLICIES: Record<AiTaskType, Omit<AiTaskPolicy, 'taskType'>> = {

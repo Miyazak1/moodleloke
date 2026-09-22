@@ -58,7 +58,7 @@ function providerName() {
 }
 
 function modelName() {
-  return process.env.CSCA_AI_MODEL || process.env.DEEPSEEK_PERSONAL_DEFAULT_MODEL || process.env.DEEPSEEK_DEFAULT_MODEL || 'deepseek-v4-flash';
+  return process.env.CSCA_AI_MODEL || process.env.DEEPSEEK_PERSONAL_DEFAULT_MODEL || process.env.DEEPSEEK_DEFAULT_MODEL || 'deepseek-flash';
 }
 
 function promptVersion() {
