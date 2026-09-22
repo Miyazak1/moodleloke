@@ -6,7 +6,7 @@ import { AgentRuntimeFeatureFlagsService } from './agent-runtime-feature-flags.s
 import { RecordTeachingDeliveryInteractionInputSchema, RecordTeachingInteractionInputSchema } from './agent.types';
 import { selectTeachingAssetCandidate, TeachingAssetSelectionCandidate } from './teaching-asset-selection-policy';
 import { TeachingAssetRoutingOutcomeService } from './teaching-asset-routing-outcome.service';
-import { getTeachingAssetCapability } from './teaching-asset-registry';
+import { getTeachingAssetCapability, TEACHING_VISUALIZER_COMPONENT_KEYS } from './teaching-asset-registry';
 
 const RESOLVER_VERSION = 'teaching-asset-resolver-v2';
 const LEGACY_RESOLVER_VERSION = 'teaching-asset-resolver-v1';
@@ -46,6 +46,10 @@ export const TeachingAssetPayloadSchema = z.union([
   z.strictObject({
     ...PayloadBaseShape,
     component: z.strictObject({ key: z.literal('chemistry.acid-base-neutralization'), version: z.literal(COMPONENT_VERSION), props: z.strictObject({ acidMin: z.number().int().min(0).max(10), acidMax: z.number().int().min(1).max(20), initialAcid: z.number().int().min(0).max(20), baseMin: z.number().int().min(0).max(10), baseMax: z.number().int().min(1).max(20), initialBase: z.number().int().min(0).max(20) }) })
+  }),
+  z.strictObject({
+    ...PayloadBaseShape,
+    component: z.strictObject({ key: z.enum(TEACHING_VISUALIZER_COMPONENT_KEYS), version: z.literal(COMPONENT_VERSION), props: z.strictObject({}) })
   })
 ]).superRefine((payload, context) => {
   if (payload.component.key === 'math.function-horizontal-shift') {

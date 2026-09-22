@@ -51,6 +51,7 @@ const attachmentList = {
 
 const journeyState = {
   schemaVersion: '1', generatedAt: '2026-09-16T08:00:00.000Z', activeWorkspace: null,
+  plans: [artifact],
   stages: [{
     id: 'practice:artifact-1', kind: 'practice', conversationId, journeyId: artifactId,
     title: '数学短诊断', subject: 'math', taskType: 'diagnostic', status: 'completed',
@@ -340,13 +341,13 @@ test('renders the server-owned learning journey instead of rebuilding it from co
   test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the journey read-model contract.');
   await mockAgentWorkspace(page);
   await page.goto('/zh/agent');
-  await page.getByRole('button', { name: '学习历程', exact: true }).click();
+  await page.getByRole('button', { name: '目标进度', exact: true }).click();
   await expect(page.getByRole('button', { name: /数学短诊断/ })).toContainText('5 题');
   await expect(page.getByRole('button', { name: /数学短诊断/ })).toContainText('80%');
   await expect(page.getByRole('button', { name: /数学短诊断/ })).toContainText('1 次辅助');
 });
 
-test('restores an active verification without an artifact or saved browser URL', async ({ page }, testInfo) => {
+test('offers an explicit resume entry for an active verification without a saved browser URL', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for cross-device workspace recovery.');
   await mockAgentWorkspace(page);
   const activeWorkspace = {
@@ -360,11 +361,14 @@ test('restores an active verification without an artifact or saved browser URL',
   }));
   await page.route('**/api/v1/csca-special-practice/**', (route) => json(route, { message: 'mock round intentionally unavailable' }, 503));
   await page.goto('/zh/agent');
+  await expect(page.getByRole('button', { name: '继续学习', exact: true })).toBeVisible();
+  await expect(page).not.toHaveURL(/agentRoundId=/);
+  await page.getByRole('button', { name: '继续学习', exact: true }).click();
   await expect(page).toHaveURL(new RegExp('/zh/agent\\?.*agentRoundId=81'));
   await expect(page).toHaveURL(new RegExp('agentInterventionVerificationId=verification-1'));
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
   await expect(page.getByText('阶段验证 · 数学')).toBeVisible();
-  await expect(page.getByLabel('当前学习辅助')).toBeVisible();
+  await expect(page.getByLabel('当前学习辅助')).toBeHidden();
 });
 
 test('stops polling and exits an unavailable restored round', async ({ page }, testInfo) => {
@@ -421,11 +425,12 @@ test('shows a continue-learning entry for an interrupted stage', async ({ page }
   await expect(page.getByText('当前推荐任务')).toHaveCount(0);
   await expect(page.getByText('保留原科目、题目位置和作答状态。')).toBeVisible();
   await continueLearning.click();
-  await expect(page).toHaveURL(new RegExp(`conversation=${resumedConversationId}.*agentRoundId=81`), { timeout: 500 });
+  await expect(page).toHaveURL(new RegExp(`agentContextId=${resumedConversationId}.*agentRoundId=81`), { timeout: 500 });
+  await expect(page).not.toHaveURL(/[?&](?:conversation|agentConversationId)=/);
   await expect(page).toHaveURL(new RegExp('agentRoundId=81'));
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
   await expect(page.getByLabel('Agent 学习任务工作区')).toContainText('恢复后应当直接看到这道函数题。');
-  await expect(page.getByLabel('当前学习辅助')).toBeVisible();
+  await expect(page.getByLabel('当前学习辅助')).toBeHidden();
 });
 
 test('does not present a submitted report as an interrupted learning task', async ({ page }, testInfo) => {
@@ -449,6 +454,10 @@ test('does not present a submitted report as an interrupted learning task', asyn
 test('starts student-initiated free practice without turning it into a recommended plan', async ({ page }, testInfo) => {
   await mockAgentWorkspace(page);
   await page.addInitScript(() => window.localStorage.setItem('moodlelike.agent.learningMode', 'free'));
+  let conversationAttachmentAnalysisLoads = 0;
+  page.on('request', (request) => {
+    if (/\/api\/v1\/agent\/conversations\/[^/]+\/attachment-analyses/.test(request.url())) conversationAttachmentAnalysisLoads += 1;
+  });
   let requestBody: Record<string, unknown> | null = null;
   let freeStarted = false;
   let startAttempts = 0;
@@ -511,19 +520,23 @@ test('starts student-initiated free practice without turning it into a recommend
   await expect(page.getByRole('alert')).toContainText('自由练习还没有开始；科目和题量已保留。');
   await page.getByRole('button', { name: '重试开始' }).click();
   await expect.poll(() => requestBody).not.toBeNull();
-  expect(requestBody).toMatchObject({ conversationId, subject: 'physics', questionCount: 3, questionLanguage: 'zh' });
+  expect(requestBody).toMatchObject({ subject: 'physics', questionCount: 3, questionLanguage: 'zh' });
+  expect(requestBody).not.toHaveProperty('conversationId');
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
+  await expect(page).toHaveURL(/agentContextId=conversation-1/);
+  await expect(page).not.toHaveURL(/[?&](?:conversation|agentConversationId)=/);
   await expect(page.getByLabel('Agent 学习任务工作区')).toContainText('自由练习 · 物理');
   await expect(page.getByLabel('自由练习任务')).toHaveCount(0);
   await expect(page.getByLabel('Agent 学习任务工作区')).toContainText('速度由 2 m/s 增加到 5 m/s');
+  expect(conversationAttachmentAnalysisLoads).toBe(0);
   if (testInfo.project.name === 'desktop') {
     await page.getByRole('button', { name: '学习设置', exact: true }).click();
     await page.locator('.agent-settings-learning-mode').getByRole('button', { name: /智能推荐/ }).click();
-    await page.getByRole('button', { name: '关闭任务面板' }).click();
+    await page.getByRole('button', { name: '做题', exact: true }).click();
     await expect(page.getByLabel('Agent 学习任务工作区')).toContainText('速度由 2 m/s 增加到 5 m/s');
     await page.getByRole('button', { name: '学习设置', exact: true }).click();
     await page.locator('.agent-settings-learning-mode').getByRole('button', { name: /自由练习/ }).click();
-    await page.getByRole('button', { name: '关闭任务面板' }).click();
+    await page.getByRole('button', { name: '做题', exact: true }).click();
     await expect(page.getByLabel('Agent 学习任务工作区')).toContainText('速度由 2 m/s 增加到 5 m/s');
     await page.getByLabel('Agent 学习任务工作区').getByRole('button', { name: 'A 2 m/s', exact: true }).click();
     await expect(page.getByLabel('Agent 学习任务工作区').locator('.special-answer-result')).toContainText('正确答案是 B');
@@ -531,23 +544,34 @@ test('starts student-initiated free practice without turning it into a recommend
   expect(startAttempts).toBe(2);
 });
 
-test('treats internal conversations as learning-history stages instead of new chats', async ({ page }) => {
+test('loads conversations only after entering subject Q&A', async ({ page }) => {
   await mockAgentWorkspace(page);
-  await page.goto('/zh/agent');
-  await page.getByRole('button', { name: /学习历程/ }).click();
-  await expect(page.getByLabel('已保存的学习阶段')).toBeVisible();
-  await expect(page.getByRole('button', { name: /数学短诊断/ })).toBeVisible();
-  await expect(page.getByRole('heading', { name: '看见做过什么，以及下一步如何变化' })).toBeVisible();
-  expect(await page.evaluate(() => window.localStorage.getItem('moodlelike.agent.journeySection'))).toBe('history');
+  await page.addInitScript(() => window.localStorage.setItem('moodlelike.agent.journeySection', 'qa'));
+  let conversationDetailLoads = 0;
+  await page.route(new RegExp(`/api/v1/agent/conversations/${conversationId}(?:\\?.*)?$`), (route) => {
+    conversationDetailLoads += 1;
+    return json(route, conversation);
+  });
+  await page.goto(`/zh/agent?conversation=${conversationId}&agentRoundId=41`);
+  await expect(page).not.toHaveURL(/conversation=/);
+  await expect(page).toHaveURL(/agentContextId=conversation-1/);
+  expect(conversationDetailLoads).toBe(0);
+  await page.getByRole('button', { name: '学习计划', exact: true }).click();
+  await expect(page.getByRole('heading', { name: '围绕目标，只保留一个明确的下一步' })).toBeVisible();
+  expect(conversationDetailLoads).toBe(0);
+  expect(await page.evaluate(() => window.localStorage.getItem('moodlelike.agent.journeySection'))).toBe('plan');
+  await page.getByRole('button', { name: '学科问答', exact: true }).click();
+  await expect.poll(() => conversationDetailLoads).toBeGreaterThan(0);
+  expect(await page.evaluate(() => window.localStorage.getItem('moodlelike.agent.journeySection'))).toBe('qa');
 });
 
 test('separates learning settings from account settings and restores the workspace layout', async ({ page }, testInfo) => {
   await mockAgentWorkspace(page);
   await page.goto('/zh/agent');
   await page.getByRole('button', { name: '学习设置', exact: true }).click();
-  await expect(page.getByLabel('Agent 学习设置工作区')).toBeVisible();
+  await expect(page.getByLabel('当前学习上下文')).toBeVisible();
   await expect(page.getByRole('heading', { name: '你希望 Agent 默认怎样开始' })).toBeVisible();
-  await expect(page.getByLabel('Agent 学习设置工作区')).toContainText('讲解、动画和结果按当前学习状态呈现，学科问答独立保留');
+  await expect(page.getByLabel('当前学习上下文')).toContainText('讲解、动画和结果按当前学习状态呈现，学科问答独立保留');
   await page.locator('.agent-settings-learning-mode').getByRole('button', { name: /自由练习/ }).click();
   expect(await page.evaluate(() => window.localStorage.getItem('moodlelike.agent.learningMode'))).toBe('free');
   await page.getByRole('button', { name: '学习画像', exact: true }).click();
@@ -600,6 +624,9 @@ test('keeps CSCALite organization and credit controls out of the independent acc
   await expect(page.getByText('机构与 AI 额度', { exact: true })).toHaveCount(0);
   await expect(page.getByRole('button', { name: '加入机构', exact: true })).toHaveCount(0);
   expect(creditRequestCount).toBe(0);
+  await page.getByRole('button', { name: '返回 Agent 设置', exact: true }).click();
+  await expect(page).toHaveURL(/\/zh\/agent\?agentSection=settings$/);
+  await expect(page.getByRole('heading', { name: '设置 Agent 如何安排学习' })).toBeVisible();
 });
 
 test('renders the saved learning plan as an Agent-native data view', async ({ page }) => {
@@ -645,7 +672,7 @@ test('recovers a failed past-paper workspace without leaving the Agent', async (
   await page.goto(`/zh/agent?conversation=${conversationId}&agentPastPaper=retry-paper`);
   await expect(page.getByText('真题服务暂时不可用')).toBeVisible();
   await page.getByRole('button', { name: '重试加载' }).click();
-  await expect(page.getByLabel('Agent 真题工作区')).toContainText('恢复测试真题');
+  await expect(page.getByLabel('真题资料详情')).toContainText('恢复测试真题');
   await expect(page).toHaveURL(new RegExp(`/zh/agent\\?.*agentPastPaper=retry-paper`));
   expect(detailRequests).toBe(2);
 });
@@ -842,6 +869,7 @@ test('keeps free-practice defaults separate and preserves the current batch when
 test('keeps the active question stable while rendering current learning assistance', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the contextual assistance contract.');
   await mockAgentWorkspace(page);
+  await page.addInitScript(() => window.localStorage.setItem('moodlelike.agent.practiceQaConversation.81', 'conversation-1'));
   const now = '2026-09-15T10:00:00.000Z';
   const roundDetail = {
     session: { id: 51, userId: 42, subject: 'math', mode: 'adaptive', status: 'active', questionLanguage: 'zh', startedAt: now, completedAt: null, createdAt: now, updatedAt: now },
@@ -881,6 +909,31 @@ test('keeps the active question stable while rendering current learning assistan
     }
   }));
   let requestedAction = '';
+  let practiceQaConversationCreates = 0;
+  let practiceQaSubmission: Record<string, unknown> | null = null;
+  const practiceQaConversation = {
+    id: 'practice-qa-1', status: 'active', title: '数学练习问答 · 第 1 题',
+    lastMessageAt: now, createdAt: now, updatedAt: now,
+    messages: [
+      { id: 'practice-question-1', conversationId: 'practice-qa-1', role: 'user', content: { schemaVersion: '1', surface: 'subject_qa', text: '为什么先看斜率？' }, clientMessageId: 'practice-client-1', runId: 'practice-run-1', createdAt: now },
+      { id: 'practice-answer-1', conversationId: 'practice-qa-1', role: 'assistant', content: { schemaVersion: '1', surface: 'subject_qa', text: '因为一次函数中 x 的系数就是斜率。', subjectQa: { decision: 'answered', generatedByAI: true } }, clientMessageId: null, runId: 'practice-run-1', createdAt: now }
+    ],
+    artifacts: []
+  };
+  await page.route(/\/api\/v1\/agent\/conversations(?:\?.*)?$/, async (route) => {
+    if (route.request().method() !== 'POST') return route.fallback();
+    practiceQaConversationCreates += 1;
+    return json(route, { ...practiceQaConversation, messages: undefined, artifacts: undefined });
+  });
+  await page.route('**/api/v1/agent/conversations/practice-qa-1/messages', async (route) => {
+    practiceQaSubmission = await route.request().postDataJSON();
+    return json(route, { messageId: 'practice-question-1', runId: 'practice-run-1', status: 'queued', eventsUrl: '/events' });
+  });
+  await page.route('**/api/v1/agent/conversations/practice-qa-1', (route) => json(route, practiceQaConversation));
+  await page.route('**/api/v1/agent/runs/practice-run-1', (route) => json(route, {
+    id: 'practice-run-1', conversationId: 'practice-qa-1', userId: 42, status: 'completed', channel: 'web', traceId: 'practice-trace-1',
+    startedAt: now, completedAt: now, errorCode: null, errorRetryable: null, artifacts: [], toolCalls: []
+  }));
   await page.route('**/api/v1/agent/practice-rounds/81/questions/101/assistance', async (route) => {
     if (route.request().method() === 'GET') return json(route, { ...availability, history: assistanceHistory });
     requestedAction = String((await route.request().postDataJSON()).action || '');
@@ -894,14 +947,61 @@ test('keeps the active question stable while rendering current learning assistan
     return json(route, response);
   });
   await page.goto(`/zh/agent?conversation=${conversationId}&agentConversationId=${conversationId}&agentArtifactId=${artifactId}&agentRoundId=81&agentView=practice&agentTaskType=diagnostic&agentSubject=math`);
+  await expect(page.getByLabel('Agent 学习任务工作区').locator('.agent-assistance-bridge')).toBeVisible();
+  await expect(page.getByLabel('当前练习题上下文')).toHaveCount(0);
+  await page.getByLabel('Agent 学习任务工作区').getByRole('button', { name: '打开学习工具' }).click();
+  const calculator = page.getByLabel('科学计算器');
+  await expect(calculator).toBeVisible();
+  await calculator.getByLabel('计算表达式').fill('2×(3+4)');
+  await calculator.getByRole('button', { name: '=', exact: true }).click();
+  await expect(calculator.locator('output')).toHaveText('14');
+  await page.getByRole('button', { name: '单位换算', exact: true }).click();
+  await expect(page.locator('.agent-unit-converter > output')).toContainText('1');
+  await expect(page.locator('.agent-unit-converter > output')).toContainText('千米 km');
+  await page.getByRole('button', { name: '公式与常量', exact: true }).click();
+  await expect(page.getByText('一元二次方程')).toBeVisible();
+  await page.getByLabel('搜索公式').fill('斜率');
+  await expect(page.getByText('直线斜率')).toBeVisible();
+  await expect(page.getByText('一元二次方程')).toHaveCount(0);
+  await page.getByRole('button', { name: '函数绘图', exact: true }).click();
+  await expect(page.getByRole('img', { name: '函数 x^2 的图像' })).toBeVisible();
+  await page.getByLabel('函数表达式').fill('sin(x)');
+  await expect(page.getByRole('img', { name: '函数 sin(x) 的图像' })).toBeVisible();
+  await page.getByRole('button', { name: '草稿纸', exact: true }).click();
+  await page.getByPlaceholder('记录计算步骤、公式或解题思路……').fill('斜率等于 x 的系数');
+  expect(practiceQaConversationCreates).toBe(0);
+  await page.getByRole('button', { name: '本题问答', exact: true }).click();
+  await page.getByLabel('Agent 学习任务工作区').locator('.agent-assistance-bridge').click();
+  await expect(page.getByRole('heading', { name: '本题问答 · 第 1 题' })).toBeVisible();
   await expect(page.getByLabel('当前练习题上下文')).toContainText('当前第 1/1 题');
+  await expect(page.getByText('我今天该学什么？')).toHaveCount(0);
+  expect(practiceQaConversationCreates).toBe(0);
+  await page.getByRole('button', { name: '学习工具', exact: true }).click();
+  await page.getByRole('button', { name: '草稿纸', exact: true }).click();
+  await expect(page.getByPlaceholder('记录计算步骤、公式或解题思路……')).toHaveValue('斜率等于 x 的系数');
+  await page.getByRole('button', { name: '本题问答', exact: true }).click();
+  await page.getByLabel('围绕当前题提问').fill('为什么先看斜率？');
+  await page.getByRole('button', { name: '发送' }).click();
+  await expect(page.getByText('因为一次函数中 x 的系数就是斜率。')).toBeVisible();
+  expect(await page.locator('.agent-message-list').evaluate((root) => {
+    const context = root.querySelector('.agent-practice-action-panel');
+    const userMessage = root.querySelector('.agent-message-block.user');
+    return Boolean(context && userMessage && (context.compareDocumentPosition(userMessage) & Node.DOCUMENT_POSITION_FOLLOWING));
+  })).toBe(true);
+  expect(practiceQaConversationCreates).toBe(1);
+  expect(await page.evaluate(() => window.localStorage.getItem('moodlelike.agent.practiceQaConversation.81.101'))).toBe('practice-qa-1');
+  expect(practiceQaSubmission).toMatchObject({
+    surface: 'subject_qa',
+    text: '为什么先看斜率？',
+    pageContext: { questionContext: { roundId: 81, questionId: 101, questionNumber: 1, subject: 'math', answered: false } }
+  });
   await page.getByRole('button', { name: '学习设置', exact: true }).click();
   await page.locator('.agent-settings-learning-mode').getByRole('button', { name: /自由练习/ }).click();
-  await page.getByRole('button', { name: '关闭任务面板' }).click();
+  await page.getByRole('button', { name: '做题', exact: true }).click();
   await expect(page.getByLabel('Agent 学习任务工作区')).toContainText('函数 y=2x+1 的斜率是多少？');
   await page.getByRole('button', { name: '学习设置', exact: true }).click();
   await page.locator('.agent-settings-learning-mode').getByRole('button', { name: /智能推荐/ }).click();
-  await page.getByRole('button', { name: '关闭任务面板' }).click();
+  await page.getByRole('button', { name: '做题', exact: true }).click();
   await expect(page.getByLabel('Agent 学习任务工作区')).toContainText('函数 y=2x+1 的斜率是多少？');
   await expect(page.getByLabel('Agent 学习任务工作区')).not.toContainText(/AI\s*\d+\s*次|AI\s*额度/);
   await expect(page.getByLabel('Agent 学习任务工作区').locator('.agent-assistance-panel')).toHaveCount(0);
@@ -909,11 +1009,84 @@ test('keeps the active question stable while rendering current learning assistan
   await page.getByLabel('当前练习题上下文').getByRole('button', { name: '回忆知识点' }).click();
   await expect(page.locator('.agent-practice-assistance-message')).toContainText('一次函数 y=kx+b 中，k 表示斜率。');
   expect(requestedAction).toBe('recall_concept');
+  await page.getByRole('button', { name: '关闭本题问答，返回做题' }).click();
+  await expect(page.getByRole('heading', { name: '本题问答 · 第 1 题' })).toHaveCount(0);
   await page.getByLabel('Agent 学习任务工作区').getByRole('button', { name: 'A 1', exact: true }).click();
+  await expect(page.getByRole('heading', { name: '本题问答 · 第 1 题' })).toBeVisible();
+  await expect(page.getByLabel('当前题错因解析')).toContainText('正确答案 B');
+  await expect(page.getByLabel('当前题错因解析')).toContainText('你的答案 A');
+  await expect(page.getByLabel('当前题错因解析')).toContainText('一次函数 y=kx+b 中，k 是斜率。');
   await expect(page.getByLabel('当前题知识讲解')).toContainText('当前题知识讲解');
+  await expect(page.getByLabel('Agent 学习任务工作区').locator('.special-explanation-box')).toHaveCount(0);
+  expect(await page.locator('.agent-message-list').evaluate((root) => {
+    const analysis = root.querySelector('.agent-practice-analysis-message');
+    const teaching = root.querySelector('.agent-practice-teaching-resource');
+    return Boolean(analysis && teaching && (analysis.compareDocumentPosition(teaching) & Node.DOCUMENT_POSITION_FOLLOWING));
+  })).toBe(true);
+  await page.getByLabel('围绕当前题提问').fill('为什么 A 错了？');
+  await page.getByRole('button', { name: '发送' }).click();
+  await expect.poll(() => practiceQaSubmission).toMatchObject({
+    surface: 'subject_qa',
+    text: '为什么 A 错了？',
+    pageContext: {
+      questionContext: {
+        roundId: 81,
+        questionId: 101,
+        selectedAnswer: 'A',
+        answered: true,
+        correctAnswer: 'B',
+        isCorrect: false,
+        explanation: '一次函数 y=kx+b 中，k 是斜率。',
+        knowledgeTags: ['函数']
+      }
+    }
+  });
+  expect(await page.locator('.agent-message-list').evaluate((root) => {
+    const teaching = root.querySelector('.agent-practice-teaching-resource');
+    const userMessage = root.querySelector('.agent-message-block.user');
+    return Boolean(teaching && userMessage && (teaching.compareDocumentPosition(userMessage) & Node.DOCUMENT_POSITION_FOLLOWING));
+  })).toBe(true);
   await expect(page.getByLabel('Agent 学习任务工作区').locator('.agent-micro-lesson-card')).toHaveCount(0);
+  await page.getByRole('button', { name: '收起讲解' }).click();
+  await expect(page.getByRole('button', { name: '展开讲解' })).toBeVisible();
+  await page.getByRole('button', { name: '展开讲解' }).click();
+  await expect(page.getByLabel('当前题知识讲解')).toContainText('当前题知识讲解');
+  await page.getByRole('button', { name: '关闭本题问答，返回做题' }).click();
+  await expect(page.getByRole('heading', { name: '本题问答 · 第 1 题' })).toHaveCount(0);
+  await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
   await page.reload();
+  await page.getByLabel('Agent 学习任务工作区').locator('.agent-assistance-bridge').click();
   await expect(page.locator('.agent-practice-assistance-message')).toContainText('一次函数 y=kx+b 中，k 表示斜率。');
+});
+
+test('keeps current-question Q&A closed after a correct answer', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the correct-answer panel contract.');
+  await mockAgentWorkspace(page);
+  const now = '2026-09-15T10:00:00.000Z';
+  const roundDetail = {
+    session: { id: 52, userId: 42, subject: 'math', mode: 'adaptive', status: 'active', questionLanguage: 'zh', startedAt: now, completedAt: null, createdAt: now, updatedAt: now },
+    round: { id: 83, sessionId: 52, roundIndex: 1, status: 'active', plannerSnapshot: { mode: 'diagnostic' }, answers: {}, timeSpent: {}, currentQuestion: 1, correctCount: 0, wrongCount: 0, unansweredCount: 1, startedAt: now, submittedAt: null, version: 1 },
+    questions: [{ id: 103, orderNumber: 1, difficulty: 'basic', questionType: 'single-choice', prompt: '函数 y=2x+1 的斜率是多少？', options: [{ id: 'A', text: '1' }, { id: 'B', text: '2' }], topicId: 67, topicCode: 'function', topicTitle: '函数', position: 1 }]
+  };
+  await page.route('**/api/v1/csca-special-practice/adaptive/rounds/83**', (route) => {
+    if (route.request().method() === 'PATCH') return json(route, roundDetail.round);
+    return json(route, roundDetail);
+  });
+  await page.route('**/api/v1/csca-special-practice/adaptive/ai/entitlement', (route) => json(route, { enabled: true, unlimited: false, balanceUnits: 50 }));
+  await page.route('**/api/v1/csca-special-practice/adaptive/rounds/83/check', (route) => json(route, {
+    questionId: 103, selected: 'B', correctAnswer: 'B', isCorrect: true,
+    explanation: '一次函数 y=kx+b 中，k 是斜率。', knowledgeTags: ['函数']
+  }));
+  await page.route('**/api/v1/agent/practice-rounds/83/questions/103/assistance', (route) => json(route, {
+    schemaVersion: '1', roundId: 83, questionId: 103, policyVersion: 'assistance-v1', contextVersion: 'ctx-1', recommendedAction: 'recall_concept', maxAllowedLevel: 'A2',
+    exposures: { usedHint: false, usedExplanation: false }, billing: { enabled: true, unlimited: false, balanceUnits: 50, aiActionMayConsumeCredits: true }, history: [], availableActions: []
+  }));
+  await page.goto(`/zh/agent?agentContextId=${conversationId}&agentArtifactId=${artifactId}&agentRoundId=83&agentView=practice&agentTaskType=diagnostic&agentSubject=math`);
+  await expect(page.getByLabel('Agent 学习任务工作区').locator('.agent-assistance-bridge')).toBeVisible();
+  await page.getByLabel('Agent 学习任务工作区').getByRole('button', { name: 'B 2', exact: true }).click();
+  await expect(page.getByLabel('Agent 学习任务工作区')).toContainText('答对了');
+  await expect(page.getByRole('heading', { name: '本题问答 · 第 1 题' })).toHaveCount(0);
+  await expect(page.getByLabel('Agent 学习任务工作区').locator('.agent-assistance-bridge')).toBeVisible();
 });
 
 test('starts a recommended mock exam and keeps the timed attempt inside the Agent workspace', async ({ page }, testInfo) => {
@@ -932,6 +1105,7 @@ test('starts a recommended mock exam and keeps the timed attempt inside the Agen
     }
   };
   const mockConversation = { ...conversation, artifacts: [mockArtifact] };
+  await page.route('**/api/v1/agent/journey/state', (route) => json(route, { ...journeyState, plans: [mockArtifact] }));
   await page.route(/\/api\/v1\/agent\/conversations(?:\?.*)?$/, (route) => json(route, [mockConversation]));
   await page.route(new RegExp(`/api/v1/agent/conversations/${conversationId}(?:\\?.*)?$`), (route) => json(route, mockConversation));
   await page.route(`**/api/v1/agent/artifacts/${artifactId}/start-mock-exam`, (route) => json(route, {
@@ -1032,6 +1206,16 @@ test('starts a recommended mock exam and keeps the timed attempt inside the Agen
   await expect(page.getByLabel('Agent 在线模考工作区')).toBeVisible();
   await expect(page.getByText('专注考试模式')).toBeVisible();
   await expect(page.getByText('函数 y=2x+1 与 y 轴交于哪一点？')).toBeVisible();
+  await page.getByLabel('Agent 在线模考工作区').getByRole('button', { name: '打开学习工具' }).click();
+  await expect(page.getByRole('region', { name: '学习工具' })).toBeVisible();
+  await expect(page.getByRole('button', { name: '草稿纸', exact: true })).toHaveClass(/active/);
+  await page.getByRole('button', { name: '科学计算器', exact: true }).click();
+  await expect(page.getByText('在线模考按正式考试环境执行，当前不开放计算器。')).toBeVisible();
+  await page.getByRole('button', { name: '单位换算', exact: true }).click();
+  await expect(page.getByText('在线模考按正式考试环境执行，当前只开放草稿纸。')).toBeVisible();
+  await page.getByRole('button', { name: '草稿纸', exact: true }).click();
+  await page.getByPlaceholder('记录计算步骤、公式或解题思路……').fill('模考草稿不会写入问答');
+  await page.getByRole('button', { name: '关闭学习辅助，返回做题' }).click();
   await expect(page.locator('.site-header')).toHaveCount(0);
   await page.getByRole('button', { name: /\(0, 1\)/ }).click();
   await page.getByRole('button', { name: '交卷', exact: true }).click();
@@ -1054,11 +1238,8 @@ test('starts a recommended mock exam and keeps the timed attempt inside the Agen
   await expect(page.getByLabel('模考学习报告')).toBeVisible();
   await expect(page.getByLabel('Agent 在线模考工作区')).toHaveCount(0);
   await page.getByRole('button', { name: '开始建议任务' }).click();
-  await expect(page).toHaveURL(new RegExp(`/zh/agent\\?conversation=${conversationId}$`));
-  await expect(page.getByText('模考后的数学巩固任务')).toBeVisible();
-  await expect(page.getByText('先完成一次函数针对性练习，再观察稳定性。')).toBeVisible();
-  expect(continuationBody?.pageContext?.entityRef).toEqual({ type: 'mock_attempt', id: '901' });
-  expect(continuationBody?.text).toContain('模考安排下一步');
+  await expect(page).toHaveURL(/\/zh\/agent$/);
+  await expect(page).not.toHaveURL(/[?&](?:conversation|agentConversationId)=/);
 });
 
 test('opens an intervention verification inside the Agent workspace', async ({ page }, testInfo) => {
@@ -1164,7 +1345,7 @@ test('retires an interrupted teaching workspace when its content is no longer av
   await page.goto(`/zh/agent?conversation=${conversationId}`);
   await page.getByRole('button', { name: '继续学习', exact: true }).click();
 
-  await expect(page).toHaveURL(new RegExp(`/zh/agent\\?conversation=${conversationId}$`));
+  await expect(page).toHaveURL(new RegExp(`/zh/agent\\?agentContextId=${conversationId}$`));
   await expect(page.getByRole('button', { name: '继续学习', exact: true })).toHaveCount(0);
   await expect(page.getByRole('button', { name: '开始学习', exact: true })).toBeVisible();
   await expect(page.getByRole('alert')).toHaveText('上次讲解内容已失效，已返回当前可开始的学习任务。');
@@ -1255,16 +1436,24 @@ test('keeps active practice mounted while a teaching lesson opens in current ass
 test('opens a grounded past paper inside the Agent workspace', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the past-paper workspace contract.');
   await mockAgentWorkspace(page);
+  const pastPaperResource = {
+    id: 71, slug: 'chemistry-2026-01', title: 'CSCA 2026 年 1 月化学真题', subject: 'chemistry' as const, examYear: 2026,
+    language: 'zh', questionCount: 48, pageCount: 18, hasAnswers: true, hasSolutions: true, isFree: true, fileCount: 2
+  };
+  await page.route((url) => url.pathname === '/api/v1/agent/journey/overview', (route) => json(route, {
+    schemaVersion: '1', generatedAt: '2026-09-16T08:00:00.000Z',
+    goal: { examDate: '2027-06-01', weeklyGoalDays: 5, totalTargetScore: 255, subjects: [{ subject: 'chemistry', targetScore: 85 }] },
+    progress: { subjects: [] },
+    weaknesses: { stateSource: 'user_csca_topic_mastery_v1', subjects: [], reviewQueue: [] },
+    resources: { source: 'published_past_papers', subjectScope: ['chemistry'], items: [pastPaperResource] }
+  }));
   const paperConversation = {
     ...conversation,
     messages: [...conversation.messages, {
       id: 'message-paper', conversationId, role: 'assistant', clientMessageId: null, runId, createdAt: '2026-09-13T08:03:00.000Z',
       content: {
         schemaVersion: '1', text: '找到一份已发布化学真题。',
-        pastPaperResources: [{
-          id: 71, slug: 'chemistry-2026-01', title: 'CSCA 2026 年 1 月化学真题', subject: 'chemistry', examYear: 2026,
-          language: 'zh', questionCount: 48, pageCount: 18, hasAnswers: true, hasSolutions: true, isFree: true, fileCount: 2
-        }]
+        pastPaperResources: [pastPaperResource]
       }
     }]
   };
@@ -1384,11 +1573,12 @@ test('opens a grounded past paper inside the Agent workspace', async ({ page }, 
   });
 
   await page.goto('/zh/agent');
-  await page.getByRole('button', { name: /在 Agent 内打开/ }).click();
+  await page.getByRole('button', { name: '学习资料', exact: true }).click();
+  await page.getByRole('button', { name: /打开/ }).click();
   await expect(page).toHaveURL(new RegExp('/zh/agent\\?.*agentPastPaper=chemistry-2026-01'));
-  await expect(page.getByLabel('Agent 真题工作区')).toBeVisible();
+  await expect(page.getByLabel('真题资料详情')).toBeVisible();
   await page.reload();
-  await expect(page.getByLabel('Agent 真题工作区')).toBeVisible();
+  await expect(page.getByLabel('真题资料详情')).toBeVisible();
   await expect(page.getByTitle('CSCA 2026 年 1 月化学真题 · 原卷 PDF')).toHaveAttribute('src', /chemistry-paper\.pdf.*#page=2/);
   await expect(page.getByRole('button', { name: /查看完整解析/ })).toBeDisabled();
   await page.getByRole('button', { name: /回忆相关概念/ }).click();
@@ -1410,8 +1600,7 @@ test('opens a grounded past paper inside the Agent workspace', async ({ page }, 
   await expect(page.getByLabel('作答进度').getByText('2/2')).toBeVisible();
   await expect(page.getByLabel('整卷复盘')).toContainText('100%');
   await expect(page.getByText(/优先巩固.*酸碱反应/)).toBeVisible();
-  await page.getByRole('button', { name: /让 Agent 安排下一步/ }).click();
-  await expect(page.getByRole('button', { name: '下一步', exact: true })).toHaveAttribute('aria-current', 'page');
-  await expect.poll(() => submittedMessageBody).toMatchObject({ surface: 'learning_workspace' });
-  expect(submittedMessageBody).not.toHaveProperty('pageContext');
+  await page.getByRole('button', { name: /返回做题/ }).click();
+  await expect(page.getByRole('button', { name: '做题', exact: true })).toHaveAttribute('aria-current', 'page');
+  expect(submittedMessageBody).toBeNull();
 });

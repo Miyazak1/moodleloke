@@ -32,14 +32,12 @@ import {
 } from '../../../lib/api';
 import { adaptivePracticePoolExhaustedCopy, isAdaptivePracticePoolExhaustedError } from '../../../lib/adaptive-practice-pool';
 import { ApiError } from '../../../lib/request';
-import { readMigratedLocalStorage, removeMigratedLocalStorage, writeMigratedLocalStorage } from '../../../lib/storage-compat';
+import { readMigratedLocalStorage, writeMigratedLocalStorage } from '../../../lib/storage-compat';
 import {
   abandonAgentTask,
   actOnAgentIntervention,
   analyzeAgentAttachment,
-  createAgentConversation,
   getAgentAttachmentAnalysis,
-  listAgentAttachmentAnalyses,
   getAgentTeachingAssetForQuestion,
   getAgentLearningAssistance,
   offerAgentIntervention,
@@ -49,8 +47,7 @@ import {
   requestAgentLearningAssistance,
   settleAgentInterventionVerification,
   settleAgentPractice,
-  submitAgentMessage,
-  uploadAgentAttachment,
+  uploadAgentPracticeQuestionAttachment,
   type AgentTeachingAsset,
   type AgentInterventionDelivery,
   type LearningAssistanceAvailability
@@ -67,10 +64,16 @@ export type AgentPracticeQuestionContext = {
   questionId: number;
   questionNumber: number;
   questionCount: number;
-  subject: string;
+  subject: 'math' | 'physics' | 'chemistry';
   topicTitle: string;
   prompt: string;
+  options: Array<{ id: string; text: string }>;
+  selectedAnswer?: string;
   answered: boolean;
+  correctAnswer?: string;
+  isCorrect?: boolean;
+  explanation?: string;
+  knowledgeTags?: string[];
   availableActions: LearningAssistanceAvailability['availableActions'];
 };
 
@@ -301,11 +304,11 @@ function waitFor(milliseconds: number) {
 function agentReturnQuery() {
   if (typeof window === 'undefined') return '';
   const current = new URLSearchParams(window.location.search);
-  const conversationId = current.get('agentConversationId');
+  const conversationId = current.get('agentContextId') || current.get('agentConversationId');
   const artifactId = current.get('agentArtifactId');
   const verificationId = current.get('agentInterventionVerificationId');
   if (!conversationId || (!artifactId && !verificationId)) return '';
-  const params = new URLSearchParams({ agentConversationId: conversationId });
+  const params = new URLSearchParams({ agentContextId: conversationId });
   if (artifactId) params.set('agentArtifactId', artifactId);
   if (verificationId) params.set('agentInterventionVerificationId', verificationId);
   return `?${params.toString()}`;
@@ -1161,22 +1164,24 @@ export function AdaptiveSubjectDashboardView({ subject, currentUser, isResolving
 export function AdaptiveRoundView({
   roundId,
   onNavigate,
-  agentConversationId,
+  agentContextId,
   agentAssistanceCommand,
   onAgentQuestionContext,
   onAgentAssistance,
   onAgentAssistanceSettled,
   onAgentTeachingAsset,
+  onOpenAgentHelp,
   onRoundUnavailable
 }: {
   roundId: string;
   onNavigate: (path: string) => void;
-  agentConversationId?: string;
+  agentContextId?: string;
   agentAssistanceCommand?: AgentPracticeAssistanceCommand | null;
   onAgentQuestionContext?: (context: AgentPracticeQuestionContext | null) => void;
   onAgentAssistance?: (event: AgentPracticeAssistanceEvent) => void;
   onAgentAssistanceSettled?: () => void;
   onAgentTeachingAsset?: (event: AgentPracticeTeachingEvent) => void;
+  onOpenAgentHelp?: () => void;
   onRoundUnavailable?: () => void;
 }) {
   const [detail, setDetail] = useState<AdaptiveRoundDetail | null>(null);
@@ -1194,7 +1199,6 @@ export function AdaptiveRoundView({
   const [isBuyingCredits, setIsBuyingCredits] = useState(false);
   const [coachLoading, setCoachLoading] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [showExplanation, setShowExplanation] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [isFinishing, setIsFinishing] = useState(false);
@@ -1205,13 +1209,12 @@ export function AdaptiveRoundView({
   const handwritingInputRef = useRef<HTMLInputElement | null>(null);
   const handwritingPickerPendingRef = useRef(false);
   const handwritingPickerFocusTimerRef = useRef<number | null>(null);
-  const handwritingConversationRef = useRef<string | null>(null);
   const handledAssistanceCommandRef = useRef<string | null>(null);
   const hydratedAssistanceRoundRef = useRef<number | null>(null);
   const onNavigateRef = useRef(onNavigate);
   const onRoundUnavailableRef = useRef(onRoundUnavailable);
   const { locale } = useI18n();
-  const isAgentLearningRound = Boolean(agentConversationId);
+  const isAgentLearningRound = Boolean(agentContextId);
 
   useEffect(() => {
     onNavigateRef.current = onNavigate;
@@ -1333,14 +1336,7 @@ export function AdaptiveRoundView({
     const key = String(currentQuestion.id);
     setHandwritingReviews((current) => ({ ...current, [key]: { status: 'uploading', fileName: file.name } }));
     try {
-      let conversationId = agentConversationId || handwritingConversationRef.current;
-      if (!conversationId) {
-        const conversation = await createAgentConversation({ title: adaptiveText(locale, '练习手写过程', 'Handwritten practice work', 'Bài làm viết tay') });
-        conversationId = conversation.id;
-        handwritingConversationRef.current = conversation.id;
-        writeMigratedLocalStorage(`moodlelike.agent.handwritingConversation.${detail.round.id}`, `cscalite.agent.handwritingConversation.${detail.round.id}`, conversation.id);
-      }
-      const attachment = await uploadAgentAttachment(conversationId, file);
+      const attachment = await uploadAgentPracticeQuestionAttachment(detail.round.id, currentQuestion.id, file);
       if (attachment.status !== 'ready') throw new Error(attachment.error?.message || adaptiveText(locale, '图片尚未准备好。', 'The image is not ready.', 'Ảnh chưa sẵn sàng.'));
       const queued = await analyzeAgentAttachment(attachment.id, {
         clientRequestId: agentRequestId(),
@@ -1394,49 +1390,6 @@ export function AdaptiveRoundView({
   }
 
   useEffect(() => {
-    if (!detail || !isAgentLearningRound) return;
-    const storageKey = `moodlelike.agent.handwritingConversation.${detail.round.id}`;
-    const legacyStorageKey = `cscalite.agent.handwritingConversation.${detail.round.id}`;
-    const conversationId = agentConversationId || readMigratedLocalStorage(storageKey, legacyStorageKey);
-    if (!conversationId) return;
-    handwritingConversationRef.current = conversationId;
-    let alive = true;
-    void listAgentAttachmentAnalyses(conversationId).then((analyses) => {
-      if (!alive) return;
-      const restored: Record<string, { status: 'completed'; fileName: string; result: Record<string, any> }> = {};
-      for (const analysis of analyses) {
-        if (analysis.status !== 'completed' || !analysis.result) continue;
-        const context = analysis.result.questionContext as Record<string, unknown> | null;
-        if (Number(context?.roundId) !== Number(detail.round.id) || !Number(context?.questionId)) continue;
-        const citations = Array.isArray(analysis.result.citations) ? analysis.result.citations as Array<Record<string, unknown>> : [];
-        restored[String(context!.questionId)] = {
-          status: 'completed',
-          fileName: String(citations[0]?.attachmentName || adaptiveText(locale, '已保存的手写图片', 'Saved handwritten image', 'Ảnh bài viết tay đã lưu')),
-          result: analysis.result
-        };
-        const questionIndex = detail.questions.findIndex((item) => item.id === Number(context!.questionId));
-        const firstError = analysis.result.firstError && typeof analysis.result.firstError === 'object' ? analysis.result.firstError as Record<string, unknown> : null;
-        const feedback = analysis.result.feedback && typeof analysis.result.feedback === 'object' ? analysis.result.feedback as Record<string, unknown> : null;
-        onAgentAssistance?.({
-          id: `handwriting:${analysis.id}`,
-          roundId: detail.round.id,
-          questionId: Number(context!.questionId),
-          questionNumber: Math.max(1, questionIndex + 1),
-          action: 'check_work',
-          content: [String(analysis.result.summary || ''), firstError?.title ? `${String(firstError.title)}：${String(firstError.explanation || '')}` : '', feedback?.nextHint ? `${adaptiveText(locale, '下一步线索', 'Next hint', 'Gợi ý tiếp theo')}：${String(feedback.nextHint)}` : ''].filter(Boolean).join('\n\n'),
-          createdAt: analysis.updatedAt || analysis.createdAt,
-          generatedByAI: true
-        });
-      }
-      if (Object.keys(restored).length) setHandwritingReviews((current) => ({ ...current, ...restored }));
-    }).catch(() => {
-      handwritingConversationRef.current = null;
-      removeMigratedLocalStorage(storageKey, legacyStorageKey);
-    });
-    return () => { alive = false; };
-  }, [agentConversationId, detail?.round.id, isAgentLearningRound, locale, onAgentAssistance]);
-
-  useEffect(() => {
     if (!isAgentLearningRound || !detail || hydratedAssistanceRoundRef.current === detail.round.id) return;
     hydratedAssistanceRoundRef.current = detail.round.id;
     void Promise.all(detail.questions.map((question) => refreshLearningAssistance(question).catch(() => null)));
@@ -1444,6 +1397,7 @@ export function AdaptiveRoundView({
 
   useEffect(() => {
     if (!isAgentLearningRound || !detail || !currentQuestion) return;
+    const currentCheck = checks[String(currentQuestion.id)];
     onAgentQuestionContext?.({
       roundId: detail.round.id,
       questionId: currentQuestion.id,
@@ -1452,7 +1406,13 @@ export function AdaptiveRoundView({
       subject: detail.session.subject,
       topicTitle: adaptiveTopicLabel(currentQuestion, locale),
       prompt: currentQuestion.prompt,
-      answered: Boolean(answers[String(currentQuestion.id)]),
+      options: currentQuestion.options.map((option) => ({ id: option.id, text: option.text })),
+      selectedAnswer: currentCheck?.selected || answers[String(currentQuestion.id)] || undefined,
+      answered: Boolean(currentCheck || answers[String(currentQuestion.id)]),
+      correctAnswer: currentCheck?.correctAnswer,
+      isCorrect: currentCheck?.isCorrect,
+      explanation: currentCheck?.explanation,
+      knowledgeTags: currentCheck?.knowledgeTags,
       availableActions: assistanceAvailability[String(currentQuestion.id)]?.availableActions ?? []
     });
   }, [answers, assistanceAvailability, currentIndex, currentQuestion, detail, isAgentLearningRound, locale, onAgentQuestionContext]);
@@ -1555,7 +1515,24 @@ export function AdaptiveRoundView({
         questionLanguage: currentQuestionLanguage
       });
       setChecks((current) => ({ ...current, [questionKey]: checked }));
-      setShowExplanation((current) => ({ ...current, [questionKey]: false }));
+      const questionIndex = detail.questions.findIndex((item) => item.id === question.id);
+      onAgentQuestionContext?.({
+        roundId: detail.round.id,
+        questionId: question.id,
+        questionNumber: Math.max(1, questionIndex + 1),
+        questionCount: detail.questions.length,
+        subject: detail.session.subject,
+        topicTitle: adaptiveTopicLabel(question, locale),
+        prompt: question.prompt,
+        options: question.options.map((option) => ({ id: option.id, text: option.text })),
+        selectedAnswer: checked.selected,
+        answered: true,
+        correctAnswer: checked.correctAnswer,
+        isCorrect: checked.isCorrect,
+        explanation: checked.explanation,
+        knowledgeTags: checked.knowledgeTags,
+        availableActions: assistanceAvailability[questionKey]?.availableActions ?? []
+      });
     } catch (nextError) {
       setAnswers((current) => {
         const next = { ...current };
@@ -1782,30 +1759,6 @@ export function AdaptiveRoundView({
     );
   }
 
-  async function toggleExplanation(question: AdaptiveQuestion, check: AdaptivePracticeCheckResult) {
-    const key = String(question.id);
-    const shouldShow = !showExplanation[key];
-    setShowExplanation((current) => ({ ...current, [key]: shouldShow }));
-    if (shouldShow && isAgentLearningRound && detail) {
-      try {
-        await saveDraft();
-        await requestAgentLearningAssistance(detail.round.id, question.id, {
-          clientRequestId: globalThis.crypto?.randomUUID?.() ?? `agent-solution-${detail.round.id}-${question.id}-${Date.now()}`,
-          action: 'show_full_solution', language: currentCoachLanguage, questionLanguage: currentQuestionLanguage
-        });
-        await refreshLearningAssistance(question);
-      } catch (nextError) {
-        setShowExplanation((current) => ({ ...current, [key]: false }));
-        setError(friendlyPracticeError(nextError, adaptiveText(locale, '解析暂时无法加载，请重试。', 'The solution could not be loaded. Please retry.', 'Chưa thể tải lời giải, vui lòng thử lại.'), locale));
-        return;
-      }
-    }
-    const mistakeExplanation = (coachInteractions[key] ?? []).find((item) => item.type === 'explain_wrong_answer');
-    if (shouldShow && !isAgentLearningRound && !check.isCorrect && !mistakeExplanation && coachLoading !== 'explain') {
-      void askCoach('explain');
-    }
-  }
-
   if (error && !detail) return <ErrorState message={error} onBack={() => onNavigate(routes.cscaSubjects)} />;
   if (!detail || !currentQuestion) return <LoadingState label={adaptiveText(locale, '正在进入科目练习', 'Entering subject practice', 'Đang vào luyện theo môn')} />;
 
@@ -1815,7 +1768,6 @@ export function AdaptiveRoundView({
   const isCheckingCurrentAnswer = Boolean(checkingAnswers[currentQuestionKey]);
   const currentCoachItems = coachInteractions[currentQuestionKey] ?? [];
   const currentHint = currentCoachItems.find((item) => item.type === 'hint');
-  const currentMistakeExplanation = currentCoachItems.find((item) => item.type === 'explain_wrong_answer');
   const currentAssistance = assistanceAvailability[currentQuestionKey];
   const currentHandwritingReview = handwritingReviews[currentQuestionKey];
   const assistanceAction = (action: 'recall_concept' | 'next_step_hint' | 'show_full_solution') => currentAssistance?.availableActions.find((item) => item.action === action);
@@ -1831,8 +1783,6 @@ export function AdaptiveRoundView({
     : currentAssistance?.billing?.enabled
       ? adaptiveText(locale, `AI 生成可能消耗额度 · 剩余 ${currentAssistance.billing.balanceUnits}`, `AI generation may use a credit · ${currentAssistance.billing.balanceUnits} left`, `Tạo bằng AI có thể dùng lượt · còn ${currentAssistance.billing.balanceUnits}`)
       : adaptiveText(locale, '知识点提醒与标准解析不消耗 AI 额度', 'Concept recall and standard solutions do not use AI credits', 'Nhắc khái niệm và lời giải chuẩn không dùng lượt AI');
-  const isExplanationOpen = Boolean(showExplanation[currentQuestionKey]);
-  const isMistakeExplanationLoading = Boolean(isExplanationOpen && currentCheck && !currentCheck.isCorrect && coachLoading === 'explain' && !currentMistakeExplanation);
   const progress = Math.round(((currentIndex + 1) / detail.questions.length) * 100);
   const currentSeconds = currentQuestion ? (timeSpent[currentQuestionKey] ?? 0) : 0;
   const totalSeconds = Object.values(timeSpent).reduce((sum, value) => sum + value, 0);
@@ -1941,51 +1891,6 @@ export function AdaptiveRoundView({
                 <strong>{currentCheck.isCorrect ? copy.answerCorrect : copy.answerIncorrect(currentCheck.correctAnswer)}</strong>
                 <span>{copy.answerResultMeta(accuracyLabel(correctCount, Object.keys(checks).length), formatSeconds(currentSeconds))}</span>
               </div>
-              <GhostButton
-                className={isMistakeExplanationLoading ? 'special-explanation-trigger loading' : 'special-explanation-trigger'}
-                onClick={() => { void toggleExplanation(currentQuestion, currentCheck); }}
-                aria-busy={isMistakeExplanationLoading}
-              >
-                <Icon
-                  name={isMistakeExplanationLoading ? 'lucide:sparkles' : isExplanationOpen ? 'lucide:chevron-down' : 'lucide:eye'}
-                  color="currentColor"
-                />
-                {isMistakeExplanationLoading ? adaptiveText(locale, '生成解析中...', 'Generating explanation...', 'Đang tạo giải thích...') : isExplanationOpen ? copy.hideExplanation : copy.viewExplanation}
-              </GhostButton>
-              {isExplanationOpen && (
-                <div className="special-explanation-box">
-                  <div className="special-explanation-summary">
-                    <span>{copy.correctAnswer(currentCheck.correctAnswer)}</span>
-                    <span>{copy.selectedAnswer(selectedAnswer || '')}</span>
-                  </div>
-                  {currentCheck.isCorrect ? (
-                    <ExplanationText text={currentCheck.explanation} />
-                  ) : (
-                    <article className={isMistakeExplanationLoading ? 'special-review-explanation loading' : 'special-review-explanation'} aria-busy={isMistakeExplanationLoading}>
-                      <h3>{currentMistakeExplanation ? adaptiveText(locale, 'AI 错因解析', 'AI mistake analysis', 'Phân tích lỗi bằng AI') : adaptiveText(locale, '错因解析', 'Mistake analysis', 'Phân tích lỗi')}</h3>
-                      {currentMistakeExplanation ? (
-                        <StructuredExplanation interaction={currentMistakeExplanation} locale={locale} />
-                      ) : coachLoading === 'explain' ? (
-                        <div className="special-explanation-loading" role="status" aria-label={adaptiveText(locale, 'AI 正在生成错因解析', 'AI is generating mistake analysis', 'AI đang tạo phân tích lỗi')}>
-                          <span className="special-explanation-loading-dots" aria-hidden="true"><i /><i /><i /></span>
-                          <p>{adaptiveText(locale, '正在结合你的答案生成错因分析...', 'Generating mistake analysis from your answer...', 'Đang tạo phân tích lỗi dựa trên đáp án của bạn...')}</p>
-                          <div className="special-explanation-loading-steps" aria-hidden="true">
-                            <span>{adaptiveText(locale, '读取你的选项', 'Reading your choice', 'Đọc lựa chọn của bạn')}</span>
-                            <span>{adaptiveText(locale, '定位关键误区', 'Finding the key misconception', 'Xác định hiểu nhầm chính')}</span>
-                            <span>{adaptiveText(locale, '整理讲解', 'Organizing explanation', 'Sắp xếp lời giải thích')}</span>
-                          </div>
-                        </div>
-                      ) : (
-                        <ExplanationText text={currentCheck.explanation} />
-                      )}
-                      {currentMistakeExplanation && (
-                        renderCoachFeedback(currentMistakeExplanation)
-                      )}
-                    </article>
-                  )}
-                  <div>{currentCheck.knowledgeTags.map((tag) => <b key={tag}>{tag}</b>)}</div>
-                </div>
-              )}
             </div>
           )}
           {!isInterventionVerification && isAgentLearningRound && (
@@ -2006,12 +1911,12 @@ export function AdaptiveRoundView({
               }}
             />
           )}
-          {!isInterventionVerification && isAgentLearningRound && !selectedAnswer && (
-            <div className="agent-assistance-bridge">
+          {!isInterventionVerification && isAgentLearningRound && (
+            <button type="button" className="agent-assistance-bridge" onClick={onOpenAgentHelp}>
               <Icon name="lucide:message-circle-question" />
-              <span><strong>{adaptiveText(locale, '需要帮助？', 'Need help?', 'Cần trợ giúp?')}</strong><small>{adaptiveText(locale, '在聊天区回忆知识点、获取渐进提示或检查手写过程。', 'Use the chat to recall the concept, request a progressive hint, or check handwritten work.', 'Dùng trò chuyện để nhắc lại khái niệm, xin gợi ý từng bước hoặc kiểm tra bài viết tay.')}</small></span>
-              <em>{recommendedAssistanceLabel}</em>
-            </div>
+              <span><strong>{adaptiveText(locale, '打开本题问答', 'Open question help', 'Mở hỏi đáp câu này')}</strong><small>{adaptiveText(locale, '在右侧询问本题，或使用知识点、提示和手写检查。', 'Ask about this question on the right, or use concept, hint, and handwriting tools.', 'Hỏi về câu này ở bên phải hoặc dùng công cụ khái niệm, gợi ý và chữ viết tay.')}</small></span>
+              <em>{adaptiveText(locale, '打开', 'Open', 'Mở')}</em>
+            </button>
           )}
           {!isInterventionVerification && !isAgentLearningRound && currentHandwritingReview && (
             <div className={`agent-handwriting-review ${currentHandwritingReview.status}`} role="status">
@@ -2197,7 +2102,7 @@ export function AdaptiveRoundReportView({ roundId, onNavigate, onAgentInterventi
   const agentReturnContext = (() => {
     if (typeof window === 'undefined') return null;
     const params = new URLSearchParams(window.location.search);
-    const conversationId = params.get('agentConversationId');
+    const conversationId = params.get('agentContextId') || params.get('agentConversationId');
     const artifactId = params.get('agentArtifactId');
     const verificationId = params.get('agentInterventionVerificationId');
     return conversationId && (artifactId || verificationId) ? { conversationId, artifactId, verificationId } : null;
@@ -2210,21 +2115,7 @@ export function AdaptiveRoundReportView({ roundId, onNavigate, onAgentInterventi
     try {
       if (agentReturnContext.verificationId) await settleAgentInterventionVerification(agentReturnContext.verificationId);
       else await settleAgentPractice(roundId);
-      const submission = await submitAgentMessage(agentReturnContext.conversationId, {
-        clientRequestId: globalThis.crypto?.randomUUID?.() ?? `agent-round-${roundId}-${Date.now()}`,
-        text: agentReturnContext.verificationId
-          ? (locale === 'zh-CN' ? '我已完成系统安排的阶段验证，请根据验证结果安排下一步。' : 'I completed the scheduled verification stage. Use the result to plan my next step.')
-          : (locale === 'zh-CN' ? '我已完成刚才的训练，请根据最新学习证据更新下一步方案。' : 'I completed the practice. Update my next step from the latest learning evidence.'),
-        locale: locale === 'zh-CN' ? 'zh-CN' : 'en',
-        pageContext: {
-          route: `${window.location.pathname}${window.location.search}`,
-          ...(agentReturnContext.artifactId ? { artifactId: agentReturnContext.artifactId } : {}),
-          entityRef: agentReturnContext.verificationId
-            ? { type: 'intervention_verification', id: agentReturnContext.verificationId }
-            : { type: 'adaptive_round', id: String(roundId) }
-        }
-      });
-      onNavigate(`${routes.agent}?conversation=${encodeURIComponent(agentReturnContext.conversationId)}&run=${encodeURIComponent(submission.runId)}`);
+      onNavigate(routes.agent);
     } catch (nextError) {
       setAgentReturnError(friendlyPracticeError(nextError, adaptiveText(locale, '暂时无法返回 Agent 更新方案，请重试。', 'Could not return to the Agent to update the plan. Please retry.', 'Tạm thời chưa thể quay lại Agent để cập nhật kế hoạch.'), locale));
       setIsReturningToAgent(false);

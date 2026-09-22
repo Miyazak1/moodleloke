@@ -81,7 +81,7 @@ export function StudentOnboardingPage({ currentUser, isResolvingAuth, returnTo, 
       return;
     }
     if (currentUser.role === 'admin') {
-      onNavigate(routes.adminAudit);
+      window.location.assign('/authoring.html');
       return;
     }
     let active = true;
@@ -187,7 +187,7 @@ export function StudentOnboardingPage({ currentUser, isResolvingAuth, returnTo, 
           <span><Icon name="lucide:check" color="currentColor" /></span>
           <h2>{copy.doneTitle}</h2><p>{copy.doneBody}</p>
           <ul><li><Icon name="lucide:book-open-check" color="currentColor" />{copy.subjectCount.replace('{count}', String(draft.targetSubjectCodes.length))}</li><li><Icon name="lucide:languages" color="currentColor" />{copy.languageReady}</li></ul>
-          <div><button type="button" onClick={() => onNavigate(nextPath)}>{copy.continue}<Icon name="lucide:arrow-right" color="currentColor" /></button><button type="button" className="secondary" onClick={() => onNavigate(routes.cscaMockExam)}>{copy.mock}</button></div>
+          <div><button type="button" onClick={() => onNavigate(nextPath)}>{copy.continue}<Icon name="lucide:arrow-right" color="currentColor" /></button></div>
           <button type="button" className="text-action" onClick={() => setStep(1)}>{copy.edit}</button>
         </section>}
         {error && <p className="onboarding-error" role="alert">{error}</p>}

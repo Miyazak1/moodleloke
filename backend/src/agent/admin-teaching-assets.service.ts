@@ -7,12 +7,9 @@ import { PrismaService } from '../prisma/prisma.service';
 import { TeachingAssetPayloadSchema } from './agent-teaching-asset.service';
 import { AgentRuntimeFeatureFlagsService } from './agent-runtime-feature-flags.service';
 import { TeachingAssetRoutingOutcomeService } from './teaching-asset-routing-outcome.service';
+import { TEACHING_ASSET_COMPONENT_KEYS } from './teaching-asset-registry';
 
-const ComponentKeySchema = z.enum([
-  'math.function-horizontal-shift',
-  'physics.newton-second-law',
-  'chemistry.acid-base-neutralization'
-]);
+const ComponentKeySchema = z.enum(TEACHING_ASSET_COMPONENT_KEYS);
 const SourceRefSchema = z.strictObject({ type: z.string().trim().min(1).max(60), id: z.string().trim().min(1).max(160), version: z.string().trim().min(1).max(80) });
 const VersionFieldsSchema = z.strictObject({
   language: z.enum(['zh-CN', 'en', 'vi']),

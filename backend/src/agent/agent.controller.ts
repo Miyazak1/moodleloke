@@ -161,6 +161,18 @@ export class AgentController {
     return this.attachments.upload(user.id, conversationId, request, fileName, fileType);
   }
 
+  @Post('practice-rounds/:roundId/questions/:questionId/attachment')
+  uploadPracticeQuestionAttachment(
+    @CurrentUser() user: PrismaUser,
+    @Param('roundId') roundId: string,
+    @Param('questionId') questionId: string,
+    @Headers('x-file-name') fileName: string,
+    @Headers('x-file-type') fileType: string | undefined,
+    @Req() request: any
+  ) {
+    return this.attachments.uploadForPracticeQuestion(user.id, roundId, questionId, request, fileName, fileType);
+  }
+
   @Get('conversations/:conversationId/attachments')
   listAttachments(@CurrentUser() user: PrismaUser, @Param('conversationId') conversationId: string) {
     return this.attachments.list(user.id, conversationId);

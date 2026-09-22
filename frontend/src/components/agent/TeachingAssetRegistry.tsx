@@ -1,5 +1,6 @@
 import type { AgentTeachingAsset, AgentTeachingInteractionResult } from '../../lib/api-agent';
 import { TeachingAssetMicroLesson } from '../../pages/special-practice/adaptive/FunctionShiftMicroLesson';
+import { EmbeddedTeachingVisualizer, TEACHING_VISUALIZER_COMPONENTS } from './TeachingVisualizerCatalog';
 
 type TeachingAction = 'opened' | 'parameter_changed' | 'active_prompt_answered' | 'completed';
 export type TeachingAssetRendererProps = {
@@ -22,6 +23,8 @@ export function teachingAssetRegistryKey(asset: AgentTeachingAsset) {
 
 export function TeachingAssetRenderer(props: TeachingAssetRendererProps) {
   const registryKey = teachingAssetRegistryKey(props.asset);
+  const visualizer = TEACHING_VISUALIZER_COMPONENTS[props.asset.component.key];
+  if (visualizer) return <TeachingAssetMicroLesson {...props} interactiveContent={<EmbeddedTeachingVisualizer componentKey={props.asset.component.key} />} />;
   const capability = TEACHING_ASSET_REGISTRY[registryKey as keyof typeof TEACHING_ASSET_REGISTRY];
   if (!capability) return <section className="agent-teaching-asset-fallback" role="status"><strong>{props.asset.title}</strong><p>{props.asset.summary}</p><small>该教学内容需要更新客户端后才能互动。当前任务不会被关闭。</small></section>;
   return <TeachingAssetMicroLesson {...props} />;

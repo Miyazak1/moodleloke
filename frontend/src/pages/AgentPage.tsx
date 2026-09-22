@@ -4,6 +4,7 @@ import { MathContent } from '../components/MathContent';
 import { UserAvatar } from '../components/UserAvatar';
 import { AgentPastPaperWorkspace } from '../components/agent/AgentPastPaperWorkspace';
 import { AgentLearningSettingsView } from '../components/agent/AgentLearningSettingsView';
+import { AgentLearningTools } from '../components/agent/AgentLearningTools';
 import { AgentAdaptiveResultMessage, AgentMockExamResultMessage } from '../components/agent/AgentStructuredReportMessage';
 import { useI18n } from '../i18n/useI18n';
 import { isAgentWebEnabled } from '../lib/agent-feature';
@@ -42,7 +43,6 @@ import {
   type AgentInterventionVerification,
   type AgentJourneyOverview,
   type AgentJourneyResumeWorkspace,
-  type AgentJourneyStage,
   type AgentJourneyState,
   type AgentMockExamLaunch,
   type AgentMockExamSettlement,
@@ -256,16 +256,34 @@ function isUnavailableTeachingWorkspace(error: unknown) {
     && (error.code === 'INTERVENTION_CONTENT_UNAVAILABLE' || error.status === 404);
 }
 
-function AgentJourneyPlanView({ conversation }: { conversation: AgentConversation | null }) {
+function AgentJourneyPlanView({
+  plans,
+  startablePlanId,
+  busy,
+  onStart,
+  onGenerate,
+  onAdjust,
+  onGoPractice
+}: {
+  plans: AgentJourneyState['plans'];
+  startablePlanId: string | null;
+  busy: boolean;
+  onStart: () => void;
+  onGenerate: () => void;
+  onAdjust: () => void;
+  onGoPractice: () => void;
+}) {
   const { locale, t } = useI18n();
-  const plans = (conversation?.artifacts ?? [])
+  const orderedPlans = [...plans]
     .filter((item) => item.type === 'learning_plan')
     .sort((left, right) => right.createdAt.localeCompare(left.createdAt));
-  const current = plans[0];
+  const current = orderedPlans[0];
   const snapshot = current?.snapshot ?? {};
   const task = snapshot.task && typeof snapshot.task === 'object' ? snapshot.task as Record<string, unknown> : {};
   const impact = decisionImpact(snapshot);
   const impactCopy = decisionImpactCopy(impact, t);
+  const isToday = current ? new Date(current.createdAt).toDateString() === new Date().toDateString() : false;
+  const isExecutable = Boolean(current && isToday && current.id === startablePlanId);
   return (
     <>
       <section className="agent-context-intro">
@@ -275,7 +293,7 @@ function AgentJourneyPlanView({ conversation }: { conversation: AgentConversatio
       </section>
       {current ? (
         <section className="agent-journey-plan-card" aria-label={t('agent.journey.currentPlan', '当前学习计划')}>
-          <header><span><Icon name="lucide:calendar-check" /></span><small>{journeyDateLabel(current.createdAt, locale)}</small></header>
+          <header><span><Icon name="lucide:calendar-check" /></span><small>{isToday ? t('agent.journeyAction.todayPlan', '今日计划') : t('agent.journeyAction.previousPlan', '过往计划')} · {journeyDateLabel(current.createdAt, locale)}</small></header>
           <strong>{current.title}</strong>
           {current.summary && <p>{current.summary}</p>}
           <dl>
@@ -291,54 +309,79 @@ function AgentJourneyPlanView({ conversation }: { conversation: AgentConversatio
               <em>{Math.max(0, Number(impact.passedPhaseCount ?? 0))}/{Math.max(1, Number(impact.completedPhaseCount ?? 0)) || 1}</em>
             </section>
           )}
+          <section className="agent-plan-execution" aria-label={t('agent.journeyAction.execution', '计划执行')}>
+            <div>
+              <small>{isExecutable ? t('agent.journeyAction.ready', '可以开始') : t('agent.journeyAction.refreshRequired', '需要更新')}</small>
+              <strong>{isExecutable ? t('agent.journeyAction.readyBody', '从这项任务直接进入做题，完成后计划会根据真实结果更新。') : t('agent.journeyAction.refreshBody', '这不是今天可执行的任务，请先生成基于最新证据的今日计划。')}</strong>
+            </div>
+            <button type="button" className="primary" disabled={busy} onClick={isExecutable ? onStart : onGenerate}><Icon name={busy ? 'lucide:loader-circle' : isExecutable ? 'lucide:play' : 'lucide:wand-sparkles'} />{busy ? t('agent.learningEntry.preparing', '正在准备') : isExecutable ? t('agent.journeyAction.startTask', '开始此任务') : t('agent.journeyAction.generateToday', '生成今日计划')}</button>
+            <button type="button" onClick={onAdjust}><Icon name="lucide:sliders-horizontal" />{t('agent.journeyAction.adjustPlan', '调整目标与偏好')}</button>
+          </section>
           <footer><Icon name="lucide:shield-check" />{t('agent.plan.source', '来自学习证据、目标与已发布题源')}</footer>
         </section>
       ) : (
-        <section className="agent-journey-empty"><Icon name="lucide:calendar-days" /><strong>{t('agent.journey.noPlan', '还没有可用计划')}</strong><p>{t('agent.journey.noPlanBody', '返回学习工作台生成今日方案，系统会先核对目标、证据和题源。')}</p></section>
+        <section className="agent-journey-empty"><Icon name="lucide:calendar-days" /><strong>{t('agent.journey.noPlan', '还没有可用计划')}</strong><p>{t('agent.journeyAction.planEmptyBody', '先完成一次做题，系统会根据目标、真实作答和题源生成学习计划。')}</p><button type="button" onClick={onGoPractice}><Icon name="lucide:play" />{t('agent.journeyAction.goPractice', '去做题')}</button></section>
       )}
-      {plans.length > 1 && (
+      {orderedPlans.length > 1 && (
         <section className="agent-context-card agent-plan-versions">
           <header><Icon name="lucide:layers-3" /><strong>{t('agent.journey.planVersions', '计划版本')}</strong></header>
-          {plans.slice(1, 4).map((item) => <p key={item.id}><b>{item.title}</b><span>{journeyDateLabel(item.createdAt, locale)}</span></p>)}
+          {orderedPlans.slice(1, 4).map((item) => <p key={item.id}><b>{item.title}</b><span>{journeyDateLabel(item.createdAt, locale)}</span></p>)}
         </section>
       )}
     </>
   );
 }
 
-function AgentJourneyHistoryView({ stages, activeId, loading, onSelect }: { stages: AgentJourneyStage[]; activeId: string | null; loading: boolean; onSelect: (stage: AgentJourneyStage) => void }) {
+function AgentJourneyHistoryView({ overview, loading, error, onOpenWeakness, onOpenSettings }: { overview: AgentJourneyOverview | null; loading: boolean; error: string; onOpenWeakness: () => void; onOpenSettings: () => void }) {
   const { locale, t } = useI18n();
+  const subjects = overview?.progress?.subjects ?? [];
+  const totalTopics = subjects.reduce((sum, item) => sum + item.totalTopicCount, 0);
+  const evidencedTopics = subjects.reduce((sum, item) => sum + item.evidencedTopicCount, 0);
+  const strongTopics = subjects.reduce((sum, item) => sum + item.strongTopicCount, 0);
+  const answerEvidence = subjects.reduce((sum, item) => sum + item.answerEvidenceCount, 0);
+  const examDate = overview?.goal?.examDate ? new Date(`${overview.goal.examDate}T00:00:00`) : null;
+  const daysRemaining = examDate ? Math.max(0, Math.ceil((examDate.getTime() - Date.now()) / 86_400_000)) : null;
+  const dateLabel = examDate ? new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long', day: 'numeric' }).format(examDate) : null;
   return (
     <>
       <section className="agent-context-intro">
-        <span className="agent-kicker">{t('agent.journey.historyKicker', '学习历程')}</span>
-        <h2>{t('agent.journey.historyTitle', '看见做过什么，以及下一步如何变化')}</h2>
-        <p>{t('agent.journey.historyBody', '这里按学习阶段记录做题、讲解与结果；只有学科问答属于对话。')}</p>
+        <span className="agent-kicker">{t('agent.progress.kicker', '目标进度')}</span>
+        <h2>{t('agent.progress.title', '离考试目标还有多远')}</h2>
+        <p>{t('agent.progress.body', '这里展示知识点覆盖和掌握证据；做完一批题只会增加证据，不会自动把知识点标记为完成。')}</p>
       </section>
-      <section className="agent-journey-history-view" aria-label={t('agent.journey.savedStages', '已保存的学习阶段')}>
-        {loading ? <div className="agent-journey-loading"><Icon name="lucide:loader-circle" />{t('agent.journey.loadingHistory', '正在整理学习历程')}</div> : stages.length ? stages.map((stage) => {
-          const detail = [
-            subjectLabel(stage.subject, t), taskLabel(stage.taskType, t),
-            stage.metrics.batchCount > 1 ? `${stage.metrics.batchCount} ${t('agent.freePractice.batches', '批')}` : '',
-            stage.metrics.answeredQuestionCount ? `${stage.metrics.answeredQuestionCount} ${t('agent.freePractice.questions', '题')}` : '',
-            stage.metrics.accuracy !== null ? `${stage.metrics.accuracy}%` : '',
-            stage.metrics.assistanceCount ? `${stage.metrics.assistanceCount} ${t('agent.journey.assistanceUses', '次辅助')}` : '',
-            stage.metrics.teachingCount ? `${stage.metrics.teachingCount} ${t('agent.journey.teachingUses', '次教学')}` : ''
-          ].filter(Boolean).join(' · ');
-          return (
-            <button key={stage.id} type="button" className={stage.conversationId === activeId ? 'active' : ''} onClick={() => onSelect(stage)}>
-              <span className={`agent-journey-stage-mark${stage.resume ? ' is-active' : ''}`}><Icon name={stage.resume ? 'lucide:play' : stage.kind === 'teaching' ? 'lucide:presentation' : stage.kind === 'mock_exam' ? 'lucide:timer' : stage.kind === 'past_paper' ? 'lucide:file-text' : 'lucide:clock-3'} /></span>
-              <span><small>{journeyDateLabel(stage.updatedAt, locale)}{stage.resume ? ` · ${t('agent.journey.canResume', '可继续')}` : ''}</small><strong>{stage.title || t('agent.history.untitled', '学习阶段')}</strong><em>{detail}</em></span>
-              <Icon name="lucide:chevron-right" />
-            </button>
-          );
-        }) : <div className="agent-journey-empty"><Icon name="lucide:clock-3" /><strong>{t('agent.journey.emptyTitle', '历程会从第一次学习开始')}</strong><p>{t('agent.journey.empty', '完成第一项学习任务后，这里会形成学习历程。')}</p></div>}
-      </section>
+      {loading ? <div className="agent-journey-loading"><Icon name="lucide:loader-circle" />{t('agent.progress.loading', '正在计算目标进度')}</div> : error ? (
+        <section className="agent-journey-empty"><Icon name="lucide:circle-alert" /><strong>{t('agent.journey.dataUnavailable', '暂时无法读取')}</strong><p>{error}</p></section>
+      ) : overview?.progress ? <>
+        <section className="agent-goal-summary">
+          <div><span><Icon name="lucide:flag" /></span><small>{t('agent.progress.examGoal', '考试目标')}</small><strong>{dateLabel ?? t('agent.progress.examDateUnset', '尚未设置考试日期')}</strong></div>
+          <dl>
+            <div><dt>{t('agent.progress.daysRemaining', '距离考试')}</dt><dd>{daysRemaining === null ? '—' : `${daysRemaining} ${t('agent.progress.days', '天')}`}</dd></div>
+            <div><dt>{t('agent.progress.coverage', '知识点覆盖')}</dt><dd>{evidencedTopics}/{totalTopics || '—'}</dd></div>
+            <div><dt>{t('agent.progress.strongEvidence', '掌握证据较强')}</dt><dd>{strongTopics}/{totalTopics || '—'}</dd></div>
+            <div><dt>{t('agent.progress.answerEvidence', '有效作答证据')}</dt><dd>{answerEvidence}</dd></div>
+          </dl>
+          <button type="button" onClick={onOpenSettings}><Icon name="lucide:settings-2" />{t('agent.progress.adjustGoal', '调整目标')}</button>
+        </section>
+        <section className="agent-subject-progress-list" aria-label={t('agent.progress.subjectProgress', '科目进度')}>
+          {subjects.map((item) => {
+            const coverage = item.totalTopicCount ? Math.round(item.evidencedTopicCount / item.totalTopicCount * 100) : 0;
+            const strong = item.totalTopicCount ? Math.round(item.strongTopicCount / item.totalTopicCount * 100) : 0;
+            const target = overview.goal?.subjects.find((goal) => goal.subject === item.subject)?.targetScore;
+            return <article key={item.subject}>
+              <header><span data-subject={item.subject}>{subjectLabel(item.subject, t).slice(0, 1)}</span><div><strong>{subjectLabel(item.subject, t)}</strong><small>{target === null || target === undefined ? t('agent.progress.targetScoreUnset', '未设置目标分') : `${t('agent.progress.targetScore', '目标')} ${target}`}</small></div><em>{item.answerEvidenceCount} {t('agent.progress.attemptEvidence', '次作答证据')}</em></header>
+              <div className="agent-progress-row"><span>{t('agent.progress.coveredTopics', '已覆盖知识点')} {item.evidencedTopicCount}/{item.totalTopicCount}</span><i><b style={{ width: `${coverage}%` }} /></i><strong>{coverage}%</strong></div>
+              <div className="agent-progress-row is-strong"><span>{t('agent.progress.strongTopics', '证据较强')} {item.strongTopicCount}/{item.totalTopicCount}</span><i><b style={{ width: `${strong}%` }} /></i><strong>{strong}%</strong></div>
+              <footer><span>{t('agent.progress.developingTopics', '学习中')} {item.developingTopicCount}</span><span>{t('agent.progress.attentionTopics', '需巩固')} {item.needsAttentionTopicCount}</span><span>{t('agent.progress.unverifiedTopics', '待验证')} {Math.max(0, item.totalTopicCount - item.strongTopicCount - item.developingTopicCount - item.needsAttentionTopicCount)}</span></footer>
+            </article>;
+          })}
+        </section>
+        <section className="agent-completion-rule"><Icon name="lucide:badge-check" /><div><strong>{t('agent.progress.completionRule', '什么才算知识点完成')}</strong><p>{t('agent.progress.completionRuleBody', '需要足够题量与题型覆盖、独立作答稳定、重复错误消失，并通过之后的保持或迁移验证。单批练习结束不等于知识点完成。')}</p></div><button type="button" onClick={onOpenWeakness}>{t('agent.progress.viewGaps', '查看当前缺口')}<Icon name="lucide:arrow-right" /></button></section>
+      </> : <section className="agent-journey-empty"><Icon name="lucide:flag" /><strong>{t('agent.progress.noProgress', '还没有目标进度')}</strong><p>{t('agent.progress.noProgressBody', '先设置考试目标并完成一次练习，系统才会形成可验证的进度。')}</p><button type="button" onClick={onOpenSettings}><Icon name="lucide:settings-2" />{t('agent.progress.adjustGoal', '调整目标')}</button></section>}
     </>
   );
 }
 
-function AgentJourneyWeaknessView({ overview, loading, error }: { overview: AgentJourneyOverview | null; loading: boolean; error: string }) {
+function AgentJourneyWeaknessView({ overview, loading, error, onGoPractice }: { overview: AgentJourneyOverview | null; loading: boolean; error: string; onGoPractice: () => void }) {
   const { t } = useI18n();
   const topics = (overview?.weaknesses.subjects ?? []).flatMap((subject) => subject.topics.map((topic) => ({ ...topic, subject: subject.subject })))
     .sort((left, right) => left.score - right.score || left.confidence - right.confidence)
@@ -362,7 +405,8 @@ function AgentJourneyWeaknessView({ overview, loading, error }: { overview: Agen
           </article>)}
         </section>
         {reviewQueue.length ? <section className="agent-context-card agent-review-queue"><header><Icon name="lucide:refresh-cw" /><strong>{t('agent.journey.reviewQueue', '待复习')}</strong></header>{reviewQueue.slice(0, 5).map((item) => <p key={item.reviewItemId}><b>{item.title}</b><span>{item.recurrenceCount} {t('agent.journey.recurrences', '次重复错误')}</span></p>)}</section> : null}
-      </> : <section className="agent-journey-empty"><Icon name="lucide:scan-search" /><strong>{t('agent.journey.noWeakness', '还没有足够证据')}</strong><p>{t('agent.journey.noWeaknessBody', '完成诊断或练习后，薄弱知识点会出现在这里。')}</p></section>}
+        <section className="agent-journey-action"><div><strong>{t('agent.journeyAction.practiceWeakness', '用下一组题巩固薄弱点')}</strong><small>{t('agent.journeyAction.practiceWeaknessHint', '系统推荐会优先参考这里的真实作答证据。')}</small></div><button type="button" onClick={onGoPractice}>{t('agent.journeyAction.goPractice', '去做题')}<Icon name="lucide:arrow-right" /></button></section>
+      </> : <section className="agent-journey-empty"><Icon name="lucide:scan-search" /><strong>{t('agent.journey.noWeakness', '还没有足够证据')}</strong><p>{t('agent.journey.noWeaknessBody', '完成诊断或练习后，薄弱知识点会出现在这里。')}</p><button type="button" onClick={onGoPractice}><Icon name="lucide:play" />{t('agent.journeyAction.startEvidence', '开始做题积累证据')}</button></section>}
     </>
   );
 }
@@ -383,7 +427,7 @@ function AgentJourneyResourcesView({ overview, loading, error, onOpen }: { overv
         {items.map((item) => <button key={item.id} type="button" onClick={() => onOpen(item)}>
           <span><Icon name="lucide:file-check-2" /></span>
           <div><small>{subjectLabel(item.subject, t)}{item.examYear ? ` · ${item.examYear}` : ''}</small><strong>{item.title}</strong><em>{item.questionCount ? `${item.questionCount} ${t('agent.verification.questions', '题')}` : t('agent.journey.publishedResource', '已发布资料')}{item.hasAnswers ? ` · ${t('agent.pastPaper.answers', '含答案')}` : ''}</em></div>
-          <Icon name="lucide:arrow-up-right" />
+          <span className="agent-resource-open">{t('agent.journeyAction.openResource', '打开')}<Icon name="lucide:arrow-right" /></span>
         </button>)}
       </section> : <section className="agent-journey-empty"><Icon name="lucide:library" /><strong>{t('agent.journey.noResources', '当前没有匹配资料')}</strong><p>{t('agent.journey.noResourcesBody', '发布与你目标科目匹配的真题后会显示在这里。')}</p></section>}
     </>
@@ -634,7 +678,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     const roundId = Number(params.get('agentRoundId'));
     const artifactId = params.get('agentArtifactId') || undefined;
     const verificationId = params.get('agentInterventionVerificationId') || undefined;
-    const conversationId = params.get('agentConversationId') || params.get('conversation');
+    const conversationId = params.get('agentContextId') || params.get('agentConversationId') || params.get('conversation');
     if (!roundId || (!artifactId && !verificationId) || !conversationId) return null;
     return {
       artifactId, verificationId, conversationId, roundId,
@@ -648,7 +692,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     const params = new URLSearchParams(window.location.search);
     const attemptId = Number(params.get('agentMockExamAttemptId'));
     const artifactId = params.get('agentArtifactId');
-    const conversationId = params.get('agentConversationId') || params.get('conversation');
+    const conversationId = params.get('agentContextId') || params.get('agentConversationId') || params.get('conversation');
     if (!attemptId || !artifactId || !conversationId) return null;
     return {
       artifactId, conversationId, attemptId,
@@ -659,13 +703,13 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   const [mockExamSettlement, setMockExamSettlement] = useState<AgentMockExamSettlement | null>(null);
   const [mockExamSettlementStatus, setMockExamSettlementStatus] = useState<'idle' | 'loading' | 'ready' | 'unavailable'>('idle');
   const [mockExamSettlementRevision, setMockExamSettlementRevision] = useState(0);
-  const [pastPaperWorkspace, setPastPaperWorkspace] = useState<{ slug: string; conversationId: string; questionId?: number } | null>(() => {
+  const [pastPaperWorkspace, setPastPaperWorkspace] = useState<{ slug: string; contextId?: string; questionId?: number } | null>(() => {
     if (typeof window === 'undefined') return null;
     const params = new URLSearchParams(window.location.search);
     const slug = params.get('agentPastPaper');
-    const conversationId = params.get('conversation');
+    const conversationId = params.get('agentContextId') || params.get('agentConversationId') || params.get('conversation');
     const questionId = Number(params.get('agentQuestionId'));
-    return slug && conversationId ? { slug, conversationId, ...(Number.isInteger(questionId) && questionId > 0 ? { questionId } : {}) } : null;
+    return slug ? { slug, ...(conversationId ? { contextId: conversationId } : {}), ...(Number.isInteger(questionId) && questionId > 0 ? { questionId } : {}) } : null;
   });
   const [draftPageContext, setDraftPageContext] = useState<{
     route: string;
@@ -694,7 +738,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
 
   function runErrorAction(action: AgentErrorAction) {
     clearErrorNotice();
-    if (action.kind === 'send') return void sendMessage(action.value, action.surface);
+    if (action.kind === 'send') return void sendMessage(action.value);
     if (action.kind === 'free-start') return void beginFreePractice();
     if (action.kind === 'free-continue') return void continueFreePracticeBatch(action.subject && action.questionCount ? { subject: action.subject, questionCount: action.questionCount } : undefined);
     if (action.kind === 'free-end') return void endFreePracticeJourney();
@@ -712,6 +756,11 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   });
   const [journeySection, setJourneySection] = useState<AgentJourneySection>(() => {
     if (typeof window === 'undefined') return 'today';
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('agentPastPaper')) return 'resources';
+    if (params.has('agentRoundId') || params.has('agentMockExamAttemptId') || params.has('agentTeachingDeliveryId')) return 'today';
+    const requestedSection = params.get('agentSection');
+    if (requestedSection === 'plan' || requestedSection === 'history' || requestedSection === 'weakness' || requestedSection === 'resources' || requestedSection === 'qa' || requestedSection === 'settings') return requestedSection;
     const saved = readMigratedLocalStorage(AGENT_JOURNEY_SECTION_STORAGE_KEY, LEGACY_AGENT_JOURNEY_SECTION_STORAGE_KEY);
     return saved === 'plan' || saved === 'history' || saved === 'weakness' || saved === 'resources' || saved === 'qa' || saved === 'settings' ? saved : 'today';
   });
@@ -746,7 +795,6 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   const [freePracticeContinuationBusy, setFreePracticeContinuationBusy] = useState<'continue' | 'end' | null>(null);
   const [isAdjustingFreePractice, setIsAdjustingFreePractice] = useState(false);
   const [journeyState, setJourneyState] = useState<AgentJourneyState | null>(null);
-  const [isJourneyHistoryLoading, setIsJourneyHistoryLoading] = useState(false);
   const [journeyOverview, setJourneyOverview] = useState<AgentJourneyOverview | null>(null);
   const [isJourneyOverviewLoading, setIsJourneyOverviewLoading] = useState(false);
   const [journeyOverviewError, setJourneyOverviewError] = useState('');
@@ -755,6 +803,20 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   const [practiceAssistanceCommand, setPracticeAssistanceCommand] = useState<AgentPracticeAssistanceCommand | null>(null);
   const [practiceAssistanceBusy, setPracticeAssistanceBusy] = useState<AgentPracticeAssistanceEvent['action'] | null>(null);
   const [practiceTeachingEvent, setPracticeTeachingEvent] = useState<AgentPracticeTeachingEvent | null>(null);
+  const [practiceTeachingCollapsed, setPracticeTeachingCollapsed] = useState(false);
+  const [practiceHelpOpen, setPracticeHelpOpen] = useState(false);
+  const [practiceAuxiliaryMode, setPracticeAuxiliaryMode] = useState<'qa' | 'tools'>('qa');
+  const [practiceQaConversation, setPracticeQaConversation] = useState<AgentConversation | null>(null);
+  const [practiceQaDraft, setPracticeQaDraft] = useState('');
+  const [practiceQaSending, setPracticeQaSending] = useState(false);
+  const [practiceQaError, setPracticeQaError] = useState('');
+  const practiceQaInputRef = useRef<HTMLTextAreaElement | null>(null);
+  const practiceQaQuestionKey = practiceQuestionContext
+    ? `${practiceQuestionContext.roundId}.${practiceQuestionContext.questionId}`
+    : null;
+  const practiceQaQuestionKeyRef = useRef<string | null>(practiceQaQuestionKey);
+  const autoOpenedWrongQuestionRef = useRef<string | null>(null);
+  practiceQaQuestionKeyRef.current = practiceQaQuestionKey;
   const enabled = isAgentWebEnabled();
 
   const receivePracticeAssistance = useCallback((item: AgentPracticeAssistanceEvent) => {
@@ -775,6 +837,137 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   }, [practiceAssistanceBusy, practiceQuestionContext]);
 
   const settlePracticeAssistance = useCallback(() => setPracticeAssistanceBusy(null), []);
+
+  const openPracticeHelp = useCallback(() => {
+    setPracticeAuxiliaryMode('qa');
+    setPracticeHelpOpen(true);
+    setTaskRailPosition('center');
+    writeMigratedLocalStorage(AGENT_TASK_RAIL_POSITION_STORAGE_KEY, LEGACY_AGENT_TASK_RAIL_POSITION_STORAGE_KEY, 'center');
+    setPracticeQaError('');
+    if (practiceQaQuestionKey && !practiceQaConversation) {
+      const questionKey = practiceQaQuestionKey;
+      const storedId = readMigratedLocalStorage(`moodlelike.agent.practiceQaConversation.${practiceQaQuestionKey}`, `cscalite.agent.practiceQaConversation.${practiceQaQuestionKey}`);
+      if (storedId) {
+        void getAgentConversation(storedId)
+          .then((item) => { if (practiceQaQuestionKeyRef.current === questionKey) setPracticeQaConversation(item); })
+          .catch(() => undefined);
+      }
+    }
+    window.requestAnimationFrame(() => practiceQaInputRef.current?.focus());
+  }, [practiceQaConversation, practiceQaQuestionKey]);
+
+  const openPracticeTools = useCallback(() => {
+    setPracticeAuxiliaryMode('tools');
+    setPracticeHelpOpen(true);
+    setTaskRailPosition('center');
+    writeMigratedLocalStorage(AGENT_TASK_RAIL_POSITION_STORAGE_KEY, LEGACY_AGENT_TASK_RAIL_POSITION_STORAGE_KEY, 'center');
+  }, []);
+
+  const receivePracticeTeachingAsset = useCallback((event: AgentPracticeTeachingEvent) => {
+    setPracticeTeachingEvent(event);
+    setPracticeTeachingCollapsed(false);
+  }, []);
+
+  useEffect(() => {
+    if (!practiceQuestionContext || practiceQuestionContext.isCorrect !== false) return;
+    const questionKey = `${practiceQuestionContext.roundId}.${practiceQuestionContext.questionId}`;
+    if (autoOpenedWrongQuestionRef.current === questionKey) return;
+    autoOpenedWrongQuestionRef.current = questionKey;
+    openPracticeHelp();
+  }, [openPracticeHelp, practiceQuestionContext]);
+
+  const followPracticeQaRun = useCallback(async (runId: string, conversationId: string, questionKey: string) => {
+    try {
+      for (let attempt = 0; attempt < 30; attempt += 1) {
+        const run = await getAgentRun(runId);
+        if (TERMINAL_RUN_STATUSES.has(run.status)) {
+          const item = await getAgentConversation(conversationId);
+          if (practiceQaQuestionKeyRef.current === questionKey) {
+            setPracticeQaConversation(item);
+            if (run.status !== 'completed') setPracticeQaError(t('agent.subjectQa.failed', '本题问答暂时没有完成，请重试。'));
+          }
+          return;
+        }
+        await wait(500);
+      }
+      if (practiceQaQuestionKeyRef.current === questionKey) setPracticeQaError(t('agent.subjectQa.slow', '回答仍在生成，你可以稍后继续查看。'));
+    } catch (nextError) {
+      if (practiceQaQuestionKeyRef.current === questionKey) setPracticeQaError(nextError instanceof Error ? nextError.message : t('agent.subjectQa.failed', '本题问答暂时没有完成，请重试。'));
+    } finally {
+      if (practiceQaQuestionKeyRef.current === questionKey) setPracticeQaSending(false);
+    }
+  }, [t]);
+
+  const sendPracticeQaMessage = useCallback(async () => {
+    const text = practiceQaDraft.trim();
+    const context = practiceQuestionContext;
+    if (!text || !context || practiceQaSending || !currentUser) return;
+    const questionKey = `${context.roundId}.${context.questionId}`;
+    setPracticeQaSending(true);
+    setPracticeQaError('');
+    try {
+      let conversationId = practiceQaConversation?.id;
+      if (!conversationId) {
+        const created = await createAgentConversation({
+          title: `${subjectLabel(context.subject, t)}${t('agent.practiceQa.titleSuffix', '练习问答')} · ${t('agent.practiceAssistance.boundQuestion', '第 {number} 题').replace('{number}', String(context.questionNumber))}`
+        });
+        conversationId = created.id;
+        writeMigratedLocalStorage(`moodlelike.agent.practiceQaConversation.${questionKey}`, `cscalite.agent.practiceQaConversation.${questionKey}`, created.id);
+      }
+      const submission = await submitAgentMessage(conversationId, {
+        clientRequestId: clientRequestId(),
+        text,
+        locale: locale === 'zh-CN' ? 'zh-CN' : 'en',
+        surface: 'subject_qa',
+        attachmentIds: [],
+        pageContext: {
+          route: `${window.location.pathname}${window.location.search}`,
+          artifactId: learningWorkspace?.artifactId,
+          entityRef: { type: 'adaptive_round', id: String(context.roundId) },
+          selectedQuestionId: context.questionId,
+          questionContext: {
+            roundId: context.roundId,
+            questionId: context.questionId,
+            questionNumber: context.questionNumber,
+            subject: context.subject,
+            topicTitle: context.topicTitle,
+            prompt: context.prompt,
+            options: context.options,
+            ...(context.selectedAnswer ? { selectedAnswer: context.selectedAnswer } : {}),
+            answered: context.answered,
+            ...(context.correctAnswer ? { correctAnswer: context.correctAnswer } : {}),
+            ...(typeof context.isCorrect === 'boolean' ? { isCorrect: context.isCorrect } : {}),
+            ...(context.explanation ? { explanation: context.explanation } : {}),
+            ...(context.knowledgeTags?.length ? { knowledgeTags: context.knowledgeTags } : {})
+          }
+        }
+      });
+      setPracticeQaDraft('');
+      const submittedConversation = await getAgentConversation(conversationId);
+      if (practiceQaQuestionKeyRef.current === questionKey) setPracticeQaConversation(submittedConversation);
+      void followPracticeQaRun(submission.runId, conversationId, questionKey);
+    } catch (nextError) {
+      if (practiceQaQuestionKeyRef.current === questionKey) {
+        setPracticeQaSending(false);
+        setPracticeQaError(nextError instanceof Error ? nextError.message : t('agent.subjectQa.failed', '本题问答暂时没有完成，请重试。'));
+      }
+    }
+  }, [currentUser, followPracticeQaRun, learningWorkspace?.artifactId, locale, practiceQaConversation?.id, practiceQaDraft, practiceQaSending, practiceQuestionContext, t]);
+
+  useEffect(() => {
+    setPracticeQaConversation(null);
+    setPracticeQaDraft('');
+    setPracticeQaSending(false);
+    setPracticeQaError('');
+    if (!practiceHelpOpen || !practiceQaQuestionKey) return;
+    const storedId = readMigratedLocalStorage(`moodlelike.agent.practiceQaConversation.${practiceQaQuestionKey}`, `cscalite.agent.practiceQaConversation.${practiceQaQuestionKey}`);
+    if (!storedId) return;
+    let alive = true;
+    void getAgentConversation(storedId)
+      .then((item) => { if (alive) setPracticeQaConversation(item); })
+      .catch(() => undefined);
+    return () => { alive = false; };
+  }, [practiceQaQuestionKey]);
 
   const scrollConversationToLatest = useCallback(() => {
     const scroller = threadScrollRef.current;
@@ -838,15 +1031,20 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     setPracticeAssistanceCommand(null);
     setPracticeAssistanceBusy(null);
     setPracticeTeachingEvent(null);
-  }, [learningWorkspace?.roundId]);
+    setPracticeTeachingCollapsed(false);
+    setPracticeHelpOpen(false);
+    setPracticeAuxiliaryMode('qa');
+    setPracticeQaConversation(null);
+    setPracticeQaDraft('');
+    setPracticeQaSending(false);
+    setPracticeQaError('');
+  }, [learningWorkspace?.roundId, mockExamWorkspace?.attemptId]);
 
   const syncWorkspaceUrl = useCallback((workspace: AgentLearningWorkspace | null, fallbackConversationId?: string) => {
     if (typeof window === 'undefined') return;
     const params = new URLSearchParams();
-    const conversationId = workspace?.conversationId || fallbackConversationId || activeConversationId;
-    if (conversationId) params.set('conversation', conversationId);
     if (workspace) {
-      params.set('agentConversationId', workspace.conversationId);
+      params.set('agentContextId', workspace.conversationId);
       if (workspace.artifactId) params.set('agentArtifactId', workspace.artifactId);
       if (workspace.verificationId) params.set('agentInterventionVerificationId', workspace.verificationId);
       params.set('agentRoundId', String(workspace.roundId));
@@ -855,13 +1053,15 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       if (workspace.subject) params.set('agentSubject', workspace.subject);
     }
     window.history.replaceState({}, '', `${window.location.pathname}${params.size ? `?${params.toString()}` : ''}`);
-  }, [activeConversationId]);
+  }, []);
 
   const syncTeachingWorkspaceUrl = useCallback((deliveryId: string | null, conversationId?: string) => {
     if (typeof window === 'undefined') return;
     const params = new URLSearchParams(window.location.search);
     const resolvedConversationId = conversationId || activeConversationId;
-    if (resolvedConversationId) params.set('conversation', resolvedConversationId);
+    params.delete('conversation');
+    params.delete('agentConversationId');
+    if (resolvedConversationId) params.set('agentContextId', resolvedConversationId);
     if (deliveryId) params.set('agentTeachingDeliveryId', deliveryId);
     else params.delete('agentTeachingDeliveryId');
     window.history.replaceState({}, '', `${window.location.pathname}${params.size ? `?${params.toString()}` : ''}`);
@@ -903,11 +1103,9 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
 
   const syncMockExamWorkspaceUrl = useCallback((workspace: AgentMockExamWorkspace | null, fallbackConversationId?: string) => {
     if (typeof window === 'undefined') return;
-    const conversationId = workspace?.conversationId || fallbackConversationId || activeConversationId;
     const params = new URLSearchParams();
-    if (conversationId) params.set('conversation', conversationId);
     if (workspace) {
-      params.set('agentConversationId', workspace.conversationId);
+      params.set('agentContextId', workspace.conversationId);
       params.set('agentArtifactId', workspace.artifactId);
       params.set('agentMockExamAttemptId', String(workspace.attemptId));
       params.set('agentView', workspace.phase === 'report' ? 'mock-report' : 'mock-exam');
@@ -915,7 +1113,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       if (workspace.subject) params.set('agentSubject', workspace.subject);
     }
     window.history.replaceState({}, '', `${window.location.pathname}${params.size ? `?${params.toString()}` : ''}`);
-  }, [activeConversationId]);
+  }, []);
 
   const openMockExamWorkspace = useCallback((launch: AgentMockExamLaunch) => {
     const workspace: AgentMockExamWorkspace = {
@@ -953,25 +1151,27 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     syncWorkspaceUrl(workspace);
   }, [syncWorkspaceUrl]);
 
-  const openPastPaperWorkspace = useCallback((slug: string, conversationId: string, questionId?: number) => {
-    setLearningWorkspace(null);
-    setMockExamWorkspace(null);
-    setTeachingDeliveryId(null);
-    setPastPaperWorkspace({ slug, conversationId, ...(questionId ? { questionId } : {}) });
-    const params = new URLSearchParams({ conversation: conversationId, agentPastPaper: slug });
+  const openPastPaperWorkspace = useCallback((slug: string, contextId?: string, questionId?: number) => {
+    setJourneySection('resources');
+    writeMigratedLocalStorage(AGENT_JOURNEY_SECTION_STORAGE_KEY, LEGACY_AGENT_JOURNEY_SECTION_STORAGE_KEY, 'resources');
+    setPastPaperWorkspace({ slug, ...(contextId ? { contextId } : {}), ...(questionId ? { questionId } : {}) });
+    const params = new URLSearchParams({ agentPastPaper: slug });
+    if (contextId) params.set('agentContextId', contextId);
     if (questionId) params.set('agentQuestionId', String(questionId));
     window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
   }, []);
 
-  const closePastPaperWorkspace = useCallback((conversationId: string, prompt?: string, context?: { slug: string; questionId: number }) => {
+  const closePastPaperWorkspace = useCallback((contextId?: string, prompt?: string, context?: { slug: string; questionId: number }) => {
     setPastPaperWorkspace(null);
-    syncWorkspaceUrl(null, conversationId);
+    syncWorkspaceUrl(null, contextId);
     if (prompt && context) {
-      setJourneySection('today');
-      writeMigratedLocalStorage(AGENT_JOURNEY_SECTION_STORAGE_KEY, LEGACY_AGENT_JOURNEY_SECTION_STORAGE_KEY, 'today');
-      setDraft('');
+      setJourneySection('qa');
+      writeMigratedLocalStorage(AGENT_JOURNEY_SECTION_STORAGE_KEY, LEGACY_AGENT_JOURNEY_SECTION_STORAGE_KEY, 'qa');
+      setActiveConversationId(null);
+      setConversation(null);
+      setDraft(prompt);
       setDraftPageContext(null);
-      void sendMessage(prompt, 'learning_workspace', null);
+      focusComposer();
     } else {
       setDraftPageContext(null);
     }
@@ -1012,8 +1212,8 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       return;
     }
     if (workspace.kind === 'past_paper') {
-      setPastPaperWorkspace({ slug: workspace.slug, conversationId: workspace.conversationId, questionId: workspace.questionId });
-      const params = new URLSearchParams({ conversation: workspace.conversationId, agentPastPaper: workspace.slug, agentQuestionId: String(workspace.questionId) });
+      setPastPaperWorkspace({ slug: workspace.slug, contextId: workspace.conversationId, questionId: workspace.questionId });
+      const params = new URLSearchParams({ agentContextId: workspace.conversationId, agentPastPaper: workspace.slug, agentQuestionId: String(workspace.questionId) });
       window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
       return;
     }
@@ -1176,23 +1376,34 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       let retryAttempt = 0;
       while (current) {
         try {
-          const [items, state] = await Promise.all([loadSummaries(), loadJourneyState().catch(() => null)]);
+          const state = await loadJourneyState().catch(() => null);
           if (!current) return;
-          if (items[0]) {
-            const params = new URLSearchParams(window.location.search);
+          const params = new URLSearchParams(window.location.search);
+
+          if (journeySection === 'qa') {
+            const items = await loadSummaries();
+            if (!current) return;
+            if (items[0]) {
             const requestedId = params.get('conversation');
             const selectedId = items.some((item) => item.id === requestedId)
               ? requestedId!
-              : isActivelyResumableWorkspace(state?.activeWorkspace) ? state.activeWorkspace.conversationId : items[0].id;
+              : items[0].id;
             setActiveConversationId(selectedId);
             await loadConversation(selectedId);
             if (!current) return;
-            const hasExplicitContext = params.has('conversation')
-              || params.has('agentRoundId')
-              || params.has('agentMockExamAttemptId')
-              || params.has('agentPastPaper')
-              || params.has('agentTeachingDeliveryId');
-            if (isActivelyResumableWorkspace(state?.activeWorkspace) && !hasExplicitContext) restoreJourneyWorkspace(state.activeWorkspace);
+            }
+          } else {
+            streamAbortRef.current?.abort();
+            setConversation(null);
+            setConversations([]);
+            setActiveConversationId(null);
+            const legacyContextId = params.get('agentConversationId') || params.get('conversation');
+            if (legacyContextId || params.has('conversation') || params.has('agentConversationId')) {
+              if (legacyContextId && !params.has('agentContextId')) params.set('agentContextId', legacyContextId);
+              params.delete('conversation');
+              params.delete('agentConversationId');
+              window.history.replaceState({}, '', `${window.location.pathname}${params.size ? `?${params.toString()}` : ''}`);
+            }
           }
           clearErrorNotice();
           setIsLoading(false);
@@ -1213,20 +1424,10 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       }
     })();
     return () => { current = false; };
-  }, [currentUser?.id, enabled, isResolvingAuth, locale]);
+  }, [currentUser?.id, enabled, isResolvingAuth, journeySection, locale]);
 
   useEffect(() => {
-    if (isResolvingAuth || !currentUser || journeySection !== 'history') return;
-    let current = true;
-    setIsJourneyHistoryLoading(true);
-    void loadJourneyState()
-      .catch(() => null)
-      .finally(() => { if (current) setIsJourneyHistoryLoading(false); });
-    return () => { current = false; };
-  }, [currentUser?.id, isResolvingAuth, journeySection, loadJourneyState]);
-
-  useEffect(() => {
-    if (isResolvingAuth || !currentUser || (journeySection !== 'weakness' && journeySection !== 'resources')) return;
+    if (isResolvingAuth || !currentUser || (journeySection !== 'history' && journeySection !== 'weakness' && journeySection !== 'resources')) return;
     let current = true;
     setIsJourneyOverviewLoading(true);
     setJourneyOverviewError('');
@@ -1264,13 +1465,13 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
         if (!current) return;
         setMockExamSettlement(result);
         setMockExamSettlementStatus('ready');
-        await loadConversation(mockExamWorkspace.conversationId).catch(() => undefined);
+        await loadJourneyState().catch(() => undefined);
       })
       .catch(() => {
         if (current) setMockExamSettlementStatus('unavailable');
       });
     return () => { current = false; };
-  }, [currentUser?.id, isResolvingAuth, loadConversation, mockExamSettlementRevision, mockExamWorkspace?.attemptId, mockExamWorkspace?.conversationId, mockExamWorkspace?.phase]);
+  }, [currentUser?.id, isResolvingAuth, loadJourneyState, mockExamSettlementRevision, mockExamWorkspace?.attemptId, mockExamWorkspace?.phase]);
 
   useEffect(() => {
     if (isResolvingAuth || !currentUser || !conversation?.id || isSending) return;
@@ -1331,34 +1532,36 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   }
 
   function chooseJourneySection(section: AgentJourneySection) {
+    if (pastPaperWorkspace && section !== 'resources') {
+      const contextId = pastPaperWorkspace.contextId;
+      setPastPaperWorkspace(null);
+      if (learningWorkspace) syncWorkspaceUrl(learningWorkspace);
+      else if (mockExamWorkspace) syncMockExamWorkspaceUrl(mockExamWorkspace);
+      else {
+        syncWorkspaceUrl(null, contextId);
+        if (teachingDeliveryId) syncTeachingWorkspaceUrl(teachingDeliveryId, contextId);
+      }
+    }
     setJourneySection(section);
     writeMigratedLocalStorage(AGENT_JOURNEY_SECTION_STORAGE_KEY, LEGACY_AGENT_JOURNEY_SECTION_STORAGE_KEY, section);
-    if ((section === 'today' || section === 'plan') && conversations[0] && conversations[0].id !== activeConversationId) {
-      void chooseConversation(conversations[0].id);
-    }
+    const params = new URLSearchParams(window.location.search);
+    params.delete('agentSection');
+    if (section !== 'today') params.set('agentSection', section);
+    window.history.replaceState({}, '', `${window.location.pathname}${params.size ? `?${params.toString()}` : ''}`);
   }
 
-  function closeSettingsWorkspace() {
-    chooseJourneySection('today');
-    focusComposer();
+  function showJourneySection(section: AgentJourneySection) {
+    setJourneySection(section);
+    writeMigratedLocalStorage(AGENT_JOURNEY_SECTION_STORAGE_KEY, LEGACY_AGENT_JOURNEY_SECTION_STORAGE_KEY, section);
   }
 
-  async function sendMessage(
-    value?: string,
-    requestedSurface?: 'learning_workspace' | 'subject_qa',
-    requestedPageContext?: {
-      route: string;
-      artifactId?: string;
-      entityRef?: { type: 'adaptive_round' | 'intervention_verification' | 'mock_attempt' | 'past_paper'; id: string };
-      selectedQuestionId?: number;
-    } | null
-  ) {
+  async function sendMessage(value?: string) {
     const text = String(value ?? draft).trim();
-    const surface = requestedSurface ?? (journeySection === 'qa' ? 'subject_qa' : 'learning_workspace');
-    if (!text || isSending || !currentUser) return;
+    const surface = 'subject_qa' as const;
+    if (journeySection !== 'qa' || !text || isSending || !currentUser) return;
     clearErrorNotice();
     setIsSending(true);
-    setRunStatus(surface === 'subject_qa' ? t('agent.subjectQa.preparing', '正在准备学科回答') : t('agent.status.queued', '正在准备分析'));
+    setRunStatus(t('agent.subjectQa.preparing', '正在准备学科回答'));
     try {
       let conversationId = activeConversationId;
       if (!conversationId) {
@@ -1367,23 +1570,12 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
         setActiveConversationId(created.id);
         setConversations((items) => [created, ...items]);
       }
-      const contextualPageContext = learningWorkspace && practiceQuestionContext
-        ? {
-            route: `${window.location.pathname}${window.location.search}`,
-            ...(learningWorkspace.artifactId ? { artifactId: learningWorkspace.artifactId } : {}),
-            entityRef: { type: 'adaptive_round' as const, id: String(practiceQuestionContext.roundId) },
-            selectedQuestionId: practiceQuestionContext.questionId
-          }
-        : { route: `${window.location.pathname}${window.location.search}` };
       const submission = await submitAgentMessage(conversationId, {
         clientRequestId: clientRequestId(),
         text,
         locale: locale === 'zh-CN' ? 'zh-CN' : 'en',
         surface,
-        attachmentIds: [],
-        ...(surface === 'learning_workspace' && requestedPageContext !== null
-          ? { pageContext: requestedPageContext ?? draftPageContext ?? contextualPageContext }
-          : {})
+        attachmentIds: []
       });
       setDraft('');
       setDraftPageContext(null);
@@ -1420,21 +1612,10 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   }
 
   function currentFreePracticeConfig() {
-    const artifact = learningWorkspace?.artifactId
-      ? conversation?.artifacts.find((item) => item.id === learningWorkspace.artifactId)
-      : null;
-    const snapshot = artifact?.snapshot ?? {};
-    const task = snapshot.task && typeof snapshot.task === 'object' && !Array.isArray(snapshot.task)
-      ? snapshot.task as Record<string, unknown>
-      : {};
     const subject = learningWorkspace?.subject === 'math' || learningWorkspace?.subject === 'physics' || learningWorkspace?.subject === 'chemistry'
       ? learningWorkspace.subject
-      : task.subject === 'math' || task.subject === 'physics' || task.subject === 'chemistry'
-        ? task.subject
-        : freePracticeSubject;
-    const storedCount = Number(task.questionCount);
-    const questionCount = storedCount === 3 || storedCount === 5 || storedCount === 10 ? storedCount : freePracticeCount;
-    return { subject, questionCount };
+      : freePracticeSubject;
+    return { subject, questionCount: freePracticeCount };
   }
 
   function toggleFreePracticeAdjustment() {
@@ -1452,19 +1633,12 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     clearErrorNotice();
     setIsStartingFreePractice(true);
     try {
-      let conversationId = activeConversationId;
-      if (!conversationId) {
-        const created = await createAgentConversation({ title: t('agent.freePractice.stageTitle', '自由练习') });
-        conversationId = created.id;
-        setActiveConversationId(created.id);
-        setConversations((items) => [created, ...items]);
-      }
       const launch = await startAgentFreePractice({
-        clientRequestId: clientRequestId(), conversationId,
+        clientRequestId: clientRequestId(),
         subject: next.subject, questionCount: next.questionCount,
         questionLanguage: locale === 'en' ? 'en' : 'zh'
       });
-      await Promise.all([loadConversation(conversationId), loadSummaries()]);
+      await loadJourneyState().catch(() => null);
       openLearningWorkspace(launch);
     } catch {
       showError(
@@ -1488,7 +1662,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
         questionLanguage: locale === 'en' ? 'en' : 'zh'
       });
       setIsAdjustingFreePractice(false);
-      await Promise.all([loadConversation(learningWorkspace.conversationId), loadSummaries(), loadJourneyState()]);
+      await loadJourneyState();
       openLearningWorkspace(launch);
     } catch {
       showError(
@@ -1507,12 +1681,10 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     try {
       if (learningWorkspace.phase === 'report') await settleAgentPractice(learningWorkspace.roundId);
       await endAgentFreePractice(learningWorkspace.artifactId, { clientRequestId: clientRequestId() });
-      const conversationId = learningWorkspace.conversationId;
       setLearningWorkspace(null);
       setIsAdjustingFreePractice(false);
-      syncWorkspaceUrl(null, conversationId);
-      await Promise.all([loadConversation(conversationId), loadSummaries(), loadJourneyState()]);
-      focusComposer();
+      syncWorkspaceUrl(null);
+      await loadJourneyState();
     } catch {
       showError(
         t('agent.freePractice.endRecoverable', '本次学习还没有结束；已完成批次不会丢失。'),
@@ -1530,23 +1702,12 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     setIsSending(true);
     setRunStatus(t('agent.status.queued', '正在准备分析'));
     try {
-      const submission = await submitAgentMessage(workspace.conversationId, {
-        clientRequestId: clientRequestId(),
-        text: locale === 'zh-CN' ? '根据刚完成的模考安排下一步' : 'Plan my next step from the mock exam I just completed',
-        locale: locale === 'zh-CN' ? 'zh-CN' : 'en',
-        pageContext: {
-          route: `${window.location.pathname}${window.location.search}`,
-          entityRef: { type: 'mock_attempt', id: String(workspace.attemptId) }
-        }
-      });
       setMockExamWorkspace(null);
       setMockExamSettlement(null);
-      setActiveConversationId(workspace.conversationId);
-      syncMockExamWorkspaceUrl(null, workspace.conversationId);
-      void followRun(submission.runId, workspace.conversationId);
-      await loadConversation(workspace.conversationId).catch(() => {
-        showError(t('agent.error.sentRefreshPending', '消息已经发送，但最新对话暂未刷新；分析完成后会自动同步。'));
-      });
+      syncMockExamWorkspaceUrl(null);
+      await loadJourneyState();
+      setIsSending(false);
+      setRunStatus('');
     } catch {
       showError(
         t('agent.mockExam.continueRecoverable', '下一项任务尚未生成；模考结果已经保留。'),
@@ -1580,16 +1741,9 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     if (localizedAgentPath) {
       const query = path.includes('?') ? path.slice(path.indexOf('?') + 1) : '';
       const params = new URLSearchParams(query);
-      const conversationId = params.get('conversation') || learningWorkspace.conversationId;
-      const runId = params.get('run');
       setLearningWorkspace(null);
-      setActiveConversationId(conversationId);
-      syncWorkspaceUrl(null, conversationId);
-      await loadConversation(conversationId).catch(() => undefined);
-      if (runId) {
-        setIsSending(true);
-        void followRun(runId, conversationId);
-      }
+      syncWorkspaceUrl(null);
+      await loadJourneyState().catch(() => undefined);
       return;
     }
 
@@ -1597,9 +1751,8 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     // remain available only for capabilities that have not moved into the shell yet.
     if (path.includes('/csca-subjects/')) {
       setLearningWorkspace(null);
-      syncWorkspaceUrl(null, learningWorkspace.conversationId);
-      focusComposer();
-      await loadConversation(learningWorkspace.conversationId).catch(() => undefined);
+      syncWorkspaceUrl(null);
+      await loadJourneyState().catch(() => undefined);
       return;
     }
     onNavigate(path);
@@ -1618,12 +1771,10 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       syncMockExamWorkspaceUrl(next);
       return;
     }
-    const conversationId = mockExamWorkspace.conversationId;
     setMockExamWorkspace(null);
     setMockExamSettlement(null);
-    syncMockExamWorkspaceUrl(null, conversationId);
-    focusComposer();
-    await loadConversation(conversationId).catch(() => undefined);
+    syncMockExamWorkspaceUrl(null);
+    await loadJourneyState().catch(() => undefined);
   }
 
   useEffect(() => {
@@ -1638,41 +1789,52 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       else if (teachingDeliveryId) closeTeachingWorkspace();
       else if (learningWorkspace) void handleLearningWorkspaceNavigation(`${routes.cscaSubjects}/close`);
       else if (mockExamWorkspace) void handleMockExamWorkspaceNavigation(routes.cscaMockExam);
-      else if (pastPaperWorkspace) closePastPaperWorkspace(pastPaperWorkspace.conversationId);
+      else if (pastPaperWorkspace) closePastPaperWorkspace(pastPaperWorkspace.contextId);
     };
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
   }, [journeySection, learningWorkspace, mockExamWorkspace, pastPaperWorkspace, teachingDeliveryId]);
 
   const latestArtifact = useMemo(() => {
-    const artifacts = conversation?.artifacts.filter((item) => item.type === 'learning_plan') ?? [];
-    return artifacts[artifacts.length - 1] ?? null;
-  }, [conversation]);
+    const artifacts = [...(journeyState?.plans ?? [])].sort((left, right) => right.createdAt.localeCompare(left.createdAt));
+    return artifacts[0] ?? null;
+  }, [journeyState?.plans]);
   const startablePlanArtifact = useMemo(() => {
-    const artifacts = [...(conversation?.artifacts ?? [])].sort((left, right) => right.createdAt.localeCompare(left.createdAt));
+    const artifacts = [...(journeyState?.plans ?? [])].sort((left, right) => right.createdAt.localeCompare(left.createdAt));
     return artifacts.find((item) => {
       const snapshot = item.snapshot ?? {};
       return item.type === 'learning_plan' && item.status === 'ready' && snapshot.canStart === true && Boolean(item.route);
     }) ?? null;
-  }, [conversation]);
+  }, [journeyState?.plans]);
   const latestSnapshot = latestArtifact?.snapshot ?? {};
   const latestTask = latestSnapshot.task && typeof latestSnapshot.task === 'object'
     ? latestSnapshot.task as Record<string, unknown>
     : null;
   const isSubjectQa = journeySection === 'qa';
+  const isPracticeQa = !isSubjectQa
+    && journeySection === 'today'
+    && learningWorkspace?.phase === 'practice'
+    && practiceHelpOpen
+    && practiceAuxiliaryMode === 'qa';
+  const isPracticeTools = !isSubjectQa
+    && journeySection === 'today'
+    && practiceHelpOpen
+    && practiceAuxiliaryMode === 'tools'
+    && (learningWorkspace?.phase === 'practice' || mockExamWorkspace?.phase === 'taking');
+  const isJourneyOverview = journeySection === 'plan'
+    || journeySection === 'history'
+    || journeySection === 'weakness'
+    || journeySection === 'resources'
+    || journeySection === 'settings';
   const subjectQaMessages = conversation?.messages.filter((message) => message.content.surface === 'subject_qa') ?? [];
-  const activityMessages = conversation?.messages.filter((message) => message.content.surface !== 'subject_qa' && message.role !== 'user') ?? [];
-  const visibleMessages = isSubjectQa ? subjectQaMessages : activityMessages;
-  const currentWorkspaceOutput = [...activityMessages].reverse().find((message) => Boolean(
-    message.content.pastPaperResources?.length
-    || message.content.attachmentAnalysisItems?.length
-    || message.content.evidenceCandidates?.length
-    || message.content.evidenceCandidate
-    || message.content.pastPaperCitations?.length
-  )) ?? null;
-  const workspaceOutputMessages = currentWorkspaceOutput ? [currentWorkspaceOutput] : [];
+  const practiceQaMessages = practiceQaConversation?.messages.filter((message) => message.content.surface === 'subject_qa') ?? [];
+  const visibleMessages = isSubjectQa ? subjectQaMessages : isPracticeQa ? practiceQaMessages : [];
+  const isQaChatSurface = isSubjectQa || isPracticeQa;
+  const currentWorkspaceOutput = null;
   const effectiveLearningMode = sessionLearningModeOverride ?? learningMode;
   const resumableWorkspace = isActivelyResumableWorkspace(journeyState?.activeWorkspace) ? journeyState.activeWorkspace : null;
+  const resourceContextId = journeyState?.activeWorkspace?.conversationId
+    ?? journeyState?.stages.find((stage) => Boolean(stage.conversationId))?.conversationId;
   const resumableStage = resumableWorkspace
     ? journeyState?.stages.find((stage) => stage.resume?.conversationId === resumableWorkspace.conversationId && stage.status === 'active') ?? null
     : null;
@@ -1680,7 +1842,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   const resumableTaskType = resumableWorkspace && 'taskType' in resumableWorkspace ? resumableWorkspace.taskType : resumableStage?.taskType;
   const workspaceArtifactId = learningWorkspace?.artifactId ?? mockExamWorkspace?.artifactId;
   const workspaceArtifact = workspaceArtifactId
-    ? conversation?.artifacts.find((item) => item.id === workspaceArtifactId) ?? null
+    ? (journeyState?.plans ?? []).find((item) => item.id === workspaceArtifactId) ?? null
     : null;
   const workspaceSnapshot = workspaceArtifact?.snapshot ?? {};
   const workspaceTask = workspaceSnapshot.task && typeof workspaceSnapshot.task === 'object'
@@ -1697,6 +1859,26 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     : workspaceTaskType
       ? `${taskLabel(workspaceTaskType, t)} · ${subjectLabel(workspaceSubject, t)}`
       : t('agent.workspace.practice', '在 Agent 内完成练习');
+  const learningToolScope = learningWorkspace?.phase === 'practice'
+    ? `round.${learningWorkspace.roundId}.question.${practiceQuestionContext?.questionId ?? 'current'}`
+    : mockExamWorkspace?.phase === 'taking'
+      ? `mock.${mockExamWorkspace.attemptId}`
+      : 'inactive';
+  const learningToolPolicy = mockExamWorkspace?.phase === 'taking'
+    ? {
+        calculator: { enabled: false, reason: t('agent.tools.mockCalculatorRestricted', '在线模考按正式考试环境执行，当前不开放计算器。') },
+        scratchpad: { enabled: true },
+        converter: { enabled: false, reason: t('agent.tools.mockReferenceRestricted', '在线模考按正式考试环境执行，当前只开放草稿纸。') },
+        reference: { enabled: false, reason: t('agent.tools.mockReferenceRestricted', '在线模考按正式考试环境执行，当前只开放草稿纸。') },
+        graph: { enabled: false, reason: t('agent.tools.mockReferenceRestricted', '在线模考按正式考试环境执行，当前只开放草稿纸。') }
+      }
+    : {
+        calculator: { enabled: true },
+        scratchpad: { enabled: true },
+        converter: { enabled: true },
+        reference: { enabled: true },
+        graph: { enabled: true }
+      };
   const recommendationUnavailable = Boolean(latestTask) && !startablePlanArtifact && !resumableWorkspace;
 
   const teachingWorkspace = intervention?.id === teachingDeliveryId
@@ -1719,16 +1901,11 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     setLearningEntryError('');
     if (resumableWorkspace) {
       const workspace = resumableWorkspace;
-      const changesConversation = workspace.conversationId !== activeConversationId;
       setIsStartingLearning(true);
-      if (changesConversation) setActiveConversationId(workspace.conversationId);
       restoreJourneyWorkspace(workspace);
       if (workspace.kind === 'teaching') {
         try {
-          const [delivery] = await Promise.all([
-            getAgentInterventionDelivery(workspace.deliveryId),
-            changesConversation ? loadConversation(workspace.conversationId) : Promise.resolve(conversation)
-          ]);
+          const delivery = await getAgentInterventionDelivery(workspace.deliveryId);
           if (!isDisplayableIntervention(delivery)) throw new Error(t('agent.learningEntry.teachingUnavailable', '上次讲解已经结束，无法继续恢复。'));
           setIntervention(delivery);
         } catch (resumeError) {
@@ -1745,13 +1922,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
         }
         return;
       }
-      if (changesConversation) {
-        void loadConversation(workspace.conversationId)
-          .catch(() => setLearningEntryError(t('agent.learningEntry.resumeRefreshFailed', '任务已恢复，但学习动态暂时没有刷新。')))
-          .finally(() => setIsStartingLearning(false));
-      } else {
-        window.setTimeout(() => setIsStartingLearning(false), 250);
-      }
+      window.setTimeout(() => setIsStartingLearning(false), 250);
       return;
     }
     if (effectiveLearningMode === 'free') {
@@ -1802,12 +1973,14 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
   }
 
   const hasTaskWorkspace = Boolean(
-    journeySection !== 'qa' && (journeySection === 'settings'
-    || standaloneTeachingWorkspace
-    || learningWorkspace?.phase === 'practice'
-    || mockExamWorkspace?.phase === 'taking'
-    || pastPaperWorkspace)
+    journeySection === 'today' && (
+      standaloneTeachingWorkspace
+      || learningWorkspace?.phase === 'practice'
+      || mockExamWorkspace?.phase === 'taking'
+    )
   );
+  const hasAuxiliaryTask = journeySection === 'today'
+    && (learningWorkspace?.phase === 'practice' || mockExamWorkspace?.phase === 'taking');
   const taskRailResizeHandle = (
     <div
       className="agent-task-rail-resizer"
@@ -1832,8 +2005,11 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
       <div
         className={[
           hasTaskWorkspace ? 'agent-workspace is-task-active' : 'agent-workspace',
+          isSubjectQa ? 'is-subject-qa' : '',
+          isPracticeQa || isPracticeTools ? 'is-practice-help-open' : '',
+          hasAuxiliaryTask && !practiceHelpOpen ? 'is-practice-help-closed' : '',
           hasTaskWorkspace && taskRailPosition === 'center' ? 'is-task-first' : '',
-          !isSubjectQa && !hasTaskWorkspace && !learningWorkspace && !mockExamWorkspace && !intervention && !interventionVerification && !currentWorkspaceOutput && !error ? 'is-single-workbench' : '',
+          isJourneyOverview || (!isSubjectQa && !hasTaskWorkspace && !learningWorkspace && !mockExamWorkspace && !intervention && !interventionVerification && !currentWorkspaceOutput && !error) ? 'is-single-workbench' : '',
           isTaskRailResizing ? 'is-resizing-task-rail' : ''
         ].filter(Boolean).join(' ')}
         style={hasTaskWorkspace ? { '--agent-task-rail-width': `${taskRailWidth}px` } as CSSProperties : undefined}
@@ -1844,8 +2020,8 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
             <div><strong>{t('agent.brand.title', '学习 Agent')}</strong><small>{t('agent.brand.subtitle', '目标驱动的 CSCA 训练')}</small></div>
           </div>
           <nav className="agent-journey-nav" aria-label={t('agent.journey.navAria', '学习旅程')}>
-            <button type="button" className={journeySection === 'today' ? 'active' : ''} aria-label={t('agent.journey.today', '今日任务')} aria-current={journeySection === 'today' ? 'page' : undefined} onClick={() => chooseJourneySection('today')}>
-              <Icon name="lucide:target" /><span><strong>{t('agent.journey.today', '今日任务')}</strong><small>{t('agent.journey.todayHint', '继续当前优先行动')}</small></span>
+            <button type="button" className={journeySection === 'today' ? 'active' : ''} aria-label={t('agent.journey.today', '做题')} aria-current={journeySection === 'today' ? 'page' : undefined} onClick={() => chooseJourneySection('today')}>
+              <Icon name="lucide:target" /><span><strong>{t('agent.journey.today', '做题')}</strong><small>{t('agent.journey.todayHint', '系统推荐或自由练习')}</small></span>
             </button>
             <button type="button" className={journeySection === 'plan' ? 'active' : ''} aria-label={t('agent.journey.plan', '学习计划')} aria-current={journeySection === 'plan' ? 'page' : undefined} onClick={() => chooseJourneySection('plan')}>
               <Icon name="lucide:calendar-days" /><span><strong>{t('agent.journey.plan', '学习计划')}</strong><small>{t('agent.journey.planHint', '目标与近期安排')}</small></span>
@@ -1887,8 +2063,18 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
           {hasTaskWorkspace && taskRailPosition === 'center' ? taskRailResizeHandle : null}
           <header className="agent-thread-header">
             <div>
-              <span className="agent-kicker">{isSubjectQa ? t('agent.subjectQa.kicker', '独立学科问答') : t('agent.thread.kicker', 'Learning workspace')}</span>
-              <h2>{journeySection === 'history'
+              <span className="agent-kicker">{isSubjectQa
+                ? t('agent.subjectQa.kicker', '独立学科问答')
+                : isPracticeQa
+                  ? t('agent.practiceQa.kicker', '当前题目')
+                  : isPracticeTools
+                    ? t('agent.tools.kicker', '当前任务辅助')
+                  : t('agent.thread.kicker', 'Learning workspace')}</span>
+              <h2>{isPracticeQa && practiceQuestionContext
+                ? t('agent.practiceQa.heading', '本题问答 · 第 {number} 题').replace('{number}', String(practiceQuestionContext.questionNumber))
+                : isPracticeTools
+                  ? t('agent.tools.heading', '学习工具')
+                : journeySection === 'history'
                 ? t('agent.journey.history', '学习历程')
                 : journeySection === 'plan'
                   ? t('agent.journey.plan', '学习计划')
@@ -1902,31 +2088,85 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                         ? t('agent.journey.settings', '学习设置')
                   : t('agent.thread.title', '学习工作台')}</h2>
             </div>
-            <span className={isSending ? 'agent-live-status running' : 'agent-live-status'} role="status" aria-live="polite"><i />{isSending ? runStatus : isSubjectQa ? t('agent.subjectQa.ready', '数理化问答边界已启用') : t('agent.status.ready', '学习数据已连接')}</span>
+            <div className="agent-thread-header-actions">
+              {(isPracticeQa || isPracticeTools) && <nav className="agent-auxiliary-tabs" aria-label={t('agent.auxiliary.tabs', '切换学习辅助')}>
+                {learningWorkspace?.phase === 'practice' && <button type="button" className={isPracticeQa ? 'active' : ''} onClick={openPracticeHelp}><Icon name="lucide:messages-square" />{t('agent.practiceQa.introTitle', '本题问答')}</button>}
+                <button type="button" className={isPracticeTools ? 'active' : ''} onClick={openPracticeTools}><Icon name="lucide:wrench" />{t('agent.tools.shortTitle', '学习工具')}</button>
+              </nav>}
+              {!(isPracticeQa || isPracticeTools) && <span className={(isSending || practiceQaSending) ? 'agent-live-status running' : 'agent-live-status'} role="status" aria-live="polite"><i />{practiceQaSending ? t('agent.practiceQa.answering', '正在回答') : isSending ? runStatus : isQaChatSurface ? t('agent.subjectQa.ready', '数理化问答边界已启用') : t('agent.status.ready', '学习数据已连接')}</span>}
+              {(isPracticeQa || isPracticeTools) && <button type="button" className="agent-practice-help-close" onClick={() => setPracticeHelpOpen(false)} aria-label={isPracticeQa ? t('agent.practiceQa.close', '关闭本题问答，返回做题') : t('agent.auxiliary.close', '关闭学习辅助，返回做题')} title={isPracticeQa ? t('agent.practiceQa.close', '关闭本题问答，返回做题') : t('agent.auxiliary.close', '关闭学习辅助，返回做题')}><Icon name="lucide:x" /></button>}
+            </div>
           </header>
 
           <div ref={threadScrollRef} className="agent-thread-scroll" aria-live="polite">
             {error && <div className="agent-inline-error" role="alert"><Icon name="lucide:circle-alert" /><span>{error}</span><div className="agent-inline-error-actions">{errorAction ? <button type="button" className="primary" onClick={() => runErrorAction(errorAction)}><Icon name="lucide:refresh-cw" />{errorAction.label}</button> : null}<button type="button" onClick={clearErrorNotice}>{t('agent.error.dismiss', '关闭')}</button></div></div>}
-            {isLoading ? (
+            {isPracticeTools ? (
+              <AgentLearningTools storageScope={learningToolScope} policy={learningToolPolicy} subject={learningWorkspace?.subject ?? mockExamWorkspace?.subject ?? workspaceSubject} />
+            ) : isSubjectQa && isLoading ? (
               <div className="agent-loading-card"><Icon name="lucide:loader-circle" />{t('agent.loadingConversation', '正在加载学习对话')}</div>
             ) : isSubjectQa && !visibleMessages.length ? (
               <SubjectQaEmptyState />
             ) : (
-              <div ref={messageListRef} className={`agent-message-list${isSubjectQa ? ' is-subject-qa' : ' is-learning-support'}`} aria-label={isSubjectQa ? t('agent.subjectQa.conversation', '学科问答对话') : t('agent.support.aria', '当前学习辅助')}>
+              <div ref={messageListRef} className={`agent-message-list${isQaChatSurface ? ' is-subject-qa' : ' is-learning-support'}`} aria-label={isQaChatSurface ? t('agent.subjectQa.conversation', '学科问答对话') : t('agent.support.aria', '当前学习辅助')}>
                 {!isSubjectQa && <section className="agent-learning-support-intro">
                   <span><Icon name="lucide:focus" /></span>
-                  <div><strong>{t('agent.support.title', '当前学习辅助')}</strong><small>{t('agent.support.body', '这里只保留与当前题目直接相关的提示、讲解和验证。完整记录可在学习历程中查看。')}</small></div>
+                  <div><strong>{isPracticeQa ? t('agent.practiceQa.introTitle', '本题问答') : t('agent.support.title', '当前学习辅助')}</strong><small>{isPracticeQa ? t('agent.practiceQa.introBody', '围绕当前题追问。未作答时优先给提示，作答后可以查看完整讲解；问答不会改变成绩。') : t('agent.support.body', '这里只保留与当前题目直接相关的提示、讲解和验证。完整记录可在学习历程中查看。')}</small></div>
                 </section>}
-                {(isSubjectQa ? visibleMessages : workspaceOutputMessages).map((message) => {
+                {isPracticeQa && practiceQuestionContext && (
+                  <section className="agent-practice-action-panel" aria-label={t('agent.practiceAssistance.context', '当前练习题上下文')}>
+                    <div><Icon name="lucide:focus" /><span><strong>{t('agent.practiceAssistance.currentQuestion', '当前第 {current}/{total} 题').replace('{current}', String(practiceQuestionContext.questionNumber)).replace('{total}', String(practiceQuestionContext.questionCount))}</strong><small>{practiceQuestionContext.topicTitle} · {t('agent.practiceAssistance.activityHint', '题内帮助只绑定当前题')}</small></span></div>
+                    <nav>
+                      <button type="button" disabled={Boolean(practiceAssistanceBusy) || practiceQuestionContext.availableActions.find((item) => item.action === 'recall_concept')?.enabled !== true} onClick={() => requestPracticeAssistance('recall_concept')}><Icon name="lucide:book-open" />{t('agent.practiceAssistance.recall', '回忆知识点')}</button>
+                      <button type="button" disabled={Boolean(practiceAssistanceBusy) || practiceQuestionContext.answered || practiceQuestionContext.availableActions.find((item) => item.action === 'next_step_hint')?.enabled !== true} onClick={() => requestPracticeAssistance('next_step_hint')}><Icon name="lucide:route" />{t('agent.practiceAssistance.nextHint', '下一步提示')}</button>
+                      <button type="button" disabled={Boolean(practiceAssistanceBusy)} onClick={() => requestPracticeAssistance('check_work')}><Icon name="lucide:scan-line" />{t('agent.practiceAssistance.checkWork', '检查手写过程')}</button>
+                    </nav>
+                  </section>
+                )}
+                {isPracticeQa && practiceQuestionContext?.isCorrect === false && (
+                  <div className="agent-message-block assistant agent-practice-analysis-message">
+                    <div className="agent-message-avatar"><span><Icon name="lucide:scan-search" /></span></div>
+                    <div className="agent-message-content">
+                      <span className="agent-message-author">{t('agent.message.agent', 'CSCA 学习 Agent')}</span>
+                      <section className="agent-practice-analysis" aria-label={t('agent.practiceAnalysis.aria', '当前题错因解析')}>
+                        <header><span>{t('agent.practiceAnalysis.kicker', '答题解析')}</span><strong>{t('agent.practiceAnalysis.title', '先看这道题为什么错')}</strong></header>
+                        <div className="agent-practice-analysis-answers">
+                          <span>{t('agent.practiceAnalysis.correctAnswer', '正确答案')} <b>{practiceQuestionContext.correctAnswer}</b></span>
+                          <span>{t('agent.practiceAnalysis.selectedAnswer', '你的答案')} <b>{practiceQuestionContext.selectedAnswer}</b></span>
+                        </div>
+                        {practiceQuestionContext.explanation && <p><MathContent text={practiceQuestionContext.explanation} /></p>}
+                        {!!practiceQuestionContext.knowledgeTags?.length && <footer>{practiceQuestionContext.knowledgeTags.map((tag) => <b key={tag}>{tag}</b>)}</footer>}
+                      </section>
+                    </div>
+                  </div>
+                )}
+                {isPracticeQa && visiblePracticeTeachingEvent && (
+                  <div className="agent-message-block assistant agent-chat-teaching-message agent-practice-teaching-resource">
+                    <div className="agent-message-avatar"><span><Icon name="lucide:book-open-check" /></span></div>
+                    <div className="agent-message-content">
+                      <span className="agent-message-author">{t('agent.message.agent', 'CSCA 学习 Agent')}</span>
+                      <section className="agent-chat-teaching-panel agent-intervention-teaching-wrap" aria-label={t('agent.practiceTeaching.aria', '当前题知识讲解')}>
+                        <header className="agent-chat-teaching-header">
+                          <div><span>{t('agent.practiceTeaching.kicker', '当前题辅助')}</span><strong>{t('agent.practiceTeaching.title', '当前题知识讲解')}</strong><small>{t('agent.practiceTeaching.hint', '第 {number} 题答错后匹配的已审核交互微课').replace('{number}', String(visiblePracticeTeachingEvent.questionNumber))}</small></div>
+                          <button type="button" className="agent-chat-teaching-toggle" onClick={() => setPracticeTeachingCollapsed((current) => !current)} aria-expanded={!practiceTeachingCollapsed}>
+                            <Icon name={practiceTeachingCollapsed ? 'lucide:chevron-down' : 'lucide:chevron-up'} />
+                            <span>{practiceTeachingCollapsed ? t('agent.practiceTeaching.expand', '展开讲解') : t('agent.practiceTeaching.collapse', '收起讲解')}</span>
+                          </button>
+                        </header>
+                        {!practiceTeachingCollapsed && <TeachingAssetRenderer asset={visiblePracticeTeachingEvent.asset} roundId={visiblePracticeTeachingEvent.roundId} questionId={visiblePracticeTeachingEvent.questionId} />}
+                      </section>
+                    </div>
+                  </div>
+                )}
+                {visibleMessages.map((message) => {
                   return (
-                    <div key={message.id} className={`agent-message-block ${message.role}${isSubjectQa ? '' : ' agent-current-workspace-output'}`}>
+                    <div key={message.id} className={`agent-message-block ${message.role}${isQaChatSurface ? '' : ' agent-current-workspace-output'}`}>
                       <div className="agent-message-avatar">
                         {message.role === 'user' ? <UserAvatar user={currentUser} size="sm" /> : <span><Icon name="lucide:sparkles" /></span>}
                       </div>
                       <div className="agent-message-content">
                         <span className="agent-message-author">{message.role === 'user' ? (currentUser.displayName || t('agent.message.you', '你')) : t('agent.message.agent', 'CSCA 学习 Agent')}</span>
-                        {isSubjectQa && message.role === 'assistant' && <small className="agent-subject-qa-disclosure"><Icon name={message.content.subjectQa?.generatedByAI === false || message.content.subjectQa?.decision === 'out_of_scope' ? 'lucide:circle-alert' : 'lucide:shield-check'} />{message.content.subjectQa?.generatedByAI === false ? t('agent.subjectQa.unavailable', '学科问答暂时不可用') : message.content.subjectQa?.decision === 'out_of_scope' ? t('agent.subjectQa.outOfScope', '已按学科边界处理') : t('agent.subjectQa.noMastery', '自由问答，不改变掌握度')}</small>}
-                        <p>{isSubjectQa ? <MathContent text={message.content.text} /> : message.content.text}</p>
+                        {isQaChatSurface && message.role === 'assistant' && <small className="agent-subject-qa-disclosure"><Icon name={message.content.subjectQa?.decision === 'unavailable' || message.content.subjectQa?.decision === 'out_of_scope' ? 'lucide:circle-alert' : 'lucide:shield-check'} />{message.content.subjectQa?.decision === 'unavailable' ? t('agent.subjectQa.unavailable', '学科问答暂时不可用') : message.content.subjectQa?.decision === 'out_of_scope' ? t('agent.subjectQa.outOfScope', '已按学科边界处理') : message.content.subjectQa?.generatedByAI === false ? t('agent.subjectQa.reviewedAnswer', '来自当前题已审核解析') : t('agent.subjectQa.noMastery', '自由问答，不改变掌握度')}</small>}
+                        <p>{isQaChatSurface ? <MathContent text={message.content.text} /> : message.content.text}</p>
                         {!!message.content.attachmentAnalysisItems?.length && (
                           <div className="agent-analysis-items" aria-label={t('agent.analysis.items', '识别到的题目')}>
                             {message.content.attachmentAnalysisItems.map((item, index) => (
@@ -1996,17 +2236,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                     </div>
                   );
                 })}
-                {!isSubjectQa && learningWorkspace?.phase === 'practice' && practiceQuestionContext && (
-                  <section className="agent-practice-action-panel" aria-label={t('agent.practiceAssistance.context', '当前练习题上下文')}>
-                    <div><Icon name="lucide:focus" /><span><strong>{t('agent.practiceAssistance.currentQuestion', '当前第 {current}/{total} 题').replace('{current}', String(practiceQuestionContext.questionNumber)).replace('{total}', String(practiceQuestionContext.questionCount))}</strong><small>{practiceQuestionContext.topicTitle} · {t('agent.practiceAssistance.activityHint', '题内帮助只绑定当前题')}</small></span></div>
-                    <nav>
-                      <button type="button" disabled={Boolean(practiceAssistanceBusy) || practiceQuestionContext.availableActions.find((item) => item.action === 'recall_concept')?.enabled !== true} onClick={() => requestPracticeAssistance('recall_concept')}><Icon name="lucide:book-open" />{t('agent.practiceAssistance.recall', '回忆知识点')}</button>
-                      <button type="button" disabled={Boolean(practiceAssistanceBusy) || practiceQuestionContext.answered || practiceQuestionContext.availableActions.find((item) => item.action === 'next_step_hint')?.enabled !== true} onClick={() => requestPracticeAssistance('next_step_hint')}><Icon name="lucide:route" />{t('agent.practiceAssistance.nextHint', '下一步提示')}</button>
-                      <button type="button" disabled={Boolean(practiceAssistanceBusy)} onClick={() => requestPracticeAssistance('check_work')}><Icon name="lucide:scan-line" />{t('agent.practiceAssistance.checkWork', '检查手写过程')}</button>
-                    </nav>
-                  </section>
-                )}
-                {!isSubjectQa && practiceAssistanceEvents
+                {isPracticeQa && practiceAssistanceEvents
                   .filter((item) => item.roundId === learningWorkspace?.roundId)
                   .slice(-1)
                   .map((item) => {
@@ -2029,25 +2259,10 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                       </div>
                     );
                   })}
-                {!isSubjectQa && practiceAssistanceBusy && (
+                {isPracticeQa && practiceAssistanceBusy && (
                   <div className="agent-message-block assistant is-thinking agent-practice-assistance-message">
                     <div className="agent-message-avatar"><span><Icon name="lucide:sparkles" /></span></div>
                     <div className="agent-message-content"><span className="agent-message-author">{t('agent.message.agent', 'CSCA 学习 Agent')}</span><p><i /><i /><i />{practiceAssistanceBusy === 'check_work' ? t('agent.practiceAssistance.waitingUpload', '正在选择或检查手写图片') : t('agent.practiceAssistance.loading', '正在结合当前题准备帮助')}</p></div>
-                  </div>
-                )}
-                {!isSubjectQa && visiblePracticeTeachingEvent && (
-                  <div className="agent-message-block assistant agent-chat-teaching-message">
-                    <div className="agent-message-avatar"><span><Icon name="lucide:book-open-check" /></span></div>
-                    <div className="agent-message-content">
-                      <span className="agent-message-author">{t('agent.message.agent', 'CSCA 学习 Agent')}</span>
-                      <section className="agent-chat-teaching-panel agent-intervention-teaching-wrap" aria-label={t('agent.practiceTeaching.aria', '当前题知识讲解')}>
-                        <header className="agent-chat-teaching-header">
-                          <div><span>{t('agent.practiceTeaching.kicker', '当前题辅助')}</span><strong>{t('agent.practiceTeaching.title', '当前题知识讲解')}</strong><small>{t('agent.practiceTeaching.hint', '第 {number} 题答错后匹配的已审核交互微课').replace('{number}', String(visiblePracticeTeachingEvent.questionNumber))}</small></div>
-                          <button type="button" onClick={() => setPracticeTeachingEvent(null)} aria-label={t('agent.practiceTeaching.dismiss', '收起知识讲解')}><Icon name="lucide:x" /></button>
-                        </header>
-                        <TeachingAssetRenderer asset={visiblePracticeTeachingEvent.asset} roundId={visiblePracticeTeachingEvent.roundId} questionId={visiblePracticeTeachingEvent.questionId} />
-                      </section>
-                    </div>
                   </div>
                 )}
                 {!isSubjectQa && learningWorkspace?.phase === 'report' && (
@@ -2172,28 +2387,39 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
             </div>
             <small>{t('agent.subjectQa.helper', '仅支持文字提问；自由问答不会改变掌握度。学习计划、做题、进度和设置请返回学习工作台。')}</small>
           </form>}
-        </main>
-
-        {journeySection === 'qa' ? null : journeySection === 'settings' ? (
-          <aside className="agent-task-rail agent-settings-task-rail" aria-label={t('agent.settings.workspaceAria', 'Agent 学习设置工作区')}>
-            {taskRailPosition === 'right' ? taskRailResizeHandle : null}
-            <div className="agent-task-rail-header">
-              <div><span className="agent-kicker">{t('agent.settings.kicker', 'Agent 使用的信息')}</span><strong>{t('agent.settings.title', '目标、画像与学习时间')}</strong><small>{t('agent.settings.hint', '保存后用于后续方案；不会改写已经发生的学习证据')}</small></div>
-              <div className="agent-task-rail-actions">
-                <button type="button" onClick={toggleTaskRailPosition} aria-label={taskRailPosition === 'right' ? t('agent.workspace.moveTaskCenter', '将任务移到中间') : t('agent.workspace.moveChatCenter', '将工作台移到中间')} title={t('agent.workspace.swap', '交换工作台与任务位置')}><Icon name="lucide:arrow-left-right" /></button>
-                <button type="button" onClick={closeSettingsWorkspace} aria-label={t('agent.workspace.close', '关闭任务面板')}><Icon name="lucide:x" /></button>
+          {isPracticeQa && <form className="agent-composer agent-subject-qa-composer agent-practice-qa-composer" onSubmit={(event) => { event.preventDefault(); void sendPracticeQaMessage(); }}>
+            <label className="agent-composer-label" htmlFor="agent-practice-question">{t('agent.practiceQa.composerLabel', '围绕当前题提问')}</label>
+            <div className="agent-composer-box">
+              <textarea
+                ref={practiceQaInputRef}
+                id="agent-practice-question"
+                value={practiceQaDraft}
+                rows={1}
+                maxLength={8000}
+                placeholder={t('agent.practiceQa.placeholder', '例如：这道题应该先判断哪个物理量？')}
+                disabled={practiceQaSending}
+                onChange={(event) => setPracticeQaDraft(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
+                    void sendPracticeQaMessage();
+                  }
+                }}
+              />
+              <div className="agent-composer-toolbar">
+                <div className="agent-composer-tools">
+                  <span className="agent-mode-chip"><Icon name="lucide:link" />{t('agent.practiceQa.bound', '已绑定当前题')}</span>
+                </div>
+                <button type="submit" className="agent-send-button" disabled={!practiceQaDraft.trim() || practiceQaSending} aria-label={t('agent.composer.send', '发送')}>
+                  <Icon name={practiceQaSending ? 'lucide:loader-circle' : 'lucide:arrow-up'} />
+                </button>
               </div>
             </div>
-            <div className="agent-task-rail-body"><AgentLearningSettingsView
-              defaultLearningMode={learningMode}
-              defaultFreePracticeSubject={defaultFreePracticeSubject}
-              defaultFreePracticeCount={defaultFreePracticeCount}
-              onDefaultLearningModeChange={updateDefaultLearningMode}
-              onDefaultFreePracticeSubjectChange={updateDefaultFreePracticeSubject}
-              onDefaultFreePracticeCountChange={updateDefaultFreePracticeCount}
-            /></div>
-          </aside>
-        ) : standaloneTeachingWorkspace ? (
+            {practiceQaError ? <small className="agent-practice-qa-error" role="alert">{practiceQaError}</small> : <small>{t('agent.practiceQa.helper', '打开面板不会创建会话；只有发送文字后才保存到学科问答。')}</small>}
+          </form>}
+        </main>
+
+        {journeySection === 'qa' ? null : journeySection === 'today' && standaloneTeachingWorkspace ? (
           <aside className="agent-task-rail agent-teaching-task-rail" aria-label={t('agent.intervention.workspaceAria', 'Agent 知识讲解工作区')}>
             {taskRailPosition === 'right' ? taskRailResizeHandle : null}
             <div className="agent-task-rail-header">
@@ -2220,7 +2446,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
               />
             </div>
           </aside>
-        ) : learningWorkspace?.phase === 'practice' ? (
+        ) : journeySection === 'today' && learningWorkspace?.phase === 'practice' ? (
           <aside className="agent-task-rail" aria-label={t('agent.workspace.aria', 'Agent 学习任务工作区')}>
             {taskRailPosition === 'right' ? taskRailResizeHandle : null}
             <div className="agent-task-rail-header">
@@ -2230,9 +2456,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                 {workspaceArtifact?.summary ? <small>{workspaceArtifact.summary}</small> : null}
               </div>
               <div className="agent-task-rail-actions">
-                <button type="button" onClick={toggleTaskRailPosition} aria-label={taskRailPosition === 'right' ? t('agent.workspace.moveTaskCenter', '将任务移到中间') : t('agent.workspace.moveChatCenter', '将工作台移到中间')} title={t('agent.workspace.swap', '交换工作台与任务位置')}><Icon name="lucide:arrow-left-right" /></button>
-                {workspaceTaskType === 'free_practice' && <button type="button" disabled={freePracticeContinuationBusy !== null} onClick={() => void endFreePracticeJourney()} aria-label={t('agent.freePractice.end', '结束本次学习')} title={t('agent.freePractice.end', '结束本次学习')}><Icon name="lucide:square" /></button>}
-                <button type="button" onClick={() => void handleLearningWorkspaceNavigation(`${routes.cscaSubjects}/close`)} aria-label={t('agent.workspace.close', '关闭任务面板')}><Icon name="lucide:x" /></button>
+                <button type="button" className="agent-task-tools-button" onClick={openPracticeTools} aria-label={t('agent.tools.open', '打开学习工具')} title={t('agent.tools.open', '打开学习工具')}><Icon name="lucide:wrench" /><span>{t('agent.tools.shortTitle', '学习工具')}</span></button>
               </div>
             </div>
             <div className="agent-task-rail-body">
@@ -2247,16 +2471,17 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                   showError(t('agent.workspace.unavailable', '之前的学习任务已经失效，已返回学习工作台。你可以重新开始自由练习或获取新的推荐。'));
                   void loadJourneyState().catch(() => null);
                 }}
-                agentConversationId={learningWorkspace.conversationId}
+                agentContextId={learningWorkspace.conversationId}
                 agentAssistanceCommand={practiceAssistanceCommand}
                 onAgentQuestionContext={setPracticeQuestionContext}
                 onAgentAssistance={receivePracticeAssistance}
                 onAgentAssistanceSettled={settlePracticeAssistance}
-                onAgentTeachingAsset={setPracticeTeachingEvent}
+                onOpenAgentHelp={openPracticeHelp}
+                onAgentTeachingAsset={receivePracticeTeachingAsset}
               />
             </div>
           </aside>
-        ) : mockExamWorkspace?.phase === 'taking' ? (
+        ) : journeySection === 'today' && mockExamWorkspace?.phase === 'taking' ? (
           <aside className="agent-task-rail agent-mock-task-rail" aria-label={t('agent.mockExam.workspaceAria', 'Agent 在线模考工作区')}>
             {taskRailPosition === 'right' ? taskRailResizeHandle : null}
             <div className="agent-task-rail-header">
@@ -2266,31 +2491,13 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                 {workspaceArtifact?.summary ? <small>{workspaceArtifact.summary}</small> : null}
               </div>
               <div className="agent-task-rail-actions">
+                <button type="button" className="agent-task-tools-button" onClick={openPracticeTools} aria-label={t('agent.tools.open', '打开学习工具')} title={t('agent.tools.open', '打开学习工具')}><Icon name="lucide:wrench" /><span>{t('agent.tools.shortTitle', '学习工具')}</span></button>
                 <button type="button" onClick={toggleTaskRailPosition} aria-label={taskRailPosition === 'right' ? t('agent.workspace.moveTaskCenter', '将任务移到中间') : t('agent.workspace.moveChatCenter', '将工作台移到中间')} title={t('agent.workspace.swap', '交换工作台与任务位置')}><Icon name="lucide:arrow-left-right" /></button>
                 <button type="button" onClick={() => void handleMockExamWorkspaceNavigation(routes.cscaMockExam)} aria-label={t('agent.workspace.close', '关闭任务面板')}><Icon name="lucide:x" /></button>
               </div>
             </div>
             <div className="agent-task-rail-body is-mock-exam">
               <MockExamTakingView attemptId={String(mockExamWorkspace.attemptId)} onNavigate={(path) => void handleMockExamWorkspaceNavigation(path)} />
-            </div>
-          </aside>
-        ) : pastPaperWorkspace ? (
-          <aside className="agent-task-rail agent-past-paper-task-rail" aria-label={t('agent.pastPaper.workspaceAria', 'Agent 真题工作区')}>
-            {taskRailPosition === 'right' ? taskRailResizeHandle : null}
-            <div className="agent-task-rail-header">
-              <div><span className="agent-kicker">{t('agent.pastPaper.kicker', '真题资料')}</span><strong>{t('agent.pastPaper.workspaceTitle', '阅读、定位与提问')}</strong></div>
-              <div className="agent-task-rail-actions">
-                <button type="button" onClick={toggleTaskRailPosition} aria-label={taskRailPosition === 'right' ? t('agent.workspace.moveTaskCenter', '将任务移到中间') : t('agent.workspace.moveChatCenter', '将工作台移到中间')} title={t('agent.workspace.swap', '交换工作台与任务位置')}><Icon name="lucide:arrow-left-right" /></button>
-                <button type="button" onClick={() => closePastPaperWorkspace(pastPaperWorkspace.conversationId)} aria-label={t('agent.workspace.close', '关闭任务面板')}><Icon name="lucide:x" /></button>
-              </div>
-            </div>
-            <div className="agent-task-rail-body">
-              <AgentPastPaperWorkspace
-                slug={pastPaperWorkspace.slug}
-                conversationId={pastPaperWorkspace.conversationId}
-                initialQuestionId={pastPaperWorkspace.questionId}
-                onAsk={(prompt, context) => closePastPaperWorkspace(pastPaperWorkspace.conversationId, prompt, context)}
-              />
             </div>
           </aside>
         ) : journeySection === 'today' && learningWorkspace?.phase === 'report' ? (
@@ -2334,19 +2541,57 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
             <button type="button" className="agent-report-rail-qa" onClick={() => chooseJourneySection('qa')}><Icon name="lucide:messages-square" /><span><strong>{t('agent.reportRail.askTitle', '这轮有疑问？')}</strong><small>{t('agent.reportRail.askBody', '去学科问答，自由询问数学、物理或化学知识。')}</small></span><Icon name="lucide:arrow-right" /></button>
           </aside>
         ) : <aside className={journeySection === 'today' ? `agent-context-rail${effectiveLearningMode === 'free' ? ' is-free-practice' : ''}` : 'agent-context-rail is-journey-view'} aria-label={journeySection === 'history' ? t('agent.journey.history', '学习历程') : journeySection === 'plan' ? t('agent.journey.plan', '学习计划') : journeySection === 'weakness' ? t('agent.journey.weakness', '错题与薄弱点') : journeySection === 'resources' ? t('agent.journey.resources', '学习资料') : t('agent.context.aria', '当前学习上下文')}>
-          {journeySection === 'plan' ? <AgentJourneyPlanView conversation={conversation} /> : journeySection === 'history' ? (
+          {journeySection === 'settings' ? <>
+            <section className="agent-context-intro">
+              <span className="agent-kicker">{t('agent.settings.kicker', 'Agent 使用的信息')}</span>
+              <h2>{t('agent.settings.title', '设置 Agent 如何安排学习')}</h2>
+              <p>{t('agent.settings.hint', '管理长期学习方式、学习画像、考试目标和时间安排；不会改变正在进行的练习。')}</p>
+            </section>
+            <AgentLearningSettingsView
+              defaultLearningMode={learningMode}
+              defaultFreePracticeSubject={defaultFreePracticeSubject}
+              defaultFreePracticeCount={defaultFreePracticeCount}
+              onDefaultLearningModeChange={updateDefaultLearningMode}
+              onDefaultFreePracticeSubjectChange={updateDefaultFreePracticeSubject}
+              onDefaultFreePracticeCountChange={updateDefaultFreePracticeCount}
+            />
+          </> : journeySection === 'plan' ? <AgentJourneyPlanView
+            plans={journeyState?.plans ?? []}
+            startablePlanId={startablePlanArtifact?.id ?? null}
+            busy={isStartingLearning || isSending}
+            onStart={() => void startOrResumeLearning()}
+            onGenerate={() => chooseJourneySection('today')}
+            onAdjust={() => chooseJourneySection('settings')}
+            onGoPractice={() => chooseJourneySection('today')}
+          /> : journeySection === 'history' ? (
             <AgentJourneyHistoryView
-              stages={journeyState?.stages ?? []}
-              activeId={activeConversationId}
-              loading={isJourneyHistoryLoading}
-              onSelect={(stage) => void chooseConversation(stage.conversationId).then(() => {
-                if (stage.resume) restoreJourneyWorkspace(stage.resume);
-              })}
+              overview={journeyOverview}
+              loading={isJourneyOverviewLoading}
+              error={journeyOverviewError}
+              onOpenWeakness={() => chooseJourneySection('weakness')}
+              onOpenSettings={() => chooseJourneySection('settings')}
             />
           ) : journeySection === 'weakness' ? (
-            <AgentJourneyWeaknessView overview={journeyOverview} loading={isJourneyOverviewLoading} error={journeyOverviewError} />
+            <AgentJourneyWeaknessView overview={journeyOverview} loading={isJourneyOverviewLoading} error={journeyOverviewError} onGoPractice={() => chooseJourneySection('today')} />
           ) : journeySection === 'resources' ? (
-            <AgentJourneyResourcesView overview={journeyOverview} loading={isJourneyOverviewLoading} error={journeyOverviewError} onOpen={(item) => activeConversationId && openPastPaperWorkspace(item.slug, activeConversationId)} />
+            pastPaperWorkspace ? <section className="agent-resource-detail" aria-label={t('agent.pastPaper.workspaceAria', '真题资料详情')}>
+              <header className="agent-resource-detail-header">
+                <div><span className="agent-kicker">{t('agent.pastPaper.kicker', '真题资料')}</span><strong>{t('agent.pastPaper.workspaceTitle', '阅读、定位与提问')}</strong></div>
+                <button type="button" onClick={() => closePastPaperWorkspace(pastPaperWorkspace.contextId)}><Icon name="lucide:arrow-left" />{t('agent.pastPaper.backToResources', '返回学习资料')}</button>
+              </header>
+              <AgentPastPaperWorkspace
+                slug={pastPaperWorkspace.slug}
+                conversationId={pastPaperWorkspace.contextId}
+                initialQuestionId={pastPaperWorkspace.questionId}
+                onAsk={(prompt, context) => closePastPaperWorkspace(pastPaperWorkspace.contextId, prompt, context)}
+                onContinueLearning={() => {
+                  closePastPaperWorkspace();
+                  chooseJourneySection('today');
+                }}
+              />
+            </section> : <AgentJourneyResourcesView overview={journeyOverview} loading={isJourneyOverviewLoading} error={journeyOverviewError} onOpen={(item) => {
+              openPastPaperWorkspace(item.slug, resourceContextId);
+            }} />
           ) : <>
           {effectiveLearningMode === 'free' ? <>
             <section className="agent-context-intro agent-workbench-heading">
@@ -2399,7 +2644,7 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                 <div className="agent-task-meta"><span>{subjectLabel(latestTask.subject, t)} · {taskLabel(latestTask.type, t)}</span><span>{Number(latestSnapshot.estimatedMinutes ?? 0)} min · {t(`agent.confidence.${String(latestSnapshot.confidence ?? 'medium')}`, String(latestSnapshot.confidence ?? 'medium'))}</span></div>
                 {!resumableWorkspace ? <button type="button" className="agent-primary-start" disabled={isStartingLearning || isStartingFreePractice} onClick={() => void startOrResumeLearning()}><Icon name={isStartingLearning || isStartingFreePractice ? 'lucide:loader-circle' : recommendationUnavailable ? 'lucide:shuffle' : 'lucide:play'} />{isStartingLearning || isStartingFreePractice ? t('agent.learningEntry.preparing', '正在准备') : recommendationUnavailable ? t('agent.plan.useFreePractice', '改做自由练习') : t('agent.learningEntry.start', '开始学习')}</button> : null}
                 {!resumableWorkspace && learningEntryError ? <small role="alert">{learningEntryError}</small> : null}
-              </> : <><p>{t('agent.context.waiting', '生成今日方案后，这里会同步任务、预计时间和依据。')}</p><button type="button" className="agent-generate-plan" disabled={isSending} onClick={() => void sendMessage(t('agent.empty.primaryPrompt', '我今天该学什么？'))}><Icon name={isSending ? 'lucide:loader-circle' : 'lucide:wand-sparkles'} />{isSending ? t('agent.context.generating', '正在生成方案') : t('agent.context.generate', '生成今日方案')}</button></>}
+              </> : <><p>{t('agent.context.waiting', '完成一次真实练习后，这里会根据作答证据更新下一步。')}</p><button type="button" className="agent-generate-plan" disabled={isStartingLearning || isStartingFreePractice} onClick={() => void startOrResumeLearning()}><Icon name={isStartingLearning || isStartingFreePractice ? 'lucide:loader-circle' : 'lucide:play'} />{isStartingLearning || isStartingFreePractice ? t('agent.learningEntry.preparing', '正在准备') : t('agent.journeyAction.goPractice', '去做题')}</button></>}
             </section>
             <section className="agent-context-card sources">
               <header><Icon name="lucide:database" /><strong>{t('agent.context.sources', '事实来源')}</strong></header>

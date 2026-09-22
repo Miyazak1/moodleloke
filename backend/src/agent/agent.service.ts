@@ -36,25 +36,54 @@ export class AgentService {
     this.assertEnabled();
     if (!this.learningRead || !this.pastPapers) throw new ServiceUnavailableException('Agent journey data is unavailable.');
     const language = locale === 'en' ? 'en' as const : 'zh' as const;
-    const [profile, mastery, reviewQueue] = await Promise.all([
+    const [profile, mastery, reviewQueue, scoreGoal] = await Promise.all([
       this.learningRead.getLearningProfile(userId),
       this.learningRead.getSubjectMastery(userId, { limit: 50 }),
-      this.learningRead.getReviewQueue(userId, { language, limit: 12 })
+      this.learningRead.getReviewQueue(userId, { language, limit: 12 }),
+      this.learningRead.getScoreGoal(userId)
     ]);
     const subjects = profile.targetSubjectCodes.length
       ? profile.targetSubjectCodes
       : ['math', 'physics', 'chemistry'] as const;
-    const paperGroups = await Promise.all(subjects.map((subject) => this.pastPapers!.listPublic({
-      subject,
-      category: 'past-paper',
-      locale: language
-    })));
+    const [paperGroups, topicCounts] = await Promise.all([
+      Promise.all(subjects.map((subject) => this.pastPapers!.listPublic({
+        subject,
+        category: 'past-paper',
+        locale: language
+      }))),
+      this.prisma.cscaExamTopic.groupBy({
+        by: ['subject'],
+        where: { subject: { in: [...subjects] }, status: 'published' },
+        _count: { _all: true }
+      })
+    ]);
     const resources = paperGroups.flatMap((group) => group.items)
       .filter((item, index, items) => items.findIndex((candidate) => candidate.id === item.id) === index)
       .slice(0, 12);
     return {
       schemaVersion: '1',
       generatedAt: new Date().toISOString(),
+      goal: {
+        examDate: scoreGoal.goal?.examDate ?? profile.targetExamDate,
+        weeklyGoalDays: profile.weeklyGoalDays,
+        totalTargetScore: scoreGoal.goal?.totalTargetScore ?? null,
+        subjects: subjects.map((subject) => ({
+          subject,
+          targetScore: scoreGoal.goal?.subjects.find((item) => item.subject === subject)?.targetScore ?? null
+        }))
+      },
+      progress: {
+        subjects: mastery.subjects.map((subject) => ({
+          subject: subject.subject,
+          totalTopicCount: topicCounts.find((item) => item.subject === subject.subject)?._count._all ?? 0,
+          evidencedTopicCount: subject.topics.filter((topic) => topic.attemptCount > 0).length,
+          strongTopicCount: subject.topics.filter((topic) => topic.status === 'strong').length,
+          developingTopicCount: subject.topics.filter((topic) => topic.status === 'developing').length,
+          needsAttentionTopicCount: subject.topics.filter((topic) => topic.status === 'needs_attention').length,
+          insufficientEvidenceTopicCount: subject.topics.filter((topic) => topic.status === 'insufficient_evidence').length,
+          answerEvidenceCount: subject.evidenceCount
+        }))
+      },
       weaknesses: {
         stateSource: mastery.stateSource,
         subjects: mastery.subjects,
@@ -79,7 +108,7 @@ export class AgentService {
 
   listConversations(userId: number) {
     return this.prisma.agentConversation.findMany({
-      where: { userId, deletedAt: null },
+      where: { userId, deletedAt: null, title: { not: '__learning_workspace__' } },
       orderBy: [{ lastMessageAt: { sort: 'desc', nulls: 'last' } }, { createdAt: 'desc' }],
       take: 50,
       select: { id: true, status: true, title: true, lastMessageAt: true, createdAt: true, updatedAt: true }

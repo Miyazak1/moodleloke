@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import { recordAgentTeachingInteraction, type AgentTeachingAsset, type AgentTeachingInteractionResult } from '../../../lib/api-agent';
 
 function requestId(prefix: string) {
@@ -21,6 +21,7 @@ type Props = {
   questionId?: number;
   recordInteraction?: (input: { clientRequestId: string; action: Exclude<TeachingAction, 'skipped'>; value?: string | number | boolean }) => Promise<AgentTeachingInteractionResult>;
   onCompleted?: () => Promise<void> | void;
+  interactiveContent?: ReactNode;
 };
 
 function InteractiveModel({ asset, onParameterChanged }: { asset: AgentTeachingAsset; onParameterChanged: (value: string) => void }) {
@@ -70,7 +71,7 @@ function InteractiveModel({ asset, onParameterChanged }: { asset: AgentTeachingA
   </div>;
 }
 
-export function TeachingAssetMicroLesson({ asset, roundId, questionId, recordInteraction, onCompleted }: Props) {
+export function TeachingAssetMicroLesson({ asset, roundId, questionId, recordInteraction, onCompleted, interactiveContent }: Props) {
   const [open, setOpen] = useState(false);
   const [answer, setAnswer] = useState('');
   const [feedback, setFeedback] = useState<{ correct: boolean; text: string } | null>(null);
@@ -106,7 +107,7 @@ export function TeachingAssetMicroLesson({ asset, roundId, questionId, recordInt
   return <section className="agent-micro-lesson" aria-label={asset.title}>
     <header><div><span>交互微课 · {asset.topicTitle}</span><h3>{asset.title}</h3><p>{asset.summary}</p></div><b>已审核内容 v{asset.version}</b></header>
     <div className="agent-micro-lesson-body">
-      <InteractiveModel asset={asset} onParameterChanged={(value) => void record('parameter_changed', value)} />
+      {interactiveContent ?? <InteractiveModel asset={asset} onParameterChanged={(value) => void record('parameter_changed', value)} />}
       <div className="agent-micro-guide"><ol>{asset.instructions.map((instruction) => <li key={instruction}>{instruction}</li>)}</ol><fieldset><legend>{asset.activePrompt.prompt}</legend>{asset.activePrompt.options.map((option) => <label key={option.id}><input type="radio" name={`asset-${asset.versionId}`} value={option.id} checked={answer === option.id} onChange={() => { setAnswer(option.id); setFeedback(null); }} /><span>{option.label}</span></label>)}</fieldset><button type="button" className="agent-micro-secondary" onClick={() => void checkAnswer()} disabled={!answer || busy}>检查我的判断</button>{feedback && <p className={feedback.correct ? 'agent-micro-feedback correct' : 'agent-micro-feedback wrong'}>{feedback.text}</p>}<button type="button" className="agent-micro-complete" onClick={() => void complete()} disabled={!feedback?.correct || busy || completed}>{completed ? '已完成，后续会安排独立验证' : '我理解了，完成微课'}</button><small>完成微课本身不会提高掌握度；系统会用后续新题验证。</small>{error && <p className="agent-micro-error" role="alert">{error}</p>}</div>
     </div>
   </section>;

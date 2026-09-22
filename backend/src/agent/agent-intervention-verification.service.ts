@@ -89,7 +89,7 @@ export class AgentInterventionVerificationService {
       expiresAt: item.expiresAt, startedAt: item.startedAt, completedAt: item.completedAt,
       route: item.roundId
         ? `/csca-subjects/${encodeURIComponent(item.subjectCode)}/practice/rounds/${item.roundId}?${[
-            item.conversationId ? `agentConversationId=${encodeURIComponent(item.conversationId)}` : '',
+            item.conversationId ? `agentContextId=${encodeURIComponent(item.conversationId)}` : '',
             `agentInterventionVerificationId=${encodeURIComponent(item.id)}`
           ].filter(Boolean).join('&')}` : null,
       outcome: item.outcome ? {

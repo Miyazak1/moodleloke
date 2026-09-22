@@ -4,6 +4,7 @@
   "version": "0.1.0-alpha.3",
   "scripts": {
     "prisma:generate": "node scripts/prisma-generate.cjs",
+    "seed:teaching-assets": "node scripts/seed-teaching-assets.cjs",
     "start:dev": "node --enable-source-maps -r ts-node/register src/main.ts",
     "start:watch": "node --watch --enable-source-maps -r ts-node/register src/main.ts",
     "dev": "node scripts/start-dev.cjs",

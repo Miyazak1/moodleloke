@@ -159,6 +159,34 @@ export class AgentAttachmentService {
     }
   }
 
+  async uploadForPracticeQuestion(
+    userId: number,
+    roundIdValue: string,
+    questionIdValue: string,
+    request: any,
+    encodedName: unknown,
+    declaredMime?: string
+  ) {
+    const roundId = Number(roundIdValue);
+    const questionId = Number(questionIdValue);
+    if (!Number.isInteger(roundId) || roundId <= 0 || !Number.isInteger(questionId) || questionId <= 0) {
+      throw new BadRequestException({ code: 'PRACTICE_QUESTION_INVALID', message: '练习题目无效。' });
+    }
+    const [roundItem, artifact] = await Promise.all([
+      this.prisma.cscaAdaptiveRoundItem.findFirst({
+        where: { roundId, questionId, round: { session: { userId } } },
+        select: { id: true }
+      }),
+      this.prisma.agentArtifact.findFirst({
+        where: { userId, domainEntityType: 'csca_adaptive_round', domainEntityId: String(roundId) },
+        orderBy: { createdAt: 'desc' },
+        select: { conversationId: true }
+      })
+    ]);
+    if (!roundItem || !artifact) throw new NotFoundException('Agent practice question not found.');
+    return this.upload(userId, artifact.conversationId, request, encodedName, declaredMime);
+  }
+
   async list(userId: number, conversationId: string) {
     this.assertEnabled();
     const conversation = await this.prisma.agentConversation.findFirst({

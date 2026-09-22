@@ -390,6 +390,18 @@ export class AgentJourneyReadService {
     }
 
     stages.sort((left, right) => right.updatedAt.localeCompare(left.updatedAt));
+    const plans = artifactFacts
+      .filter((item) => item.artifact.type === 'learning_plan')
+      .map(({ artifact }) => ({
+        id: artifact.id,
+        type: artifact.type,
+        status: artifact.status,
+        title: artifact.title,
+        summary: artifact.summary,
+        route: artifact.route,
+        snapshot: artifact.snapshot,
+        createdAt: artifact.createdAt.toISOString()
+      }));
     // A submitted round may still expose a report route, but it is no longer an
     // interrupted task. Only workspaces with a genuinely active learning action
     // should drive the global "continue learning" entry.
@@ -398,6 +410,7 @@ export class AgentJourneyReadService {
       schemaVersion: '1' as const,
       generatedAt: new Date().toISOString(),
       activeWorkspace,
+      plans,
       stages: stages.slice(0, 100)
     };
   }

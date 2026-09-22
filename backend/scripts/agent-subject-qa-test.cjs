@@ -50,6 +50,43 @@ async function main() {
   assert.equal(bounded.text, '学科问答目前只支持数学、物理和化学。学习计划、做题、进度和设置请返回学习工作台。');
   assert.doesNotMatch(bounded.text, /越界回答/);
 
+  const reviewedGateway = gateway(null, false);
+  const reviewed = await new AgentSubjectQaService(reviewedGateway).answer({
+    runId: 'run-reviewed-question',
+    userId: 42,
+    locale: 'zh-CN',
+    question: '为什么 D 错了？',
+    history: [],
+    questionContext: {
+      roundId: 31,
+      questionId: 204,
+      questionNumber: 4,
+      subject: 'physics',
+      topicTitle: '力与运动',
+      prompt: '汽车急刹车时乘客会向前倾，主要体现了物体的（ ）',
+      options: [
+        { id: 'A', text: '弹性' },
+        { id: 'B', text: '惯性' },
+        { id: 'C', text: '重力' },
+        { id: 'D', text: '摩擦力' }
+      ],
+      selectedAnswer: 'D',
+      answered: true,
+      correctAnswer: 'B',
+      isCorrect: false,
+      explanation: '刹车时汽车速度迅速减小，乘客身体由于惯性仍保持原来的运动状态，因此会相对汽车向前倾。',
+      knowledgeTags: ['惯性', '牛顿第一定律']
+    }
+  });
+  assert.equal(reviewed.decision, 'answer');
+  assert.equal(reviewed.subject, 'physics');
+  assert.equal(reviewed.generatedByAI, false);
+  assert.match(reviewed.text, /选项 D（摩擦力）不符合题目条件/);
+  assert.match(reviewed.text, /正确选项：B（惯性）/);
+  assert.match(reviewed.text, /刹车时汽车速度迅速减小/);
+  assert.match(reviewed.text, /牛顿第一定律/);
+  assert.equal(reviewedGateway.calls.length, 0);
+
   const unavailableGateway = gateway(null, false);
   const unavailable = await new AgentSubjectQaService(unavailableGateway).answer({
     runId: 'run-unavailable', userId: 42, locale: 'zh-CN', question: '解释勾股定理', history: []

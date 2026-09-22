@@ -833,11 +833,16 @@ export class CscaAdaptiveService {
     const topic = await this.prisma.cscaExamTopic.findFirst({ where: { id: item.topicId } });
     if (!topic) throw new NotFoundException('题目不存在。');
     const localizedQuestion = publicQuestion(question, topic, explanationLanguage);
+    const isCorrect = selected === question.correctAnswer;
+    await this.prisma.cscaAdaptiveRoundItem.update({
+      where: { id: item.id },
+      data: { selectedAnswer: selected, isCorrect }
+    });
     return {
       questionId,
       selected,
       correctAnswer: question.correctAnswer,
-      isCorrect: selected === question.correctAnswer,
+      isCorrect,
       explanation: localizedQuestion.explanation ?? '',
       knowledgeTags: localizedQuestion.knowledgeTags ?? []
     };

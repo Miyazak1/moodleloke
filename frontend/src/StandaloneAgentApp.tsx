@@ -66,11 +66,14 @@ export default function StandaloneAgentApp() {
     const nextUrl = new URL(next, window.location.origin);
     const internalPath = stripLocaleFromPath(nextUrl.pathname);
     let nextRoute: StandaloneRoute = 'agent';
+    let isKnownStandalonePath = internalPath === routes.agent || internalPath === routes.home;
     if (internalPath === routes.auth || internalPath === routes.login || internalPath === routes.register) nextRoute = 'auth';
     else if (internalPath === routes.onboarding) nextRoute = 'onboarding';
     else if (internalPath === routes.me) nextRoute = 'me';
+    if (nextRoute !== 'agent') isKnownStandalonePath = true;
     const localizedPath = buildLocalizedPath(locale, canonicalPath(nextRoute));
-    window.history.pushState({}, '', localizedPath + nextUrl.search + nextUrl.hash);
+    const preserveSuffix = isKnownStandalonePath && internalPath !== routes.home;
+    window.history.pushState({}, '', localizedPath + (preserveSuffix ? nextUrl.search + nextUrl.hash : ''));
     window.dispatchEvent(new Event('moodlelike:navigation'));
     setRoute(nextRoute);
   }

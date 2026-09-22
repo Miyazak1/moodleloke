@@ -17,6 +17,7 @@ import { AgentRuntimeFeatureFlagsService } from './agent-runtime-feature-flags.s
 import { AgentTaskActionInputSchema, ContinueAgentFreePracticeInputSchema, StartAgentFreePracticeInputSchema, StartAgentPracticeInputSchema } from './agent.types';
 
 const TOOL_VERSION = '1.0';
+const LEARNING_WORKSPACE_CONTAINER_TITLE = '__learning_workspace__';
 const SUPPORTED_TASKS = new Set(['diagnostic', 'review', 'targeted_practice', 'concept_learning', 'mock_exam']);
 const TERMINAL_DECISIONS = ['completed', 'failed', 'abandoned', 'superseded'];
 
@@ -68,12 +69,6 @@ export class AgentPracticeActionService {
       throw new ServiceUnavailableException({ code: 'AGENT_PRACTICE_WRITE_DISABLED', message: 'Agent 练习创建能力暂未开放。' });
     }
     const input = StartAgentFreePracticeInputSchema.parse(body);
-    const conversation = await this.prisma.agentConversation.findFirst({
-      where: { id: input.conversationId, userId, deletedAt: null, status: 'active' },
-      select: { id: true }
-    });
-    if (!conversation) throw new NotFoundException('Agent 学习旅程不存在。');
-
     const toolName = 'start_student_initiated_practice';
     const keyHash = idempotencyHash(userId, toolName, input.clientRequestId);
     const existing = await this.prisma.agentToolCall.findFirst({
@@ -81,6 +76,17 @@ export class AgentPracticeActionService {
     });
     if (existing?.status === 'completed' && existing.output) return existing.output;
     if (existing) throw new ConflictException({ code: 'AGENT_FREE_PRACTICE_CREATE_IN_PROGRESS', message: '自由练习正在创建，请稍后重试。' });
+
+    const conversation = input.conversationId
+      ? await this.prisma.agentConversation.findFirst({
+          where: { id: input.conversationId, userId, deletedAt: null, status: 'active' },
+          select: { id: true }
+        })
+      : await this.prisma.agentConversation.create({
+          data: { userId, title: LEARNING_WORKSPACE_CONTAINER_TITLE },
+          select: { id: true }
+        });
+    if (!conversation) throw new NotFoundException('Agent 学习工作台不存在。');
 
     const reserved = await this.prisma.$transaction(async (tx) => {
       const run = await tx.agentRun.create({
@@ -150,8 +156,8 @@ export class AgentPracticeActionService {
           }
         }
       });
-      const legacyRoute = `/csca-subjects/${encodeURIComponent(input.subject)}/practice/rounds/${round.round.id}?agentConversationId=${encodeURIComponent(conversation.id)}&agentArtifactId=${encodeURIComponent(artifact.id)}`;
-      const route = `/agent?conversation=${encodeURIComponent(conversation.id)}&agentConversationId=${encodeURIComponent(conversation.id)}&agentArtifactId=${encodeURIComponent(artifact.id)}&agentRoundId=${round.round.id}&agentView=practice&agentTaskType=free_practice&agentSubject=${encodeURIComponent(input.subject)}`;
+      const legacyRoute = `/csca-subjects/${encodeURIComponent(input.subject)}/practice/rounds/${round.round.id}?agentContextId=${encodeURIComponent(conversation.id)}&agentArtifactId=${encodeURIComponent(artifact.id)}`;
+      const route = `/agent?agentContextId=${encodeURIComponent(conversation.id)}&agentArtifactId=${encodeURIComponent(artifact.id)}&agentRoundId=${round.round.id}&agentView=practice&agentTaskType=free_practice&agentSubject=${encodeURIComponent(input.subject)}`;
       const output = {
         schemaVersion: '1', artifactId: artifact.id, conversationId: conversation.id,
         sessionId: round.session.id, roundId: round.round.id, mode: round.session.mode,
@@ -263,8 +269,8 @@ export class AgentPracticeActionService {
           sessionId: round.session.id, roundId: round.round.id
         }
       } });
-      const legacyRoute = `/csca-subjects/${encodeURIComponent(input.subject)}/practice/rounds/${round.round.id}?agentConversationId=${encodeURIComponent(previous.conversationId)}&agentArtifactId=${encodeURIComponent(artifact.id)}`;
-      const route = `/agent?conversation=${encodeURIComponent(previous.conversationId)}&agentConversationId=${encodeURIComponent(previous.conversationId)}&agentArtifactId=${encodeURIComponent(artifact.id)}&agentRoundId=${round.round.id}&agentView=practice&agentTaskType=free_practice&agentSubject=${encodeURIComponent(input.subject)}`;
+      const legacyRoute = `/csca-subjects/${encodeURIComponent(input.subject)}/practice/rounds/${round.round.id}?agentContextId=${encodeURIComponent(previous.conversationId)}&agentArtifactId=${encodeURIComponent(artifact.id)}`;
+      const route = `/agent?agentContextId=${encodeURIComponent(previous.conversationId)}&agentArtifactId=${encodeURIComponent(artifact.id)}&agentRoundId=${round.round.id}&agentView=practice&agentTaskType=free_practice&agentSubject=${encodeURIComponent(input.subject)}`;
       const output = {
         schemaVersion: '1', artifactId: artifact.id, conversationId: previous.conversationId, sessionId: round.session.id, roundId: round.round.id,
         mode: round.session.mode, questionCount: round.questions.length, subject: round.session.subject, questionLanguage: round.session.questionLanguage,
@@ -510,7 +516,7 @@ export class AgentPracticeActionService {
           attempt = await this.mockExam.createAttempt(paperSlug, userId, { language: questionLanguage });
         }
         const legacyRoute = `/csca-mock-exam/attempts/${attempt.id}`;
-        const route = `/agent?conversation=${encodeURIComponent(artifact.conversationId)}&agentConversationId=${encodeURIComponent(artifact.conversationId)}&agentArtifactId=${encodeURIComponent(artifact.id)}&agentMockExamAttemptId=${attempt.id}&agentView=mock-exam&agentTaskType=mock_exam&agentSubject=${encodeURIComponent(subject)}`;
+        const route = `/agent?agentContextId=${encodeURIComponent(artifact.conversationId)}&agentArtifactId=${encodeURIComponent(artifact.id)}&agentMockExamAttemptId=${attempt.id}&agentView=mock-exam&agentTaskType=mock_exam&agentSubject=${encodeURIComponent(subject)}`;
         const output = {
           schemaVersion: '1', artifactId: artifact.id, conversationId: artifact.conversationId,
           attemptId: attempt.id, paperSlug, paperTitle: attempt.paper.title,
@@ -557,8 +563,8 @@ export class AgentPracticeActionService {
           }
         : focusTopicId ? { questionCount, focusTopicId } : { questionCount };
       const round = await this.adaptive.createRound(userId, String(session.id), roundInput);
-      const legacyRoute = `/csca-subjects/${encodeURIComponent(subject)}/practice/rounds/${round.round.id}?agentConversationId=${encodeURIComponent(artifact.conversationId)}&agentArtifactId=${encodeURIComponent(artifact.id)}`;
-      const route = `/agent?conversation=${encodeURIComponent(artifact.conversationId)}&agentConversationId=${encodeURIComponent(artifact.conversationId)}&agentArtifactId=${encodeURIComponent(artifact.id)}&agentRoundId=${round.round.id}&agentView=practice&agentTaskType=${encodeURIComponent(taskType)}&agentSubject=${encodeURIComponent(subject)}`;
+      const legacyRoute = `/csca-subjects/${encodeURIComponent(subject)}/practice/rounds/${round.round.id}?agentContextId=${encodeURIComponent(artifact.conversationId)}&agentArtifactId=${encodeURIComponent(artifact.id)}`;
+      const route = `/agent?agentContextId=${encodeURIComponent(artifact.conversationId)}&agentArtifactId=${encodeURIComponent(artifact.id)}&agentRoundId=${round.round.id}&agentView=practice&agentTaskType=${encodeURIComponent(taskType)}&agentSubject=${encodeURIComponent(subject)}`;
       const output = {
         schemaVersion: '1',
         artifactId: artifact.id,

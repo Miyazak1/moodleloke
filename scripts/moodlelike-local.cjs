@@ -92,6 +92,7 @@ function setup() {
   run('applying committed database migrations', npmCommand, ['run', 'db:migrate']);
   run('building stable backend runtime', npmCommand, ['run', 'backend:build']);
   run('creating idempotent local demo evidence', process.execPath, [path.join(root, 'scripts', 'agent-demo-seed.cjs'), '--apply']);
+  run('publishing reviewed teaching visualizers', npmCommand, ['--prefix', 'backend', 'run', 'seed:teaching-assets']);
   console.log('[moodlelike] local setup complete; no CSCALite database or volume was used.');
 }
 
@@ -139,22 +140,27 @@ async function verify() {
 }
 
 async function start() {
-  setup();
   const backendUp = await reachable(backendUrl + '/api/v1/health');
   const frontendUp = await reachable(frontendUrl + '/zh/agent');
-  if (backendUp || frontendUp) {
-    if (!(backendUp && frontendUp)) fail('Only one Moodlelike service is reachable; free ports 3100 and 5190, then retry.');
+  if (backendUp && frontendUp) {
     await verify();
-    console.log('[moodlelike] services were already running.');
+    console.log('[moodlelike] services were already running; skipped setup and rebuild.');
     return;
   }
-  const backend = spawn(npmCommand, ['--prefix', 'backend', 'run', 'start:prod'], { cwd: root, env: runtimeEnv, stdio: 'inherit', shell: onWindows });
-  const frontend = spawn(npmCommand, ['run', 'frontend:dev'], { cwd: root, env: runtimeEnv, stdio: 'inherit', shell: onWindows });
-  const children = [backend, frontend];
-  const stop = () => children.forEach((child) => { if (!child.killed) child.kill('SIGTERM'); });
+
+  if (!backendUp && !frontendUp) {
+    setup();
+  } else {
+    console.log('[moodlelike] one service is already healthy; reusing it and starting only the missing service.');
+  }
+
+  const children = [];
+  if (!backendUp) children.push({ name: 'backend', process: spawn(npmCommand, ['--prefix', 'backend', 'run', 'start:prod'], { cwd: root, env: runtimeEnv, stdio: 'inherit', shell: onWindows }) });
+  if (!frontendUp) children.push({ name: 'frontend', process: spawn(npmCommand, ['run', 'frontend:dev'], { cwd: root, env: runtimeEnv, stdio: 'inherit', shell: onWindows }) });
+  const stop = () => children.forEach((child) => { if (!child.process.killed) child.process.kill('SIGTERM'); });
   process.once('SIGINT', () => { stop(); process.exit(130); });
   process.once('SIGTERM', () => { stop(); process.exit(143); });
-  const earlyExit = new Promise((_, reject) => children.forEach((child, index) => child.once('exit', (code) => reject(new Error((index ? 'frontend' : 'backend') + ' exited early with code ' + code)))));
+  const earlyExit = new Promise((_, reject) => children.forEach((child) => child.process.once('exit', (code) => reject(new Error(child.name + ' exited early with code ' + code)))));
   try {
     await Promise.race([Promise.all([waitFor(backendUrl + '/api/v1/health', 90000), waitFor(frontendUrl + '/zh/agent', 90000)]), earlyExit]);
     await verify();

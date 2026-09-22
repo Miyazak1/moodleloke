@@ -27,6 +27,33 @@ function hasGeneratedClient() {
   );
 }
 
+function generatedClientMatchesSchema() {
+  const sourceSchema = path.join(backendRoot, 'prisma', 'schema.prisma');
+  const generatedSchema = path.join(backendRoot, 'node_modules', '.prisma', 'client', 'schema.prisma');
+  if (!hasGeneratedClient() || !fs.existsSync(generatedSchema)) return false;
+  return fs.readFileSync(sourceSchema).equals(fs.readFileSync(generatedSchema));
+}
+
+function generatedClientMatchesRuntime() {
+  try {
+    const cliPackage = JSON.parse(fs.readFileSync(path.join(backendRoot, 'node_modules', 'prisma', 'package.json'), 'utf8'));
+    const clientPackage = JSON.parse(fs.readFileSync(path.join(backendRoot, 'node_modules', '@prisma', 'client', 'package.json'), 'utf8'));
+    return Boolean(cliPackage.version) && cliPackage.version === clientPackage.version;
+  } catch {
+    return false;
+  }
+}
+
+if (
+  process.platform === 'win32' &&
+  process.env.PRISMA_GENERATE_FORCE !== 'true' &&
+  generatedClientMatchesSchema() &&
+  generatedClientMatchesRuntime()
+) {
+  console.log('Generated Prisma client already matches prisma/schema.prisma and the installed Prisma runtime; reusing it.');
+  process.exit(0);
+}
+
 let lastStatus = 1;
 let lastWasFileLock = false;
 for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
@@ -54,6 +81,16 @@ for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
 
   const output = `${result.stdout || ''}\n${result.stderr || ''}`;
   lastWasFileLock = shouldRetry(output);
+  if (
+    process.platform === 'win32' &&
+    lastWasFileLock &&
+    process.env.PRISMA_GENERATE_ALLOW_LOCKED_CLIENT !== 'false' &&
+    generatedClientMatchesSchema()
+  ) {
+    console.warn('Prisma engine is locked by the local backend, but the generated client exactly matches prisma/schema.prisma.');
+    console.warn('Reusing the existing generated client without further retries.');
+    process.exit(0);
+  }
   if (attempt < maxAttempts && lastWasFileLock) {
     const delayMs = attempt * 1500;
     console.warn(`Prisma generate hit a transient Windows file lock; retrying in ${delayMs}ms (${attempt + 1}/${maxAttempts}).`);
@@ -67,7 +104,7 @@ if (
   process.platform === 'win32' &&
   lastWasFileLock &&
   process.env.PRISMA_GENERATE_ALLOW_LOCKED_CLIENT !== 'false' &&
-  hasGeneratedClient()
+  generatedClientMatchesSchema()
 ) {
   console.warn('Prisma generate could not replace the Windows query engine because a local process is holding it.');
   console.warn('Continuing with the existing generated Prisma client. Stop the local backend and rerun prisma:generate before committing schema changes.');

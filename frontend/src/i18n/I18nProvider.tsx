@@ -67,6 +67,11 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     const hadQueryLocale = search.has('lang');
     if (hadQueryLocale) search.delete('lang');
     const cleanSearch = search.toString() ? `?${search.toString()}` : '';
+    const isStandaloneDocument = /\/[^/]+\.html$/i.test(window.location.pathname);
+    if (isStandaloneDocument) {
+      if (hadQueryLocale) window.history.replaceState(window.history.state, '', `${window.location.pathname}${cleanSearch}${window.location.hash}`);
+      return;
+    }
     const cleanInternalPath = `${window.location.pathname}${cleanSearch}${window.location.hash}`;
     if (!pathLocale || hadQueryLocale) {
       window.history.replaceState(window.history.state, '', buildLocalizedPath(pathLocale || locale, cleanInternalPath));

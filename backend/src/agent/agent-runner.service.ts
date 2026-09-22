@@ -120,8 +120,11 @@ export class AgentRunnerService {
           if (content?.surface !== 'subject_qa' || typeof content.text !== 'string') return [];
           return [{ role: message.role as 'user' | 'assistant', text: content.text }];
         });
+        const questionContext = input.pageContext && typeof input.pageContext === 'object'
+          ? (input.pageContext as { questionContext?: Parameters<AgentSubjectQaService['answer']>[0]['questionContext'] }).questionContext
+          : undefined;
         const response = this.subjectQa
-          ? await this.subjectQa.answer({ runId: run.id, userId: run.userId, locale: input.locale, question: input.text, history })
+          ? await this.subjectQa.answer({ runId: run.id, userId: run.userId, locale: input.locale, question: input.text, history, questionContext })
           : { text: input.locale === 'zh-CN' ? '学科问答暂时无法连接。你仍可以返回学习工作台继续做题。' : 'Subject Q&A is temporarily unavailable. You can still return to the learning workspace and continue practicing.', decision: 'unavailable' as const, subject: null, generatedByAI: false };
         await this.prisma.$transaction((tx) => this.events.append(tx, {
           runId, conversationId: run.conversationId, eventKey: 'plan:created', eventType: 'plan.created',

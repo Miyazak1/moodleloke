@@ -13,7 +13,22 @@ export const AgentPageContextSchema = z.strictObject({
     type: z.enum(['adaptive_round', 'intervention_verification', 'mock_attempt', 'past_paper']),
     id: z.string().trim().min(1).max(120)
   }).optional(),
-  selectedQuestionId: z.number().int().positive().optional()
+  selectedQuestionId: z.number().int().positive().optional(),
+  questionContext: z.strictObject({
+    roundId: z.number().int().positive(),
+    questionId: z.number().int().positive(),
+    questionNumber: z.number().int().positive(),
+    subject: z.enum(['math', 'physics', 'chemistry']),
+    topicTitle: z.string().trim().max(200),
+    prompt: z.string().trim().min(1).max(5000),
+    options: z.array(z.strictObject({ id: z.string().trim().min(1).max(40), text: z.string().trim().min(1).max(1000) })).max(12),
+    selectedAnswer: z.string().trim().max(1000).optional(),
+    answered: z.boolean(),
+    correctAnswer: z.string().trim().max(1000).optional(),
+    isCorrect: z.boolean().optional(),
+    explanation: z.string().trim().max(8000).optional(),
+    knowledgeTags: z.array(z.string().trim().min(1).max(200)).max(30).optional()
+  }).optional()
 });
 
 export const SubmitAgentMessageInputSchema = z.strictObject({
@@ -30,8 +45,8 @@ export const SubmitAgentMessageInputSchema = z.strictObject({
   if (input.surface === 'subject_qa' && input.attachmentIds.length) {
     context.addIssue({ code: z.ZodIssueCode.custom, path: ['attachmentIds'], message: 'Subject Q&A currently accepts text questions only.' });
   }
-  if (input.surface === 'subject_qa' && input.pageContext) {
-    context.addIssue({ code: z.ZodIssueCode.custom, path: ['pageContext'], message: 'Subject Q&A cannot control an active learning task.' });
+  if (input.surface === 'subject_qa' && input.pageContext && !input.pageContext.questionContext) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ['pageContext'], message: 'Subject Q&A accepts only a read-only current-question context.' });
   }
 });
 
@@ -42,7 +57,7 @@ export const StartAgentPracticeInputSchema = z.strictObject({
 
 export const StartAgentFreePracticeInputSchema = z.strictObject({
   clientRequestId: z.string().trim().min(1).max(120),
-  conversationId: z.string().trim().min(1).max(120),
+  conversationId: z.string().trim().min(1).max(120).optional(),
   subject: z.enum(['math', 'physics', 'chemistry']),
   questionCount: z.number().int().min(1).max(10).default(5),
   questionLanguage: z.enum(['zh', 'en']).default('zh')

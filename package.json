@@ -25,6 +25,7 @@
     "mock-exams:ensure": "node scripts/ensure-mock-exams.cjs",
     "mock-exams:validate": "node scripts/validate-mock-exams.cjs",
     "special-practice:seed": "node scripts/seed-special-practice.cjs",
+    "teaching-assets:seed": "npm --prefix backend run seed:teaching-assets",
     "special-practice:ensure": "node scripts/ensure-special-practice.cjs",
     "special-practice:validate": "node scripts/validate-special-practice.cjs",
     "csca-adaptive:seed-topic-mapping": "node scripts/seed-csca-adaptive-topic-mapping.cjs",

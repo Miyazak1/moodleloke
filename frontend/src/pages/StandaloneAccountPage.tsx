@@ -90,7 +90,7 @@ export function StandaloneAccountPage({ currentUser, isResolvingAuth, onCurrentU
         </section>
 
         <section className="standalone-account-card boundary">
-          <Icon name="lucide:sliders-horizontal" color="currentColor" /><div><h2>{t('agent.account.learningSettings', '学习设置留在 Agent')}</h2><p>{t('agent.account.learningSettingsBody', '学习模式、目标、科目、语言和时间容量会改变 Agent 决策，因此统一在学习工作区维护。')}</p><button type="button" className="secondary" onClick={() => onNavigate(routes.agent)}>{t('agent.account.openLearningSettings', '返回 Agent 设置')}</button></div>
+          <Icon name="lucide:sliders-horizontal" color="currentColor" /><div><h2>{t('agent.account.learningSettings', '学习设置留在 Agent')}</h2><p>{t('agent.account.learningSettingsBody', '学习模式、目标、科目、语言和时间容量会改变 Agent 决策，因此统一在学习工作区维护。')}</p><button type="button" className="secondary" onClick={() => onNavigate(`${routes.agent}?agentSection=settings`)}>{t('agent.account.openLearningSettings', '返回 Agent 设置')}</button></div>
         </section>
       </div>
 

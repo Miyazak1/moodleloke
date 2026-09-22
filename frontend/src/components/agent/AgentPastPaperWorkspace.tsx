@@ -20,9 +20,10 @@ import {
 
 type AgentPastPaperWorkspaceProps = {
   slug: string;
-  conversationId: string;
+  conversationId?: string;
   initialQuestionId?: number;
   onAsk: (prompt: string, context: { slug: string; questionId: number }) => void;
+  onContinueLearning: () => void;
 };
 
 function fileSize(bytes?: number) {
@@ -54,7 +55,7 @@ const ASSISTANCE_LABELS: Record<AgentPastPaperAssistanceAction, { zh: string; en
   show_full_solution: { zh: '查看完整解析', en: 'Show full solution', icon: 'lucide:book-open-check' }
 };
 
-export function AgentPastPaperWorkspace({ slug, conversationId, initialQuestionId, onAsk }: AgentPastPaperWorkspaceProps) {
+export function AgentPastPaperWorkspace({ slug, conversationId, initialQuestionId, onAsk, onContinueLearning }: AgentPastPaperWorkspaceProps) {
   const { locale, t } = useI18n();
   const [detail, setDetail] = useState<PastPaperDetail | null>(null);
   const [selectedFileId, setSelectedFileId] = useState<number | null>(null);
@@ -79,7 +80,11 @@ export function AgentPastPaperWorkspace({ slug, conversationId, initialQuestionI
     let alive = true;
     setDetail(null);
     setError('');
-    void Promise.all([getPastPaper(slug, { locale }), getAgentPastPaperQuestionIndex(slug), getAgentPastPaperProgress(slug, conversationId)])
+    void Promise.all([
+      getPastPaper(slug, { locale }),
+      getAgentPastPaperQuestionIndex(slug),
+      conversationId ? getAgentPastPaperProgress(slug, conversationId) : Promise.resolve(null)
+    ])
       .then(([result, index, sessionProgress]) => {
         if (!alive) return;
         setDetail(result);
@@ -88,7 +93,7 @@ export function AgentPastPaperWorkspace({ slug, conversationId, initialQuestionI
         const preferred = result.files.find((file) => file.kind === 'paper') ?? result.files[0];
         setSelectedFileId(preferred?.id ?? null);
         const preferredQuestion = index.questions.find((item) => item.id === initialQuestionId)
-          ?? index.questions.find((item) => item.id === sessionProgress.nextQuestionId)
+          ?? index.questions.find((item) => item.id === sessionProgress?.nextQuestionId)
           ?? index.questions.find((item) => item.canAnswer)
           ?? index.questions[0];
         setSelectedQuestionId(preferredQuestion?.id ?? null);
@@ -103,7 +108,7 @@ export function AgentPastPaperWorkspace({ slug, conversationId, initialQuestionI
     setAttempt(null);
     setSelectedAnswer('');
     setSolutionArmed(false);
-    if (!selectedQuestionId || !questionIndex) return () => { alive = false; };
+    if (!conversationId || !selectedQuestionId || !questionIndex) return () => { alive = false; };
     const selectedSummary = questionIndex?.questions.find((question) => question.id === selectedQuestionId);
     if (selectedSummary && !selectedSummary.canAnswer) return () => { alive = false; };
     void startAgentPastPaperAttempt(slug, selectedQuestionId, { clientRequestId: crypto.randomUUID(), conversationId })
@@ -122,7 +127,7 @@ export function AgentPastPaperWorkspace({ slug, conversationId, initialQuestionI
     let alive = true;
     setReview(null);
     setReviewError('');
-    if (progress?.status !== 'completed') return () => { alive = false; };
+    if (!conversationId || progress?.status !== 'completed') return () => { alive = false; };
     void getAgentPastPaperReview(slug, conversationId)
       .then((result) => { if (alive) setReview(result); })
       .catch((nextError) => { if (alive) setReviewError(nextError instanceof Error ? nextError.message : t('agent.pastPaper.reviewFailed', '整卷复盘暂时无法加载。')); });
@@ -167,7 +172,7 @@ export function AgentPastPaperWorkspace({ slug, conversationId, initialQuestionI
   }
 
   async function requestAssistance(action: AgentPastPaperAssistanceAction, confirmed = false) {
-    if (!selectedQuestionId || assistanceBusy) return;
+    if (!conversationId || !selectedQuestionId || assistanceBusy) return;
     setAssistanceBusy(action);
     setError('');
     try {
@@ -189,7 +194,7 @@ export function AgentPastPaperWorkspace({ slug, conversationId, initialQuestionI
   }
 
   async function submitAnswer() {
-    if (!attempt || attempt.attempt.status === 'submitted' || !selectedAnswer.trim() || attemptBusy) return;
+    if (!conversationId || !attempt || attempt.attempt.status === 'submitted' || !selectedAnswer.trim() || attemptBusy) return;
     setAttemptBusy(true);
     setError('');
     try {
@@ -241,9 +246,9 @@ export function AgentPastPaperWorkspace({ slug, conversationId, initialQuestionI
             : t('agent.pastPaper.noFocusTopics', '本卷没有识别出明确的薄弱知识点。')}</p>
           {review.decision.primaryTask ? <small><Icon name="lucide:route" />{t('agent.pastPaper.nextRecommendation', '最新建议')}：{review.decision.primaryTask.subject} · {review.decision.primaryTask.type}{review.decision.estimatedMinutes ? ` · ${review.decision.estimatedMinutes} ${t('common.minutes', '分钟')}` : ''}</small>
             : <small><Icon name="lucide:info" />{review.decision.status === 'goal_unset' ? t('agent.pastPaper.goalRequired', '设置目标分数和考试日期后，Agent 才能生成下一方案。') : t('agent.pastPaper.decisionUpdating', '学习证据正在更新，稍后可生成下一方案。')}</small>}
-          {selectedQuestion ? <button type="button" onClick={() => onAsk(t('agent.pastPaper.planNextPrompt', '我刚完成了这套真题。请根据最新学习证据告诉我今天接下来学什么，并安排一个首选任务。'), { slug: detail.paper.slug, questionId: selectedQuestion.id })}>
-            <Icon name="lucide:sparkles" />{t('agent.pastPaper.planNext', '让 Agent 安排下一步')}<Icon name="lucide:arrow-right" />
-          </button> : null}
+          <button type="button" onClick={onContinueLearning}>
+            <Icon name="lucide:arrow-left" />{t('agent.pastPaper.continueLearning', '返回做题')}<Icon name="lucide:arrow-right" />
+          </button>
         </section> : reviewError ? <p className="agent-past-paper-review-error">{reviewError}</p> : null}
         <section className="agent-past-paper-question-index" aria-label={t('agent.pastPaper.questionIndex', '题目索引')}>
           <div><strong>{t('agent.pastPaper.questionIndex', '题目索引')}</strong><small>{questionIndex?.status === 'ready' ? `${questionIndex.questions.length} ${t('agent.verification.questions', '题')}` : t('agent.pastPaper.indexUnavailable', '尚未绑定可信索引')}</small></div>

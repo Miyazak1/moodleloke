@@ -328,7 +328,8 @@ export type AgentTeachingAsset = {
   component:
     | { key: 'math.function-horizontal-shift'; version: '1'; props: { baseExpression: 'x^2'; shiftMin: number; shiftMax: number; initialShift: number } }
     | { key: 'physics.newton-second-law'; version: '1'; props: { forceMin: number; forceMax: number; initialForce: number; massMin: number; massMax: number; initialMass: number } }
-    | { key: 'chemistry.acid-base-neutralization'; version: '1'; props: { acidMin: number; acidMax: number; initialAcid: number; baseMin: number; baseMax: number; initialBase: number } };
+    | { key: 'chemistry.acid-base-neutralization'; version: '1'; props: { acidMin: number; acidMax: number; initialAcid: number; baseMin: number; baseMax: number; initialBase: number } }
+    | { key: `visualizer.${'math' | 'physics' | 'chemistry'}.${string}`; version: '1'; props: Record<string, never> };
   activePrompt: { id: string; prompt: string; options: Array<{ id: string; label: string }> };
   verificationPolicy: { required: true; mode: 'next_fresh_question'; completionIsMasteryEvidence: false };
   fallback: Record<string, unknown>;
@@ -481,6 +482,27 @@ export type AgentConversation = AgentConversationSummary & {
 export type AgentJourneyOverview = {
   schemaVersion: '1';
   generatedAt: string;
+  goal: {
+    examDate: string | null;
+    weeklyGoalDays: number | null;
+    totalTargetScore: number | null;
+    subjects: Array<{
+      subject: 'math' | 'physics' | 'chemistry';
+      targetScore: number | null;
+    }>;
+  };
+  progress: {
+    subjects: Array<{
+      subject: 'math' | 'physics' | 'chemistry';
+      totalTopicCount: number;
+      evidencedTopicCount: number;
+      strongTopicCount: number;
+      developingTopicCount: number;
+      needsAttentionTopicCount: number;
+      insufficientEvidenceTopicCount: number;
+      answerEvidenceCount: number;
+    }>;
+  };
   weaknesses: {
     stateSource: 'user_csca_topic_mastery_v1';
     subjects: Array<{
@@ -560,6 +582,7 @@ export type AgentJourneyState = {
   schemaVersion: '1';
   generatedAt: string;
   activeWorkspace: AgentJourneyResumeWorkspace | null;
+  plans: Array<Pick<AgentArtifact, 'id' | 'type' | 'status' | 'title' | 'summary' | 'route' | 'snapshot' | 'createdAt'>>;
   stages: AgentJourneyStage[];
 };
 
@@ -785,6 +808,21 @@ export function submitAgentMessage(
       artifactId?: string;
       entityRef?: { type: 'adaptive_round' | 'intervention_verification' | 'mock_attempt' | 'past_paper'; id: string };
       selectedQuestionId?: number;
+      questionContext?: {
+        roundId: number;
+        questionId: number;
+        questionNumber: number;
+        subject: 'math' | 'physics' | 'chemistry';
+        topicTitle: string;
+        prompt: string;
+        options: Array<{ id: string; text: string }>;
+        selectedAnswer?: string;
+        answered: boolean;
+        correctAnswer?: string;
+        isCorrect?: boolean;
+        explanation?: string;
+        knowledgeTags?: string[];
+      };
     };
   }
 ) {
@@ -926,7 +964,7 @@ export function startAgentPractice(
 
 export function startAgentFreePractice(input: {
   clientRequestId: string;
-  conversationId: string;
+  conversationId?: string;
   subject: 'math' | 'physics' | 'chemistry';
   questionCount: number;
   questionLanguage: 'zh' | 'en';
@@ -974,6 +1012,37 @@ export async function uploadAgentAttachment(
       if (request.status >= 200 && request.status < 300 && payload) return resolve(payload as AgentAttachment);
       const message = payload?.message?.message || payload?.message || payload?.error || `附件上传失败 (${request.status})`;
       reject(new ApiError(String(message), request.status, payload?.code || payload?.message?.code || 'attachment_upload_failed'));
+    };
+    request.send(file);
+  });
+}
+
+export async function uploadAgentPracticeQuestionAttachment(
+  roundId: number,
+  questionId: number,
+  file: File,
+  onProgress?: (percent: number) => void
+) {
+  let token = readStoredToken();
+  if (!token) token = await refreshStoredAccessToken({ clearOnFailure: false });
+  if (!token) throw new ApiError('请先登录。', 401, 'auth_required');
+  return new Promise<AgentAttachment>((resolve, reject) => {
+    const request = new XMLHttpRequest();
+    request.open('POST', `${API_BASE}/api/v1/agent/practice-rounds/${roundId}/questions/${questionId}/attachment`);
+    request.setRequestHeader('Authorization', `Bearer ${token}`);
+    request.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+    request.setRequestHeader('X-File-Name', encodeURIComponent(file.name));
+    request.setRequestHeader('X-File-Type', file.type || 'application/octet-stream');
+    request.upload.onprogress = (event) => {
+      if (event.lengthComputable) onProgress?.(Math.round((event.loaded / event.total) * 100));
+    };
+    request.onerror = () => reject(new ApiError('手写过程上传失败，请检查网络。', 0, 'practice_attachment_upload_failed'));
+    request.onload = () => {
+      let payload: any = null;
+      try { payload = JSON.parse(request.responseText); } catch { /* handled below */ }
+      if (request.status >= 200 && request.status < 300 && payload) return resolve(payload as AgentAttachment);
+      const message = payload?.message?.message || payload?.message || payload?.error || `手写过程上传失败 (${request.status})`;
+      reject(new ApiError(String(message), request.status, payload?.code || payload?.message?.code || 'practice_attachment_upload_failed'));
     };
     request.send(file);
   });
