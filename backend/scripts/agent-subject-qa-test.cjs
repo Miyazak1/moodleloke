@@ -50,7 +50,14 @@ async function main() {
   assert.equal(bounded.text, '学科问答目前只支持数学、物理和化学。学习计划、做题、进度和设置请返回学习工作台。');
   assert.doesNotMatch(bounded.text, /越界回答/);
 
-  const reviewedGateway = gateway(null, false);
+  const reviewedGateway = gateway({
+    status: 'success',
+    json: {
+      decision: 'answer',
+      subject: 'physics',
+      answer: 'D 说的是摩擦力，但乘客向前倾并不是摩擦力把人向前推。刹车时车速突然减小，乘客身体仍倾向保持原来的向前运动状态，这体现的是惯性，所以应选 B。'
+    }
+  });
   const reviewed = await new AgentSubjectQaService(reviewedGateway).answer({
     runId: 'run-reviewed-question',
     userId: 42,
@@ -80,12 +87,47 @@ async function main() {
   });
   assert.equal(reviewed.decision, 'answer');
   assert.equal(reviewed.subject, 'physics');
-  assert.equal(reviewed.generatedByAI, false);
-  assert.match(reviewed.text, /选项 D（摩擦力）不符合题目条件/);
-  assert.match(reviewed.text, /正确选项：B（惯性）/);
-  assert.match(reviewed.text, /刹车时汽车速度迅速减小/);
-  assert.match(reviewed.text, /牛顿第一定律/);
-  assert.equal(reviewedGateway.calls.length, 0);
+  assert.equal(reviewed.generatedByAI, true);
+  assert.match(reviewed.text, /摩擦力把人向前推/);
+  assert.match(reviewed.text, /惯性/);
+  const reviewedRequest = reviewedGateway.calls.find((item) => item.kind === 'complete').request;
+  assert.equal(reviewedRequest.metadata.grounding, 'reviewed_current_question');
+  assert.match(reviewedRequest.messages[1].content, /汽车急刹车时乘客会向前倾/);
+  assert.match(reviewedRequest.messages[1].content, /为什么 D 错了/);
+  assert.match(reviewedRequest.messages[1].content, /牛顿第一定律/);
+
+  const fallbackGateway = gateway({ status: 'failed', error: 'provider unavailable' });
+  const fallback = await new AgentSubjectQaService(fallbackGateway).answer({
+    runId: 'run-reviewed-fallback',
+    userId: 42,
+    locale: 'zh-CN',
+    question: '为什么 D 错了？',
+    history: [],
+    questionContext: {
+      roundId: 31,
+      questionId: 204,
+      questionNumber: 4,
+      subject: 'physics',
+      topicTitle: '力与运动',
+      prompt: '汽车急刹车时乘客会向前倾，主要体现了物体的（ ）',
+      options: [
+        { id: 'A', text: '弹性' },
+        { id: 'B', text: '惯性' },
+        { id: 'C', text: '重力' },
+        { id: 'D', text: '摩擦力' }
+      ],
+      selectedAnswer: 'D',
+      answered: true,
+      correctAnswer: 'B',
+      isCorrect: false,
+      explanation: '刹车时汽车速度迅速减小，乘客身体由于惯性仍保持原来的运动状态，因此会相对汽车向前倾。',
+      knowledgeTags: ['惯性', '牛顿第一定律']
+    }
+  });
+  assert.equal(fallback.generatedByAI, false);
+  assert.match(fallback.text, /选项 D（摩擦力）不符合题目条件/);
+  assert.match(fallback.text, /正确选项：B（惯性）/);
+  assert.equal(fallbackGateway.calls.filter((item) => item.kind === 'complete').length, 1);
 
   const unavailableGateway = gateway(null, false);
   const unavailable = await new AgentSubjectQaService(unavailableGateway).answer({

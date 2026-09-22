@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { AiGatewayService } from '../ai-gateway/ai-gateway.service';
 
-const SUBJECT_QA_VERSION = 'agent-subject-qa-v1';
+const SUBJECT_QA_VERSION = 'agent-subject-qa-v2-model-first';
 const SubjectAnswerSchema = z.strictObject({
   decision: z.enum(['answer', 'out_of_scope']),
   subject: z.enum(['math', 'physics', 'chemistry']).nullable(),
@@ -108,11 +108,11 @@ export class AgentSubjectQaService {
       ? '学科问答暂时无法连接。你仍可以返回学习工作台继续做题。'
       : 'Subject Q&A is temporarily unavailable. You can still return to the learning workspace and continue practicing.';
     const reviewedAnswer = reviewedQuestionAnswer({ locale: input.locale, question: input.question, context: input.questionContext });
-    if (reviewedAnswer && input.questionContext) {
-      return { text: reviewedAnswer, decision: 'answer', subject: input.questionContext.subject, generatedByAI: false };
-    }
+    const reviewedFallback = reviewedAnswer && input.questionContext
+      ? { text: reviewedAnswer, decision: 'answer' as const, subject: input.questionContext.subject, generatedByAI: false }
+      : null;
     if (!this.gateway.hasConfiguredKey('ai_coach_explanation')) {
-      return { text: unavailable, decision: 'unavailable', subject: null, generatedByAI: false };
+      return reviewedFallback ?? { text: unavailable, decision: 'unavailable', subject: null, generatedByAI: false };
     }
     try {
       const response = await this.gateway.complete({
@@ -126,7 +126,12 @@ export class AgentSubjectQaService {
         timeoutMs: 15_000,
         userId: input.userId,
         idempotencyKey: `agent-subject-qa:${input.runId}`,
-        metadata: { operation: 'subject_qa', version: SUBJECT_QA_VERSION, runId: input.runId },
+        metadata: {
+          operation: 'subject_qa',
+          version: SUBJECT_QA_VERSION,
+          runId: input.runId,
+          grounding: input.questionContext ? 'reviewed_current_question' : 'subject_only'
+        },
         messages: [
           {
             role: 'system',
@@ -149,15 +154,15 @@ export class AgentSubjectQaService {
           }
         ]
       });
-      if (response.status !== 'success') return { text: unavailable, decision: 'unavailable', subject: null, generatedByAI: false };
+      if (response.status !== 'success') return reviewedFallback ?? { text: unavailable, decision: 'unavailable', subject: null, generatedByAI: false };
       const parsed = SubjectAnswerSchema.safeParse(response.json ?? JSON.parse(response.content));
-      if (!parsed.success) return { text: unavailable, decision: 'unavailable', subject: null, generatedByAI: false };
+      if (!parsed.success) return reviewedFallback ?? { text: unavailable, decision: 'unavailable', subject: null, generatedByAI: false };
       if (parsed.data.decision === 'out_of_scope') {
         return { text: outOfScope, decision: 'out_of_scope', subject: null, generatedByAI: true };
       }
       return { text: parsed.data.answer, decision: 'answer', subject: parsed.data.subject, generatedByAI: true };
     } catch {
-      return { text: unavailable, decision: 'unavailable', subject: null, generatedByAI: false };
+      return reviewedFallback ?? { text: unavailable, decision: 'unavailable', subject: null, generatedByAI: false };
     }
   }
 }
