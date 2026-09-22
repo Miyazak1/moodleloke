@@ -746,17 +746,15 @@
 .agent-practice-action-panel button { display: inline-flex; min-height: 30px; align-items: center; gap: 5px; padding: 0 9px; border: 1px solid rgba(49, 93, 255, .18); border-radius: 8px; background: #f8faff; color: var(--agent-blue); font-size: 11px; font-weight: 850; }
 .agent-practice-action-panel button:disabled { color: var(--agent-faint); opacity: .5; }
 .agent-practice-action-panel button svg { width: 13px; }
-.agent-practice-analysis-message .agent-message-content { width: min(760px, 100%); }
-.agent-practice-analysis { display: grid; gap: 12px; overflow: hidden; border: 1px solid rgba(255, 112, 95, .24); border-radius: 14px; background: linear-gradient(145deg, rgba(255, 248, 245, .98), rgba(248, 252, 255, .98)); box-shadow: 0 14px 34px rgba(95, 50, 42, .07); }
-.agent-practice-analysis header { display: grid; gap: 3px; padding: 14px 16px 0; }
-.agent-practice-analysis header span { color: #b34b3c; font-size: 12px; font-weight: 850; letter-spacing: .04em; }
-.agent-practice-analysis header strong { color: var(--agent-ink); font-size: 17px; }
-.agent-practice-analysis-answers { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px; }
-.agent-practice-analysis-answers span { padding: 6px 9px; border-radius: 999px; background: rgba(255,255,255,.8); color: var(--agent-muted); font-size: 13px; }
-.agent-practice-analysis-answers b { color: var(--agent-ink); }
-.agent-practice-analysis > p { margin: 0 16px; padding: 13px 14px; border-radius: 10px; background: rgba(49, 93, 255, .07); color: var(--agent-ink); font-size: 15px; font-weight: 700; line-height: 1.7; }
-.agent-practice-analysis footer { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 16px 14px; }
-.agent-practice-analysis footer b { padding: 4px 8px; border-radius: 999px; background: rgba(19, 199, 163, .1); color: var(--agent-mint-dark); font-size: 12px; }
+.agent-practice-question-invite-message .agent-message-content { width: min(720px, 100%); }
+.agent-practice-question-invite { display: grid; gap: 10px; padding: 14px 16px; border: 1px solid rgba(49, 93, 255, .18); border-radius: 5px 14px 14px 14px; background: linear-gradient(135deg, rgba(244, 247, 255, .98), rgba(241, 255, 250, .96)); box-shadow: 0 10px 26px rgba(49, 93, 255, .055); }
+.agent-practice-question-invite header { display: grid; gap: 3px; }
+.agent-practice-question-invite header span { color: #b34b3c; font-size: 11px; font-weight: 850; }
+.agent-practice-question-invite header strong { color: var(--agent-ink); font-size: 16px; line-height: 1.4; }
+.agent-practice-question-invite > p { margin: 0; color: var(--agent-muted); font-size: 12px; line-height: 1.6; }
+.agent-practice-question-invite > div { display: flex; flex-wrap: wrap; gap: 7px; }
+.agent-practice-question-invite button { min-height: 32px; padding: 0 11px; border: 1px solid rgba(49, 93, 255, .2); border-radius: 9px; background: rgba(255,255,255,.86); color: var(--agent-blue); font-size: 11px; font-weight: 800; }
+.agent-practice-question-invite button:hover { border-color: var(--agent-blue); background: #fff; }
 .agent-learning-tools { display: grid; width: min(760px, 100%); gap: 16px; margin: 0 auto; padding: 2px 0 28px; }
 .agent-learning-tools-intro { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 12px; align-items: center; padding: 14px 15px; border: 1px solid var(--agent-line); border-radius: 15px; background: linear-gradient(135deg, rgba(238, 244, 255, .96), rgba(239, 253, 248, .96)); }
 .agent-learning-tools-intro > span { display: grid; width: 40px; height: 40px; place-items: center; border-radius: 12px; background: #fff; color: var(--agent-blue); box-shadow: 0 6px 16px rgba(49, 93, 255, .09); }

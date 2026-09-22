@@ -44,6 +44,7 @@ import {
   type AgentJourneyOverview,
   type AgentJourneyResumeWorkspace,
   type AgentJourneyState,
+  type AgentMessage,
   type AgentMockExamLaunch,
   type AgentMockExamSettlement,
   type AgentPracticeLaunch,
@@ -654,6 +655,11 @@ type AgentErrorAction = {
   questionCount?: number;
 };
 
+type AgentQaTimelineEntry =
+  | { kind: 'message'; key: string; createdAt: string; order: number; message: AgentMessage }
+  | { kind: 'assistance'; key: string; createdAt: string; order: number; item: AgentPracticeAssistanceEvent }
+  | { kind: 'teaching'; key: string; createdAt: string; order: number; item: AgentPracticeTeachingEvent };
+
 export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedirect }: AgentPageProps) {
   const { locale, t } = useI18n();
   const [conversations, setConversations] = useState<AgentConversationSummary[]>([]);
@@ -861,6 +867,11 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     setPracticeHelpOpen(true);
     setTaskRailPosition('center');
     writeMigratedLocalStorage(AGENT_TASK_RAIL_POSITION_STORAGE_KEY, LEGACY_AGENT_TASK_RAIL_POSITION_STORAGE_KEY, 'center');
+  }, []);
+
+  const preparePracticeQaQuestion = useCallback((question: string) => {
+    setPracticeQaDraft(question);
+    window.requestAnimationFrame(() => practiceQaInputRef.current?.focus());
   }, []);
 
   const receivePracticeTeachingAsset = useCallback((event: AgentPracticeTeachingEvent) => {
@@ -1895,6 +1906,35 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
     && practiceTeachingEvent.questionId === practiceQuestionContext?.questionId
     ? practiceTeachingEvent
     : null;
+  const currentPracticeAssistanceEvents = isPracticeQa && practiceQuestionContext
+    ? practiceAssistanceEvents.filter((item) => item.roundId === practiceQuestionContext.roundId && item.questionId === practiceQuestionContext.questionId)
+    : [];
+  const firstGroundedPracticeAnswer = isPracticeQa
+    ? practiceQaMessages.find((message) => message.role === 'assistant' && message.content.subjectQa?.decision === 'answer')
+    : null;
+  const visibleTimeline: AgentQaTimelineEntry[] = [
+    ...visibleMessages.map((message) => ({
+      kind: 'message' as const,
+      key: `message:${message.id}`,
+      createdAt: message.createdAt,
+      order: message.role === 'user' ? 0 : 1,
+      message
+    })),
+    ...currentPracticeAssistanceEvents.map((item) => ({
+      kind: 'assistance' as const,
+      key: `assistance:${item.id}`,
+      createdAt: item.createdAt,
+      order: 2,
+      item
+    })),
+    ...(visiblePracticeTeachingEvent && firstGroundedPracticeAnswer ? [{
+      kind: 'teaching' as const,
+      key: `teaching:${visiblePracticeTeachingEvent.roundId}:${visiblePracticeTeachingEvent.questionId}`,
+      createdAt: firstGroundedPracticeAnswer.createdAt,
+      order: 2,
+      item: visiblePracticeTeachingEvent
+    }] : [])
+  ].sort((left, right) => left.createdAt.localeCompare(right.createdAt) || left.order - right.order || left.key.localeCompare(right.key));
 
   async function startOrResumeLearning() {
     if (isStartingLearning || isStartingFreePractice) return;
@@ -2123,43 +2163,68 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                   </section>
                 )}
                 {isPracticeQa && practiceQuestionContext?.isCorrect === false && (
-                  <div className="agent-message-block assistant agent-practice-analysis-message">
-                    <div className="agent-message-avatar"><span><Icon name="lucide:scan-search" /></span></div>
+                  <div className="agent-message-block assistant agent-practice-question-invite-message">
+                    <div className="agent-message-avatar"><span><Icon name="lucide:message-circle-question" /></span></div>
                     <div className="agent-message-content">
                       <span className="agent-message-author">{t('agent.message.agent', 'CSCA 学习 Agent')}</span>
-                      <section className="agent-practice-analysis" aria-label={t('agent.practiceAnalysis.aria', '当前题错因解析')}>
-                        <header><span>{t('agent.practiceAnalysis.kicker', '答题解析')}</span><strong>{t('agent.practiceAnalysis.title', '先看这道题为什么错')}</strong></header>
-                        <div className="agent-practice-analysis-answers">
-                          <span>{t('agent.practiceAnalysis.correctAnswer', '正确答案')} <b>{practiceQuestionContext.correctAnswer}</b></span>
-                          <span>{t('agent.practiceAnalysis.selectedAnswer', '你的答案')} <b>{practiceQuestionContext.selectedAnswer}</b></span>
+                      <section className="agent-practice-question-invite" aria-label={t('agent.practiceQa.inviteAria', '当前题提问引导')}>
+                        <header><span>{t('agent.practiceQa.inviteKicker', '这道题没有答对')}</span><strong>{t('agent.practiceQa.inviteTitle', '哪里没想通，可以继续问我')}</strong></header>
+                        <p>{t('agent.practiceQa.inviteBody', '我会只结合当前题回答，不会引用其他题目的记录。')}</p>
+                        <div>
+                          {practiceQuestionContext.selectedAnswer && <button type="button" onClick={() => preparePracticeQaQuestion(t('agent.practiceQa.whySelectedWrong', '为什么我选的 {answer} 错了？').replace('{answer}', practiceQuestionContext.selectedAnswer || ''))}>{t('agent.practiceQa.whyWrong', '为什么我的答案错了？')}</button>}
+                          <button type="button" onClick={() => preparePracticeQaQuestion(t('agent.practiceQa.howToSolve', '这道题应该怎么判断？'))}>{t('agent.practiceQa.askApproach', '这题怎么判断？')}</button>
+                          <button type="button" onClick={() => preparePracticeQaQuestion(t('agent.practiceQa.explainConcept', '讲讲这道题涉及的知识点。'))}>{t('agent.practiceQa.askConcept', '讲讲相关知识点')}</button>
                         </div>
-                        {practiceQuestionContext.explanation && <p><MathContent text={practiceQuestionContext.explanation} /></p>}
-                        {!!practiceQuestionContext.knowledgeTags?.length && <footer>{practiceQuestionContext.knowledgeTags.map((tag) => <b key={tag}>{tag}</b>)}</footer>}
                       </section>
                     </div>
                   </div>
                 )}
-                {isPracticeQa && visiblePracticeTeachingEvent && (
-                  <div className="agent-message-block assistant agent-chat-teaching-message agent-practice-teaching-resource">
-                    <div className="agent-message-avatar"><span><Icon name="lucide:book-open-check" /></span></div>
-                    <div className="agent-message-content">
-                      <span className="agent-message-author">{t('agent.message.agent', 'CSCA 学习 Agent')}</span>
-                      <section className="agent-chat-teaching-panel agent-intervention-teaching-wrap" aria-label={t('agent.practiceTeaching.aria', '当前题知识讲解')}>
-                        <header className="agent-chat-teaching-header">
-                          <div><span>{t('agent.practiceTeaching.kicker', '当前题辅助')}</span><strong>{t('agent.practiceTeaching.title', '当前题知识讲解')}</strong><small>{t('agent.practiceTeaching.hint', '第 {number} 题答错后匹配的已审核交互微课').replace('{number}', String(visiblePracticeTeachingEvent.questionNumber))}</small></div>
-                          <button type="button" className="agent-chat-teaching-toggle" onClick={() => setPracticeTeachingCollapsed((current) => !current)} aria-expanded={!practiceTeachingCollapsed}>
-                            <Icon name={practiceTeachingCollapsed ? 'lucide:chevron-down' : 'lucide:chevron-up'} />
-                            <span>{practiceTeachingCollapsed ? t('agent.practiceTeaching.expand', '展开讲解') : t('agent.practiceTeaching.collapse', '收起讲解')}</span>
-                          </button>
-                        </header>
-                        {!practiceTeachingCollapsed && <TeachingAssetRenderer asset={visiblePracticeTeachingEvent.asset} roundId={visiblePracticeTeachingEvent.roundId} questionId={visiblePracticeTeachingEvent.questionId} />}
-                      </section>
-                    </div>
-                  </div>
-                )}
-                {visibleMessages.map((message) => {
+                {visibleTimeline.map((entry) => {
+                  if (entry.kind === 'assistance') {
+                    const item = entry.item;
+                    const title = item.action === 'recall_concept'
+                      ? t('agent.practiceAssistance.concept', '知识点回忆')
+                      : item.action === 'next_step_hint'
+                        ? t('agent.practiceAssistance.hint', '渐进提示')
+                        : t('agent.practiceAssistance.handwriting', '手写过程检查');
+                    return (
+                      <div key={entry.key} className={`agent-message-block assistant agent-practice-assistance-message ${item.status === 'failed' ? 'is-error' : ''}`}>
+                        <div className="agent-message-avatar"><span><Icon name={item.action === 'check_work' ? 'lucide:scan-line' : 'lucide:sparkles'} /></span></div>
+                        <div className="agent-message-content">
+                          <span className="agent-message-author">{t('agent.message.agent', 'CSCA 学习 Agent')}</span>
+                          <article>
+                            <header><span>{t('agent.practiceAssistance.boundQuestion', '第 {number} 题').replace('{number}', String(item.questionNumber))}</span><strong>{title}</strong></header>
+                            <p>{item.content}</p>
+                            <small><Icon name={item.status === 'failed' ? 'lucide:circle-alert' : 'lucide:shield-check'} />{item.status === 'failed' ? t('agent.practiceAssistance.failedDisclosure', '本次辅助没有完成，可以重试') : item.generatedByAI ? t('agent.practiceAssistance.aiDisclosure', '受当前题与辅助层级约束的 AI 辅助') : t('agent.practiceAssistance.reviewedDisclosure', '来自已审核学习内容')}</small>
+                          </article>
+                        </div>
+                      </div>
+                    );
+                  }
+                  if (entry.kind === 'teaching') {
+                    const item = entry.item;
+                    return (
+                      <div key={entry.key} className="agent-message-block assistant agent-chat-teaching-message agent-practice-teaching-resource">
+                        <div className="agent-message-avatar"><span><Icon name="lucide:book-open-check" /></span></div>
+                        <div className="agent-message-content">
+                          <span className="agent-message-author">{t('agent.message.agent', 'CSCA 学习 Agent')}</span>
+                          <section className="agent-chat-teaching-panel agent-intervention-teaching-wrap" aria-label={t('agent.practiceTeaching.aria', '当前题知识讲解')}>
+                            <header className="agent-chat-teaching-header">
+                              <div><span>{t('agent.practiceTeaching.kicker', '当前题辅助')}</span><strong>{t('agent.practiceTeaching.title', '当前题知识讲解')}</strong><small>{t('agent.practiceTeaching.hint', '第 {number} 题答错后匹配的已审核交互微课').replace('{number}', String(item.questionNumber))}</small></div>
+                              <button type="button" className="agent-chat-teaching-toggle" onClick={() => setPracticeTeachingCollapsed((current) => !current)} aria-expanded={!practiceTeachingCollapsed}>
+                                <Icon name={practiceTeachingCollapsed ? 'lucide:chevron-down' : 'lucide:chevron-up'} />
+                                <span>{practiceTeachingCollapsed ? t('agent.practiceTeaching.expand', '展开讲解') : t('agent.practiceTeaching.collapse', '收起讲解')}</span>
+                              </button>
+                            </header>
+                            {!practiceTeachingCollapsed && <TeachingAssetRenderer asset={item.asset} roundId={item.roundId} questionId={item.questionId} />}
+                          </section>
+                        </div>
+                      </div>
+                    );
+                  }
+                  const message = entry.message;
                   return (
-                    <div key={message.id} className={`agent-message-block ${message.role}${isQaChatSurface ? '' : ' agent-current-workspace-output'}`}>
+                    <div key={entry.key} className={`agent-message-block ${message.role}${isQaChatSurface ? '' : ' agent-current-workspace-output'}`}>
                       <div className="agent-message-avatar">
                         {message.role === 'user' ? <UserAvatar user={currentUser} size="sm" /> : <span><Icon name="lucide:sparkles" /></span>}
                       </div>
@@ -2236,29 +2301,6 @@ export function AgentPage({ currentUser, isResolvingAuth, onNavigate, onAuthRedi
                     </div>
                   );
                 })}
-                {isPracticeQa && practiceAssistanceEvents
-                  .filter((item) => item.roundId === learningWorkspace?.roundId)
-                  .slice(-1)
-                  .map((item) => {
-                    const title = item.action === 'recall_concept'
-                      ? t('agent.practiceAssistance.concept', '知识点回忆')
-                      : item.action === 'next_step_hint'
-                        ? t('agent.practiceAssistance.hint', '渐进提示')
-                        : t('agent.practiceAssistance.handwriting', '手写过程检查');
-                    return (
-                      <div key={item.id} className={`agent-message-block assistant agent-practice-assistance-message ${item.status === 'failed' ? 'is-error' : ''}`}>
-                        <div className="agent-message-avatar"><span><Icon name={item.action === 'check_work' ? 'lucide:scan-line' : 'lucide:sparkles'} /></span></div>
-                        <div className="agent-message-content">
-                          <span className="agent-message-author">{t('agent.message.agent', 'CSCA 学习 Agent')}</span>
-                          <article>
-                            <header><span>{t('agent.practiceAssistance.boundQuestion', '第 {number} 题').replace('{number}', String(item.questionNumber))}</span><strong>{title}</strong></header>
-                            <p>{item.content}</p>
-                            <small><Icon name={item.status === 'failed' ? 'lucide:circle-alert' : 'lucide:shield-check'} />{item.status === 'failed' ? t('agent.practiceAssistance.failedDisclosure', '本次辅助没有完成，可以重试') : item.generatedByAI ? t('agent.practiceAssistance.aiDisclosure', '受当前题与辅助层级约束的 AI 辅助') : t('agent.practiceAssistance.reviewedDisclosure', '来自已审核学习内容')}</small>
-                          </article>
-                        </div>
-                      </div>
-                    );
-                  })}
                 {isPracticeQa && practiceAssistanceBusy && (
                   <div className="agent-message-block assistant is-thinking agent-practice-assistance-message">
                     <div className="agent-message-avatar"><span><Icon name="lucide:sparkles" /></span></div>

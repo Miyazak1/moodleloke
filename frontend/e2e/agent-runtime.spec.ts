@@ -916,7 +916,7 @@ test('keeps the active question stable while rendering current learning assistan
     lastMessageAt: now, createdAt: now, updatedAt: now,
     messages: [
       { id: 'practice-question-1', conversationId: 'practice-qa-1', role: 'user', content: { schemaVersion: '1', surface: 'subject_qa', text: '为什么先看斜率？' }, clientMessageId: 'practice-client-1', runId: 'practice-run-1', createdAt: now },
-      { id: 'practice-answer-1', conversationId: 'practice-qa-1', role: 'assistant', content: { schemaVersion: '1', surface: 'subject_qa', text: '因为一次函数中 x 的系数就是斜率。', subjectQa: { decision: 'answered', generatedByAI: true } }, clientMessageId: null, runId: 'practice-run-1', createdAt: now }
+      { id: 'practice-answer-1', conversationId: 'practice-qa-1', role: 'assistant', content: { schemaVersion: '1', surface: 'subject_qa', text: '因为一次函数中 x 的系数就是斜率。', subjectQa: { decision: 'answer', subject: 'math', generatedByAI: true, masteryChanged: false } }, clientMessageId: null, runId: 'practice-run-1', createdAt: now }
     ],
     artifacts: []
   };
@@ -1013,15 +1013,15 @@ test('keeps the active question stable while rendering current learning assistan
   await expect(page.getByRole('heading', { name: '本题问答 · 第 1 题' })).toHaveCount(0);
   await page.getByLabel('Agent 学习任务工作区').getByRole('button', { name: 'A 1', exact: true }).click();
   await expect(page.getByRole('heading', { name: '本题问答 · 第 1 题' })).toBeVisible();
-  await expect(page.getByLabel('当前题错因解析')).toContainText('正确答案 B');
-  await expect(page.getByLabel('当前题错因解析')).toContainText('你的答案 A');
-  await expect(page.getByLabel('当前题错因解析')).toContainText('一次函数 y=kx+b 中，k 是斜率。');
+  await expect(page.getByLabel('当前题提问引导')).toContainText('哪里没想通，可以继续问我');
+  await expect(page.getByLabel('当前题提问引导')).not.toContainText('正确答案 B');
+  await expect(page.getByLabel('当前题提问引导')).not.toContainText('一次函数 y=kx+b 中，k 是斜率。');
   await expect(page.getByLabel('当前题知识讲解')).toContainText('当前题知识讲解');
   await expect(page.getByLabel('Agent 学习任务工作区').locator('.special-explanation-box')).toHaveCount(0);
   expect(await page.locator('.agent-message-list').evaluate((root) => {
-    const analysis = root.querySelector('.agent-practice-analysis-message');
+    const invite = root.querySelector('.agent-practice-question-invite-message');
     const teaching = root.querySelector('.agent-practice-teaching-resource');
-    return Boolean(analysis && teaching && (analysis.compareDocumentPosition(teaching) & Node.DOCUMENT_POSITION_FOLLOWING));
+    return Boolean(invite && teaching && (invite.compareDocumentPosition(teaching) & Node.DOCUMENT_POSITION_FOLLOWING));
   })).toBe(true);
   await page.getByLabel('围绕当前题提问').fill('为什么 A 错了？');
   await page.getByRole('button', { name: '发送' }).click();
@@ -1044,7 +1044,7 @@ test('keeps the active question stable while rendering current learning assistan
   expect(await page.locator('.agent-message-list').evaluate((root) => {
     const teaching = root.querySelector('.agent-practice-teaching-resource');
     const userMessage = root.querySelector('.agent-message-block.user');
-    return Boolean(teaching && userMessage && (teaching.compareDocumentPosition(userMessage) & Node.DOCUMENT_POSITION_FOLLOWING));
+    return Boolean(teaching && userMessage && (userMessage.compareDocumentPosition(teaching) & Node.DOCUMENT_POSITION_FOLLOWING));
   })).toBe(true);
   await expect(page.getByLabel('Agent 学习任务工作区').locator('.agent-micro-lesson-card')).toHaveCount(0);
   await page.getByRole('button', { name: '收起讲解' }).click();
