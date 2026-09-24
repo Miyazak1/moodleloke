@@ -6,6 +6,7 @@ import type { User } from '../lib/api-types';
 import { getMe, logout, resendEmailVerification, updateMeProfile } from '../lib/auth';
 import { routes } from '../lib/routes';
 import '../styles/standalone-account.css';
+import '../styles/content-typography.css';
 
 type Props = {
   currentUser: User | null;

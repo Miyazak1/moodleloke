@@ -83,6 +83,7 @@ import { ApiError } from '../lib/request';
 import type { AgentHostBridge } from '../lib/agent-host-bridge';
 import '../styles/agent.css';
 import '../styles/agent-motion.css';
+import '../styles/content-typography.css';
 
 type AgentPageProps = {
   currentUser: User | null;

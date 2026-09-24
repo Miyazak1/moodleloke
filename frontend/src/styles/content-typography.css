@@ -1,0 +1,142 @@
+/*
+ * Readability layer for user-facing content.
+ *
+ * Page styles intentionally stay compact, but several content surfaces had
+ * drifted down to 8-12px. These overrides establish a readable floor without
+ * changing the primary side rail or page/header navigation.
+ */
+
+.agent-page :is(.agent-thread-scroll, .agent-task-rail-body, .agent-context-rail, .agent-composer) p,
+.agent-page :is(.agent-thread-scroll, .agent-task-rail-body, .agent-context-rail, .agent-composer) dd {
+  font-size: 15px !important;
+  line-height: 1.65;
+}
+
+.agent-page :is(.agent-thread-scroll, .agent-task-rail-body, .agent-context-rail, .agent-composer) small,
+.agent-page :is(.agent-thread-scroll, .agent-task-rail-body, .agent-context-rail, .agent-composer) dt {
+  font-size: 13px !important;
+  line-height: 1.5;
+}
+
+.agent-page :is(.agent-thread-scroll, .agent-task-rail-body, .agent-context-rail, .agent-composer) :is(button, input, textarea, select, summary, label) {
+  font-size: 14px !important;
+}
+
+.agent-page :is(.agent-thread-scroll, .agent-task-rail-body, .agent-context-rail, .agent-composer) :is(input, textarea, select) {
+  line-height: 1.5;
+}
+
+/* Question and answer content is the primary reading surface. */
+.agent-task-rail-body :is(.special-question-head h1, .mock-question-head h1, .agent-past-paper-question-card h2) {
+  font-size: 18px !important;
+  line-height: 1.6;
+}
+
+.agent-task-rail-body :is(.special-answer-options button, .mock-options button, .agent-past-paper-options button span) {
+  font-size: 15px !important;
+  line-height: 1.55;
+}
+
+.agent-task-rail-body :is(.special-taking-status, .special-taking-status span, .special-question-nav-head span, .special-question-nav-head strong, .special-footer-progress, .mock-cbt-status, .mock-question-nav-title) {
+  font-size: 13px !important;
+}
+
+/* Concrete mistake evidence: labels, formulas and answer comparisons. */
+.agent-wrong-evidence > header small,
+.agent-wrong-question-list > article > header small,
+.agent-wrong-question-list > article > header :is(span, em),
+.agent-wrong-question-learning dt,
+.agent-wrong-completion-rule :is(strong, small),
+.agent-wrong-action-error,
+.agent-wrong-evidence-state {
+  font-size: 13px !important;
+}
+
+.agent-wrong-question-list > article > .math-content,
+.agent-wrong-options .math-content,
+.agent-wrong-question-learning dd {
+  font-size: 15px !important;
+  line-height: 1.65;
+}
+
+.agent-wrong-answer-comparison span {
+  font-size: 13px !important;
+}
+
+.agent-wrong-answer-comparison b {
+  font-size: 14px !important;
+}
+
+/* Learning reports previously contained several 8-10px text styles. */
+.agent-structured-report :is(.agent-report-kicker, .agent-report-object-head span, .agent-report-metric small, .agent-report-insight small, .agent-report-detail-unavailable, .agent-report-detail-body section > small, .agent-report-tags span, .agent-report-question-list small, .agent-report-free-next-hint, .agent-report-adjustment label),
+.agent-structured-report-state :is(small, button) {
+  font-size: 12px !important;
+  line-height: 1.5;
+}
+
+.agent-structured-report :is(.agent-report-intro p, .agent-report-insight strong, .agent-report-detail-body p, .agent-report-question-list strong, .agent-report-question-list p),
+.agent-structured-report-state,
+.agent-structured-report-state strong {
+  font-size: 14px !important;
+  line-height: 1.6;
+}
+
+.agent-structured-report :is(.agent-report-actions > button, .agent-report-action-menu > summary, .agent-report-disclosures summary, .agent-report-evidence-row > summary, .agent-report-adjustment button) {
+  font-size: 13px !important;
+}
+
+.agent-report-metric strong {
+  font-size: 15px !important;
+}
+
+/* Right-hand report/context rail. Large scores remain intentionally large. */
+.agent-context-rail :is(.agent-report-rail-summary, .agent-report-rail-next, .agent-context-card, .agent-live-decision-card, .agent-journey-plan-card, .agent-goal-summary, .agent-subject-progress-list, .agent-completion-rule, .agent-quality-status, .agent-quality-validation, .agent-quality-alerts, .agent-journey-history-view, .agent-journey-topic-list, .agent-journey-resource-list) :is(small, dt, em) {
+  font-size: 13px !important;
+  line-height: 1.5;
+}
+
+.agent-context-rail :is(.agent-report-rail-summary, .agent-report-rail-next, .agent-context-card, .agent-live-decision-card, .agent-journey-plan-card, .agent-goal-summary, .agent-subject-progress-list, .agent-completion-rule, .agent-quality-status, .agent-quality-validation, .agent-quality-alerts, .agent-journey-history-view, .agent-journey-topic-list, .agent-journey-resource-list) :is(p, dd) {
+  font-size: 14px !important;
+  line-height: 1.6;
+}
+
+.agent-report-rail :is(.agent-report-rail-decision strong, .agent-report-rail-next header strong, .agent-report-rail-qa strong) {
+  font-size: 14px !important;
+}
+
+.agent-report-rail-score strong {
+  font-size: 35px !important;
+}
+
+/* Chat, plans, evidence and teaching cards. */
+.agent-thread-scroll :is(.agent-message-content, .agent-plan-card, .agent-analysis-items, .agent-analysis-details, .agent-evidence-card, .agent-intervention-card) :is(small, em) {
+  font-size: 13px !important;
+  line-height: 1.5;
+}
+
+.agent-thread-scroll :is(.agent-message-content, .agent-plan-card, .agent-analysis-items, .agent-analysis-details, .agent-evidence-card, .agent-intervention-card) :is(p, .math-content) {
+  font-size: 15px !important;
+  line-height: 1.65;
+}
+
+/* Authentication, onboarding and account content; site navigation is outside these scopes. */
+.brand-auth-page .auth-layout :is(p, label, button, input, select, textarea),
+.onboarding-page .onboarding-workspace :is(p, label, button, input, select, textarea),
+.standalone-account-page :is(.standalone-account-card, .standalone-account-status) :is(p, label, button, input, select, textarea) {
+  font-size: 15px !important;
+  line-height: 1.55;
+}
+
+.brand-auth-page .auth-layout small,
+.onboarding-page .onboarding-workspace small,
+.standalone-account-page :is(.standalone-account-card, .standalone-account-status) small {
+  font-size: 13px !important;
+  line-height: 1.5;
+}
+
+@media (max-width: 720px) {
+  .agent-page :is(.agent-thread-scroll, .agent-task-rail-body, .agent-context-rail, .agent-composer) p,
+  .agent-page :is(.agent-thread-scroll, .agent-task-rail-body, .agent-context-rail, .agent-composer) dd {
+    font-size: 14px !important;
+  }
+}

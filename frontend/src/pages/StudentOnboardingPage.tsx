@@ -15,6 +15,7 @@ import { updateMeProfile } from '../lib/auth';
 import { buildAuthRedirectUrl, safeReturnPath } from '../lib/app-navigation';
 import { routes } from '../lib/routes';
 import '../styles/onboarding.css';
+import '../styles/content-typography.css';
 
 const COPY = {
   'zh-CN': {

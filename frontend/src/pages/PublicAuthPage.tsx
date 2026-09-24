@@ -4,6 +4,7 @@ import { useI18n } from '../i18n/useI18n';
 import type { User } from '../lib/api';
 import { forgotPassword, getMe, login, register, resendEmailVerification, resetPassword, startGoogleLogin } from '../lib/auth';
 import '../styles/account.css';
+import '../styles/content-typography.css';
 
 type AuthMode = 'login' | 'register';
 type AuthStep = AuthMode | 'forgot' | 'reset' | 'verify';
