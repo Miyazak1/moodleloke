@@ -573,7 +573,7 @@ test('reviews a concrete mistake and launches an independently verified targeted
       itemKey: 'adaptive_round:51:401', sourceType: 'adaptive_round', sourceId: 51, questionId: 401,
       subject: 'physics', topicId: 47, topicTitle: '惯性', topic: { id: 47, slug: 'inertia', title: '惯性', subject: 'physics', module: '力与运动' },
       prompt: '汽车急刹车时乘客向前倾，主要体现了物体的（ ）',
-      options: [{ id: 'A', text: '弹性' }, { id: 'B', text: '惯性' }, { id: 'C', text: '重力' }, { id: 'D', text: '摩擦力' }],
+      options: [{ id: 'A', text: '弹性' }, { id: 'B', text: '惯性 $v=v_0$' }, { id: 'C', text: '重力' }, { id: 'D', text: '摩擦力 $F=ma$' }],
       selected: 'D', selectedAnswer: 'D', correctAnswer: 'B', explanation: '乘客身体保持原运动状态，这是惯性。', aiExplanationId: 901,
       structuredExplanation: { whyWrong: '把造成减速的摩擦力误当成身体继续向前运动的原因。', correctApproach: '先判断研究对象是否在保持原来的运动状态。', quickMethod: '状态来不及改变时优先考虑惯性。', avoidNextTime: '区分“改变运动的力”和“保持原状态的惯性”。' },
       mistakePattern: { patternType: 'concept_confusion', label: '概念混淆', confidence: .92, source: 'wrong_pattern' }, patternType: 'concept_confusion', patternLabel: '概念混淆', patternConfidence: .92,
@@ -622,6 +622,8 @@ test('reviews a concrete mistake and launches an independently verified targeted
   await expect(page.getByText('独立验证 1/2 · 3 次重复错误', { exact: true })).toBeVisible();
   await expect(page.getByLabel('具体错题证据')).toContainText('汽车急刹车时乘客向前倾');
   await expect(page.getByLabel('具体错题证据')).toContainText('你的答案 D. 摩擦力');
+  await expect(page.locator('.agent-wrong-answer-comparison [data-math-formula="true"]')).toHaveCount(2);
+  await expect(page.locator('.agent-wrong-answer-comparison')).not.toContainText('$');
   await expect(page.getByRole('button', { name: '已复盘，开始独立验证', exact: true })).toBeDisabled();
   await page.getByRole('button', { name: '查看解析并学习', exact: true }).click();
   await expect(page.getByLabel('具体错题证据')).toContainText('把造成减速的摩擦力误当成身体继续向前运动的原因');

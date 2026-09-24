@@ -59,7 +59,7 @@
   line-height: 1.65;
 }
 
-.agent-wrong-answer-comparison span {
+.agent-wrong-answer-comparison > span {
   font-size: 13px !important;
 }
 

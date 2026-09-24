@@ -1445,8 +1445,8 @@
 .agent-wrong-question-list > article > header em { background: var(--agent-blue-soft); color: var(--agent-blue); }
 .agent-wrong-question-list > article > .math-content { font-size: 13px; font-weight: 760; line-height: 1.65; }
 .agent-wrong-answer-comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-.agent-wrong-answer-comparison span { display: grid; gap: 3px; padding: 8px 10px; border-radius: 9px; background: #fff2ed; color: var(--agent-muted); font-size: 10px; }
-.agent-wrong-answer-comparison span:last-child { background: var(--agent-mint-soft); }
+.agent-wrong-answer-comparison > span { display: grid; gap: 3px; padding: 8px 10px; border-radius: 9px; background: #fff2ed; color: var(--agent-muted); font-size: 10px; }
+.agent-wrong-answer-comparison > span:last-child { background: var(--agent-mint-soft); }
 .agent-wrong-answer-comparison b { color: var(--agent-ink); font-size: 11px; }
 .agent-wrong-question-learning { display: grid; gap: 10px; padding-top: 3px; }
 .agent-wrong-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
