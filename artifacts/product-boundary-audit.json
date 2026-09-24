@@ -1,11 +1,11 @@
 {
   "schemaVersion": "1",
-  "generatedAt": "2026-09-17T13:37:24.968Z",
+  "generatedAt": "2026-09-24T03:53:05.048Z",
   "frontend": {
     "totals": {
-      "student-agent": 78,
+      "student-agent": 140,
       "admin-authoring": 94,
-      "teaching-assets": 52,
+      "teaching-assets": 0,
       "obsolete-candidate": 0
     },
     "groups": {
@@ -15,12 +15,20 @@
         "src/components/ErrorBanner.tsx",
         "src/components/Icon.tsx",
         "src/components/MathContent.tsx",
+        "src/components/NewtonSecondLawCanvas.tsx",
+        "src/components/SolidGeometryCanvas.tsx",
         "src/components/StudentProfileFields.tsx",
         "src/components/UiPrimitives.tsx",
         "src/components/UserAvatar.tsx",
+        "src/components/agent/AgentAsyncState.tsx",
+        "src/components/agent/AgentLearningCards.tsx",
         "src/components/agent/AgentLearningSettingsView.tsx",
+        "src/components/agent/AgentLearningTools.tsx",
         "src/components/agent/AgentPastPaperWorkspace.tsx",
+        "src/components/agent/AgentStructuredReportMessage.tsx",
+        "src/components/agent/AgentWeaknessWorkspace.tsx",
         "src/components/agent/TeachingAssetRegistry.tsx",
+        "src/components/agent/TeachingVisualizerCatalog.tsx",
         "src/content/localized/csca-subjects.ts",
         "src/i18n/I18nProvider.tsx",
         "src/i18n/locale-utils.ts",
@@ -32,6 +40,8 @@
         "src/i18n/useI18n.ts",
         "src/lib/adaptive-practice-pool.ts",
         "src/lib/agent-feature.ts",
+        "src/lib/agent-host-bridge.ts",
+        "src/lib/agent-workspace-route.ts",
         "src/lib/api-admin.ts",
         "src/lib/api-agent.ts",
         "src/lib/api-content.ts",
@@ -43,7 +53,6 @@
         "src/lib/api.ts",
         "src/lib/app-navigation.ts",
         "src/lib/auth.ts",
-        "src/lib/locale-routing.ts",
         "src/lib/request.ts",
         "src/lib/routes.ts",
         "src/lib/storage-compat.ts",
@@ -54,6 +63,23 @@
         "src/pages/PublicAuthPage.tsx",
         "src/pages/StandaloneAccountPage.tsx",
         "src/pages/StudentOnboardingPage.tsx",
+        "src/pages/special-practice/ChemistryVisualizers.tsx",
+        "src/pages/special-practice/MathVisualizers.tsx",
+        "src/pages/special-practice/PhysicsCircuitSeriesParallelVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsCircularMotionVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsDoubleSlitVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsElectricFieldVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsElectromagneticInductionVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsEnergyConservationVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsIdealGasLawVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsKinematicsGraphsVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsMagneticForceVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsMomentumCollisionVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsNewtonSecondLawVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsPhotoelectricEffectVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsThermodynamicsFirstLawVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsThinLensVisualizerView.tsx",
+        "src/pages/special-practice/PhysicsWaveSpeedVisualizerView.tsx",
         "src/pages/special-practice/adaptive/AdaptivePracticeViews.tsx",
         "src/pages/special-practice/adaptive/FunctionShiftMicroLesson.tsx",
         "src/styles.css",
@@ -64,8 +90,11 @@
         "src/styles/account.part-03.css",
         "src/styles/account.part-04.css",
         "src/styles/account.part-05.css",
+        "src/styles/agent-motion.css",
+        "src/styles/agent-report.css",
         "src/styles/agent.css",
         "src/styles/base.css",
+        "src/styles/brand-work.css",
         "src/styles/brand.css",
         "src/styles/index.css",
         "src/styles/layout.css",
@@ -81,13 +110,46 @@
         "src/styles/onboarding.css",
         "src/styles/public-shell.css",
         "src/styles/shared-components.css",
+        "src/styles/special-practice-visualizers-chemistry.css",
+        "src/styles/special-practice-visualizers-physics.css",
+        "src/styles/special-practice-visualizers.css",
         "src/styles/special-practice.css",
         "src/styles/special-practice.part-01.css",
         "src/styles/special-practice.part-02.css",
         "src/styles/special-practice.part-03.css",
         "src/styles/special-practice.part-04.css",
         "src/styles/special-practice.part-05.css",
-        "src/styles/standalone-account.css"
+        "src/styles/standalone-account.css",
+        "src/styles/visualizers/chemistry/atomic-periodic.css",
+        "src/styles/visualizers/chemistry/bonding.css",
+        "src/styles/visualizers/chemistry/ion-reaction.css",
+        "src/styles/visualizers/chemistry/neutralization.css",
+        "src/styles/visualizers/chemistry/nomenclature.css",
+        "src/styles/visualizers/chemistry/organic.css",
+        "src/styles/visualizers/chemistry/ph-titration.css",
+        "src/styles/visualizers/chemistry/reaction-rate.css",
+        "src/styles/visualizers/chemistry/redox.css",
+        "src/styles/visualizers/chemistry/substance-classification.css",
+        "src/styles/visualizers/math/charts-responsive.css",
+        "src/styles/visualizers/math/layout-controls.css",
+        "src/styles/visualizers/math/math-tools.css",
+        "src/styles/visualizers/math/notes-legends.css",
+        "src/styles/visualizers/math/shared-formula-trig.css",
+        "src/styles/visualizers/physics/circuit.css",
+        "src/styles/visualizers/physics/circular.css",
+        "src/styles/visualizers/physics/double-slit.css",
+        "src/styles/visualizers/physics/electric.css",
+        "src/styles/visualizers/physics/energy.css",
+        "src/styles/visualizers/physics/ideal-gas.css",
+        "src/styles/visualizers/physics/induction.css",
+        "src/styles/visualizers/physics/kinematics.css",
+        "src/styles/visualizers/physics/lens.css",
+        "src/styles/visualizers/physics/magnetic.css",
+        "src/styles/visualizers/physics/momentum.css",
+        "src/styles/visualizers/physics/newton.css",
+        "src/styles/visualizers/physics/photoelectric.css",
+        "src/styles/visualizers/physics/thermodynamics.css",
+        "src/styles/visualizers/physics/wave.css"
       ],
       "admin-authoring": [
         "src/AuthoringApp.tsx",
@@ -185,68 +247,15 @@
         "src/styles/admin.css",
         "src/styles/authoring-entry.css"
       ],
-      "teaching-assets": [
-        "src/components/NewtonSecondLawCanvas.tsx",
-        "src/components/SolidGeometryCanvas.tsx",
-        "src/pages/special-practice/ChemistryVisualizers.tsx",
-        "src/pages/special-practice/MathVisualizers.tsx",
-        "src/pages/special-practice/PhysicsCircuitSeriesParallelVisualizerView.tsx",
-        "src/pages/special-practice/PhysicsCircularMotionVisualizerView.tsx",
-        "src/pages/special-practice/PhysicsDoubleSlitVisualizerView.tsx",
-        "src/pages/special-practice/PhysicsElectricFieldVisualizerView.tsx",
-        "src/pages/special-practice/PhysicsElectromagneticInductionVisualizerView.tsx",
-        "src/pages/special-practice/PhysicsEnergyConservationVisualizerView.tsx",
-        "src/pages/special-practice/PhysicsIdealGasLawVisualizerView.tsx",
-        "src/pages/special-practice/PhysicsKinematicsGraphsVisualizerView.tsx",
-        "src/pages/special-practice/PhysicsMagneticForceVisualizerView.tsx",
-        "src/pages/special-practice/PhysicsMomentumCollisionVisualizerView.tsx",
-        "src/pages/special-practice/PhysicsNewtonSecondLawVisualizerView.tsx",
-        "src/pages/special-practice/PhysicsPhotoelectricEffectVisualizerView.tsx",
-        "src/pages/special-practice/PhysicsThermodynamicsFirstLawVisualizerView.tsx",
-        "src/pages/special-practice/PhysicsThinLensVisualizerView.tsx",
-        "src/pages/special-practice/PhysicsWaveSpeedVisualizerView.tsx",
-        "src/styles/special-practice-visualizers-chemistry.css",
-        "src/styles/special-practice-visualizers-physics.css",
-        "src/styles/special-practice-visualizers.css",
-        "src/styles/visualizers/chemistry/atomic-periodic.css",
-        "src/styles/visualizers/chemistry/bonding.css",
-        "src/styles/visualizers/chemistry/ion-reaction.css",
-        "src/styles/visualizers/chemistry/neutralization.css",
-        "src/styles/visualizers/chemistry/nomenclature.css",
-        "src/styles/visualizers/chemistry/organic.css",
-        "src/styles/visualizers/chemistry/ph-titration.css",
-        "src/styles/visualizers/chemistry/reaction-rate.css",
-        "src/styles/visualizers/chemistry/redox.css",
-        "src/styles/visualizers/chemistry/substance-classification.css",
-        "src/styles/visualizers/math/charts-responsive.css",
-        "src/styles/visualizers/math/layout-controls.css",
-        "src/styles/visualizers/math/math-tools.css",
-        "src/styles/visualizers/math/notes-legends.css",
-        "src/styles/visualizers/math/shared-formula-trig.css",
-        "src/styles/visualizers/physics/circuit.css",
-        "src/styles/visualizers/physics/circular.css",
-        "src/styles/visualizers/physics/double-slit.css",
-        "src/styles/visualizers/physics/electric.css",
-        "src/styles/visualizers/physics/energy.css",
-        "src/styles/visualizers/physics/ideal-gas.css",
-        "src/styles/visualizers/physics/induction.css",
-        "src/styles/visualizers/physics/kinematics.css",
-        "src/styles/visualizers/physics/lens.css",
-        "src/styles/visualizers/physics/magnetic.css",
-        "src/styles/visualizers/physics/momentum.css",
-        "src/styles/visualizers/physics/newton.css",
-        "src/styles/visualizers/physics/photoelectric.css",
-        "src/styles/visualizers/physics/thermodynamics.css",
-        "src/styles/visualizers/physics/wave.css"
-      ],
+      "teaching-assets": [],
       "obsolete-candidate": []
     }
   },
   "backend": {
     "entry": "backend/src/app.module.ts",
     "totals": {
-      "all": 247,
-      "reachable": 209,
+      "all": 254,
+      "reachable": 216,
       "unreachable": 38
     },
     "areas": {
@@ -256,8 +265,8 @@
         "unreachable": 4
       },
       "agent": {
-        "total": 40,
-        "reachable": 40,
+        "total": 44,
+        "reachable": 44,
         "unreachable": 0
       },
       "ai-gateway": {
@@ -281,13 +290,13 @@
         "unreachable": 0
       },
       "common": {
-        "total": 6,
-        "reachable": 5,
+        "total": 7,
+        "reachable": 6,
         "unreachable": 1
       },
       "csca-learning": {
-        "total": 3,
-        "reachable": 3,
+        "total": 4,
+        "reachable": 4,
         "unreachable": 0
       },
       "csca-mock-exam": {
@@ -296,8 +305,8 @@
         "unreachable": 0
       },
       "csca-special-practice": {
-        "total": 19,
-        "reachable": 19,
+        "total": 20,
+        "reachable": 20,
         "unreachable": 0
       },
       "health": {
@@ -349,6 +358,8 @@
       "backend/src/agent/agent-attachment-evidence.service.ts",
       "backend/src/agent/agent-attachment-storage.ts",
       "backend/src/agent/agent-attachment.service.ts",
+      "backend/src/agent/agent-conversation-lifecycle.policy.ts",
+      "backend/src/agent/agent-conversation-lifecycle.service.ts",
       "backend/src/agent/agent-event.service.ts",
       "backend/src/agent/agent-grounded-response.service.ts",
       "backend/src/agent/agent-intent-router.service.ts",
@@ -364,6 +375,7 @@
       "backend/src/agent/agent-recovery.service.ts",
       "backend/src/agent/agent-runner.service.ts",
       "backend/src/agent/agent-runtime-feature-flags.service.ts",
+      "backend/src/agent/agent-subject-qa.service.ts",
       "backend/src/agent/agent-teaching-asset.service.ts",
       "backend/src/agent/agent-tool-executor.service.ts",
       "backend/src/agent/agent-trusted-question-matcher.service.ts",
@@ -371,6 +383,7 @@
       "backend/src/agent/agent.module.ts",
       "backend/src/agent/agent.service.ts",
       "backend/src/agent/agent.types.ts",
+      "backend/src/agent/learning-quality.policy.ts",
       "backend/src/agent/question-supply-evaluation.service.ts",
       "backend/src/agent/question-supply-fulfillment.contract.ts",
       "backend/src/agent/question-supply-fulfillment.service.ts",
@@ -468,6 +481,7 @@
       "backend/src/auth/auth.service.ts",
       "backend/src/auth/auth.types.ts",
       "backend/src/auth/current-user.decorator.ts",
+      "backend/src/common/integration-readiness.ts",
       "backend/src/common/ops-metrics.ts",
       "backend/src/common/rate-limit.ts",
       "backend/src/common/request-context.ts",
@@ -476,12 +490,14 @@
       "backend/src/csca-learning/csca-learning.module.ts",
       "backend/src/csca-learning/csca-learning.service.ts",
       "backend/src/csca-learning/csca-learning.types.ts",
+      "backend/src/csca-learning/wrong-pattern-verification.policy.ts",
       "backend/src/csca-mock-exam/csca-mock-exam.controller.ts",
       "backend/src/csca-mock-exam/csca-mock-exam.module.ts",
       "backend/src/csca-mock-exam/csca-mock-exam.service.ts",
       "backend/src/csca-mock-exam/csca-mock-exam.types.ts",
       "backend/src/csca-mock-exam/mock-exam-mastery-bridge.service.ts",
       "backend/src/csca-mock-exam/mock-exam-planner.service.ts",
+      "backend/src/csca-special-practice/adaptive-learning-decision.policy.ts",
       "backend/src/csca-special-practice/adaptive-planner.service.ts",
       "backend/src/csca-special-practice/adaptive-question-provider.service.ts",
       "backend/src/csca-special-practice/ai-coach-prompt-templates.ts",
@@ -782,7 +798,7 @@
       {
         "model": "CscaExamTopic",
         "accessor": "cscaExamTopic",
-        "prismaAccessorMentions": 26,
+        "prismaAccessorMentions": 27,
         "typeMentions": 2,
         "reviewCandidate": false
       },
@@ -845,21 +861,21 @@
       {
         "model": "CscaAdaptiveSession",
         "accessor": "cscaAdaptiveSession",
-        "prismaAccessorMentions": 9,
+        "prismaAccessorMentions": 10,
         "typeMentions": 0,
         "reviewCandidate": false
       },
       {
         "model": "CscaAdaptiveRound",
         "accessor": "cscaAdaptiveRound",
-        "prismaAccessorMentions": 24,
+        "prismaAccessorMentions": 25,
         "typeMentions": 0,
         "reviewCandidate": false
       },
       {
         "model": "CscaAdaptiveRoundItem",
         "accessor": "cscaAdaptiveRoundItem",
-        "prismaAccessorMentions": 6,
+        "prismaAccessorMentions": 8,
         "typeMentions": 0,
         "reviewCandidate": false
       },
@@ -880,7 +896,7 @@
       {
         "model": "CscaQuestion",
         "accessor": "cscaQuestion",
-        "prismaAccessorMentions": 29,
+        "prismaAccessorMentions": 31,
         "typeMentions": 2,
         "reviewCandidate": false
       },
@@ -894,14 +910,14 @@
       {
         "model": "CscaConceptCard",
         "accessor": "cscaConceptCard",
-        "prismaAccessorMentions": 4,
+        "prismaAccessorMentions": 5,
         "typeMentions": 0,
         "reviewCandidate": false
       },
       {
         "model": "TeachingAsset",
         "accessor": "teachingAsset",
-        "prismaAccessorMentions": 12,
+        "prismaAccessorMentions": 13,
         "typeMentions": 1,
         "reviewCandidate": false
       },
@@ -1069,7 +1085,7 @@
       {
         "model": "CscaTrainingEvent",
         "accessor": "cscaTrainingEvent",
-        "prismaAccessorMentions": 23,
+        "prismaAccessorMentions": 24,
         "typeMentions": 0,
         "reviewCandidate": false
       },
@@ -1139,7 +1155,7 @@
       {
         "model": "CscaWrongPattern",
         "accessor": "cscaWrongPattern",
-        "prismaAccessorMentions": 24,
+        "prismaAccessorMentions": 29,
         "typeMentions": 0,
         "reviewCandidate": false
       },
@@ -1286,7 +1302,7 @@
       {
         "model": "LearningEvidenceEvent",
         "accessor": "learningEvidenceEvent",
-        "prismaAccessorMentions": 13,
+        "prismaAccessorMentions": 16,
         "typeMentions": 1,
         "reviewCandidate": false
       },
@@ -1307,14 +1323,14 @@
       {
         "model": "UserCscaTopicStateV2",
         "accessor": "userCscaTopicStateV2",
-        "prismaAccessorMentions": 7,
+        "prismaAccessorMentions": 8,
         "typeMentions": 1,
         "reviewCandidate": false
       },
       {
         "model": "LearningStateProjectionCheckpoint",
         "accessor": "learningStateProjectionCheckpoint",
-        "prismaAccessorMentions": 8,
+        "prismaAccessorMentions": 10,
         "typeMentions": 0,
         "reviewCandidate": false
       },
@@ -1328,14 +1344,14 @@
       {
         "model": "LearningPrescription",
         "accessor": "learningPrescription",
-        "prismaAccessorMentions": 2,
+        "prismaAccessorMentions": 4,
         "typeMentions": 0,
         "reviewCandidate": false
       },
       {
         "model": "LearningDecisionCurrent",
         "accessor": "learningDecisionCurrent",
-        "prismaAccessorMentions": 6,
+        "prismaAccessorMentions": 7,
         "typeMentions": 0,
         "reviewCandidate": false
       },
@@ -1349,7 +1365,7 @@
       {
         "model": "LearningInterventionDelivery",
         "accessor": "learningInterventionDelivery",
-        "prismaAccessorMentions": 13,
+        "prismaAccessorMentions": 14,
         "typeMentions": 0,
         "reviewCandidate": false
       },
@@ -1377,14 +1393,14 @@
       {
         "model": "LearningInterventionStabilityAssessment",
         "accessor": "learningInterventionStabilityAssessment",
-        "prismaAccessorMentions": 4,
+        "prismaAccessorMentions": 5,
         "typeMentions": 0,
         "reviewCandidate": false
       },
       {
         "model": "LearningPrescriptionOutcome",
         "accessor": "learningPrescriptionOutcome",
-        "prismaAccessorMentions": 12,
+        "prismaAccessorMentions": 15,
         "typeMentions": 0,
         "reviewCandidate": false
       },
@@ -1531,14 +1547,14 @@
       {
         "model": "AgentConversation",
         "accessor": "agentConversation",
-        "prismaAccessorMentions": 22,
+        "prismaAccessorMentions": 32,
         "typeMentions": 0,
         "reviewCandidate": false
       },
       {
         "model": "AgentMessage",
         "accessor": "agentMessage",
-        "prismaAccessorMentions": 13,
+        "prismaAccessorMentions": 14,
         "typeMentions": 0,
         "reviewCandidate": false
       },
@@ -1601,21 +1617,21 @@
       {
         "model": "AgentRun",
         "accessor": "agentRun",
-        "prismaAccessorMentions": 26,
+        "prismaAccessorMentions": 27,
         "typeMentions": 0,
         "reviewCandidate": false
       },
       {
         "model": "AgentToolCall",
         "accessor": "agentToolCall",
-        "prismaAccessorMentions": 60,
+        "prismaAccessorMentions": 61,
         "typeMentions": 0,
         "reviewCandidate": false
       },
       {
         "model": "AgentArtifact",
         "accessor": "agentArtifact",
-        "prismaAccessorMentions": 23,
+        "prismaAccessorMentions": 29,
         "typeMentions": 0,
         "reviewCandidate": false
       },

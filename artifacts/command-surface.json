@@ -1,9 +1,9 @@
 {
   "schemaVersion": "1",
-  "total": 331,
-  "budget": 331,
+  "total": 332,
+  "budget": 332,
   "counts": {
-    "product-core": 42,
+    "product-core": 43,
     "question-production": 202,
     "platform-contracts": 41,
     "compatibility-operations": 46,
@@ -45,6 +45,7 @@
       "question-engine:test",
       "release:check",
       "security:audit-dependencies",
+      "teaching-assets:seed",
       "test:authoring-boundary",
       "test:ci-contract",
       "test:data-migration-policy",

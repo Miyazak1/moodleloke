@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { TrainingEventService } from '../csca-special-practice/training-event.service';
+import { decideWrongPatternVerification } from './wrong-pattern-verification.policy';
 import {
   CscaLearningSubject,
   CscaWrongPatternReviewQueueResponse,
@@ -688,7 +689,7 @@ function dashboardCopy(language?: string | null) {
 }
 
 function hrefForSubject(subject: CscaLearningSubject) {
-  return `/zh/csca-subjects/${subject}`;
+  return `/csca-subjects/${subject}`;
 }
 
 function subjectLabel(subject: CscaLearningSubject, language?: string | null) {
@@ -1104,14 +1105,15 @@ export class CscaLearningService {
     });
     for (const pattern of patterns) {
       const correctEvidenceCount = correctEvidenceCountFrom(pattern.metadata) + 1;
-      const verification = wrongPatternVerificationState({ metadata: pattern.metadata, lastCorrectAt: pattern.lastCorrectAt });
-      const nextStatus = verification.verificationRequired ? 'improving' : correctEvidenceCount >= 2 ? 'resolved' : 'improving';
       await this.prisma.cscaWrongPattern.update({
         where: { id: pattern.id },
         data: {
-          status: nextStatus,
+          // Ordinary correct answers are useful recovery evidence, but they are not
+          // an independent, delayed verification. Only the dedicated verification
+          // flow may resolve a wrong pattern.
+          status: 'improving',
           lastCorrectAt: occurredAt,
-          nextReviewAt: nextStatus === 'resolved' ? null : addLocalDays(occurredAt, 5),
+          nextReviewAt: addLocalDays(occurredAt, 3),
           metadata: {
             ...jsonRecord(pattern.metadata),
             correctEvidenceCount,
@@ -1160,34 +1162,32 @@ export class CscaLearningService {
       lastVerificationOverallTotal: input.overallTotal,
       lastVerificationOverallAccuracy: overallAccuracy
     };
+    const verificationDecision = decideWrongPatternVerification({
+      passed: input.passed,
+      occurredAt,
+      metadata
+    });
     const updated = await this.prisma.cscaWrongPattern.update({
       where: { id: pattern.id },
-      data: input.passed
-        ? {
-            status: 'resolved',
-            lastCorrectAt: occurredAt,
-            nextReviewAt: null,
-            metadata: {
-              ...baseMetadata,
-              verificationCompletedAt: occurredAt.toISOString(),
-              verificationFailedAt: null
-            }
-          }
-        : {
-            status: 'improving',
-            nextReviewAt: addLocalDays(occurredAt, 2),
-            metadata: {
-              ...baseMetadata,
-              verificationFailedAt: occurredAt.toISOString(),
-              verificationCompletedAt: null
-            }
-          }
+      data: {
+        status: verificationDecision.resolved ? 'resolved' : 'improving',
+        lastCorrectAt: input.passed ? occurredAt : pattern.lastCorrectAt,
+        nextReviewAt: verificationDecision.nextReviewDelayDays === null
+          ? null
+          : addLocalDays(occurredAt, verificationDecision.nextReviewDelayDays),
+        metadata: {
+          ...baseMetadata,
+          ...verificationDecision.metadata
+        }
+      }
     });
     return {
       id: updated.id,
       status: updated.status,
       nextReviewAt: updated.nextReviewAt?.toISOString() ?? null,
       verificationAttemptCount,
+      consecutiveVerificationPassCount: verificationDecision.consecutivePassCount,
+      requiredConsecutiveVerificationPassCount: 2,
       targetAccuracy,
       overallAccuracy,
       ...wrongPatternVerificationState({ metadata: updated.metadata, lastCorrectAt: updated.lastCorrectAt })
@@ -2356,7 +2356,7 @@ export class CscaLearningService {
       if (input.activeRound && activeSubject) {
         candidates.push(rankedAction(
           'continue_active_round',
-          `/zh/csca-subjects/${activeSubject}/practice/rounds/${input.activeRound.id}`,
+          `/csca-subjects/${activeSubject}/practice/rounds/${input.activeRound.id}`,
           needsReviewRepair ? 18 : 30,
           copy.actions.continue_active_round.body,
           needsReviewRepair ? 'medium' : 'high'
@@ -2369,23 +2369,23 @@ export class CscaLearningService {
         const reviewGap = Math.max(0, 12 - reviewScore);
         candidates.push(rankedAction(
           'review_due_patterns',
-          '/zh/me?section=practice&due=1#wrong-bank',
+          '/me?section=practice&due=1#wrong-bank',
           12 + dueReviewCount * 7 + highPriorityPatternCount * 6 + pendingVerificationCount * 8 + reviewGap + Math.min(4, activePatternCount),
           copy.actions.review_due_patterns.body,
           'high'
         ));
       }
       if (latestMock && latestMock.unansweredCount >= 8) {
-        candidates.push(rankedAction('resume_mock_attempt', '/zh/csca-mock-exam', 14 + Math.min(8, latestMock.unansweredCount - 7), copy.actions.resume_mock_attempt.body));
+        candidates.push(rankedAction('resume_mock_attempt', '/csca-mock-exam', 14 + Math.min(8, latestMock.unansweredCount - 7), copy.actions.resume_mock_attempt.body));
       }
       if (!latestMock) {
-        candidates.push(rankedAction('start_mock_exam', '/zh/csca-mock-exam', input.summary.totalAnswered >= 40 ? 16 : 10, copy.actions.start_mock_exam.body));
+        candidates.push(rankedAction('start_mock_exam', '/csca-mock-exam', input.summary.totalAnswered >= 40 ? 16 : 10, copy.actions.start_mock_exam.body));
       }
       if (weakestSubject && (weakestSubject.masteryAvg === null || weakestSubject.masteryAvg < 72 || weakestSubject.weakTopicCount > 0)) {
         const masteryGap = weakestSubject.masteryAvg === null ? 18 : Math.max(0, 72 - weakestSubject.masteryAvg);
         candidates.push(rankedAction('repair_weak_subject', weakestSubject.href, 8 + Math.min(12, masteryGap) + Math.min(5, weakestSubject.weakTopicCount), copy.actions.repair_weak_subject.body));
       }
-      candidates.push(rankedAction('keep_training', input.nextAction?.href ?? weakestSubject?.href ?? '/zh/csca-subjects/math', score >= 78 ? 8 : 5, copy.actions.keep_training.body, score >= 78 ? 'medium' : 'low'));
+      candidates.push(rankedAction('keep_training', input.nextAction?.href ?? weakestSubject?.href ?? '/csca-subjects/math', score >= 78 ? 8 : 5, copy.actions.keep_training.body, score >= 78 ? 'medium' : 'low'));
       const seen = new Set<string>();
       return candidates
         .sort((a, b) => b.expectedGain - a.expectedGain || a.type.localeCompare(b.type))
@@ -2991,7 +2991,7 @@ export class CscaLearningService {
         total,
         totalSeconds: secondsFromJsonMap(attempt.timeSpent),
         submittedAt: attempt.submittedAt?.toISOString() ?? null,
-        reportHref: `/zh/csca-mock-exam/attempts/${attempt.id}/report`
+        reportHref: `/csca-mock-exam/attempts/${attempt.id}/report`
       }];
     });
     const latest = rows[0] ?? null;
@@ -3351,7 +3351,7 @@ export class CscaLearningService {
         title: copy.continueTitle(label),
         body: copy.continueBody,
         ctaLabel: copy.continueCta,
-        href: `/zh/csca-subjects/${activeSubject}/practice/rounds/${input.activeRound.id}`
+        href: `/csca-subjects/${activeSubject}/practice/rounds/${input.activeRound.id}`
       };
     }
 
@@ -3393,7 +3393,7 @@ export class CscaLearningService {
       title: copy.mockTitle,
       body: copy.mockBody,
       ctaLabel: copy.mockCta,
-      href: '/zh/csca-mock-exam'
+      href: '/csca-mock-exam'
     };
   }
 }

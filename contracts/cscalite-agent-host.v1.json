@@ -1,0 +1,122 @@
+{
+  "schemaVersion": "cscalite-agent-host-v1",
+  "status": "integration-frozen",
+  "purpose": "Replace CSCALite's legacy student practice surface while keeping automatic question production isolated as a plugin capability.",
+  "ownership": {
+    "host": ["authentication", "student identity", "primary navigation", "deployment rollout"],
+    "moodlelike": ["practice workspace", "answer checking", "learning evidence", "question-scoped AI help", "review and verification"],
+    "questionPlugin": ["candidate generation", "offline review", "publication into approved question supply"]
+  },
+  "routes": {
+    "browserEntry": "/agent",
+    "localePolicy": {
+      "pathPrefixAllowed": false,
+      "localeSource": "host_snapshot",
+      "supported": ["zh-CN", "en", "vi"],
+      "contentFallback": "en"
+    },
+    "apiPrefixes": [
+      "/api/v1/agent",
+      "/api/v1/csca-special-practice/adaptive",
+      "/api/v1/me/csca/wrong-questions"
+    ],
+    "queryKeys": [
+      "agentContextId",
+      "agentArtifactId",
+      "agentRoundId",
+      "agentView",
+      "agentTaskType",
+      "agentSubject",
+      "agentSection"
+    ],
+    "forbiddenTaskWorkspaceKeys": ["agentConversationId", "conversation"]
+  },
+  "frontendBridge": {
+    "module": "frontend/src/lib/agent-host-bridge.ts",
+    "requiredCallbacks": ["navigate", "requestAuthentication", "getSnapshot", "requestJson"],
+    "identityProps": ["currentUser", "isResolvingAuth"],
+    "snapshotFields": ["contractVersion", "identity", "isResolvingAuth", "locale", "features"],
+    "transportRule": "All Agent HTTP calls use the host requestJson transport; the embedded Agent must not own access-token or refresh-token persistence.",
+    "rule": "The host owns navigation, authentication redirects, identity, locale, transport and feature negotiation; AgentPage owns learning-workspace orchestration."
+  },
+  "identity": {
+    "transport": "existing CSCALite authenticated session",
+    "serverAuthority": "user id is read from the authenticated request and never accepted from browser payloads",
+    "serializedIdType": "string",
+    "serverIdType": "host_defined",
+    "conversationRule": "Only independent subject Q&A is a reusable conversation. Practice help is scoped to one AgentContext and one current question."
+  },
+  "agentContext": {
+    "schemaVersion": "agent-context-v1",
+    "kinds": ["practice", "mock_exam", "past_paper", "teaching", "wrong_question_review"],
+    "statuses": ["active", "superseded", "completed", "expired"],
+    "requiredBindings": ["userId", "kind", "domainEntityType", "domainEntityId"],
+    "optionalBindings": ["questionId", "subject", "expiresAt"],
+    "ownership": "The server derives userId from the authenticated request and rejects cross-user access.",
+    "questionIsolation": "When questionId is present, messages and assistance are valid only for that exact question. Changing the current question supersedes the prior question binding.",
+    "conversationFallbackAllowed": false,
+    "urlKey": "agentContextId",
+    "terminalBehavior": {
+      "superseded": "workspace_stale",
+      "expired": "workspace_stale",
+      "crossUser": "workspace_forbidden"
+    }
+  },
+  "workspaceEvents": {
+    "hostToAgent": ["identity.changed", "locale.changed", "feature.changed", "workspace.restore"],
+    "agentToHost": ["workspace.ready", "workspace.closed", "attempt.started", "attempt.submitted", "report.opened"]
+  },
+  "errors": {
+    "codes": [
+      "auth_required",
+      "email_unverified",
+      "feature_disabled",
+      "workspace_stale",
+      "workspace_forbidden",
+      "question_supply_unavailable"
+    ],
+    "httpStatus": {
+      "auth_required": 401,
+      "email_unverified": 403,
+      "feature_disabled": 503,
+      "workspace_stale": 409,
+      "workspace_forbidden": 403,
+      "question_supply_unavailable": 503
+    }
+  },
+  "rollout": {
+    "serverSwitch": "AGENT_WEB_ENABLED",
+    "browserSwitch": "VITE_AGENT_WEB_ENABLED",
+    "browserWriteSwitch": "VITE_AGENT_PRACTICE_WRITE_ENABLED",
+    "writeSwitch": "CSCA_AGENT_PRACTICE_WRITE_ENABLED",
+    "disabledRedirect": "VITE_AGENT_DISABLED_REDIRECT_URL",
+    "hostMode": "MOODLELIKE_HOST_INTEGRATION_MODE",
+    "contractVersion": "MOODLELIKE_HOST_CONTRACT_VERSION"
+  },
+  "css": {
+    "rootNamespace": "agent-page",
+    "hostMayStyleInsideNamespace": false
+  },
+  "questionProductionIsolation": {
+    "studentRuntimeMayGenerateQuestions": false,
+    "contractVersion": "question-supply-plugin-v1",
+    "catalogReadPort": "QuestionCatalogReadPort",
+    "demandPort": "QuestionSupplyDemandPort",
+    "failureBehavior": "Return question_supply_unavailable without invoking generation or blocking existing practice, reports or conversations.",
+    "requiredDisabledFlags": [
+      "CSCA_AI_QUESTION_GENERATION_ENABLED",
+      "CSCA_AI_QUESTIONING_SCHEDULER_ENABLED",
+      "CSCA_SUBJECT_PRACTICE_PRODUCTION_ENABLED",
+      "CSCA_SUBJECT_PRACTICE_PREDICTIVE_REPLENISHMENT_ENABLED"
+    ]
+  },
+  "releaseGates": [
+    "configuration_preflight",
+    "database_read_probe",
+    "deepseek_stream_probe",
+    "multi_user_isolation",
+    "idempotent_submit",
+    "desktop_tablet_mobile_golden_paths",
+    "rollback_rehearsal"
+  ]
+}

@@ -1,0 +1,116 @@
+.agent-page,
+.agent-gate-page {
+  --agent-motion-instant: 80ms;
+  --agent-motion-fast: 140ms;
+  --agent-motion-base: 200ms;
+  --agent-motion-panel: 260ms;
+  --agent-ease-standard: cubic-bezier(.2, 0, 0, 1);
+  --agent-ease-enter: cubic-bezier(0, 0, .2, 1);
+  --agent-ease-exit: cubic-bezier(.4, 0, 1, 1);
+}
+
+.agent-task-rail {
+  animation: agentPanelEnter var(--agent-motion-panel) var(--agent-ease-enter) both;
+}
+
+.agent-practice-help-close {
+  transition:
+    color var(--agent-motion-fast) var(--agent-ease-standard),
+    border-color var(--agent-motion-fast) var(--agent-ease-standard),
+    background var(--agent-motion-fast) var(--agent-ease-standard);
+}
+
+.agent-message-block {
+  animation: agentMessageEnter var(--agent-motion-base) var(--agent-ease-enter) both;
+}
+
+.agent-inline-error {
+  animation: agentNoticeEnter var(--agent-motion-base) var(--agent-ease-enter) both;
+}
+
+.agent-jump-to-latest {
+  position: absolute;
+  z-index: 12;
+  right: clamp(18px, 3vw, 34px);
+  bottom: 122px;
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  gap: 7px;
+  padding: 0 12px;
+  border: 1px solid rgba(49, 93, 255, .2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .96);
+  color: var(--agent-blue);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 850;
+  box-shadow: 0 10px 28px rgba(34, 55, 100, .14);
+  cursor: pointer;
+  animation: agentFloatingActionEnter var(--agent-motion-base) var(--agent-ease-enter) both;
+  transition:
+    transform var(--agent-motion-fast) var(--agent-ease-standard),
+    box-shadow var(--agent-motion-fast) var(--agent-ease-standard),
+    border-color var(--agent-motion-fast) var(--agent-ease-standard);
+}
+
+.agent-jump-to-latest:hover {
+  border-color: rgba(49, 93, 255, .4);
+  box-shadow: 0 13px 32px rgba(34, 55, 100, .18);
+  transform: translateY(-1px);
+}
+
+.agent-jump-to-latest:active { transform: translateY(0); }
+.agent-jump-to-latest svg { width: 14px; height: 14px; }
+
+.agent-page :is(button, [role="button"], [role="radio"], input, select, textarea):focus-visible,
+.agent-gate-page :is(button, [role="button"], input, select, textarea):focus-visible {
+  outline: 3px solid rgba(49, 93, 255, .24);
+  outline-offset: 2px;
+}
+
+@keyframes agentPanelEnter {
+  from { opacity: 0; transform: translateX(10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes agentMessageEnter {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes agentNoticeEnter {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes agentFloatingActionEnter {
+  from { opacity: 0; transform: translateY(6px) scale(.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 720px) {
+  .agent-jump-to-latest { right: 14px; bottom: 108px; }
+  .agent-async-state { grid-template-columns: 34px minmax(0, 1fr); }
+  .agent-async-state > button { grid-column: 2; justify-self: start; }
+}
+
+@media (pointer: coarse) {
+  .agent-page :is(button, [role="button"], [role="radio"]),
+  .agent-gate-page :is(button, [role="button"]) { min-height: 44px; }
+  .agent-page :is(.agent-practice-help-close, .agent-send-button, .agent-attachment-actions button, .agent-composer-context button) { min-width: 44px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agent-page *,
+  .agent-page *::before,
+  .agent-page *::after,
+  .agent-gate-page *,
+  .agent-gate-page *::before,
+  .agent-gate-page *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}

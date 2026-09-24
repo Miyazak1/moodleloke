@@ -1,0 +1,55 @@
+{
+  "hostSnapshot": {
+    "contractVersion": "cscalite-agent-host-v1",
+    "identity": {
+      "id": "42",
+      "email": "student@example.invalid",
+      "role": "student",
+      "displayName": "Fixture Student",
+      "emailVerified": true
+    },
+    "isResolvingAuth": false,
+    "locale": "zh-CN",
+    "features": {
+      "agentWeb": true,
+      "practiceWrite": true,
+      "studentRuntimeQuestionGeneration": false
+    }
+  },
+  "agentContext": {
+    "id": "ctx_fixture_physics_31_23",
+    "userId": "42",
+    "kind": "practice",
+    "domainEntityType": "adaptive_round",
+    "domainEntityId": "31",
+    "questionId": "23",
+    "subject": "physics",
+    "status": "active",
+    "createdAt": "2026-09-24T00:00:00.000Z",
+    "updatedAt": "2026-09-24T00:00:00.000Z",
+    "expiresAt": "2026-10-24T00:00:00.000Z"
+  },
+  "error": {
+    "code": "workspace_stale",
+    "status": 409,
+    "message": "当前题目上下文已失效，请返回最新题目。"
+  },
+  "questionSupplyDemand": {
+    "schemaVersion": "1",
+    "demandKey": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "requestId": "fixture-request-1",
+    "requestCycle": 1,
+    "source": "agent_today_plan",
+    "subjectCode": "physics",
+    "topicIds": [1],
+    "difficulty": "medium",
+    "taskType": "diagnostic",
+    "verificationPhase": null,
+    "sourcePolicy": "reviewed_published_only",
+    "requestedCount": 5,
+    "lastKnownAvailableCount": 0,
+    "deficitCount": 5,
+    "constraints": {},
+    "observedAt": "2026-09-24T00:00:00.000Z"
+  }
+}

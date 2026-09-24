@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Icon } from '../Icon';
 import { useI18n } from '../../i18n/useI18n';
 import { API_BASE, downloadPastPaperFile, getPastPaper, type PastPaperDetail, type PastPaperFile } from '../../lib/api';
 import {
+  createAgentLearningContext,
   getAgentPastPaperAssistance,
   getAgentPastPaperProgress,
   getAgentPastPaperQuestionIndex,
@@ -22,6 +23,7 @@ type AgentPastPaperWorkspaceProps = {
   slug: string;
   conversationId?: string;
   initialQuestionId?: number;
+  onContextReady?: (conversationId: string) => void;
   onAsk: (prompt: string, context: { slug: string; questionId: number }) => void;
   onContinueLearning: () => void;
 };
@@ -55,7 +57,7 @@ const ASSISTANCE_LABELS: Record<AgentPastPaperAssistanceAction, { zh: string; en
   show_full_solution: { zh: '查看完整解析', en: 'Show full solution', icon: 'lucide:book-open-check' }
 };
 
-export function AgentPastPaperWorkspace({ slug, conversationId, initialQuestionId, onAsk, onContinueLearning }: AgentPastPaperWorkspaceProps) {
+export function AgentPastPaperWorkspace({ slug, conversationId, initialQuestionId, onContextReady, onAsk, onContinueLearning }: AgentPastPaperWorkspaceProps) {
   const { locale, t } = useI18n();
   const [detail, setDetail] = useState<PastPaperDetail | null>(null);
   const [selectedFileId, setSelectedFileId] = useState<number | null>(null);
@@ -75,6 +77,33 @@ export function AgentPastPaperWorkspace({ slug, conversationId, initialQuestionI
   const [attemptBusy, setAttemptBusy] = useState(false);
   const [clockNow, setClockNow] = useState(() => Date.now());
   const [loadRevision, setLoadRevision] = useState(0);
+  const [workspaceContextId, setWorkspaceContextId] = useState<string | undefined>(conversationId);
+  const contextProvisioningRef = useRef<ReturnType<typeof createAgentLearningContext> | null>(null);
+
+  useEffect(() => {
+    setWorkspaceContextId(conversationId);
+  }, [conversationId, slug]);
+
+  useEffect(() => {
+    let alive = true;
+    if (workspaceContextId) return () => { alive = false; };
+    const provisioning = contextProvisioningRef.current
+      ?? createAgentLearningContext({ kind: 'past_paper', resourceId: slug });
+    contextProvisioningRef.current = provisioning;
+    void provisioning
+      .then((context) => {
+        if (!alive) return;
+        setWorkspaceContextId(context.contextId);
+        onContextReady?.(context.contextId);
+      })
+      .catch((nextError) => {
+        if (alive) setError(nextError instanceof Error ? nextError.message : t('agent.pastPaper.contextFailed', '真题学习空间暂时无法建立。'));
+      })
+      .finally(() => {
+        if (contextProvisioningRef.current === provisioning) contextProvisioningRef.current = null;
+      });
+    return () => { alive = false; };
+  }, [onContextReady, t, workspaceContextId]);
 
   useEffect(() => {
     let alive = true;
@@ -82,25 +111,53 @@ export function AgentPastPaperWorkspace({ slug, conversationId, initialQuestionI
     setError('');
     void Promise.all([
       getPastPaper(slug, { locale }),
-      getAgentPastPaperQuestionIndex(slug),
-      conversationId ? getAgentPastPaperProgress(slug, conversationId) : Promise.resolve(null)
+      getAgentPastPaperQuestionIndex(slug)
     ])
-      .then(([result, index, sessionProgress]) => {
+      .then(([result, index]) => {
         if (!alive) return;
         setDetail(result);
         setQuestionIndex(index);
-        setProgress(sessionProgress);
         const preferred = result.files.find((file) => file.kind === 'paper') ?? result.files[0];
         setSelectedFileId(preferred?.id ?? null);
         const preferredQuestion = index.questions.find((item) => item.id === initialQuestionId)
-          ?? index.questions.find((item) => item.id === sessionProgress?.nextQuestionId)
           ?? index.questions.find((item) => item.canAnswer)
           ?? index.questions[0];
         setSelectedQuestionId(preferredQuestion?.id ?? null);
       })
       .catch((nextError) => alive && setError(nextError instanceof Error ? nextError.message : t('agent.pastPaper.loadFailed', '真题暂时无法加载。')));
     return () => { alive = false; };
-  }, [conversationId, initialQuestionId, loadRevision, locale, slug, t]);
+  }, [initialQuestionId, loadRevision, locale, slug, t]);
+
+  useEffect(() => {
+    let alive = true;
+    setProgress(null);
+    if (!workspaceContextId) return () => { alive = false; };
+    void getAgentPastPaperProgress(slug, workspaceContextId)
+      .then((sessionProgress) => {
+        if (!alive) return;
+        setProgress(sessionProgress);
+        if (!initialQuestionId && sessionProgress.nextQuestionId) setSelectedQuestionId(sessionProgress.nextQuestionId);
+      })
+      .catch(async (nextError) => {
+        if (!alive) return;
+        const message = nextError instanceof Error ? nextError.message : '';
+        if (/对话不存在|conversation(?:\s+is)?\s+not\s+found/i.test(message)) {
+          try {
+            const context = await createAgentLearningContext({ kind: 'past_paper', resourceId: slug });
+            if (!alive) return;
+            setWorkspaceContextId(context.contextId);
+            onContextReady?.(context.contextId);
+            return;
+          } catch (contextError) {
+            if (!alive) return;
+            setError(contextError instanceof Error ? contextError.message : t('agent.pastPaper.contextFailed', '真题学习空间暂时无法建立。'));
+            return;
+          }
+        }
+        setError(message || t('agent.pastPaper.progressFailed', '真题进度暂时无法加载。'));
+      });
+    return () => { alive = false; };
+  }, [initialQuestionId, onContextReady, slug, t, workspaceContextId]);
 
   useEffect(() => {
     let alive = true;
@@ -108,31 +165,31 @@ export function AgentPastPaperWorkspace({ slug, conversationId, initialQuestionI
     setAttempt(null);
     setSelectedAnswer('');
     setSolutionArmed(false);
-    if (!conversationId || !selectedQuestionId || !questionIndex) return () => { alive = false; };
+    if (!workspaceContextId || !selectedQuestionId || !questionIndex) return () => { alive = false; };
     const selectedSummary = questionIndex?.questions.find((question) => question.id === selectedQuestionId);
     if (selectedSummary && !selectedSummary.canAnswer) return () => { alive = false; };
-    void startAgentPastPaperAttempt(slug, selectedQuestionId, { clientRequestId: crypto.randomUUID(), conversationId })
+    void startAgentPastPaperAttempt(slug, selectedQuestionId, { clientRequestId: crypto.randomUUID(), conversationId: workspaceContextId })
       .then(async (result) => {
         if (!alive) return;
         setAttempt(result);
         setSelectedAnswer(result.attempt.selectedAnswer ?? '');
-        setAssistance(await getAgentPastPaperAssistance(slug, selectedQuestionId, conversationId));
-        if (alive) setProgress(await getAgentPastPaperProgress(slug, conversationId));
+        setAssistance(await getAgentPastPaperAssistance(slug, selectedQuestionId, workspaceContextId));
+        if (alive) setProgress(await getAgentPastPaperProgress(slug, workspaceContextId));
       })
       .catch((nextError) => { if (alive) setError(nextError instanceof Error ? nextError.message : t('agent.pastPaper.assistanceLoadFailed', '学习辅助暂时无法加载。')); });
     return () => { alive = false; };
-  }, [conversationId, questionIndex, selectedQuestionId, slug, t]);
+  }, [questionIndex, selectedQuestionId, slug, t, workspaceContextId]);
 
   useEffect(() => {
     let alive = true;
     setReview(null);
     setReviewError('');
-    if (!conversationId || progress?.status !== 'completed') return () => { alive = false; };
-    void getAgentPastPaperReview(slug, conversationId)
+    if (!workspaceContextId || progress?.status !== 'completed') return () => { alive = false; };
+    void getAgentPastPaperReview(slug, workspaceContextId)
       .then((result) => { if (alive) setReview(result); })
       .catch((nextError) => { if (alive) setReviewError(nextError instanceof Error ? nextError.message : t('agent.pastPaper.reviewFailed', '整卷复盘暂时无法加载。')); });
     return () => { alive = false; };
-  }, [conversationId, progress?.status, slug, t]);
+  }, [progress?.status, slug, t, workspaceContextId]);
 
   useEffect(() => {
     if (!attempt || attempt.attempt.status === 'submitted') return;
@@ -172,19 +229,19 @@ export function AgentPastPaperWorkspace({ slug, conversationId, initialQuestionI
   }
 
   async function requestAssistance(action: AgentPastPaperAssistanceAction, confirmed = false) {
-    if (!conversationId || !selectedQuestionId || assistanceBusy) return;
+    if (!workspaceContextId || !selectedQuestionId || assistanceBusy) return;
     setAssistanceBusy(action);
     setError('');
     try {
       await requestAgentPastPaperAssistance(slug, selectedQuestionId, {
         clientRequestId: crypto.randomUUID(),
-        conversationId,
+        conversationId: workspaceContextId,
         action,
         ...(action === 'check_step' ? { studentWork } : {}),
         ...(confirmed ? { confirmed: true } : {}),
         language: locale.startsWith('en') ? 'en' : 'zh'
       });
-      setAssistance(await getAgentPastPaperAssistance(slug, selectedQuestionId, conversationId));
+      setAssistance(await getAgentPastPaperAssistance(slug, selectedQuestionId, workspaceContextId));
       if (action === 'show_full_solution') setSolutionArmed(false);
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : t('agent.pastPaper.assistanceFailed', '学习辅助生成失败。'));
@@ -194,14 +251,14 @@ export function AgentPastPaperWorkspace({ slug, conversationId, initialQuestionI
   }
 
   async function submitAnswer() {
-    if (!conversationId || !attempt || attempt.attempt.status === 'submitted' || !selectedAnswer.trim() || attemptBusy) return;
+    if (!workspaceContextId || !attempt || attempt.attempt.status === 'submitted' || !selectedAnswer.trim() || attemptBusy) return;
     setAttemptBusy(true);
     setError('');
     try {
       const result = await submitAgentPastPaperAttempt(attempt.attempt.id, { clientRequestId: crypto.randomUUID(), selectedAnswer });
       setAttempt(result);
-      if (selectedQuestionId) setAssistance(await getAgentPastPaperAssistance(slug, selectedQuestionId, conversationId));
-      setProgress(await getAgentPastPaperProgress(slug, conversationId));
+      if (selectedQuestionId) setAssistance(await getAgentPastPaperAssistance(slug, selectedQuestionId, workspaceContextId));
+      setProgress(await getAgentPastPaperProgress(slug, workspaceContextId));
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : t('agent.pastPaper.submitFailed', '答案提交失败。'));
     } finally {

@@ -92,7 +92,7 @@ test('completes the real proactive teaching path inside the Agent workspace', as
 
   await completeVerification(page);
 
-  await expect(page).toHaveURL(new RegExp(`/zh/agent\\?agentContextId=${scenario.conversationId}`));
+  await expect(page).toHaveURL(new RegExp(`/agent\\?agentContextId=${scenario.conversationId}`));
   await expect(page.locator('.agent-message-block.assistant').last()).toContainText(/即时独立验证 3\/3 题通过|当前阶段已记录/);
   await expect(page.locator('.agent-message-block.assistant').last()).toContainText(/尚不等于稳定掌握|后续保持验证/);
 
@@ -103,14 +103,14 @@ test('completes the real proactive teaching path inside the Agent workspace', as
   await retentionCard.getByRole('button', { name: /开始验证/ }).click();
   await completeVerification(page);
 
-  await expect(page).toHaveURL(new RegExp(`/zh/agent\\?agentContextId=${scenario.conversationId}`));
+  await expect(page).toHaveURL(new RegExp(`/agent\\?agentContextId=${scenario.conversationId}`));
   await expect(page.locator('.agent-message-block.assistant').last()).toContainText(/保持验证 3\/3 题通过|当前阶段已记录/);
   const transferCard = page.locator('.agent-verification-card');
   await expect(transferCard).toContainText('跨题型迁移验证');
   await transferCard.getByRole('button', { name: /开始验证/ }).click();
   await completeVerification(page);
 
-  await expect(page).toHaveURL(new RegExp(`/zh/agent\\?agentContextId=${scenario.conversationId}`));
+  await expect(page).toHaveURL(new RegExp(`/agent\\?agentContextId=${scenario.conversationId}`));
   await expect(page.locator('.agent-message-block.assistant').last()).toContainText('迁移验证 3/3 题通过');
   await expect(page.locator('.agent-message-block.assistant').last()).toContainText('三阶段验证已确认稳定掌握');
   await expect(page.locator('.agent-verification-card')).toHaveCount(0);

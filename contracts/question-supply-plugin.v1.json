@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "question-supply-plugin-v1",
+  "description": "Asynchronous boundary between the student runtime and independently operated question production.",
+  "ports": {
+    "catalogRead": {
+      "name": "QuestionCatalogReadPort",
+      "sourcePolicy": "reviewed_published_only",
+      "operations": ["countApproved", "listApproved"]
+    },
+    "demand": {
+      "name": "QuestionSupplyDemandPort",
+      "operation": "dispatch",
+      "delivery": "asynchronous_idempotent",
+      "mayPublishDirectly": false
+    }
+  },
+  "studentRuntime": {
+    "mayInvokeGeneration": false,
+    "mayReadStagingCandidates": false,
+    "onInventoryShortage": "question_supply_unavailable",
+    "mustRemainAvailable": ["existing_practice", "answer_checking", "reports", "independent_subject_qa"]
+  }
+}

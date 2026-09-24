@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { useI18n } from '../../i18n/useI18n';
 import type { Locale } from '../../i18n/locales';
-import { buildLocalizedPath } from '../../lib/locale-routing';
 import { routes } from '../../lib/routes';
 import type { User } from '../../lib/api';
 
@@ -101,8 +100,8 @@ const ADMIN_CONSOLE_COPY = {
   }
 } as const;
 
-function navigateTo(path: string, locale: Locale) {
-  const target = buildLocalizedPath(locale, path);
+function navigateTo(path: string, _locale: Locale) {
+  const target = path;
   if (window.location.pathname === target) return;
   window.history.pushState({}, '', target);
   window.dispatchEvent(new PopStateEvent('popstate'));

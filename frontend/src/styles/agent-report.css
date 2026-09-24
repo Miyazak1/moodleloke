@@ -11,6 +11,22 @@
 .agent-report-intro p { max-width: 640px; margin: 0; color: var(--agent-muted); font-size: 12px; line-height: 1.7; }
 
 .agent-report-object { display: grid; gap: 0; overflow: hidden; border: 1px solid rgba(28, 67, 62, .14); border-radius: 15px; background: rgba(255, 255, 255, .88); box-shadow: 0 12px 32px rgba(35, 70, 64, .06); }
+.agent-verification-result { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 11px; align-items: start; margin: 14px 14px 0; padding: 13px; border: 1px solid rgba(49, 93, 255, .2); border-radius: 12px; background: linear-gradient(135deg, rgba(239, 244, 255, .94), rgba(239, 255, 249, .82)); }
+.agent-verification-result > svg { width: 18px; height: 18px; margin: 5px 0 0 6px; color: var(--agent-blue); }
+.agent-verification-result > div { display: grid; gap: 3px; }
+.agent-verification-result small { color: var(--agent-blue); font-size: 9px; font-weight: 900; }
+.agent-verification-result strong { color: var(--agent-ink); font-size: 13px; line-height: 1.4; }
+.agent-verification-result p { margin: 0; color: var(--agent-muted); font-size: 10px; line-height: 1.6; }
+.agent-verification-result em { color: var(--agent-mint-dark); font-size: 9px; font-style: normal; font-weight: 800; }
+.agent-verification-result > button { display: inline-flex; min-height: 32px; align-items: center; gap: 5px; padding: 0 10px; border: 1px solid var(--agent-line-strong); border-radius: 8px; background: #fff; color: var(--agent-blue); font: inherit; font-size: 9px; font-weight: 850; cursor: pointer; }
+.agent-verification-result > button svg { width: 12px; height: 12px; }
+.agent-verification-result > p { grid-column: 2 / -1; margin: 0; color: #a33f32; font-size: 9px; }
+.agent-verification-result[data-verdict="repaired"] { border-color: rgba(19, 199, 163, .32); background: var(--agent-mint-soft); }
+.agent-verification-result[data-verdict="repaired"] > svg,
+.agent-verification-result[data-verdict="repaired"] small { color: var(--agent-mint-dark); }
+.agent-verification-result[data-verdict="insufficient_evidence"] { border-color: rgba(194, 139, 17, .28); background: #fff9e8; }
+.agent-verification-result[data-verdict="insufficient_evidence"] > svg,
+.agent-verification-result[data-verdict="insufficient_evidence"] small { color: #8b650e; }
 .agent-report-object-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; padding: 17px 18px 13px; }
 .agent-report-object-head > div { display: grid; min-width: 0; gap: 4px; }
 .agent-report-object-head span { color: var(--agent-faint); font-size: 9px; font-weight: 850; }

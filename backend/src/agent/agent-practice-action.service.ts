@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { CscaAdaptiveService } from '../csca-special-practice/csca-adaptive.service';
+import { WRONG_PATTERN_MINIMUM_TARGET_ITEMS, WRONG_PATTERN_REQUIRED_CONSECUTIVE_PASSES } from '../csca-learning/wrong-pattern-verification.policy';
 import { CscaMockExamService } from '../csca-mock-exam/csca-mock-exam.service';
 import { LearningDecisionService } from '../learning-intelligence/decision/learning-decision.service';
 import { LearningStateProjectorService } from '../learning-intelligence/projection/learning-state-projector.service';
@@ -64,6 +65,121 @@ export class AgentPracticeActionService {
     private readonly decisions?: LearningDecisionService
   ) {}
 
+  async startPrescription(userId: number, prescriptionId: string, body: unknown) {
+    if (!this.flags.isWebEnabled() || !this.flags.isPracticeWriteEnabled()) {
+      throw new ServiceUnavailableException({ code: 'AGENT_PRACTICE_WRITE_DISABLED', message: 'Agent 练习创建能力暂未开放。' });
+    }
+    const input = StartAgentPracticeInputSchema.parse(body);
+    const current = await this.prisma.learningDecisionCurrent.findFirst({
+      where: { userId, prescriptionId },
+      include: { prescription: true }
+    });
+    if (!current || current.prescription.validUntil.getTime() <= Date.now()) {
+      throw new ConflictException({ code: 'AGENT_PLAN_STALE', message: '这项建议已经更新，请刷新后开始最新任务。' });
+    }
+    const tasks = Array.isArray(current.prescription.tasks)
+      ? current.prescription.tasks as Array<Record<string, unknown>>
+      : [];
+    const task = tasks.slice().sort((left, right) => Number(left.priority ?? 99) - Number(right.priority ?? 99))[0];
+    if (!task) throw new ConflictException({ code: 'AGENT_PRESCRIPTION_EMPTY', message: '当前建议没有可启动的任务。' });
+    const taskType = String(task.type ?? '');
+    const subject = String(task.subject ?? '');
+    if (!SUPPORTED_TASKS.has(taskType)) {
+      throw new ConflictException({ code: 'AGENT_TASK_NOT_STARTABLE', message: '当前建议暂时不能从这里启动。' });
+    }
+    if (!['math', 'physics', 'chemistry'].includes(subject)) {
+      throw new BadRequestException({ code: 'AGENT_TASK_SUBJECT_INVALID', message: '学习建议科目无效。' });
+    }
+
+    let review: Record<string, unknown> | null = null;
+    if (taskType === 'review' || taskType === 'concept_learning') {
+      const topicIds = Array.isArray(task.topicIds) ? task.topicIds.map(positiveInteger).filter((value): value is number => Boolean(value)) : [];
+      const reviewItem = await this.prisma.cscaWrongPattern.findFirst({
+        where: {
+          userId,
+          subject,
+          status: { in: ['active', 'improving'] },
+          ...(topicIds.length ? { topicId: { in: topicIds } } : {})
+        },
+        select: { id: true, topicId: true, patternType: true },
+        orderBy: { updatedAt: 'desc' }
+      });
+      if (!reviewItem) {
+        throw new ConflictException({ code: 'AGENT_REVIEW_ITEM_UNAVAILABLE', message: '当前错题复习项已经变化，请刷新最新建议。' });
+      }
+      review = reviewItem;
+    }
+
+    let artifact = await this.prisma.agentArtifact.findFirst({
+      where: { userId, type: 'learning_plan', domainEntityType: 'learning_prescription', domainEntityId: prescriptionId },
+      orderBy: { createdAt: 'desc' }
+    });
+    if (!artifact) {
+      const language = input.questionLanguage ?? 'zh';
+      const subjectLabel = language === 'zh'
+        ? subject === 'math' ? '数学' : subject === 'physics' ? '物理' : '化学'
+        : subject === 'math' ? 'Math' : subject === 'physics' ? 'Physics' : 'Chemistry';
+      const artifactId = `plan_${createHash('sha256').update(`${userId}:${prescriptionId}`).digest('hex').slice(0, 32)}`;
+      try {
+        artifact = await this.prisma.$transaction(async (tx) => {
+          const conversation = await tx.agentConversation.create({
+            data: { userId, title: LEARNING_WORKSPACE_CONTAINER_TITLE }
+          });
+          const now = new Date();
+          const run = await tx.agentRun.create({
+            data: {
+              conversationId: conversation.id,
+              userId,
+              status: 'completed',
+              traceId: randomUUID(),
+              inputSnapshot: { schemaVersion: '1', intent: 'start_learning_prescription', prescriptionId },
+              startedAt: now,
+              completedAt: now,
+              attemptCount: 1
+            }
+          });
+          return tx.agentArtifact.create({
+            data: {
+              id: artifactId,
+              conversationId: conversation.id,
+              runId: run.id,
+              userId,
+              type: 'learning_plan',
+              status: 'ready',
+              title: language === 'zh' ? `${subjectLabel} · 当前建议任务` : `${subjectLabel} · Current recommended task`,
+              summary: current.prescription.reasonSummary,
+              domainEntityType: 'learning_prescription',
+              domainEntityId: prescriptionId,
+              route: '/agent',
+              snapshot: {
+                schemaVersion: '1',
+                planKind: 'current_recommendation',
+                generatedFrom: 'learning_prescription',
+                prescriptionId,
+                goalId: current.prescription.goalId,
+                versions: current.prescription.versions,
+                objective: current.prescription.objective,
+                reasonCodes: current.prescription.reasonCodes,
+                confidence: current.prescription.confidence,
+                estimatedMinutes: current.prescription.estimatedMinutes,
+                task,
+                review,
+                canStart: true,
+                route: '/agent',
+                validUntil: current.prescription.validUntil.toISOString()
+              } as Prisma.InputJsonValue
+            }
+          });
+        });
+      } catch (error) {
+        if (!(error instanceof Prisma.PrismaClientKnownRequestError) || error.code !== 'P2002') throw error;
+        artifact = await this.prisma.agentArtifact.findUnique({ where: { id: artifactId } });
+      }
+    }
+    if (!artifact) throw new ConflictException({ code: 'AGENT_PLAN_MATERIALIZATION_FAILED', message: '建议任务尚未准备好，请重试。' });
+    return this.start(userId, artifact.id, input, taskType === 'mock_exam' ? 'mock_exam' : 'practice');
+  }
+
   async startFree(userId: number, body: unknown) {
     if (!this.flags.isWebEnabled() || !this.flags.isPracticeWriteEnabled()) {
       throw new ServiceUnavailableException({ code: 'AGENT_PRACTICE_WRITE_DISABLED', message: 'Agent 练习创建能力暂未开放。' });
@@ -76,6 +192,16 @@ export class AgentPracticeActionService {
     });
     if (existing?.status === 'completed' && existing.output) return existing.output;
     if (existing) throw new ConflictException({ code: 'AGENT_FREE_PRACTICE_CREATE_IN_PROGRESS', message: '自由练习正在创建，请稍后重试。' });
+
+    const requestedReview = input.reviewItemId
+      ? await this.prisma.cscaWrongPattern.findFirst({
+          where: { id: input.reviewItemId, userId, subject: input.subject, status: { in: ['active', 'improving'] } },
+          select: { id: true, topicId: true, patternType: true }
+        })
+      : null;
+    if (input.reviewItemId && (!requestedReview || requestedReview.patternType !== input.patternType)) {
+      throw new ConflictException({ code: 'AGENT_REVIEW_ITEM_UNAVAILABLE', message: '这项错题复习已经完成或发生变化，请刷新薄弱点后重试。' });
+    }
 
     const conversation = input.conversationId
       ? await this.prisma.agentConversation.findFirst({
@@ -129,10 +255,24 @@ export class AgentPracticeActionService {
         mode: 'practice',
         questionLanguage: input.questionLanguage
       });
-      const round = await this.adaptive.createRound(userId, String(session.id), { questionCount: input.questionCount });
+      const focusTopicId = requestedReview?.topicId ?? input.focusTopicId;
+      const round = await this.adaptive.createRound(userId, String(session.id), requestedReview
+        ? {
+            questionCount: input.questionCount,
+            ...(focusTopicId ? { focusTopicId } : {}),
+            verification: {
+              reviewItemId: requestedReview.id,
+              ...(requestedReview.topicId ? { topicId: requestedReview.topicId } : {}),
+              patternType: requestedReview.patternType
+            }
+          }
+        : focusTopicId
+          ? { questionCount: input.questionCount, focusTopicId }
+          : { questionCount: input.questionCount });
+      const practiceKind = requestedReview ? 'review' : focusTopicId ? 'targeted_practice' : 'free_practice';
       const title = input.questionLanguage === 'zh'
-        ? `${input.subject === 'math' ? '数学' : input.subject === 'physics' ? '物理' : '化学'}自由练习`
-        : `${input.subject === 'math' ? 'Math' : input.subject === 'physics' ? 'Physics' : 'Chemistry'} free practice`;
+        ? `${input.subject === 'math' ? '数学' : input.subject === 'physics' ? '物理' : '化学'}${requestedReview ? '错题复习' : focusTopicId ? '薄弱点训练' : '自由练习'}`
+        : `${input.subject === 'math' ? 'Math' : input.subject === 'physics' ? 'Physics' : 'Chemistry'} ${requestedReview ? 'mistake review' : focusTopicId ? 'focused practice' : 'free practice'}`;
       const artifact = await this.prisma.agentArtifact.create({
         data: {
           conversationId: conversation.id,
@@ -147,7 +287,8 @@ export class AgentPracticeActionService {
           snapshot: {
             schemaVersion: '1',
             source: 'student_initiated',
-            task: { type: 'free_practice', subject: input.subject, questionCount: round.questions.length },
+            task: { type: 'free_practice', practiceKind, subject: input.subject, questionCount: round.questions.length, ...(focusTopicId ? { topicIds: [focusTopicId] } : {}) },
+            ...(requestedReview ? { review: { reviewItemId: requestedReview.id, patternType: requestedReview.patternType } } : {}),
             freePracticeJourneyId: journeyId,
             batchIndex: 1,
             journeyStatus: 'active',
@@ -166,7 +307,8 @@ export class AgentPracticeActionService {
         route, legacyRoute, journeyId, batchIndex: 1,
         workspace: {
           kind: 'adaptive_round', phase: 'practice', taskType: 'free_practice', subject: input.subject,
-          reasonCodes: ['student_initiated'], objective: null
+          reasonCodes: ['student_initiated', ...(requestedReview ? ['review_due_pattern'] : focusTopicId ? ['weak_topic_focus'] : [])],
+          objective: requestedReview ? '修复重复错因并完成验证' : focusTopicId ? '针对当前薄弱知识点训练' : null
         }
       };
       await this.prisma.$transaction(async (tx) => {
@@ -188,7 +330,7 @@ export class AgentPracticeActionService {
         await this.events.append(tx, {
           runId: reserved.run.id, conversationId: conversation.id,
           eventKey: `practice:${artifact.id}:started`, eventType: 'practice.started',
-          data: { artifactId: artifact.id, sessionId: round.session.id, roundId: round.round.id, subject: input.subject, source: 'student_initiated' }
+          data: { artifactId: artifact.id, sessionId: round.session.id, roundId: round.round.id, subject: input.subject, source: 'student_initiated', practiceKind, focusTopicId: focusTopicId ?? null, reviewItemId: requestedReview?.id ?? null }
         });
       });
       return output;
@@ -662,18 +804,58 @@ export class AgentPracticeActionService {
       ? planner.focus as Record<string, unknown>
       : {};
     const focusTopicId = positiveInteger(focus.topicId);
+    const reviewItemId = positiveInteger(focus.reviewItemId);
     const targetItems = planner.mode === 'verification' && focusTopicId
       ? round.items.filter((item) => item.topicId === focusTopicId)
       : round.items;
     const targetCorrect = targetItems.filter((item) => item.isCorrect === true).length;
     const targetAccuracy = targetItems.length ? targetCorrect / targetItems.length : 0;
-    const decision = planner.mode === 'verification' && targetAccuracy < 0.8 ? 'failed' : 'completed';
+    const verificationPassed = planner.mode === 'verification'
+      && targetItems.length >= WRONG_PATTERN_MINIMUM_TARGET_ITEMS
+      && targetAccuracy >= 0.8;
+    const verificationPattern = planner.mode === 'verification' && reviewItemId
+      ? await this.prisma.cscaWrongPattern.findFirst({
+          where: { id: reviewItemId, userId, subject: round.session.subject },
+          select: { id: true, topicId: true, patternType: true, status: true, nextReviewAt: true, metadata: true }
+        })
+      : null;
+    const verificationMetadata = objectValue(verificationPattern?.metadata ?? null);
+    const consecutivePassCount = Math.max(0, Number(verificationMetadata.consecutiveVerificationPassCount ?? 0) || 0);
+    const requiredPassCount = Math.max(1, Number(verificationMetadata.requiredConsecutiveVerificationPassCount ?? WRONG_PATTERN_REQUIRED_CONSECUTIVE_PASSES) || WRONG_PATTERN_REQUIRED_CONSECUTIVE_PASSES);
+    const verificationResult = planner.mode === 'verification' ? {
+      verdict: targetItems.length < WRONG_PATTERN_MINIMUM_TARGET_ITEMS || !verificationPattern
+        ? 'insufficient_evidence' as const
+        : verificationPattern.status === 'resolved'
+          ? 'repaired' as const
+          : 'needs_consolidation' as const,
+      currentRoundPassed: verificationPassed,
+      reviewItemId: verificationPattern?.id ?? reviewItemId ?? null,
+      topicId: verificationPattern?.topicId ?? focusTopicId ?? null,
+      patternType: verificationPattern?.patternType ?? (typeof focus.patternType === 'string' ? focus.patternType : null),
+      consecutivePassCount,
+      requiredPassCount,
+      nextReviewAt: verificationPattern?.nextReviewAt?.toISOString() ?? null,
+      nextAction: targetItems.length < WRONG_PATTERN_MINIMUM_TARGET_ITEMS || !verificationPattern
+        ? 'retry_verification' as const
+        : verificationPattern.status === 'resolved'
+          ? 'broaden_coverage' as const
+          : verificationPassed
+            ? 'wait_for_spaced_verification' as const
+            : 'review_then_retry' as const
+    } : null;
+    const decision = planner.mode === 'verification' && !verificationPassed ? 'failed' : 'completed';
     const toolName = 'settle_learning_task';
     const keyHash = idempotencyHash(userId, toolName, String(roundId));
     const existingCall = await this.prisma.agentToolCall.findFirst({
       where: { userId, toolName, toolVersion: TOOL_VERSION, idempotencyKeyHash: keyHash }
     });
-    if (existingCall?.status === 'completed' && existingCall.output) return existingCall.output;
+    if (existingCall?.status === 'completed' && existingCall.output) {
+      const storedOutput = objectValue(existingCall.output);
+      if (!verificationResult || storedOutput.verificationResult) return existingCall.output;
+      const upgradedOutput = { ...storedOutput, verificationResult };
+      await this.prisma.agentToolCall.update({ where: { id: existingCall.id }, data: { output: upgradedOutput as Prisma.InputJsonValue } });
+      return upgradedOutput;
+    }
     let call = existingCall;
     if (!call) {
       try {
@@ -707,6 +889,7 @@ export class AgentPracticeActionService {
       targetCorrectCount: targetCorrect,
       targetTotal: targetItems.length,
       targetAccuracy: Math.round(targetAccuracy * 100),
+      ...(verificationResult ? { verificationResult } : {}),
       ...(freePractice ? { freePractice } : {})
     };
     await this.prisma.$transaction(async (tx) => {

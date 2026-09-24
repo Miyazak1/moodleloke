@@ -79,8 +79,8 @@ Operational review checklist after the drill:
 The single-host production rehearsal lives under `deploy/`.
 
 ```bash
-copy deploy/.env.deploy.example deploy/.env
-docker compose --env-file deploy/.env -f deploy/docker-compose.prod.yml up -d --build
+copy .env.production.example .env
+docker compose --env-file .env -f deploy/docker-compose.prod.yml up -d --build
 ```
 
 Services:
@@ -512,6 +512,35 @@ Retention windows are controlled by:
 - `CLEANUP_AUTH_EMAIL_TOKEN_DAYS`, default `7`.
 - `CLEANUP_REFRESH_SESSION_DAYS`, default `30`.
 - `CLEANUP_PAYMENT_CALLBACK_LOG_DAYS`, default `90`.
+
+## Practice-question Q&A lifecycle
+
+Practice-question conversations are temporary assistance context, not learning evidence. The backend archives inactive practice Q&A after 30 days and permanently removes it after 90 days. Empty conversations abandoned before the first message are eligible after 24 hours. Independent subject-Q&A history and learning-context conversations are outside this policy.
+
+The lifecycle worker runs every six hours by default. It skips conversations with queued/running Agent runs, pending outbox events, or attachments linked to verified exam evidence. Deleting a practice conversation cascades its messages, completed runs, artifacts, and processed outbox rows; mastery, wrong-answer records, adaptive-round answers, and learning evidence are stored separately and are not selected by this cleanup.
+
+Review a dry-run before manual cleanup:
+
+```bash
+npm run backend:build
+npm --prefix backend run agent:conversation-lifecycle
+```
+
+Apply one reviewed batch explicitly:
+
+```bash
+npm --prefix backend run agent:conversation-lifecycle -- --apply --confirm=PURGE_PRACTICE_QA --batch-size=100
+```
+
+Configuration:
+
+- `AGENT_CONVERSATION_LIFECYCLE_ENABLED`, default `true`.
+- `AGENT_CONVERSATION_LIFECYCLE_INTERVAL_MS`, default `21600000` (six hours).
+- `AGENT_PRACTICE_QA_ARCHIVE_DAYS`, default `30`.
+- `AGENT_PRACTICE_QA_PURGE_DAYS`, default `90` and always at least one day longer than the archive window.
+- `AGENT_PRACTICE_QA_ABANDONED_HOURS`, default `24`.
+
+Apply database migrations before starting a backend containing this worker. Monitor the structured lifecycle summary for archived, purged, and blocked counts. A blocked count is expected while a response is active; persistent blocked IDs require inspection rather than forced deletion.
 
 ## Emergency Rollback
 

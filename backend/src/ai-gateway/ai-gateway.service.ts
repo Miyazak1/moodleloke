@@ -245,7 +245,8 @@ export class AiGatewayService {
             reasoningEffort: request.reasoningEffort,
             maxTokens: request.maxTokens,
             responseFormat: request.responseFormat,
-            timeoutMs
+            timeoutMs,
+            onTextDelta: request.onTextDelta
           });
         } catch (error) {
           this.logger.warn(`AI provider threw unexpectedly: ${error instanceof Error ? error.message : String(error)}`);

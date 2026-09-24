@@ -49,6 +49,11 @@ export class AgentController {
     return this.agent.createConversation(user.id, body);
   }
 
+  @Post('learning-contexts')
+  createLearningContext(@CurrentUser() user: PrismaUser, @Body() body: unknown) {
+    return this.agent.createLearningContext(user.id, body);
+  }
+
   @Get('conversations')
   listConversations(@CurrentUser() user: PrismaUser) {
     return this.agent.listConversations(user.id);
@@ -62,6 +67,24 @@ export class AgentController {
   @Get('journey/overview')
   getJourneyOverview(@CurrentUser() user: PrismaUser, @Query('locale') locale?: string) {
     return this.agent.getJourneyOverview(user.id, locale);
+  }
+
+  @Post('journey/prescriptions/:prescriptionId/exposure')
+  recordPrescriptionExposure(
+    @CurrentUser() user: PrismaUser,
+    @Param('prescriptionId') prescriptionId: string,
+    @Body() body: unknown
+  ) {
+    return this.agent.recordPrescriptionExposure(user.id, prescriptionId, body);
+  }
+
+  @Post('journey/prescriptions/:prescriptionId/start')
+  startPrescription(
+    @CurrentUser() user: PrismaUser,
+    @Param('prescriptionId') prescriptionId: string,
+    @Body() body: unknown
+  ) {
+    return this.practiceActions.startPrescription(user.id, prescriptionId, body);
   }
 
   @Get('journey/state')

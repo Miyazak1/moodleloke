@@ -12,6 +12,9 @@ const npmCommand = onWindows ? 'npm.cmd' : 'npm';
 const dockerCommand = onWindows ? 'docker.exe' : 'docker';
 const backendUrl = 'http://localhost:3100';
 const frontendUrl = 'http://localhost:5190';
+const localDirectory = path.join(root, '.local');
+const demoCredentialPath = path.join(localDirectory, 'agent-demo-credentials.json');
+const demoSessionPath = path.join(localDirectory, 'agent-demo-session.json');
 const runtimeEnv = {
   ...process.env,
   NODE_ENV: 'development',
@@ -25,8 +28,11 @@ const runtimeEnv = {
   PUBLIC_API_ORIGIN: process.env.PUBLIC_API_ORIGIN || backendUrl,
   VITE_API_BASE_URL: backendUrl,
   VITE_STANDALONE_AGENT: '1',
+  MOODLELIKE_HOST_INTEGRATION_MODE: 'standalone',
+  MOODLELIKE_HOST_CONTRACT_VERSION: 'cscalite-agent-host-v1',
   AGENT_WEB_ENABLED: 'true',
   VITE_AGENT_WEB_ENABLED: 'true',
+  VITE_AGENT_DISABLED_REDIRECT_URL: '/',
   CSCA_AGENT_FOUNDATION_ENABLED: 'true',
   CSCA_LEARNING_EVIDENCE_WRITE_ENABLED: 'true',
   CSCA_LEARNING_SHADOW_PROJECTION_ENABLED: 'true',
@@ -36,10 +42,22 @@ const runtimeEnv = {
   CSCA_LEARNING_INTERVENTION_DELIVERY_ENABLED: 'true',
   CSCA_LEARNING_INTERVENTION_VERIFICATION_ENABLED: 'true',
   CSCA_AGENT_PRACTICE_WRITE_ENABLED: 'true',
-  CSCA_AGENT_TEACHING_ASSET_ENABLED: 'true'
+  CSCA_AGENT_TEACHING_ASSET_ENABLED: 'true',
+  CSCA_AI_QUESTION_GENERATION_ENABLED: 'false',
+  CSCA_AI_QUESTIONING_SCHEDULER_ENABLED: 'false',
+  CSCA_SUBJECT_PRACTICE_PRODUCTION_ENABLED: 'false',
+  CSCA_SUBJECT_PRACTICE_PREDICTIVE_REPLENISHMENT_ENABLED: 'false'
 };
 
 function fail(message) { throw new Error(message); }
+
+class HttpResponseError extends Error {
+  constructor(url, status, text) {
+    super(url + ' returned HTTP ' + status + ': ' + text.slice(0, 200));
+    this.name = 'HttpResponseError';
+    this.status = status;
+  }
+}
 
 function run(label, executable, args, options = {}) {
   process.stdout.write('[moodlelike] ' + label + '\n');
@@ -104,8 +122,16 @@ async function response(url, options = {}) {
   const text = await result.text();
   let body = text;
   try { body = text ? JSON.parse(text) : {}; } catch {}
-  if (!result.ok) fail(url + ' returned HTTP ' + result.status + ': ' + text.slice(0, 200));
+  if (!result.ok) throw new HttpResponseError(url, result.status, text);
   return body;
+}
+
+function integrationPreflight() {
+  run('running non-destructive integration preflight', process.execPath, ['scripts/moodlelike-integration-preflight.cjs']);
+}
+
+function integrationProbe(kind) {
+  run(`running read-only ${kind} integration probe`, process.execPath, ['scripts/moodlelike-integration-preflight.cjs', `--probe-${kind}`]);
 }
 
 async function reachable(url) {
@@ -121,33 +147,81 @@ async function waitFor(url, timeoutMs) {
   fail('Timed out waiting for ' + url);
 }
 
-async function verify() {
+async function verifyRuntimeShell() {
   const health = await response(backendUrl + '/api/v1/health');
   if (health.status !== 'ok' || health.service !== 'moodlelike-backend') fail('Unexpected backend identity or health response.');
-  const html = await response(frontendUrl + '/zh/agent');
+  const html = await response(frontendUrl + '/agent');
   if (typeof html !== 'string' || !/<html|<!doctype/i.test(html)) fail('Frontend Agent route did not return an HTML shell.');
-  const credentialPath = path.join(root, '.local', 'agent-demo-credentials.json');
-  if (!fs.existsSync(credentialPath)) fail('Demo credentials are missing. Run npm run local:setup.');
-  const credentials = JSON.parse(fs.readFileSync(credentialPath, 'utf8'));
+  return health;
+}
+
+function readDemoSession(expectedEmail) {
+  try {
+    const session = JSON.parse(fs.readFileSync(demoSessionPath, 'utf8'));
+    if (session.email !== expectedEmail || typeof session.accessToken !== 'string' || !session.accessToken) return null;
+    return session;
+  } catch {
+    return null;
+  }
+}
+
+function writeDemoSession(email, accessToken) {
+  fs.mkdirSync(localDirectory, { recursive: true });
+  const temporaryPath = demoSessionPath + '.tmp';
+  fs.writeFileSync(temporaryPath, JSON.stringify({ schemaVersion: '1', email, accessToken }, null, 2) + '\n', { encoding: 'utf8', mode: 0o600 });
+  fs.renameSync(temporaryPath, demoSessionPath);
+}
+
+async function authenticatedDemo(credentials) {
+  const cached = readDemoSession(credentials.email);
+  if (cached) {
+    try {
+      const headers = { authorization: 'Bearer ' + cached.accessToken };
+      const me = await response(backendUrl + '/api/v1/auth/me', { headers });
+      return { headers, me, source: 'cached-session' };
+    } catch (error) {
+      if (!(error instanceof HttpResponseError) || (error.status !== 401 && error.status !== 403)) throw error;
+      try { fs.unlinkSync(demoSessionPath); } catch {}
+    }
+  }
+
   const login = await response(backendUrl + '/api/v1/auth/login', {
     method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(credentials)
   });
   const token = login.tokens && login.tokens.accessToken;
   if (!token) fail('Demo login did not return an access token.');
+  writeDemoSession(credentials.email, token);
   const headers = { authorization: 'Bearer ' + token };
   const me = await response(backendUrl + '/api/v1/auth/me', { headers });
+  return { headers, me, source: 'new-login' };
+}
+
+async function verify() {
+  const health = await verifyRuntimeShell();
+  if (!fs.existsSync(demoCredentialPath)) fail('Demo credentials are missing. Run npm run local:setup.');
+  const credentials = JSON.parse(fs.readFileSync(demoCredentialPath, 'utf8'));
+  let authenticated;
+  try {
+    authenticated = await authenticatedDemo(credentials);
+  } catch (error) {
+    if (error instanceof HttpResponseError && error.status === 429) {
+      fail('Demo login is temporarily rate-limited by earlier verification attempts. The services are healthy; wait for the 15-minute auth window or restart the local backend once. Future checks reuse a cached session.');
+    }
+    throw error;
+  }
+  const { headers, me, source } = authenticated;
   await response(backendUrl + '/api/v1/agent/conversations', { headers });
-  const report = { schemaVersion: '1', verdict: 'pass', backend: health.service, database: 'reachable-through-authenticated-demo', frontend: 'agent-shell-ok', demoUser: me.email || credentials.email };
+  const report = { schemaVersion: '1', verdict: 'pass', backend: health.service, database: 'reachable-through-authenticated-demo', frontend: 'agent-shell-ok', demoUser: me.email || credentials.email, authentication: source };
   console.log(JSON.stringify(report, null, 2));
   return report;
 }
 
 async function start() {
   const backendUp = await reachable(backendUrl + '/api/v1/health');
-  const frontendUp = await reachable(frontendUrl + '/zh/agent');
+  const frontendUp = await reachable(frontendUrl + '/agent');
   if (backendUp && frontendUp) {
-    await verify();
-    console.log('[moodlelike] services were already running; skipped setup and rebuild.');
+    await verifyRuntimeShell();
+    console.log('[moodlelike] services were already running and are healthy; skipped setup and rebuild, and did not repeat the demo login.');
     return;
   }
 
@@ -165,9 +239,9 @@ async function start() {
   process.once('SIGTERM', () => { stop(); process.exit(143); });
   const earlyExit = new Promise((_, reject) => children.forEach((child) => child.process.once('exit', (code) => reject(new Error(child.name + ' exited early with code ' + code)))));
   try {
-    await Promise.race([Promise.all([waitFor(backendUrl + '/api/v1/health', 90000), waitFor(frontendUrl + '/zh/agent', 90000)]), earlyExit]);
+    await Promise.race([Promise.all([waitFor(backendUrl + '/api/v1/health', 90000), waitFor(frontendUrl + '/agent', 90000)]), earlyExit]);
     await verify();
-    console.log('[moodlelike] ready: ' + frontendUrl + '/zh/agent');
+    console.log('[moodlelike] ready: ' + frontendUrl + '/agent');
     await earlyExit;
   } finally {
     stop();
@@ -179,7 +253,10 @@ Promise.resolve()
     if (command === 'doctor') return doctor();
     if (command === 'setup') return setup();
     if (command === 'verify') return verify();
+    if (command === 'preflight') return integrationPreflight();
+    if (command === 'probe-database') return integrationProbe('database');
+    if (command === 'probe-deepseek') return integrationProbe('deepseek');
     if (command === 'start') return start();
-    fail('Unknown command: ' + command + '. Use doctor, setup, start, or verify.');
+    fail('Unknown command: ' + command + '. Use doctor, setup, preflight, probe-database, probe-deepseek, start, or verify.');
   })
   .catch((error) => { console.error('[moodlelike] ' + (error.message || error)); process.exitCode = 1; });

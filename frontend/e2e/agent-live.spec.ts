@@ -49,7 +49,7 @@ test('runs the real student read path, restores it, and exposes safe failure fee
   page.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
   page.on('pageerror', (error) => pageErrors.push(error.message));
   await authenticate(page);
-  await page.goto('/zh/agent');
+  await page.goto('/agent');
 
   await expect(page.locator('.site-header')).toHaveCount(0);
   await expect(page.locator('.agent-account-card')).toContainText('CSCA Demo Student');

@@ -34,11 +34,12 @@ test('loads the independent Agent with real read data and migrates browser ident
     window.localStorage.setItem('cscalite.accessToken', accessToken);
   }, token);
 
-  await page.goto('/zh/agent');
-  await expect(page.locator('.agent-live-status')).toContainText('学习数据已连接');
+  await page.goto('/agent');
+  await expect(page.locator('.agent-live-status:visible').first()).toContainText('学习数据已连接');
   await expect(page.locator('.agent-account-card')).toBeVisible();
-  await expect(page.getByLabel('向学习 Agent 提问')).toBeVisible();
-  await expect(page.getByRole('button', { name: '添加附件' })).toBeEnabled();
+  await page.getByRole('button', { name: /学科问答/ }).click();
+  await expect(page.getByLabel('询问数学、物理或化学')).toBeVisible();
+  await expect(page.getByRole('button', { name: '添加附件' })).toHaveCount(0);
 
   const storage = await page.evaluate(() => ({
     token: window.localStorage.getItem('moodlelike.accessToken'),

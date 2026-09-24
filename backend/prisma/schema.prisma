@@ -3354,14 +3354,19 @@ model ScoreCalibrationGovernanceEvent {
 }
 
 model AgentConversation {
-  id            String    @id @default(cuid())
-  userId        Int       @map("user_id")
-  status        String    @default("active") @db.VarChar(24)
-  title         String?   @db.VarChar(200)
-  lastMessageAt DateTime? @map("last_message_at")
-  deletedAt     DateTime? @map("deleted_at")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id              String    @id @default(cuid())
+  userId          Int       @map("user_id")
+  status          String    @default("active") @db.VarChar(24)
+  title           String?   @db.VarChar(200)
+  scopeType       String    @default("learning_context") @map("scope_type") @db.VarChar(40)
+  scopeRoundId    Int?      @map("scope_round_id")
+  scopeQuestionId Int?      @map("scope_question_id")
+  lastMessageAt   DateTime? @map("last_message_at")
+  archivedAt      DateTime? @map("archived_at")
+  purgeAfter      DateTime? @map("purge_after")
+  deletedAt       DateTime? @map("deleted_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
 
   user                         User                               @relation(fields: [userId], references: [id], onDelete: Cascade)
   messages                     AgentMessage[]
@@ -3374,6 +3379,8 @@ model AgentConversation {
   pastPaperAttempts            AgentPastPaperAttempt[]
 
   @@index([userId, status, lastMessageAt], map: "idx_agent_conversations_user_status_last")
+  @@index([userId, scopeType, scopeRoundId, scopeQuestionId], map: "idx_agent_conversations_scope")
+  @@index([scopeType, status, purgeAfter], map: "idx_agent_conversations_lifecycle")
   @@map("agent_conversations")
 }
 

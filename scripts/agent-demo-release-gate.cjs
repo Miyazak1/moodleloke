@@ -90,7 +90,7 @@ async function preflightFilesAndServices(resetEachRun) {
   const backendUrl = process.env.AGENT_DEMO_BACKEND_URL || 'http://localhost:3000';
   const frontendUrl = process.env.AGENT_DEMO_FRONTEND_URL || 'http://localhost:5187';
   const backend = await request(`${backendUrl}/api/v1/health`, /"status"\s*:\s*"ok"/);
-  const frontend = await request(`${frontendUrl}/zh/agent`, /<html|<!doctype/i);
+  const frontend = await request(`${frontendUrl}/agent`, /<html|<!doctype/i);
   return { backend, frontend, resetWillPrepareFixtures: resetEachRun, credentials: path.relative(root, credentialsPath), fixtures: requiredFixtures.map((item) => path.relative(root, item)) };
 }
 

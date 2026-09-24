@@ -468,6 +468,11 @@ export type AgentConversationSummary = {
   id: string;
   status: string;
   title: string | null;
+  scopeType?: 'learning_context' | 'independent_subject_qa' | 'practice_question_qa';
+  scopeRoundId?: number | null;
+  scopeQuestionId?: number | null;
+  archivedAt?: string | null;
+  purgeAfter?: string | null;
   lastMessageAt: string | null;
   createdAt: string;
   updatedAt: string;
@@ -503,6 +508,49 @@ export type AgentJourneyOverview = {
       answerEvidenceCount: number;
     }>;
   };
+  nextDecision?: null | {
+    prescriptionId: string;
+    reasonSummary: string;
+    reasonCodes: string[];
+    confidence: 'low' | 'medium' | 'high';
+    estimatedMinutes: number;
+    source: 'learning_prescription';
+    generatedByAI: false;
+    availability?: null | {
+      status: 'sufficient' | 'limited' | 'empty' | 'unknown' | 'not_required';
+      requestedCount: number;
+      availableCount: number | null;
+      teachingAssetCount?: number;
+      conceptCardCount?: number;
+      explainedQuestionCount?: number;
+    };
+    primaryTask: null | {
+      type: 'diagnostic' | 'review' | 'targeted_practice' | 'mock_exam' | 'concept_learning' | 'intervention_verification';
+      subject: 'math' | 'physics' | 'chemistry';
+      topicIds: number[];
+      difficulty?: string;
+      questionCount?: number;
+      priority: number;
+    };
+  };
+  learningQuality?: {
+    schemaVersion: '1';
+    policyVersion: 'learning-quality-v1';
+    status: 'cold_start' | 'collecting' | 'validating' | 'calibrated';
+    evidence: { acceptedCount: number; evidencedTopicCount: number; totalTopicCount: number; projectionPending: boolean };
+    recommendationFunnel: {
+      publishedCount: number; shownCount: number; acceptedCount: number; terminalCount: number;
+      completedCount: number; positiveOutcomeCount: number; followThroughRate: number;
+      completionRate: number; positiveOutcomeRate: number;
+    };
+    validation: {
+      stable: number; notStable: number; inconclusive: number; pending: number; contradictionCount: number;
+      strongWithActiveErrorCount: number; weakWithStableValidationCount: number;
+    };
+    supply: null | { status: 'sufficient' | 'limited' | 'empty' | 'unknown' | 'not_required'; requestedCount: number; availableCount: number | null; teachingAssetCount?: number; conceptCardCount?: number; explainedQuestionCount?: number };
+    alerts: Array<{ code: string; tone: 'info' | 'warning'; title: string; body: string; action: 'practice' | 'review' | 'wait' }>;
+    provenance: { generatedByAI: false; source: 'learning_evidence_and_outcomes'; note: string };
+  };
   weaknesses: {
     stateSource: 'user_csca_topic_mastery_v1';
     subjects: Array<{
@@ -529,9 +577,12 @@ export type AgentJourneyOverview = {
       subject: 'math' | 'physics' | 'chemistry';
       title: string;
       dueAt: string | null;
-      priority: string;
+      priority: number;
       recurrenceCount: number;
       status: string;
+      consecutiveVerificationPassCount?: number;
+      requiredConsecutiveVerificationPassCount?: number;
+      lastVerificationPassedAt?: string | null;
       href: string;
     }>;
   };
@@ -676,6 +727,17 @@ export type AgentTaskSettlement = {
   targetCorrectCount: number;
   targetTotal: number;
   targetAccuracy: number;
+  verificationResult?: {
+    verdict: 'repaired' | 'needs_consolidation' | 'insufficient_evidence';
+    currentRoundPassed: boolean;
+    reviewItemId: number | null;
+    topicId: number | null;
+    patternType: string | null;
+    consecutivePassCount: number;
+    requiredPassCount: number;
+    nextReviewAt: string | null;
+    nextAction: 'broaden_coverage' | 'wait_for_spaced_verification' | 'review_then_retry' | 'retry_verification';
+  };
   freePractice?: {
     journeyId: string;
     batchIndex: number;
@@ -761,7 +823,10 @@ export type AgentStreamEvent = {
   data: Record<string, unknown>;
 };
 
-export function createAgentConversation(input: { title?: string } = {}) {
+export function createAgentConversation(input: {
+  title?: string;
+  scope?: { type: 'independent_subject_qa' } | { type: 'practice_question_qa'; roundId: number; questionId: number };
+} = {}) {
   return requestJson<AgentConversationSummary>('/api/v1/agent/conversations', {
     method: 'POST',
     withAuth: true,
@@ -811,6 +876,7 @@ export function submitAgentMessage(
       questionContext?: {
         roundId: number;
         questionId: number;
+        questionSource?: 'special_practice' | 'csca_question';
         questionNumber: number;
         subject: 'math' | 'physics' | 'chemistry';
         topicTitle: string;
@@ -906,6 +972,27 @@ export function offerAgentIntervention(input: {
   });
 }
 
+export function recordAgentPrescriptionExposure(prescriptionId: string, input: { clientRequestId: string; surface: string }) {
+  return requestJson<{ schemaVersion: '1'; prescriptionId: string; recorded: boolean; shownAt: string }>(`/api/v1/agent/journey/prescriptions/${encodeURIComponent(prescriptionId)}/exposure`, {
+    method: 'POST', withAuth: true, body: JSON.stringify(input)
+  });
+}
+
+export type AgentLearningContext = {
+  contextId: string;
+  kind: 'practice' | 'mock_exam' | 'past_paper' | 'teaching';
+  resourceId: string | null;
+  createdAt: string;
+};
+
+export function createAgentLearningContext(input: { kind: AgentLearningContext['kind']; resourceId?: string }) {
+  return requestJson<AgentLearningContext>('/api/v1/agent/learning-contexts', {
+    method: 'POST',
+    withAuth: true,
+    body: JSON.stringify(input)
+  });
+}
+
 export function getAgentInterventionDelivery(deliveryId: string) {
   return requestJson<AgentInterventionDelivery>(`/api/v1/agent/intervention-deliveries/${encodeURIComponent(deliveryId)}`, {
     withAuth: true
@@ -962,12 +1049,26 @@ export function startAgentPractice(
   });
 }
 
+export function startAgentPrescription(
+  prescriptionId: string,
+  input: { clientRequestId: string; questionLanguage?: 'zh' | 'en' }
+) {
+  return requestJson<AgentPracticeLaunch | AgentMockExamLaunch>(`/api/v1/agent/journey/prescriptions/${encodeURIComponent(prescriptionId)}/start`, {
+    method: 'POST',
+    withAuth: true,
+    body: JSON.stringify(input)
+  });
+}
+
 export function startAgentFreePractice(input: {
   clientRequestId: string;
   conversationId?: string;
   subject: 'math' | 'physics' | 'chemistry';
   questionCount: number;
   questionLanguage: 'zh' | 'en';
+  focusTopicId?: number;
+  reviewItemId?: number;
+  patternType?: string;
 }) {
   return requestJson<AgentPracticeLaunch>('/api/v1/agent/free-practice/start', {
     method: 'POST',

@@ -13,7 +13,7 @@ const env = {
   ...process.env,
   TMP: tempDir,
   TEMP: tempDir,
-  DATABASE_URL: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/cscalite?schema=public'
+  DATABASE_URL: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:56432/moodlelike?schema=public'
 };
 
 const backendRoot = path.join(root, 'backend');

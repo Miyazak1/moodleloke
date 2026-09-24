@@ -16,6 +16,36 @@ const SubjectAnswerSchema = z.strictObject({
   }
 });
 
+function streamedJsonAnswer(content: string) {
+  const decision = content.match(/"decision"\s*:\s*"(answer|out_of_scope)"/)?.[1];
+  if (decision !== 'answer') return '';
+  const answerStart = /"answer"\s*:\s*"/.exec(content);
+  if (!answerStart) return '';
+  let result = '';
+  for (let index = answerStart.index + answerStart[0].length; index < content.length; index += 1) {
+    const character = content[index];
+    if (character === '"') break;
+    if (character !== '\\') {
+      result += character;
+      continue;
+    }
+    if (index + 1 >= content.length) break;
+    const escaped = content[index + 1];
+    const escapes: Record<string, string> = { '"': '"', '\\': '\\', '/': '/', b: '\b', f: '\f', n: '\n', r: '\r', t: '\t' };
+    if (escaped === 'u') {
+      const hex = content.slice(index + 2, index + 6);
+      if (!/^[0-9a-fA-F]{4}$/.test(hex)) break;
+      result += String.fromCharCode(Number.parseInt(hex, 16));
+      index += 5;
+      continue;
+    }
+    if (!(escaped in escapes)) break;
+    result += escapes[escaped];
+    index += 1;
+  }
+  return result;
+}
+
 type SubjectQaTurn = { role: 'user' | 'assistant'; text: string };
 type SubjectQaQuestionContext = {
   roundId: number;
@@ -100,6 +130,7 @@ export class AgentSubjectQaService {
     question: string;
     history: SubjectQaTurn[];
     questionContext?: SubjectQaQuestionContext;
+    onDelta?: (delta: string) => void | Promise<void>;
   }): Promise<{ text: string; decision: 'answer' | 'out_of_scope' | 'unavailable'; subject: 'math' | 'physics' | 'chemistry' | null; generatedByAI: boolean }> {
     const outOfScope = input.locale === 'zh-CN'
       ? '学科问答目前只支持数学、物理和化学。学习计划、做题、进度和设置请返回学习工作台。'
@@ -115,6 +146,8 @@ export class AgentSubjectQaService {
       return reviewedFallback ?? { text: unavailable, decision: 'unavailable', subject: null, generatedByAI: false };
     }
     try {
+      let streamedContent = '';
+      let emittedAnswer = '';
       const response = await this.gateway.complete({
         taskType: 'ai_coach_explanation',
         sourceModule: 'agent_subject_qa',
@@ -123,7 +156,7 @@ export class AgentSubjectQaService {
         thinking: 'disabled',
         maxTokens: 900,
         maxProviderAttempts: 1,
-        timeoutMs: 15_000,
+        timeoutMs: 45_000,
         userId: input.userId,
         idempotencyKey: `agent-subject-qa:${input.runId}`,
         metadata: {
@@ -131,6 +164,15 @@ export class AgentSubjectQaService {
           version: SUBJECT_QA_VERSION,
           runId: input.runId,
           grounding: input.questionContext ? 'reviewed_current_question' : 'subject_only'
+        },
+        onTextDelta: async (delta) => {
+          streamedContent += delta;
+          const answer = streamedJsonAnswer(streamedContent);
+          if (!answer.startsWith(emittedAnswer)) return;
+          const answerDelta = answer.slice(emittedAnswer.length);
+          if (!answerDelta) return;
+          emittedAnswer = answer;
+          await input.onDelta?.(answerDelta);
         },
         messages: [
           {
@@ -159,6 +201,10 @@ export class AgentSubjectQaService {
       if (!parsed.success) return reviewedFallback ?? { text: unavailable, decision: 'unavailable', subject: null, generatedByAI: false };
       if (parsed.data.decision === 'out_of_scope') {
         return { text: outOfScope, decision: 'out_of_scope', subject: null, generatedByAI: true };
+      }
+      if (parsed.data.answer.startsWith(emittedAnswer)) {
+        const remaining = parsed.data.answer.slice(emittedAnswer.length);
+        if (remaining) await input.onDelta?.(remaining);
       }
       return { text: parsed.data.answer, decision: 'answer', subject: parsed.data.subject, generatedByAI: true };
     } catch {

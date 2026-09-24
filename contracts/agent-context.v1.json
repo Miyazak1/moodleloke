@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "agent-context-v1",
+  "description": "A short-lived, server-owned learning workspace binding. It is not a reusable chat conversation.",
+  "required": ["id", "userId", "kind", "domainEntityType", "domainEntityId", "status", "createdAt", "updatedAt"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "userId": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "kind": { "enum": ["practice", "mock_exam", "past_paper", "teaching", "wrong_question_review"] },
+    "domainEntityType": { "enum": ["adaptive_round", "mock_attempt", "past_paper_attempt", "teaching_delivery", "wrong_question"] },
+    "domainEntityId": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "questionId": { "type": ["string", "null"], "maxLength": 120 },
+    "subject": { "enum": ["math", "physics", "chemistry", null] },
+    "status": { "enum": ["active", "superseded", "completed", "expired"] },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "expiresAt": { "type": ["string", "null"], "format": "date-time" }
+  },
+  "invariants": [
+    "userId is derived from the authenticated request, never from a browser payload",
+    "question-bound assistance is rejected when questionId differs from the server-authoritative current question",
+    "a context never appears in the independent subject Q&A conversation list",
+    "conversationId and agentConversationId are never accepted as context aliases",
+    "superseded and expired contexts reject writes with workspace_stale"
+  ]
+}

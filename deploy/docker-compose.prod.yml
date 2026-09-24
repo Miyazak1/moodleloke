@@ -45,7 +45,7 @@ services:
   backend:
     image: moodlelike-backend:prod
     env_file:
-      - .env
+      - ../.env
     build:
       context: ..
       dockerfile: deploy/backend.Dockerfile
@@ -99,7 +99,7 @@ services:
       redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/v1/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      test: ["CMD", "node", "-e", "const token=process.env.OPS_READY_TOKEN;fetch('http://127.0.0.1:3000/api/v1/ops/ready',{headers:token?{authorization:'Bearer '+token}:{}}).then(async r=>{const body=await r.json();process.exit(r.ok&&body.status==='ready'?0:1)}).catch(()=>process.exit(1))"]
       interval: 10s
       timeout: 5s
       retries: 12
@@ -112,6 +112,9 @@ services:
       args:
         VITE_AUTH_CSRF_COOKIE_NAME: ${VITE_AUTH_CSRF_COOKIE_NAME:-moodlelike_csrf}
         VITE_AUTH_CSRF_HEADER_NAME: ${VITE_AUTH_CSRF_HEADER_NAME:-X-CSRF-Token}
+        VITE_AGENT_WEB_ENABLED: ${VITE_AGENT_WEB_ENABLED:-true}
+        VITE_AGENT_PRACTICE_WRITE_ENABLED: ${VITE_AGENT_PRACTICE_WRITE_ENABLED:-true}
+        VITE_AGENT_DISABLED_REDIRECT_URL: ${VITE_AGENT_DISABLED_REDIRECT_URL:-/}
     restart: unless-stopped
     ports:
       - "${MOODLELIKE_HTTP_PORT:-18080}:80"

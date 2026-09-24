@@ -59,6 +59,7 @@ export interface AiGatewayRequest {
   providerConfigOverride?: AiRuntimeProviderConfig;
   bypassProviderHardStopLedger?: boolean;
   metadata?: Record<string, unknown>;
+  onTextDelta?: (delta: string) => void | Promise<void>;
 }
 
 export type AiGatewayStatus =
@@ -137,6 +138,7 @@ export interface AiProviderRequest {
   maxTokens?: number;
   responseFormat?: AiGatewayResponseFormat;
   timeoutMs: number;
+  onTextDelta?: (delta: string) => void | Promise<void>;
 }
 
 export interface AiProviderResponse {

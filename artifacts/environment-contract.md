@@ -7,6 +7,8 @@ Generated from the reachable Agent runtime. Values are never included.
 | ADMIN_BOOTSTRAP_EMAIL | runtime-config | yes | yes |
 | ADMIN_EMAIL | runtime-config | no | no |
 | AGENT_ATTACHMENT_MAX_MB | runtime-config | no | no |
+| AGENT_CONVERSATION_LIFECYCLE_ENABLED | runtime-config | yes | yes |
+| AGENT_CONVERSATION_LIFECYCLE_INTERVAL_MS | runtime-config | yes | yes |
 | AGENT_PRIVATE_UPLOADS_DIR | runtime-config | no | no |
 | AI_DEFAULT_PROVIDER | runtime-config | yes | yes |
 | AI_GATEWAY_BACKGROUND_CONCURRENCY | runtime-config | yes | yes |
@@ -156,7 +158,9 @@ Generated from the reachable Agent runtime. Values are never included.
 | SUBJECT_PRACTICE_OBSERVATION_NETWORK_PROBE_TIMEOUT_MS | runtime-config | no | no |
 | SUBJECT_PRACTICE_QUESTION_PLAN_CELL_ALLOWLIST_FLAG | runtime-config | no | no |
 | UPLOADS_DIR | runtime-config | no | no |
-| VITE_AGENT_WEB_ENABLED | frontend-public | no | no |
+| VITE_AGENT_DISABLED_REDIRECT_URL | frontend-public | yes | yes |
+| VITE_AGENT_PRACTICE_WRITE_ENABLED | frontend-public | yes | yes |
+| VITE_AGENT_WEB_ENABLED | frontend-public | yes | yes |
 | VITE_API_BASE_URL | frontend-public | yes | no |
 | VITE_AUTH_CSRF_COOKIE_NAME | frontend-public | yes | yes |
 | VITE_AUTH_CSRF_HEADER_NAME | frontend-public | yes | yes |

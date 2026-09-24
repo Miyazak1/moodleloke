@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const { AgentEventService } = require('../dist/backend/src/agent/agent-event.service');
 const { AgentRunnerService } = require('../dist/backend/src/agent/agent-runner.service');
-const { AgentService } = require('../dist/backend/src/agent/agent.service');
+const { AgentService, dedupeReviewQueue } = require('../dist/backend/src/agent/agent.service');
 const { AgentToolExecutorService } = require('../dist/backend/src/agent/agent-tool-executor.service');
 const { AgentRuntimeFeatureFlagsService } = require('../dist/backend/src/agent/agent-runtime-feature-flags.service');
 const { AgentPracticeActionService } = require('../dist/backend/src/agent/agent-practice-action.service');
@@ -10,7 +10,8 @@ const {
   normalizeAttachmentContentType,
   normalizeAttachmentSubject
 } = require('../dist/backend/src/agent/agent-attachment-analysis.service');
-const { routeAgentIntent } = require('../dist/backend/src/agent/agent.types');
+const { routeAgentIntent, SubmitAgentMessageInputSchema } = require('../dist/backend/src/agent/agent.types');
+const { decideWrongPatternVerification } = require('../dist/backend/src/csca-learning/wrong-pattern-verification.policy');
 
 function runtimeStore(overrides = {}) {
   const state = {
@@ -68,7 +69,7 @@ function runtimeStore(overrides = {}) {
     },
     agentMessage: {
       async findMany() {
-        return state.messages.slice().reverse().map((item) => ({ role: item.role, content: item.content }));
+        return state.messages.slice().reverse().map((item) => ({ role: item.role, content: item.content, runId: item.runId ?? null }));
       },
       async upsert({ where, create }) {
         const key = where.conversationId_clientMessageId;
@@ -120,7 +121,7 @@ function successfulTools() {
         get_review_queue: { items: [{ reviewItemId: 31, patternType: 'concept_gap', topicId: 10, subject: 'math', title: 'Functions', priority: 3, recurrenceCount: 3, status: 'active', dueAt: null, href: '/review' }] },
         get_subject_mastery: { stateSource: 'user_csca_topic_mastery_v1', subjects: [{ subject: 'math', evidenceCount: 5, score: 0.52, topics: [{ topicId: 10, code: 'functions', title: 'Functions', score: 0.52, confidence: 0.8, status: 'needs_attention', attemptCount: 5, correctCount: 2, lastPracticedAt: null, updatedAt: '2026-09-14T00:00:00.000Z' }] }] },
         list_mock_exam_attempts: { items: [{ attemptId: 'mock-1', paperSlug: 'math-mock-1', title: 'Math Mock 1', subject: 'math', status: 'submitted', answeredCount: 48, questionCount: 48, score: 82, updatedAt: '2026-09-14T00:00:00.000Z', attemptPath: '/mock/1', reportPath: '/mock/1/report' }] },
-        search_past_papers: { items: [{ id: 1, slug: 'chemistry-2026', title: 'CSCA 2026 Chemistry Past Paper', category: 'past-paper', subject: 'chemistry', examYear: 2026, language: 'en', questionCount: 48, hasAnswers: true, hasSolutions: false, isFree: true, fileCount: 2, href: '/zh/past-papers/download/chemistry-2026' }] },
+        search_past_papers: { items: [{ id: 1, slug: 'chemistry-2026', title: 'CSCA 2026 Chemistry Past Paper', category: 'past-paper', subject: 'chemistry', examYear: 2026, language: 'en', questionCount: 48, hasAnswers: true, hasSolutions: false, isFree: true, fileCount: 2, href: '/past-papers/download/chemistry-2026' }] },
         get_question_supply_status: { status: 'sufficient', availableCount: 8, canCreatePractice: true },
         get_intervention_stability: {
           verificationId: 'verification-1', deliveryId: 'delivery-1', subjectCode: 'math', currentPhase: 'immediate',
@@ -533,6 +534,10 @@ async function testJourneyOverviewUsesLearningCapabilitiesAndPublishedResources(
     async getReviewQueue(userId, input) {
       calls.push(['review', userId, input]);
       return { items: [{ reviewItemId: 'review-1', subject: 'math', title: 'Functions' }] };
+    },
+    async getScoreGoal(userId) {
+      calls.push(['score-goal', userId]);
+      return { goal: null };
     }
   };
   const pastPapers = {
@@ -541,14 +546,131 @@ async function testJourneyOverviewUsesLearningCapabilitiesAndPublishedResources(
       return { items: [{ id: input.subject === 'math' ? 1 : 2, slug: `${input.subject}-paper`, subject: input.subject }] };
     }
   };
-  const service = new AgentService({}, { isWebEnabled: () => true }, {}, {}, learningRead, pastPapers);
+  const prisma = {
+    cscaExamTopic: {
+      async groupBy(input) {
+        calls.push(['topics', input]);
+        return [
+          { subject: 'math', _count: { _all: 12 } },
+          { subject: 'physics', _count: { _all: 10 } }
+        ];
+      }
+    }
+  };
+  const service = new AgentService(prisma, { isWebEnabled: () => true }, {}, {}, learningRead, pastPapers);
   const overview = await service.getJourneyOverview(7, 'en');
   assert.equal(overview.weaknesses.stateSource, 'user_csca_topic_mastery_v1');
   assert.equal(overview.weaknesses.reviewQueue[0].reviewItemId, 'review-1');
   assert.deepEqual(overview.resources.subjectScope, ['math', 'physics']);
   assert.deepEqual(overview.resources.items.map((item) => item.slug), ['math-paper', 'physics-paper']);
-  assert.deepEqual(calls.find((item) => item[0] === 'review')[2], { language: 'en', limit: 12 });
+  assert.deepEqual(calls.find((item) => item[0] === 'review')[2], { language: 'en', limit: 40 });
   assert.equal(calls.filter((item) => item[0] === 'papers').length, 2);
+  assert.deepEqual(calls.find((item) => item[0] === 'score-goal'), ['score-goal', 7]);
+}
+
+async function testPrescriptionExposureIsOwnedAndIdempotent() {
+  const writes = [];
+  let shown = null;
+  const prisma = {
+    learningPrescription: {
+      async findFirst({ where }) {
+        assert.deepEqual(where, { id: 'prescription-1', userId: 7 });
+        return { id: 'prescription-1' };
+      }
+    },
+    learningPrescriptionOutcome: {
+      async findFirst({ where }) {
+        assert.equal(where.prescriptionId, 'prescription-1');
+        assert.equal(where.userId, 7);
+        assert.equal(where.decision, 'shown');
+        return shown;
+      },
+      async create(input) {
+        writes.push(input);
+        shown = { id: 'shown-1', createdAt: new Date('2026-09-23T08:00:00.000Z') };
+        return { createdAt: shown.createdAt };
+      }
+    }
+  };
+  const service = new AgentService(prisma, { isWebEnabled: () => true }, {}, {});
+  const first = await service.recordPrescriptionExposure(7, 'prescription-1', { clientRequestId: 'shown:1', surface: 'agent_learning_plan' });
+  const duplicate = await service.recordPrescriptionExposure(7, 'prescription-1', { clientRequestId: 'shown:1', surface: 'agent_learning_plan' });
+  assert.equal(first.recorded, true);
+  assert.equal(duplicate.recorded, false);
+  assert.equal(writes.length, 1);
+  assert.deepEqual(writes[0].data.metadata, { clientRequestId: 'shown:1', surface: 'agent_learning_plan' });
+}
+
+async function testLearningContextHasDedicatedCreationBoundary() {
+  const writes = [];
+  const prisma = {
+    agentConversation: {
+      async create(input) {
+        writes.push(input);
+        return { id: 'learning-context-1', createdAt: new Date('2026-09-22T00:00:00.000Z') };
+      }
+    }
+  };
+  const service = new AgentService(prisma, { isWebEnabled: () => true }, {}, {});
+  const context = await service.createLearningContext(17, { kind: 'past_paper', resourceId: 'paper-1' });
+  assert.equal(context.contextId, 'learning-context-1');
+  assert.equal(context.kind, 'past_paper');
+  assert.equal(context.resourceId, 'paper-1');
+  assert.deepEqual(writes[0].data, { userId: 17, title: '__learning_workspace__' });
+  await assert.rejects(
+    () => service.createConversation(17, { title: '__learning_workspace__' }),
+    /Reserved learning workspace title/
+  );
+}
+
+async function testConversationScopesAreExplicitAtCreation() {
+  const writes = [];
+  let existingPractice = null;
+  const prisma = {
+    agentConversation: {
+      async findFirst(input) {
+        assert.deepEqual(input.where, {
+          userId: 17, scopeType: 'practice_question_qa', scopeRoundId: 81, scopeQuestionId: 101,
+          status: 'active', deletedAt: null
+        });
+        return existingPractice;
+      },
+      async create(input) {
+        writes.push(input.data);
+        return {
+          id: `conversation-${writes.length}`, status: 'active', title: input.data.title,
+          scopeType: input.data.scopeType, scopeRoundId: input.data.scopeRoundId, scopeQuestionId: input.data.scopeQuestionId,
+          lastMessageAt: null, createdAt: new Date(), updatedAt: new Date()
+        };
+      }
+    }
+  };
+  const service = new AgentService(prisma, { isWebEnabled: () => true }, {}, {});
+  const independent = await service.createConversation(17, {
+    title: '独立学科问答', scope: { type: 'independent_subject_qa' }
+  });
+  assert.equal(independent.scopeType, 'independent_subject_qa');
+  assert.deepEqual(writes[0], {
+    userId: 17, title: '独立学科问答', scopeType: 'independent_subject_qa', scopeRoundId: null, scopeQuestionId: null,
+    purgeAfter: null
+  });
+
+  const practice = await service.createConversation(17, {
+    title: '第 1 题问答', scope: { type: 'practice_question_qa', roundId: 81, questionId: 101 }
+  });
+  assert.equal(practice.scopeType, 'practice_question_qa');
+  assert.deepEqual({ ...writes[1], purgeAfter: undefined }, {
+    userId: 17, title: '第 1 题问答', scopeType: 'practice_question_qa', scopeRoundId: 81, scopeQuestionId: 101,
+    purgeAfter: undefined
+  });
+  assert.ok(writes[1].purgeAfter instanceof Date);
+
+  existingPractice = { ...practice, id: 'existing-practice' };
+  const reused = await service.createConversation(17, {
+    title: '重复打开', scope: { type: 'practice_question_qa', roundId: 81, questionId: 101 }
+  });
+  assert.equal(reused.id, 'existing-practice');
+  assert.equal(writes.length, 2);
 }
 
 async function testDuplicateSubmissionIsScopedAndIdempotent() {
@@ -606,7 +728,14 @@ function practiceActionStore({ stale = false, review = false, taskType = null } 
       ...(reviewLike ? { review: { reviewItemId: 31, topicId: 10, patternType: 'concept_gap', title: 'Functions', recurrenceCount: 3 } } : {})
     }
   };
-  const state = { artifact, calls: [], outcomes: [], round: null, mockAttempt: null };
+  const state = {
+    artifact, calls: [], outcomes: [], round: null, mockAttempt: null,
+    pattern: reviewLike ? {
+      id: 31, topicId: 10, patternType: 'concept_gap', status: 'improving',
+      nextReviewAt: new Date('2026-09-25T08:00:00.000Z'),
+      metadata: { consecutiveVerificationPassCount: 0, requiredConsecutiveVerificationPassCount: 2 }
+    } : null
+  };
   const db = {
     state,
     async $transaction(callback) { return callback(db); },
@@ -631,9 +760,7 @@ function practiceActionStore({ stale = false, review = false, taskType = null } 
     },
     cscaWrongPattern: {
       async findFirst({ where }) {
-        return reviewLike && where.id === 31 && where.userId === 7
-          ? { id: 31, topicId: 10, patternType: 'concept_gap' }
-          : null;
+        return state.pattern && where.id === state.pattern.id && where.userId === 7 ? state.pattern : null;
       }
     },
     cscaAdaptiveRound: {
@@ -685,7 +812,7 @@ async function testPracticeActionIsConstrainedAndIdempotent() {
   assert.equal(prisma.state.outcomes.length, 1);
   assert.equal(prisma.state.artifact.status, 'started');
   assert.match(first.route, /^\/agent\?/);
-  assert.match(first.route, /agentConversationId=conv-1/);
+  assert.match(first.route, /agentContextId=conv-1/);
   assert.equal(first.workspace.kind, 'adaptive_round');
   assert.equal(first.workspace.taskType, 'targeted_practice');
   assert.equal(first.workspace.subject, 'math');
@@ -736,6 +863,11 @@ async function testReviewLaunchAndSettlementAreBoundAndIdempotent() {
   const first = await service.settle(7, '82');
   const duplicate = await service.settle(7, '82');
   assert.equal(first.decision, 'failed');
+  assert.deepEqual(first.verificationResult, {
+    verdict: 'needs_consolidation', currentRoundPassed: false, reviewItemId: 31, topicId: 10,
+    patternType: 'concept_gap', consecutivePassCount: 0, requiredPassCount: 2,
+    nextReviewAt: '2026-09-25T08:00:00.000Z', nextAction: 'review_then_retry'
+  });
   assert.deepEqual(duplicate, first);
   assert.equal(prisma.state.outcomes.filter((item) => item.decision === 'failed').length, 1);
   assert.equal(prisma.state.artifact.status, 'failed');
@@ -902,20 +1034,223 @@ async function testSubmittedPracticeCompletes() {
   assert.equal(prisma.state.artifact.status, 'completed');
 }
 
-async function testConversationListPutsEmptyThreadsLast() {
+async function testConversationListKeepsIndependentSubjectQaSeparate() {
   let query = null;
   const service = new AgentService(
-    { agentConversation: { async findMany(input) { query = input; return []; } } },
+    { agentConversation: { async findMany(input) {
+      query = input;
+      return [
+        { id: 'global-qa', status: 'active', title: '加速度问题', lastMessageAt: new Date(), createdAt: new Date(), updatedAt: new Date() }
+      ];
+    } } },
     {},
     {},
     {}
   );
-  await service.listConversations(7);
+  const result = await service.listConversations(7);
+  assert.deepEqual(result.map((item) => item.id), ['global-qa']);
   assert.deepEqual(query.orderBy, [
     { lastMessageAt: { sort: 'desc', nulls: 'last' } },
     { createdAt: 'desc' }
   ]);
-  assert.deepEqual(query.where, { userId: 7, deletedAt: null });
+  assert.deepEqual(query.where, { userId: 7, deletedAt: null, scopeType: 'independent_subject_qa' });
+  assert.equal(query.take, 50);
+  assert.equal('messages' in query.select, false);
+}
+
+async function testCurrentDiagnosticPrescriptionMaterializesAndStarts() {
+  let storedArtifact = null;
+  let artifactCreates = 0;
+  const prisma = {
+    async $transaction(callback) { return callback(prisma); },
+    learningDecisionCurrent: {
+      async findFirst({ where }) {
+        assert.deepEqual(where, { userId: 7, prescriptionId: 'rx-current' });
+        return {
+          prescription: {
+            id: 'rx-current', goalId: 'goal-1', versions: { decisionPolicyVersion: 'v1' },
+            objective: 'diagnostic:chemistry:3', reasonCodes: ['EVIDENCE_INSUFFICIENT'],
+            reasonSummary: '先完成化学短诊断。', confidence: 'low', estimatedMinutes: 10,
+            tasks: [{ type: 'diagnostic', subject: 'chemistry', topicIds: [3], questionCount: 3, priority: 1 }],
+            validUntil: new Date('2099-01-01T00:00:00.000Z')
+          }
+        };
+      }
+    },
+    agentArtifact: {
+      async findFirst() { return storedArtifact; },
+      async findUnique() { return storedArtifact; },
+      async create({ data }) { artifactCreates += 1; storedArtifact = { createdAt: new Date(), snapshot: data.snapshot, ...data }; return storedArtifact; }
+    },
+    agentConversation: { async create() { return { id: 'context-current' }; } },
+    agentRun: { async create() { return { id: 'run-current' }; } }
+  };
+  const service = new AgentPracticeActionService(
+    prisma,
+    {},
+    new AgentRuntimeFeatureFlagsService({ AGENT_WEB_ENABLED: 'true', CSCA_AGENT_PRACTICE_WRITE_ENABLED: 'true' }),
+    { async append() {} }
+  );
+  const starts = [];
+  service.start = async (userId, artifactId, input, expectedKind) => {
+    starts.push({ userId, artifactId, input, expectedKind });
+    return { artifactId, conversationId: 'context-current', roundId: 91, taskType: 'diagnostic', workspace: { kind: 'adaptive_round', phase: 'practice' } };
+  };
+  const first = await service.startPrescription(7, 'rx-current', { clientRequestId: 'accept-current', questionLanguage: 'zh' });
+  const second = await service.startPrescription(7, 'rx-current', { clientRequestId: 'accept-current', questionLanguage: 'zh' });
+  assert.equal(first.roundId, 91);
+  assert.deepEqual(second, first);
+  assert.equal(artifactCreates, 1);
+  assert.equal(storedArtifact.type, 'learning_plan');
+  assert.equal(storedArtifact.domainEntityId, 'rx-current');
+  assert.equal(storedArtifact.snapshot.task.type, 'diagnostic');
+  assert.equal(starts[0].expectedKind, 'practice');
+  assert.equal(starts[0].input.clientRequestId, 'accept-current');
+}
+
+async function testPracticeQuestionQaUsesServerOwnedContextAndRejectsConversationReuse() {
+  const contextEvents = [];
+  const prisma = {
+    cscaTrainingEvent: { async create(input) { contextEvents.push(input.data); return input.data; } }
+  };
+  const questionContext = {
+    async resolve(userId, roundId, questionId, language, questionSource) {
+      assert.equal(userId, 7);
+      assert.equal(roundId, 81);
+      assert.equal(questionId, 101);
+      assert.equal(language, 'zh');
+      assert.equal(questionSource, 'csca_question');
+      return {
+        artifact: { id: 'artifact-owned' },
+        roundId: 81,
+        questionId: 101,
+        subject: 'math',
+        item: { position: 2, selectedAnswer: 'B', isCorrect: true },
+        question: {
+          questionSource: 'csca_question', topicTitle: '一次函数', prompt: '服务端可信题干',
+          options: [{ id: 'A', text: '1' }, { id: 'B', text: '2' }],
+          correctAnswer: 'B', explanation: '服务端审核解析', knowledgeTags: ['斜率']
+        }
+      };
+    }
+  };
+  const service = new AgentService(prisma, { isWebEnabled: () => true }, {}, {}, undefined, undefined, undefined, undefined, questionContext);
+  const tampered = SubmitAgentMessageInputSchema.parse({
+    clientRequestId: 'qa-owned-1', text: '为什么 B 对？', locale: 'zh-CN', surface: 'subject_qa', attachmentIds: [],
+    pageContext: {
+      route: '/agent', entityRef: { type: 'adaptive_round', id: '999' }, selectedQuestionId: 999,
+      questionContext: {
+        roundId: 81, questionId: 101, questionSource: 'csca_question', questionNumber: 9, subject: 'physics', topicTitle: '伪造知识点',
+        prompt: '客户端伪造题干', options: [{ id: 'A', text: '伪造选项' }], selectedAnswer: 'A', answered: true,
+        correctAnswer: 'A', isCorrect: true, explanation: '客户端伪造解析', knowledgeTags: ['伪造']
+      }
+    }
+  });
+  const authoritative = await service.authoritativeSubjectQaInput(7, tampered);
+  assert.equal(authoritative.pageContext.artifactId, 'artifact-owned');
+  assert.deepEqual(authoritative.pageContext.entityRef, { type: 'adaptive_round', id: '81' });
+  assert.equal(authoritative.pageContext.selectedQuestionId, 101);
+  assert.equal(authoritative.pageContext.questionContext.subject, 'math');
+  assert.equal(authoritative.pageContext.questionContext.questionNumber, 2);
+  assert.equal(authoritative.pageContext.questionContext.prompt, '服务端可信题干');
+  assert.equal(authoritative.pageContext.questionContext.correctAnswer, 'B');
+  assert.equal(authoritative.pageContext.questionContext.explanation, '服务端审核解析');
+
+  const unansweredService = new AgentService(
+    prisma, { isWebEnabled: () => true }, {}, {}, undefined, undefined, undefined, undefined,
+    { async resolve(...args) { return { ...(await questionContext.resolve(...args)), item: { position: 2, selectedAnswer: null, isCorrect: null } }; } }
+  );
+  const unanswered = await unansweredService.authoritativeSubjectQaInput(7, tampered);
+  assert.equal(unanswered.pageContext.questionContext.answered, false);
+  assert.equal('correctAnswer' in unanswered.pageContext.questionContext, false);
+  assert.equal('explanation' in unanswered.pageContext.questionContext, false);
+
+  await assert.rejects(
+    () => service.assertSubjectQaConversationScope(7, {
+      id: 'conversation-stale', scopeType: 'practice_question_qa', scopeRoundId: 81, scopeQuestionId: 100
+    }, authoritative.pageContext),
+    (error) => error?.response?.code === 'AGENT_QA_CONTEXT_MISMATCH'
+  );
+  assert.equal(contextEvents[0].eventType, 'agent_subject_qa_context_mismatch');
+  assert.deepEqual(contextEvents[0].metadata.requestedBinding, { roundId: 81, questionId: 101 });
+  await service.assertSubjectQaConversationScope(7, {
+    id: 'conversation-current', scopeType: 'practice_question_qa', scopeRoundId: 81, scopeQuestionId: 101
+  }, authoritative.pageContext);
+  await service.assertSubjectQaConversationScope(7, {
+    id: 'conversation-independent', scopeType: 'independent_subject_qa', scopeRoundId: null, scopeQuestionId: null
+  }, undefined);
+}
+
+async function testSubjectQaHistoryIsLimitedToTheCurrentQuestion() {
+  const currentQuestion = { roundId: 81, questionId: 101, questionNumber: 1, subject: 'math', topicTitle: '函数', prompt: '当前题', options: [], answered: false };
+  const prisma = runtimeStore({
+    run: {
+      id: 'run-1', userId: 7, conversationId: 'conv-1', traceId: 'trace-1', status: 'queued',
+      inputSnapshot: { schemaVersion: '1', intent: 'subject_qa', text: '当前题怎么做？', locale: 'zh-CN', surface: 'subject_qa', pageContext: { questionContext: currentQuestion } }
+    },
+    messages: [
+      { role: 'user', runId: 'run-old', content: { surface: 'subject_qa', text: '上一题问题', pageContext: { questionContext: { roundId: 80, questionId: 99 } } } },
+      { role: 'assistant', runId: 'run-old', content: { surface: 'subject_qa', text: '上一题回答' } },
+      { role: 'user', runId: 'run-current', content: { surface: 'subject_qa', text: '当前题之前的问题', pageContext: { questionContext: { roundId: 81, questionId: 101 } } } },
+      { role: 'assistant', runId: 'run-current', content: { surface: 'subject_qa', text: '当前题之前的回答' } },
+      { role: 'user', runId: 'run-1', content: { surface: 'subject_qa', text: '当前题怎么做？', pageContext: { questionContext: currentQuestion } } }
+    ]
+  });
+  let observed = null;
+  const subjectQa = {
+    async answer(input) {
+      observed = input;
+      return { text: '只基于当前题回答', decision: 'answer', subject: 'math', generatedByAI: true };
+    }
+  };
+  await new AgentRunnerService(prisma, {}, new AgentEventService(prisma), undefined, undefined, undefined, undefined, undefined, subjectQa).run('run-1', 7);
+  assert.deepEqual(observed.history, [
+    { role: 'user', text: '当前题之前的问题' },
+    { role: 'assistant', text: '当前题之前的回答' }
+  ]);
+  assert.deepEqual(observed.questionContext, currentQuestion);
+  assert.equal(prisma.state.run.status, 'completed');
+}
+
+async function testReviewSettlementDistinguishesRepairFromInsufficientEvidence() {
+  async function settleWith({ items, status, consecutiveVerificationPassCount }) {
+    const prisma = practiceActionStore({ review: true });
+    const service = new AgentPracticeActionService(
+      prisma,
+      {
+        async createSession() { return { id: 62 }; },
+        async createRound() { return { session: { id: 62, mode: 'practice', subject: 'math', questionLanguage: 'zh' }, round: { id: 92 }, questions: Array(3).fill({}) }; }
+      },
+      new AgentRuntimeFeatureFlagsService({ AGENT_WEB_ENABLED: 'true', CSCA_AGENT_PRACTICE_WRITE_ENABLED: 'true' }),
+      { async append() {} }
+    );
+    await service.start(7, 'artifact-1', { clientRequestId: `review-${status}-${items.length}` });
+    prisma.state.pattern.status = status;
+    prisma.state.pattern.metadata = { consecutiveVerificationPassCount, requiredConsecutiveVerificationPassCount: 2 };
+    prisma.state.pattern.nextReviewAt = status === 'resolved' ? null : new Date('2026-09-28T08:00:00.000Z');
+    prisma.state.round = {
+      id: 92, submittedAt: new Date(),
+      plannerSnapshot: { mode: 'verification', focus: { topicId: 10, reviewItemId: 31, patternType: 'concept_gap' } },
+      session: { subject: 'math' }, items
+    };
+    return service.settle(7, '92');
+  }
+
+  const repaired = await settleWith({
+    items: [{ topicId: 10, isCorrect: true }, { topicId: 10, isCorrect: true }, { topicId: 10, isCorrect: true }],
+    status: 'resolved', consecutiveVerificationPassCount: 2
+  });
+  assert.equal(repaired.decision, 'completed');
+  assert.equal(repaired.verificationResult.verdict, 'repaired');
+  assert.equal(repaired.verificationResult.nextAction, 'broaden_coverage');
+
+  const insufficient = await settleWith({
+    items: [{ topicId: 10, isCorrect: true }, { topicId: 10, isCorrect: true }],
+    status: 'improving', consecutiveVerificationPassCount: 1
+  });
+  assert.equal(insufficient.decision, 'failed');
+  assert.equal(insufficient.verificationResult.verdict, 'insufficient_evidence');
+  assert.equal(insufficient.verificationResult.nextAction, 'retry_verification');
 }
 
 function testAttachmentAnalysisEnumNormalization() {
@@ -927,6 +1262,67 @@ function testAttachmentAnalysisEnumNormalization() {
   assert.equal(normalizeAttachmentContentType('unsupported-value'), 'unknown');
   assert.equal(normalizeAttachmentAssessment('partly correct'), 'partially_correct');
   assert.equal(normalizeAttachmentAssessment('not sure'), 'not_assessable');
+}
+
+function testReviewQueueDedupesOneLearningTargetIntoOneAction() {
+  const result = dedupeReviewQueue([
+    { reviewItemId: 71, subject: 'physics', topicId: 47, patternType: 'concept_confusion', recurrenceCount: 3, priority: 3 },
+    { reviewItemId: 72, subject: 'physics', topicId: 47, patternType: 'pacing', recurrenceCount: 1, priority: 1 },
+    { reviewItemId: 73, subject: 'physics', topicId: 48, patternType: 'calculation_error', recurrenceCount: 2, priority: 2 },
+    { reviewItemId: 74, subject: 'chemistry', patternType: 'concept_confusion', recurrenceCount: 2, priority: 2 },
+    { reviewItemId: 75, subject: 'chemistry', patternType: 'pacing', recurrenceCount: 4, priority: 3 }
+  ]);
+  assert.deepEqual(result.map((item) => item.reviewItemId), [71, 73, 74, 75]);
+}
+
+function testWrongPatternVerificationRequiresSeparatedConsecutivePasses() {
+  const first = decideWrongPatternVerification({ passed: true, occurredAt: new Date('2026-09-20T08:00:00.000Z'), metadata: {} });
+  assert.equal(first.resolved, false);
+  assert.equal(first.consecutivePassCount, 1);
+  const immediateRepeat = decideWrongPatternVerification({ passed: true, occurredAt: new Date('2026-09-20T12:00:00.000Z'), metadata: first.metadata });
+  assert.equal(immediateRepeat.resolved, false);
+  assert.equal(immediateRepeat.consecutivePassCount, 1);
+  const separated = decideWrongPatternVerification({ passed: true, occurredAt: new Date('2026-09-22T08:00:00.000Z'), metadata: immediateRepeat.metadata });
+  assert.equal(separated.resolved, true);
+  assert.equal(separated.consecutivePassCount, 2);
+  const failed = decideWrongPatternVerification({ passed: false, occurredAt: new Date('2026-09-24T08:00:00.000Z'), metadata: separated.metadata });
+  assert.equal(failed.resolved, false);
+  assert.equal(failed.consecutivePassCount, 0);
+}
+
+async function testEventReplayIsUserScopedAndResumesAfterCursor() {
+  const createdAt = new Date('2026-09-23T08:00:00.000Z');
+  const outbox = [
+    { id: 'event-1', runId: 'run-replay', conversationId: 'context-1', sequence: 1, eventType: 'run.started', payload: {}, createdAt },
+    { id: 'event-2', runId: 'run-replay', conversationId: 'context-1', sequence: 2, eventType: 'answer.delta', payload: { delta: '继续' }, createdAt }
+  ];
+  const prisma = {
+    agentRun: {
+      async findFirst({ where, select }) {
+        if (where.id !== 'run-replay' || where.userId !== 7) return null;
+        return select?.status ? { status: 'completed' } : { id: 'run-replay', conversationId: 'context-1' };
+      }
+    },
+    agentOutbox: {
+      async findMany({ where }) {
+        return outbox.filter((item) => item.runId === where.runId && item.sequence > where.sequence.gt);
+      }
+    }
+  };
+  const events = new AgentEventService(prisma);
+  await assert.rejects(() => events.stream(8, 'run-replay', 0), (error) => error?.status === 404);
+  const stream = await events.stream(7, 'run-replay', 1);
+  const received = await new Promise((resolve, reject) => {
+    const items = [];
+    const timeout = setTimeout(() => reject(new Error('Timed out waiting for replay completion.')), 2000);
+    stream.subscribe({
+      next: (item) => items.push(item),
+      error: (error) => { clearTimeout(timeout); reject(error); },
+      complete: () => { clearTimeout(timeout); resolve(items); }
+    });
+  });
+  assert.deepEqual(received.map((item) => Number(item.id)), [2]);
+  assert.equal(received[0].data.data.delta, '继续');
 }
 
 async function main() {
@@ -946,19 +1342,29 @@ async function main() {
   await testGroundedReadRoutesUseOnlyServerCapabilities();
   await testGroundedReadRoutesHaveHonestEmptyStates();
   await testConversationReadIsUserScoped();
+  await testLearningContextHasDedicatedCreationBoundary();
+  await testConversationScopesAreExplicitAtCreation();
   await testJourneyOverviewUsesLearningCapabilitiesAndPublishedResources();
+  await testPrescriptionExposureIsOwnedAndIdempotent();
   await testDuplicateSubmissionIsScopedAndIdempotent();
+  await testPracticeQuestionQaUsesServerOwnedContextAndRejectsConversationReuse();
+  await testSubjectQaHistoryIsLimitedToTheCurrentQuestion();
   await testAllowlistAndFlag();
   await testPracticeActionIsConstrainedAndIdempotent();
+  await testCurrentDiagnosticPrescriptionMaterializesAndStarts();
   await testPracticeActionRejectsStalePlan();
   await testReviewLaunchAndSettlementAreBoundAndIdempotent();
+  await testReviewSettlementDistinguishesRepairFromInsufficientEvidence();
   await testConceptLearningUsesNativeAgentWorkspace();
   await testMockExamUsesNativeAgentWorkspaceAndSettles();
   await testMockExamResumesOwnedAttemptWithoutCreatingAnother();
   await testAbandonRecordsOneTerminalOutcome();
   await testSubmittedPracticeCompletes();
-  await testConversationListPutsEmptyThreadsLast();
+  await testConversationListKeepsIndependentSubjectQaSeparate();
   testAttachmentAnalysisEnumNormalization();
+  testReviewQueueDedupesOneLearningTargetIntoOneAction();
+  testWrongPatternVerificationRequiresSeparatedConsecutivePasses();
+  await testEventReplayIsUserScopedAndResumesAfterCursor();
   console.log('Agent runtime today-plan tests passed.');
 }
 

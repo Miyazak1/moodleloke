@@ -499,7 +499,7 @@ function wrongPatternVerificationState(input: { metadata: unknown }) {
 function wrongPatternVerificationHref(pattern: { id: number; subject: string; patternType: string; topicId: number | null }) {
   const params = new URLSearchParams({ review: pattern.patternType, verify: String(pattern.id) });
   if (Number.isInteger(pattern.topicId)) params.set('topicId', String(pattern.topicId));
-  return `/zh/csca-subjects/${pattern.subject}?${params.toString()}`;
+  return `/csca-subjects/${pattern.subject}?${params.toString()}`;
 }
 
 function dueForReview(value: string | null) {

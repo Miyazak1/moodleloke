@@ -454,7 +454,7 @@ async function testHistoricalFallback() {
   assert(dashboard.heatmap.some((item) => item.date === '2026-06-07' && item.answeredCount === 43), 'Historical fallback must merge same-day training and mock data.');
   assertEqual(dashboard.mockTrend.latest?.score, 42, 'Dashboard should expose latest mock score.');
   assertEqual(dashboard.mockTrend.latest?.unansweredCount, 20, 'Dashboard should expose latest mock unanswered count.');
-  assertEqual(dashboard.mockTrend.latest?.reportHref, '/zh/csca-mock-exam/attempts/88/report', 'Dashboard should expose the current mock report route.');
+  assertEqual(dashboard.mockTrend.latest?.reportHref, '/csca-mock-exam/attempts/88/report', 'Dashboard should expose the current mock report route.');
   assertEqual(dashboard.readiness.stage, 'diagnosing', 'Readiness should stay conservative while subject evidence is incomplete.');
   assertEqual(dashboard.readiness.confidence, 'low', 'Readiness should expose low confidence when evidence is thin.');
   assert(dashboard.readiness.dimensions.some((dimension) => dimension.key === 'evidence' && dimension.status !== 'strong'), 'Thin evidence should be visible as its own readiness dimension.');
@@ -865,7 +865,7 @@ async function testReadinessPrioritizesDueReviewsAfterBaseline() {
   const dashboard = await service.getDashboard(909);
   assertEqual(dashboard.readiness.stage, 'repairing', 'Readiness should enter repair mode when due reviews remain after baseline is complete.');
   assertEqual(dashboard.readiness.nextAction.type, 'review_due_patterns', 'Readiness should prioritize due review completion.');
-  assertEqual(dashboard.readiness.nextAction.href, '/zh/me?section=practice&due=1#wrong-bank', 'Readiness review action should jump to the wrong-question bank.');
+  assertEqual(dashboard.readiness.nextAction.href, '/me?section=practice&due=1#wrong-bank', 'Readiness review action should jump to the wrong-question bank.');
 }
 
 async function testReadinessExamReadyWhenSignalsAreStable() {
@@ -1396,7 +1396,7 @@ async function testReadinessActionClickIsRecorded() {
 
   const result = await service.recordReadinessActionClick(808, {
     type: 'review_due_patterns',
-    href: '/zh/me?section=practice&due=1#wrong-bank',
+    href: '/me?section=practice&due=1#wrong-bank',
     expectedGain: 20,
     priority: 'high',
     rank: 1,
@@ -2216,7 +2216,7 @@ async function testMockTrendReturnsSubjectBackflow() {
   assertEqual(dashboard.mockTrend.latest?.id, 91, 'Mock trend should expose latest submitted mock attempt.');
   assertEqual(dashboard.mockTrend.recent.length, 2, 'Mock trend should expose recent attempts chronologically.');
   assertEqual(dashboard.mockTrend.subjectStats[0].subject, 'math', 'Mock trend should prioritize weakest subject for backflow.');
-  assertEqual(dashboard.mockTrend.nextAction?.href, '/zh/csca-subjects/math', 'Mock trend should point back to subject training.');
+  assertEqual(dashboard.mockTrend.nextAction?.href, '/csca-subjects/math', 'Mock trend should point back to subject training.');
 }
 
 async function main() {

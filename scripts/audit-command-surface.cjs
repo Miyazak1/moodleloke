@@ -8,6 +8,7 @@ const scripts = pkg.scripts || {};
 const coreExact = new Set([
   'dev', 'frontend:dev', 'frontend:build', 'backend:build', 'prisma:generate', 'prisma:validate',
   'demo:seed', 'agent:build', 'audit:product-boundaries', 'audit:command-surface', 'audit:compatibility-operations',
+  'teaching-assets:seed',
   'audit:prisma-retention', 'audit:environment-contract', 'security:audit-dependencies',
   'release:check', 'ci:contracts', 'ci:golden'
 ]);
@@ -70,7 +71,7 @@ const unexpectedDuplicates = duplicateCommands.filter(({ names }) => JSON.string
 const report = {
   schemaVersion: '1',
   total: Object.keys(scripts).length,
-  budget: 331,
+  budget: 332,
   counts: Object.fromEntries(Object.entries(categories).map(([name, values]) => [name, values.length])),
   categories,
   duplicateCommands,

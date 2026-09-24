@@ -41,6 +41,7 @@ import { AgentJourneyReadService } from './agent-journey-read.service';
 import { AgentSubjectQaService } from './agent-subject-qa.service';
 import { CscaMockExamModule } from '../csca-mock-exam/csca-mock-exam.module';
 import { PastPapersModule } from '../past-papers/past-papers.module';
+import { AgentConversationLifecycleService } from './agent-conversation-lifecycle.service';
 
 @Module({
   imports: [PrismaModule, AuthModule, LearningIntelligenceFoundationModule, CscaSpecialPracticeModule, CscaMockExamModule, PastPapersModule, AiGatewayModule],
@@ -77,6 +78,7 @@ import { PastPapersModule } from '../past-papers/past-papers.module';
     AdminTeachingAssetsService,
     AgentRunnerService,
     AgentRecoveryService,
+    AgentConversationLifecycleService,
     AgentService
   ],
   exports: [AgentService]

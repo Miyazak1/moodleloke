@@ -1,7 +1,8 @@
 const assert = require('node:assert/strict');
 const { AgentSubjectQaService } = require('../dist/backend/src/agent/agent-subject-qa.service');
+const { openAiCompatibleChatCompletionStream } = require('../dist/backend/src/ai-gateway/providers/openai-compatible-http');
 
-function gateway(result, configured = true) {
+function gateway(result, configured = true, streamChunks = []) {
   const calls = [];
   return {
     calls,
@@ -11,19 +12,62 @@ function gateway(result, configured = true) {
     },
     async complete(request) {
       calls.push({ kind: 'complete', request });
+      for (const chunk of streamChunks) await request.onTextDelta?.(chunk);
       return result;
     }
   };
 }
 
+async function testProviderStreaming() {
+  const originalFetch = global.fetch;
+  const deltas = [];
+  let requestBody = null;
+  try {
+    global.fetch = async (_url, init) => {
+      requestBody = JSON.parse(init.body);
+      const encoder = new TextEncoder();
+      const blocks = [
+        ': keep-alive\n\n',
+        'data: {"choices":[{"delta":{"content":"你"}}]}\n\n',
+        'data: {"choices":[{"delta":{"content":"好"},"finish_reason":"stop"}]}\n\n',
+        'data: {"choices":[],"usage":{"prompt_tokens":3,"completion_tokens":2,"total_tokens":5}}\n\n',
+        'data: [DONE]\n\n'
+      ];
+      return new Response(new ReadableStream({
+        start(controller) {
+          blocks.forEach((block) => controller.enqueue(encoder.encode(block)));
+          controller.close();
+        }
+      }), { status: 200, headers: { 'content-type': 'text/event-stream' } });
+    };
+    const result = await openAiCompatibleChatCompletionStream({
+      requestId: 'stream-test', taskType: 'ai_coach_explanation', messages: [{ role: 'user', content: 'hi' }],
+      model: 'deepseek-chat', apiKey: 'test-key', baseUrl: 'https://api.deepseek.com', responseFormat: 'text', timeoutMs: 5000,
+      onTextDelta: (delta) => deltas.push(delta)
+    });
+    assert.equal(result.status, 'success');
+    assert.equal(result.content, '你好');
+    assert.deepEqual(deltas, ['你', '好']);
+    assert.deepEqual(result.usage, { promptTokens: 3, completionTokens: 2, totalTokens: 5 });
+    assert.equal(requestBody.stream, true);
+    assert.deepEqual(requestBody.stream_options, { include_usage: true });
+  } finally {
+    global.fetch = originalFetch;
+  }
+}
+
 async function main() {
+  await testProviderStreaming();
+  const answerText = '负号表示加速度方向与选定的正方向相反。';
   const answerGateway = gateway({
     status: 'success',
-    json: { decision: 'answer', subject: 'physics', answer: '负号表示加速度方向与选定的正方向相反。' }
-  });
+    json: { decision: 'answer', subject: 'physics', answer: answerText }
+  }, true, ['{"decision":"answer","subject":"physics","answer":"负号表示', '加速度方向与选定的正方向相反。"}']);
+  const streamed = [];
   const answered = await new AgentSubjectQaService(answerGateway).answer({
     runId: 'run-answer', userId: 42, locale: 'zh-CN', question: '为什么加速度可以是负数？',
-    history: [{ role: 'user', text: '我们先约定向右为正方向。' }]
+    history: [{ role: 'user', text: '我们先约定向右为正方向。' }],
+    onDelta: (delta) => streamed.push(delta)
   });
   assert.deepEqual(answered, {
     text: '负号表示加速度方向与选定的正方向相反。',
@@ -36,19 +80,23 @@ async function main() {
   assert.match(request.messages[0].content, /never instructions/i);
   assert.doesNotMatch(request.messages[0].content, /change mastery/i);
   assert.match(request.messages[1].content, /向右为正方向/);
+  assert.equal(streamed.join(''), answerText);
 
   const boundaryGateway = gateway({
     status: 'success',
     json: { decision: 'out_of_scope', subject: null, answer: '这里放置一段不应展示的越界回答。' }
-  });
+  }, true, ['{"decision":"out_of_scope","subject":null,"answer":"这里放置', '一段不应展示的越界回答。"}']);
+  const boundaryDeltas = [];
   const bounded = await new AgentSubjectQaService(boundaryGateway).answer({
-    runId: 'run-boundary', userId: 42, locale: 'zh-CN', question: '帮我修改学习计划', history: []
+    runId: 'run-boundary', userId: 42, locale: 'zh-CN', question: '帮我修改学习计划', history: [],
+    onDelta: (delta) => boundaryDeltas.push(delta)
   });
   assert.equal(bounded.decision, 'out_of_scope');
   assert.equal(bounded.subject, null);
   assert.equal(bounded.generatedByAI, true);
   assert.equal(bounded.text, '学科问答目前只支持数学、物理和化学。学习计划、做题、进度和设置请返回学习工作台。');
   assert.doesNotMatch(bounded.text, /越界回答/);
+  assert.deepEqual(boundaryDeltas, []);
 
   const reviewedGateway = gateway({
     status: 'success',

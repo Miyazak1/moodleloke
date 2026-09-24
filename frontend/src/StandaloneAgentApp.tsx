@@ -1,26 +1,34 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { ErrorBanner } from './components/ErrorBanner';
-import { useI18n } from './i18n/useI18n';
 import type { User } from './lib/api';
 import { buildAuthRedirectUrl, buildOnboardingUrl } from './lib/app-navigation';
-import { buildLocalizedPath, parseLocalizedPath, stripLocaleFromPath } from './lib/locale-routing';
+import { createAgentHostBridge } from './lib/agent-host-bridge';
+import { isAgentPracticeWriteEnabled, isAgentWebEnabled } from './lib/agent-feature';
+import { requestJson } from './lib/request';
 import { EMAIL_UNVERIFIED_EVENT } from './lib/request';
 import { routes } from './lib/routes';
 import { useAuthSession } from './lib/use-auth-session';
+import { useI18n } from './i18n/useI18n';
 
 const AgentPage = lazy(() => import('./pages/AgentPage').then((module) => ({ default: module.AgentPage })));
 const PublicAuthPage = lazy(() => import('./pages/PublicAuthPage').then((module) => ({ default: module.PublicAuthPage })));
 const StandaloneAccountPage = lazy(() => import('./pages/StandaloneAccountPage').then((module) => ({ default: module.StandaloneAccountPage })));
 const StudentOnboardingPage = lazy(() => import('./pages/StudentOnboardingPage').then((module) => ({ default: module.StudentOnboardingPage })));
 
-type StandaloneRoute = 'agent' | 'auth' | 'onboarding' | 'me';
+type StandaloneRoute = 'agent' | 'auth' | 'onboarding' | 'me' | 'not-found';
+
+function currentPathname() {
+  const pathname = window.location.pathname.replace(/\/+$/, '');
+  return pathname || routes.home;
+}
 
 function readStandaloneRoute(): StandaloneRoute {
-  const route = parseLocalizedPath(window.location.pathname).route;
+  const route = currentPathname();
   if (route === routes.auth || route === routes.login || route === routes.register) return 'auth';
   if (route === routes.onboarding) return 'onboarding';
   if (route === routes.me) return 'me';
-  return 'agent';
+  if (route === routes.agent || route === routes.home) return 'agent';
+  return 'not-found';
 }
 
 function canonicalPath(route: StandaloneRoute) {
@@ -31,21 +39,10 @@ function canonicalPath(route: StandaloneRoute) {
 }
 
 export default function StandaloneAgentApp() {
-  const { locale, setLocale } = useI18n();
   const { currentUser, setCurrentUser, isResolvingAuth, setIsResolvingAuth } = useAuthSession(true);
+  const { locale } = useI18n();
   const [route, setRoute] = useState<StandaloneRoute>(() => readStandaloneRoute());
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const currentLocale = parseLocalizedPath(window.location.pathname).locale;
-    if (currentLocale && currentLocale !== locale) setLocale(currentLocale);
-    const currentRoute = readStandaloneRoute();
-    const internalPath = stripLocaleFromPath(window.location.pathname);
-    if (currentRoute === 'agent' && internalPath !== routes.agent) {
-      window.history.replaceState(window.history.state, '', buildLocalizedPath(currentLocale || locale, routes.agent));
-    }
-    setRoute(currentRoute);
-  }, [locale, setLocale]);
 
   useEffect(() => {
     const handlePopState = () => setRoute(readStandaloneRoute());
@@ -64,16 +61,15 @@ export default function StandaloneAgentApp() {
 
   function navigate(next: string) {
     const nextUrl = new URL(next, window.location.origin);
-    const internalPath = stripLocaleFromPath(nextUrl.pathname);
+    const internalPath = nextUrl.pathname.replace(/\/+$/, '') || routes.home;
     let nextRoute: StandaloneRoute = 'agent';
     let isKnownStandalonePath = internalPath === routes.agent || internalPath === routes.home;
     if (internalPath === routes.auth || internalPath === routes.login || internalPath === routes.register) nextRoute = 'auth';
     else if (internalPath === routes.onboarding) nextRoute = 'onboarding';
     else if (internalPath === routes.me) nextRoute = 'me';
     if (nextRoute !== 'agent') isKnownStandalonePath = true;
-    const localizedPath = buildLocalizedPath(locale, canonicalPath(nextRoute));
     const preserveSuffix = isKnownStandalonePath && internalPath !== routes.home;
-    window.history.pushState({}, '', localizedPath + (preserveSuffix ? nextUrl.search + nextUrl.hash : ''));
+    window.history.pushState({}, '', canonicalPath(nextRoute) + (preserveSuffix ? nextUrl.search + nextUrl.hash : ''));
     window.dispatchEvent(new Event('moodlelike:navigation'));
     setRoute(nextRoute);
   }
@@ -89,22 +85,43 @@ export default function StandaloneAgentApp() {
   }
 
   const isAgent = route === 'agent';
+  const agentHost = createAgentHostBridge({
+    navigate,
+    requestAuthentication: (returnTo) => navigate(buildAuthRedirectUrl(returnTo)),
+    getSnapshot: () => ({
+      contractVersion: 'cscalite-agent-host-v1',
+      identity: currentUser ? {
+        id: String(currentUser.id),
+        email: currentUser.email,
+        role: currentUser.role,
+        ...(currentUser.displayName ? { displayName: currentUser.displayName } : {}),
+        emailVerified: Boolean(currentUser.emailVerifiedAt)
+      } : null,
+      isResolvingAuth,
+      locale,
+      features: {
+        agentWeb: isAgentWebEnabled(),
+        practiceWrite: isAgentPracticeWriteEnabled(),
+        studentRuntimeQuestionGeneration: false
+      }
+    }),
+    requestJson
+  });
   return (
     <div className={isAgent ? 'site-shell site-shell-agent' : 'site-shell'}>
       <main className={isAgent ? 'site-main site-main-agent' : 'site-main'}>
         <ErrorBanner message={error} />
-        <Suspense fallback={<div className="page-loading" role="status">Loading…</div>}>
+        <Suspense fallback={<div className="page-loading" role="status" aria-live="polite">正在加载学习空间…</div>}>
           {route === 'agent' && (
             <AgentPage
               currentUser={currentUser}
               isResolvingAuth={isResolvingAuth}
-              onNavigate={navigate}
-              onAuthRedirect={(returnTo) => navigate(buildAuthRedirectUrl(returnTo))}
+              host={agentHost}
             />
           )}
           {route === 'auth' && (
             <PublicAuthPage
-              initialMode={parseLocalizedPath(window.location.pathname).route === routes.register ? 'register' : 'login'}
+              initialMode={currentPathname() === routes.register ? 'register' : 'login'}
               redirectTo={new URLSearchParams(window.location.search).get('redirect') ?? undefined}
               onBackHome={() => navigate(routes.agent)}
               onGoToMe={completeAuth}
@@ -126,6 +143,13 @@ export default function StandaloneAgentApp() {
               onCurrentUserChange={setCurrentUser}
               onNavigate={navigate}
             />
+          )}
+          {route === 'not-found' && (
+            <section className="empty-state" role="alert">
+              <h1>页面不存在</h1>
+              <p>请检查访问地址。</p>
+              <button type="button" onClick={() => navigate(routes.agent)}>返回做题</button>
+            </section>
           )}
         </Suspense>
       </main>

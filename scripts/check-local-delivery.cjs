@@ -12,6 +12,7 @@ if (!runner.includes('moodlelike-local-development-secret') || !runner.includes(
 const startBody = runner.slice(runner.indexOf('async function start()'), runner.indexOf('Promise.resolve()'));
 if (startBody.indexOf("reachable(backendUrl + '/api/v1/health')") > startBody.indexOf('setup();')) throw new Error('Local start must check running services before setup/build to avoid Windows Prisma file locks.');
 if (!startBody.includes('skipped setup and rebuild')) throw new Error('Local start must reuse an already healthy frontend/backend pair.');
+if (!startBody.includes('verifyRuntimeShell') || !runner.includes('cached-session') || !runner.includes('demoSessionPath')) throw new Error('Local start verification must avoid repeated demo logins and cache authenticated verification sessions.');
 if (!batch.includes('npm run local:start') || batch.includes('scripts\wait-for-http')) throw new Error('Windows launcher must delegate to the unified local runner.');
 if (!health.includes("service: 'moodlelike-backend'")) throw new Error('Health identity must be Moodlelike.');
 console.log('Moodlelike local delivery contract passed.');

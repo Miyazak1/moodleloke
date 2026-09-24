@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1",
-  "generatedAt": "2026-09-17T13:37:25.473Z",
+  "generatedAt": "2026-09-24T03:53:06.322Z",
   "policy": "copy-all-first-prune-later",
   "counts": {
     "runtime-keep": 113,
@@ -222,7 +222,7 @@
       "table": "csca_exam_topics",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 26,
+      "prismaAccessorMentions": 27,
       "typeMentions": 2
     },
     {
@@ -294,7 +294,7 @@
       "table": "csca_adaptive_sessions",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 9,
+      "prismaAccessorMentions": 10,
       "typeMentions": 0
     },
     {
@@ -302,7 +302,7 @@
       "table": "csca_adaptive_rounds",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 24,
+      "prismaAccessorMentions": 25,
       "typeMentions": 0
     },
     {
@@ -310,7 +310,7 @@
       "table": "csca_adaptive_round_items",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 6,
+      "prismaAccessorMentions": 8,
       "typeMentions": 0
     },
     {
@@ -334,7 +334,7 @@
       "table": "csca_questions",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 29,
+      "prismaAccessorMentions": 31,
       "typeMentions": 2
     },
     {
@@ -350,7 +350,7 @@
       "table": "csca_concept_cards",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 4,
+      "prismaAccessorMentions": 5,
       "typeMentions": 0
     },
     {
@@ -358,7 +358,7 @@
       "table": "teaching_assets",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 12,
+      "prismaAccessorMentions": 13,
       "typeMentions": 1
     },
     {
@@ -550,7 +550,7 @@
       "table": "csca_training_events",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 23,
+      "prismaAccessorMentions": 24,
       "typeMentions": 0
     },
     {
@@ -630,7 +630,7 @@
       "table": "csca_wrong_patterns",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 24,
+      "prismaAccessorMentions": 29,
       "typeMentions": 0
     },
     {
@@ -798,7 +798,7 @@
       "table": "learning_evidence_events",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 13,
+      "prismaAccessorMentions": 16,
       "typeMentions": 1
     },
     {
@@ -822,7 +822,7 @@
       "table": "user_csca_topic_states_v2",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 7,
+      "prismaAccessorMentions": 8,
       "typeMentions": 1
     },
     {
@@ -830,7 +830,7 @@
       "table": "learning_state_projection_checkpoints",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 8,
+      "prismaAccessorMentions": 10,
       "typeMentions": 0
     },
     {
@@ -846,7 +846,7 @@
       "table": "learning_prescriptions",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 2,
+      "prismaAccessorMentions": 4,
       "typeMentions": 0
     },
     {
@@ -854,7 +854,7 @@
       "table": "learning_decision_current",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 6,
+      "prismaAccessorMentions": 7,
       "typeMentions": 0
     },
     {
@@ -870,7 +870,7 @@
       "table": "learning_intervention_deliveries",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 13,
+      "prismaAccessorMentions": 14,
       "typeMentions": 0
     },
     {
@@ -902,7 +902,7 @@
       "table": "learning_intervention_stability_assessments",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 4,
+      "prismaAccessorMentions": 5,
       "typeMentions": 0
     },
     {
@@ -910,7 +910,7 @@
       "table": "learning_prescription_outcomes",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 12,
+      "prismaAccessorMentions": 15,
       "typeMentions": 0
     },
     {
@@ -1078,7 +1078,7 @@
       "table": "agent_conversations",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 22,
+      "prismaAccessorMentions": 32,
       "typeMentions": 0
     },
     {
@@ -1086,7 +1086,7 @@
       "table": "agent_messages",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 13,
+      "prismaAccessorMentions": 14,
       "typeMentions": 0
     },
     {
@@ -1158,7 +1158,7 @@
       "table": "agent_runs",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 26,
+      "prismaAccessorMentions": 27,
       "typeMentions": 0
     },
     {
@@ -1166,7 +1166,7 @@
       "table": "agent_tool_calls",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 60,
+      "prismaAccessorMentions": 61,
       "typeMentions": 0
     },
     {
@@ -1174,7 +1174,7 @@
       "table": "agent_artifacts",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 23,
+      "prismaAccessorMentions": 29,
       "typeMentions": 0
     },
     {

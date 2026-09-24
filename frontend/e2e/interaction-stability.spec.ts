@@ -410,7 +410,7 @@ test('backend-style auth token keeps student routes signed in', async ({ page })
   await expect(page.locator('body')).not.toContainText('登录后保存进度');
   await expect(page.locator('body')).not.toContainText('Login saves progress');
 
-  await page.goto('/zh/me');
+  await page.goto('/me');
   await expect(page.getByRole('heading', { name: 'Admin' })).toBeVisible();
   await expect(page.locator('body')).not.toContainText('请先登录');
   await expect(page.locator('body')).not.toContainText('Log in to keep your CSCA practice path together');

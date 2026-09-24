@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Icon } from '../Icon';
 import { MathContent } from '../MathContent';
 import { useI18n } from '../../i18n/useI18n';
+import { AgentAsyncState } from './AgentAsyncState';
 import {
   createAdaptivePracticeRound,
   createAdaptivePracticeSession,
@@ -10,7 +11,7 @@ import {
   type AdaptiveRoundReport,
   type MockExamReport
 } from '../../lib/api';
-import type { AgentMockExamSettlement } from '../../lib/api-agent';
+import { settleAgentPractice, type AgentMockExamSettlement, type AgentTaskSettlement } from '../../lib/api-agent';
 import { routes } from '../../lib/routes';
 import '../../styles/agent-report.css';
 
@@ -38,13 +39,7 @@ function ReportState({
   actionLabel?: string;
   onAction?: () => void;
 }) {
-  return (
-    <div className={`agent-structured-report-state${status === 'error' ? ' is-error' : ''}`} role={status === 'error' ? 'alert' : 'status'}>
-      <Icon name={status === 'error' ? 'lucide:circle-alert' : 'lucide:loader-circle'} />
-      <span><strong>{title}</strong><small>{body}</small></span>
-      {actionLabel && onAction ? <button type="button" onClick={onAction}><Icon name="lucide:refresh-cw" />{actionLabel}</button> : null}
-    </div>
-  );
+  return <AgentAsyncState kind={status} title={title} body={body} actionLabel={actionLabel} onAction={onAction} />;
 }
 
 export function AgentAdaptiveResultMessage({
@@ -53,7 +48,12 @@ export function AgentAdaptiveResultMessage({
   onNavigate,
   customActions,
   renderFollowUp,
-  onReportLoaded
+  onReportLoaded,
+  onStartTargeted,
+  onContinue,
+  onOpenPlan,
+  onOpenWeakness,
+  onSettlementLoaded
 }: {
   roundId: number;
   taskType?: string;
@@ -61,6 +61,11 @@ export function AgentAdaptiveResultMessage({
   customActions?: ReactNode;
   renderFollowUp?: (report: AdaptiveRoundReport) => ReactNode;
   onReportLoaded?: (report: AdaptiveRoundReport | null) => void;
+  onStartTargeted?: (selection: { subject: 'math' | 'physics' | 'chemistry'; questionCount: number; focusTopicId?: number; reviewItemId?: number; patternType?: string }) => void;
+  onContinue?: () => void;
+  onOpenPlan?: () => void;
+  onOpenWeakness?: () => void;
+  onSettlementLoaded?: (settlement: AgentTaskSettlement) => void;
 }) {
   const { locale, t } = useI18n();
   const [report, setReport] = useState<AdaptiveRoundReport | null>(null);
@@ -69,7 +74,15 @@ export function AgentAdaptiveResultMessage({
   const [isContinuing, setIsContinuing] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [questionsOpen, setQuestionsOpen] = useState(false);
+  const [settlement, setSettlement] = useState<AgentTaskSettlement | null>(null);
+  const [settlementError, setSettlementError] = useState('');
+  const [settlementRevision, setSettlementRevision] = useState(0);
   const questionDetailsRef = useRef<HTMLDetailsElement | null>(null);
+  const onSettlementLoadedRef = useRef(onSettlementLoaded);
+
+  useEffect(() => {
+    onSettlementLoadedRef.current = onSettlementLoaded;
+  }, [onSettlementLoaded]);
 
   useEffect(() => {
     let active = true;
@@ -86,27 +99,60 @@ export function AgentAdaptiveResultMessage({
     return () => { active = false; };
   }, [loadRevision, locale, onReportLoaded, roundId, t]);
 
+  useEffect(() => {
+    let active = true;
+    setSettlement(null);
+    setSettlementError('');
+    void settleAgentPractice(roundId)
+      .then((result) => {
+        if (!active) return;
+        setSettlement(result);
+        onSettlementLoadedRef.current?.(result);
+      })
+      .catch((nextError) => {
+        if (active) setSettlementError(nextError instanceof Error ? nextError.message : t('agent.report.settlementFailed', '验证结论暂时无法同步。'));
+      });
+    return () => { active = false; };
+  }, [roundId, settlementRevision, t]);
+
   if (error) return <ReportState status="error" title={t('agent.report.loadFailedTitle', '学习结果还没有载入')} body={error} actionLabel={t('agent.report.retryLoad', '重试加载')} onAction={() => setLoadRevision((current) => current + 1)} />;
   if (!report) return <ReportState status="loading" title={t('agent.report.loading', '正在整理本轮学习结果')} body={t('agent.report.loadingBody', '完成后会在学习工作台显示结果、学习证据和下一步。')} />;
 
   const summary = report.summary;
+  const decision = report.learningDecision;
   const primaryWeakTopic = report.weakTopics[0]?.title
     ?? report.items.find((item) => !item.isCorrect)?.topicTitle
     ?? t('agent.report.noWeakTopic', '本轮知识点');
   const isStrong = summary.accuracy >= 80;
   const isDeveloping = summary.accuracy >= 60 && summary.accuracy < 80;
-  const title = isStrong
-    ? t('agent.report.strongTitle', '这一轮做得很稳。')
-    : isDeveloping
-      ? t('agent.report.developingTitle', '已经找到需要巩固的位置。')
-      : t('agent.report.focusTitle', '先处理一个最关键的薄弱点。');
-  const body = isStrong
-    ? t('agent.report.strongBody', '正确率达到 {accuracy}%，下一轮可以继续扩大覆盖面。').replace('{accuracy}', String(summary.accuracy))
-    : t('agent.report.focusBody', '你答对 {correct}/{total} 题，目前最值得优先复盘的是“{topic}”。')
-      .replace('{correct}', String(summary.correctCount)).replace('{total}', String(summary.total)).replace('{topic}', primaryWeakTopic);
+  const title = decision?.headline ?? t('agent.report.pendingDecisionTitle', '本轮作答已记录。');
+  const body = decision?.explanation ?? t('agent.report.pendingDecisionBody', '掌握判断暂未同步；当前只展示本轮结果，待学习证据同步后再决定下一步。');
   const evidenceCount = Math.max(0, summary.total - summary.unansweredCount);
   const isDiagnostic = taskType === 'diagnostic';
   const wrongItems = report.items.filter((item) => !item.isCorrect);
+  const roundMode = report.round.plannerSnapshot && typeof report.round.plannerSnapshot === 'object' && !Array.isArray(report.round.plannerSnapshot)
+    ? (report.round.plannerSnapshot as { mode?: unknown }).mode
+    : null;
+  const isVerification = settlement?.verification === true || roundMode === 'verification';
+  const verificationResult = settlement?.verificationResult;
+  const verificationTitle = !verificationResult
+    ? '正在确认验证结论'
+    : verificationResult.verdict === 'repaired'
+      ? '该薄弱点已修复'
+      : verificationResult.verdict === 'insufficient_evidence'
+        ? '本轮证据不足'
+        : verificationResult.currentRoundPassed
+          ? '本轮通过，仍需间隔验证'
+          : '该薄弱点仍需巩固';
+  const verificationBody = !verificationResult
+    ? '系统正在核对当前错因、独立作答和复习记录。'
+    : verificationResult.verdict === 'repaired'
+      ? `已连续通过 ${verificationResult.consecutivePassCount}/${verificationResult.requiredPassCount} 次独立验证，已从待复习队列移除。`
+      : verificationResult.verdict === 'insufficient_evidence'
+        ? `本轮只形成 ${settlement?.targetTotal ?? 0} 道有效验证题，不足以判定是否修复。`
+        : verificationResult.currentRoundPassed
+          ? `当前通过 ${verificationResult.consecutivePassCount}/${verificationResult.requiredPassCount} 次。为避免短时记忆造成假掌握，下一次验证需在间隔后完成。`
+          : `本轮目标题正确率 ${settlement?.targetAccuracy ?? summary.accuracy}%，连续通过计数已重置。先回看原错因，再进行下一轮定向训练。`;
 
   async function startNextRound() {
     if (isContinuing) return;
@@ -132,6 +178,26 @@ export function AgentAdaptiveResultMessage({
     window.setTimeout(() => questionDetailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 0);
   }
 
+  function runDecisionAction() {
+    const next = decision?.nextStep;
+    if (!next || next.type === 'continue_practice' || next.type === 'broaden_coverage') {
+      if (onContinue) onContinue();
+      else void startNextRound();
+      return;
+    }
+    if (next.type === 'delayed_verification') return;
+    if (onStartTargeted) {
+      onStartTargeted({
+        subject: next.subject,
+        questionCount: next.questionCount,
+        ...(next.topicId ? { focusTopicId: next.topicId } : {}),
+        ...(next.reviewItemId && next.patternType ? { reviewItemId: next.reviewItemId, patternType: next.patternType } : {})
+      });
+      return;
+    }
+    void startNextRound();
+  }
+
   return (
     <section className="agent-structured-report" aria-label={t('agent.workspace.chatReportAria', '本轮学习报告')}>
       <header className="agent-report-intro">
@@ -144,6 +210,12 @@ export function AgentAdaptiveResultMessage({
       </header>
 
       <div className="agent-report-object">
+        {isVerification ? <section className="agent-verification-result" data-verdict={verificationResult?.verdict ?? 'pending'}>
+          <Icon name={verificationResult?.verdict === 'repaired' ? 'lucide:badge-check' : verificationResult?.verdict === 'insufficient_evidence' ? 'lucide:circle-help' : verificationResult?.currentRoundPassed ? 'lucide:calendar-clock' : 'lucide:refresh-cw'} />
+          <div><small>独立验证结果</small><strong>{verificationTitle}</strong><p>{verificationBody}</p>{verificationResult?.nextReviewAt && verificationResult.nextAction === 'wait_for_spaced_verification' ? <em>下次验证：{new Date(verificationResult.nextReviewAt).toLocaleDateString(locale)}</em> : null}</div>
+          {settlementError ? <button type="button" onClick={() => setSettlementRevision((current) => current + 1)}><Icon name="lucide:refresh-cw" />重试同步</button> : onOpenWeakness && verificationResult ? <button type="button" onClick={onOpenWeakness}><Icon name="lucide:arrow-left" />{verificationResult.verdict === 'repaired' ? '查看更新后的薄弱点' : '返回错题复盘'}</button> : null}
+          {settlementError ? <p role="alert">{settlementError}</p> : null}
+        </section> : null}
         <div className="agent-report-object-head">
           <div><span>{t('agent.workspace.chatReportTitle', '结果、学习证据与下一步')}</span><strong>{primaryWeakTopic}</strong></div>
           <b>{summary.accuracy}%</b>
@@ -152,20 +224,28 @@ export function AgentAdaptiveResultMessage({
         <div className="agent-report-metrics">
           <Metric label={t('agent.report.correct', '答对')} value={`${summary.correctCount}/${summary.total}`} tone={isStrong ? 'good' : undefined} />
           <Metric label={t('agent.report.duration', '本轮用时')} value={formatDuration(summary.totalSeconds)} />
-          <Metric label={t('agent.report.answerEvidence', '作答证据')} value={`${evidenceCount} ${t('agent.report.items', '项')}`} />
+          <Metric label={decision ? '独立答对' : t('agent.report.answerEvidence', '作答证据')} value={decision ? `${decision.evidenceBasis.independentCorrectCount}/${evidenceCount}` : `${evidenceCount} ${t('agent.report.items', '项')}`} />
         </div>
 
         <div className="agent-report-insight">
-          <Icon name="lucide:sparkles" />
-          <div><small>{t('agent.report.agentJudgement', 'Agent 判断')}</small><strong>{isStrong ? t('agent.report.nextBroaden', '保持当前节奏，下一轮继续验证稳定性。') : t('agent.report.nextRepair', '先复盘共同错因，再开始下一轮练习。')}</strong></div>
+          <Icon name="lucide:scale" />
+          <div><small>{decision ? '规则判断 · 来自真实作答证据' : '掌握判断暂未形成'}</small><strong>{decision?.nextStep.reason ?? '你仍可查看本轮题目，但系统不会仅凭正确率宣布已经掌握。'}</strong></div>
         </div>
 
-        {customActions ?? (
+        {customActions ?? (isVerification ? (
           <div className="agent-report-actions">
-            <button type="button" onClick={openQuestionReview}><Icon name="lucide:book-open-check" />{t('agent.report.reviewFirst', '先看错题')}</button>
-            <button type="button" className="primary" disabled={isContinuing} onClick={() => void startNextRound()}><Icon name={isContinuing ? 'lucide:loader-circle' : 'lucide:play'} />{isContinuing ? t('agent.report.preparing', '正在准备') : t('agent.report.nextRound', '继续下一轮')}</button>
+            {wrongItems.length ? <button type="button" onClick={openQuestionReview}><Icon name="lucide:book-open-check" />{t('agent.report.reviewFirst', '先看错题')}</button> : null}
+            {verificationResult?.verdict === 'repaired' && onContinue ? <button type="button" className="primary" onClick={onContinue}><Icon name="lucide:arrow-right" />继续扩大知识覆盖</button> : null}
+            {onOpenWeakness ? <button type="button" className={verificationResult?.verdict === 'repaired' ? '' : 'primary'} onClick={onOpenWeakness}><Icon name="lucide:history" />{verificationResult?.verdict === 'repaired' ? '查看薄弱点' : '回到错题与薄弱点'}</button> : null}
           </div>
-        )}
+        ) : (
+          <div className="agent-report-actions">
+            {wrongItems.length ? <button type="button" onClick={openQuestionReview}><Icon name="lucide:book-open-check" />{t('agent.report.reviewFirst', '先看错题')}</button> : null}
+            <button type="button" className="primary" disabled={isContinuing || decision?.nextStep.type === 'delayed_verification'} onClick={runDecisionAction}><Icon name={isContinuing ? 'lucide:loader-circle' : decision?.nextStep.type === 'delayed_verification' ? 'lucide:calendar-clock' : 'lucide:play'} />{isContinuing ? t('agent.report.preparing', '正在准备') : decision?.nextStep.label ?? t('agent.report.nextRound', '继续下一轮')}</button>
+            {onContinue && (decision?.nextStep.type === 'review_mistakes' || decision?.nextStep.type === 'targeted_practice') ? <button type="button" disabled={isContinuing} onClick={onContinue}><Icon name="lucide:arrow-right" />继续下一批</button> : null}
+            {onOpenPlan ? <button type="button" onClick={onOpenPlan}><Icon name="lucide:calendar-range" />查看学习计划</button> : null}
+          </div>
+        ))}
 
         {renderFollowUp ? <div className="agent-report-follow-up">{renderFollowUp(report)}</div> : null}
 
@@ -191,6 +271,12 @@ export function AgentAdaptiveResultMessage({
               {report.remediationPlan?.triggered && <section>
                 <small>{t('agent.report.repairPlan', '补救安排')}</small>
                 <p>{report.remediationPlan.conceptCards[0]?.title ?? t('agent.report.repairCopy', '下一轮将优先安排同类变式题。')}</p>
+              </section>}
+              {decision && <section>
+                <small>掌握判断依据</small>
+                <p>首次作答 {decision.evidenceBasis.firstAttemptCount} 项 · 独立答对 {decision.evidenceBasis.independentCorrectCount} 项 · 提示后答对 {decision.evidenceBasis.assistedCorrectCount} 项{decision.evidenceBasis.averageSeconds !== null ? ` · 平均 ${decision.evidenceBasis.averageSeconds} 秒` : ''}</p>
+                <div className="agent-report-tags">{decision.topics.slice(0, 5).map((topic) => <span key={topic.topicId}>{topic.title} · {topic.status === 'verified_mastery' ? '稳定掌握' : topic.status === 'needs_review' ? '需要复习' : topic.status === 'needs_verification' ? '等待验证' : '积累证据'}</span>)}</div>
+                <p>{decision.adaptationPending ? '最新证据已保存，知识状态正在异步更新；当前建议已优先采用本轮作答。' : '知识状态已同步。AI 不直接修改掌握度。'}</p>
               </section>}
             </div>
           </details>
@@ -261,8 +347,13 @@ export function AgentMockExamResultMessage({
   const focus = settlement?.learningReview.focusTopics[0]?.title ?? report.knowledgeStats.slice().sort((a, b) => (b.wrong / Math.max(1, b.total)) - (a.wrong / Math.max(1, a.total)))[0]?.tag;
   const nextTask = settlement?.learningReview.nextDecision?.primaryTask;
   const wrongItems = report.items.filter((item) => !item.isCorrect);
+  const localizedDecisionReason = locale.toLowerCase().startsWith('zh')
+    ? focus
+      ? `根据本次模考结果，建议先巩固“${focus}”，再用新题验证。`
+      : '根据本次模考结果，建议先完成一项针对性巩固任务。'
+    : settlement?.learningReview.nextDecision?.reasonSummary ?? '';
   const nextDecisionCopy = nextTask
-    ? `${nextTask.type === 'targeted_practice' ? t('agent.task.targetedPractice', '针对性练习') : t('agent.task.learning', '下一项学习任务')} · ${settlement?.learningReview.nextDecision?.reasonSummary ?? ''}`
+    ? `${nextTask.type === 'targeted_practice' ? t('agent.task.targetedPractice', '针对性练习') : t('agent.task.learning', '下一项学习任务')} · ${localizedDecisionReason}`
     : settlementStatus === 'loading'
       ? t('agent.mockExam.nextSyncing', '正在把本次模考纳入学习历程；你现在可以先复盘错题。')
       : t('agent.mockExam.nextUnavailable', '成绩已记录；学习证据同步未完成，可重试同步或先复盘错题。');

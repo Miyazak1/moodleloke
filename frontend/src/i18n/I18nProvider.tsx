@@ -12,7 +12,6 @@ import {
   type LocaleOption
 } from './locales';
 import { readMessage } from './messages';
-import { buildLocalizedPath, getLocaleFromPathname } from '../lib/locale-routing';
 
 type I18nContextValue = {
   locale: Locale;
@@ -39,9 +38,6 @@ function detectInitialLocale(): Locale {
   if (legacyLocale) window.localStorage.removeItem(LEGACY_LOCALE_STORAGE_KEY);
   if (legacySource) window.localStorage.removeItem(LEGACY_LOCALE_SOURCE_STORAGE_KEY);
 
-  const pathLocale = getLocaleFromPathname(window.location.pathname);
-  if (pathLocale) return pathLocale;
-
   const queryLocale = normalizeLocale(new URLSearchParams(window.location.search).get('lang'));
   if (queryLocale) return queryLocale;
 
@@ -62,7 +58,6 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   }, [locale]);
 
   useEffect(() => {
-    const pathLocale = getLocaleFromPathname(window.location.pathname);
     const search = new URLSearchParams(window.location.search);
     const hadQueryLocale = search.has('lang');
     if (hadQueryLocale) search.delete('lang');
@@ -72,10 +67,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       if (hadQueryLocale) window.history.replaceState(window.history.state, '', `${window.location.pathname}${cleanSearch}${window.location.hash}`);
       return;
     }
-    const cleanInternalPath = `${window.location.pathname}${cleanSearch}${window.location.hash}`;
-    if (!pathLocale || hadQueryLocale) {
-      window.history.replaceState(window.history.state, '', buildLocalizedPath(pathLocale || locale, cleanInternalPath));
-    }
+    if (hadQueryLocale) window.history.replaceState(window.history.state, '', `${window.location.pathname}${cleanSearch}${window.location.hash}`);
   }, [locale]);
 
   const setLocale = useCallback((nextLocale: Locale) => {

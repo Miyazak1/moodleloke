@@ -1988,7 +1988,7 @@ test('mock exam all free subjects can create an attempt', async ({ page }) => {
 
     await page.goto(`/csca-mock-exam/${subject.id}/${slug}`);
     await page.getByRole('button', { name: '开始模考' }).click();
-    await expect(page).toHaveURL(`/zh/csca-mock-exam/attempts/${subject.attemptId}`);
+    await expect(page).toHaveURL(`/csca-mock-exam/attempts/${subject.attemptId}`);
   }
 });
 

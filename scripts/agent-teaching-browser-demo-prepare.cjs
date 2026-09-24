@@ -161,7 +161,7 @@ async function main() {
     }
   });
 
-  const relativeUrl = `/zh/agent?agentContextId=${encodeURIComponent(conversation.id)}`;
+  const relativeUrl = `/agent?agentContextId=${encodeURIComponent(conversation.id)}`;
   const scenario = {
     schemaVersion: '1',
     marker,

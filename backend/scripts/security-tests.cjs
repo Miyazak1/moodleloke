@@ -23,6 +23,7 @@ const { recordAdminAudit } = require('../dist/backend/src/admin-audit/admin-audi
 const { buildPublishedSchoolWhere } = require('../dist/backend/src/schools/schools.query.js');
 const { SchoolsService } = require('../dist/backend/src/schools/schools.service.js');
 const { HealthController } = require('../dist/backend/src/health/health.controller.js');
+const { getStudentAgentIntegrationReadiness } = require('../dist/backend/src/common/integration-readiness.js');
 
 function createFakePrisma() {
   const state = {
@@ -425,6 +426,15 @@ async function run() {
   assert.equal(health.status, 'ok');
   assert.equal(health.checks.databaseUrlConfigured, true);
   assert.equal(JSON.stringify(health).includes('secret'), false, 'health response must not leak secret values');
+  const integrationReady = getStudentAgentIntegrationReadiness({
+    MOODLELIKE_HOST_INTEGRATION_MODE: 'cscalite', MOODLELIKE_HOST_CONTRACT_VERSION: 'cscalite-agent-host-v1',
+    AGENT_WEB_ENABLED: 'true', CSCA_AGENT_PRACTICE_WRITE_ENABLED: 'true', AI_GATEWAY_ENABLED: 'true', AI_DEFAULT_PROVIDER: 'deepseek',
+    DEEPSEEK_PERSONAL_API_KEYS: 'private-key-must-not-leak', DEEPSEEK_PERSONAL_DEFAULT_MODEL: 'deepseek-flash',
+    CSCA_AI_QUESTION_GENERATION_ENABLED: 'false', CSCA_AI_QUESTIONING_SCHEDULER_ENABLED: 'false',
+    CSCA_SUBJECT_PRACTICE_PRODUCTION_ENABLED: 'false', CSCA_SUBJECT_PRACTICE_PREDICTIVE_REPLENISHMENT_ENABLED: 'false'
+  });
+  assert.equal(integrationReady.status, 'ready');
+  assert.equal(JSON.stringify(integrationReady).includes('private-key-must-not-leak'), false, 'integration readiness must not leak provider credentials');
   process.env.NODE_ENV = 'test';
   process.env.MOODLELIKE_ENV = 'production';
   delete process.env.OPS_HEALTH_DETAILS_ENABLED;

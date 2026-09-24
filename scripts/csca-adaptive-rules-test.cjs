@@ -26,8 +26,20 @@ const { AIObservabilityService } = require('../backend/src/csca-special-practice
 const { AIUsageMeterService } = require('../backend/src/csca-special-practice/ai-usage-meter.service');
 const { TrainingEventService } = require('../backend/src/csca-special-practice/training-event.service');
 const { MockExamMasteryBridgeService } = require('../backend/src/csca-mock-exam/mock-exam-mastery-bridge.service');
-const { CommerceService } = require('../backend/src/commerce/commerce.service');
-const { PaymentsService } = require('../backend/src/payments/payments.service');
+function optionalStandaloneService(modulePath, exportName) {
+  try {
+    return require(modulePath)[exportName];
+  } catch (error) {
+    if (error?.code === 'MODULE_NOT_FOUND' && String(error.message).includes(modulePath)) return null;
+    throw error;
+  }
+}
+
+// Commerce and payments belong to the host CSCALite application. Keep their
+// contract checks when those modules are present, but do not make Moodlelike's
+// standalone adaptive regression suite depend on host-only code.
+const CommerceService = optionalStandaloneService('../backend/src/commerce/commerce.service', 'CommerceService');
+const PaymentsService = optionalStandaloneService('../backend/src/payments/payments.service', 'PaymentsService');
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -702,6 +714,34 @@ async function testSpecialPracticeSessionFiltersGovernedAiQuestions() {
   const response = error.getResponse?.();
   assertEqual(response?.code, 'SPECIAL_PRACTICE_POOL_REPLENISHING', 'An incomplete governed topic must expose the replenishing state.');
   assertEqual(capturedSnapshot.length, 0, 'An incomplete governed topic must not create a partial student session.');
+}
+
+async function testQuestionProviderAvoidsCrossSourceNumericIdCollisions() {
+  const provider = new AdaptiveQuestionProviderService({
+    cscaQuestion: {
+      findMany: async ({ where }) => where?.sourceType === 'ai' ? [] : [{
+        id: 701, topicId: 1, designedDifficulty: '基础', empiricalDifficulty: null, difficultyConfidence: null,
+        syllabusVersion: '2026', topic: { code: 'math-1', title: 'Topic 1', syllabusVersion: '2026' }
+      }]
+    },
+    cscaTopicMapping: {
+      findMany: async () => [
+        { sourceId: 701, topicId: 2, topic: { code: 'math-2', title: 'Topic 2', syllabusVersion: '2026' } },
+        { sourceId: 702, topicId: 2, topic: { code: 'math-2', title: 'Topic 2', syllabusVersion: '2026' } }
+      ]
+    },
+    specialPracticeQuestion: {
+      findMany: async () => [{ id: 701, difficulty: '基础' }, { id: 702, difficulty: '基础' }]
+    },
+    cscaQuestionExposure: { findMany: async () => [] }
+  });
+  const selected = await provider.pickQuestions(101, [
+    { topicId: 1, code: 'math-1', title: 'Topic 1', module: null, targetDifficulty: '基础', reason: 'weakest_topic' },
+    { topicId: 2, code: 'math-2', title: 'Topic 2', module: null, targetDifficulty: '基础', reason: 'weakest_topic' }
+  ], 2);
+  assertEqual(selected.length, 2, 'Provider should fill the round after skipping a cross-source numeric id collision.');
+  assertEqual(new Set(selected.map((item) => item.questionId)).size, 2, 'Round question ids must remain unique across source tables.');
+  assert(selected.some((item) => item.questionId === 702), 'Provider should choose a safe alternate question after a source collision.');
 }
 
 async function testSpecialPracticeSubjectCountsFilterGovernedAiQuestions() {
@@ -2249,6 +2289,19 @@ async function testDiagnosticCoverageReport() {
     },
     userCscaTopicMastery: {
       findMany: async ({ where }) => masteryRows.filter((row) => where.topicId.in.includes(row.topicId))
+    },
+    userCscaTopicStateV2: {
+      findMany: async () => []
+    },
+    learningEvidenceEvent: {
+      findMany: async () => [],
+      findFirst: async () => null
+    },
+    cscaWrongPattern: {
+      findMany: async () => []
+    },
+    learningStateProjectionCheckpoint: {
+      findUnique: async () => null
     }
   };
   const service = new CscaAdaptiveService(prisma, {}, {}, {}, {}, {}, {}, {});
@@ -2263,6 +2316,53 @@ async function testDiagnosticCoverageReport() {
   assertEqual(report.diagnosticCoverage.coveredDimensions[0].attemptCount, 1, 'Covered dimension must expose round attempts.');
   assert(report.diagnosticCoverage.insufficientDimensions.some((dimension) => dimension.topicId === 2 && dimension.reason === 'low_confidence'), 'Low-confidence covered dimension must be flagged.');
   assert(report.diagnosticCoverage.insufficientDimensions.some((dimension) => dimension.topicId === 3 && dimension.reason === 'not_covered'), 'Uncovered dimension must be flagged.');
+}
+
+async function testConcurrentRoundSubmitLoserHasNoLearningSideEffects() {
+  const round = {
+    id: 701, sessionId: 301, roundIndex: 1, status: 'active', plannerSnapshot: null,
+    answers: { 501: 'A' }, timeSpent: { 501: 20 }, currentQuestion: 1,
+    correctCount: 0, wrongCount: 0, unansweredCount: 1, startedAt: new Date(), submittedAt: null, version: 1,
+    session: { id: 301, userId: 101, subject: 'math', mode: 'practice', questionLanguage: 'zh' },
+    items: [{ id: 1, roundId: 701, questionId: 501, questionSource: 'special_practice', topicId: 1, position: 1, selectedAnswer: 'A', isCorrect: true, usedHint: false, usedExplanation: false, timeSpentSeconds: 20 }]
+  };
+  const calls = { mastery: 0, event: 0, activity: 0, wrong: 0, correct: 0, quality: 0 };
+  const prisma = {
+    async $transaction(callback) { return callback(prisma); },
+    async $executeRaw() { return 1; },
+    cscaAdaptiveRound: {
+      async findFirst({ include }) { return include ? round : { ...round, submittedAt: new Date() }; }
+    },
+    specialPracticeQuestion: {
+      async findMany() {
+        return [{ id: 501, version: 1, orderNumber: 1, difficulty: '基础', questionType: 'single_choice', prompt: '1+1=?', options: [{ id: 'A', text: '2' }], correctAnswer: 'A', explanation: '1+1=2', knowledgeTags: ['加法'], localizations: null, topic: { title: '运算', localizations: null } }];
+      }
+    },
+    cscaQuestion: { async findMany() { return []; } }
+  };
+  const service = new CscaAdaptiveService(
+    prisma,
+    {},
+    {},
+    { async updateFromRound() { calls.mastery += 1; } },
+    { async record() { calls.event += 1; } },
+    {
+      async recordLearningActivity() { calls.activity += 1; },
+      async recordWrongPatterns() { calls.wrong += 1; },
+      async recordWrongPatternCorrectEvidence() { calls.correct += 1; }
+    },
+    {
+      async refreshForSpecialPracticeQuestionIds() { calls.quality += 1; },
+      async refreshForCscaQuestionIds() { calls.quality += 1; }
+    },
+    {},
+    { isEnabled() { return false; } },
+    {}
+  );
+  service.getReport = async () => ({ schemaVersion: 'test', round: { id: 701 } });
+  const result = await service.submitRound(101, '701', 'zh');
+  assertEqual(result.round.id, 701, 'Concurrent submit loser should return the durable report.');
+  assertEqual(Object.values(calls).reduce((sum, value) => sum + value, 0), 0, 'Concurrent submit loser must not repeat learning side effects.');
 }
 
 async function testAdaptiveReportKeepsHistoricalGovernedQuestions() {
@@ -2353,6 +2453,19 @@ async function testAdaptiveReportKeepsHistoricalGovernedQuestions() {
     },
     userCscaTopicMastery: {
       findMany: async () => []
+    },
+    userCscaTopicStateV2: {
+      findMany: async () => []
+    },
+    learningEvidenceEvent: {
+      findMany: async () => [],
+      findFirst: async () => null
+    },
+    cscaWrongPattern: {
+      findMany: async () => []
+    },
+    learningStateProjectionCheckpoint: {
+      findUnique: async () => null
     }
   };
   const service = new CscaAdaptiveService(prisma, {}, {}, {}, {}, {}, {}, {});
@@ -2512,6 +2625,7 @@ async function main() {
   await testPlannerAssistantProviderGuard();
   await testQuestionProvider();
   await testQuestionProviderDirectUnifiedQuestions();
+  await testQuestionProviderAvoidsCrossSourceNumericIdCollisions();
   await testQuestionProviderPreferredUnifiedVariant();
   await testQuestionProviderReduceExposureGovernance();
   await testSpecialPracticeSessionFiltersGovernedAiQuestions();
@@ -2527,13 +2641,14 @@ async function main() {
   await testPlatformPersonalReserveSkipsOrganizationPool();
   await testOrganizationAIAdminManagementMasksProviderSecret();
   testOrganizationAISecretStoreLegacyCompatibility();
-  testAICreditCommercePricing();
-  await testAICreditPaymentFulfillment();
+  if (CommerceService) testAICreditCommercePricing();
+  if (PaymentsService) await testAICreditPaymentFulfillment();
   await testAICoachProvider();
   await testAICoachStructuredExplanationPersistence();
   await testAICoachFiltersGovernedAiBackedSpecialQuestion();
   await testAICoachRoundSummaryFiltersGovernedAndSupportsUnifiedQuestions();
   await testDiagnosticCoverageReport();
+  await testConcurrentRoundSubmitLoserHasNoLearningSideEffects();
   await testAdaptiveReportKeepsHistoricalGovernedQuestions();
   await testAIObservability();
   await testTrainingEventObservability();

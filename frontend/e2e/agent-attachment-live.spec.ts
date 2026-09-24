@@ -62,7 +62,7 @@ test('analyzes a handwritten answer and a native PDF with grounded citations', a
   page.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
   page.on('pageerror', (error) => pageErrors.push(error.message));
   await authenticate(page);
-  await page.goto('/zh/agent');
+  await page.goto('/agent');
 
   await uploadAndSend(page, fixture('handwritten-function-answer.png'), '请分析这张手写答案，识别题目、学生答案并判断是否正确。');
   const evidence = page.locator('.agent-evidence-card').filter({ hasText: '确认是否记入学习档案' }).first();

@@ -94,6 +94,21 @@ function messageContentText(value: unknown) {
     .trim();
 }
 
+function messageContentDelta(value: unknown) {
+  if (typeof value === 'string') return value;
+  if (!Array.isArray(value)) return '';
+  return value.map((part) => {
+    if (typeof part === 'string') return part;
+    if (!part || typeof part !== 'object' || Array.isArray(part)) return '';
+    const record = part as { text?: unknown; content?: unknown };
+    return typeof record.text === 'string'
+      ? record.text
+      : typeof record.content === 'string'
+        ? record.content
+        : '';
+  }).join('');
+}
+
 function messagesWithJsonFinalDeliveryGuard(request: AiProviderRequest) {
   if (request.responseFormat !== 'json') return request.messages;
   const guard = 'Final delivery contract: put the complete valid JSON object in message.content. Do not leave content empty. Do not return reasoning_content without a final JSON object. If hidden reasoning is used, still finish with the JSON object in message.content and no prose before or after it.';
@@ -209,6 +224,140 @@ export async function openAiCompatibleChatCompletion(request: AiProviderRequest)
       errorMessage: errorCode === 'provider_timeout'
         ? `Provider request timed out (${diagnostics}).`
         : `Provider request failed (${diagnostics}).`
+    };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+type StreamChunk = {
+  choices?: Array<{
+    finish_reason?: unknown;
+    delta?: { content?: unknown };
+  }>;
+  usage?: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number };
+};
+
+export async function openAiCompatibleChatCompletionStream(request: AiProviderRequest): Promise<AiProviderResponse> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), request.timeoutMs);
+  try {
+    const response = await fetch(`${request.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
+      method: 'POST',
+      signal: controller.signal,
+      headers: {
+        authorization: `Bearer ${request.apiKey}`,
+        'content-type': 'application/json',
+        accept: 'text/event-stream'
+      },
+      body: JSON.stringify({
+        model: request.model,
+        temperature: request.temperature,
+        thinking: request.thinking ? { type: request.thinking } : undefined,
+        reasoning_effort: request.reasoningEffort,
+        max_tokens: request.maxTokens,
+        response_format: request.responseFormat === 'json' ? { type: 'json_object' } : undefined,
+        stream: true,
+        stream_options: { include_usage: true },
+        messages: messagesWithJsonFinalDeliveryGuard(request)
+      })
+    });
+    if (!response.ok || !response.body) {
+      const body = await readBody(response);
+      const errorMessage = providerErrorMessage(body.json, `Provider returned HTTP ${response.status}.`);
+      return {
+        status: 'failed',
+        content: '',
+        raw: body.json ?? body.text,
+        providerStatusCode: response.status,
+        errorCode: errorCodeFromHttp(response.status, errorMessage),
+        errorMessage
+      };
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let content = '';
+    let finishReason = '';
+    let usage: AiProviderResponse['usage'];
+    let sawDone = false;
+
+    const consumeBlock = async (block: string) => {
+      const data = block.split('\n')
+        .filter((line) => line.startsWith('data:'))
+        .map((line) => line.slice(5).trimStart())
+        .join('\n');
+      if (!data) return;
+      if (data.trim() === '[DONE]') {
+        sawDone = true;
+        return;
+      }
+      let chunk: StreamChunk;
+      try {
+        chunk = JSON.parse(data) as StreamChunk;
+      } catch {
+        return;
+      }
+      const choice = chunk.choices?.[0];
+      const delta = messageContentDelta(choice?.delta?.content);
+      if (delta) {
+        content += delta;
+        await request.onTextDelta?.(delta);
+      }
+      if (typeof choice?.finish_reason === 'string') finishReason = choice.finish_reason;
+      if (chunk.usage) {
+        usage = {
+          promptTokens: chunk.usage.prompt_tokens,
+          completionTokens: chunk.usage.completion_tokens,
+          totalTokens: chunk.usage.total_tokens
+        };
+      }
+    };
+
+    while (true) {
+      const { value, done } = await reader.read();
+      buffer += decoder.decode(value, { stream: !done }).replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+      let boundary = buffer.indexOf('\n\n');
+      while (boundary >= 0) {
+        await consumeBlock(buffer.slice(0, boundary));
+        buffer = buffer.slice(boundary + 2);
+        boundary = buffer.indexOf('\n\n');
+      }
+      if (done) break;
+    }
+    if (buffer.trim()) await consumeBlock(buffer);
+
+    if (request.responseFormat === 'json' && finishReason === 'length') {
+      return {
+        status: 'failed', content: '', usage, providerStatusCode: response.status,
+        errorCode: 'provider_schema_invalid',
+        errorMessage: `Provider returned truncated JSON output (finishReason=length; contentLength=${content.length}).`
+      };
+    }
+    if (!content.trim()) {
+      return {
+        status: 'failed', content: '', usage, providerStatusCode: response.status,
+        errorCode: 'provider_empty_output', errorMessage: 'Provider returned empty streamed final output.'
+      };
+    }
+    return {
+      status: 'success',
+      content: content.trim(),
+      usage,
+      providerStatusCode: response.status,
+      raw: { streamed: true, sawDone, finishReason }
+    };
+  } catch (error) {
+    const errorCode = errorCodeFromException(error);
+    const diagnostics = compactExceptionDiagnostic(error);
+    return {
+      status: 'failed',
+      content: '',
+      errorCode,
+      errorMessage: errorCode === 'provider_timeout'
+        ? `Provider streaming request timed out (${diagnostics}).`
+        : `Provider streaming request failed (${diagnostics}).`
     };
   } finally {
     clearTimeout(timeout);

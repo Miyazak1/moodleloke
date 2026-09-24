@@ -19,9 +19,12 @@ export class AgentPracticeQuestionContextService {
     private readonly adaptive: CscaAdaptiveService
   ) {}
 
-  async resolve(userId: number, roundIdValue: unknown, questionIdValue: unknown, language = 'zh') {
+  async resolve(userId: number, roundIdValue: unknown, questionIdValue: unknown, language = 'zh', questionSourceValue?: unknown) {
     const roundId = positiveInteger(roundIdValue, '训练轮次无效。');
     const questionId = positiveInteger(questionIdValue, '题目无效。');
+    const questionSource = questionSourceValue === 'csca_question' || questionSourceValue === 'special_practice'
+      ? questionSourceValue
+      : null;
     const accepted = await this.prisma.learningPrescriptionOutcome.findFirst({
       where: { userId, decision: 'accepted', domainEntityType: 'csca_adaptive_round', domainEntityId: String(roundId) },
       orderBy: { createdAt: 'desc' }
@@ -40,10 +43,10 @@ export class AgentPracticeQuestionContextService {
       where: { id: roundId, session: { userId } },
       include: { session: { select: { id: true, subject: true } }, items: true }
     });
-    const item = round?.items.find((candidate) => candidate.questionId === questionId);
+    const item = round?.items.find((candidate) => candidate.questionId === questionId && (!questionSource || candidate.questionSource === questionSource));
     if (!round || !item) throw new NotFoundException('训练题目不存在。');
     const detail = await this.adaptive.getRound(userId, String(roundId), language);
-    const question = detail.questions.find((candidate) => candidate.id === questionId);
+    const question = detail.questions.find((candidate) => candidate.id === questionId && (!questionSource || candidate.questionSource === questionSource));
     if (!question) throw new NotFoundException('训练题目不存在。');
     return { artifact, round, item, question, roundId, questionId, sessionId: round.session.id, subject: round.session.subject };
   }

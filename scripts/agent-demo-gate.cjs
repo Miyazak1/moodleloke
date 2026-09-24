@@ -50,7 +50,7 @@ async function waitRun(token, runId) {
 async function preflight() {
   const health = await request(backendUrl, '/api/v1/health');
   assert(health.status === 'ok', 'Backend health is not ok.');
-  const page = await request(frontendUrl, '/zh/agent');
+  const page = await request(frontendUrl, '/agent');
   assert(typeof page === 'string' && /<html|<!doctype/i.test(page), 'Frontend Agent route did not return the app shell.');
   return { backend: health.status, frontend: 'ok' };
 }

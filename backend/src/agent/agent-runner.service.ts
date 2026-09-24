@@ -107,28 +107,74 @@ export class AgentRunnerService {
         runId, conversationId: run.conversationId, eventKey: 'run:started', eventType: 'run.started', data: {}
       }));
       if (input.surface === 'subject_qa') {
+        const questionContext = input.pageContext && typeof input.pageContext === 'object'
+          ? (input.pageContext as { questionContext?: Parameters<AgentSubjectQaService['answer']>[0]['questionContext'] }).questionContext
+          : undefined;
         const historyRows = await this.prisma.agentMessage.findMany({
           where: { conversationId: run.conversationId },
           orderBy: { createdAt: 'desc' },
           take: 20,
           select: { role: true, content: true, runId: true }
         });
+        const expectedBinding = questionContext ? `${questionContext.roundId}:${questionContext.questionId}` : null;
+        const matchingRunIds = new Set(historyRows.flatMap((message) => {
+          if (message.role !== 'user' || !message.runId) return [];
+          const content = message.content as Record<string, unknown> | null;
+          const pageContext = content?.pageContext && typeof content.pageContext === 'object'
+            ? content.pageContext as { questionContext?: { roundId?: unknown; questionId?: unknown } }
+            : null;
+          const binding = pageContext?.questionContext
+            ? `${Number(pageContext.questionContext.roundId)}:${Number(pageContext.questionContext.questionId)}`
+            : null;
+          return content?.surface === 'subject_qa' && binding === expectedBinding ? [message.runId] : [];
+        }));
         const history = historyRows.reverse().flatMap((message) => {
           if (message.role !== 'user' && message.role !== 'assistant') return [];
           if (message.role === 'user' && message.runId === run.id) return [];
           const content = message.content as Record<string, unknown> | null;
           if (content?.surface !== 'subject_qa' || typeof content.text !== 'string') return [];
+          if (!message.runId || !matchingRunIds.has(message.runId)) return [];
           return [{ role: message.role as 'user' | 'assistant', text: content.text }];
         });
-        const questionContext = input.pageContext && typeof input.pageContext === 'object'
-          ? (input.pageContext as { questionContext?: Parameters<AgentSubjectQaService['answer']>[0]['questionContext'] }).questionContext
-          : undefined;
+        let pendingAnswerDelta = '';
+        let answerDeltaIndex = 0;
+        const flushAnswerDelta = async () => {
+          const delta = pendingAnswerDelta;
+          if (!delta) return;
+          pendingAnswerDelta = '';
+          answerDeltaIndex += 1;
+          await this.prisma.$transaction((tx) => this.events.append(tx, {
+            runId,
+            conversationId: run.conversationId,
+            eventKey: `answer:delta:${answerDeltaIndex}`,
+            eventType: 'answer.delta',
+            data: { delta }
+          }));
+        };
         const response = this.subjectQa
-          ? await this.subjectQa.answer({ runId: run.id, userId: run.userId, locale: input.locale, question: input.text, history, questionContext })
+          ? await this.subjectQa.answer({
+            runId: run.id,
+            userId: run.userId,
+            locale: input.locale,
+            question: input.text,
+            history,
+            questionContext,
+            onDelta: async (delta) => {
+              pendingAnswerDelta += delta;
+              if (pendingAnswerDelta.length >= 24 || /[。！？.!?\n]$/.test(pendingAnswerDelta)) await flushAnswerDelta();
+            }
+          })
           : { text: input.locale === 'zh-CN' ? '学科问答暂时无法连接。你仍可以返回学习工作台继续做题。' : 'Subject Q&A is temporarily unavailable. You can still return to the learning workspace and continue practicing.', decision: 'unavailable' as const, subject: null, generatedByAI: false };
+        await flushAnswerDelta();
         await this.prisma.$transaction((tx) => this.events.append(tx, {
           runId, conversationId: run.conversationId, eventKey: 'plan:created', eventType: 'plan.created',
-          data: { intent: 'subject_qa', source: response.generatedByAI ? 'llm' : 'rule', confidence: 1, reasonCode: response.decision, routerVersion: 'agent-subject-qa-v1' }
+          data: {
+            intent: 'subject_qa', source: response.generatedByAI ? 'llm' : 'rule', confidence: 1,
+            reasonCode: response.decision, routerVersion: 'agent-subject-qa-v2',
+            context: questionContext
+              ? { type: 'adaptive_question', roundId: questionContext.roundId, questionId: questionContext.questionId }
+              : { type: 'independent_subject_qa' }
+          }
         }));
         await this.complete(run, response.text, null, { surface: 'subject_qa', subjectQa: { decision: response.decision, subject: response.subject, generatedByAI: response.generatedByAI, masteryChanged: false } });
         return;

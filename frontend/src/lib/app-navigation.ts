@@ -1,4 +1,3 @@
-import { parseLocalizedPath, stripLocaleFromPath } from './locale-routing';
 import { routes, type PublicRoute } from './routes';
 
 const adminRouteAliases: Partial<Record<string, PublicRoute>> = {
@@ -22,7 +21,7 @@ const adminCanonicalRoutes = new Set<PublicRoute>([
 ]);
 
 export function currentPath(): PublicRoute {
-  const pathname = parseLocalizedPath(window.location.pathname).route as PublicRoute;
+  const pathname = (window.location.pathname.replace(/\/+$/, '') || routes.home) as PublicRoute;
   if (pathname === routes.login || pathname === routes.register) {
     return routes.auth;
   }
@@ -68,7 +67,7 @@ export function isStudyChinaRoute(_route: string) {
 }
 
 export function isMockExamTakingRoute(route: string) {
-  return /^\/csca-mock-exam\/attempts\/\d+$/.test(stripLocaleFromPath(route));
+  return /^\/csca-mock-exam\/attempts\/\d+$/.test(route);
 }
 
 export function isKnownRoute(route: PublicRoute) {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AiProvider, AiProviderHealth, AiProviderRequest, AiProviderResponse } from '../ai-gateway.types';
-import { openAiCompatibleChatCompletion } from './openai-compatible-http';
+import { openAiCompatibleChatCompletion, openAiCompatibleChatCompletionStream } from './openai-compatible-http';
 
 @Injectable()
 export class DeepSeekProvider implements AiProvider {
@@ -9,7 +9,9 @@ export class DeepSeekProvider implements AiProvider {
   readonly protocol = 'openai-compatible' as const;
 
   complete(request: AiProviderRequest): Promise<AiProviderResponse> {
-    return openAiCompatibleChatCompletion(request);
+    return request.onTextDelta
+      ? openAiCompatibleChatCompletionStream(request)
+      : openAiCompatibleChatCompletion(request);
   }
 
   async healthCheck(): Promise<AiProviderHealth> {

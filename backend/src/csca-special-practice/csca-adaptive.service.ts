@@ -6,11 +6,14 @@ import {
 import { isStudentConsumableAiVersionStatus } from '../ai-questioning/question-version-governance';
 import { QuestionQualityService } from '../ai-questioning/question-quality.service';
 import { CscaLearningService } from '../csca-learning/csca-learning.service';
+import { WRONG_PATTERN_MINIMUM_TARGET_ITEMS } from '../csca-learning/wrong-pattern-verification.policy';
 import { mapTrustedQuestionEvidence } from '../learning-intelligence/evidence/learning-evidence-mapper';
+import { LEARNING_STATE_MODEL_VERSION, LEARNING_STATE_PROJECTOR_VERSION } from '../learning-intelligence/evidence/learning-evidence-writer.service';
 import { LearningIntelligenceFeatureFlagsService } from '../learning-intelligence/learning-intelligence-feature-flags.service';
 import { LEARNING_EVIDENCE_WRITER, LearningEvidenceWriter, LearningEvidenceWriteResult, learningEvidenceReceipt } from '../learning-intelligence/learning-evidence-writer.port';
 import { PrismaService } from '../prisma/prisma.service';
 import { AdaptivePlannerService } from './adaptive-planner.service';
+import { decideAdaptiveLearning } from './adaptive-learning-decision.policy';
 import { AdaptiveQuestionProviderService, trustedQuestionTransferSignature } from './adaptive-question-provider.service';
 import {
   ADAPTIVE_EXPOSURE_SOURCE,
@@ -773,6 +776,7 @@ export class CscaAdaptiveService {
           position: item.position,
           selectedAnswer: item.selectedAnswer,
           isCorrect: item.isCorrect,
+          ...(item.selectedAnswer ? { correctAnswer: question.correctAnswer } : {}),
           usedHint: item.usedHint,
           usedExplanation: item.usedExplanation,
           timeSpentSeconds: item.timeSpentSeconds
@@ -871,12 +875,12 @@ export class CscaAdaptiveService {
     const verification = verificationFromPlannerSnapshot(round.plannerSnapshot);
     const evidenceSourceType = round.session.mode === 'diagnostic' ? 'diagnostic' : verification ? 'review' : 'adaptive';
 
-    const evidenceWrites = await this.prisma.$transaction(async (tx) => {
+    const submission = await this.prisma.$transaction(async (tx) => {
       const writes: LearningEvidenceWriteResult[] = [];
       await tx.$executeRaw`SELECT pg_advisory_xact_lock(${ADAPTIVE_ROUND_LOCK_NAMESPACE}::int, ${round.id}::int)`;
       const latest = await tx.cscaAdaptiveRound.findFirst({ where: { id: round.id } });
       if (!latest) throw new NotFoundException('自适应训练轮次不存在。');
-      if (latest.submittedAt) return writes;
+      if (latest.submittedAt) return { writes, didSubmit: false as const };
       for (const result of results) {
         await tx.cscaAdaptiveRoundItem.update({
           where: { id: result.item.id },
@@ -945,8 +949,11 @@ export class CscaAdaptiveService {
           completedAt: submittedAt
         }
       });
-      return writes;
+      return { writes, didSubmit: true as const };
     });
+
+    if (!submission.didSubmit) return this.getReport(userId, String(round.id), languageValue);
+    const evidenceWrites = submission.writes;
 
     await this.masteryEngine.updateFromRound(results.map((result) => ({
       userId,
@@ -1038,7 +1045,7 @@ export class CscaAdaptiveService {
         : results;
       const targetCorrectCount = targetResults.filter((result) => result.isCorrect).length;
       const targetTotal = targetResults.length;
-      const passed = targetTotal > 0 && targetCorrectCount / targetTotal >= 0.8;
+      const passed = targetTotal >= WRONG_PATTERN_MINIMUM_TARGET_ITEMS && targetCorrectCount / targetTotal >= 0.8;
       await this.cscaLearningService.recordWrongPatternVerification({
         userId,
         subject: round.session.subject,
@@ -1067,10 +1074,38 @@ export class CscaAdaptiveService {
     const explanationLanguage = adaptiveLanguage(languageValue || sessionLanguage || questionLanguage);
     const questionMap = await this.roundQuestionMap(round.items);
     const topicMap = await this.topicMap(round.items.map((item) => item.topicId));
-    const masteryRows = await this.prisma.userCscaTopicMastery.findMany({
-      where: { userId, topicId: { in: round.items.map((item) => item.topicId) } }
-    });
+    const topicIds = [...new Set(round.items.map((item) => item.topicId))];
+    const verification = verificationFromPlannerSnapshot(round.plannerSnapshot);
+    const evidenceSourceType = round.session.mode === 'diagnostic' ? 'diagnostic' : verification ? 'review' : 'adaptive';
+    const [masteryRows, projectedStates, roundEvidence, reviewPatterns, projectionCheckpoint, latestEvidence] = await Promise.all([
+      this.prisma.userCscaTopicMastery.findMany({ where: { userId, topicId: { in: topicIds } } }),
+      this.prisma.userCscaTopicStateV2.findMany({
+        where: { userId, subjectCode: round.session.subject, topicId: { in: topicIds }, modelVersion: LEARNING_STATE_MODEL_VERSION }
+      }),
+      this.prisma.learningEvidenceEvent.findMany({
+        where: { userId, subjectCode: round.session.subject, sourceType: evidenceSourceType, sourceId: String(round.id) },
+        orderBy: { eventSequence: 'asc' }
+      }),
+      this.prisma.cscaWrongPattern.findMany({
+        where: { userId, subject: round.session.subject, topicId: { in: topicIds } },
+        orderBy: [{ updatedAt: 'desc' }, { id: 'desc' }]
+      }),
+      this.prisma.learningStateProjectionCheckpoint.findUnique({
+        where: { userId_subjectCode_projectorVersion: { userId, subjectCode: round.session.subject, projectorVersion: LEARNING_STATE_PROJECTOR_VERSION } }
+      }),
+      this.prisma.learningEvidenceEvent.findFirst({
+        where: { userId, subjectCode: round.session.subject },
+        select: { eventSequence: true },
+        orderBy: { eventSequence: 'desc' }
+      })
+    ]);
     const masteryMap = new Map(masteryRows.map((row) => [row.topicId, row]));
+    const projectedStateMap = new Map(projectedStates.map((row) => [row.topicId, row]));
+    const evidenceMap = new Map(roundEvidence.map((row) => [row.questionId, row]));
+    const patternMap = new Map<number, typeof reviewPatterns[number]>();
+    for (const pattern of reviewPatterns) {
+      if (pattern.topicId && !patternMap.has(pattern.topicId)) patternMap.set(pattern.topicId, pattern);
+    }
     const items = round.items.map((item) => {
       const question = questionMap.get(roundQuestionKey(item.questionSource, item.questionId));
       const topic = topicMap.get(item.topicId);
@@ -1087,6 +1122,8 @@ export class CscaAdaptiveService {
         correctAnswer: question.correctAnswer,
         isCorrect: item.isCorrect,
         isUnanswered,
+        usedHint: item.usedHint,
+        usedExplanation: item.usedExplanation,
         timeSpentSeconds: item.timeSpentSeconds,
         mastery: masteryMap.get(item.topicId)?.mastery ?? null
       };
@@ -1101,6 +1138,54 @@ export class CscaAdaptiveService {
       isWrong: items[index]?.isUnanswered || items[index]?.isCorrect === false,
       knowledgeTags: items[index]?.knowledgeTags ?? []
     })), round.id);
+    const decisionTopics = [...new Map(items.map((item) => [item.topicId, {
+      topicId: item.topicId,
+      code: item.topicCode,
+      title: item.topicTitle
+    }])).values()].map((topic) => {
+      const topicItems = items.filter((item) => item.topicId === topic.topicId);
+      const state = projectedStateMap.get(topic.topicId);
+      const legacy = masteryMap.get(topic.topicId);
+      const pattern = patternMap.get(topic.topicId);
+      const seconds = topicItems.map((item) => item.timeSpentSeconds).filter((value) => Number.isFinite(value));
+      const stateSource = state ? 'learning_state_v2' as const : legacy ? 'legacy_mastery' as const : 'round_only' as const;
+      return {
+        ...topic,
+        total: topicItems.length,
+        correct: topicItems.filter((item) => item.isCorrect === true).length,
+        unanswered: topicItems.filter((item) => item.isUnanswered).length,
+        independentCorrect: topicItems.filter((item) => item.isCorrect === true && !item.usedHint && !item.usedExplanation).length,
+        assistedCorrect: topicItems.filter((item) => item.isCorrect === true && (item.usedHint || item.usedExplanation)).length,
+        firstAttemptCount: topicItems.filter((item) => evidenceMap.get(roundQuestionKey(item.questionSource, item.id))?.firstAttempt === true).length,
+        averageSeconds: seconds.length ? Math.round(seconds.reduce((sum, value) => sum + value, 0) / seconds.length) : null,
+        state: {
+          source: stateSource,
+          mastery: state?.mastery ?? legacy?.mastery ?? null,
+          confidence: state?.confidence ?? legacy?.confidence ?? null,
+          independence: state?.independence ?? null,
+          retention: state?.retention ?? null,
+          fluency: state?.fluency ?? null,
+          transfer: state?.transfer ?? null,
+          consistency: state?.consistency ?? null,
+          coverage: state?.coverage ?? null,
+          evidenceCount: state?.evidenceCount ?? legacy?.attemptCount ?? topicItems.length,
+          stateVersion: state?.stateVersion ?? null
+        },
+        reviewPattern: pattern ? {
+          id: pattern.id,
+          patternType: pattern.patternType,
+          status: pattern.status,
+          recurrenceCount: pattern.recurrenceCount,
+          nextReviewAt: pattern.nextReviewAt?.toISOString() ?? null,
+          consecutiveVerificationPassCount: Math.max(0, Number(recordFromUnknown(pattern.metadata).consecutiveVerificationPassCount ?? 0) || 0)
+        } : null
+      };
+    });
+    const learningDecision = decideAdaptiveLearning({
+      subject: round.session.subject as SpecialPracticeSubject,
+      adaptationPending: Boolean(latestEvidence && (!projectionCheckpoint || projectionCheckpoint.lastEventSequence < latestEvidence.eventSequence)),
+      topics: decisionTopics
+    });
     return {
       session: this.sessionSummary(round.session),
       round: this.roundSummary(round),
@@ -1117,6 +1202,7 @@ export class CscaAdaptiveService {
         ? await this.diagnosticCoverage(userId, round.session.subject as SpecialPracticeSubject, items)
         : null,
       nextRecommendation: weakTopics.length ? 'continue_weak_topics' : 'try_challenge_round',
+      learningDecision,
       remediationPlan,
       trend: await this.reportTrend(userId, round.session.subject as SpecialPracticeSubject, round.id),
       items

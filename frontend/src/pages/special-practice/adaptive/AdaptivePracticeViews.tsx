@@ -62,6 +62,7 @@ import { FunctionShiftMicroLesson } from './FunctionShiftMicroLesson';
 export type AgentPracticeQuestionContext = {
   roundId: number;
   questionId: number;
+  questionSource?: 'special_practice' | 'csca_question';
   questionNumber: number;
   questionCount: number;
   subject: 'math' | 'physics' | 'chemistry';
@@ -1204,7 +1205,8 @@ export function AdaptiveRoundView({
   const [isFinishing, setIsFinishing] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
   const roundVersionRef = useRef<number | null>(null);
-  const autoSavePromiseRef = useRef<Promise<unknown> | null>(null);
+  const autoSavePromiseRef = useRef<Promise<void> | null>(null);
+  const pendingDraftRef = useRef<{ answers: Record<string, string>; timeSpent: Record<string, number>; currentQuestion: number } | null>(null);
   const timeSpentRef = useRef<Record<string, number>>({});
   const handwritingInputRef = useRef<HTMLInputElement | null>(null);
   const handwritingPickerPendingRef = useRef(false);
@@ -1233,6 +1235,8 @@ export function AdaptiveRoundView({
         handwritingPickerFocusTimerRef.current = null;
         if (!handwritingPickerPendingRef.current || handwritingInputRef.current?.files?.length) return;
         handwritingPickerPendingRef.current = false;
+        handwritingInputRef.current?.remove();
+        handwritingInputRef.current = null;
         onAgentAssistanceSettled?.();
       }, 200);
     };
@@ -1240,6 +1244,8 @@ export function AdaptiveRoundView({
     return () => {
       window.removeEventListener('focus', settleCancelledPicker);
       if (handwritingPickerFocusTimerRef.current !== null) window.clearTimeout(handwritingPickerFocusTimerRef.current);
+      handwritingInputRef.current?.remove();
+      handwritingInputRef.current = null;
     };
   }, [onAgentAssistanceSettled]);
 
@@ -1267,7 +1273,24 @@ export function AdaptiveRoundView({
       .then((result) => {
         if (!alive) return;
         setDetail(result);
-        setAnswers(result.round.answers ?? {});
+        const restoredAnswers = result.questions.reduce<Record<string, string>>((items, question) => {
+          if (question.selectedAnswer) items[String(question.id)] = question.selectedAnswer;
+          return items;
+        }, { ...(result.round.answers ?? {}) });
+        const restoredChecks = result.questions.reduce<Record<string, AdaptivePracticeCheckResult>>((items, question) => {
+          if (!question.selectedAnswer || question.isCorrect === null || question.isCorrect === undefined || !question.correctAnswer) return items;
+          items[String(question.id)] = {
+            questionId: question.id,
+            selected: question.selectedAnswer,
+            correctAnswer: question.correctAnswer,
+            isCorrect: question.isCorrect,
+            explanation: question.explanation ?? '',
+            knowledgeTags: question.knowledgeTags ?? []
+          };
+          return items;
+        }, {});
+        setAnswers(restoredAnswers);
+        setChecks(restoredChecks);
         setTimeSpent(result.round.timeSpent ?? {});
         setCurrentIndex(Math.max(0, Math.min(result.questions.length - 1, (result.round.currentQuestion || 1) - 1)));
         roundVersionRef.current = result.round.version;
@@ -1384,8 +1407,37 @@ export function AdaptiveRoundView({
       } }));
       onAgentAssistance?.({ id: `handwriting-error:${detail.round.id}:${currentQuestion.id}:${Date.now()}`, roundId: detail.round.id, questionId: currentQuestion.id, questionNumber: currentIndex + 1, action: 'check_work', content: errorMessage, createdAt: new Date().toISOString(), generatedByAI: false, status: 'failed' });
     } finally {
-      if (handwritingInputRef.current) handwritingInputRef.current.value = '';
       onAgentAssistanceSettled?.();
+    }
+  }
+
+  function openHandwritingPicker() {
+    handwritingInputRef.current?.remove();
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/png,image/jpeg,image/webp';
+    input.className = 'agent-handwriting-input';
+    input.hidden = true;
+    input.tabIndex = -1;
+    input.setAttribute('aria-hidden', 'true');
+    input.style.display = 'none';
+    const finish = (file?: File) => {
+      if (handwritingInputRef.current !== input) return;
+      handwritingPickerPendingRef.current = false;
+      handwritingInputRef.current = null;
+      input.remove();
+      if (file) void reviewHandwrittenWork(file);
+      else onAgentAssistanceSettled?.();
+    };
+    input.addEventListener('change', () => finish(input.files?.[0]), { once: true });
+    input.addEventListener('cancel', () => finish(), { once: true });
+    document.body.appendChild(input);
+    handwritingInputRef.current = input;
+    handwritingPickerPendingRef.current = true;
+    try {
+      input.click();
+    } catch {
+      finish();
     }
   }
 
@@ -1401,6 +1453,7 @@ export function AdaptiveRoundView({
     onAgentQuestionContext?.({
       roundId: detail.round.id,
       questionId: currentQuestion.id,
+      questionSource: currentQuestion.questionSource === 'csca_question' ? 'csca_question' : 'special_practice',
       questionNumber: currentIndex + 1,
       questionCount: detail.questions.length,
       subject: detail.session.subject,
@@ -1423,21 +1476,7 @@ export function AdaptiveRoundView({
     handledAssistanceCommandRef.current = agentAssistanceCommand.id;
     if (agentAssistanceCommand.action === 'recall_concept') void recallConcept();
     else if (agentAssistanceCommand.action === 'next_step_hint') void askCoach('hint');
-    else {
-      const input = handwritingInputRef.current;
-      if (!input) {
-        onAgentAssistanceSettled?.();
-        return;
-      }
-      input.value = '';
-      handwritingPickerPendingRef.current = true;
-      try {
-        input.click();
-      } catch {
-        handwritingPickerPendingRef.current = false;
-        onAgentAssistanceSettled?.();
-      }
-    }
+    else openHandwritingPicker();
   }, [agentAssistanceCommand, currentQuestion, detail]);
 
   useEffect(() => {
@@ -1466,21 +1505,31 @@ export function AdaptiveRoundView({
 
   function saveDraft() {
     if (!detail || isFinishing) return null;
-    const savePromise = patchAdaptivePracticeRound(detail.round.id, {
-      answers,
-      timeSpent: timeSpentRef.current,
-      currentQuestion: currentIndex + 1,
-      expectedVersion: roundVersionRef.current ?? undefined
-    });
-    autoSavePromiseRef.current = savePromise;
-    void savePromise
-      .then((nextRound) => { roundVersionRef.current = nextRound.version; })
+    pendingDraftRef.current = {
+      answers: { ...answers },
+      timeSpent: { ...timeSpentRef.current },
+      currentQuestion: currentIndex + 1
+    };
+    if (autoSavePromiseRef.current) return autoSavePromiseRef.current;
+    const drainDrafts = async () => {
+      while (pendingDraftRef.current) {
+        const draft = pendingDraftRef.current;
+        pendingDraftRef.current = null;
+        const nextRound = await patchAdaptivePracticeRound(detail.round.id, {
+          ...draft,
+          expectedVersion: roundVersionRef.current ?? undefined
+        });
+        roundVersionRef.current = nextRound.version;
+      }
+    };
+    const savePromise = drainDrafts()
       .catch((nextError) => {
         setError(friendlyPracticeError(nextError, adaptiveText(locale, '本轮保存失败，请检查网络后继续。', 'Saving this round failed. Check your connection before continuing.', 'Lưu vòng này thất bại. Hãy kiểm tra mạng trước khi tiếp tục.'), locale));
       })
       .finally(() => {
         if (autoSavePromiseRef.current === savePromise) autoSavePromiseRef.current = null;
       });
+    autoSavePromiseRef.current = savePromise;
     return savePromise;
   }
 
@@ -1510,6 +1559,7 @@ export function AdaptiveRoundView({
     try {
       const checked = await checkAdaptivePracticeAnswer(detail.round.id, {
         questionId: question.id,
+        questionSource: question.questionSource === 'csca_question' ? 'csca_question' : 'special_practice',
         selected,
         language: currentCoachLanguage,
         questionLanguage: currentQuestionLanguage
@@ -1519,6 +1569,7 @@ export function AdaptiveRoundView({
       onAgentQuestionContext?.({
         roundId: detail.round.id,
         questionId: question.id,
+        questionSource: question.questionSource === 'csca_question' ? 'csca_question' : 'special_practice',
         questionNumber: Math.max(1, questionIndex + 1),
         questionCount: detail.questions.length,
         subject: detail.session.subject,
@@ -1550,7 +1601,7 @@ export function AdaptiveRoundView({
     setIsFinishing(true);
     setError(null);
     try {
-      await autoSavePromiseRef.current?.catch(() => undefined);
+      await autoSavePromiseRef.current;
       const saved = await patchAdaptivePracticeRound(detail.round.id, { answers, timeSpent, currentQuestion: currentIndex + 1, expectedVersion: roundVersionRef.current ?? undefined });
       roundVersionRef.current = saved.version;
       const report = await submitAdaptivePracticeRound(detail.round.id, currentCoachLanguage);
@@ -1892,24 +1943,6 @@ export function AdaptiveRoundView({
                 <span>{copy.answerResultMeta(accuracyLabel(correctCount, Object.keys(checks).length), formatSeconds(currentSeconds))}</span>
               </div>
             </div>
-          )}
-          {!isInterventionVerification && isAgentLearningRound && (
-            <input
-              ref={handwritingInputRef}
-              className="agent-handwriting-input"
-              type="file"
-              accept="image/png,image/jpeg,image/webp"
-              onChange={(event) => {
-                handwritingPickerPendingRef.current = false;
-                const file = event.target.files?.[0];
-                if (file) void reviewHandwrittenWork(file);
-                else onAgentAssistanceSettled?.();
-              }}
-              onCancel={() => {
-                handwritingPickerPendingRef.current = false;
-                onAgentAssistanceSettled?.();
-              }}
-            />
           )}
           {!isInterventionVerification && isAgentLearningRound && (
             <button type="button" className="agent-assistance-bridge" onClick={onOpenAgentHelp}>

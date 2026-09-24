@@ -24,6 +24,10 @@ function answeredCount(value: Prisma.JsonValue | null | undefined): number {
   return Object.values(value).filter((answer) => answer !== null && answer !== undefined && String(answer).trim()).length;
 }
 
+function jsonRecord(value: Prisma.JsonValue | null | undefined): Record<string, unknown> {
+  return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
+}
+
 function masteryStatus(mastery: number, confidence: number, attemptCount: number): string {
   if (attemptCount === 0 || confidence < 0.35) return 'insufficient_evidence';
   if (mastery >= 0.8) return 'strong';
@@ -232,7 +236,9 @@ export class LearningReadCapabilityService {
       take: input.limit ?? 10
     });
     return {
-      items: rows.map((row) => ({
+      items: rows.map((row) => {
+        const metadata = jsonRecord(row.metadata);
+        return {
         reviewItemId: row.id,
         patternType: row.patternType,
         topicId: row.topicId ?? undefined,
@@ -242,8 +248,11 @@ export class LearningReadCapabilityService {
         priority: reviewPriority(row),
         recurrenceCount: row.recurrenceCount,
         status: row.status,
+        consecutiveVerificationPassCount: Math.max(0, Number(metadata.consecutiveVerificationPassCount ?? 0) || 0),
+        requiredConsecutiveVerificationPassCount: Math.max(1, Number(metadata.requiredConsecutiveVerificationPassCount ?? 2) || 2),
+        lastVerificationPassedAt: typeof metadata.lastVerificationPassedAt === 'string' ? metadata.lastVerificationPassedAt : null,
         href: `/csca-special-practice/${row.subject}?reviewPattern=${encodeURIComponent(row.patternType)}${row.topicId ? `&topicId=${row.topicId}` : ''}`
-      }))
+      }})
     };
   }
 

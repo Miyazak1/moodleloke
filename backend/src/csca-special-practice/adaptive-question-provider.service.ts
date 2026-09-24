@@ -318,11 +318,14 @@ export class AdaptiveQuestionProviderService {
     }
 
     const selected: AdaptivePlannedQuestion[] = [];
-    const selectedIds = new Set<string>();
+    // Round answer/time maps are keyed by the numeric question id. Until that
+    // persisted contract is migrated to composite source:id keys, never place
+    // equal numeric ids from two source tables in the same round.
+    const selectedIds = new Set<number>();
     for (const plannedTopic of plannedTopics) {
       const preferredQuestionIds = new Set(plannedTopic.preferredQuestionIds ?? []);
       const candidates = (candidatesByTopic.get(plannedTopic.topicId) ?? [])
-        .filter((candidate) => !selectedIds.has(`${candidate.source}:${candidate.id}`))
+        .filter((candidate) => !selectedIds.has(candidate.id))
         .sort((a, b) => {
           const aPreferred = a.source === 'csca_question' && preferredQuestionIds.has(a.id) ? 0 : 1;
           const bPreferred = b.source === 'csca_question' && preferredQuestionIds.has(b.id) ? 0 : 1;
@@ -345,7 +348,7 @@ export class AdaptiveQuestionProviderService {
         });
       const next = candidates[0];
       if (!next) continue;
-      selectedIds.add(`${next.source}:${next.id}`);
+      selectedIds.add(next.id);
       selected.push({
         ...plannedTopic,
         questionId: next.id,
@@ -358,7 +361,7 @@ export class AdaptiveQuestionProviderService {
     if (selected.length >= limit) return selected;
 
     const fallbackCandidates = Array.from(candidatesByTopic.values()).flat()
-      .filter((candidate) => !selectedIds.has(`${candidate.source}:${candidate.id}`))
+      .filter((candidate) => !selectedIds.has(candidate.id))
       .sort((a, b) => {
         const aTopic = plannedTopics.find((topic) => topic.topicId === a.topicId);
         const bTopic = plannedTopics.find((topic) => topic.topicId === b.topicId);
@@ -383,7 +386,7 @@ export class AdaptiveQuestionProviderService {
     for (const candidate of fallbackCandidates) {
       const plannedTopic = plannedTopics.find((topic) => topic.topicId === candidate.topicId);
       if (!plannedTopic) continue;
-      selectedIds.add(`${candidate.source}:${candidate.id}`);
+      selectedIds.add(candidate.id);
       selected.push({
         ...plannedTopic,
         questionId: candidate.id,

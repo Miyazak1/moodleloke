@@ -2,6 +2,7 @@ import { Body, Controller, Get, Headers, Logger, NotFoundException, Optional, Po
 import { getAppVersion, getCspMode, getMetricsPrometheusText, getMetricsSnapshot, isMetricsEnabled } from '../common/ops-metrics';
 import { getRateLimitReadiness } from '../common/rate-limit';
 import { isProductionRuntime } from '../common/runtime-environment';
+import { getStudentAgentIntegrationReadiness } from '../common/integration-readiness';
 import { PrismaService } from '../prisma/prisma.service';
 
 type HealthChecks = {
@@ -49,13 +50,15 @@ export class HealthController {
     this.assertReadyAccess(authorization);
     const checks = this.buildChecks();
     const database = await this.checkDatabase();
+    const studentAgent = getStudentAgentIntegrationReadiness();
 
     const optionalReadiness = [
       checks.databaseUrlConfigured,
       checks.authSecretConfigured,
       checks.adminBootstrapConfigured,
       checks.corsOriginsConfigured,
-      database.connected
+      database.connected,
+      studentAgent.status === 'ready'
     ];
 
     return {
@@ -64,6 +67,7 @@ export class HealthController {
       cspMode: getCspMode(),
       metricsEnabled: isMetricsEnabled(),
       database,
+      studentAgent,
       rateLimit: getRateLimitReadiness(),
       checks,
       productionReadiness: this.buildProductionReadiness(checks),
@@ -145,14 +149,17 @@ export class HealthController {
   }
 
   private buildProductionReadiness(checks: HealthChecks) {
+    const studentAgent = getStudentAgentIntegrationReadiness();
     const required = {
       databaseUrlConfigured: checks.databaseUrlConfigured,
       authSecretConfigured: checks.authSecretConfigured,
-      corsOriginsConfigured: checks.corsOriginsConfigured
+      corsOriginsConfigured: checks.corsOriginsConfigured,
+      studentAgentConfigured: studentAgent.status === 'ready'
     };
     return {
       status: Object.values(required).every(Boolean) ? 'ready' : 'blocked',
       required,
+      studentAgent,
       optional: {
         adminBootstrapConfigured: checks.adminBootstrapConfigured,
         paymentCallbackSecretConfigured: checks.paymentCallbackSecretConfigured,

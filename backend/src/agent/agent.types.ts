@@ -3,7 +3,22 @@ import { z } from 'zod';
 export const AGENT_RUNTIME_SCHEMA_VERSION = '1' as const;
 
 export const CreateAgentConversationInputSchema = z.strictObject({
-  title: z.string().trim().min(1).max(200).optional()
+  title: z.string().trim().min(1).max(200).refine((value) => value !== '__learning_workspace__', {
+    message: 'Reserved learning workspace title'
+  }).optional(),
+  scope: z.discriminatedUnion('type', [
+    z.strictObject({ type: z.literal('independent_subject_qa') }),
+    z.strictObject({
+      type: z.literal('practice_question_qa'),
+      roundId: z.number().int().positive(),
+      questionId: z.number().int().positive()
+    })
+  ]).default({ type: 'independent_subject_qa' })
+});
+
+export const CreateAgentLearningContextInputSchema = z.strictObject({
+  kind: z.enum(['practice', 'mock_exam', 'past_paper', 'teaching']),
+  resourceId: z.string().trim().min(1).max(200).optional()
 });
 
 export const AgentPageContextSchema = z.strictObject({
@@ -17,6 +32,7 @@ export const AgentPageContextSchema = z.strictObject({
   questionContext: z.strictObject({
     roundId: z.number().int().positive(),
     questionId: z.number().int().positive(),
+    questionSource: z.enum(['special_practice', 'csca_question']).optional(),
     questionNumber: z.number().int().positive(),
     subject: z.enum(['math', 'physics', 'chemistry']),
     topicTitle: z.string().trim().max(200),
@@ -60,7 +76,14 @@ export const StartAgentFreePracticeInputSchema = z.strictObject({
   conversationId: z.string().trim().min(1).max(120).optional(),
   subject: z.enum(['math', 'physics', 'chemistry']),
   questionCount: z.number().int().min(1).max(10).default(5),
-  questionLanguage: z.enum(['zh', 'en']).default('zh')
+  questionLanguage: z.enum(['zh', 'en']).default('zh'),
+  focusTopicId: z.number().int().positive().optional(),
+  reviewItemId: z.number().int().positive().optional(),
+  patternType: z.string().trim().min(1).max(80).optional()
+}).superRefine((input, context) => {
+  if (input.reviewItemId && !input.patternType) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ['patternType'], message: '错题复习需要提供错因类型。' });
+  }
 });
 
 export const ContinueAgentFreePracticeInputSchema = z.strictObject({

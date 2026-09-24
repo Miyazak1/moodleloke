@@ -2593,6 +2593,9 @@ export type AdaptiveQuestion = SpecialPracticeQuestion & {
   position?: number;
   selectedAnswer?: string | null;
   isCorrect?: boolean | null;
+  correctAnswer?: string;
+  explanation?: string;
+  knowledgeTags?: string[];
   usedHint?: boolean;
   usedExplanation?: boolean;
   timeSpentSeconds?: number;
@@ -2649,6 +2652,70 @@ export type AdaptiveRoundReport = {
     }>;
   } | null;
   nextRecommendation: string;
+  learningDecision?: {
+    schemaVersion: '1';
+    policyVersion: string;
+    generatedByAI: false;
+    source: 'rules_and_learning_evidence';
+    adaptationPending: boolean;
+    status: 'needs_review' | 'needs_verification' | 'building' | 'verified_mastery';
+    headline: string;
+    explanation: string;
+    evidenceBasis: {
+      answeredCount: number;
+      firstAttemptCount: number;
+      independentCorrectCount: number;
+      assistedCorrectCount: number;
+      averageSeconds: number | null;
+      stateSource: 'learning_state_v2' | 'legacy_mastery' | 'round_only' | 'mixed';
+    };
+    topics: Array<{
+      topicId: number;
+      code: string;
+      title: string;
+      status: 'needs_review' | 'needs_verification' | 'building' | 'verified_mastery';
+      reasons: string[];
+      total: number;
+      correct: number;
+      unanswered: number;
+      independentCorrect: number;
+      assistedCorrect: number;
+      firstAttemptCount: number;
+      averageSeconds: number | null;
+      state: {
+        source: 'learning_state_v2' | 'legacy_mastery' | 'round_only';
+        mastery: number | null;
+        confidence: number | null;
+        independence: number | null;
+        retention: number | null;
+        fluency: number | null;
+        transfer: number | null;
+        consistency: number | null;
+        coverage: number | null;
+        evidenceCount: number;
+        stateVersion: string | null;
+      };
+      reviewPattern: null | {
+        id: number;
+        patternType: string;
+        status: string;
+        recurrenceCount: number;
+        nextReviewAt: string | null;
+        consecutiveVerificationPassCount: number;
+      };
+    }>;
+    nextStep: {
+      type: 'review_mistakes' | 'targeted_practice' | 'delayed_verification' | 'continue_practice' | 'broaden_coverage';
+      label: string;
+      reason: string;
+      subject: SpecialPracticeSubject;
+      topicId: number | null;
+      reviewItemId: number | null;
+      patternType: string | null;
+      dueAt: string | null;
+      questionCount: number;
+    };
+  };
   remediationPlan?: {
     triggered: boolean;
     trigger: null | {
