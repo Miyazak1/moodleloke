@@ -1357,7 +1357,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
       openLearningWorkspace(launch);
       return true;
     } catch (nextError) {
-      const failureMessage = selection && nextError instanceof Error
+      const failureMessage = nextError instanceof Error && nextError.message
         ? nextError.message
         : t('agent.freePractice.startRecoverable', '自由练习还没有开始；科目和题量已保留。');
       showError(

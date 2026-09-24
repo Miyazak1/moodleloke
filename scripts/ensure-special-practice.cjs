@@ -28,6 +28,8 @@ async function main() {
     console.log(`Special-practice seed skipped: ${publishedCount} published topic(s) already exist.`);
   }
   run('special-practice validation', ['scripts/validate-special-practice.cjs']);
+  run('adaptive topic mapping seed', ['scripts/seed-csca-adaptive-topic-mapping.cjs']);
+  run('adaptive topic mapping validation', ['scripts/validate-csca-adaptive-topic-mapping.cjs']);
 }
 
 main()
