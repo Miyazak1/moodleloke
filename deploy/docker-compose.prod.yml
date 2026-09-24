@@ -73,6 +73,14 @@ services:
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
       GOOGLE_OAUTH_REDIRECT_URI: ${GOOGLE_OAUTH_REDIRECT_URI:-}
       AUTH_GOOGLE_STATE_COOKIE_NAME: ${AUTH_GOOGLE_STATE_COOKIE_NAME:-moodlelike_oauth_state}
+      # The standalone Agent depends on the complete evidence -> projection ->
+      # target-gap -> prescription chain. Keep it enabled by default for this
+      # isolated deployment; operators can still explicitly disable a layer.
+      CSCA_AGENT_FOUNDATION_ENABLED: ${CSCA_AGENT_FOUNDATION_ENABLED:-true}
+      CSCA_LEARNING_EVIDENCE_WRITE_ENABLED: ${CSCA_LEARNING_EVIDENCE_WRITE_ENABLED:-true}
+      CSCA_LEARNING_SHADOW_PROJECTION_ENABLED: ${CSCA_LEARNING_SHADOW_PROJECTION_ENABLED:-true}
+      CSCA_TARGET_GAP_ENABLED: ${CSCA_TARGET_GAP_ENABLED:-true}
+      CSCA_LEARNING_PRESCRIPTION_ENABLED: ${CSCA_LEARNING_PRESCRIPTION_ENABLED:-true}
       LOG_FORMAT: ${LOG_FORMAT:-json}
       REQUEST_BODY_LIMIT: ${REQUEST_BODY_LIMIT:-2mb}
       READY_DB_TIMEOUT_MS: ${READY_DB_TIMEOUT_MS:-1500}

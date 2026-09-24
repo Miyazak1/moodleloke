@@ -58,6 +58,10 @@ function testPureRules() {
   }));
   assert.equal(cold[0].recommendedAction, 'diagnostic');
   assert.ok(cold[0].reasonCodes.includes('EVIDENCE_INSUFFICIENT'));
+  assert.equal(buildLearningPrescription(pureInput({
+    defaultSessionMinutes: 10,
+    topics: [{ ...input.topics[0], mastery: null, confidence: 0, evidenceCount: 0, incorrectCount: 0 }]
+  }), cold).tasks[0].questionCount, 5, 'normal short diagnostics must still contain a useful five-question batch');
 
   const review = computeTargetGaps(pureInput({
     dueReviewTopicIds: [11],
@@ -75,7 +79,9 @@ function testPureRules() {
   const dueGaps = computeTargetGaps(dueInput);
   assert.equal(dueGaps[0].recommendedAction, 'intervention_verification');
   assert.equal(dueGaps[0].interventionVerificationId, 'verification-retention');
-  assert.equal(buildLearningPrescription(dueInput, dueGaps).tasks[0].interventionVerificationPhase, 'retention');
+  const duePrescription = buildLearningPrescription(dueInput, dueGaps);
+  assert.equal(duePrescription.tasks[0].interventionVerificationPhase, 'retention');
+  assert.equal(duePrescription.tasks[0].questionCount, 3, 'spaced intervention verification intentionally remains a focused three-question check');
 
   const stable = computeTargetGaps(pureInput({
     topics: [{ ...input.topics[0], mastery: 0.3, retention: 0.2, transfer: 0.2, incorrectCount: 4 }],

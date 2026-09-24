@@ -81,13 +81,15 @@ export class AgentService {
     if (!this.learningRead || !this.pastPapers) throw new ServiceUnavailableException('Agent journey data is unavailable.');
     const language = locale === 'en' ? 'en' as const : 'zh' as const;
     await this.projector?.processPending(200).catch(() => undefined);
-    const [profile, mastery, reviewQueue, scoreGoal, currentDecision] = await Promise.all([
+    const [profile, mastery, reviewQueue, scoreGoal, planningDecision] = await Promise.all([
       this.learningRead.getLearningProfile(userId),
       this.learningRead.getSubjectMastery(userId, { limit: 50 }),
       this.learningRead.getReviewQueue(userId, { language, limit: 40 }),
       this.learningRead.getScoreGoal(userId),
-      this.decisions?.recompute(userId).catch(() => null) ?? null
+      this.decisions?.getLearningPrescription(userId).catch(() => ({ status: 'unavailable' as const, prescription: null }))
+        ?? Promise.resolve({ status: 'disabled' as const, prescription: null })
     ]);
+    const currentPrescription = planningDecision.status === 'ready' ? planningDecision.prescription : null;
     const subjects = profile.targetSubjectCodes.length
       ? profile.targetSubjectCodes
       : ['math', 'physics', 'chemistry'] as const;
@@ -133,7 +135,7 @@ export class AgentService {
     const resources = paperGroups.flatMap((group) => group.items)
       .filter((item, index, items) => items.findIndex((candidate) => candidate.id === item.id) === index)
       .slice(0, 12);
-    const primaryTask = currentDecision?.prescription?.tasks.slice().sort((left, right) => left.priority - right.priority)[0] ?? null;
+    const primaryTask = currentPrescription?.tasks.slice().sort((left, right) => left.priority - right.priority)[0] ?? null;
     const baseSupply = primaryTask && ['diagnostic', 'review', 'targeted_practice', 'intervention_verification'].includes(primaryTask.type)
       ? await this.learningRead.getQuestionSupplyStatus({
           subject: primaryTask.subject,
@@ -164,7 +166,7 @@ export class AgentService {
       evidencedTopicCount: mastery.subjects.reduce((sum, subject) => sum + subject.topics.filter((topic) => topic.attemptCount > 0).length, 0),
       totalTopicCount: topicCounts.reduce((sum, item) => sum + item._count._all, 0),
       projectionPending,
-      decisionAvailable: Boolean(currentDecision?.prescription),
+      decisionAvailable: Boolean(currentPrescription),
       prescriptions: prescriptions.map((item) => ({ prescriptionId: item.id })),
       outcomes: prescriptionOutcomes.map((item) => {
         const metadata = recordValue(item.metadata);
@@ -206,12 +208,24 @@ export class AgentService {
           answerEvidenceCount: subject.evidenceCount
         }))
       },
-      nextDecision: currentDecision?.prescription ? {
-        prescriptionId: currentDecision.prescription.prescriptionId,
-        reasonSummary: currentDecision.prescription.reasonSummary,
-        reasonCodes: currentDecision.prescription.reasonCodes,
-        confidence: currentDecision.prescription.confidence,
-        estimatedMinutes: currentDecision.prescription.estimatedMinutes,
+      planning: {
+        status: planningDecision.status,
+        reasonCode: planningDecision.status === 'goal_unset'
+          ? 'formal_goal_required'
+          : planningDecision.status === 'disabled'
+            ? 'planning_disabled'
+            : planningDecision.status === 'updating'
+              ? 'evidence_projection_pending'
+              : planningDecision.status === 'unavailable'
+                ? 'planning_unavailable'
+                : null
+      },
+      nextDecision: currentPrescription ? {
+        prescriptionId: currentPrescription.prescriptionId,
+        reasonSummary: currentPrescription.reasonSummary,
+        reasonCodes: currentPrescription.reasonCodes,
+        confidence: currentPrescription.confidence,
+        estimatedMinutes: currentPrescription.estimatedMinutes,
         primaryTask,
         availability: supply,
         source: 'learning_prescription' as const,

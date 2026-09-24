@@ -229,9 +229,12 @@ export function buildLearningPrescription(input: LearningDecisionInput, gaps: Ta
   const taskType = primary?.recommendedAction ?? 'targeted_practice';
   const subject = primary?.subject ?? fallbackSubject;
   const sessionMinutes = Math.min(30, Math.max(10, input.defaultSessionMinutes ?? 15));
+  const isInterventionVerification = Boolean(primary?.interventionVerificationId);
   const questionCount = taskType === 'concept_learning' || taskType === 'mock_exam'
     ? undefined
-    : Math.min(10, Math.max(3, Math.floor(sessionMinutes / 3)));
+    : isInterventionVerification
+      ? 3
+      : Math.min(10, Math.max(5, Math.floor(sessionMinutes / 3)));
   const reasonCodes = primary?.reasonCodes ?? ['MAINTENANCE_PRACTICE'];
   const confidence = primary?.confidence ?? 'medium';
   const topicIds = primary?.topicIds ?? [];

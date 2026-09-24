@@ -171,7 +171,10 @@ export function decideAdaptiveLearning(input: {
       reviewItemId: focus?.reviewPattern?.id ?? null,
       patternType: focus?.reviewPattern?.patternType ?? null,
       dueAt,
-      questionCount: 3
+      // A normal follow-up batch should be long enough to provide useful
+      // evidence and should match the product's standard five-question batch.
+      // Spaced verification remains a deliberately small three-question check.
+      questionCount: nextType === 'delayed_verification' ? 3 : 5
     }
   };
 }

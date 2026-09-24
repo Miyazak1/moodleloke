@@ -313,6 +313,12 @@ export function AgentLearningSettingsView({
   const recommendedReason = journeyOverview?.nextDecision && recommendedTask
     ? recommendationReason(journeyOverview.nextDecision, isZh, recommendedSubject)
     : '';
+  const hasFormalGoal = Boolean(
+    journeyOverview?.goal?.examDate
+    && journeyOverview.goal.subjects?.some((item) => typeof item.targetScore === 'number')
+  );
+  const planningStatus = journeyOverview?.planning?.status
+    ?? (hasFormalGoal ? 'unavailable' : 'goal_unset');
   const examDateValue = journeyOverview?.goal?.examDate ? new Date(`${journeyOverview.goal.examDate}T00:00:00`) : null;
   const examDateLabel = examDateValue && !Number.isNaN(examDateValue.getTime())
     ? new Intl.DateTimeFormat(isZh ? 'zh-CN' : 'en', { year: 'numeric', month: 'long', day: 'numeric' }).format(examDateValue)
@@ -367,7 +373,26 @@ export function AgentLearningSettingsView({
           <dl><div><dt>{t('agent.plan.task', '任务')}</dt><dd>{taskLabel(planTask.type, isZh)}</dd></div><div><dt>{t('agent.plan.subject', '科目')}</dt><dd>{subjectLabel(String(planTask.subject ?? ''), isZh)}</dd></div><div><dt>{t('agent.plan.duration', '预计')}</dt><dd>{Number(planSnapshot.estimatedMinutes ?? 0) ? `${Number(planSnapshot.estimatedMinutes)} min` : '—'}</dd></div><div><dt>{t('agent.plan.volume', '题量')}</dt><dd>{Number(planTask.questionCount ?? 0) || '—'}</dd></div></dl>
           <div className="agent-plan-execution"><div><small>{isCurrentPlanStartable ? t('agent.journeyAction.ready', '可以开始') : t('agent.journeyAction.refreshRequired', '需要更新')}</small><strong>{isCurrentPlanStartable ? t('agent.journeyAction.readyBody', '直接进入任务，完成后按真实结果更新计划。') : t('agent.journeyAction.refreshBody', '这不是今天可执行的任务，请生成基于最新证据的计划。')}</strong></div><button type="button" className="primary" disabled={planBusy} onClick={isCurrentPlanStartable ? onStartPlan : onGeneratePlan}><Icon name={planBusy ? 'lucide:loader-circle' : isCurrentPlanStartable ? 'lucide:play' : 'lucide:refresh-cw'} />{planBusy ? t('agent.learningEntry.preparing', '正在准备') : isCurrentPlanStartable ? t('agent.journeyAction.startTask', '开始此任务') : t('agent.journeyAction.generateToday', '更新今日计划')}</button></div>
           <footer><Icon name="lucide:shield-check" />{t('agent.plan.source', '来自学习证据、目标与已发布题源')}</footer>
-        </div> : !journeyOverviewLoading && !journeyOverviewError && !journeyOverview?.nextDecision?.primaryTask ? <div className="agent-journey-empty"><Icon name="lucide:calendar-days" /><strong>{t('agent.journey.noPlan', '还没有可用计划')}</strong><p>{t('agent.journeyAction.planEmptyBody', '先完成一次做题，系统会根据目标和真实作答形成下一步。')}</p><button type="button" onClick={onGoPractice}><Icon name="lucide:play" />{t('agent.journeyAction.goPractice', '去做题')}</button></div> : null}
+        </div> : !journeyOverviewLoading && !journeyOverviewError && !journeyOverview?.nextDecision?.primaryTask ? <div className="agent-journey-empty">
+          <Icon name={planningStatus === 'goal_unset' ? 'lucide:target' : planningStatus === 'updating' ? 'lucide:refresh-cw' : planningStatus === 'disabled' ? 'lucide:toggle-left' : 'lucide:calendar-days'} />
+          <strong>{planningStatus === 'goal_unset'
+            ? (isZh ? '先设置正式考试目标' : 'Set your exam goal first')
+            : planningStatus === 'updating'
+              ? (isZh ? '最近作答正在同步' : 'Recent answers are syncing')
+              : planningStatus === 'disabled'
+                ? (isZh ? '当前环境尚未开启学习计划' : 'Learning plans are not enabled here')
+                : (isZh ? '暂时无法生成可执行计划' : 'No executable plan is available yet')}</strong>
+          <p>{planningStatus === 'goal_unset'
+            ? (isZh ? '做题记录已经保留，但计划还需要考试日期、目标科目和目标分；继续重复做题不会补齐这些目标信息。' : 'Your practice is saved, but planning also needs an exam date, target subjects, and target scores. More practice alone cannot supply those goals.')
+            : planningStatus === 'updating'
+              ? (isZh ? '系统正在把最近完成的作答投影为学习证据。稍后重试即可，不需要重复做题。' : 'The system is projecting your latest answers into learning evidence. Retry shortly; you do not need to repeat the practice.')
+              : planningStatus === 'disabled'
+                ? (isZh ? '你的作答仍会保存，但此部署没有启用目标差距与计划生成链路。' : 'Your answers are saved, but target-gap and plan generation are disabled in this deployment.')
+                : (isZh ? '目标或作答可能已经存在，但计划服务本次没有返回结果。请重试读取。' : 'Goals or answers may already exist, but planning did not return a result. Please retry.')}</p>
+          {planningStatus === 'goal_unset'
+            ? <button type="button" onClick={() => selectPanel('goal')}><Icon name="lucide:target" />{isZh ? '设置考试目标' : 'Set exam goal'}</button>
+            : <button type="button" onClick={onJourneyOverviewRetry}><Icon name="lucide:refresh-cw" />{isZh ? '重新读取计划' : 'Retry plan'}</button>}
+        </div> : null}
       </section>}
 
       {panel === 'progress' && <section className="agent-settings-progress" aria-label={t('agent.journey.progress', '目标进度')}>

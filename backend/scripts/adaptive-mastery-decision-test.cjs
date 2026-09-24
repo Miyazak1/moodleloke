@@ -27,6 +27,7 @@ function topic(overrides = {}) {
 const stable = decideAdaptiveLearning({ subject: 'physics', adaptationPending: false, topics: [topic()] });
 assert.equal(stable.status, 'verified_mastery');
 assert.equal(stable.nextStep.type, 'broaden_coverage');
+assert.equal(stable.nextStep.questionCount, 5);
 assert.equal(stable.generatedByAI, false);
 
 const assisted = decideAdaptiveLearning({
@@ -45,7 +46,18 @@ const wrong = decideAdaptiveLearning({
 });
 assert.equal(wrong.status, 'needs_review');
 assert.equal(wrong.nextStep.reviewItemId, 71);
+assert.equal(wrong.nextStep.questionCount, 5);
 assert.equal(wrong.adaptationPending, true);
+
+const delayed = decideAdaptiveLearning({
+  subject: 'physics', adaptationPending: false,
+  topics: [topic({
+    independentCorrect: 1, assistedCorrect: 2,
+    reviewPattern: { id: 72, patternType: 'concept_gap', status: 'improving', recurrenceCount: 2, nextReviewAt: '2099-09-25T08:00:00.000Z', consecutiveVerificationPassCount: 1 }
+  })]
+});
+assert.equal(delayed.nextStep.type, 'delayed_verification');
+assert.equal(delayed.nextStep.questionCount, 3);
 
 const firstAt = new Date('2026-09-22T08:00:00.000Z');
 const firstPass = decideWrongPatternVerification({ passed: true, occurredAt: firstAt, metadata: {} });

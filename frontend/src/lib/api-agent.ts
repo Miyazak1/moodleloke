@@ -508,6 +508,10 @@ export type AgentJourneyOverview = {
       answerEvidenceCount: number;
     }>;
   };
+  planning?: {
+    status: 'ready' | 'disabled' | 'goal_unset' | 'updating' | 'unavailable';
+    reasonCode: 'formal_goal_required' | 'planning_disabled' | 'evidence_projection_pending' | 'planning_unavailable' | null;
+  };
   nextDecision?: null | {
     prescriptionId: string;
     reasonSummary: string;
