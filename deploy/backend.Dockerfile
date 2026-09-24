@@ -1,4 +1,4 @@
-FROM node:20.20-bookworm-slim AS deps
+FROM node:22-bookworm-slim AS deps
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends ca-certificates openssl \
@@ -11,10 +11,11 @@ RUN npm ci && npm --prefix backend ci
 
 FROM deps AS build
 COPY scripts ./scripts
+COPY question-engine ./question-engine
 COPY backend ./backend
 RUN npm --prefix backend run build
 
-FROM node:20.20-bookworm-slim AS runtime
+FROM node:22-bookworm-slim AS runtime
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends ca-certificates openssl \

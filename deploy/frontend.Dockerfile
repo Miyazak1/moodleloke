@@ -1,4 +1,4 @@
-FROM node:20.20-bookworm-slim AS build
+FROM node:22-bookworm-slim AS build
 
 WORKDIR /app
 ARG VITE_AUTH_CSRF_COOKIE_NAME=moodlelike_csrf
