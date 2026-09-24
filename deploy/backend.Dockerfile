@@ -37,4 +37,4 @@ COPY --from=build /app/backend/node_modules/.prisma ./backend/node_modules/.pris
 COPY --from=build /app/backend/node_modules/@prisma/client ./backend/node_modules/@prisma/client
 
 EXPOSE 3000
-CMD ["node", "backend/dist/main.js"]
+CMD ["node", "backend/dist/backend/src/main.js"]
