@@ -8,18 +8,18 @@
 
 .agent-page :is(.agent-thread-scroll, .agent-task-rail-body, .agent-context-rail, .agent-composer) p,
 .agent-page :is(.agent-thread-scroll, .agent-task-rail-body, .agent-context-rail, .agent-composer) dd {
-  font-size: 15px !important;
+  font-size: var(--content-body-size) !important;
   line-height: 1.65;
 }
 
 .agent-page :is(.agent-thread-scroll, .agent-task-rail-body, .agent-context-rail, .agent-composer) small,
 .agent-page :is(.agent-thread-scroll, .agent-task-rail-body, .agent-context-rail, .agent-composer) dt {
-  font-size: 13px !important;
+  font-size: var(--content-meta-size) !important;
   line-height: 1.5;
 }
 
 .agent-page :is(.agent-thread-scroll, .agent-task-rail-body, .agent-context-rail, .agent-composer) :is(button, input, textarea, select, summary, label) {
-  font-size: 14px !important;
+  font-size: var(--content-control-size) !important;
 }
 
 .agent-page :is(.agent-thread-scroll, .agent-task-rail-body, .agent-context-rail, .agent-composer) :is(input, textarea, select) {
@@ -137,6 +137,10 @@
 @media (max-width: 720px) {
   .agent-page :is(.agent-thread-scroll, .agent-task-rail-body, .agent-context-rail, .agent-composer) p,
   .agent-page :is(.agent-thread-scroll, .agent-task-rail-body, .agent-context-rail, .agent-composer) dd {
-    font-size: 14px !important;
+    font-size: var(--content-body-size) !important;
+  }
+
+  .agent-page :is(.agent-thread-scroll, .agent-context-rail, .agent-composer) :is(button, summary, select, input) {
+    min-height: var(--touch-target-min);
   }
 }

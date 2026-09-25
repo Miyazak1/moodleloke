@@ -17,7 +17,7 @@
     "test:e2e:agent:handwriting:live": "playwright test --config playwright.agent-handwriting-live.config.ts",
     "test:e2e:fixed-bank": "playwright test --config playwright.config.ts e2e/public-routes.spec.ts e2e/onboarding.spec.ts e2e/i18n-smoke.spec.ts e2e/interaction-stability.spec.ts e2e/style-primitives.spec.ts --workers=2",
     "test:concurrency": "playwright test --config playwright.config.ts e2e/loading-concurrency.spec.ts e2e/interaction-stability.spec.ts --workers=1",
-    "test:i18n": "playwright test --config playwright.agent.config.ts --grep \"applies language preference without putting the locale in the route\"",
+    "test:i18n": "playwright test --config playwright.agent.config.ts --grep \"applies language preference without putting the locale in the route|lets the user change and persist the interface language from the public shell\"",
     "test:i18n-debt": "node scripts/check-i18n-debt.cjs",
     "test:i18n-messages": "node scripts/check-i18n-message-parity.cjs",
     "test:i18n-vi": "node scripts/check-i18n-vi-coverage.cjs",

@@ -505,6 +505,10 @@
 .agent-rail-brand small { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .agent-rail-brand strong { font-size: 16px; }
 .agent-rail-brand small { margin-top: 3px; color: var(--agent-muted); font-size: 12px; font-weight: 760; }
+.agent-mobile-language { display: none; }
+.agent-mobile-account { display: none; }
+.agent-language-selector { width: 100%; border-color: var(--agent-line); background: rgba(255, 255, 255, .78); }
+.agent-language-selector select { min-width: 0; width: 100%; }
 
 .agent-journey-nav { display: grid; align-content: start; gap: 5px; min-height: 0; overflow-y: auto; scrollbar-width: thin; }
 .agent-journey-nav button {
@@ -1620,14 +1624,18 @@
   .agent-past-paper-viewer-body { grid-template-columns: 1fr; }
   .agent-past-paper-viewer iframe { min-height: 480px; }
   .agent-past-paper-tutor { border-top: 1px solid var(--agent-line); border-left: 0; }
-  .agent-conversation-rail { display: flex; min-width: 0; gap: 8px; align-items: center; padding: 9px 12px; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--agent-line); scrollbar-width: none; }
+  .agent-conversation-rail { display: flex; min-width: 0; gap: 8px; align-items: center; padding: 9px 12px; overflow: hidden; border-right: 0; border-bottom: 1px solid var(--agent-line); }
   .agent-rail-brand,
   .agent-rail-trust,
   .agent-account-card,
   .agent-back-home,
   .agent-rail-label,
   .agent-history-list > p { display: none; }
-  .agent-journey-nav { display: flex; min-width: max-content; gap: 5px; }
+  .agent-rail-footer { display: none; }
+  .agent-mobile-language { display: grid; flex: 0 0 auto; min-width: 112px; border-color: var(--agent-line); background: #fff; }
+  .agent-mobile-language select { min-width: 72px; }
+  .agent-mobile-account { display: inline-grid; flex: 0 0 44px; width: 44px; height: 44px; place-items: center; padding: 0; border: 1px solid var(--agent-line); border-radius: 12px; background: #fff; }
+  .agent-journey-nav { display: flex; min-width: 0; gap: 5px; overflow-x: auto; scrollbar-width: none; mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 22px), transparent 100%); }
   .agent-journey-nav button { display: inline-flex; width: auto; min-width: max-content; min-height: 40px; align-items: center; justify-content: center; gap: 7px; padding: 0 11px; }
   .agent-journey-nav button > span { display: grid; gap: 0; }
   .agent-journey-nav button > span small { display: none; }

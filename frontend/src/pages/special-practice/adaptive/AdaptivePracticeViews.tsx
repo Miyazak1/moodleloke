@@ -345,6 +345,15 @@ function friendlyPracticeError(error: unknown, fallback: string, locale = 'zh-CN
   const message = error instanceof Error ? error.message : '';
   if (!message || message === 'Failed to fetch') return fallback;
   if (message.includes('请先登录')) return adaptiveText(locale, '请先登录。', 'Please sign in first.', 'Vui lòng đăng nhập trước.');
+  if (error instanceof ApiError) {
+    if (error.status === 401) return adaptiveText(locale, '登录状态已失效，请重新登录。', 'Your session has expired. Please sign in again.', 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+    if (error.code === 'EMAIL_UNVERIFIED') return adaptiveText(locale, '请先完成邮箱验证。', 'Please verify your email first.', 'Vui lòng xác minh email trước.');
+    if (error.status === 403) return adaptiveText(locale, '当前账号暂时不能执行这项操作。', 'This action is not available for the current account.', 'Tài khoản hiện tại chưa thể thực hiện thao tác này.');
+    if (error.status === 404) return adaptiveText(locale, '这项练习内容已失效，请返回后重新选择。', 'This practice content is no longer available. Go back and choose again.', 'Nội dung luyện tập này không còn khả dụng. Hãy quay lại và chọn lại.');
+    if (error.status === 409) return adaptiveText(locale, '练习状态已更新，请刷新后继续。', 'The practice state has changed. Refresh before continuing.', 'Trạng thái luyện tập đã thay đổi. Hãy tải lại trước khi tiếp tục.');
+    if (error.status === 429) return adaptiveText(locale, '操作过于频繁，请稍后再试。', 'Too many requests. Please try again shortly.', 'Bạn thao tác quá nhanh. Vui lòng thử lại sau.');
+    return fallback;
+  }
   return message;
 }
 
@@ -996,7 +1005,7 @@ export function AdaptiveSubjectDashboardView({ subject, currentUser, isResolving
       const round = await createAdaptivePracticeRound(sessionId, needsDiagnostic ? {} : { focusTopicId });
       onNavigate(adaptiveRoundPath(subject, round.round.id));
     } catch (nextError) {
-      setError((nextError as Error).message || adaptiveText(locale, '暂时无法开始科目练习。', 'Subject practice cannot start right now.', 'Tạm thời chưa thể bắt đầu luyện theo môn.'));
+      setError(friendlyPracticeError(nextError, adaptiveText(locale, '暂时无法开始科目练习。', 'Subject practice cannot start right now.', 'Tạm thời chưa thể bắt đầu luyện theo môn.'), locale));
     } finally {
       setIsStarting(false);
     }
@@ -2192,7 +2201,7 @@ export function AdaptiveRoundReportView({ roundId, onNavigate, onAgentInterventi
         setNextRoundPoolExhausted(true);
         setNextRoundError(null);
       } else {
-        setNextRoundError((nextError as Error).message || adaptiveText(locale, '暂时无法准备下一轮训练。', 'The next training round cannot be prepared right now.', 'Tạm thời chưa thể chuẩn bị vòng luyện tiếp theo.'));
+        setNextRoundError(friendlyPracticeError(nextError, adaptiveText(locale, '暂时无法准备下一轮训练。', 'The next training round cannot be prepared right now.', 'Tạm thời chưa thể chuẩn bị vòng luyện tiếp theo.'), locale));
       }
     } finally {
       setIsStartingNext(false);
@@ -2274,7 +2283,7 @@ export function AdaptiveRoundReportView({ roundId, onNavigate, onAgentInterventi
       })
       .catch((nextError) => {
         if (!alive) return;
-        setCoachSummaryError(isQuotaError(nextError) ? adaptiveText(locale, ADAPTIVE_COPY.aiCreditQuotaError, 'AI Coach credits are insufficient. Standard explanations remain available; buy credits to keep using hints, mistake analysis, and round summaries.', 'Không đủ lượt AI Coach. Giải thích tiêu chuẩn vẫn được giữ lại; nạp lượt để tiếp tục dùng gợi ý, phân tích lỗi và tổng kết vòng.') : (nextError as Error).message || adaptiveText(locale, 'AI 总结暂时不可用。', 'AI summary is temporarily unavailable.', 'Tạm thời chưa thể dùng tổng kết AI.'));
+        setCoachSummaryError(isQuotaError(nextError) ? adaptiveText(locale, ADAPTIVE_COPY.aiCreditQuotaError, 'AI Coach credits are insufficient. Standard explanations remain available; buy credits to keep using hints, mistake analysis, and round summaries.', 'Không đủ lượt AI Coach. Giải thích tiêu chuẩn vẫn được giữ lại; nạp lượt để tiếp tục dùng gợi ý, phân tích lỗi và tổng kết vòng.') : friendlyPracticeError(nextError, adaptiveText(locale, 'AI 总结暂时不可用。', 'AI summary is temporarily unavailable.', 'Tạm thời chưa thể dùng tổng kết AI.'), locale));
       })
       .finally(() => {
         if (alive) setIsCoachLoading(false);
@@ -2405,7 +2414,7 @@ export function AdaptiveRoundReportView({ roundId, onNavigate, onAgentInterventi
       setCoachSummary(await getAdaptiveAIRoundSummary({ roundId: currentReport.round.id, language: reportCoachLanguage, questionLanguage: reportQuestionLanguage }));
       void refreshEntitlement();
     } catch (nextError) {
-      setCoachSummaryError(isQuotaError(nextError) ? copy.aiCreditQuotaError : (nextError as Error).message || adaptiveText(locale, 'AI 总结暂时不可用。', 'AI summary is temporarily unavailable.', 'Tạm thời chưa thể dùng tổng kết AI.'));
+      setCoachSummaryError(isQuotaError(nextError) ? copy.aiCreditQuotaError : friendlyPracticeError(nextError, adaptiveText(locale, 'AI 总结暂时不可用。', 'AI summary is temporarily unavailable.', 'Tạm thời chưa thể dùng tổng kết AI.'), locale));
     } finally {
       setIsCoachLoading(false);
     }
@@ -2462,7 +2471,7 @@ export function AdaptiveRoundReportView({ roundId, onNavigate, onAgentInterventi
         setNextRoundPoolExhausted(true);
         setNextRoundError(null);
       } else {
-        setNextRoundError((nextError as Error).message || adaptiveText(locale, '暂时无法准备下一轮训练。', 'The next training round cannot be prepared right now.', 'Tạm thời chưa thể chuẩn bị vòng luyện tiếp theo.'));
+        setNextRoundError(friendlyPracticeError(nextError, adaptiveText(locale, '暂时无法准备下一轮训练。', 'The next training round cannot be prepared right now.', 'Tạm thời chưa thể chuẩn bị vòng luyện tiếp theo.'), locale));
       }
     } finally {
       setIsStartingNext(false);

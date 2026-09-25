@@ -4,6 +4,7 @@ import { AdminStatsStrip } from '../components/admin/AdminWorkbench';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { AdminFormField, GhostButton, InlineActions, StatusPill } from '../components/UiPrimitives';
 import { useI18n } from '../i18n/useI18n';
+import { adminText, selectAdminCopy, usesLatinAdminCopy } from '../lib/admin-locale';
 import { createAdminUser, getAdminUsers, grantAdminAdaptiveAIUnits, setAdminUserStatus, type AdminUser, type User } from '../lib/api';
 
 type UserStatusAction = 'disable' | 'restore';
@@ -198,7 +199,7 @@ function getRoleLabel(role: string, copy: AdminUsersCopy) {
 
 function formatAdminUsersError(nextError: unknown, fallback: string, locale: string) {
   const message = (nextError as Error).message || fallback;
-  return locale === 'en' ? fallback : message;
+  return usesLatinAdminCopy(locale) ? fallback : message;
 }
 
 export function AdminUsersPage({
@@ -221,7 +222,7 @@ export function AdminUsersPage({
   currentUser?: User | null;
 }) {
   const { locale } = useI18n();
-  const copy = locale === 'en' ? ADMIN_USERS_COPY.en : ADMIN_USERS_COPY.zh;
+  const copy = selectAdminCopy(locale, ADMIN_USERS_COPY);
   const [items, setItems] = useState<AdminUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [busyAction, setBusyAction] = useState<UserBusyAction | null>(null);
@@ -270,7 +271,7 @@ export function AdminUsersPage({
   const isActionBusy = (action: UserBusyAction) => busyAction === action;
   const busyLabel = (action: UserBusyAction, label: string) => {
     if (!isActionBusy(action)) return label;
-    return locale === 'en' ? `${label}...` : `${label}中`;
+    return adminText(locale, { zh: `${label}中`, en: `${label}...`, vi: `${label}...` });
   };
   const busyClass = (action: UserBusyAction, base = '') => {
     const loadingClass = isActionBusy(action) ? 'admin-action-loading' : '';

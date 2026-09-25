@@ -39,6 +39,11 @@
   --public-blush: #eef8f7;
   --public-shadow: var(--brand-shadow);
   --font-sans: 'Inter', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --content-body-size: 15px;
+  --content-control-size: 14px;
+  --content-meta-size: 13px;
+  --content-caption-size: 12px;
+  --touch-target-min: 44px;
 }
 
 .site-shell * { letter-spacing: 0; }
@@ -106,6 +111,55 @@ input[type="file"]:focus-visible::file-selector-button {
 }
 
 button { cursor: pointer; }
+
+.standalone-language-bar {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  justify-content: flex-end;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 14px 24px 0;
+}
+
+.language-selector {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 10px 0 12px;
+  border: 1px solid var(--brand-line, var(--line));
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .9);
+  color: var(--ink-700);
+  font-size: 13px;
+  font-weight: 760;
+}
+
+.language-selector > svg { width: 16px; height: 16px; flex: 0 0 auto; }
+.language-selector > svg:last-child { width: 14px; height: 14px; pointer-events: none; }
+.language-selector select {
+  min-width: 98px;
+  height: 40px;
+  padding: 0 24px 0 2px;
+  border: 0;
+  outline: 0;
+  appearance: none;
+  background: transparent;
+  color: var(--ink-900);
+  font: inherit;
+  cursor: pointer;
+}
+.language-selector:focus-within { border-color: rgba(49, 93, 255, .38); box-shadow: 0 0 0 4px rgba(49, 93, 255, .12); }
+.language-selector.is-compact { grid-template-columns: auto auto auto; }
+.language-selector.is-compact select { min-width: 84px; }
+
+@media (max-width: 720px) {
+  .standalone-language-bar { padding: 10px 12px 0; }
+  .language-selector { min-height: 44px; }
+}
 
 button:disabled {
   cursor: default;

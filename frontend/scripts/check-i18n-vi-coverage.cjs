@@ -9,6 +9,15 @@ const messageRoot = path.join(srcRoot, 'i18n', 'messages');
 const localizedRoot = path.join(srcRoot, 'content', 'localized');
 const specialPracticeRoot = path.join(srcRoot, 'pages', 'special-practice');
 const allowedSharedMessageValues = new Set([
+  'header.brandKicker',
+  'home.aiCoachKicker',
+  'homeLite.visual.mathMetricOneValue',
+  'homeLite.visual.mathMetricTwoValue',
+  'homeLite.visual.mathMetricThreeValue',
+  'homeLite.visual.physicsMetricOneValue',
+  'homeLite.visual.physicsMetricThreeValue',
+  'homeLite.visual.chemMetricOneValue',
+  'homeLite.visual.chemMetricThreeValue',
   'cscaPrep.csca',
   'mockExam.questionSuffix',
   'studyChina.cities.faqKicker',

@@ -13,11 +13,17 @@ import {
   type AgentPastPaperResource
 } from '../../lib/api-agent';
 import type { AdaptiveRoundReport } from '../../lib/api';
+import { ApiError } from '../../lib/request';
 import { Icon } from '../Icon';
 import { AgentAsyncState } from './AgentAsyncState';
 
 function clientRequestId() {
   return globalThis.crypto?.randomUUID?.() ?? `agent-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function safeAgentActionError(error: unknown, fallback: string) {
+  if (error instanceof ApiError || (error instanceof Error && error.message === 'Failed to fetch')) return fallback;
+  return error instanceof Error && error.message ? error.message : fallback;
 }
 
 function subjectLabel(value: unknown, t: (key: string, fallback?: string) => string) {
@@ -89,7 +95,7 @@ export function EvidenceCandidateCard({ candidate, onChanged }: { candidate: Age
       if (action === 'revoke') await revokeAgentAttachmentEvidence(candidate.id, { clientRequestId: clientRequestId(), reason: 'student_requested_retraction' });
       await onChanged();
     } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : t('agent.evidence.actionFailed', '暂时无法更新这条证据。'));
+      setError(safeAgentActionError(nextError, t('agent.evidence.actionFailed', '暂时无法更新这条证据。')));
     } finally { setBusy(false); }
   };
   const itemHeading = candidate.analysisItemId ? <div className="agent-evidence-item-heading">
@@ -170,7 +176,7 @@ export function InterventionCard({ item, onChanged, onDismissed, onCompleted, on
         if (updated.content.teachingAsset) onOpenTeaching(updated);
       }
     } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : t('agent.intervention.actionFailed', '暂时无法更新这项讲解。'));
+      setError(safeAgentActionError(nextError, t('agent.intervention.actionFailed', '暂时无法更新这项讲解。')));
     } finally { setBusy(false); }
   };
   const isReading = item.status === 'in_progress';
@@ -199,7 +205,7 @@ export function InterventionCard({ item, onChanged, onDismissed, onCompleted, on
   );
 }
 
-export function InterventionVerificationCard({ item, onOpen }: { item: AgentInterventionVerification; onOpen: (item: AgentInterventionVerification, path: string) => void }) {
+export function InterventionVerificationCard({ item, questionLanguage, onOpen }: { item: AgentInterventionVerification; questionLanguage: 'zh' | 'en'; onOpen: (item: AgentInterventionVerification, path: string) => void }) {
   const { locale, t } = useI18n();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -214,11 +220,11 @@ export function InterventionVerificationCard({ item, onOpen }: { item: AgentInte
     setBusy(true);
     setError('');
     try {
-      const started = await startAgentInterventionVerification(item.id, { clientRequestId: clientRequestId(), questionLanguage: locale === 'zh-CN' ? 'zh' : 'en' });
+      const started = await startAgentInterventionVerification(item.id, { clientRequestId: clientRequestId(), questionLanguage });
       if (!started.route) throw new Error(t('agent.verification.routeMissing', '验证任务入口暂不可用。'));
       onOpen(started, started.route);
     } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : t('agent.verification.startFailed', '暂时无法开始验证。'));
+      setError(safeAgentActionError(nextError, t('agent.verification.startFailed', '暂时无法开始验证。')));
       setBusy(false);
     }
   };

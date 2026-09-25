@@ -5,6 +5,7 @@ import { AdminStatsStrip, AdminWorkflowSteps } from '../components/admin/AdminWo
 import { MathContent } from '../components/MathContent';
 import { AdminFormField, GhostButton, InlineActions, StatusPill } from '../components/UiPrimitives';
 import { useI18n } from '../i18n/useI18n';
+import { adminText, selectAdminCopy, usesLatinAdminCopy } from '../lib/admin-locale';
 import {
   archiveAdminMockExamPaper,
   archiveAdminMockExamQuestion,
@@ -205,7 +206,7 @@ const ADMIN_MOCK_COPY = {
 type AdminMockCopy = (typeof ADMIN_MOCK_COPY)[keyof typeof ADMIN_MOCK_COPY];
 
 function createSampleImport(locale: string) {
-  const isEnglish = locale === 'en';
+  const isEnglish = usesLatinAdminCopy(locale);
   return {
   papers: [
     {
@@ -275,7 +276,7 @@ function emptyQuestion(orderNumber: number): QuestionDraft {
 function compactError(error: unknown, fallback: string, locale: string) {
   if (error instanceof Error) {
     const message = error.message;
-    if (locale === 'en' && /[\u3400-\u9fff]/.test(message)) return fallback;
+    if (usesLatinAdminCopy(locale) && /[\u3400-\u9fff]/.test(message)) return fallback;
     return message;
   }
   return fallback;
@@ -291,9 +292,11 @@ function trimActionMessage(message: string) {
 }
 
 function appendRefreshWarning(current: string, action: string, target: string, detail: string, locale: string) {
-  const warning = locale === 'en'
-    ? `${action} succeeded, but ${target} could not refresh: ${detail}`
-    : `${action}已完成，但${target}暂时无法刷新：${detail}`;
+  const warning = adminText(locale, {
+    zh: `${action}已完成，但${target}暂时无法刷新：${detail}`,
+    en: `${action} succeeded, but ${target} could not refresh: ${detail}`,
+    vi: `${action} đã hoàn tất nhưng không thể làm mới ${target}: ${detail}`
+  });
   return current ? `${current}；${warning}` : warning;
 }
 
@@ -324,7 +327,29 @@ export function AdminMockExamPage({
   onGoToAuth
 }: AdminMockExamPageProps) {
   const { locale } = useI18n();
-  const copy = locale === 'en' ? ADMIN_MOCK_COPY.en : ADMIN_MOCK_COPY.zh;
+  const copy = selectAdminCopy(locale, ADMIN_MOCK_COPY);
+  const interactionCopy = {
+    paperList: adminText(locale, { zh: '套卷列表', en: 'the mock paper list', vi: 'danh sách đề thi thử' }),
+    paperDetail: adminText(locale, { zh: '套卷详情', en: 'the mock paper detail', vi: 'chi tiết đề thi thử' }),
+    loadingDetails: adminText(locale, { zh: '正在读取详情', en: 'Loading details', vi: 'Đang tải chi tiết' }),
+    loadingDetailsBody: adminText(locale, { zh: '正在读取当前模拟卷，完成后会更新右侧编辑区。', en: 'The selected mock paper is loading.', vi: 'Đang tải đề thi thử đã chọn; khu vực chỉnh sửa sẽ sớm được cập nhật.' }),
+    workflowLabel: adminText(locale, { zh: '模拟卷发布流程', en: 'Mock paper publishing workflow', vi: 'Quy trình xuất bản đề thi thử' }),
+    selectPaper: adminText(locale, { zh: '选择套卷', en: 'Select paper', vi: 'Chọn đề' }),
+    selectPaperDetail: adminText(locale, { zh: '已有套卷或新草稿', en: 'Existing or new draft', vi: 'Đề hiện có hoặc bản nháp mới' }),
+    editContent: adminText(locale, { zh: '编辑内容', en: 'Edit content', vi: 'Chỉnh sửa nội dung' }),
+    editContentDetail: adminText(locale, { zh: '套卷信息与题目', en: 'Paper and questions', vi: 'Thông tin đề và câu hỏi' }),
+    releaseCheck: adminText(locale, { zh: '发布检查', en: 'Release check', vi: 'Kiểm tra phát hành' }),
+    checkCompleteness: adminText(locale, { zh: '检查完整性', en: 'Check completeness', vi: 'Kiểm tra tính đầy đủ' }),
+    publish: adminText(locale, { zh: '发布上线', en: 'Publish', vi: 'Xuất bản' }),
+    publishDetail: adminText(locale, { zh: '前台对学生可见', en: 'Visible to students', vi: 'Hiển thị cho học sinh' }),
+    publishTitle: adminText(locale, { zh: '确认发布这套模拟卷？', en: 'Publish this mock paper?', vi: 'Xuất bản đề thi thử này?' }),
+    archivePaperTitle: adminText(locale, { zh: '确认归档这套模拟卷？', en: 'Archive this mock paper?', vi: 'Lưu trữ đề thi thử này?' }),
+    archiveQuestionTitle: adminText(locale, { zh: '确认下架这道题？', en: 'Archive this question?', vi: 'Lưu trữ câu hỏi này?' }),
+    publishDescription: adminText(locale, { zh: '必须先通过发布检查；发布后学生端将可以看到并开始作答。', en: 'The release check must pass. After publishing, the paper becomes available to students.', vi: 'Đề phải vượt qua kiểm tra phát hành. Sau khi xuất bản, học sinh có thể xem và bắt đầu làm bài.' }),
+    archiveDescription: adminText(locale, { zh: '该操作会将内容移出学生端流程，已有作答记录仍会保留。', en: 'This action removes the content from the student-facing flow. Existing attempt records are preserved.', vi: 'Thao tác này gỡ nội dung khỏi luồng học sinh nhưng vẫn giữ các lượt làm bài hiện có.' }),
+    confirmPublish: adminText(locale, { zh: '确认发布', en: 'Publish', vi: 'Xuất bản' }),
+    confirmArchive: adminText(locale, { zh: '确认归档', en: 'Archive', vi: 'Lưu trữ' })
+  };
   const [items, setItems] = useState<AdminMockExamPaper[]>([]);
   const [detail, setDetail] = useState<AdminMockExamPaperDetail | null>(null);
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -343,7 +368,7 @@ export function AdminMockExamPage({
   const isActionBusy = (action: MockExamBusyAction) => busyAction === action;
   const busyLabel = (action: MockExamBusyAction, label: string) => {
     if (!isActionBusy(action)) return label;
-    return locale === 'en' ? `${label}...` : `${label}中`;
+    return adminText(locale, { zh: `${label}中`, en: `${label}...`, vi: `${label}...` });
   };
   const busyClass = (action: MockExamBusyAction) => isActionBusy(action) ? 'admin-action-loading' : undefined;
 
@@ -443,7 +468,7 @@ export function AdminMockExamPage({
       setIsCreatingPaper(false);
       await loadPapers(created.id, {
         afterWriteAction: trimActionMessage(copy.createdPaper),
-        refreshTarget: locale === 'en' ? 'the mock paper list' : '套卷列表'
+refreshTarget: interactionCopy.paperList
       });
     } catch (nextError) {
       setError(compactError(nextError, copy.fallbackError, locale));
@@ -470,11 +495,11 @@ export function AdminMockExamPage({
       const action = trimActionMessage(copy.savedPaper);
       await loadPapers(paperId, {
         afterWriteAction: action,
-        refreshTarget: locale === 'en' ? 'the mock paper list' : '套卷列表'
+        refreshTarget: interactionCopy.paperList
       });
       await loadDetail(paperId, {
         afterWriteAction: action,
-        refreshTarget: locale === 'en' ? 'the mock paper detail' : '套卷详情'
+refreshTarget: interactionCopy.paperDetail
       });
     } catch (nextError) {
       setError(compactError(nextError, copy.fallbackError, locale));
@@ -501,11 +526,11 @@ export function AdminMockExamPage({
       const action = trimActionMessage(copy.publishedPaper);
       await loadPapers(paperId, {
         afterWriteAction: action,
-        refreshTarget: locale === 'en' ? 'the mock paper list' : '套卷列表'
+        refreshTarget: interactionCopy.paperList
       });
       await loadDetail(paperId, {
         afterWriteAction: action,
-        refreshTarget: locale === 'en' ? 'the mock paper detail' : '套卷详情'
+        refreshTarget: interactionCopy.paperDetail
       });
     } catch (nextError) {
       setError(compactError(nextError, copy.fallbackError, locale));
@@ -524,11 +549,11 @@ export function AdminMockExamPage({
       const action = trimActionMessage(copy.archivedPaper);
       await loadPapers(detail.paper.id, {
         afterWriteAction: action,
-        refreshTarget: locale === 'en' ? 'the mock paper list' : '套卷列表'
+        refreshTarget: interactionCopy.paperList
       });
       await loadDetail(detail.paper.id, {
         afterWriteAction: action,
-        refreshTarget: locale === 'en' ? 'the mock paper detail' : '套卷详情'
+        refreshTarget: interactionCopy.paperDetail
       });
     } catch (nextError) {
       setError(compactError(nextError, copy.fallbackError, locale));
@@ -546,7 +571,7 @@ export function AdminMockExamPage({
       setFeedback(copy.duplicatedPaper);
       await loadPapers(copied.id, {
         afterWriteAction: trimActionMessage(copy.duplicatedPaper),
-        refreshTarget: locale === 'en' ? 'the mock paper list' : '套卷列表'
+        refreshTarget: interactionCopy.paperList
       });
     } catch (nextError) {
       setError(compactError(nextError, copy.fallbackError, locale));
@@ -570,11 +595,11 @@ export function AdminMockExamPage({
       const action = trimActionMessage(questionDraft.id ? copy.savedQuestion : copy.createdQuestion);
       await loadDetail(detail.paper.id, {
         afterWriteAction: action,
-        refreshTarget: locale === 'en' ? 'the mock paper detail' : '套卷详情'
+        refreshTarget: interactionCopy.paperDetail
       });
       await loadPapers(detail.paper.id, {
         afterWriteAction: action,
-        refreshTarget: locale === 'en' ? 'the mock paper list' : '套卷列表'
+        refreshTarget: interactionCopy.paperList
       });
     } catch (nextError) {
       setError(compactError(nextError, copy.fallbackError, locale));
@@ -593,11 +618,11 @@ export function AdminMockExamPage({
       const action = trimActionMessage(copy.archivedQuestion);
       await loadDetail(detail.paper.id, {
         afterWriteAction: action,
-        refreshTarget: locale === 'en' ? 'the mock paper detail' : '套卷详情'
+        refreshTarget: interactionCopy.paperDetail
       });
       await loadPapers(detail.paper.id, {
         afterWriteAction: action,
-        refreshTarget: locale === 'en' ? 'the mock paper list' : '套卷列表'
+        refreshTarget: interactionCopy.paperList
       });
     } catch (nextError) {
       setError(compactError(nextError, copy.fallbackError, locale));
@@ -657,7 +682,7 @@ export function AdminMockExamPage({
       setError(appendRefreshWarning(
         '',
         trimActionMessage(importFeedback || copy.importDone),
-        locale === 'en' ? 'the mock paper list' : '套卷列表',
+        interactionCopy.paperList,
         compactError(nextError, copy.fallbackError, locale),
         locale
       ));
@@ -683,7 +708,7 @@ export function AdminMockExamPage({
     >
       {currentUser?.role === 'admin' && feedback && <section className="admin-feedback success"><strong>{copy.successTitle}</strong><p>{feedback}</p></section>}
       {currentUser?.role === 'admin' && error && <section className="admin-feedback warning"><strong>{copy.warningTitle}</strong><p>{error}</p></section>}
-      {currentUser?.role === 'admin' && isLoadingDetail && <section className="admin-feedback"><strong>{locale === 'en' ? 'Loading details' : '正在读取详情'}</strong><p>{locale === 'en' ? 'The selected mock paper is loading.' : '正在读取当前模拟卷，完成后会更新右侧编辑区。'}</p></section>}
+{currentUser?.role === 'admin' && isLoadingDetail && <section className="admin-feedback"><strong>{interactionCopy.loadingDetails}</strong><p>{interactionCopy.loadingDetailsBody}</p></section>}
 
       {currentUser?.role === 'admin' && (
         <section className="mock-admin-workbench">
@@ -699,13 +724,13 @@ export function AdminMockExamPage({
           />
 
           <AdminWorkflowSteps
-            ariaLabel={locale === 'en' ? 'Mock paper publishing workflow' : '模拟卷发布流程'}
+ariaLabel={interactionCopy.workflowLabel}
             className="admin-workbench-flow"
             items={[
-              { key: 'select', label: locale === 'en' ? 'Select paper' : '选择套卷', detail: locale === 'en' ? 'Existing or new draft' : '已有套卷或新草稿', state: detail || isCreatingPaper ? 'complete' : 'active' },
-              { key: 'edit', label: locale === 'en' ? 'Edit content' : '编辑内容', detail: locale === 'en' ? 'Paper and questions' : '套卷信息与题目', state: isCreatingPaper ? 'active' : detail ? 'complete' : 'upcoming' },
-              { key: 'check', label: locale === 'en' ? 'Release check' : '发布检查', detail: detail?.issues.length ? (locale === 'en' ? `${detail.issues.length} issue(s)` : `${detail.issues.length} 项待处理`) : (locale === 'en' ? 'Check completeness' : '检查完整性'), state: detail?.issues.length ? 'warning' : detail?.paper.status === 'published' ? 'complete' : detail ? 'active' : 'upcoming' },
-              { key: 'publish', label: locale === 'en' ? 'Publish' : '发布上线', detail: locale === 'en' ? 'Visible to students' : '前台对学生可见', state: detail?.paper.status === 'published' ? 'complete' : 'upcoming' }
+              { key: 'select', label: interactionCopy.selectPaper, detail: interactionCopy.selectPaperDetail, state: detail || isCreatingPaper ? 'complete' : 'active' },
+              { key: 'edit', label: interactionCopy.editContent, detail: interactionCopy.editContentDetail, state: isCreatingPaper ? 'active' : detail ? 'complete' : 'upcoming' },
+              { key: 'check', label: interactionCopy.releaseCheck, detail: detail?.issues.length ? adminText(locale, { zh: `${detail.issues.length} 项待处理`, en: `${detail.issues.length} issue(s)`, vi: `${detail.issues.length} vấn đề` }) : interactionCopy.checkCompleteness, state: detail?.issues.length ? 'warning' : detail?.paper.status === 'published' ? 'complete' : detail ? 'active' : 'upcoming' },
+              { key: 'publish', label: interactionCopy.publish, detail: interactionCopy.publishDetail, state: detail?.paper.status === 'published' ? 'complete' : 'upcoming' }
             ]}
           />
 
@@ -918,14 +943,14 @@ export function AdminMockExamPage({
       {pendingConfirmation && (
         <ConfirmDialog
           title={pendingConfirmation === 'publish-paper'
-            ? (locale === 'en' ? 'Publish this mock paper?' : '确认发布这套模拟卷？')
+            ? interactionCopy.publishTitle
             : pendingConfirmation === 'archive-paper'
-              ? (locale === 'en' ? 'Archive this mock paper?' : '确认归档这套模拟卷？')
-              : (locale === 'en' ? 'Archive this question?' : '确认下架这道题？')}
+              ? interactionCopy.archivePaperTitle
+              : interactionCopy.archiveQuestionTitle}
           body={pendingConfirmation === 'publish-paper'
-            ? (locale === 'en' ? 'The release check must pass. After publishing, the paper becomes available to students.' : '必须先通过发布检查；发布后学生端将可以看到并开始作答。')
-            : (locale === 'en' ? 'This action removes the content from the student-facing flow. Existing attempt records are preserved.' : '该操作会将内容移出学生端流程，已有作答记录仍会保留。')}
-          confirmLabel={pendingConfirmation === 'publish-paper' ? (locale === 'en' ? 'Publish' : '确认发布') : (locale === 'en' ? 'Archive' : '确认归档')}
+            ? interactionCopy.publishDescription
+            : interactionCopy.archiveDescription}
+          confirmLabel={pendingConfirmation === 'publish-paper' ? interactionCopy.confirmPublish : interactionCopy.confirmArchive}
           tone={pendingConfirmation === 'publish-paper' ? 'neutral' : 'danger'}
           isBusy={isBusy}
           onCancel={() => setPendingConfirmation(null)}

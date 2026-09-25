@@ -128,6 +128,18 @@ test('applies language preference without putting the locale in the route', asyn
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
 });
 
+test('lets the user change and persist the interface language from the public shell', async ({ page }) => {
+  await page.goto('/login?lang=zh-CN');
+  const language = page.getByLabel('界面语言');
+  await expect(language).toBeVisible();
+  await language.selectOption('en');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await expect.poll(() => page.evaluate(() => window.localStorage.getItem('moodlelike.locale'))).toBe('en');
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await expect(page.getByLabel('Interface language')).toHaveValue('en');
+});
+
 test('renders an evidence-based learning workspace without horizontal overflow', async ({ page }, testInfo) => {
   await mockAgentWorkspace(page);
   await page.goto('/agent');
@@ -144,6 +156,13 @@ test('renders an evidence-based learning workspace without horizontal overflow',
     await expect(page.getByText('你的目标与考试日期')).toBeVisible();
     await expect(page.locator('.agent-account-card')).toContainText('林澈');
     await expect(page.locator('.agent-account-card')).toContainText('个人设置');
+    await expect(page.locator('.agent-language-selector')).toBeVisible();
+  }
+  if (testInfo.project.name === 'mobile') {
+    await expect(page.locator('.agent-mobile-language')).toBeVisible();
+    await expect(page.locator('.agent-mobile-account')).toBeVisible();
+    await expect(page.locator('.agent-language-selector')).toBeHidden();
+    await expect(page.locator('.agent-journey-nav')).toHaveCSS('overflow-x', 'auto');
   }
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(2);

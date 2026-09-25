@@ -2,6 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, typ
 import { Icon } from '../components/Icon';
 import { MathContent } from '../components/MathContent';
 import { UserAvatar } from '../components/UserAvatar';
+import { LanguageSelector } from '../components/LanguageSelector';
 import { AgentPastPaperWorkspace } from '../components/agent/AgentPastPaperWorkspace';
 import {
   AgentJourneyResourcesView,
@@ -68,6 +69,7 @@ import {
 } from './special-practice/adaptive/AdaptivePracticeViews';
 import { MockExamTakingView } from './CscaMockExamPage';
 import type { AdaptiveRoundReport, User } from '../lib/api';
+import { getMyStudentProfile } from '../lib/api-me';
 import { routes } from '../lib/routes';
 import {
   parseAgentWorkspaceRoute,
@@ -149,6 +151,55 @@ function taskLabel(value: unknown, t: (key: string, fallback?: string) => string
     free_practice: t('agent.task.freePractice', '自由练习')
   };
   return labels[String(value)] ?? t('agent.task.learning', '学习任务');
+}
+
+function formatAgentUserError(error: unknown, locale: string, fallback: string) {
+  const copy = locale === 'zh-CN'
+    ? {
+        network: '暂时无法连接学习服务，请检查网络后重试。',
+        session: '登录状态已失效，请重新登录后继续。',
+        verify: '请先完成邮箱验证，再继续学习。',
+        forbidden: '当前账号暂时不能执行这项操作。',
+        unavailable: '这项学习内容暂时不可用，请返回后重新选择。',
+        conflict: '学习状态已经更新，请刷新后重试。',
+        limited: '操作过于频繁，请稍后再试。',
+        supply: '当前科目暂时没有可用题目，你的选择已保留。'
+      }
+    : locale === 'vi'
+      ? {
+          network: 'Tạm thời không thể kết nối dịch vụ học tập. Hãy kiểm tra mạng rồi thử lại.',
+          session: 'Phiên đăng nhập đã hết hạn. Hãy đăng nhập lại để tiếp tục.',
+          verify: 'Hãy xác minh email trước khi tiếp tục học.',
+          forbidden: 'Tài khoản hiện tại chưa thể thực hiện thao tác này.',
+          unavailable: 'Nội dung học này tạm thời không khả dụng. Hãy quay lại và chọn lại.',
+          conflict: 'Trạng thái học đã được cập nhật. Hãy tải lại rồi thử lại.',
+          limited: 'Bạn thao tác quá nhanh. Hãy thử lại sau.',
+          supply: 'Hiện chưa có câu hỏi phù hợp cho môn này. Lựa chọn của bạn đã được giữ lại.'
+        }
+      : {
+          network: 'The learning service cannot be reached right now. Check your connection and try again.',
+          session: 'Your session has expired. Sign in again to continue.',
+          verify: 'Verify your email before continuing.',
+          forbidden: 'This account cannot perform that action right now.',
+          unavailable: 'This learning content is temporarily unavailable. Go back and choose again.',
+          conflict: 'Your learning state has changed. Refresh and try again.',
+          limited: 'Too many attempts. Please try again shortly.',
+          supply: 'No questions are currently available for this subject. Your selection has been saved.'
+        };
+  if (isAgentConnectionError(error)) return copy.network;
+  if (!(error instanceof ApiError)) return fallback;
+  const code = String(error.code ?? '').toUpperCase();
+  if (code === 'EMAIL_UNVERIFIED') return copy.verify;
+  if (code === 'ADAPTIVE_PRACTICE_POOL_EXHAUSTED') return copy.supply;
+  if (error.status === 401) return copy.session;
+  if (error.status === 403) return copy.forbidden;
+  if (error.status === 404) return copy.unavailable;
+  if (error.status === 409) return copy.conflict;
+  if (error.status === 429) return copy.limited;
+  // The caller knows which operation failed, so a safe operation-specific
+  // message is more useful than a generic server failure for 5xx responses.
+  if (error.status >= 500) return fallback;
+  return fallback;
 }
 
 function practiceQaStorageKeys(questionKey: string) {
@@ -387,6 +438,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
   const [journeyOverview, setJourneyOverview] = useState<AgentJourneyOverview | null>(null);
   const [isJourneyOverviewLoading, setIsJourneyOverviewLoading] = useState(false);
   const [journeyOverviewError, setJourneyOverviewError] = useState('');
+  const [preferredQuestionLanguage, setPreferredQuestionLanguage] = useState<'zh' | 'en' | null>(null);
   const [journeyOverviewRevision, setJourneyOverviewRevision] = useState(0);
   const [practiceQuestionContext, setPracticeQuestionContext] = useState<AgentPracticeQuestionContext | null>(null);
   const [practiceAssistanceEvents, setPracticeAssistanceEvents] = useState<AgentPracticeAssistanceEvent[]>([]);
@@ -410,6 +462,24 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
   const autoOpenedWrongQuestionRef = useRef<string | null>(null);
   practiceQaQuestionKeyRef.current = practiceQaQuestionKey;
   const enabled = isAgentWebEnabled();
+  const questionLanguage = preferredQuestionLanguage ?? (locale === 'en' ? 'en' : 'zh');
+
+  useEffect(() => {
+    let current = true;
+    if (!currentUser) {
+      setPreferredQuestionLanguage(null);
+      return () => { current = false; };
+    }
+    void getMyStudentProfile()
+      .then((profile) => {
+        if (!current) return;
+        if (profile.preferredQuestionLanguageCode === 'en') setPreferredQuestionLanguage('en');
+        else if (profile.preferredQuestionLanguageCode === 'zh-CN') setPreferredQuestionLanguage('zh');
+        else setPreferredQuestionLanguage(null);
+      })
+      .catch(() => { if (current) setPreferredQuestionLanguage(null); });
+    return () => { current = false; };
+  }, [currentUser?.id]);
 
   useEffect(() => {
     const saved = readMigratedLocalStorage(AGENT_JOURNEY_SECTION_STORAGE_KEY, LEGACY_AGENT_JOURNEY_SECTION_STORAGE_KEY);
@@ -531,12 +601,12 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
       if (practiceQaQuestionKeyRef.current === questionKey) setPracticeQaError(t('agent.subjectQa.slow', '回答仍在生成，你可以稍后继续查看。'));
       setStreamingAnswer((current) => current?.runId === runId ? null : current);
     } catch (nextError) {
-      if (practiceQaQuestionKeyRef.current === questionKey) setPracticeQaError(nextError instanceof Error ? nextError.message : t('agent.subjectQa.failed', '本题问答暂时没有完成，请重试。'));
+      if (practiceQaQuestionKeyRef.current === questionKey) setPracticeQaError(formatAgentUserError(nextError, locale, t('agent.subjectQa.failed', '本题问答暂时没有完成，请重试。')));
       setStreamingAnswer((current) => current?.runId === runId ? null : current);
     } finally {
       if (practiceQaQuestionKeyRef.current === questionKey) setPracticeQaSending(false);
     }
-  }, [t]);
+  }, [locale, t]);
 
   const sendPracticeQaMessage = useCallback(async () => {
     const text = practiceQaDraft.trim();
@@ -602,7 +672,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     } catch (nextError) {
       if (practiceQaQuestionKeyRef.current === questionKey) {
         setPracticeQaSending(false);
-        setPracticeQaError(nextError instanceof Error ? nextError.message : t('agent.subjectQa.failed', '本题问答暂时没有完成，请重试。'));
+        setPracticeQaError(formatAgentUserError(nextError, locale, t('agent.subjectQa.failed', '本题问答暂时没有完成，请重试。')));
       }
     }
   }, [currentUser, followPracticeQaRun, learningWorkspace?.artifactId, locale, practiceQaConversation?.id, practiceQaDraft, practiceQaSending, practiceQuestionContext, t]);
@@ -1053,6 +1123,13 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     let current = true;
     setIsLoading(true);
     clearErrorNotice();
+    // Canonicalize a restored workspace before any asynchronous loading starts.
+    // Doing this after the request could resurrect stale route parameters when
+    // the workspace child had already reported that the round no longer exists.
+    if (journeySection !== 'qa') {
+      const initialWorkspaceRoute = parseAgentWorkspaceRoute(window.location.search);
+      if (initialWorkspaceRoute) replaceAgentWorkspaceRoute(initialWorkspaceRoute);
+    }
     void (async () => {
       let retryAttempt = 0;
       while (current) {
@@ -1083,12 +1160,8 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
             setActiveConversationId(null);
             if (params.has('conversation') || params.has('agentConversationId')) {
               const workspaceRoute = parseAgentWorkspaceRoute(window.location.search);
-              if (workspaceRoute) {
-                replaceAgentWorkspaceRoute(workspaceRoute);
-              } else {
-              params.delete('conversation');
-              params.delete('agentConversationId');
-              window.history.replaceState({}, '', `${window.location.pathname}${params.size ? `?${params.toString()}` : ''}`);
+              if (!workspaceRoute) {
+                replaceAgentJourneySectionRoute(journeySection);
               }
             }
           }
@@ -1098,7 +1171,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
         } catch (loadError) {
           if (!current) return;
           if (!isAgentConnectionError(loadError)) {
-            showError(loadError instanceof Error ? loadError.message : t('agent.error.load', '无法加载学习对话。'));
+            showError(formatAgentUserError(loadError, locale, t('agent.error.load', '无法加载学习对话。')));
             setIsLoading(false);
             return;
           }
@@ -1120,7 +1193,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     setJourneyOverviewError('');
     void getAgentJourneyOverview(locale === 'en' ? 'en' : 'zh-CN')
       .then((result) => { if (current) setJourneyOverview(result); })
-      .catch((loadError) => { if (current) setJourneyOverviewError(loadError instanceof Error ? loadError.message : t('agent.journey.dataUnavailable', '暂时无法读取')); })
+      .catch((loadError) => { if (current) setJourneyOverviewError(formatAgentUserError(loadError, locale, t('agent.journey.dataUnavailable', '暂时无法读取'))); })
       .finally(() => { if (current) setIsJourneyOverviewLoading(false); });
     return () => { current = false; };
   }, [currentUser?.id, isResolvingAuth, journeyOverviewRevision, journeySection, locale, t]);
@@ -1186,7 +1259,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
           void loadJourneyState().catch(() => undefined);
           return;
         }
-        setLearningEntryError(loadError instanceof Error ? loadError.message : t('agent.learningEntry.resumeFailed', '暂时无法恢复上次学习，请重试。'));
+        setLearningEntryError(formatAgentUserError(loadError, locale, t('agent.learningEntry.resumeFailed', '暂时无法恢复上次学习，请重试。')));
       });
     return () => { current = false; };
   }, [currentUser?.id, isResolvingAuth, loadJourneyState, syncTeachingWorkspaceUrl, teachingDeliveryId, t]);
@@ -1246,7 +1319,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     try {
       await loadConversation(id);
     } catch (loadError) {
-      showError(loadError instanceof Error ? loadError.message : t('agent.error.load', '无法加载学习对话。'));
+      showError(formatAgentUserError(loadError, locale, t('agent.error.load', '无法加载学习对话。')));
     } finally {
       setIsLoading(false);
     }
@@ -1349,7 +1422,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
       const launch = await startAgentFreePractice({
         clientRequestId: clientRequestId(),
         subject: next.subject, questionCount: next.questionCount,
-        questionLanguage: locale === 'en' ? 'en' : 'zh',
+        questionLanguage,
         ...(next.focusTopicId ? { focusTopicId: next.focusTopicId } : {}),
         ...(next.reviewItemId ? { reviewItemId: next.reviewItemId } : {}),
         ...(next.patternType ? { patternType: next.patternType } : {})
@@ -1358,9 +1431,11 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
       openLearningWorkspace(launch);
       return true;
     } catch (nextError) {
-      const failureMessage = nextError instanceof Error && nextError.message
-        ? nextError.message
-        : t('agent.freePractice.startRecoverable', '自由练习还没有开始；科目和题量已保留。');
+      const failureMessage = formatAgentUserError(
+        nextError,
+        locale,
+        t('agent.freePractice.startRecoverable', '自由练习还没有开始；科目和题量已保留。')
+      );
       showError(
         failureMessage,
         { kind: 'free-start', label: t('agent.freePractice.retryStart', '重试开始'), ...(selection ? { practiceSelection: selection } : {}) }
@@ -1380,7 +1455,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
       await settleAgentPractice(learningWorkspace.roundId);
       const launch = await continueAgentFreePractice(learningWorkspace.artifactId, {
         clientRequestId: clientRequestId(), subject: next.subject, questionCount: next.questionCount,
-        questionLanguage: locale === 'en' ? 'en' : 'zh'
+        questionLanguage
       });
       setIsAdjustingFreePractice(false);
       await loadJourneyState();
@@ -1504,12 +1579,12 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     try {
       const launch = await startAgentPrescription(prescriptionId, {
         clientRequestId: clientRequestId(),
-        questionLanguage: locale === 'en' ? 'en' : 'zh'
+        questionLanguage
       });
       openTaskWorkspace(launch);
       await loadJourneyState().catch(() => undefined);
     } catch (nextError) {
-      const message = nextError instanceof Error ? nextError.message : t('agent.learningEntry.startFailed', '暂时无法开始学习，请重试。');
+      const message = formatAgentUserError(nextError, locale, t('agent.learningEntry.startFailed', '暂时无法开始学习，请重试。'));
       setLearningEntryError(message);
       showError(message);
     } finally {
@@ -1737,7 +1812,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
             setLearningEntryError(t('agent.learningEntry.staleTeaching', '上次讲解内容已失效，已返回当前可开始的学习任务。'));
             await loadJourneyState().catch(() => undefined);
           } else {
-            setLearningEntryError(resumeError instanceof Error ? resumeError.message : t('agent.learningEntry.resumeFailed', '暂时无法恢复上次学习，请重试。'));
+            setLearningEntryError(formatAgentUserError(resumeError, locale, t('agent.learningEntry.resumeFailed', '暂时无法恢复上次学习，请重试。')));
           }
         } finally {
           setIsStartingLearning(false);
@@ -1765,12 +1840,12 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
       const start = task.type === 'mock_exam' ? startAgentMockExam : startAgentPractice;
       const launch = await start(startablePlanArtifact.id, {
         clientRequestId: clientRequestId(),
-        questionLanguage: locale === 'zh-CN' ? 'zh' : 'en'
+        questionLanguage
       });
       openTaskWorkspace(launch);
       await loadJourneyState().catch(() => undefined);
     } catch (nextError) {
-      setLearningEntryError(nextError instanceof Error ? nextError.message : t('agent.learningEntry.startFailed', '暂时无法开始学习，请重试。'));
+      setLearningEntryError(formatAgentUserError(nextError, locale, t('agent.learningEntry.startFailed', '暂时无法开始学习，请重试。')));
     } finally {
       setIsStartingLearning(false);
     }
@@ -1846,6 +1921,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
             <span><Icon name="lucide:bot" /></span>
             <div><strong>{t('agent.brand.title', '学习 Agent')}</strong><small>{t('agent.brand.subtitle', '目标驱动的 CSCA 训练')}</small></div>
           </div>
+          <LanguageSelector compact className="agent-mobile-language" />
           <nav className="agent-journey-nav" aria-label={t('agent.journey.navAria', '学习旅程')}>
             <button type="button" className={journeySection === 'today' ? 'active' : ''} aria-label={t('agent.journey.today', '做题')} aria-current={journeySection === 'today' ? 'page' : undefined} onClick={() => chooseJourneySection('today')}>
               <Icon name="lucide:target" /><span><strong>{t('agent.journey.today', '做题')}</strong><small>{t('agent.journey.todayHint', '系统推荐或自由练习')}</small></span>
@@ -1863,8 +1939,12 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
               <Icon name="lucide:settings" /><span><strong>{t('agent.journey.settings', '学习设置')}</strong><small>{t('agent.journey.settingsHint', '目标与学习偏好')}</small></span>
             </button>
           </nav>
+          <button type="button" className="agent-mobile-account" aria-label={t('agent.account.settings', '个人设置')} onClick={() => onNavigate(`${routes.me}?section=settings`)}>
+            <UserAvatar user={currentUser} size="sm" />
+          </button>
           <div className="agent-rail-footer">
             <div className="agent-rail-trust"><Icon name="lucide:shield-check" /><span>{t('agent.history.trust', '只读取你的学习数据；不会直接修改掌握度或自动出题。')}</span></div>
+            <LanguageSelector className="agent-language-selector" />
             <button type="button" className="agent-account-card" aria-label={t('agent.account.settings', '个人设置')} onClick={() => onNavigate(`${routes.me}?section=settings`)}>
               <UserAvatar user={currentUser} size="sm" />
               <span>
@@ -2179,6 +2259,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
                   <InterventionVerificationCard
                     key={interventionVerification.id}
                     item={interventionVerification}
+                    questionLanguage={questionLanguage}
                     onOpen={(item, path) => openVerificationWorkspace(item, path, activeEvidenceContextId)}
                   />
                 )}

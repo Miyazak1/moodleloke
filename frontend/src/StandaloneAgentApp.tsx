@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { ErrorBanner } from './components/ErrorBanner';
+import { LanguageSelector } from './components/LanguageSelector';
 import type { User } from './lib/api';
 import { buildAuthRedirectUrl, buildOnboardingUrl } from './lib/app-navigation';
 import { createAgentHostBridge } from './lib/agent-host-bridge';
@@ -109,6 +110,7 @@ export default function StandaloneAgentApp() {
   });
   return (
     <div className={isAgent ? 'site-shell site-shell-agent' : 'site-shell'}>
+      {(!isAgent || !currentUser) ? <div className="standalone-language-bar"><LanguageSelector compact /></div> : null}
       <main className={isAgent ? 'site-main site-main-agent' : 'site-main'}>
         <ErrorBanner message={error} />
         <Suspense fallback={<div className="page-loading" role="status" aria-live="polite">正在加载学习空间…</div>}>

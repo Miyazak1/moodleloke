@@ -1,75 +1,63 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const pagePath = path.resolve(__dirname, '..', 'src', 'pages', 'CscaSubjectPage.tsx');
-const source = fs.readFileSync(pagePath, 'utf8');
-const formulaContentPath = path.resolve(__dirname, '..', 'src', 'content', 'localized', 'csca-formulas.ts');
-const formulaContentSource = fs.readFileSync(formulaContentPath, 'utf8');
+const contentPath = path.resolve(__dirname, '..', 'src', 'content', 'localized', 'csca-subjects.ts');
+if (!fs.existsSync(contentPath)) {
+  console.error(`i18n content parity check failed: missing ${path.relative(process.cwd(), contentPath)}`);
+  process.exit(1);
+}
 
-function readConstArray(name, text = source) {
-  const marker = `const ${name}`;
-  const start = text.indexOf(marker);
-  if (start < 0) throw new Error(`Missing ${name}`);
-  const valueStart = text.indexOf('=', start);
-  if (valueStart < 0) throw new Error(`Missing value for ${name}`);
-  const arrayStart = text.indexOf('[', valueStart);
-  if (arrayStart < 0) throw new Error(`Missing array for ${name}`);
+const source = fs.readFileSync(contentPath, 'utf8');
 
+function readBalancedObject(startMarker, text = source) {
+  const markerIndex = text.indexOf(startMarker);
+  if (markerIndex < 0) throw new Error(`Missing ${startMarker}`);
+  const objectStart = text.indexOf('{', markerIndex + startMarker.length);
+  if (objectStart < 0) throw new Error(`Missing object for ${startMarker}`);
   let depth = 0;
-  for (let index = arrayStart; index < text.length; index += 1) {
+  let quote = '';
+  let escaped = false;
+  for (let index = objectStart; index < text.length; index += 1) {
     const char = text[index];
-    if (char === '[') depth += 1;
-    if (char === ']') depth -= 1;
-    if (depth === 0) return text.slice(arrayStart, index + 1);
+    if (quote) {
+      if (escaped) escaped = false;
+      else if (char === '\\') escaped = true;
+      else if (char === quote) quote = '';
+      continue;
+    }
+    if (char === '"' || char === "'" || char === '`') { quote = char; continue; }
+    if (char === '{') depth += 1;
+    if (char === '}') depth -= 1;
+    if (depth === 0) return text.slice(objectStart, index + 1);
   }
-  throw new Error(`Unclosed array for ${name}`);
+  throw new Error(`Unclosed object for ${startMarker}`);
 }
 
-function readPhysicsFormulaCopySections() {
-  const copyStart = formulaContentSource.indexOf('export const CSCA_FORMULA_COPY');
-  if (copyStart < 0) throw new Error('Missing CSCA_FORMULA_COPY');
-  const physicsStart = formulaContentSource.indexOf('physics:', copyStart);
-  if (physicsStart < 0) throw new Error('Missing CSCA_FORMULA_COPY.en.physics');
-  const sectionsStart = formulaContentSource.indexOf('sections:', physicsStart);
-  if (sectionsStart < 0) throw new Error('Missing CSCA_FORMULA_COPY.en.physics.sections');
-  const arrayStart = formulaContentSource.indexOf('[', sectionsStart);
-  if (arrayStart < 0) throw new Error('Missing array for CSCA_FORMULA_COPY.en.physics.sections');
-
-  let depth = 0;
-  for (let index = arrayStart; index < formulaContentSource.length; index += 1) {
-    const char = formulaContentSource[index];
-    if (char === '[') depth += 1;
-    if (char === ']') depth -= 1;
-    if (depth === 0) return formulaContentSource.slice(arrayStart, index + 1);
-  }
-
-  throw new Error('Unclosed array for CSCA_FORMULA_COPY.en.physics.sections');
+function countItems(block, field) {
+  const match = block.match(new RegExp(`${field}:\\s*\\[([\\s\\S]*?)\\]`, 'm'));
+  if (!match) return -1;
+  return (match[1].match(/\{\s*(?:label:\s*['"][^'"]+['"],\s*)?title:/g) ?? []).length;
 }
-
-function countTopLevelSections(text) {
-  return (text.match(/\btitle:\s*['"]/g) ?? []).length;
-}
-
-function countItems(text) {
-  return (text.match(/\bname:\s*['"]/g) ?? []).length;
-}
-
-const parityPairs = [
-  ['PHYSICS_FORMULA_SECTIONS', 'CSCA_FORMULA_COPY.en.physics.sections', readPhysicsFormulaCopySections]
-];
 
 const failures = [];
-for (const [baseName, localizedName, readLocalized] of parityPairs) {
-  const base = readConstArray(baseName);
-  const localized = readLocalized();
-  const baseSections = countTopLevelSections(base);
-  const localizedSections = countTopLevelSections(localized);
-  const baseItems = countItems(base);
-  const localizedItems = countItems(localized);
+const copy = readBalancedObject('export const CSCA_SUBJECT_COPY');
+const english = readBalancedObject('en:', copy);
+const vietnamese = readBalancedObject('vi:', copy);
 
-  if (baseSections !== localizedSections || baseItems !== localizedItems) {
-    failures.push(`${localizedName} does not match ${baseName}: sections ${localizedSections}/${baseSections}, items ${localizedItems}/${baseItems}`);
+for (const subject of ['math', 'physics', 'chemistry']) {
+  const enSubject = readBalancedObject(`${subject}:`, english);
+  const viSubject = readBalancedObject(`${subject}:`, vietnamese);
+  for (const field of ['modules', 'tips']) {
+    const enCount = countItems(enSubject, field);
+    const viCount = countItems(viSubject, field);
+    if (enCount < 1 || viCount < 1 || enCount !== viCount) {
+      failures.push(`${subject}.${field} differs between en and vi (${enCount}/${viCount})`);
+    }
   }
+}
+
+for (const requiredExport of ['CSCA_SUBJECT_LABELS', 'CSCA_PRACTICE_MODULE_LABELS', 'CSCA_PRACTICE_TOPIC_LABELS']) {
+  if (!source.includes(`export const ${requiredExport}`)) failures.push(`Missing ${requiredExport}`);
 }
 
 if (failures.length) {
@@ -78,4 +66,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log('i18n content parity check passed.');
+console.log('i18n content parity check passed for current standalone subject content.');

@@ -5,6 +5,7 @@ import { AdminStatsStrip, AdminWorkflowSteps } from '../components/admin/AdminWo
 import { MathContent } from '../components/MathContent';
 import { AdminFormField, GhostButton, InlineActions, StatusPill } from '../components/UiPrimitives';
 import { useI18n } from '../i18n/useI18n';
+import { adminText, selectAdminCopy, usesLatinAdminCopy } from '../lib/admin-locale';
 import {
   archiveAdminSpecialPracticeQuestion,
   archiveAdminSpecialPracticeTopic,
@@ -353,7 +354,7 @@ function optionsWithCurrent(options: readonly string[], current: string | null |
 }
 
 function createSampleImport(locale: string) {
-  const isEnglish = locale === 'en';
+  const isEnglish = usesLatinAdminCopy(locale);
   return {
     topics: [
       {
@@ -420,7 +421,7 @@ function emptyQuestion(orderNumber: number, difficulty = '基础'): QuestionDraf
 function compactError(error: unknown, fallback: string, locale: string) {
   if (error instanceof Error) {
     const message = error.message;
-    if (locale === 'en' && /[\u3400-\u9fff]/.test(message)) return fallback;
+    if (usesLatinAdminCopy(locale) && /[\u3400-\u9fff]/.test(message)) return fallback;
     return message;
   }
   return fallback;
@@ -436,9 +437,11 @@ function trimActionMessage(message: string) {
 }
 
 function appendRefreshWarning(current: string, action: string, target: string, detail: string, locale: string) {
-  const warning = locale === 'en'
-    ? `${action} succeeded, but ${target} could not refresh: ${detail}`
-    : `${action}已完成，但${target}暂时无法刷新：${detail}`;
+  const warning = adminText(locale, {
+    zh: `${action}已完成，但${target}暂时无法刷新：${detail}`,
+    en: `${action} succeeded, but ${target} could not refresh: ${detail}`,
+    vi: `${action} đã hoàn tất nhưng không thể làm mới ${target}: ${detail}`
+  });
   return current ? `${current}；${warning}` : warning;
 }
 
@@ -525,7 +528,29 @@ export function AdminSpecialPracticePage({
   onGoToAuth
 }: AdminSpecialPracticePageProps) {
   const { locale } = useI18n();
-  const copy = locale === 'en' ? ADMIN_SPECIAL_COPY.en : ADMIN_SPECIAL_COPY.zh;
+  const copy = selectAdminCopy(locale, ADMIN_SPECIAL_COPY);
+  const interactionCopy = {
+    topicList: adminText(locale, { zh: '专项目录', en: 'the special practice list', vi: 'danh sách luyện tập chuyên đề' }),
+    topicDetail: adminText(locale, { zh: '专项详情', en: 'the special practice detail', vi: 'chi tiết chuyên đề' }),
+    loadingDetails: adminText(locale, { zh: '正在读取详情', en: 'Loading details', vi: 'Đang tải chi tiết' }),
+    loadingDetailsBody: adminText(locale, { zh: '正在读取当前专项练习，完成后会更新右侧编辑区。', en: 'The selected special practice topic is loading.', vi: 'Đang tải chuyên đề đã chọn; khu vực chỉnh sửa sẽ sớm được cập nhật.' }),
+    workflowLabel: adminText(locale, { zh: '专项练习发布流程', en: 'Special practice publishing workflow', vi: 'Quy trình xuất bản luyện tập chuyên đề' }),
+    selectTopic: adminText(locale, { zh: '选择专项', en: 'Select topic', vi: 'Chọn chuyên đề' }),
+    selectTopicDetail: adminText(locale, { zh: '已有专项或新草稿', en: 'Existing or new draft', vi: 'Chuyên đề hiện có hoặc bản nháp mới' }),
+    editContent: adminText(locale, { zh: '编辑内容', en: 'Edit content', vi: 'Chỉnh sửa nội dung' }),
+    editContentDetail: adminText(locale, { zh: '专项信息与题目', en: 'Topic and questions', vi: 'Thông tin chuyên đề và câu hỏi' }),
+    readiness: adminText(locale, { zh: '学生可用性检查', en: 'Student readiness', vi: 'Kiểm tra khả dụng cho học sinh' }),
+    readinessDetail: adminText(locale, { zh: '题量与质量门槛', en: 'Inventory and quality', vi: 'Số lượng và chất lượng câu hỏi' }),
+    publish: adminText(locale, { zh: '发布上线', en: 'Publish', vi: 'Xuất bản' }),
+    publishDetail: adminText(locale, { zh: '进入学生练习池', en: 'Available to students', vi: 'Đưa vào kho luyện tập của học sinh' }),
+    publishTitle: adminText(locale, { zh: '确认发布这个专项练习？', en: 'Publish this special practice topic?', vi: 'Xuất bản chuyên đề luyện tập này?' }),
+    archiveTopicTitle: adminText(locale, { zh: '确认归档这个专项练习？', en: 'Archive this special practice topic?', vi: 'Lưu trữ chuyên đề luyện tập này?' }),
+    archiveQuestionTitle: adminText(locale, { zh: '确认下架这道题？', en: 'Archive this question?', vi: 'Lưu trữ câu hỏi này?' }),
+    publishDescription: adminText(locale, { zh: '必须先通过学生可用性检查；发布后该专项将进入学生练习池。', en: 'Student-readiness checks must pass. After publishing, the topic enters the student practice pool.', vi: 'Chuyên đề phải vượt qua kiểm tra khả dụng. Sau khi xuất bản, chuyên đề sẽ vào kho luyện tập của học sinh.' }),
+    archiveDescription: adminText(locale, { zh: '该操作会将内容移出学生练习流程，已有练习记录仍会保留。', en: 'This action removes the content from the student practice flow. Existing session records are preserved.', vi: 'Thao tác này gỡ nội dung khỏi luồng luyện tập nhưng vẫn giữ các phiên hiện có.' }),
+    confirmPublish: adminText(locale, { zh: '确认发布', en: 'Publish', vi: 'Xuất bản' }),
+    confirmArchive: adminText(locale, { zh: '确认归档', en: 'Archive', vi: 'Lưu trữ' })
+  };
   const [items, setItems] = useState<AdminSpecialPracticeTopic[]>([]);
   const [detail, setDetail] = useState<AdminSpecialPracticeTopicDetail | null>(null);
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -544,7 +569,7 @@ export function AdminSpecialPracticePage({
   const isActionBusy = (action: SpecialPracticeBusyAction) => busyAction === action;
   const busyLabel = (action: SpecialPracticeBusyAction, label: string) => {
     if (!isActionBusy(action)) return label;
-    return locale === 'en' ? `${label}...` : `${label}中`;
+    return adminText(locale, { zh: `${label}中`, en: `${label}...`, vi: `${label}...` });
   };
   const busyClass = (action: SpecialPracticeBusyAction) => isActionBusy(action) ? 'admin-action-loading' : undefined;
 
@@ -648,7 +673,7 @@ export function AdminSpecialPracticePage({
       setIsCreatingTopic(false);
       await loadTopics(created.id, {
         afterWriteAction: trimActionMessage(copy.createdTopic),
-        refreshTarget: locale === 'en' ? 'the special practice list' : '专项目录'
+        refreshTarget: interactionCopy.topicList
       });
     } catch (nextError) {
       setError(compactError(nextError, copy.fallbackError, locale));
@@ -675,11 +700,11 @@ export function AdminSpecialPracticePage({
       const action = trimActionMessage(copy.savedTopic);
       await loadTopics(topicId, {
         afterWriteAction: action,
-        refreshTarget: locale === 'en' ? 'the special practice list' : '专项目录'
+        refreshTarget: interactionCopy.topicList
       });
       await loadDetail(topicId, {
         afterWriteAction: action,
-        refreshTarget: locale === 'en' ? 'the special practice detail' : '专项详情'
+        refreshTarget: interactionCopy.topicDetail
       });
     } catch (nextError) {
       setError(compactError(nextError, copy.fallbackError, locale));
@@ -706,11 +731,11 @@ export function AdminSpecialPracticePage({
       const action = trimActionMessage(copy.publishedTopic);
       await loadTopics(topicId, {
         afterWriteAction: action,
-        refreshTarget: locale === 'en' ? 'the special practice list' : '专项目录'
+        refreshTarget: interactionCopy.topicList
       });
       await loadDetail(topicId, {
         afterWriteAction: action,
-        refreshTarget: locale === 'en' ? 'the special practice detail' : '专项详情'
+        refreshTarget: interactionCopy.topicDetail
       });
     } catch (nextError) {
       setError(compactError(nextError, copy.fallbackError, locale));
@@ -729,11 +754,11 @@ export function AdminSpecialPracticePage({
       const action = trimActionMessage(copy.archivedTopic);
       await loadTopics(detail.topic.id, {
         afterWriteAction: action,
-        refreshTarget: locale === 'en' ? 'the special practice list' : '专项目录'
+        refreshTarget: interactionCopy.topicList
       });
       await loadDetail(detail.topic.id, {
         afterWriteAction: action,
-        refreshTarget: locale === 'en' ? 'the special practice detail' : '专项详情'
+        refreshTarget: interactionCopy.topicDetail
       });
     } catch (nextError) {
       setError(compactError(nextError, copy.fallbackError, locale));
@@ -751,7 +776,7 @@ export function AdminSpecialPracticePage({
       setFeedback(copy.duplicatedTopic);
       await loadTopics(copied.id, {
         afterWriteAction: trimActionMessage(copy.duplicatedTopic),
-        refreshTarget: locale === 'en' ? 'the special practice list' : '专项目录'
+        refreshTarget: interactionCopy.topicList
       });
     } catch (nextError) {
       setError(compactError(nextError, copy.fallbackError, locale));
@@ -775,11 +800,11 @@ export function AdminSpecialPracticePage({
       const action = trimActionMessage(questionDraft.id ? copy.savedQuestion : copy.createdQuestion);
       await loadDetail(detail.topic.id, {
         afterWriteAction: action,
-        refreshTarget: locale === 'en' ? 'the special practice detail' : '专项详情'
+        refreshTarget: interactionCopy.topicDetail
       });
       await loadTopics(detail.topic.id, {
         afterWriteAction: action,
-        refreshTarget: locale === 'en' ? 'the special practice list' : '专项目录'
+        refreshTarget: interactionCopy.topicList
       });
     } catch (nextError) {
       setError(compactError(nextError, copy.fallbackError, locale));
@@ -798,11 +823,11 @@ export function AdminSpecialPracticePage({
       const action = trimActionMessage(copy.archivedQuestion);
       await loadDetail(detail.topic.id, {
         afterWriteAction: action,
-        refreshTarget: locale === 'en' ? 'the special practice detail' : '专项详情'
+        refreshTarget: interactionCopy.topicDetail
       });
       await loadTopics(detail.topic.id, {
         afterWriteAction: action,
-        refreshTarget: locale === 'en' ? 'the special practice list' : '专项目录'
+        refreshTarget: interactionCopy.topicList
       });
     } catch (nextError) {
       setError(compactError(nextError, copy.fallbackError, locale));
@@ -862,7 +887,7 @@ export function AdminSpecialPracticePage({
       setError(appendRefreshWarning(
         '',
         trimActionMessage(importFeedback || copy.importDone),
-        locale === 'en' ? 'the special practice list' : '专项目录',
+        interactionCopy.topicList,
         compactError(nextError, copy.fallbackError, locale),
         locale
       ));
@@ -888,7 +913,7 @@ export function AdminSpecialPracticePage({
     >
       {currentUser?.role === 'admin' && feedback && <section className="admin-feedback success"><strong>{copy.successTitle}</strong><p>{feedback}</p></section>}
       {currentUser?.role === 'admin' && error && <section className="admin-feedback warning"><strong>{copy.warningTitle}</strong><p>{error}</p></section>}
-      {currentUser?.role === 'admin' && isLoadingDetail && <section className="admin-feedback"><strong>{locale === 'en' ? 'Loading details' : '正在读取详情'}</strong><p>{locale === 'en' ? 'The selected special practice topic is loading.' : '正在读取当前专项练习，完成后会更新右侧编辑区。'}</p></section>}
+      {currentUser?.role === 'admin' && isLoadingDetail && <section className="admin-feedback"><strong>{interactionCopy.loadingDetails}</strong><p>{interactionCopy.loadingDetailsBody}</p></section>}
 
       {currentUser?.role === 'admin' && (
         <section className="mock-admin-workbench">
@@ -905,13 +930,13 @@ export function AdminSpecialPracticePage({
           />
 
           <AdminWorkflowSteps
-            ariaLabel={locale === 'en' ? 'Special practice publishing workflow' : '专项练习发布流程'}
+            ariaLabel={interactionCopy.workflowLabel}
             className="admin-workbench-flow"
             items={[
-              { key: 'select', label: locale === 'en' ? 'Select topic' : '选择专项', detail: locale === 'en' ? 'Existing or new draft' : '已有专项或新草稿', state: detail || isCreatingTopic ? 'complete' : 'active' },
-              { key: 'edit', label: locale === 'en' ? 'Edit content' : '编辑内容', detail: locale === 'en' ? 'Topic and questions' : '专项信息与题目', state: isCreatingTopic ? 'active' : detail ? 'complete' : 'upcoming' },
-              { key: 'check', label: locale === 'en' ? 'Student readiness' : '学生可用性检查', detail: detail?.issues.length ? (locale === 'en' ? `${detail.issues.length} issue(s)` : `${detail.issues.length} 项待处理`) : (locale === 'en' ? 'Inventory and quality' : '题量与质量门槛'), state: detail?.issues.length ? 'warning' : detail?.topic.status === 'published' ? 'complete' : detail ? 'active' : 'upcoming' },
-              { key: 'publish', label: locale === 'en' ? 'Publish' : '发布上线', detail: locale === 'en' ? 'Available to students' : '进入学生练习池', state: detail?.topic.status === 'published' ? 'complete' : 'upcoming' }
+              { key: 'select', label: interactionCopy.selectTopic, detail: interactionCopy.selectTopicDetail, state: detail || isCreatingTopic ? 'complete' : 'active' },
+              { key: 'edit', label: interactionCopy.editContent, detail: interactionCopy.editContentDetail, state: isCreatingTopic ? 'active' : detail ? 'complete' : 'upcoming' },
+              { key: 'check', label: interactionCopy.readiness, detail: detail?.issues.length ? adminText(locale, { zh: `${detail.issues.length} 项待处理`, en: `${detail.issues.length} issue(s)`, vi: `${detail.issues.length} vấn đề` }) : interactionCopy.readinessDetail, state: detail?.issues.length ? 'warning' : detail?.topic.status === 'published' ? 'complete' : detail ? 'active' : 'upcoming' },
+              { key: 'publish', label: interactionCopy.publish, detail: interactionCopy.publishDetail, state: detail?.topic.status === 'published' ? 'complete' : 'upcoming' }
             ]}
           />
 
@@ -1136,14 +1161,14 @@ export function AdminSpecialPracticePage({
       {pendingConfirmation && (
         <ConfirmDialog
           title={pendingConfirmation === 'publish-topic'
-            ? (locale === 'en' ? 'Publish this special practice topic?' : '确认发布这个专项练习？')
+            ? interactionCopy.publishTitle
             : pendingConfirmation === 'archive-topic'
-              ? (locale === 'en' ? 'Archive this special practice topic?' : '确认归档这个专项练习？')
-              : (locale === 'en' ? 'Archive this question?' : '确认下架这道题？')}
+              ? interactionCopy.archiveTopicTitle
+              : interactionCopy.archiveQuestionTitle}
           body={pendingConfirmation === 'publish-topic'
-            ? (locale === 'en' ? 'Student-readiness checks must pass. After publishing, the topic enters the student practice pool.' : '必须先通过学生可用性检查；发布后该专项将进入学生练习池。')
-            : (locale === 'en' ? 'This action removes the content from the student practice flow. Existing session records are preserved.' : '该操作会将内容移出学生练习流程，已有练习记录仍会保留。')}
-          confirmLabel={pendingConfirmation === 'publish-topic' ? (locale === 'en' ? 'Publish' : '确认发布') : (locale === 'en' ? 'Archive' : '确认归档')}
+            ? interactionCopy.publishDescription
+            : interactionCopy.archiveDescription}
+          confirmLabel={pendingConfirmation === 'publish-topic' ? interactionCopy.confirmPublish : interactionCopy.confirmArchive}
           tone={pendingConfirmation === 'publish-topic' ? 'neutral' : 'danger'}
           isBusy={isBusy}
           onCancel={() => setPendingConfirmation(null)}

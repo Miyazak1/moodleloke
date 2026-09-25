@@ -5,6 +5,7 @@ import { MathContent } from '../components/MathContent';
 import { MetricCard } from '../components/UiPrimitives';
 import { AdminAuditWorkspaceLinks } from '../components/admin/AdminAuditWorkspaceLinks';
 import { useI18n } from '../i18n/useI18n';
+import { adminText, selectAdminCopy, usesLatinAdminCopy } from '../lib/admin-locale';
 import {
   createAdminAdaptiveAIReviewDecision,
   getAdminAdaptiveAIObservability,
@@ -1188,10 +1189,10 @@ function formatAdminAuditError(nextError: unknown, fallback: string, locale: str
   if (nextError instanceof ApiError) {
     const code = nextError.code ? `/${nextError.code}` : '';
     const detail = `HTTP ${nextError.status}${code}: ${nextError.message}`;
-    return locale === 'en' ? `${fallback} (${detail})` : detail;
+    return usesLatinAdminCopy(locale) ? `${fallback} (${detail})` : detail;
   }
   const message = (nextError as Error).message || fallback;
-  return locale === 'en' ? fallback : message;
+  return usesLatinAdminCopy(locale) ? fallback : message;
 }
 
 function isAdminAuditForbiddenError(nextError: unknown) {
@@ -1203,7 +1204,7 @@ function isAdminAuditForbiddenError(nextError: unknown) {
 }
 
 function formatAdminAuditModuleFailure(label: string, reason: unknown, locale: string) {
-  return `${label}（${formatAdminAuditError(reason, locale === 'en' ? 'failed' : '失败', locale)}）`;
+  return `${label}（${formatAdminAuditError(reason, adminText(locale, { zh: '失败', en: 'failed', vi: 'thất bại' }), locale)}）`;
 }
 
 function auditPayload(value: unknown): Record<string, unknown> | undefined {
@@ -1817,8 +1818,8 @@ export function AdminAuditPage({
   currentUser?: User | null;
 }) {
   const { locale } = useI18n();
-  const copy = (locale === 'en' ? ADMIN_AUDIT_COPY.en : ADMIN_AUDIT_COPY.zh) as typeof ADMIN_AUDIT_COPY.zh;
-  const auditFilterCopy = locale === 'en'
+  const copy = selectAdminCopy(locale, ADMIN_AUDIT_COPY) as typeof ADMIN_AUDIT_COPY.zh;
+  const auditFilterCopy = usesLatinAdminCopy(locale)
     ? {
       organization: 'Organization',
       allOrganizations: 'All organizations',

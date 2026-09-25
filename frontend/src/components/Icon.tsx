@@ -5,6 +5,14 @@ type IconProps = {
 };
 
 const ICON_PATHS: Record<string, string[]> = {
+  'lucide:arrow-down': ['M12 5v14', 'm19 12-7 7-7-7'],
+  'lucide:calendar-range': ['M8 2v4', 'M16 2v4', 'M3 10h18', 'M5 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2', 'M7 15h4', 'M14 15h3', 'M7 18h2', 'M12 18h5'],
+  'lucide:circle-check-big': ['M21.8 10A10 10 0 1 1 17 3.3', 'm9 11 3 3L22 4'],
+  'lucide:history': ['M3 12a9 9 0 1 0 3-6.7', 'M3 3v6h6', 'M12 7v5l3 2'],
+  'lucide:radio': ['M16.2 7.8a6 6 0 0 1 0 8.4', 'M7.8 16.2a6 6 0 0 1 0-8.4', 'M19 5a10 10 0 0 1 0 14', 'M5 19A10 10 0 0 1 5 5', 'M12 12h.01'],
+  'lucide:search-x': ['M21 21l-4.3-4.3', 'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16', 'm8 8 6 6', 'm14 8-6 6'],
+  'lucide:toggle-left': ['M8 5h8a7 7 0 0 1 0 14H8A7 7 0 0 1 8 5', 'M8 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6'],
+  'lucide:triangle-alert': ['M10.3 2.9 1.8 17a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3l-8.5-15a2 2 0 0 0-3.5 0z', 'M12 9v4', 'M12 17h.01'],
   'lucide:book-open-check': ['M12 7v14', 'M3 5.5A2.5 2.5 0 0 1 5.5 3H12v18H5.5A2.5 2.5 0 0 0 3 18.5z', 'M21 5.5A2.5 2.5 0 0 0 18.5 3H12v18h6.5a2.5 2.5 0 0 1 2.5-2.5z', 'm16 13 1.6 1.6L21 11.2'],
   'lucide:chevron-down': ['m6 9 6 6 6-6'],
   'lucide:chevron-up': ['m18 15-6-6-6 6'],
