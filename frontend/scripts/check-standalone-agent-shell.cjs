@@ -9,6 +9,7 @@ const agentPage = fs.readFileSync(path.join(root, 'src', 'pages', 'AgentPage.tsx
 const accountPage = fs.readFileSync(path.join(root, 'src', 'pages', 'PublicMePage.tsx'), 'utf8');
 const authPage = fs.readFileSync(path.join(root, 'src', 'pages', 'PublicAuthPage.tsx'), 'utf8');
 const publicHomePage = fs.readFileSync(path.join(root, 'src', 'pages', 'PublicHomePage.tsx'), 'utf8');
+const siteHeaderControls = fs.readFileSync(path.join(root, 'src', 'components', 'SiteHeaderControls.tsx'), 'utf8');
 const homePage = fs.readFileSync(path.join(root, 'src', 'pages', 'HomePage.tsx'), 'utf8');
 const contentController = fs.readFileSync(path.join(root, '..', 'backend', 'src', 'content', 'content.controller.ts'), 'utf8');
 const adminAuditController = fs.readFileSync(path.join(root, '..', 'backend', 'src', 'admin-audit', 'admin-audit.controller.ts'), 'utf8');
@@ -49,6 +50,7 @@ const checks = [
   [shell.includes("route === 'home'"), 'the root route must render the inherited public home'],
   [shell.includes("route !== 'home'"), 'the public home must not receive a duplicate shell language selector'],
   [publicHomePage.includes('getPublicContent({ locale })'), 'the public home must load locale-aware CMS content'],
+  [publicHomePage.includes('SiteHeaderControls') && siteHeaderControls.includes('site-language-button') && siteHeaderControls.includes('site-account-menu'), 'the public shell must retain the inherited CSCALite language and signed-in account controls'],
   [homePage.includes('copy.hero.title') && homePage.includes('copy.practice.title'), 'the inherited home must render CMS-managed copy'],
   [!/(routes\.(cscaPrep|cscaExamTime|cscaMockExam|cscaSubjects)|href=["'`]\/csca-|href=["'`]\/schools|href=["'`]\/services\/consulting)/.test(homePage), 'the inherited home must not link to retired CSCALITE student or consulting routes'],
   [contentController.includes("@Get('api/v1/content/home')") && !contentController.includes("'public-content'"), 'public home content must use only the canonical API route'],

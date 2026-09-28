@@ -141,6 +141,26 @@ test('lets the user change and persist the interface language from the public sh
   await expect(page.getByLabel('Interface language')).toContainText('English');
 });
 
+test('inherits the CSCALite header controls for a signed-in user', async ({ page }) => {
+  await mockAgentWorkspace(page);
+  await page.goto('/');
+
+  await expect(page.locator('.site-language-button')).toBeVisible();
+  await expect(page.locator('.site-language-button > span')).toHaveText('CN');
+  await expect(page.locator('.site-login-button')).toHaveCount(0);
+  await expect(page.locator('.site-avatar-button .user-avatar')).toBeVisible();
+
+  await page.locator('.site-language-button').click();
+  await page.getByRole('menuitemradio', { name: /English/ }).click();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+
+  await page.locator('.site-avatar-button').click();
+  await expect(page.locator('.site-account-menu')).toBeVisible();
+  await expect(page.locator('.site-account-menu-head')).toContainText('student@example.com');
+  await expect(page.getByRole('menuitem', { name: 'My Account' })).toBeVisible();
+  await expect(page.getByRole('menuitem', { name: 'Log out' })).toBeVisible();
+});
+
 test('renders an evidence-based learning workspace without horizontal overflow', async ({ page }, testInfo) => {
   await mockAgentWorkspace(page);
   await page.goto('/agent');
@@ -733,16 +753,16 @@ test('inherits the CSCALite personal center, language control, avatar, and organ
 
   await page.goto('/me?section=settings');
   await expect(page.getByRole('heading', { name: '个人设置' })).toBeVisible();
-  await expect(page.locator('.account-site-header .language-selector')).toBeVisible();
+  await expect(page.locator('.account-site-header .site-language-selector')).toBeVisible();
   await expect(page.locator('.account-site-header .user-avatar')).toHaveAttribute('data-avatar-variant');
   await expect(page.getByText('机构与额度', { exact: true })).toBeVisible();
   await page.getByText('机构与额度', { exact: true }).click();
   await expect(page.getByRole('button', { name: '加入机构', exact: true })).toBeVisible();
   expect(creditRequestCount).toBeGreaterThan(0);
-  await page.getByRole('button', { name: '界面语言' }).click();
-  await page.getByRole('option', { name: /English/ }).click();
+  await page.getByRole('button', { name: '选择语言' }).click();
+  await page.getByRole('menuitemradio', { name: /English/ }).click();
   await expect(page.getByRole('heading', { name: 'Personal settings' })).toBeVisible();
-  await expect(page.locator('.account-site-header .language-selector')).toContainText('English');
+  await expect(page.locator('.account-site-header .site-language-selector')).toContainText('English');
 });
 
 test('recovers a failed past-paper workspace without leaving the Agent', async ({ page }, testInfo) => {

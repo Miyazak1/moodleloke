@@ -10,6 +10,7 @@ const required = [
   'src/pages/PublicHomePage.tsx',
   'src/pages/HomePage.tsx',
   'src/pages/PublicMePage.tsx',
+  'src/components/SiteHeaderControls.tsx',
   'src/components/account/AccountSectionNav.tsx',
   'src/components/account/AccountOverviewSection.tsx',
   'src/components/account/AccountSettingsWorkspace.tsx',

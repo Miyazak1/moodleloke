@@ -2,7 +2,7 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 import { ErrorBanner } from './components/ErrorBanner';
 import { Icon } from './components/Icon';
 import { LanguageSelector } from './components/LanguageSelector';
-import { UserAvatar } from './components/UserAvatar';
+import { SiteHeaderControls } from './components/SiteHeaderControls';
 import type { User } from './lib/api';
 import { buildAuthRedirectUrl, buildOnboardingUrl, safeAdminReturnPath, safeReturnPath } from './lib/app-navigation';
 import { createAgentHostBridge } from './lib/agent-host-bridge';
@@ -129,17 +129,13 @@ export default function StandaloneAgentApp() {
               <button type="button" className="site-link" onClick={() => navigate(routes.agent)}>{t('homeNav.practice', '做题训练')}</button>
               <button type="button" className="site-link" onClick={() => navigate(`${routes.agent}?agentSection=weakness`)}>{t('homeNav.review', '错题复盘')}</button>
             </nav>
-            <div className="site-account-group">
-              <LanguageSelector compact />
-              {currentUser ? (
-                <button type="button" className="site-avatar-button" aria-label={t('homeNav.account', '我的账号')} onClick={() => navigate(routes.me)}>
-                  <UserAvatar user={currentUser} size="sm" />
-                  <Icon name="lucide:chevron-down" />
-                </button>
-              ) : (
-                <button type="button" className="site-login-button" onClick={() => navigate(`${routes.auth}?redirect=${encodeURIComponent(routes.me)}`)}>{t('common.login', '登录')}</button>
-              )}
-            </div>
+            <SiteHeaderControls
+              currentUser={currentUser}
+              isResolvingAuth={isResolvingAuth}
+              currentPath={window.location.pathname}
+              onNavigate={navigate}
+              onCurrentUserChange={setCurrentUser}
+            />
           </div>
         </header>
       ) : null}
@@ -148,7 +144,12 @@ export default function StandaloneAgentApp() {
         <ErrorBanner message={error} />
         <Suspense fallback={<div className="page-loading" role="status" aria-live="polite">正在加载学习空间…</div>}>
           {route === 'home' && (
-            <PublicHomePage currentUser={currentUser} onNavigate={navigate} />
+            <PublicHomePage
+              currentUser={currentUser}
+              isResolvingAuth={isResolvingAuth}
+              onCurrentUserChange={setCurrentUser}
+              onNavigate={navigate}
+            />
           )}
           {route === 'agent' && (
             <AgentPage

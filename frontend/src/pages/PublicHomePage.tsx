@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Icon } from '../components/Icon';
-import { LanguageSelector } from '../components/LanguageSelector';
+import { SiteHeaderControls } from '../components/SiteHeaderControls';
 import { getHomeCopy, mergeHomeCopyFromBlocks, type HomeCopy } from '../content/public-site';
 import { DEFAULT_CSCA_EXAM_SCHEDULE, mergeCscaExamScheduleFromBlocks, type CscaExamSchedule } from '../content/csca-exam';
 import { useI18n } from '../i18n/useI18n';
@@ -11,10 +11,12 @@ import { HomePage } from './HomePage';
 
 type PublicHomePageProps = {
   currentUser: User | null;
+  isResolvingAuth: boolean;
+  onCurrentUserChange: (user: User | null) => void;
   onNavigate: (path: string) => void;
 };
 
-export function PublicHomePage({ currentUser, onNavigate }: PublicHomePageProps) {
+export function PublicHomePage({ currentUser, isResolvingAuth, onCurrentUserChange, onNavigate }: PublicHomePageProps) {
   const { locale, t } = useI18n();
   const [copy, setCopy] = useState<HomeCopy>(() => getHomeCopy(locale));
   const [examSchedule, setExamSchedule] = useState<CscaExamSchedule>(DEFAULT_CSCA_EXAM_SCHEDULE);
@@ -51,12 +53,13 @@ export function PublicHomePage({ currentUser, onNavigate }: PublicHomePageProps)
             <button type="button" className="site-link" onClick={() => onNavigate(`${routes.agent}?agentSection=weakness`)}>{t('homeNav.review', '错题复盘')}</button>
             <button type="button" className="site-link" onClick={() => onNavigate(`${routes.agent}?agentSection=resources`)}>{t('homeNav.resources', '真题资料')}</button>
           </nav>
-          <div className="site-account-group">
-            <LanguageSelector compact />
-            <button type="button" className="site-login-button" onClick={() => onNavigate(currentUser ? routes.me : `${routes.auth}?redirect=${encodeURIComponent(routes.agent)}`)}>
-              {currentUser ? t('homeNav.account', '我的账号') : t('common.login', '登录')}
-            </button>
-          </div>
+          <SiteHeaderControls
+            currentUser={currentUser}
+            isResolvingAuth={isResolvingAuth}
+            currentPath={window.location.pathname}
+            onNavigate={onNavigate}
+            onCurrentUserChange={onCurrentUserChange}
+          />
         </div>
       </header>
       <HomePage
