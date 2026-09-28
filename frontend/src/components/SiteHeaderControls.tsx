@@ -11,6 +11,7 @@ type SiteHeaderControlsProps = {
   isResolvingAuth: boolean;
   currentPath: string;
   onNavigate: (path: string) => void;
+  onAdminNavigate?: (path: string) => void;
   onCurrentUserChange: (user: User | null) => void;
 };
 
@@ -19,6 +20,7 @@ export function SiteHeaderControls({
   isResolvingAuth,
   currentPath,
   onNavigate,
+  onAdminNavigate,
   onCurrentUserChange
 }: SiteHeaderControlsProps) {
   const { locale, localeOption, locales, setLocale, t } = useI18n();
@@ -52,6 +54,10 @@ export function SiteHeaderControls({
   const goTo = (path: string) => {
     setAccountOpen(false);
     if (path.startsWith('/admin') || path.startsWith('/organization')) {
+      if (path.startsWith('/admin') && onAdminNavigate) {
+        onAdminNavigate(path);
+        return;
+      }
       window.location.assign(path);
       return;
     }

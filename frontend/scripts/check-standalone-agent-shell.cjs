@@ -10,6 +10,8 @@ const accountPage = fs.readFileSync(path.join(root, 'src', 'pages', 'PublicMePag
 const authPage = fs.readFileSync(path.join(root, 'src', 'pages', 'PublicAuthPage.tsx'), 'utf8');
 const publicHomePage = fs.readFileSync(path.join(root, 'src', 'pages', 'PublicHomePage.tsx'), 'utf8');
 const siteHeaderControls = fs.readFileSync(path.join(root, 'src', 'components', 'SiteHeaderControls.tsx'), 'utf8');
+const loadingState = fs.readFileSync(path.join(root, 'src', 'components', 'AppLoadingState.tsx'), 'utf8');
+const loadingStyles = fs.readFileSync(path.join(root, 'src', 'styles', 'loading.css'), 'utf8');
 const homePage = fs.readFileSync(path.join(root, 'src', 'pages', 'HomePage.tsx'), 'utf8');
 const contentController = fs.readFileSync(path.join(root, '..', 'backend', 'src', 'content', 'content.controller.ts'), 'utf8');
 const adminAuditController = fs.readFileSync(path.join(root, '..', 'backend', 'src', 'admin-audit', 'admin-audit.controller.ts'), 'utf8');
@@ -33,6 +35,10 @@ const checks = [
   [adminApp.includes('AdminContentPage') && adminApp.includes('AdminOperationsPage') && adminApp.includes('AdminQuestionEnginePage') && adminApp.includes('buildAdminAuthRedirectUrl'), 'AdminApp must mount the guarded operations, content, and question-engine workspaces'],
   [adminApp.includes('AdminMockExamPage') && adminApp.includes('AdminPastPapersPage') && adminApp.includes('AdminSpecialPracticePage') && adminApp.includes('AdminOrganizationsPage') && adminApp.includes('AdminUsersPage'), 'AdminApp must mount the inherited learning-content and account-management workspaces'],
   [adminApp.includes('site-main-public site-main-admin') && adminApp.includes('SiteHeaderControls'), 'AdminApp must retain the shared CSCALite header and constrained public-shell layout'],
+  [adminApp.includes('ADMIN_PAGE_PRELOADERS') && adminApp.includes('requestIdleCallback'), 'AdminApp must preload lazy workspaces while the browser is idle'],
+  [adminApp.includes('onAdminNavigate={navigateAdmin}') && siteHeaderControls.includes('onAdminNavigate'), 'admin account-menu navigation must stay inside the client shell'],
+  [adminApp.includes('<AppLoadingState variant="admin"') && shell.includes('<AppLoadingState variant="page"'), 'lazy routes must use the branded loading state'],
+  [loadingState.includes('aria-busy="true"') && loadingStyles.includes('prefers-reduced-motion'), 'the branded loading state must remain accessible and respect reduced motion'],
   [adminApp.includes('ADMIN_PATHS.has(path)'), 'unknown admin routes must fail closed'],
   [adminAuditController.includes("@Get('api/v1/admin/ops/overview')"), 'the admin operations overview must use its canonical API route'],
   [!adminAuditController.includes("'admin/audit'") && !adminAuditController.includes("'admin/audit-logs'"), 'unprefixed legacy audit API aliases must stay removed'],

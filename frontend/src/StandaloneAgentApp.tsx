@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
+import { AppLoadingState } from './components/AppLoadingState';
 import { ErrorBanner } from './components/ErrorBanner';
 import { Icon } from './components/Icon';
 import { LanguageSelector } from './components/LanguageSelector';
@@ -142,7 +143,7 @@ export default function StandaloneAgentApp() {
       {(route !== 'home' && route !== 'me' && (!isAgent || !currentUser)) ? <div className="standalone-language-bar"><LanguageSelector compact /></div> : null}
       <main className={mainClassName}>
         <ErrorBanner message={error} />
-        <Suspense fallback={<div className="page-loading" role="status" aria-live="polite">正在加载学习空间…</div>}>
+        <Suspense fallback={<AppLoadingState variant="page" />}>
           {route === 'home' && (
             <PublicHomePage
               currentUser={currentUser}

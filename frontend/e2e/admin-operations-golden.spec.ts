@@ -64,6 +64,12 @@ test('shows the CSCA-only operations overview and navigates to content without r
   await expect(page).toHaveURL(/\/admin\/content$/);
   await expect(page.getByRole('heading', { name: /管理 CSCA 首页/ })).toBeVisible();
 
+  await page.evaluate(() => { (window as Window & { adminClientNavigationMarker?: boolean }).adminClientNavigationMarker = true; });
+  await page.locator('.admin-site-header .site-avatar-button').click();
+  await page.getByRole('menuitem', { name: '后台管理' }).click();
+  await expect(page).toHaveURL(/\/admin\/audit$/);
+  await expect.poll(() => page.evaluate(() => (window as Window & { adminClientNavigationMarker?: boolean }).adminClientNavigationMarker)).toBe(true);
+
   await page.getByRole('navigation', { name: '后台工作区导航' }).getByRole('button', { name: '模考题库' }).click();
   await expect(page).toHaveURL(/\/admin\/learning\/mock-exams$/);
   await expect(page.getByRole('heading', { name: '批量导入试卷，也能逐题精修。' })).toBeVisible();

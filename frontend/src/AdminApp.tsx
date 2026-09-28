@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
+import { AppLoadingState } from './components/AppLoadingState';
 import { SiteHeaderControls } from './components/SiteHeaderControls';
 import { useI18n } from './i18n/useI18n';
 import { buildAdminAuthRedirectUrl } from './lib/app-navigation';
@@ -8,13 +9,31 @@ import { AdminContentPage } from './pages/AdminContentPage';
 import { AdminOperationsPage } from './pages/AdminOperationsPage';
 import { AdminQuestionEnginePage } from './pages/AdminQuestionEnginePage';
 
-const AdminAIQuestionBankPage = lazy(() => import('./pages/AdminAIQuestionBankPage').then((module) => ({ default: module.AdminAIQuestionBankPage })));
-const AdminTeachingAssetsPage = lazy(() => import('./pages/AdminTeachingAssetsPage').then((module) => ({ default: module.AdminTeachingAssetsPage })));
-const AdminMockExamPage = lazy(() => import('./pages/AdminMockExamPage').then((module) => ({ default: module.AdminMockExamPage })));
-const AdminPastPapersPage = lazy(() => import('./pages/AdminPastPapersPage').then((module) => ({ default: module.AdminPastPapersPage })));
-const AdminSpecialPracticePage = lazy(() => import('./pages/AdminSpecialPracticePage').then((module) => ({ default: module.AdminSpecialPracticePage })));
-const AdminOrganizationsPage = lazy(() => import('./pages/AdminOrganizationsPage').then((module) => ({ default: module.AdminOrganizationsPage })));
-const AdminUsersPage = lazy(() => import('./pages/AdminUsersPage').then((module) => ({ default: module.AdminUsersPage })));
+const loadAdminAIQuestionBankPage = () => import('./pages/AdminAIQuestionBankPage');
+const loadAdminTeachingAssetsPage = () => import('./pages/AdminTeachingAssetsPage');
+const loadAdminMockExamPage = () => import('./pages/AdminMockExamPage');
+const loadAdminPastPapersPage = () => import('./pages/AdminPastPapersPage');
+const loadAdminSpecialPracticePage = () => import('./pages/AdminSpecialPracticePage');
+const loadAdminOrganizationsPage = () => import('./pages/AdminOrganizationsPage');
+const loadAdminUsersPage = () => import('./pages/AdminUsersPage');
+
+const ADMIN_PAGE_PRELOADERS = [
+  loadAdminAIQuestionBankPage,
+  loadAdminTeachingAssetsPage,
+  loadAdminMockExamPage,
+  loadAdminPastPapersPage,
+  loadAdminSpecialPracticePage,
+  loadAdminOrganizationsPage,
+  loadAdminUsersPage
+];
+
+const AdminAIQuestionBankPage = lazy(() => loadAdminAIQuestionBankPage().then((module) => ({ default: module.AdminAIQuestionBankPage })));
+const AdminTeachingAssetsPage = lazy(() => loadAdminTeachingAssetsPage().then((module) => ({ default: module.AdminTeachingAssetsPage })));
+const AdminMockExamPage = lazy(() => loadAdminMockExamPage().then((module) => ({ default: module.AdminMockExamPage })));
+const AdminPastPapersPage = lazy(() => loadAdminPastPapersPage().then((module) => ({ default: module.AdminPastPapersPage })));
+const AdminSpecialPracticePage = lazy(() => loadAdminSpecialPracticePage().then((module) => ({ default: module.AdminSpecialPracticePage })));
+const AdminOrganizationsPage = lazy(() => loadAdminOrganizationsPage().then((module) => ({ default: module.AdminOrganizationsPage })));
+const AdminUsersPage = lazy(() => loadAdminUsersPage().then((module) => ({ default: module.AdminUsersPage })));
 
 function normalizeAdminPath(pathname: string) {
   const normalized = pathname.replace(/\/+$/, '') || '/admin';
@@ -56,17 +75,35 @@ export default function AdminApp() {
     return () => window.removeEventListener('popstate', sync);
   }, []);
 
+  useEffect(() => {
+    if (isResolvingAuth || currentUser?.role !== 'admin') return;
+    const idleWindow = window as Window & {
+      requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number;
+      cancelIdleCallback?: (handle: number) => void;
+    };
+    const preload = () => {
+      void Promise.allSettled(ADMIN_PAGE_PRELOADERS.map((loadPage) => loadPage()));
+    };
+    if (idleWindow.requestIdleCallback) {
+      const handle = idleWindow.requestIdleCallback(preload, { timeout: 1800 });
+      return () => idleWindow.cancelIdleCallback?.(handle);
+    }
+    const handle = window.setTimeout(preload, 300);
+    return () => window.clearTimeout(handle);
+  }, [currentUser?.role, isResolvingAuth]);
+
   function leaveAdmin(target: string) {
     window.location.assign(target);
   }
 
   function navigateAdmin(target: string) {
-    window.history.pushState({}, '', target);
-    setPath(normalizeAdminPath(target));
+    const normalized = normalizeAdminPath(target);
+    window.history.pushState({}, '', normalized);
+    setPath(normalized);
   }
 
   if (isResolvingAuth) {
-    return <div className="page-loading" role="status" aria-live="polite">正在验证管理员身份…</div>;
+    return <AppLoadingState variant="auth" />;
   }
 
   const authRedirect = buildAdminAuthRedirectUrl(path);
@@ -129,11 +166,11 @@ export default function AdminApp() {
             <button type="button" className="site-link" onClick={() => leaveAdmin(routes.agent)}>{t('homeNav.practice', '做题训练')}</button>
             <button type="button" className="site-link" onClick={() => leaveAdmin(`${routes.agent}?agentSection=weakness`)}>{t('homeNav.review', '错题复盘')}</button>
           </nav>
-          <SiteHeaderControls currentUser={currentUser} isResolvingAuth={isResolvingAuth} currentPath={path} onNavigate={leaveAdmin} onCurrentUserChange={setCurrentUser} />
+          <SiteHeaderControls currentUser={currentUser} isResolvingAuth={isResolvingAuth} currentPath={path} onNavigate={leaveAdmin} onAdminNavigate={navigateAdmin} onCurrentUserChange={setCurrentUser} />
         </div>
       </header>
       <main className="site-main site-main-public site-main-admin">
-        <Suspense fallback={<div className="page-loading" role="status">正在加载管理工作区…</div>}>
+        <Suspense fallback={<AppLoadingState variant="admin" />}>
           {page}
         </Suspense>
       </main>
