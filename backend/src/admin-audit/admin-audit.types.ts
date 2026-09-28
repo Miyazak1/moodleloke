@@ -17,6 +17,15 @@ export type AuditSummary = {
   specialPracticeSessionCount: number;
 };
 
+export type AdminOperationsOverview = {
+  adminAuditEventCount: number;
+  contentAuditEventCount: number;
+  latestAdminAuditEventAt: string | null;
+  mockExamAttemptCount: number;
+  specialPracticeSessionCount: number;
+  activeAgentConversationCount: number;
+};
+
 export type AdminAuditEvent = {
   id: number;
   actorId?: number;

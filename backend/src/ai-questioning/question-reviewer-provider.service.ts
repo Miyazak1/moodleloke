@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { AiGatewayService } from '../ai-gateway/ai-gateway.service';
 import { AiGatewayMessage } from '../ai-gateway/ai-gateway.types';
+import { QuestionEnginePluginRegistryService } from '../question-engine-plugin/question-engine-plugin-registry.service';
 import { BlindAnswerReviewEvidence, GeneratedQuestionCandidate, ReviewContext, ReviewDimension, ReviewResult, ValidationIssue } from './ai-questioning.types';
 
 type ProviderReview = {
@@ -343,7 +344,10 @@ function reviewMessages(candidate: GeneratedQuestionCandidate, context: ReviewCo
 export class QuestionReviewerProviderService {
   private readonly gateway: AiGatewayService;
 
-  constructor(gateway: AiGatewayService) {
+  constructor(
+    gateway: AiGatewayService,
+    private readonly pluginRegistry?: QuestionEnginePluginRegistryService
+  ) {
     this.gateway = gateway;
   }
 
@@ -381,6 +385,14 @@ export class QuestionReviewerProviderService {
 
   async reviewBlindAnswer(candidate: GeneratedQuestionCandidate, context: ReviewContext = {}): Promise<BlindAnswerReviewEvidence> {
     if (!blindReviewEnabled()) return emptyBlindEvidence(context, 'disabled');
+    if (this.pluginRegistry && !this.pluginRegistry.allowsProductionCapability('question.review')) {
+      return emptyBlindEvidence(context, 'disabled');
+    }
+    if (this.pluginRegistry?.usesSidecar()) {
+      return this.pluginRegistry.executeSidecarCapability<BlindAnswerReviewEvidence>('question.review', {
+        operation: 'reviewBlindAnswer', candidate, context
+      });
+    }
     const generatorProvider = cleanText(context.generatorAgent?.provider);
     const generatorModel = cleanText(context.generatorAgent?.model);
     if (!generatorProvider || !generatorModel) return emptyBlindEvidence(context, 'generator_identity_missing');
@@ -446,6 +458,18 @@ export class QuestionReviewerProviderService {
   }
 
   async review(candidate: GeneratedQuestionCandidate, context: ReviewContext = {}): Promise<ProviderReview> {
+    if (this.pluginRegistry && !this.pluginRegistry.allowsProductionCapability('question.review')) {
+      return {
+        issues: [],
+        dimensions: [],
+        provider: { provider: 'rule-fallback', model: RULE_MODEL, status: 'reviewer_disabled' }
+      };
+    }
+    if (this.pluginRegistry?.usesSidecar()) {
+      return this.pluginRegistry.executeSidecarCapability<ProviderReview>('question.review', {
+        operation: 'review', candidate, context
+      });
+    }
     const selectedModel = modelNameForContext(context);
     if (!externalReady(this.gateway.hasConfiguredKey('question_review', selectedModel))) {
       return {

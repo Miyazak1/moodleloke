@@ -1,5 +1,7 @@
 # CSCAPilot Fixed-Question-Bank Release Checklist
 
+> 历史清单：本文件描述 CSCALITE 旧全站发布面，已被 `moodlelike-cscalite-product-consolidation-adr-2026-09-25.md` 和 `cscalite-to-moodlelike-production-cutover-runbook-2026-09-28.md` 取代。不得将其中旧学生路由或 `/admin/*` 验收项视为当前 Moodlelike 独立入口已上线能力。
+
 本清单适用于当前 CSCA 学习优先、固定题库上线版本。院校、奖学金、公开搜索、购物车和结算属于历史兼容后端，不是本次前端发布门禁。
 
 ## 1. 范围与隔离

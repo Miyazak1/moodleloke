@@ -31,6 +31,7 @@ type AdminPageShellProps = {
   onGoToSpecialPractice?: () => void;
   onGoToOrganizations?: () => void;
   onGoToUsers?: () => void;
+  availableSections?: AdminSectionKey[];
 };
 
 export function AdminPageShell({
@@ -58,7 +59,8 @@ export function AdminPageShell({
   onGoToPastPapers,
   onGoToSpecialPractice,
   onGoToOrganizations,
-  onGoToUsers
+  onGoToUsers,
+  availableSections
 }: AdminPageShellProps) {
   const hasAdminAccess = allowAccess ?? currentUser?.role === 'admin';
 
@@ -85,6 +87,7 @@ export function AdminPageShell({
       onGoToSpecialPractice={onGoToSpecialPractice}
       onGoToOrganizations={onGoToOrganizations}
       onGoToUsers={onGoToUsers}
+      availableSections={availableSections}
     >
       {showAuthGate && <AdminAuthGate currentUser={currentUser} onGoToAuth={onGoToAuth} />}
       {hasAdminAccess && children}

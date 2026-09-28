@@ -4,6 +4,7 @@ import { getRateLimitReadiness } from '../common/rate-limit';
 import { isProductionRuntime } from '../common/runtime-environment';
 import { getStudentAgentIntegrationReadiness } from '../common/integration-readiness';
 import { PrismaService } from '../prisma/prisma.service';
+import { QuestionEnginePluginRegistryService } from '../question-engine-plugin/question-engine-plugin-registry.service';
 
 type HealthChecks = {
   app: boolean;
@@ -20,11 +21,15 @@ type HealthChecks = {
 export class HealthController {
   private readonly logger = new Logger(HealthController.name);
 
-  constructor(@Optional() private readonly prisma?: PrismaService) {}
+  constructor(
+    @Optional() private readonly prisma?: PrismaService,
+    @Optional() private readonly questionEnginePlugins?: QuestionEnginePluginRegistryService
+  ) {}
 
   @Get(['health', 'api/v1/health'])
   check() {
     const checks = this.buildChecks();
+    const questionEngine = this.getQuestionEngineReadiness();
     if (this.shouldUseMinimalHealth()) {
       return {
         status: 'ok',
@@ -40,7 +45,8 @@ export class HealthController {
       cspMode: getCspMode(),
       metricsEnabled: isMetricsEnabled(),
       checks,
-      productionReadiness: this.buildProductionReadiness(checks),
+      questionEngine,
+      productionReadiness: this.buildProductionReadiness(checks, questionEngine),
       timestamp: new Date().toISOString()
     };
   }
@@ -51,6 +57,7 @@ export class HealthController {
     const checks = this.buildChecks();
     const database = await this.checkDatabase();
     const studentAgent = getStudentAgentIntegrationReadiness();
+    const questionEngine = await this.getQuestionEngineReadinessWithRuntime();
 
     const optionalReadiness = [
       checks.databaseUrlConfigured,
@@ -58,7 +65,8 @@ export class HealthController {
       checks.adminBootstrapConfigured,
       checks.corsOriginsConfigured,
       database.connected,
-      studentAgent.status === 'ready'
+      studentAgent.status === 'ready',
+      questionEngine.status !== 'blocked'
     ];
 
     return {
@@ -68,9 +76,10 @@ export class HealthController {
       metricsEnabled: isMetricsEnabled(),
       database,
       studentAgent,
+      questionEngine,
       rateLimit: getRateLimitReadiness(),
       checks,
-      productionReadiness: this.buildProductionReadiness(checks),
+      productionReadiness: this.buildProductionReadiness(checks, questionEngine),
       timestamp: new Date().toISOString()
     };
   }
@@ -148,18 +157,35 @@ export class HealthController {
     return output;
   }
 
-  private buildProductionReadiness(checks: HealthChecks) {
+  private getQuestionEngineReadiness() {
+    return this.questionEnginePlugins?.getProductionReadiness() ?? {
+      status: 'inactive' as const,
+      activationRequested: false,
+      selectedPluginId: '',
+      requiredCapabilities: [],
+      blockers: [],
+      capabilityStates: []
+    };
+  }
+
+  private async getQuestionEngineReadinessWithRuntime() {
+    return this.questionEnginePlugins?.getProductionReadinessWithRuntime() ?? this.getQuestionEngineReadiness();
+  }
+
+  private buildProductionReadiness(checks: HealthChecks, questionEngine = this.getQuestionEngineReadiness()) {
     const studentAgent = getStudentAgentIntegrationReadiness();
     const required = {
       databaseUrlConfigured: checks.databaseUrlConfigured,
       authSecretConfigured: checks.authSecretConfigured,
       corsOriginsConfigured: checks.corsOriginsConfigured,
-      studentAgentConfigured: studentAgent.status === 'ready'
+      studentAgentConfigured: studentAgent.status === 'ready',
+      questionEngineConfigurationValid: questionEngine.status !== 'blocked'
     };
     return {
       status: Object.values(required).every(Boolean) ? 'ready' : 'blocked',
       required,
       studentAgent,
+      questionEngine,
       optional: {
         adminBootstrapConfigured: checks.adminBootstrapConfigured,
         paymentCallbackSecretConfigured: checks.paymentCallbackSecretConfigured,

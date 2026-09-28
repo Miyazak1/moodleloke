@@ -2,6 +2,8 @@ import { requestJson, toQueryString } from './request';
 import type {
   AdminAuditEvent,
   AdminAuditSummary,
+  AdminOperationsOverview,
+  QuestionEnginePluginStatus,
   AdminAdaptiveReplenishmentInventory,
   AdminAdaptiveReplenishmentRunResult,
   AdminAdaptiveReplenishmentTeamScopes,
@@ -105,6 +107,14 @@ export function getAdminPracticeSummary() {
 
 export function getAdminAuditEvents(params: { organizationId?: number | null; module?: string; resourceType?: string; action?: string; limit?: number } = {}) {
   return authRequest<{ items: AdminAuditEvent[] }>(`/api/v1/admin/audit-events${toQueryString(params)}`);
+}
+
+export function getAdminOperationsOverview() {
+  return authRequest<AdminOperationsOverview>('/api/v1/admin/ops/overview');
+}
+
+export function getQuestionEnginePluginStatus() {
+  return authRequest<QuestionEnginePluginStatus>('/api/v1/admin/question-engine/plugins/status');
 }
 
 export function getAdminAdaptiveAIObservability(params: { days?: number; from?: string; to?: string; provider?: string; status?: string; type?: string; subject?: string } = {}) {

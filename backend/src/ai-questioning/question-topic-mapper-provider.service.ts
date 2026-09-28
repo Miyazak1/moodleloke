@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { AiGatewayService } from '../ai-gateway/ai-gateway.service';
 import { AiGatewayMessage } from '../ai-gateway/ai-gateway.types';
+import { QuestionEnginePluginRegistryService } from '../question-engine-plugin/question-engine-plugin-registry.service';
 
 export type TopicMapperQuestion = {
   id: number;
@@ -176,7 +177,10 @@ function mappingMessages(question: TopicMapperQuestion, topics: TopicMapperTopic
 export class QuestionTopicMapperProviderService {
   private readonly gateway: AiGatewayService;
 
-  constructor(gateway: AiGatewayService) {
+  constructor(
+    gateway: AiGatewayService,
+    private readonly pluginRegistry?: QuestionEnginePluginRegistryService
+  ) {
     this.gateway = gateway;
   }
 
@@ -196,6 +200,22 @@ export class QuestionTopicMapperProviderService {
 
   async suggest(question: TopicMapperQuestion, topics: TopicMapperTopic[]): Promise<TopicMapperResult> {
     const allowedCodes = new Set(topics.map((topic) => topic.code));
+    if (this.pluginRegistry && !this.pluginRegistry.allowsProductionCapability('question.topic-map')) {
+      return {
+        suggestions: [],
+        rawOutput: null,
+        provider: 'rule-fallback',
+        model: RULE_MODEL,
+        status: 'topic_mapper_disabled',
+        error: 'question_engine_plugin_topic_map_gate_closed',
+        agent: agent('rule-fallback', RULE_MODEL)
+      };
+    }
+    if (this.pluginRegistry?.usesSidecar()) {
+      return this.pluginRegistry.executeSidecarCapability<TopicMapperResult>('question.topic-map', {
+        operation: 'suggest', question, topics
+      });
+    }
     if (!externalReady(this.gateway.hasConfiguredKey('topic_mapping', modelName()))) {
       return {
         suggestions: [],

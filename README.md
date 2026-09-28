@@ -30,7 +30,7 @@ Moodlelike Agent 是从 CSCALite 中独立出的 AI 原生训练与教学产品�
 
 3. 服务启动后可单独验收：`npm run local:verify`。完整交付验收使用 `npm run local:acceptance`。
 
-默认地址：前端 `http://localhost:5190/zh/agent`，后端 `http://localhost:3100`，PostgreSQL `localhost:56432`。
+默认地址：前端 `http://localhost:5190/agent`，后端 `http://localhost:3100`，PostgreSQL `localhost:56432`。
 
 完整说明见 [LOCAL_DELIVERY.md](./LOCAL_DELIVERY.md)。
 

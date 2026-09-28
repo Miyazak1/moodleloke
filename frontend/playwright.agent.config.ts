@@ -14,13 +14,15 @@ export default defineConfig({
   timeout: 30_000,
   expect: { timeout: 8_000 },
   use: { baseURL, trace: 'on-first-retry' },
-  webServer: {
-    command: `${npmCommand} run dev:force -- --host ${host} --port ${port}`,
-    url: baseURL,
-    reuseExistingServer: true,
-    timeout: 30_000,
-    env: { ...process.env, VITE_AGENT_WEB_ENABLED: 'true' }
-  },
+  webServer: process.env.E2E_SKIP_WEB_SERVER
+    ? undefined
+    : {
+        command: `${npmCommand} run dev:force -- --host ${host} --port ${port}`,
+        url: baseURL,
+        reuseExistingServer: true,
+        timeout: 30_000,
+        env: { ...process.env, VITE_AGENT_WEB_ENABLED: 'true' }
+      },
   projects: [
     { name: 'desktop', use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } } },
     { name: 'tablet', use: { ...devices['Desktop Chrome'], viewport: { width: 1024, height: 820 } } },

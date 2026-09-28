@@ -9,7 +9,7 @@ Policy: copy all models during initial migration; prune only after relation, SQL
 | AuthEmailToken | auth_email_tokens | runtime-keep | Referenced by the reachable backend runtime. |
 | OAuthAccount | oauth_accounts | runtime-keep | Referenced by the reachable backend runtime. |
 | RefreshSession | refresh_sessions | runtime-keep | Referenced by the reachable backend runtime. |
-| PublicContentBlock | content_blocks | legacy-archive-candidate | Belongs to a removed CSCALite public, commerce, payment, or study-abroad domain. |
+| PublicContentBlock | content_blocks | runtime-keep | Referenced by the reachable backend runtime. |
 | CityGuide | city_guides | legacy-archive-candidate | Belongs to a removed CSCALite public, commerce, payment, or study-abroad domain. |
 | ApplicationTimelineWindow | application_timeline_windows | legacy-archive-candidate | Belongs to a removed CSCALite public, commerce, payment, or study-abroad domain. |
 | AdminAuditLog | admin_audit_logs | runtime-keep | Referenced by the reachable backend runtime. |

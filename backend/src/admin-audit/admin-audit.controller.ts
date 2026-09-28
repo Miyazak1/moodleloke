@@ -9,11 +9,16 @@ import { AdminAuditService } from './admin-audit.service';
 export class AdminAuditController {
   constructor(private readonly adminAuditService: AdminAuditService) {}
 
-  @Get(['admin/audit', 'admin/audit-logs', 'api/v1/admin/audit-logs'])
+  @Get('api/v1/admin/audit-logs')
   async listItems() {
     return {
       items: await this.adminAuditService.listItems()
     };
+  }
+
+  @Get('api/v1/admin/ops/overview')
+  async getOperationsOverview() {
+    return this.adminAuditService.getOperationsOverview();
   }
 
   @Get(['api/v1/admin/practice/summary'])

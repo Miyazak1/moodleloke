@@ -3528,6 +3528,85 @@ export type AdminAuditSummary = {
   specialPracticeSessionCount: number;
 };
 
+export type AdminOperationsOverview = {
+  adminAuditEventCount: number;
+  contentAuditEventCount: number;
+  latestAdminAuditEventAt: string | null;
+  mockExamAttemptCount: number;
+  specialPracticeSessionCount: number;
+  activeAgentConversationCount: number;
+};
+
+export type QuestionEnginePluginStatus = {
+  schemaVersion: '1';
+  host: {
+    apiVersion: '1';
+    selectedPluginId: string;
+    fallbackMode: 'verified-bank-only';
+    fallbackAvailable: true;
+    arbitraryRuntimeCodeLoading: false;
+    enforcedCapabilities: Array<'question.generate' | 'question.review' | 'question.topic-map'>;
+    taskProtocol: {
+      version: 'question-engine-task-v1';
+      executionMode: 'in-process' | 'sidecar';
+      signingConfigured: boolean;
+      sidecarEndpointConfigured: boolean;
+      nonceStoreConfigured: boolean;
+      transportImplemented: true;
+      sidecarActivationSupported: true;
+      sidecarActivationEnabled: boolean;
+      workerCapabilities: Array<'question.generate' | 'question.review' | 'question.topic-map'>;
+      acceptedWorkerVersions: string[];
+    };
+  };
+  runtime?: {
+    worker: {
+      status: 'not_applicable' | 'healthy' | 'blocked' | 'unreachable';
+      checkedAt: string;
+      latencyMs: number;
+      protocol?: string;
+      worker?: { id: string; version: string };
+      capabilities?: Array<'question.generate' | 'question.review' | 'question.topic-map'>;
+      blockers: string[];
+    };
+    transport: {
+      circuit: { open: boolean; consecutiveFailures: number; threshold: number; resetMs: number };
+      lastSuccessAt: string | null;
+      lastFailure: { at: string; code: string; affectsCircuit: boolean } | null;
+    };
+  };
+  plugins: Array<{
+    descriptor: {
+      id: string;
+      displayName: string;
+      version: string;
+      apiVersion: '1';
+      capabilities: Array<'question.generate' | 'question.review' | 'question.topic-map'>;
+      executionBoundary: 'in-process-adapter';
+      activationMode: 'configuration-restart';
+    };
+    selected: boolean;
+    enabled: boolean;
+    provider: string;
+    model: string;
+    providerConfigured: boolean;
+    productionRunnerEnabled: boolean;
+    generationWritesEnabled: boolean;
+    status: 'disabled' | 'ready' | 'blocked';
+    blockers: string[];
+    capabilityStates: Array<{
+      capability: 'question.generate' | 'question.review' | 'question.topic-map';
+      enabled: boolean;
+      provider: string;
+      model: string;
+      providerConfigured: boolean;
+      executionEnabled: boolean;
+      status: 'disabled' | 'ready' | 'blocked';
+      blockers: string[];
+    }>;
+  }>;
+};
+
 export type AdminAuditEvent = {
   id: number;
   actorId?: number;

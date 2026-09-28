@@ -6,7 +6,7 @@ import { CscaLearningService } from '../csca-learning/csca-learning.service';
 import { ReadinessActionCalibrationSnapshotRefreshResult } from '../csca-learning/csca-learning.types';
 import { PrismaService } from '../prisma/prisma.service';
 import { recordAdminAudit } from './admin-audit-log';
-import { AdminAuditEvent, AdminReadinessEvidenceDetail, AdminReadinessEvidenceFile, AuditItem, AuditSummary } from './admin-audit.types';
+import { AdminAuditEvent, AdminOperationsOverview, AdminReadinessEvidenceDetail, AdminReadinessEvidenceFile, AuditItem, AuditSummary } from './admin-audit.types';
 
 type DbAuditLog = Awaited<ReturnType<PrismaService['adminAuditLog']['findMany']>>[number];
 
@@ -70,6 +70,33 @@ export class AdminAuditService {
     private readonly prisma: PrismaService,
     private readonly cscaLearningService: CscaLearningService
   ) {}
+
+  async getOperationsOverview(): Promise<AdminOperationsOverview> {
+    const [
+      adminAuditEventCount,
+      contentAuditEventCount,
+      latestAdminAuditEvent,
+      mockExamAttemptCount,
+      specialPracticeSessionCount,
+      activeAgentConversationCount
+    ] = await Promise.all([
+      this.prisma.adminAuditLog.count(),
+      this.prisma.adminAuditLog.count({ where: { module: 'content' } }),
+      this.prisma.adminAuditLog.findFirst({ orderBy: [{ createdAt: 'desc' }, { id: 'desc' }] }),
+      this.prisma.mockExamAttempt.count(),
+      this.prisma.specialPracticeSession.count(),
+      this.prisma.agentConversation.count({ where: { status: 'active', deletedAt: null } })
+    ]);
+
+    return {
+      adminAuditEventCount,
+      contentAuditEventCount,
+      latestAdminAuditEventAt: latestAdminAuditEvent?.createdAt.toISOString() ?? null,
+      mockExamAttemptCount,
+      specialPracticeSessionCount,
+      activeAgentConversationCount
+    };
+  }
 
   async listItems(): Promise<AuditItem[]> {
     const summary = await this.getSummary();

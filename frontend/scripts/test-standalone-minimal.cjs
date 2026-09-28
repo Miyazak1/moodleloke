@@ -4,8 +4,11 @@ const path = require('node:path');
 const root = path.resolve(__dirname, '..');
 const required = [
   'src/main.tsx',
+  'src/AdminApp.tsx',
   'src/StandaloneAgentApp.tsx',
   'src/pages/AgentPage.tsx',
+  'src/pages/PublicHomePage.tsx',
+  'src/pages/HomePage.tsx',
   'src/pages/StandaloneAccountPage.tsx',
   'src/pages/PublicAuthPage.tsx',
   'src/pages/StudentOnboardingPage.tsx',
@@ -20,7 +23,6 @@ const required = [
 const removedLegacy = [
   'src/App.tsx',
   'src/components/AppRouteRenderer.tsx',
-  'src/pages/HomePage.tsx',
   'src/pages/PublicMePage.tsx'
 ];
 
@@ -40,7 +42,7 @@ const agentLearningCards = fs.readFileSync(path.join(root, 'src/components/agent
 const agentReport = fs.readFileSync(path.join(root, 'src/components/agent/AgentStructuredReportMessage.tsx'), 'utf8');
 const agentHostBridge = fs.readFileSync(path.join(root, 'src/lib/agent-host-bridge.ts'), 'utf8');
 const agentMotion = fs.readFileSync(path.join(root, 'src/styles/agent-motion.css'), 'utf8');
-if (!main.includes("import App from './StandaloneAgentApp'")) throw new Error('StandaloneAgentApp is not the production entry.');
+if (!main.includes("import('./StandaloneAgentApp')") || !main.includes("import('./AdminApp')")) throw new Error('The production bootstrap must isolate public/student and admin apps.');
 if (shell.includes('AppRouteRenderer')) throw new Error('Legacy route renderer leaked into standalone shell.');
 if (!agentPage.includes('className="agent-jump-to-latest"')) throw new Error('Agent conversation must preserve a visible return-to-latest control.');
 if (!agentPage.includes('role="radiogroup"') || !agentPage.includes('role="radio"')) throw new Error('Free-practice choices must expose single-selection semantics.');

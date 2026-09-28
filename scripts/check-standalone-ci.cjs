@@ -7,9 +7,12 @@ const rootPackage = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 
 for (const marker of ['npm run security:audit-dependencies', 'npm run ci:contracts', 'npm run ci:golden', 'playwright install --with-deps chromium', 'actions/upload-artifact@v4']) {
   if (!workflow.includes(marker)) throw new Error('Standalone CI is missing: ' + marker);
 }
-for (const script of ['test:e2e:golden:student', 'test:e2e:golden:teaching', 'test:e2e:golden:authoring', 'test:e2e:golden']) {
+for (const script of ['test:e2e:golden:home', 'test:e2e:golden:admin-content', 'test:e2e:golden:admin-operations', 'test:e2e:golden:admin-question-engine', 'test:e2e:golden:student', 'test:e2e:golden:teaching', 'test:e2e:golden:authoring', 'test:e2e:golden']) {
   if (!frontendPackage.scripts[script]) throw new Error('Frontend golden-path script is missing: ' + script);
 }
+if (frontendPackage.scripts['test:e2e'] !== 'npm run test:e2e:golden') throw new Error('Default frontend E2E must exercise the standalone golden paths.');
+if (!frontendPackage.scripts['test:e2e:legacy-cscalite']) throw new Error('Legacy CSCALITE route tests must remain explicitly named for migration reference.');
+if (/public-routes\.spec/.test(frontendPackage.scripts['test:e2e:fixed-bank'] || '')) throw new Error('The current fixed-bank gate must not claim retired CSCALITE public routes.');
 for (const script of ['ci:contracts', 'ci:golden', 'security:audit-dependencies', 'test:teaching-assets', 'test:authoring-boundary', 'test:repository-ownership', 'test:live-golden-path-contract', 'audit:command-surface', 'audit:compatibility-operations']) {
   if (!rootPackage.scripts[script]) throw new Error('Root CI gate is missing: ' + script);
 }

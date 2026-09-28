@@ -4,6 +4,7 @@ import { createHash, randomUUID } from 'crypto';
 import { connect as connectTls } from 'tls';
 import { PrismaService } from '../prisma/prisma.service';
 import { GeneratedQuestionCandidate, ReviewResult, jsonInput } from './ai-questioning.types';
+import { evaluateQuestionCandidateWriteGate } from '../question-engine-plugin/question-candidate-write-gate';
 import {
   QuestionGeneratorProviderService,
   questionGenerationMaxTokensForBlueprint,
@@ -22148,6 +22149,8 @@ export class AIQuestioningService implements OnModuleInit, OnModuleDestroy {
       ...generationProfileMetadata(styledBlueprint.generationProfile),
       generationSource: generationSource.generationSource,
       generationMode: generationSource.generationMode,
+      promptAudit: recordFrom(recordFrom(generated.promptMetadata)?.promptAudit),
+      sourceIsolationEvidence: recordFrom(recordFrom(recordFrom(generated.promptMetadata)?.promptAudit)?.sourceIsolation),
       mockExamSlot: generationSource.mockExamSlot,
       localizations: candidate.localizations ?? null,
       fallbackUsed: generated.status !== 'success',
@@ -24296,11 +24299,24 @@ export class AIQuestioningService implements OnModuleInit, OnModuleDestroy {
       options: candidate.options,
       explanation: candidate.explanation
     });
-    const metadataWithSimilarity = {
+    const metadataBeforeWriteGate = {
       ...generationMetadataRecord,
       sourceSimilarity,
       questionFingerprint,
       ...(schedulerHint ? { schedulerHint } : {})
+    };
+    const candidateWriteGate = evaluateQuestionCandidateWriteGate({
+      candidate,
+      review,
+      generationMetadata: metadataBeforeWriteGate,
+      sourceSimilarity
+    });
+    if (candidateWriteGate.decision === 'block') {
+      throw new BadRequestException(`question_engine_candidate_write_blocked:${candidateWriteGate.blockers.join(',')}`);
+    }
+    const metadataWithSimilarity = {
+      ...metadataBeforeWriteGate,
+      candidateWriteGate
     };
     const [question] = await this.prisma.$queryRaw<QuestionRow[]>(Prisma.sql`
       INSERT INTO "csca_questions" (

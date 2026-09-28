@@ -406,11 +406,14 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
   });
   const [learningMode, setLearningMode] = useState<'recommended' | 'free'>(() => {
     if (typeof window === 'undefined') return 'recommended';
+    if (new URLSearchParams(window.location.search).get('mode') === 'free') return 'free';
     return readMigratedLocalStorage(AGENT_LEARNING_MODE_STORAGE_KEY, LEGACY_AGENT_LEARNING_MODE_STORAGE_KEY) === 'free' ? 'free' : 'recommended';
   });
   const [sessionLearningModeOverride, setSessionLearningModeOverride] = useState<'free' | null>(null);
   const [defaultFreePracticeSubject, setDefaultFreePracticeSubject] = useState<'math' | 'physics' | 'chemistry'>(() => {
     if (typeof window === 'undefined') return 'math';
+    const requested = new URLSearchParams(window.location.search).get('subject');
+    if (requested === 'math' || requested === 'physics' || requested === 'chemistry') return requested;
     const saved = readMigratedLocalStorage(AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY, LEGACY_AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY);
     return saved === 'physics' || saved === 'chemistry' ? saved : 'math';
   });
@@ -421,6 +424,8 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
   });
   const [freePracticeSubject, setFreePracticeSubject] = useState<'math' | 'physics' | 'chemistry'>(() => {
     if (typeof window === 'undefined') return 'math';
+    const requested = new URLSearchParams(window.location.search).get('subject');
+    if (requested === 'math' || requested === 'physics' || requested === 'chemistry') return requested;
     const saved = readMigratedLocalStorage(AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY, LEGACY_AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY);
     return saved === 'physics' || saved === 'chemistry' ? saved : 'math';
   });

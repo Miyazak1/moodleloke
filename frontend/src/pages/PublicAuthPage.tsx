@@ -214,7 +214,7 @@ function getInitialAuthError(locale: string) {
 function getInitialStep(initialMode: AuthMode): AuthStep {
   const params = new URLSearchParams(window.location.search);
   const mode = params.get('mode');
-  if (mode === 'forgot' || mode === 'reset') return mode;
+  if (mode === 'login' || mode === 'register' || mode === 'forgot' || mode === 'reset') return mode;
   return initialMode;
 }
 

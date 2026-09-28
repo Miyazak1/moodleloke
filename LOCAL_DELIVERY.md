@@ -20,7 +20,7 @@ The generated demo credentials live under ignored `.local/` and are never printe
 
 ## Expected URLs
 
-- Student Agent: `http://localhost:5190/zh/agent`
+- Student Agent: `http://localhost:5190/agent`
 - Backend health: `http://localhost:3100/api/v1/health`
 - PostgreSQL: `localhost:56432`
 - Redis: `localhost:57379`

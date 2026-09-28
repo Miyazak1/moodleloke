@@ -26,7 +26,7 @@ type PendingContentConfirm =
 
 type ContentStatusFilter = 'all' | 'published' | 'draft' | 'archived' | 'dirty';
 type ContentGroupKey = 'home' | 'subject' | 'system';
-type ContentLocale = 'zh-CN' | 'en';
+type ContentLocale = 'zh-CN' | 'en' | 'vi';
 type VocabularyEditableField = 'term' | 'translation' | 'definition' | 'pinyin' | 'module' | 'tags' | 'level' | 'frequency' | 'relatedPath';
 
 const SUBJECT_VOCABULARY_KEY_PREFIX = 'csca.subject-vocabulary.';
@@ -36,7 +36,8 @@ const ADMIN_CONTENT_COPY = {
   zh: {
     locales: {
       'zh-CN': { label: 'CN 中文', note: '默认内容' },
-      en: { label: 'GB English', note: '英文翻译' }
+      en: { label: 'GB English', note: '英文翻译' },
+      vi: { label: 'VN Tiếng Việt', note: '越南语翻译' }
     },
     statuses: { published: '已发布', draft: '草稿', archived: '已归档', dirty: '未保存', all: '全部' },
     loadFailed: '内容块暂时无法加载。',
@@ -163,7 +164,8 @@ const ADMIN_CONTENT_COPY = {
   en: {
     locales: {
       'zh-CN': { label: 'CN Chinese', note: 'Default content' },
-      en: { label: 'GB English', note: 'English translation' }
+      en: { label: 'GB English', note: 'English translation' },
+      vi: { label: 'VN Vietnamese', note: 'Vietnamese translation' }
     },
     statuses: { published: 'Published', draft: 'Draft', archived: 'Archived', dirty: 'Unsaved', all: 'All' },
     loadFailed: 'Content blocks could not be loaded.',
@@ -291,7 +293,7 @@ const ADMIN_CONTENT_COPY = {
 
 type AdminContentCopy = (typeof ADMIN_CONTENT_COPY)[keyof typeof ADMIN_CONTENT_COPY];
 
-const CONTENT_LOCALE_VALUES: ContentLocale[] = ['zh-CN', 'en'];
+const CONTENT_LOCALE_VALUES: ContentLocale[] = ['zh-CN', 'en', 'vi'];
 
 const CSCA_HOME_BLOCK_PRESETS: Record<string, { title: string; subtitle: string; body: Record<string, unknown> }> = {
   'home.hero': {
@@ -555,7 +557,7 @@ export function AdminContentPage({
   const [savedItems, setSavedItems] = useState<AdminContentBlock[]>([]);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [query, setQuery] = useState('');
-  const [selectedLocale, setSelectedLocale] = useState<ContentLocale>(locale === 'en' ? 'en' : 'zh-CN');
+  const [selectedLocale, setSelectedLocale] = useState<ContentLocale>(locale === 'en' ? 'en' : locale === 'vi' ? 'vi' : 'zh-CN');
   const [statusFilter, setStatusFilter] = useState<ContentStatusFilter>('all');
   const [collapsedGroups, setCollapsedGroups] = useState<Record<ContentGroupKey, boolean>>({ home: false, subject: false, system: true });
   const [dirtyByKey, setDirtyByKey] = useState<Record<string, boolean>>({});
@@ -1001,6 +1003,7 @@ export function AdminContentPage({
       onGoToMockExams={onGoToMockExams}
       onGoToSpecialPractice={onGoToSpecialPractice}
       onGoToUsers={onGoToUsers}
+      availableSections={['audit', 'content', 'aiOperations']}
     >
       {currentUser?.role === 'admin' && (
         <section className="admin-feedback">

@@ -39,6 +39,7 @@ type AdminConsoleShellProps = {
   onGoToSpecialPractice?: () => void;
   onGoToOrganizations?: () => void;
   onGoToUsers?: () => void;
+  availableSections?: AdminSectionKey[];
 };
 
 const ADMIN_CONSOLE_COPY = {
@@ -60,7 +61,7 @@ const ADMIN_CONSOLE_COPY = {
     learningGroup: '固定题库',
     accountsGroup: '账号与机构',
     audit: '运营总览',
-    aiOperations: 'AI 运维',
+    aiOperations: '题目引擎',
     aiQuestionBank: 'AI 题库',
     content: '内容管理',
     teachingAssets: '教学资产',
@@ -88,7 +89,7 @@ const ADMIN_CONSOLE_COPY = {
     learningGroup: 'Fixed Question Banks',
     accountsGroup: 'Accounts & Organizations',
     audit: 'Operations Overview',
-    aiOperations: 'AI Operations',
+    aiOperations: 'Question Engine',
     aiQuestionBank: 'AI Question Bank',
     content: 'Content',
     teachingAssets: 'Teaching Assets',
@@ -125,7 +126,8 @@ export function AdminConsoleShell({
   onGoToPastPapers,
   onGoToSpecialPractice,
   onGoToOrganizations,
-  onGoToUsers
+  onGoToUsers,
+  availableSections
 }: AdminConsoleShellProps) {
   const { locale, t } = useI18n();
   const copy = locale === 'en' ? ADMIN_CONSOLE_COPY.en : ADMIN_CONSOLE_COPY.zh;
@@ -203,7 +205,12 @@ export function AdminConsoleShell({
       { key: 'teachingAssets' as const, label: '教学资产管理', onClick: () => openAuthoringWorkspace('teaching-assets') }
     ]
   }];
-  const groups = isStandaloneAuthoring ? authoringGroups : isOrganizationMode ? organizationGroups : adminGroups;
+  const baseGroups = isStandaloneAuthoring ? authoringGroups : isOrganizationMode ? organizationGroups : adminGroups;
+  const groups = availableSections
+    ? baseGroups
+      .map((group) => ({ ...group, items: group.items.filter((item) => availableSections.includes(item.key)) }))
+      .filter((group) => group.items.length > 0)
+    : baseGroups;
 
   const currentGroup = groups.find((group) => group.items.some((item) => item.key === current));
 

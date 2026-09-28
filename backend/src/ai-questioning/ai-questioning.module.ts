@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
 import { AiGatewayModule } from '../ai-gateway/ai-gateway.module';
 import { PrismaModule } from '../prisma/prisma.module';
+import { QuestionEnginePluginModule } from '../question-engine-plugin/question-engine-plugin.module';
 import { AdaptiveReplenishmentService } from './adaptive-replenishment.service';
 import { AIQuestioningController } from './ai-questioning.controller';
 import { AIQuestioningSchedulerService } from './ai-questioning-scheduler.service';
@@ -16,7 +17,7 @@ import { QuestionTopicMapperProviderService } from './question-topic-mapper-prov
 import { QuestionValidatorService } from './question-validator.service';
 
 @Module({
-  imports: [PrismaModule, AuthModule, AiGatewayModule],
+  imports: [PrismaModule, AuthModule, AiGatewayModule, QuestionEnginePluginModule],
   controllers: [AIQuestioningController],
   providers: [AIQuestioningService, AdaptiveReplenishmentService, AIQuestioningSchedulerService, QuestionGeneratorProviderService, QuestionGeneratorService, QuestionPromptBuilderService, QuestionQualityService, QuestionReviewerProviderService, QuestionReviewerService, QuestionTopicMapperProviderService, QuestionValidatorService],
   exports: [AIQuestioningService, QuestionQualityService, QuestionValidatorService]

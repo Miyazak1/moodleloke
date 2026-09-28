@@ -847,11 +847,13 @@ test('retries a failed journey overview without reloading the Agent workspace', 
 
   await page.goto('/agent');
   await page.getByRole('button', { name: '学习设置', exact: true }).click();
-  await expect(page.locator('.agent-async-state.is-error')).toHaveAttribute('role', 'alert');
-  await expect(page.getByText('学习证据服务暂时不可用。', { exact: true })).toBeVisible();
+  const overviewError = page.locator('.agent-async-state.is-error');
+  await expect(overviewError).toHaveAttribute('role', 'alert');
+  await expect(overviewError).toContainText('暂时无法读取');
+  await expect(overviewError).not.toContainText('学习证据服务暂时不可用。');
   await page.getByRole('button', { name: '重试读取', exact: true }).click();
   await expect.poll(() => overviewLoads).toBe(2);
-  await expect(page.getByText('学习证据服务暂时不可用。', { exact: true })).toHaveCount(0);
+  await expect(overviewError).toHaveCount(0);
   await expect(page.getByRole('button', { name: '重试读取', exact: true })).toHaveCount(0);
   await expect(page.getByRole('heading', { name: '围绕目标，只保留一个明确的下一步' })).toBeVisible();
   await expect(page.locator('.agent-live-decision-card')).toHaveCount(0);

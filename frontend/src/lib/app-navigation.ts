@@ -1,4 +1,5 @@
 import { routes, type PublicRoute } from './routes';
+import { safeStandaloneReturnPath } from './standalone-route-policy';
 
 const adminRouteAliases: Partial<Record<string, PublicRoute>> = {
   [routes.adminLearningMockExams]: routes.adminMockExams,
@@ -130,13 +131,31 @@ export function isPublicBrandRoute(route: PublicRoute) {
 }
 
 export function buildAuthRedirectUrl(redirectTo: string) {
-  return `${routes.auth}?redirect=${encodeURIComponent(redirectTo)}`;
+  return `${routes.auth}?redirect=${encodeURIComponent(safeStandaloneReturnPath(redirectTo, routes.agent))}`;
+}
+
+const enabledAdminReturnPaths = new Set<string>([routes.adminAudit, routes.adminContent, routes.adminAiOperations]);
+
+export function safeAdminReturnPath(value: string | null | undefined) {
+  const raw = String(value ?? '').trim();
+  if (!raw || raw.length > 300 || raw.startsWith('//') || raw.includes('\\') || /[\u0000-\u001f\u007f]/.test(raw)) return null;
+  let url: URL;
+  try {
+    url = new URL(raw, 'https://moodlelike.local');
+  } catch {
+    return null;
+  }
+  if (url.origin !== 'https://moodlelike.local' || !enabledAdminReturnPaths.has(url.pathname)) return null;
+  return `${url.pathname}${url.search}${url.hash}`;
+}
+
+export function buildAdminAuthRedirectUrl(redirectTo = routes.adminAudit) {
+  const safeReturnTo = safeAdminReturnPath(redirectTo) ?? routes.adminAudit;
+  return `${routes.auth}?redirect=${encodeURIComponent(safeReturnTo)}`;
 }
 
 export function safeReturnPath(value: string | null | undefined, fallback = routes.me) {
-  const next = String(value ?? '').trim();
-  if (!next.startsWith('/') || next.startsWith('//') || next.includes('\\') || /[\u0000-\u001f\u007f]/.test(next)) return fallback;
-  return next.startsWith(routes.onboarding) ? fallback : next.slice(0, 300);
+  return safeStandaloneReturnPath(value, fallback);
 }
 
 export function buildOnboardingUrl(returnTo?: string) {

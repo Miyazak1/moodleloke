@@ -1,11 +1,11 @@
 # Product boundary audit
 
-Generated: 2026-09-24T03:53:05.048Z
+Generated: 2026-09-28T12:29:40.308Z
 
 ## Frontend
 
-- student-agent: 140
-- admin-authoring: 94
+- student-agent: 164
+- admin-authoring: 83
 - teaching-assets: 0
 - obsolete-candidate: 0
 
@@ -14,12 +14,13 @@ Generated: 2026-09-24T03:53:05.048Z
 | Area | Total | Reachable | Unreachable |
 | --- | ---: | ---: | ---: |
 | (root) | 2 | 1 | 1 |
-| admin-audit | 5 | 1 | 4 |
+| admin-audit | 5 | 5 | 0 |
 | agent | 44 | 44 | 0 |
 | ai-gateway | 12 | 12 | 0 |
 | ai-questioning | 83 | 60 | 23 |
 | auth | 12 | 12 | 0 |
 | common | 7 | 6 | 1 |
+| content | 4 | 4 | 0 |
 | csca-learning | 4 | 4 | 0 |
 | csca-mock-exam | 6 | 6 | 0 |
 | csca-special-practice | 20 | 20 | 0 |
@@ -29,6 +30,8 @@ Generated: 2026-09-24T03:53:05.048Z
 | ops | 2 | 0 | 2 |
 | past-papers | 5 | 5 | 0 |
 | prisma | 2 | 2 | 0 |
+| question-engine-plugin | 11 | 11 | 0 |
+| question-engine-worker | 2 | 0 | 2 |
 | schools | 11 | 11 | 0 |
 | score-calibration | 6 | 0 | 6 |
 
@@ -36,7 +39,6 @@ Generated: 2026-09-24T03:53:05.048Z
 
 Static absence is not deletion authority; relations, raw SQL and migration compatibility still require review.
 
-- PublicContentBlock
 - CityGuide
 - ApplicationTimelineWindow
 - SchoolRaw

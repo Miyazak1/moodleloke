@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { createHash } from 'node:crypto';
 import { AiGatewayService } from '../ai-gateway/ai-gateway.service';
 import { AiGatewayAttempt, AiGatewayMessage } from '../ai-gateway/ai-gateway.types';
+import { QuestionEnginePluginRegistryService } from '../question-engine-plugin/question-engine-plugin-registry.service';
 import { GeneratedQuestionCandidate } from './ai-questioning.types';
 import {
   QuestionGenerationBlueprint,
@@ -499,7 +500,8 @@ export class QuestionGeneratorProviderService {
 
   constructor(
     private readonly promptBuilder: QuestionPromptBuilderService,
-    gateway: AiGatewayService
+    gateway: AiGatewayService,
+    private readonly pluginRegistry?: QuestionEnginePluginRegistryService
   ) {
     this.gateway = gateway;
   }
@@ -627,6 +629,24 @@ export class QuestionGeneratorProviderService {
         ).join(',') || 'Local shadow generator failed closed.',
         gatewayAttempts: []
       };
+    }
+    if (this.pluginRegistry && !this.pluginRegistry.allowsProductionCapability('question.generate')) {
+      return {
+        candidate: fallback,
+        rawOutput: fallback,
+        normalizedOutput: fallback,
+        promptMetadata: prompt.metadata,
+        agent: generatorAgent('rule-fallback', RULE_MODEL),
+        provider: 'rule-fallback',
+        model: RULE_MODEL,
+        status: 'generator_disabled',
+        error: 'question_engine_plugin_generation_gate_closed'
+      };
+    }
+    if (this.pluginRegistry?.usesSidecar()) {
+      return this.pluginRegistry.executeSidecarCapability<GenerationProviderResult>('question.generate', {
+        operation: 'generate', blueprint, fallback, options
+      });
     }
     if (!externalReady(this.gateway.hasConfiguredKey('question_generation', selectedModel))) {
       return {

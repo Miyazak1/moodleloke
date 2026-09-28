@@ -1,10 +1,10 @@
 {
   "schemaVersion": "1",
-  "generatedAt": "2026-09-24T03:53:06.322Z",
+  "generatedAt": "2026-09-28T12:29:41.618Z",
   "policy": "copy-all-first-prune-later",
   "counts": {
-    "runtime-keep": 113,
-    "legacy-archive-candidate": 9,
+    "runtime-keep": 114,
+    "legacy-archive-candidate": 8,
     "manual-review": 2,
     "future-platform-keep": 23
   },
@@ -14,8 +14,8 @@
       "table": "users",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 50,
-      "typeMentions": 16
+      "prismaAccessorMentions": 52,
+      "typeMentions": 18
     },
     {
       "model": "StudentProfile",
@@ -52,10 +52,10 @@
     {
       "model": "PublicContentBlock",
       "table": "content_blocks",
-      "disposition": "legacy-archive-candidate",
-      "rationale": "Belongs to a removed CSCALite public, commerce, payment, or study-abroad domain.",
-      "prismaAccessorMentions": 0,
-      "typeMentions": 0
+      "disposition": "runtime-keep",
+      "rationale": "Referenced by the reachable backend runtime.",
+      "prismaAccessorMentions": 13,
+      "typeMentions": 4
     },
     {
       "model": "CityGuide",
@@ -78,7 +78,7 @@
       "table": "admin_audit_logs",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 4,
+      "prismaAccessorMentions": 10,
       "typeMentions": 0
     },
     {
@@ -94,7 +94,7 @@
       "table": "schools",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 37,
+      "prismaAccessorMentions": 39,
       "typeMentions": 15
     },
     {
@@ -166,7 +166,7 @@
       "table": "school_change_logs",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 9,
+      "prismaAccessorMentions": 11,
       "typeMentions": 0
     },
     {
@@ -214,7 +214,7 @@
       "table": "special_practice_sessions",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 10,
+      "prismaAccessorMentions": 12,
       "typeMentions": 2
     },
     {
@@ -446,7 +446,7 @@
       "table": "organizations",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 27,
+      "prismaAccessorMentions": 28,
       "typeMentions": 0
     },
     {
@@ -678,7 +678,7 @@
       "table": "mock_exam_attempts",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 27,
+      "prismaAccessorMentions": 29,
       "typeMentions": 0
     },
     {
@@ -1078,7 +1078,7 @@
       "table": "agent_conversations",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 32,
+      "prismaAccessorMentions": 33,
       "typeMentions": 0
     },
     {

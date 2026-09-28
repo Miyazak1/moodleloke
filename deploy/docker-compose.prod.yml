@@ -115,6 +115,41 @@ services:
       timeout: 5s
       retries: 12
 
+  question-engine-worker:
+    profiles: ["question-engine"]
+    image: moodlelike-backend:prod
+    build:
+      context: ..
+      dockerfile: deploy/backend.Dockerfile
+    command: ["node", "backend/dist/backend/src/question-engine-worker/main.js"]
+    user: "node"
+    read_only: true
+    cap_drop: ["ALL"]
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    environment:
+      NODE_ENV: production
+      MOODLELIKE_ENV: production
+      QUESTION_ENGINE_WORKER_ENABLED: "true"
+      QUESTION_ENGINE_WORKER_HOST: 0.0.0.0
+      QUESTION_ENGINE_WORKER_PORT: 3100
+      QUESTION_ENGINE_WORKER_VERSION: ${QUESTION_ENGINE_WORKER_VERSION:-1.0.0}
+      QUESTION_ENGINE_WORKER_CAPABILITIES: ${QUESTION_ENGINE_WORKER_CAPABILITIES:-}
+      QUESTION_ENGINE_NONCE_REDIS_URL: ${MOODLELIKE_DOCKER_REDIS_URL:-redis://redis:6379}
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3100/health').then(async r=>{const b=await r.json();process.exit(r.ok&&(b.status==='ready'||b.status==='ready_no_capabilities')?0:1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
   frontend:
     image: moodlelike-frontend:prod
     build:
