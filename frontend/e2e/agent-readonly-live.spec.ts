@@ -57,9 +57,10 @@ test('loads the independent Agent with real read data and migrates browser ident
   expect(storage.legacyLocaleSource).toBeNull();
 
   await page.getByRole('button', { name: '个人设置', exact: true }).click();
-  await expect(page).toHaveURL(/\/zh\/me\?section=settings$/);
-  await expect(page.getByRole('heading', { name: '账号设置' })).toBeVisible();
-  await expect(page.getByText('机构与 AI 额度', { exact: true })).toHaveCount(0);
-  await expect(page.locator('.standalone-account-card.profile')).toBeVisible();
+  await expect(page).toHaveURL(/\/me\?section=settings$/);
+  await expect(page.getByRole('heading', { name: '个人设置' })).toBeVisible();
+  await expect(page.getByText('机构与额度', { exact: true })).toBeVisible();
+  await expect(page.locator('.me-settings-workspace')).toBeVisible();
+  await expect(page.locator('.account-site-header .user-avatar')).toBeVisible();
   expect(pageErrors).toEqual([]);
 });

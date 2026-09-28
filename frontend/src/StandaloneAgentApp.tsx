@@ -1,6 +1,8 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { ErrorBanner } from './components/ErrorBanner';
+import { Icon } from './components/Icon';
 import { LanguageSelector } from './components/LanguageSelector';
+import { UserAvatar } from './components/UserAvatar';
 import type { User } from './lib/api';
 import { buildAuthRedirectUrl, buildOnboardingUrl, safeAdminReturnPath, safeReturnPath } from './lib/app-navigation';
 import { createAgentHostBridge } from './lib/agent-host-bridge';
@@ -15,7 +17,7 @@ import { useI18n } from './i18n/useI18n';
 const AgentPage = lazy(() => import('./pages/AgentPage').then((module) => ({ default: module.AgentPage })));
 const PublicHomePage = lazy(() => import('./pages/PublicHomePage').then((module) => ({ default: module.PublicHomePage })));
 const PublicAuthPage = lazy(() => import('./pages/PublicAuthPage').then((module) => ({ default: module.PublicAuthPage })));
-const StandaloneAccountPage = lazy(() => import('./pages/StandaloneAccountPage').then((module) => ({ default: module.StandaloneAccountPage })));
+const PublicMePage = lazy(() => import('./pages/PublicMePage').then((module) => ({ default: module.PublicMePage })));
 const StudentOnboardingPage = lazy(() => import('./pages/StudentOnboardingPage').then((module) => ({ default: module.StudentOnboardingPage })));
 
 function readStandaloneRoute(): StandaloneRoute {
@@ -30,7 +32,7 @@ function readInitialAuthMode() {
 
 export default function StandaloneAgentApp() {
   const { currentUser, setCurrentUser, isResolvingAuth, setIsResolvingAuth } = useAuthSession(true);
-  const { locale } = useI18n();
+  const { locale, t } = useI18n();
   const [route, setRoute] = useState<StandaloneRoute>(() => readStandaloneRoute());
   const [error, setError] = useState<string | null>(null);
 
@@ -56,7 +58,15 @@ export default function StandaloneAgentApp() {
   }, []);
 
   function navigate(next: string) {
-    const resolution = resolveStandaloneHref(next, window.location.origin);
+    const legacyLearningPath = (() => {
+      const value = String(next ?? '');
+      const subjectMatch = value.match(/^\/csca-subjects\/(math|physics|chemistry)/);
+      if (subjectMatch) return `${routes.agent}?mode=free&subject=${subjectMatch[1]}`;
+      if (value.startsWith('/csca-mock-exam')) return `${routes.agent}?agentSection=progress`;
+      if (value.startsWith('/csca-special-practice')) return routes.agent;
+      return value;
+    })();
+    const resolution = resolveStandaloneHref(legacyLearningPath, window.location.origin);
     window.history.pushState({}, '', resolution.href);
     window.dispatchEvent(new Event('moodlelike:navigation'));
     setRoute(resolution.route);
@@ -107,7 +117,33 @@ export default function StandaloneAgentApp() {
   });
   return (
     <div className={isAgent ? 'site-shell site-shell-agent' : 'site-shell'}>
-      {(route !== 'home' && (!isAgent || !currentUser)) ? <div className="standalone-language-bar"><LanguageSelector compact /></div> : null}
+      {route === 'me' ? (
+        <header className="site-header site-header-home account-site-header">
+          <div className="site-header-inner">
+            <button type="button" className="site-brand" onClick={() => navigate(routes.home)}>
+              <span className="site-brand-mark" aria-hidden="true">CS</span>
+              <span><strong>{t('homeNav.brand', 'CSCA 学习 Agent')}</strong></span>
+            </button>
+            <nav className="site-nav" aria-label={t('nav.aria', '主导航')}>
+              <button type="button" className="site-link" onClick={() => navigate(routes.home)}>{t('nav.home', '首页')}</button>
+              <button type="button" className="site-link" onClick={() => navigate(routes.agent)}>{t('homeNav.practice', '做题训练')}</button>
+              <button type="button" className="site-link" onClick={() => navigate(`${routes.agent}?agentSection=weakness`)}>{t('homeNav.review', '错题复盘')}</button>
+            </nav>
+            <div className="site-account-group">
+              <LanguageSelector compact />
+              {currentUser ? (
+                <button type="button" className="site-avatar-button" aria-label={t('homeNav.account', '我的账号')} onClick={() => navigate(routes.me)}>
+                  <UserAvatar user={currentUser} size="sm" />
+                  <Icon name="lucide:chevron-down" />
+                </button>
+              ) : (
+                <button type="button" className="site-login-button" onClick={() => navigate(`${routes.auth}?redirect=${encodeURIComponent(routes.me)}`)}>{t('common.login', '登录')}</button>
+              )}
+            </div>
+          </div>
+        </header>
+      ) : null}
+      {(route !== 'home' && route !== 'me' && (!isAgent || !currentUser)) ? <div className="standalone-language-bar"><LanguageSelector compact /></div> : null}
       <main className={mainClassName}>
         <ErrorBanner message={error} />
         <Suspense fallback={<div className="page-loading" role="status" aria-live="polite">正在加载学习空间…</div>}>
@@ -139,10 +175,17 @@ export default function StandaloneAgentApp() {
             />
           )}
           {route === 'me' && (
-            <StandaloneAccountPage
+            <PublicMePage
               currentUser={currentUser}
               isResolvingAuth={isResolvingAuth}
               onCurrentUserChange={setCurrentUser}
+              onGoToMockExam={() => navigate(`${routes.agent}?agentSection=progress`)}
+              onGoToAuth={() => navigate(routes.auth)}
+              onOpenMockExamReport={() => navigate(`${routes.agent}?agentSection=progress`)}
+              onOpenSpecialPracticeReport={() => navigate(`${routes.agent}?agentSection=progress`)}
+              onOpenSpecialPracticeTopic={(subject) => navigate(`${routes.agent}?mode=free&subject=${encodeURIComponent(subject)}`)}
+              onGoToSpecialPractice={() => navigate(routes.agent)}
+              onGoToAdmin={() => window.location.assign(routes.adminAudit)}
               onNavigate={navigate}
             />
           )}
@@ -155,6 +198,20 @@ export default function StandaloneAgentApp() {
           )}
         </Suspense>
       </main>
+      {route === 'me' ? (
+        <footer className="site-footer site-footer-account">
+          <div className="site-footer-account-inner">
+            <div className="site-footer-account-brand">
+              <span className="site-brand-mark" aria-hidden="true">CS</span>
+              <div><strong>Moodlelike</strong><span>© {new Date().getFullYear()} · {t('footer.accountPrivacy', '账号信息仅用于登录、安全与学习记录。')}</span></div>
+            </div>
+            <nav aria-label={t('footer.accountAria', '账号页页脚导航')}>
+              <button type="button" onClick={() => navigate(routes.home)}>{t('footer.backHome', '返回首页')}</button>
+              <button type="button" onClick={() => navigate(routes.agent)}>{t('homeNav.practice', '做题训练')}</button>
+            </nav>
+          </div>
+        </footer>
+      ) : null}
     </div>
   );
 }

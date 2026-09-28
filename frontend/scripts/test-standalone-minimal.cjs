@@ -9,7 +9,10 @@ const required = [
   'src/pages/AgentPage.tsx',
   'src/pages/PublicHomePage.tsx',
   'src/pages/HomePage.tsx',
-  'src/pages/StandaloneAccountPage.tsx',
+  'src/pages/PublicMePage.tsx',
+  'src/components/account/AccountSectionNav.tsx',
+  'src/components/account/AccountOverviewSection.tsx',
+  'src/components/account/AccountSettingsWorkspace.tsx',
   'src/pages/PublicAuthPage.tsx',
   'src/pages/StudentOnboardingPage.tsx',
   'src/components/agent/AgentLearningSettingsView.tsx',
@@ -22,8 +25,7 @@ const required = [
 ];
 const removedLegacy = [
   'src/App.tsx',
-  'src/components/AppRouteRenderer.tsx',
-  'src/pages/PublicMePage.tsx'
+  'src/components/AppRouteRenderer.tsx'
 ];
 
 for (const relativePath of required) {

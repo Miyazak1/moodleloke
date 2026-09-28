@@ -562,9 +562,11 @@ test('separates learning settings from account settings and restores the selecte
   await expect(page.getByRole('button', { name: '做题', exact: true })).toHaveAttribute('aria-current', 'page');
   await expect(page.locator('.agent-composer')).toHaveCount(0);
   await page.getByRole('button', { name: '个人设置', exact: true }).click();
-  await expect(page).toHaveURL(/\/zh\/me\?section=settings$/);
-  await expect(page.getByRole('heading', { name: '账号设置' })).toBeVisible();
-  await expect(page.locator('.standalone-account-card.profile')).toContainText('林澈');
+  await expect(page).toHaveURL(/\/me\?section=settings$/);
+  await expect(page.getByRole('heading', { name: '个人设置' })).toBeVisible();
+  await expect(page.locator('.me-settings-workspace')).toBeVisible();
+  await expect(page.locator('.account-site-header .user-avatar')).toBeVisible();
+  await expect(page.getByLabel('我的账号页内导航')).toContainText('账号设置');
 });
 
 test('reviews a concrete mistake and launches an independently verified targeted round', async ({ page }, testInfo) => {
@@ -720,8 +722,8 @@ test('restores a verification report and shows the durable learning verdict', as
   await expect(page).toHaveURL(/agentSection=weakness/);
 });
 
-test('keeps CSCALite organization and credit controls out of the independent account page', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== 'desktop', 'Independent account boundary coverage only needs one browser viewport.');
+test('inherits the CSCALite personal center, language control, avatar, and organization settings', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'Inherited account coverage only needs one browser viewport.');
   await mockAgentWorkspace(page);
   let creditRequestCount = 0;
   await page.route('**/api/v1/me/ai-credits', (route) => {
@@ -730,13 +732,17 @@ test('keeps CSCALite organization and credit controls out of the independent acc
   });
 
   await page.goto('/me?section=settings');
-  await expect(page.getByRole('heading', { name: '账号设置' })).toBeVisible();
-  await expect(page.getByText('机构与 AI 额度', { exact: true })).toHaveCount(0);
-  await expect(page.getByRole('button', { name: '加入机构', exact: true })).toHaveCount(0);
-  expect(creditRequestCount).toBe(0);
-  await page.getByRole('button', { name: '返回 Agent 设置', exact: true }).click();
-  await expect(page).toHaveURL(/\/zh\/agent\?agentSection=settings$/);
-  await expect(page.getByRole('heading', { name: '设置 Agent 如何安排学习' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '个人设置' })).toBeVisible();
+  await expect(page.locator('.account-site-header .language-selector')).toBeVisible();
+  await expect(page.locator('.account-site-header .user-avatar')).toHaveAttribute('data-avatar-variant');
+  await expect(page.getByText('机构与额度', { exact: true })).toBeVisible();
+  await page.getByText('机构与额度', { exact: true }).click();
+  await expect(page.getByRole('button', { name: '加入机构', exact: true })).toBeVisible();
+  expect(creditRequestCount).toBeGreaterThan(0);
+  await page.getByRole('button', { name: '界面语言' }).click();
+  await page.getByRole('option', { name: /English/ }).click();
+  await expect(page.getByRole('heading', { name: 'Personal settings' })).toBeVisible();
+  await expect(page.locator('.account-site-header .language-selector')).toContainText('English');
 });
 
 test('recovers a failed past-paper workspace without leaving the Agent', async ({ page }, testInfo) => {

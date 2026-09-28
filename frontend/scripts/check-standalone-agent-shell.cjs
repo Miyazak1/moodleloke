@@ -6,7 +6,7 @@ const main = fs.readFileSync(path.join(root, 'src', 'main.tsx'), 'utf8');
 const shell = fs.readFileSync(path.join(root, 'src', 'StandaloneAgentApp.tsx'), 'utf8');
 const adminApp = fs.readFileSync(path.join(root, 'src', 'AdminApp.tsx'), 'utf8');
 const agentPage = fs.readFileSync(path.join(root, 'src', 'pages', 'AgentPage.tsx'), 'utf8');
-const accountPage = fs.readFileSync(path.join(root, 'src', 'pages', 'StandaloneAccountPage.tsx'), 'utf8');
+const accountPage = fs.readFileSync(path.join(root, 'src', 'pages', 'PublicMePage.tsx'), 'utf8');
 const authPage = fs.readFileSync(path.join(root, 'src', 'pages', 'PublicAuthPage.tsx'), 'utf8');
 const publicHomePage = fs.readFileSync(path.join(root, 'src', 'pages', 'PublicHomePage.tsx'), 'utf8');
 const homePage = fs.readFileSync(path.join(root, 'src', 'pages', 'HomePage.tsx'), 'utf8');
@@ -53,10 +53,10 @@ const checks = [
   [!/(routes\.(cscaPrep|cscaExamTime|cscaMockExam|cscaSubjects)|href=["'`]\/csca-|href=["'`]\/schools|href=["'`]\/services\/consulting)/.test(homePage), 'the inherited home must not link to retired CSCALITE student or consulting routes'],
   [contentController.includes("@Get('api/v1/content/home')") && !contentController.includes("'public-content'"), 'public home content must use only the canonical API route'],
   [appModule.includes('ContentModule'), 'the backend application must mount ContentModule'],
-  [shell.includes("import('./pages/StandaloneAccountPage')"), 'standalone account page must be route-lazy-loaded'],
-  [!shell.includes("import('./pages/PublicMePage')"), 'legacy PublicMePage must not be loaded'],
+  [shell.includes("import('./pages/PublicMePage')"), 'the inherited personal learning center must be route-lazy-loaded'],
+  [accountPage.includes('AccountSectionNav') && accountPage.includes('AccountSettingsWorkspace'), 'the personal learning center must retain its overview, records, review, and settings structure'],
   [shell.includes("from './lib/standalone-route-policy'"), 'standalone shell must use the shared route policy'],
-  [shell.includes('resolveStandaloneHref(next, window.location.origin)'), 'internal navigation must resolve through the shared route policy'],
+  [shell.includes('resolveStandaloneHref(legacyLearningPath, window.location.origin)'), 'internal navigation must resolve through the shared route policy'],
   [shell.includes("route === 'not-found'"), 'unknown paths must render a not-found state'],
   [authPage.includes("mode === 'login' || mode === 'register' || mode === 'forgot' || mode === 'reset'"), 'the canonical auth page must preserve login, register, forgot, and reset modes'],
   [shell.includes('initialMode={readInitialAuthMode()}'), 'direct /register visits must retain registration mode before history canonicalization runs'],
@@ -69,7 +69,7 @@ const checks = [
   [!shell.includes("let nextRoute: StandaloneRoute = 'agent'"), 'unknown internal paths must not silently fall back to Agent'],
   [!agentPage.includes('!hasExplicitContext) restoreJourneyWorkspace'), 'a clean /agent route must show an explicit resume entry instead of auto-opening a task'],
   [agentPage.includes("params.get('agentSection')"), 'Agent sections must support explicit deep-link intent'],
-  [accountPage.includes('`${routes.agent}?agentSection=settings`'), 'the account page learning-settings action must open Agent learning settings'],
+  [accountPage.includes('<AccountSettingsWorkspace'), 'the account page must expose the inherited settings workspace'],
   [!onboarding.includes('onNavigate(routes.adminAudit)'), 'onboarding must not navigate to retired in-app admin routes'],
   [!onboarding.includes('onNavigate(routes.cscaMockExam)'), 'onboarding must not navigate to retired CSCA site routes'],
   [onboarding.includes("window.location.assign('/authoring.html')"), 'admin onboarding must enter the standalone authoring document']

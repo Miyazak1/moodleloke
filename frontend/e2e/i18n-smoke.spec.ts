@@ -863,13 +863,16 @@ test.describe('Account workspace i18n', () => {
 
     await page.addInitScript(() => {
       window.localStorage.setItem('cscalite.accessToken', 'test-token');
+      window.localStorage.setItem('moodlelike.locale', 'en');
+      window.localStorage.setItem('moodlelike.localeSource', 'manual');
     });
 
-    await page.goto(localizedPath('en', '/me'));
+    await page.goto('/me');
     await expect(page.getByRole('heading', { name: 'Learner' })).toBeVisible();
 
-    for (const name of ['Overview', 'Settings', 'Practice records', 'Mistake review', 'Online mocks']) {
-      await page.getByRole('button', { name }).click();
+    const accountNav = page.getByLabel('My account section navigation');
+    for (const name of ['Profile & activity', 'Settings', 'Practice records', 'Mistake review', 'Online mocks']) {
+      await accountNav.getByRole('button', { name, exact: true }).click();
       const health = await getVisibleTextHealth(page);
       expect(health.rawKeys, `/me logged-in ${name} raw i18n keys`).toEqual([]);
       expect(health.chinese, `/me logged-in ${name} visible Chinese text`).toEqual([]);
