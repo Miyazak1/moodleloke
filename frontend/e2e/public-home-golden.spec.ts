@@ -30,9 +30,19 @@ test('renders the inherited public home and routes every student intent into Age
   await page.goto('/');
 
   await expect(page).toHaveURL(/\/$/);
+  await expect(page.locator('main.site-main-home')).toBeVisible();
   await expect(page.getByRole('heading', { name: '用真实作答找到下一步。' })).toBeVisible();
   await expect(page.getByText('真实作答诊断', { exact: true })).toBeVisible();
   await expect(page.locator('a[href^="/csca-"], a[href^="/schools"], a[href^="/services/consulting"]')).toHaveCount(0);
+
+  const mainBox = await page.locator('main.site-main-home').boundingBox();
+  expect(mainBox?.width).toBeGreaterThanOrEqual((page.viewportSize()?.width ?? 0) - 1);
+
+  const footer = page.locator('.public-home-footer');
+  await footer.scrollIntoViewIfNeeded();
+  await expect(footer).toBeVisible();
+  await expect(footer.getByRole('navigation', { name: '页脚导航' })).toBeVisible();
+  await expect(footer.getByText(/© \d{4} Moodlelike/)).toBeVisible();
 
   await page.getByRole('link', { name: /开始免费模考/ }).click();
   await expect(page).toHaveURL(/\/agent$/);

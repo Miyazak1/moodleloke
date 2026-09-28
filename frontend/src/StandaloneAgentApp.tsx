@@ -78,6 +78,11 @@ export default function StandaloneAgentApp() {
   }
 
   const isAgent = route === 'agent';
+  const mainClassName = isAgent
+    ? 'site-main site-main-agent'
+    : route === 'home'
+      ? 'site-main site-main-home'
+      : 'site-main';
   const agentHost = createAgentHostBridge({
     navigate,
     requestAuthentication: (returnTo) => navigate(buildAuthRedirectUrl(returnTo)),
@@ -103,7 +108,7 @@ export default function StandaloneAgentApp() {
   return (
     <div className={isAgent ? 'site-shell site-shell-agent' : 'site-shell'}>
       {(route !== 'home' && (!isAgent || !currentUser)) ? <div className="standalone-language-bar"><LanguageSelector compact /></div> : null}
-      <main className={isAgent ? 'site-main site-main-agent' : 'site-main'}>
+      <main className={mainClassName}>
         <ErrorBanner message={error} />
         <Suspense fallback={<div className="page-loading" role="status" aria-live="polite">正在加载学习空间…</div>}>
           {route === 'home' && (
