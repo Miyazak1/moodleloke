@@ -132,12 +132,13 @@ test('lets the user change and persist the interface language from the public sh
   await page.goto('/login?lang=zh-CN');
   const language = page.getByLabel('界面语言');
   await expect(language).toBeVisible();
-  await language.selectOption('en');
+  await language.click();
+  await page.getByRole('option', { name: /English/ }).click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await expect.poll(() => page.evaluate(() => window.localStorage.getItem('moodlelike.locale'))).toBe('en');
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-  await expect(page.getByLabel('Interface language')).toHaveValue('en');
+  await expect(page.getByLabel('Interface language')).toContainText('English');
 });
 
 test('renders an evidence-based learning workspace without horizontal overflow', async ({ page }, testInfo) => {

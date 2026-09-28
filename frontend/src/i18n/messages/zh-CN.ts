@@ -834,6 +834,16 @@ export const zhCNMessages = {
     orgCreditsTitle: 'AI 额度池',
     orgCreditsBody: '为团队统一配置 AI Coach 使用额度。'
   },
+  homeNav: {
+    practice: '做题训练',
+    review: '错题复盘',
+    resources: '真题资料',
+    account: '我的账号'
+  },
+  homeFooter: {
+    focus: '专注数学、物理、化学做题训练',
+    start: '开始学习'
+  },
   homeLite: {
     hero: {
       eyebrow: 'CSCA 模考与科目训练',

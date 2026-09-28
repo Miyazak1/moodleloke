@@ -44,6 +44,16 @@ test('renders the inherited public home and routes every student intent into Age
   await expect(footer.getByRole('navigation', { name: '页脚导航' })).toBeVisible();
   await expect(footer.getByText(/© \d{4} Moodlelike/)).toBeVisible();
 
+  await page.getByLabel('界面语言').click();
+  await page.getByRole('option', { name: /English/ }).click();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await expect(footer.getByRole('navigation', { name: 'Footer navigation' }).getByRole('button', { name: 'Practice' })).toBeVisible();
+  await expect(footer.getByRole('button', { name: /Start Learning/ })).toBeVisible();
+
+  await page.getByLabel('Interface language').click();
+  await page.getByRole('option', { name: /中文/ }).click();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN');
+
   await page.getByRole('link', { name: /开始免费模考/ }).click();
   await expect(page).toHaveURL(/\/agent$/);
 

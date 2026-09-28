@@ -844,6 +844,16 @@ export const viMessages = {
     orgCreditsTitle: 'Quỹ credit AI',
     orgCreditsBody: 'Cấu hình credit AI Coach dùng chung cho đội nhóm.'
   },
+  homeNav: {
+    practice: 'Luyện tập',
+    review: 'Ôn câu sai',
+    resources: 'Đề thi thật',
+    account: 'Tài khoản của tôi'
+  },
+  homeFooter: {
+    focus: 'Tập trung luyện Toán, Vật lý và Hóa học',
+    start: 'Bắt đầu học'
+  },
   homeLite: {
     hero: {
       eyebrow: 'Thi thử CSCA và luyện theo môn',

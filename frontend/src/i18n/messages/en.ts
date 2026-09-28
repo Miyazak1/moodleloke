@@ -830,6 +830,16 @@ export const enMessages = {
     orgCreditsTitle: 'AI Credit Pool',
     orgCreditsBody: 'Configure shared AI Coach credits for the team.'
   },
+  homeNav: {
+    practice: 'Practice',
+    review: 'Mistake Review',
+    resources: 'Past Papers',
+    account: 'My Account'
+  },
+  homeFooter: {
+    focus: 'Focused math, physics, and chemistry practice',
+    start: 'Start Learning'
+  },
   homeLite: {
     hero: {
       eyebrow: 'CSCA mocks and subject practice',
