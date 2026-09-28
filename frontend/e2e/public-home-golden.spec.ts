@@ -10,10 +10,14 @@ async function mockPublicHome(page: Page) {
     window.localStorage.setItem('cscalite.localeSource', 'manual');
   });
   await page.route('**/api/v1/auth/refresh', (route) => json(route, { message: 'Unauthenticated' }, 401));
-  await page.route((url) => url.pathname === '/api/v1/content/home', (route) => json(route, {
-    items: [{
+  await page.route((url) => url.pathname === '/api/v1/content/home', (route) => {
+    const requestedLocale = new URL(route.request().url()).searchParams.get('locale') || 'zh-CN';
+    return json(route, {
+      items: [{
       key: 'home.hero',
       locale: 'zh-CN',
+      requestedLocale,
+      isFallback: requestedLocale !== 'zh-CN',
       title: '用真实作答找到下一步。',
       subtitle: 'CSCA 做题训练',
       body: {
@@ -21,7 +25,8 @@ async function mockPublicHome(page: Page) {
         proofPills: ['真实作答诊断', '三科专项训练', '错题回流验证']
       }
     }]
-  }));
+    });
+  });
   await page.route((url) => url.pathname === '/api/v1/csca-special-practice/home-mini-mock', (route) => json(route, { message: 'Preview unavailable' }, 503));
 }
 
@@ -49,8 +54,18 @@ test('renders the inherited public home and routes every student intent into Age
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await expect(footer.getByRole('navigation', { name: 'Footer navigation' }).getByRole('button', { name: 'Practice' })).toBeVisible();
   await expect(footer.getByRole('button', { name: /Start Learning/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'New to CSCA?' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Take one mock first. See exactly what to improve.' })).toBeAttached();
+  await expect.poll(() => page.locator('body').innerText()).not.toMatch(/[\u3400-\u9fff]/);
 
   await page.getByLabel('Interface language').click();
+  await page.getByRole('option', { name: /Tiếng Việt/ }).click();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
+  await expect(page.getByRole('heading', { name: 'Lần đầu tìm hiểu CSCA?' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Làm một đề thi thử trước để biết chính xác cần cải thiện gì.' })).toBeAttached();
+  await expect.poll(() => page.locator('body').innerText()).not.toMatch(/[\u3400-\u9fff]/);
+
+  await page.getByLabel('Ngôn ngữ giao diện').click();
   await page.getByRole('option', { name: /中文/ }).click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN');
 
