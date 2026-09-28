@@ -49,12 +49,24 @@ test('shows the CSCA-only operations overview and navigates to content without r
   await expect(page.getByText('7', { exact: true })).toBeVisible();
   await expect(page.getByText('content.publish')).toBeVisible();
   await expect(page.getByText(/public_content_block #home.hero/)).toBeVisible();
+  await expect(page.locator('.admin-site-header')).toBeVisible();
+  await expect(page.locator('.admin-site-header .site-avatar-button')).toBeVisible();
 
   const adminNavigation = page.getByRole('navigation', { name: '后台工作区导航' });
-  await expect(adminNavigation.getByRole('button')).toHaveCount(3);
+  await expect(adminNavigation.getByRole('button')).toHaveCount(10);
+  await expect(adminNavigation.getByRole('button', { name: '模考题库' })).toBeVisible();
+  await expect(adminNavigation.getByRole('button', { name: '真题资料' })).toBeVisible();
+  await expect(adminNavigation.getByRole('button', { name: '机构团队' })).toBeVisible();
+  await expect(adminNavigation.getByRole('button', { name: 'AI 题库' })).toBeVisible();
+  const shellBox = await page.locator('.admin-console-shell').boundingBox();
+  expect(shellBox?.width ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(1280);
   await adminNavigation.getByRole('button', { name: '内容管理' }).click();
   await expect(page).toHaveURL(/\/admin\/content$/);
   await expect(page.getByRole('heading', { name: /管理 CSCA 首页/ })).toBeVisible();
+
+  await page.getByRole('navigation', { name: '后台工作区导航' }).getByRole('button', { name: '模考题库' }).click();
+  await expect(page).toHaveURL(/\/admin\/learning\/mock-exams$/);
+  await expect(page.getByRole('heading', { name: '批量导入试卷，也能逐题精修。' })).toBeVisible();
 });
 
 test('denies operations data to a signed-in non-admin', async ({ page }) => {

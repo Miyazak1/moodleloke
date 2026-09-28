@@ -86,7 +86,7 @@ test('shows a fail-safe disabled question-engine plugin without generation actio
   await expect(page.getByText(/question-engine-task-v1/)).toBeVisible();
   await expect(page.getByText('执行模式：in-process')).toBeVisible();
   await expect(page.getByRole('button', { name: /生成|启用|安装/ })).toHaveCount(0);
-  await expect(page.getByRole('navigation', { name: '后台工作区导航' }).getByRole('button')).toHaveCount(3);
+  await expect(page.getByRole('navigation', { name: '后台工作区导航' }).getByRole('button')).toHaveCount(10);
 });
 
 test('does not request plugin status for a non-admin', async ({ page }) => {

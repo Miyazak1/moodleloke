@@ -46,7 +46,7 @@ test('edits and publishes homepage content through the isolated admin app', asyn
 
   await page.goto('/admin/content');
   await expect(page.getByRole('heading', { name: /管理 CSCA 首页/ })).toBeVisible();
-  await expect(page.getByRole('navigation', { name: '后台工作区导航' }).getByRole('button')).toHaveCount(3);
+  await expect(page.getByRole('navigation', { name: '后台工作区导航' }).getByRole('button')).toHaveCount(10);
   await page.getByRole('button', { name: /旧首页标题/ }).click();
   await page.getByRole('textbox', { name: '标题', exact: true }).fill('发布后的首页标题');
   await page.getByRole('button', { name: '保存', exact: true }).click();

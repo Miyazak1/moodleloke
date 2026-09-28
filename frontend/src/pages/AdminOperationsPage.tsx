@@ -116,7 +116,6 @@ export function AdminOperationsPage({ currentUser, onGoToContent, onGoToAuth }: 
       body={currentUser?.role === 'admin' ? copy.body : copy.guestBody}
       onGoToAuth={onGoToAuth}
       onGoToContent={onGoToContent}
-      availableSections={['audit', 'content', 'aiOperations']}
     >
       {currentUser?.role === 'admin' && (
         <>

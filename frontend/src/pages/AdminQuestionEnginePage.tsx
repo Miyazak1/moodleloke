@@ -151,7 +151,6 @@ export function AdminQuestionEnginePage({ currentUser, onGoToAudit, onGoToConten
       onGoToAuth={onGoToAuth}
       onGoToAudit={onGoToAudit}
       onGoToContent={onGoToContent}
-      availableSections={['audit', 'content', 'aiOperations']}
     >
       {currentUser?.role === 'admin' && (
         <>

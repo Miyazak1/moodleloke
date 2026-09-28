@@ -38,8 +38,8 @@
 .c-admin-shell__sidebar,
 .brand-page.admin-work-page .c-admin-shell__sidebar {
   position: sticky;
-  top: 16px;
-  max-height: calc(100vh - 32px);
+  top: 88px;
+  max-height: calc(100vh - 104px);
   overflow: auto;
 }
 

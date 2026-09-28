@@ -1003,7 +1003,6 @@ export function AdminContentPage({
       onGoToMockExams={onGoToMockExams}
       onGoToSpecialPractice={onGoToSpecialPractice}
       onGoToUsers={onGoToUsers}
-      availableSections={['audit', 'content', 'aiOperations']}
     >
       {currentUser?.role === 'admin' && (
         <section className="admin-feedback">
