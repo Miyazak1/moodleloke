@@ -1962,7 +1962,6 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
             <UserAvatar user={currentUser} size="sm" />
           </button>
           <div className="agent-rail-footer">
-            <div className="agent-rail-trust"><Icon name="lucide:shield-check" /><span>{t('agent.history.trust', '只读取你的学习数据；不会直接修改掌握度或自动出题。')}</span></div>
             <button type="button" className="agent-account-card" aria-label={t('agent.account.settings', '个人设置')} onClick={() => onNavigate(`${routes.me}?section=settings`)}>
               <UserAvatar user={currentUser} size="sm" />
               <span>

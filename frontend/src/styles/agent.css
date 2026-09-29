@@ -560,22 +560,6 @@
 .agent-history-list button.active { border-color: rgba(49, 93, 255, .15); background: var(--agent-blue-soft); color: var(--agent-blue); }
 .agent-history-list > p { margin: 4px 8px; color: var(--agent-faint); font-size: 13px; line-height: 1.6; }
 
-.agent-rail-trust {
-  display: grid;
-  grid-template-columns: 17px minmax(0, 1fr);
-  gap: 8px;
-  padding: 12px;
-  border: 1px solid rgba(19, 199, 163, .16);
-  border-radius: 11px;
-  background: rgba(220, 251, 242, .58);
-  color: #587068;
-  font-size: 12px;
-  font-weight: 720;
-  line-height: 1.55;
-}
-
-.agent-rail-trust svg { width: 16px; height: 16px; color: var(--agent-mint-dark); }
-
 .agent-rail-footer { display: grid; gap: 9px; }
 
 .agent-account-card {
@@ -1623,7 +1607,6 @@
   .agent-past-paper-tutor { border-top: 1px solid var(--agent-line); border-left: 0; }
   .agent-conversation-rail { display: flex; min-width: 0; gap: 8px; align-items: center; padding: 9px 12px; overflow: hidden; border-right: 0; border-bottom: 1px solid var(--agent-line); }
   .agent-rail-brand,
-  .agent-rail-trust,
   .agent-account-card,
   .agent-back-home,
   .agent-rail-label,
