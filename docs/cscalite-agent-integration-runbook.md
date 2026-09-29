@@ -41,6 +41,23 @@
 - 学生运行时只通过 `QuestionCatalogReadPort` 读取已审核、已发布题目，通过 `QuestionSupplyDemandPort` 异步上报库存缺口。
 - 学生请求不得同步触发生成、读取 staging 候选题或直接发布题目。库存不足返回 `question_supply_unavailable`，已有做题、判题、报告和学科问答仍可使用。
 
+## 公开 OER 题库接入
+
+- Agent 的可信题目匹配和训练供给可以直接读取 `csca_questions` 中 `status=approved`、所属考纲 topic 已发布的 `external_oer` 题。无需开启自动出题插件。
+- 从旧 CSCALite 数据库接入公开题时，只使用 `scripts/migrate-external-oer-between-containers.sh`；不得使用完整数据库迁移脚本覆盖 Agent 独立部署的数据。
+- 专用脚本通过 topic code 重建目标库外键，不复用旧库数字 topic ID，也不把旧 `source_question_id` 错接到新库的专项题。
+- 默认调用是只读计划模式：
+
+  `bash scripts/migrate-external-oer-between-containers.sh deploy-db-1 moodlelike-next-db-1`
+
+- 应用前必须显式确认目标容器；脚本会先完整备份目标数据库，再只导入 `approved + external_oer + published topic`：
+
+  `CONFIRM_TARGET_CONTAINER=moodlelike-next-db-1 bash scripts/migrate-external-oer-between-containers.sh deploy-db-1 moodlelike-next-db-1 --apply`
+
+- 每道导入题在 `generation_metadata.externalOerImport` 中保留旧题 ID、来源系统和导入时间。脚本按旧题 ID以及题干/答案双重去重，可安全重复执行。
+- 不迁移 `ai`、`pending_review`、`review_failed`、demo、人工测试包或其它候选数据。导入完成后最多等待 Agent 的五分钟题源缓存过期，公开题即可参与可信匹配；重启 backend 可立即清空进程内缓存。
+- 备份和清单位于 `.local/external-oer-migrations/<run-id>/`。发现数量或 topic 映射异常时停止放量，先保留该目录用于回滚分析。
+
 ## 发布前检查
 
 1. 以 `.env.production.example` 创建密钥管理配置，不要把真实值写入仓库。
