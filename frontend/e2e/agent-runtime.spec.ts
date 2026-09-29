@@ -355,6 +355,33 @@ test('offers an explicit resume entry for an active verification without a saved
   await expect(page.getByLabel('当前学习辅助')).toBeHidden();
 });
 
+test('localizes the English Agent resume surface instead of using Chinese fallbacks', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the locale regression contract.');
+  await mockAgentWorkspace(page);
+  const activeWorkspace = {
+    kind: 'adaptive_round', conversationId, roundId: 81,
+    phase: 'practice', taskType: 'free_practice', subject: 'math'
+  };
+  await page.route('**/api/v1/agent/journey/state', (route) => json(route, {
+    ...journeyState,
+    activeWorkspace,
+    stages: journeyState.stages.map((stage) => ({ ...stage, status: 'active', completedAt: null, resume: activeWorkspace }))
+  }));
+  await page.goto('/agent');
+  await page.evaluate(() => {
+    window.localStorage.setItem('moodlelike.locale', 'en');
+    window.localStorage.setItem('moodlelike.localeSource', 'manual');
+  });
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await expect(page.getByRole('button', { name: /Subject Q&A/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Continue where you left off' })).toBeVisible();
+  await expect(page.getByText('Your previous session is unfinished')).toBeVisible();
+  await expect(page.getByText('Math · Free practice', { exact: true })).toBeVisible();
+  await expect(page.getByText('Keep the same subject, question position, and answer state.').first()).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Continue previous practice', exact: true })).toBeVisible();
+});
+
 test('stops polling and exits an unavailable restored round', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the stale round recovery contract.');
   await mockAgentWorkspace(page);

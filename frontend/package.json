@@ -21,6 +21,7 @@
     "test:i18n": "node scripts/run-agent-playwright.cjs --grep \"applies language preference without putting the locale in the route|lets the user change and persist the interface language from the public shell\"",
     "test:i18n-debt": "node scripts/check-i18n-debt.cjs",
     "test:i18n-messages": "node scripts/check-i18n-message-parity.cjs",
+    "test:i18n-agent-keys": "node --loader ../backend/node_modules/ts-node/esm.mjs scripts/check-agent-i18n-keys.mjs",
     "test:i18n-vi": "node scripts/check-i18n-vi-coverage.cjs",
     "test:i18n-content": "node scripts/check-i18n-content-parity.cjs",
     "test:icons": "node scripts/check-icon-coverage.cjs",
