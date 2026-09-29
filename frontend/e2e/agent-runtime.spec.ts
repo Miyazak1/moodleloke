@@ -175,16 +175,31 @@ test('renders an evidence-based learning workspace without horizontal overflow',
   await expect(page.locator('.agent-learning-mode')).toHaveCount(0);
   if (testInfo.project.name === 'desktop') {
     await expect(page.getByText('你的目标与考试日期')).toBeVisible();
-    await expect(page.locator('.agent-account-card')).toContainText('林澈');
-    await expect(page.locator('.agent-account-card')).toContainText('个人设置');
-    await expect(page.locator('.agent-language-selector')).toBeVisible();
+    await expect(page.locator('.agent-header-account')).toBeVisible();
+    await expect(page.locator('.agent-header-language')).toBeVisible();
   }
   if (testInfo.project.name === 'mobile') {
     await expect(page.locator('.agent-mobile-language')).toBeVisible();
     await expect(page.locator('.agent-mobile-account')).toBeVisible();
-    await expect(page.locator('.agent-language-selector')).toBeHidden();
+    await expect(page.locator('.agent-header-language')).toBeHidden();
     await expect(page.locator('.agent-journey-nav')).toHaveCSS('overflow-x', 'auto');
   }
+  const activeLanguageSelector = testInfo.project.name === 'mobile'
+    ? page.locator('.agent-mobile-language')
+    : page.locator('.agent-header-language');
+  await activeLanguageSelector.locator('.language-selector-trigger').click();
+  const languageMenu = page.locator('.language-selector-menu.is-portal');
+  await expect(languageMenu).toBeVisible();
+  const menuBounds = await languageMenu.evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    return { top: rect.top, right: rect.right, bottom: rect.bottom, left: rect.left, viewportWidth: window.innerWidth, viewportHeight: window.innerHeight };
+  });
+  expect(menuBounds.top).toBeGreaterThanOrEqual(0);
+  expect(menuBounds.left).toBeGreaterThanOrEqual(0);
+  expect(menuBounds.right).toBeLessThanOrEqual(menuBounds.viewportWidth);
+  expect(menuBounds.bottom).toBeLessThanOrEqual(menuBounds.viewportHeight);
+  await page.keyboard.press('Escape');
+  await expect(languageMenu).toBeHidden();
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(2);
   const workspace = await page.locator('.agent-workspace').boundingBox();
@@ -1233,7 +1248,19 @@ test('keeps the active question stable while rendering current learning assistan
   await page.getByRole('button', { name: '草稿纸', exact: true }).click();
   await expect(page.getByPlaceholder('记录计算步骤、公式或解题思路……')).toHaveValue('斜率等于 x 的系数');
   await page.getByRole('button', { name: '本题问答', exact: true }).click();
-  await page.getByLabel('围绕当前题提问').fill('为什么先看斜率？');
+  const practiceQuestionComposer = page.getByLabel('围绕当前题提问');
+  await practiceQuestionComposer.focus();
+  const initialComposerStyle = await practiceQuestionComposer.evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    const style = window.getComputedStyle(element);
+    return { height: rect.height, outlineStyle: style.outlineStyle, outlineWidth: style.outlineWidth };
+  });
+  expect(initialComposerStyle.height).toBeGreaterThanOrEqual(78);
+  expect(initialComposerStyle.outlineStyle === 'none' || initialComposerStyle.outlineWidth === '0px').toBe(true);
+  await practiceQuestionComposer.fill('第一行\n第二行\n第三行\n第四行');
+  const expandedComposerHeight = await practiceQuestionComposer.evaluate((element) => element.getBoundingClientRect().height);
+  expect(expandedComposerHeight).toBeGreaterThan(initialComposerStyle.height);
+  await practiceQuestionComposer.fill('为什么先看斜率？');
   await page.getByRole('button', { name: '发送' }).click();
   await expect(page.getByText('因为一次函数中 x 的系数就是斜率。')).toBeVisible();
   expect(await page.locator('.agent-practice-qa-composer').evaluate((root) => {

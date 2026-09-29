@@ -69,6 +69,12 @@
   outline-offset: 2px;
 }
 
+.agent-page .agent-composer textarea:focus-visible {
+  outline: 0;
+  outline-offset: 0;
+  box-shadow: none;
+}
+
 @keyframes agentPanelEnter {
   from { opacity: 0; transform: translateX(10px); }
   to { opacity: 1; transform: translateX(0); }

@@ -475,7 +475,7 @@
 
 .agent-conversation-rail {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
   gap: 16px;
   padding: 22px 16px 16px;
   border-right: 1px solid var(--agent-line);
@@ -505,10 +505,14 @@
 .agent-rail-brand small { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .agent-rail-brand strong { font-size: 16px; }
 .agent-rail-brand small { margin-top: 3px; color: var(--agent-muted); font-size: 12px; font-weight: 760; }
+.agent-rail-controls { display: flex; align-items: center; gap: 8px; }
+.agent-rail-controls .agent-header-language { min-width: 0; flex: 1 1 auto; }
+.agent-rail-controls .agent-header-language .language-selector-trigger { width: 100%; }
 .agent-mobile-language { display: none; }
 .agent-mobile-account { display: none; }
-.agent-language-selector { width: 100%; }
-.agent-language-selector .language-selector-trigger { width: 100%; border-color: var(--agent-line); background: rgba(255, 255, 255, .78); }
+.agent-header-language .language-selector-trigger { min-width: 124px; min-height: 38px; border-color: var(--agent-line); background: rgba(255, 255, 255, .88); }
+.agent-header-account { display: grid; width: 40px; height: 40px; flex: 0 0 40px; place-items: center; padding: 0; border: 1px solid var(--agent-line); border-radius: 999px; background: rgba(255, 255, 255, .92); box-shadow: 0 5px 16px rgba(35, 57, 73, .08); }
+.agent-header-account:hover { border-color: rgba(49, 93, 255, .28); background: #fff; box-shadow: 0 7px 20px rgba(35, 57, 73, .13); }
 
 .agent-journey-nav { display: grid; align-content: start; gap: 5px; min-height: 0; overflow-y: auto; scrollbar-width: thin; }
 .agent-journey-nav button {
@@ -1119,7 +1123,7 @@
 .agent-attachment-actions button:hover:not(:disabled) { background: #edf3f1; color: var(--agent-ink); }
 .agent-attachment-actions button:disabled { opacity: .35; }
 .agent-attachment-actions svg { width: 15px; height: 15px; }
-.agent-composer textarea { width: 100%; min-height: 42px; max-height: 138px; resize: none; padding: 5px 1px; border: 0; outline: 0; background: transparent; color: var(--agent-ink); font-size: 15px; line-height: 1.55; }
+.agent-composer textarea { width: 100%; min-height: 78px; max-height: 200px; resize: none; overflow-y: hidden; padding: 8px 3px; border: 0; outline: 0; background: transparent; color: var(--agent-ink); font-size: 15px; line-height: 1.55; }
 .agent-composer textarea:focus-visible { box-shadow: none; }
 .agent-composer textarea::placeholder { color: #95a2b1; }
 .agent-composer-toolbar { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: 12px; }
@@ -1626,12 +1630,15 @@
   .agent-past-paper-tutor { border-top: 1px solid var(--agent-line); border-left: 0; }
   .agent-conversation-rail { display: flex; min-width: 0; gap: 8px; align-items: center; padding: 9px 12px; overflow: hidden; border-right: 0; border-bottom: 1px solid var(--agent-line); }
   .agent-rail-brand,
+  .agent-rail-controls,
   .agent-rail-trust,
   .agent-account-card,
   .agent-back-home,
   .agent-rail-label,
   .agent-history-list > p { display: none; }
   .agent-rail-footer { display: none; }
+  .agent-header-language,
+  .agent-header-account { display: none; }
   .agent-mobile-language { display: grid; flex: 0 0 auto; min-width: 112px; border-color: var(--agent-line); background: #fff; }
   .agent-mobile-language select { min-width: 72px; }
   .agent-mobile-account { display: inline-grid; flex: 0 0 44px; width: 44px; height: 44px; place-items: center; padding: 0; border: 1px solid var(--agent-line); border-radius: 12px; background: #fff; }

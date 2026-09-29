@@ -304,6 +304,14 @@ type AgentQaTimelineEntry =
   | { kind: 'assistance'; key: string; createdAt: string; order: number; item: AgentPracticeAssistanceEvent }
   | { kind: 'teaching'; key: string; createdAt: string; order: number; item: AgentPracticeTeachingEvent };
 
+function resizeComposerTextarea(element: HTMLTextAreaElement | null) {
+  if (!element) return;
+  element.style.height = 'auto';
+  const nextHeight = Math.min(Math.max(element.scrollHeight, 78), 200);
+  element.style.height = `${nextHeight}px`;
+  element.style.overflowY = element.scrollHeight > 200 ? 'auto' : 'hidden';
+}
+
 export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps) {
   const onNavigate = host.navigate;
   const onAuthRedirect = host.requestAuthentication;
@@ -459,6 +467,14 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
   const [practiceQaError, setPracticeQaError] = useState('');
   const [streamingAnswer, setStreamingAnswer] = useState<{ runId: string; conversationId: string; text: string } | null>(null);
   const practiceQaInputRef = useRef<HTMLTextAreaElement | null>(null);
+
+  useLayoutEffect(() => {
+    resizeComposerTextarea(composerInputRef.current);
+  }, [draft, journeySection]);
+
+  useLayoutEffect(() => {
+    resizeComposerTextarea(practiceQaInputRef.current);
+  }, [practiceAuxiliaryMode, practiceHelpOpen, practiceQaDraft]);
   const practiceQaStreamAbortRef = useRef<AbortController | null>(null);
   const practiceQaQuestionKey = practiceQuestionContext
     ? `${practiceQuestionContext.roundId}.${practiceQuestionContext.questionId}`
@@ -1926,6 +1942,12 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
             <span><Icon name="lucide:bot" /></span>
             <div><strong>{t('agent.brand.title', '学习 Agent')}</strong><small>{t('agent.brand.subtitle', '目标驱动的 CSCA 训练')}</small></div>
           </div>
+          <div className="agent-rail-controls">
+            <LanguageSelector compact className="agent-header-language" />
+            <button type="button" className="agent-header-account" aria-label={t('agent.account.settings', '个人设置')} title={t('agent.account.settings', '个人设置')} onClick={() => onNavigate(`${routes.me}?section=settings`)}>
+              <UserAvatar user={currentUser} size="sm" />
+            </button>
+          </div>
           <LanguageSelector compact className="agent-mobile-language" />
           <nav className="agent-journey-nav" aria-label={t('agent.journey.navAria', '学习旅程')}>
             <button type="button" className={journeySection === 'today' ? 'active' : ''} aria-label={t('agent.journey.today', '做题')} aria-current={journeySection === 'today' ? 'page' : undefined} onClick={() => chooseJourneySection('today')}>
@@ -1949,15 +1971,6 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
           </button>
           <div className="agent-rail-footer">
             <div className="agent-rail-trust"><Icon name="lucide:shield-check" /><span>{t('agent.history.trust', '只读取你的学习数据；不会直接修改掌握度或自动出题。')}</span></div>
-            <LanguageSelector className="agent-language-selector" />
-            <button type="button" className="agent-account-card" aria-label={t('agent.account.settings', '个人设置')} onClick={() => onNavigate(`${routes.me}?section=settings`)}>
-              <UserAvatar user={currentUser} size="sm" />
-              <span>
-                <strong>{currentUser.displayName || currentUser.email}</strong>
-                <small>{t('agent.account.settings', '个人设置')}</small>
-              </span>
-              <Icon name="lucide:settings" />
-            </button>
             <button type="button" className="agent-back-home" onClick={() => onNavigate(routes.home)}>
               <Icon name="lucide:arrow-left" />
               <span>{t('agent.account.backHome', '返回 CSCAPilot 首页')}</span>
@@ -2282,7 +2295,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
                 ref={composerInputRef}
                 id="agent-message"
                 value={draft}
-                rows={1}
+                rows={3}
                 maxLength={8000}
                 placeholder={t('agent.subjectQa.placeholder', '例如：为什么加速度可以是负数？')}
                 disabled={isSending}
@@ -2322,7 +2335,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
                 ref={practiceQaInputRef}
                 id="agent-practice-question"
                 value={practiceQaDraft}
-                rows={1}
+                rows={3}
                 maxLength={8000}
                 placeholder={t('agent.practiceQa.placeholder', '例如：这道题应该先判断哪个物理量？')}
                 disabled={practiceQaSending}
