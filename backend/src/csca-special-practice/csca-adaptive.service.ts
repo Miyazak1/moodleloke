@@ -15,6 +15,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { AdaptivePlannerService } from './adaptive-planner.service';
 import { decideAdaptiveLearning } from './adaptive-learning-decision.policy';
 import { AdaptiveQuestionProviderService, trustedQuestionTransferSignature } from './adaptive-question-provider.service';
+import { isStandardStudentChoiceQuestion } from './student-question-eligibility';
 import {
   ADAPTIVE_EXPOSURE_SOURCE,
   ADAPTIVE_DIAGNOSTIC_ROUND_SIZE,
@@ -445,6 +446,25 @@ export class CscaAdaptiveService {
         WHERE q."status" = 'approved'
           AND q."source_type" <> 'ai'
           AND q."source_question_id" IS NULL
+          AND (
+            q."source_type" <> 'external_oer'
+            OR (
+              q."question_type" = 'single-choice'
+              AND jsonb_typeof(q."options") = 'array'
+              AND jsonb_array_length(q."options") = 4
+              AND (
+                SELECT COUNT(DISTINCT option_row->>'id')
+                FROM jsonb_array_elements(q."options") option_row
+                WHERE BTRIM(COALESCE(option_row->>'id', '')) <> ''
+                  AND BTRIM(COALESCE(option_row->>'text', '')) <> ''
+              ) = 4
+              AND EXISTS (
+                SELECT 1
+                FROM jsonb_array_elements(q."options") option_row
+                WHERE option_row->>'id' = q."correct_answer"
+              )
+            )
+          )
           AND q."syllabus_version" = topic."syllabusVersion"
           AND COALESCE(q."generation_metadata"->'scope'->>'targetUseCase', '') <> 'online_mock_exam'
           AND COALESCE(q."generation_metadata"->>'targetUseCase', '') <> 'online_mock_exam'
@@ -628,12 +648,17 @@ export class CscaAdaptiveService {
     const trustedRows = await this.prisma.cscaQuestion.findMany({
       where: { id: { in: ids }, topicId: topic.id, status: 'approved', sourceType: { not: 'ai' }, sourceQuestionId: null, topic: { status: 'published' } },
       select: {
-        id: true, version: true, questionType: true, knowledgeTags: true, generationMetadata: true, reviewMetadata: true,
+        id: true, version: true, sourceType: true, questionType: true, options: true, correctAnswer: true,
+        knowledgeTags: true, generationMetadata: true, reviewMetadata: true,
         blueprint: { select: { skill: true } }, qualityMetric: { select: { needsReview: true } }
       }
     });
     const trustedMap = new Map(trustedRows.map((item) => [item.id, item]));
-    if (input.questions.some((item) => trustedMap.get(item.questionId)?.version !== item.questionVersion || trustedMap.get(item.questionId)?.qualityMetric?.needsReview)) {
+    if (input.questions.some((item) => {
+      const row = trustedMap.get(item.questionId);
+      return row?.version !== item.questionVersion || row?.qualityMetric?.needsReview
+        || (row?.sourceType === 'external_oer' && !isStandardStudentChoiceQuestion(row));
+    })) {
       throw new ConflictException({ code: 'INTERVENTION_VERIFICATION_SUPPLY_CHANGED', message: '验证题状态已变化，请重新获取方案。' });
     }
     const excludedTransferSignatures = new Set(input.excludedTransferSignatures ?? []);

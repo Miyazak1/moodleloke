@@ -51,9 +51,35 @@ const questions = subjects.flatMap((subject, subjectIndex) => Array.from({ lengt
   };
 }));
 
+const nonstandardExternalQuestions = subjects.map((subject, subjectIndex) => ({
+  id: 100 + subjectIndex,
+  subject,
+  empiricalDifficulty: null,
+  designedDifficulty: 'standard',
+  questionType: 'single-choice',
+  prompt: `${subject} imported free-response question with generated candidates`,
+  options: Array.from({ length: 10 }, (_, index) => ({ id: String.fromCharCode(65 + index), text: `candidate ${index + 1}` })),
+  correctAnswer: 'A',
+  explanation: 'Imported source answer.',
+  knowledgeTags: [`${subject}-external`],
+  topic: {
+    id: 100 + subjectIndex,
+    subject,
+    module: `${subject}-module`,
+    code: `${subject}-external`,
+    title: `${subject} external topic`,
+    status: 'published'
+  }
+}));
+
 const prisma = {
   cscaQuestion: {
-    findMany: async () => []
+    findMany: async (args) => {
+      const ids = args?.where?.id?.in;
+      if (Array.isArray(ids)) return nonstandardExternalQuestions.filter((question) => ids.includes(question.id));
+      const subject = args?.where?.subject;
+      return nonstandardExternalQuestions.filter((question) => question.subject === subject);
+    }
   },
   specialPracticeQuestion: {
     findMany: async (args) => {
@@ -72,6 +98,7 @@ async function main() {
   assert.equal(miniMock.questionCount, 12);
   assert.deepEqual(miniMock.subjects.map((subject) => subject.questionCount), [4, 4, 4]);
   assert.ok(miniMock.questions.every((question) => question.id < 0), 'fixed-bank IDs must use the negative namespace');
+  assert.ok(miniMock.questions.every((question) => question.options.length === 4), 'student mock questions must be four-option choices');
 
   const answers = Object.fromEntries(miniMock.questions.map((question) => [String(question.id), 'A']));
   const report = await service.scoreHomeMiniMock({
@@ -83,6 +110,10 @@ async function main() {
   assert.equal(report.summary.correctCount, 12);
   assert.equal(report.summary.accuracy, 100);
   assert.deepEqual(report.subjectBreakdown.map((subject) => subject.total), [4, 4, 4]);
+  await assert.rejects(
+    () => service.scoreHomeMiniMock({ questionIds: [nonstandardExternalQuestions[0].id], answers: {} }),
+    /本轮题目已不可用/
+  );
   console.log('home mini mock fixed-bank fallback: ok');
 }
 

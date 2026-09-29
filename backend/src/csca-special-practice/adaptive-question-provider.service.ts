@@ -5,6 +5,7 @@ import {
 import { isStudentConsumableAiVersionStatus } from '../ai-questioning/question-version-governance';
 import { PrismaService } from '../prisma/prisma.service';
 import { ADAPTIVE_EXPOSURE_SOURCE, AdaptivePlannedQuestion, AdaptivePlannedTopic, IndependentVerificationQuestion } from './csca-adaptive.types';
+import { isStandardStudentChoiceQuestion } from './student-question-eligibility';
 
 type CandidateQuestion = {
   id: number;
@@ -150,7 +151,8 @@ export class AdaptiveQuestionProviderService {
       select: {
         id: true, version: true, designedDifficulty: true, empiricalDifficulty: true,
         difficultyConfidence: true, qualityMetric: { select: { needsReview: true } },
-        questionType: true, knowledgeTags: true, generationMetadata: true, reviewMetadata: true,
+        sourceType: true, questionType: true, options: true, correctAnswer: true,
+        knowledgeTags: true, generationMetadata: true, reviewMetadata: true,
         blueprint: { select: { skill: true } },
         topic: { select: { id: true, code: true, title: true } }
       },
@@ -160,6 +162,7 @@ export class AdaptiveQuestionProviderService {
     const excludedSignatures = new Set(constraints.excludedTransferSignatures ?? []);
     const allowed = candidates.filter((item) => {
       if (item.qualityMetric?.needsReview || excludedRefs.includes(`csca_question:${item.id}:v${item.version}`)) return false;
+      if (item.sourceType === 'external_oer' && !isStandardStudentChoiceQuestion(item)) return false;
       const signature = trustedQuestionTransferSignature(item);
       return !constraints.requireDifferentTransferSignature || Boolean(signature && !excludedSignatures.has(signature));
     });
@@ -200,7 +203,11 @@ export class AdaptiveQuestionProviderService {
       },
       select: {
         id: true,
+        sourceType: true,
         topicId: true,
+        questionType: true,
+        options: true,
+        correctAnswer: true,
         designedDifficulty: true,
         empiricalDifficulty: true,
         difficultyConfidence: true,
@@ -244,7 +251,8 @@ export class AdaptiveQuestionProviderService {
     });
     const directCurrentQuestions = directQuestions.filter((question) => (
       question.syllabusVersion === question.topic.syllabusVersion &&
-      !isOnlineMockExamQuestion(question.generationMetadata, question.reviewMetadata)
+      !isOnlineMockExamQuestion(question.generationMetadata, question.reviewMetadata) &&
+      (question.sourceType !== 'external_oer' || isStandardStudentChoiceQuestion(question))
     ));
     const exposureIds = Array.from(new Set([...questionIds, ...directCurrentQuestions.map((question) => question.id)]));
     const exposureRows = exposureIds.length ? await this.prisma.cscaQuestionExposure.findMany({

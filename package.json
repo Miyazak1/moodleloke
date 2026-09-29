@@ -31,6 +31,7 @@
     "csca-adaptive:seed-topic-mapping": "node scripts/seed-csca-adaptive-topic-mapping.cjs",
     "csca-adaptive:validate-topic-mapping": "node scripts/validate-csca-adaptive-topic-mapping.cjs",
     "csca-adaptive:rules": "node scripts/csca-adaptive-rules-test.cjs",
+    "external-oer:quarantine": "node scripts/quarantine-nonstandard-external-oer.cjs",
     "csca-adaptive:predictive-replenishment-rules": "node scripts/csca-adaptive-predictive-replenishment-rules-test.cjs",
     "csca-adaptive:predictive-replenishment-smoke": "node scripts/csca-adaptive-predictive-replenishment-smoke.cjs",
     "csca-ai-questioning:rules": "node --expose-gc --max-old-space-size=8192 scripts/csca-ai-questioning-rules-test.cjs",

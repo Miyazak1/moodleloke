@@ -11,6 +11,7 @@ import { LearningIntelligenceFeatureFlagsService } from '../learning-intelligenc
 import { LEARNING_EVIDENCE_WRITER, LearningEvidenceWriter, LearningEvidenceWriteResult, learningEvidenceReceipt } from '../learning-intelligence/learning-evidence-writer.port';
 import { PrismaService } from '../prisma/prisma.service';
 import { SpecialPracticeOption, SpecialPracticeSessionPatchPayload, SpecialPracticeSubject } from './csca-special-practice.types';
+import { isStandardStudentChoiceQuestion } from './student-question-eligibility';
 
 const SUBJECTS: Array<{ id: SpecialPracticeSubject; title: string; description: string; tags: string[] }> = [
   { id: 'math', title: '数学', description: '集合、函数、几何与概率统计的知识点训练。', tags: ['集合与不等式', '函数', '几何与代数', '概率与统计'] },
@@ -773,7 +774,8 @@ export class CscaSpecialPracticeService {
         include: { topic: true },
         orderBy: [{ topicId: 'asc' }, { id: 'asc' }]
       });
-      const picked = [...approvedAiCandidates]
+      const picked = approvedAiCandidates
+        .filter(isStandardStudentChoiceQuestion)
         .sort((left, right) => seededRank(`${seed}:${subject.id}`, left.id) - seededRank(`${seed}:${subject.id}`, right.id))
         .slice(0, HOME_MINI_MOCK_PER_SUBJECT)
         .map(approvedAiMiniMockQuestion);
@@ -789,6 +791,7 @@ export class CscaSpecialPracticeService {
           orderBy: [{ topicId: 'asc' }, { orderNumber: 'asc' }, { id: 'asc' }]
         });
         picked.push(...publishedSpecialCandidates
+          .filter(isStandardStudentChoiceQuestion)
           .sort((left, right) => seededRank(`${seed}:${subject.id}:fixed`, left.id) - seededRank(`${seed}:${subject.id}:fixed`, right.id))
           .slice(0, missingCount)
           .map(publishedSpecialMiniMockQuestion));
@@ -843,8 +846,8 @@ export class CscaSpecialPracticeService {
       orderBy: [{ id: 'asc' }]
     }) : [];
     const byId = new Map<number, HomeMiniMockQuestionSource>([
-      ...approvedAiRows.map((question) => [question.id, approvedAiMiniMockQuestion(question)] as const),
-      ...publishedSpecialRows.map((question) => [-question.id, publishedSpecialMiniMockQuestion(question)] as const)
+      ...approvedAiRows.filter(isStandardStudentChoiceQuestion).map((question) => [question.id, approvedAiMiniMockQuestion(question)] as const),
+      ...publishedSpecialRows.filter(isStandardStudentChoiceQuestion).map((question) => [-question.id, publishedSpecialMiniMockQuestion(question)] as const)
     ]);
     const ordered = questionIds.map((id) => byId.get(id)).filter((question): question is HomeMiniMockQuestionSource => Boolean(question));
     if (ordered.length !== questionIds.length) throw new BadRequestException('本轮题目已不可用，请重新抽题。');
