@@ -139,7 +139,10 @@ export class AgentService {
     const baseSupply = primaryTask && ['diagnostic', 'review', 'targeted_practice', 'intervention_verification'].includes(primaryTask.type)
       ? await this.learningRead.getQuestionSupplyStatus({
           subject: primaryTask.subject,
-          topicIds: primaryTask.topicIds,
+          // Diagnostic rounds are assembled across the published subject pool.
+          // Applying the prescription's evidence-gap topic here made preflight
+          // report zero even though the same round launcher could use the full pool.
+          topicIds: primaryTask.type === 'diagnostic' ? [] : primaryTask.topicIds,
           requestedCount: primaryTask.questionCount ?? 5
         }).catch(() => ({ status: 'unknown' as const, requestedCount: primaryTask.questionCount ?? 5, availableCount: null }))
       : primaryTask ? { status: 'not_required' as const, requestedCount: 0, availableCount: null } : null;

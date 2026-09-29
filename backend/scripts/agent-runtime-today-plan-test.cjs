@@ -171,6 +171,31 @@ async function testTodayPlanCompletesInOrder() {
   assert.equal('difficulty' in tools.inputs.find((item) => item.name === 'get_question_supply_status').input, false);
 }
 
+async function testDiagnosticPreflightUsesTheSubjectPool() {
+  const prisma = runtimeStore();
+  const tools = successfulTools();
+  const execute = tools.execute.bind(tools);
+  tools.execute = async (context, name, input) => {
+    const result = await execute(context, name, input);
+    if (name !== 'get_learning_prescription') return result;
+    return {
+      ...result,
+      data: {
+        ...result.data,
+        prescription: {
+          ...result.data.prescription,
+          objective: 'diagnostic:chemistry:3',
+          tasks: [{ type: 'diagnostic', subject: 'chemistry', topicIds: [3], questionCount: 5, priority: 1 }]
+        }
+      }
+    };
+  };
+  await new AgentRunnerService(prisma, tools, new AgentEventService(prisma)).run('run-1', 7);
+  const supplyInput = tools.inputs.find((item) => item.name === 'get_question_supply_status').input;
+  assert.deepEqual(supplyInput.topicIds, [], 'diagnostic preflight must match the subject-wide round launcher');
+  assert.equal(prisma.state.artifacts[0].route, '/agent');
+}
+
 async function testLlmRoutingCanRecognizeNaturalPlanRequestWithoutChoosingTools() {
   const prisma = runtimeStore({
     run: {
@@ -544,6 +569,10 @@ async function testJourneyOverviewUsesLearningCapabilitiesAndPublishedResources(
     async getScoreGoal(userId) {
       calls.push(['score-goal', userId]);
       return { goal: null };
+    },
+    async getQuestionSupplyStatus(input) {
+      calls.push(['supply', input]);
+      return { status: 'sufficient', requestedCount: input.requestedCount, availableCount: 100, canCreatePractice: true };
     }
   };
   const pastPapers = {
@@ -563,7 +592,19 @@ async function testJourneyOverviewUsesLearningCapabilitiesAndPublishedResources(
       }
     }
   };
-  const service = new AgentService(prisma, { isWebEnabled: () => true }, {}, {}, learningRead, pastPapers);
+  const decisions = {
+    async getLearningPrescription() {
+      return {
+        status: 'ready',
+        prescription: {
+          prescriptionId: 'rx-diagnostic', reasonSummary: 'Diagnose chemistry coverage.', reasonCodes: ['EVIDENCE_INSUFFICIENT'],
+          confidence: 'medium', estimatedMinutes: 15,
+          tasks: [{ type: 'diagnostic', subject: 'chemistry', topicIds: [3], questionCount: 5, priority: 1 }]
+        }
+      };
+    }
+  };
+  const service = new AgentService(prisma, { isWebEnabled: () => true }, {}, {}, learningRead, pastPapers, undefined, decisions);
   const overview = await service.getJourneyOverview(7, 'en');
   assert.equal(overview.weaknesses.stateSource, 'user_csca_topic_mastery_v1');
   assert.equal(overview.weaknesses.reviewQueue[0].reviewItemId, 'review-1');
@@ -572,6 +613,8 @@ async function testJourneyOverviewUsesLearningCapabilitiesAndPublishedResources(
   assert.deepEqual(calls.find((item) => item[0] === 'review')[2], { language: 'en', limit: 40 });
   assert.equal(calls.filter((item) => item[0] === 'papers').length, 2);
   assert.deepEqual(calls.find((item) => item[0] === 'score-goal'), ['score-goal', 7]);
+  assert.deepEqual(calls.find((item) => item[0] === 'supply')[1].topicIds, [], 'diagnostic overview must count the subject-wide pool');
+  assert.equal(overview.nextDecision.availability.availableCount, 100);
 }
 
 async function testPrescriptionExposureIsOwnedAndIdempotent() {
@@ -1333,6 +1376,7 @@ async function testEventReplayIsUserScopedAndResumesAfterCursor() {
 
 async function main() {
   await testTodayPlanCompletesInOrder();
+  await testDiagnosticPreflightUsesTheSubjectPool();
   await testLlmRoutingCanRecognizeNaturalPlanRequestWithoutChoosingTools();
   await testAttachmentRunHandsOffWithoutMisleadingAssistantMessage();
   await testUpdatingDecisionDoesNotCreateArtifact();

@@ -533,9 +533,11 @@ export class AgentRunnerService {
     let canStart = type === 'mock_exam' || type === 'intervention_verification';
     if (type === 'diagnostic' || type === 'review' || type === 'targeted_practice' || (type === 'concept_learning' && review)) {
       const reviewTopicId = Number(review?.topicId);
-      const requestedTopicIds = Number.isInteger(reviewTopicId) && reviewTopicId > 0
-        ? [reviewTopicId]
-        : Array.isArray(task.topicIds) ? task.topicIds : [];
+      const requestedTopicIds = type === 'diagnostic'
+        ? []
+        : Number.isInteger(reviewTopicId) && reviewTopicId > 0
+          ? [reviewTopicId]
+          : Array.isArray(task.topicIds) ? task.topicIds : [];
       supply = successData(await this.tools.execute(context, 'get_question_supply_status', {
         subject,
         topicIds: requestedTopicIds,
