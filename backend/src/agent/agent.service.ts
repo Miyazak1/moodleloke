@@ -140,7 +140,6 @@ export class AgentService {
       ? await this.learningRead.getQuestionSupplyStatus({
           subject: primaryTask.subject,
           topicIds: primaryTask.topicIds,
-          difficulty: primaryTask.difficulty,
           requestedCount: primaryTask.questionCount ?? 5
         }).catch(() => ({ status: 'unknown' as const, requestedCount: primaryTask.questionCount ?? 5, availableCount: null }))
       : primaryTask ? { status: 'not_required' as const, requestedCount: 0, availableCount: null } : null;

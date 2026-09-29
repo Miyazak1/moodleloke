@@ -539,7 +539,6 @@ export class AgentRunnerService {
       supply = successData(await this.tools.execute(context, 'get_question_supply_status', {
         subject,
         topicIds: requestedTopicIds,
-        ...(typeof task.difficulty === 'string' ? { difficulty: task.difficulty } : {}),
         requestedCount: questionCount
       })) as Record<string, unknown>;
       canStart = supply.canCreatePractice === true;
@@ -548,7 +547,6 @@ export class AgentRunnerService {
           source: 'agent_today_plan',
           subjectCode: subject,
           topicIds: requestedTopicIds,
-          ...(typeof task.difficulty === 'string' ? { difficulty: task.difficulty } : {}),
           taskType: type,
           requestedCount: questionCount,
           availableCount: Number(supply.availableCount ?? 0),
@@ -561,7 +559,6 @@ export class AgentRunnerService {
           source: 'agent_today_plan',
           subjectCode: subject,
           topicIds: requestedTopicIds,
-          ...(typeof task.difficulty === 'string' ? { difficulty: task.difficulty } : {}),
           taskType: type,
           requestedCount: questionCount,
           availableCount: Number(supply.availableCount ?? questionCount),

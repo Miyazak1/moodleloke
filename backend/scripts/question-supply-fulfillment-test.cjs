@@ -3,6 +3,7 @@ const { readFileSync } = require('node:fs');
 const { QuestionSupplyFulfillmentService } = require('../dist/backend/src/agent/question-supply-fulfillment.service');
 const { QuestionSupplyShadowAdapter } = require('../dist/backend/src/agent/question-supply-shadow.adapter');
 const { AgentRuntimeFeatureFlagsService } = require('../dist/backend/src/agent/agent-runtime-feature-flags.service');
+const { QuestionSupplyDemandV1Schema } = require('../dist/backend/src/agent/question-supply-fulfillment.contract');
 
 function createStore(requestOverrides = {}) {
   const request = {
@@ -110,16 +111,18 @@ async function testPlanDispatchAndInventoryRecovery() {
   const prisma = createStore();
   let availableCount = 2;
   let dispatchCount = 0;
+  const inventoryInputs = [];
   const adapter = {
     async dispatch(demand) {
       dispatchCount += 1;
       assert.equal(demand.schemaVersion, '1');
       assert.equal(demand.deficitCount, 3);
+      assert.equal('difficulty' in demand, false, 'automatic question supply demand must not require difficulty');
       assert.equal('sourceEntityId' in demand, false, 'production contract must not expose student-linked entity references');
       return new QuestionSupplyShadowAdapter().dispatch(demand);
     }
   };
-  const learningSupply = { async getQuestionSupplyStatus() { return { canCreatePractice: availableCount >= 5, availableCount }; } };
+  const learningSupply = { async getQuestionSupplyStatus(input) { inventoryInputs.push(input); return { canCreatePractice: availableCount >= 5, availableCount }; } };
   const service = new QuestionSupplyFulfillmentService(prisma, enabledFlags(), learningSupply, {}, adapter);
   const first = await service.run({ limit: 10, workerId: 'test-worker' }, 99);
   assert.equal(first.materialized[0].created, true);
@@ -129,6 +132,7 @@ async function testPlanDispatchAndInventoryRecovery() {
   assert.equal(dispatchCount, 1);
   assert.equal(prisma.state.planEvents.some((item) => item.metadata?.generationInvoked === false), true);
   assert.equal(prisma.state.inventoryChecks[0].result, 'still_short');
+  assert.equal('difficulty' in inventoryInputs[0], false);
 
   availableCount = 7;
   const second = await service.run({ limit: 10, workerId: 'test-worker' }, 99);
@@ -194,7 +198,30 @@ async function testDisabledGateAndSourceIsolation() {
   assert.doesNotMatch(source, /ai-questioning|AIQuestioningService|requestPracticeGeneration/);
 }
 
+function testLegacyDemandDropsDifficulty() {
+  const demand = QuestionSupplyDemandV1Schema.parse({
+    schemaVersion: '1',
+    demandKey: 'b'.repeat(64),
+    requestId: 'legacy-request',
+    requestCycle: 1,
+    source: 'agent_today_plan',
+    subjectCode: 'physics',
+    topicIds: [12],
+    difficulty: 'hard',
+    taskType: 'targeted_practice',
+    verificationPhase: null,
+    sourcePolicy: 'reviewed_published_only',
+    requestedCount: 5,
+    lastKnownAvailableCount: 0,
+    deficitCount: 5,
+    constraints: {},
+    observedAt: '2026-09-29T00:00:00.000Z'
+  });
+  assert.equal('difficulty' in demand, false, 'legacy difficulty must not reach automatic supply adapters');
+}
+
 async function main() {
+  testLegacyDemandDropsDifficulty();
   await testPlanDispatchAndInventoryRecovery();
   await testVerificationUsesExactOwnedExposureCheck();
   await testAdapterFailureIsRetriedSafely();

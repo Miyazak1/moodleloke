@@ -8,11 +8,11 @@ export const ApprovedQuestionSupplyQueryV1Schema = z.object({
   schemaVersion: z.literal(QUESTION_SUPPLY_PLUGIN_CONTRACT_VERSION),
   subjectCode: z.enum(['math', 'physics', 'chemistry']),
   topicIds: z.array(z.number().int().positive()).max(20),
-  difficulty: z.string().max(24).nullable(),
+  difficulty: z.string().max(24).nullable().optional(),
   taskType: z.string().min(1).max(48),
   sourcePolicy: z.literal('reviewed_published_only'),
   limit: z.number().int().positive().max(100)
-}).strict();
+}).strict().transform(({ difficulty: _legacyDifficulty, ...query }) => query);
 
 export type ApprovedQuestionSupplyQueryV1 = z.infer<typeof ApprovedQuestionSupplyQueryV1Schema>;
 
@@ -32,7 +32,7 @@ export const QuestionSupplyDemandV1Schema = z.object({
   source: z.enum(['agent_today_plan', 'intervention_verification']),
   subjectCode: z.enum(['math', 'physics', 'chemistry']),
   topicIds: z.array(z.number().int().positive()).max(20),
-  difficulty: z.string().max(24).nullable(),
+  difficulty: z.string().max(24).nullable().optional(),
   taskType: z.string().min(1).max(48),
   verificationPhase: z.enum(['immediate', 'retention', 'transfer']).nullable(),
   sourcePolicy: z.literal('reviewed_published_only'),
@@ -41,7 +41,7 @@ export const QuestionSupplyDemandV1Schema = z.object({
   deficitCount: z.number().int().positive(),
   constraints: z.record(z.string(), z.unknown()),
   observedAt: z.string().datetime()
-}).strict();
+}).strict().transform(({ difficulty: _legacyDifficulty, ...demand }) => demand);
 
 export type QuestionSupplyDemandV1 = z.infer<typeof QuestionSupplyDemandV1Schema>;
 

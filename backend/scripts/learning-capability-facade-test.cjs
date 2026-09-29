@@ -61,7 +61,7 @@ const prisma = {
   specialPracticeQuestion: { count: track('specialPracticeQuestion.count', 3) },
   learningInterventionVerification: {
     findFirst: track('learningInterventionVerification.findFirst', (args) => args.where.userId === 42 && args.where.id === 'verification-1' ? ({
-      id: 'verification-1', deliveryId: 'delivery-1', phase: 'retention', status: 'completed', dueAt: now,
+      id: 'verification-1', deliveryId: 'delivery-1', subjectCode: 'math', phase: 'retention', status: 'completed', dueAt: now,
       outcome: { result: 'passed', accuracy: 1, evaluatedAt: now },
       sourceDelivery: {
         stabilityAssessment: {
@@ -147,6 +147,13 @@ async function main() {
   const supply = await invoke('get_question_supply_status', { subject: 'math', requestedCount: 5 });
   assert.equal(supply.availableCount, 7);
   assert.equal(supply.status, 'sufficient');
+  const topicSupply = await invoke('get_question_supply_status', {
+    subject: 'math', topicIds: [7], difficulty: 'foundation', requestedCount: 4
+  });
+  assert.equal(topicSupply.availableCount, 4, 'legacy difficulty input must not hide qualified topic inventory');
+  assert.equal(topicSupply.filters.difficulty, null, 'difficulty is metadata, not an active supply filter');
+  const latestQuestionCount = seen.filter((entry) => entry.name === 'cscaQuestion.count').at(-1);
+  assert.equal('designedDifficulty' in latestQuestionCount.args.where, false);
 
   const stability = await invoke('get_intervention_stability', { verificationId: 'verification-1' });
   assert.equal(stability.currentPhase, 'retention');

@@ -446,9 +446,9 @@ async function testQuestionProvider() {
   ], 2);
 
   assertEqual(selected.length, 2, 'Question provider must pick requested number of questions.');
-  assertEqual(selected[0].questionId, 11, 'Question provider must prefer target difficulty before lower exposure.');
+  assertEqual(selected[0].questionId, 12, 'Question provider must prefer lower exposure without treating difficulty as a selection constraint.');
   assertEqual(selected[0].questionSource, 'special_practice', 'Legacy provider candidates must expose special_practice source.');
-  assertEqual(selected[1].questionId, 21, 'Question provider must prefer closest difficulty when exposure is tied.');
+  assertEqual(selected[1].questionId, 21, 'Question provider must use stable ordering when exposure is tied.');
   assertEqual(new Set(selected.map((item) => item.questionId)).size, selected.length, 'Question provider must not duplicate questions.');
 }
 

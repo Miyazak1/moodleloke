@@ -17,27 +17,6 @@ type CandidateQuestion = {
   topicTitle: string;
 };
 
-function difficultyScore(difficulty: string, targetDifficulty: string) {
-  const rank = (value: string) => {
-    if (value.includes('挑战')) return 4;
-    if (value.includes('较难') || value.includes('提高')) return 3;
-    if (value.includes('中')) return 2;
-    return 1;
-  };
-  return Math.abs(rank(difficulty) - rank(targetDifficulty));
-}
-
-function difficultyRank(difficulty: string) {
-  if (difficulty.includes('挑战')) return 4;
-  if (difficulty.includes('较难') || difficulty.includes('提高')) return 3;
-  if (difficulty.includes('中')) return 2;
-  return 1;
-}
-
-function difficultyOverTarget(difficulty: string, targetDifficulty: string) {
-  return Math.max(0, difficultyRank(difficulty) - difficultyRank(targetDifficulty));
-}
-
 function recordFrom(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
 }
@@ -339,8 +318,6 @@ export class AdaptiveQuestionProviderService {
             a.exposurePenalty - b.exposurePenalty ||
             a.profilePriority - b.profilePriority ||
             aPreferred - bPreferred ||
-            difficultyScore(a.difficulty, plannedTopic.targetDifficulty) - difficultyScore(b.difficulty, plannedTopic.targetDifficulty) ||
-            difficultyOverTarget(a.difficulty, plannedTopic.targetDifficulty) - difficultyOverTarget(b.difficulty, plannedTopic.targetDifficulty) ||
             aExposure - bExposure ||
             (a.source === b.source ? 0 : a.source === 'csca_question' ? -1 : 1) ||
             a.id - b.id
@@ -363,21 +340,15 @@ export class AdaptiveQuestionProviderService {
     const fallbackCandidates = Array.from(candidatesByTopic.values()).flat()
       .filter((candidate) => !selectedIds.has(candidate.id))
       .sort((a, b) => {
-        const aTopic = plannedTopics.find((topic) => topic.topicId === a.topicId);
-        const bTopic = plannedTopics.find((topic) => topic.topicId === b.topicId);
         const aExposure = exposureMap.get(`${ADAPTIVE_EXPOSURE_SOURCE}:${a.source}:${a.id}`)?.seenCount
           ?? (a.source === 'special_practice' ? exposureMap.get(`${ADAPTIVE_EXPOSURE_SOURCE}:${a.id}`)?.seenCount : undefined)
           ?? 0;
         const bExposure = exposureMap.get(`${ADAPTIVE_EXPOSURE_SOURCE}:${b.source}:${b.id}`)?.seenCount
           ?? (b.source === 'special_practice' ? exposureMap.get(`${ADAPTIVE_EXPOSURE_SOURCE}:${b.id}`)?.seenCount : undefined)
           ?? 0;
-        const aTarget = aTopic?.targetDifficulty ?? a.difficulty;
-        const bTarget = bTopic?.targetDifficulty ?? b.difficulty;
         return (
           a.exposurePenalty - b.exposurePenalty ||
           a.profilePriority - b.profilePriority ||
-          difficultyScore(a.difficulty, aTarget) - difficultyScore(b.difficulty, bTarget) ||
-          difficultyOverTarget(a.difficulty, aTarget) - difficultyOverTarget(b.difficulty, bTarget) ||
           aExposure - bExposure ||
           (a.source === b.source ? 0 : a.source === 'csca_question' ? -1 : 1) ||
           a.id - b.id

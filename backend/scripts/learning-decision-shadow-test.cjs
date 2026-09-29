@@ -50,6 +50,8 @@ function testPureRules() {
   assert.equal(gaps[0].estimatedScoreImpact, null, 'uncalibrated shadow rules must not invent score impact');
   const prescription = buildLearningPrescription(input, gaps);
   assert.equal(prescription.tasks[0].type, 'concept_learning');
+  assert.equal('difficulty' in prescription.tasks[0], false, 'new learning tasks must not carry a difficulty constraint');
+  assert.equal(gaps.some((item) => item.type === 'difficulty'), false, 'difficulty must not be emitted as a learning gap');
   assert.equal(prescription.versions.forecastModelVersion, 'score-readiness-shadow-gate-v1');
   assert.deepEqual(buildTargetGapSnapshot(input), buildTargetGapSnapshot(input), 'same frozen input must replay deterministically');
 

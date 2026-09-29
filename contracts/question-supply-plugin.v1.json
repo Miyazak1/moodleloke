@@ -19,5 +19,9 @@
     "mayReadStagingCandidates": false,
     "onInventoryShortage": "question_supply_unavailable",
     "mustRemainAvailable": ["existing_practice", "answer_checking", "reports", "independent_subject_qa"]
+  },
+  "inventoryDimensions": {
+    "required": ["subject", "topic"],
+    "difficultyPolicy": "metadata_only_not_a_supply_constraint"
   }
 }

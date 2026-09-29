@@ -96,6 +96,7 @@ async function testCreateDeduplicateAndNoGeneratorSideEffect() {
   const first = await service.recordBestEffort(gap);
   const second = await service.recordBestEffort({ ...gap, sourceEntityId: 'rx-2', availableCount: 1, constraints: { b: true, a: ['x'] } });
   const third = await service.recordBestEffort({ ...gap, sourceEntityId: 'rx-3', availableCount: 1, constraints: { a: ['x'], b: true } });
+  const difficultyIgnored = await service.recordBestEffort({ ...gap, difficulty: 'hard', sourceEntityId: 'rx-4' });
   assert.equal(prisma.state.requests.length, 2, 'constraints define separate inventory demand cells');
   assert.equal(first.requestKey.length, 64);
   assert.equal(second.observationCount, 2, 'constraint object key order must not change the request key');
@@ -104,6 +105,8 @@ async function testCreateDeduplicateAndNoGeneratorSideEffect() {
   assert.equal(second.lastContextSnapshot.automaticQuestionGenerationInvoked, false);
   assert.equal(second.lastContextSnapshot.aiInvoked, false);
   assert.equal(third.requestKey, second.requestKey);
+  assert.equal(difficultyIgnored.requestKey, first.requestKey, 'difficulty must not split supply demand cells');
+  assert.equal(first.difficulty, null, 'new supply requests keep the legacy column neutral');
   assert.equal(prisma.state.events.length, 2, 'ordinary repeated observations are aggregated, not appended as noisy audit events');
   const source = readFileSync(require.resolve('../dist/backend/src/agent/question-supply-request.service'), 'utf8');
   assert.doesNotMatch(source, /AIQuestioning|GenerationCapability|requestPracticeGeneration|generateQuestion/);
@@ -141,7 +144,7 @@ async function testRecoveryConfirmationIsExactAndIdempotent() {
   const service = new QuestionSupplyRequestService(prisma, new AgentRuntimeFeatureFlagsService({ CSCA_QUESTION_SUPPLY_REQUEST_ENABLED: 'true' }));
   await service.recordBestEffort(gap);
   const recovered = {
-    source: gap.source, subjectCode: gap.subjectCode, topicIds: gap.topicIds, difficulty: gap.difficulty,
+    source: gap.source, subjectCode: gap.subjectCode, topicIds: gap.topicIds,
     taskType: gap.taskType, requestedCount: gap.requestedCount, availableCount: 7,
     confirmationKind: 'domain_preflight_passed'
   };

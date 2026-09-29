@@ -94,10 +94,13 @@ function runtimeStore(overrides = {}) {
 
 function successfulTools() {
   const called = [];
+  const inputs = [];
   return {
     called,
-    async execute(_context, name) {
+    inputs,
+    async execute(_context, name, input) {
       called.push(name);
+      inputs.push({ name, input });
       const data = {
         get_learning_profile: { educationStageCode: 'high_school', gradeCode: '12', targetSubjectCodes: ['math'] },
         get_score_goal: { status: 'configured', goal: { goalId: 'goal-1' } },
@@ -164,6 +167,8 @@ async function testTodayPlanCompletesInOrder() {
   assert.equal(recovered.length, 1);
   assert.equal(recovered[0].confirmationKind, 'domain_preflight_passed');
   assert.equal(recovered[0].availableCount, 8);
+  assert.equal('difficulty' in recovered[0], false);
+  assert.equal('difficulty' in tools.inputs.find((item) => item.name === 'get_question_supply_status').input, false);
 }
 
 async function testLlmRoutingCanRecognizeNaturalPlanRequestWithoutChoosingTools() {
@@ -451,6 +456,7 @@ async function testSupplyShortageCreatesOnlyAnOperationalRequest() {
   assert.equal(observed[0].requestedCount, 5);
   assert.equal(observed[0].availableCount, 2);
   assert.equal(observed[0].source, 'agent_today_plan');
+  assert.equal('difficulty' in observed[0], false);
 }
 
 async function testGroundedReadRoutesUseOnlyServerCapabilities() {

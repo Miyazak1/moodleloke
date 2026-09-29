@@ -104,7 +104,7 @@ function recommendationReason(decision: NonNullable<AgentJourneyOverview['nextDe
   if (reasons.has('EXAM_APPROACHING') || reasons.has('RECENT_MOCK_MISSING')) return `考试时间临近，${subject}还缺少近期完整模考证据。`;
   if (reasons.has('SYLLABUS_COVERAGE_INCOMPLETE')) return `${subject}仍有知识点缺少独立作答记录，先用短诊断补齐覆盖。`;
   if (reasons.has('EVIDENCE_INSUFFICIENT') || reasons.has('INTERVENTION_EVIDENCE_INCONCLUSIVE')) return `${subject}现有作答证据还不足以形成可靠判断，先完成一组短诊断。`;
-  if (reasons.has('INDEPENDENCE_OR_DIFFICULTY_LIMIT')) return `${subject}当前独立作答或难度覆盖仍有缺口，建议用针对性练习继续验证。`;
+  if (reasons.has('INDEPENDENCE_BELOW_BASELINE') || reasons.has('INDEPENDENCE_OR_DIFFICULTY_LIMIT')) return `${subject}当前独立作答仍不够稳定，建议用针对性练习继续验证。`;
   if (reasons.has('FLUENCY_BELOW_BASELINE')) return `${subject}的正确性已有基础，但完成速度和熟练度仍需加强。`;
   if (reasons.has('TRANSFER_BELOW_BASELINE')) return `${subject}在变式题中的迁移表现还不稳定，需要针对性练习。`;
   if (reasons.has('MASTERY_BELOW_BASELINE') || reasons.has('INTERVENTION_NOT_STABLE')) return `${subject}近期独立作答尚未稳定，建议先处理当前最明显的知识缺口。`;

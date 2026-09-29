@@ -47,7 +47,8 @@ assert.deepEqual(defaults.snapshot(), {
   interventionShadow: false,
   interventionDelivery: false,
   interventionVerification: false,
-  scoreReadiness: false
+  scoreReadiness: false,
+  scorePredictionShadow: false
 });
 
 const gated = new LearningIntelligenceFeatureFlagsService({

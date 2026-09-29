@@ -28,7 +28,7 @@ const SupplyGapSchema = z.object({
   if (value.source === 'intervention_verification' && !value.verificationPhase) {
     context.addIssue({ code: 'custom', path: ['verificationPhase'], message: 'Verification phase is required.' });
   }
-});
+}).transform(({ difficulty: _legacyDifficulty, ...input }) => input);
 
 const SupplyRecoverySchema = z.object({
   ...SupplyIdentityFields,
@@ -42,7 +42,7 @@ const SupplyRecoverySchema = z.object({
   if (value.source === 'intervention_verification' && !value.verificationPhase) {
     context.addIssue({ code: 'custom', path: ['verificationPhase'], message: 'Verification phase is required.' });
   }
-});
+}).transform(({ difficulty: _legacyDifficulty, ...input }) => input);
 
 const ListSchema = z.object({
   status: z.enum(['open', 'acknowledged', 'resolved', 'dismissed']).optional(),
@@ -56,7 +56,7 @@ const ActionSchema = z.object({
 }).strict();
 
 type SupplyGapInput = z.infer<typeof SupplyGapSchema>;
-type SupplyIdentityInput = Pick<SupplyGapInput, 'source' | 'subjectCode' | 'topicIds' | 'difficulty' | 'taskType' | 'verificationPhase' | 'constraints'>;
+type SupplyIdentityInput = Pick<SupplyGapInput, 'source' | 'subjectCode' | 'topicIds' | 'taskType' | 'verificationPhase' | 'constraints'>;
 type SupplyRequestStatus = 'open' | 'acknowledged' | 'resolved' | 'dismissed';
 
 const ACTION_TARGETS: Record<z.infer<typeof ActionSchema>['action'], SupplyRequestStatus> = {
@@ -180,7 +180,6 @@ export class QuestionSupplyRequestService {
       source: input.source,
       subjectCode: input.subjectCode,
       topicIds,
-      difficulty: input.difficulty ?? null,
       taskType: input.taskType,
       verificationPhase: input.verificationPhase ?? null,
       sourcePolicy: 'reviewed_published_only',
@@ -274,7 +273,7 @@ export class QuestionSupplyRequestService {
               source: input.source,
               subjectCode: input.subjectCode,
               topicIds,
-              difficulty: input.difficulty ?? null,
+              difficulty: null,
               taskType: input.taskType,
               verificationPhase: input.verificationPhase ?? null,
               priority: input.source === 'intervention_verification' ? 'high' : 'normal',

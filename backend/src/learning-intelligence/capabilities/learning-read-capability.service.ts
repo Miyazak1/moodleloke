@@ -306,7 +306,6 @@ export class LearningReadCapabilityService {
         subject: input.subject,
         status: { in: ['approved', 'published'] },
         ...(input.topicIds?.length ? { topicId: { in: input.topicIds } } : {}),
-        ...(input.difficulty ? { designedDifficulty: input.difficulty } : {}),
         ...(input.questionType ? { questionType: input.questionType } : {}),
         OR: [{ qualityMetric: null }, { qualityMetric: { needsReview: false } }]
       }
@@ -317,7 +316,6 @@ export class LearningReadCapabilityService {
           where: {
             status: 'published',
             topic: { subject: input.subject, status: 'published' },
-            ...(input.difficulty ? { difficulty: input.difficulty } : {})
           }
         });
     const availableCount = cscaCount + specialPracticeCount;
@@ -333,7 +331,8 @@ export class LearningReadCapabilityService {
       },
       filters: {
         topicIds: input.topicIds ?? [],
-        difficulty: input.difficulty ?? null,
+        // Historical difficulty values remain metadata and never constrain supply.
+        difficulty: null,
         questionType: input.questionType ?? null
       },
       generatedAt: new Date().toISOString()

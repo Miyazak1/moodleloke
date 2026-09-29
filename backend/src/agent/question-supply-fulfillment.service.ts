@@ -93,7 +93,6 @@ export class QuestionSupplyFulfillmentService {
       source: request.source,
       subjectCode: request.subjectCode,
       topicIds: numberArray(request.topicIds),
-      difficulty: request.difficulty ?? null,
       taskType: request.taskType,
       verificationPhase: request.verificationPhase ?? null,
       sourcePolicy: request.sourcePolicy,
@@ -321,7 +320,6 @@ export class QuestionSupplyFulfillmentService {
       const status = await this.learningSupply.getQuestionSupplyStatus({
         subject: request.subjectCode,
         topicIds,
-        ...(request.difficulty ? { difficulty: request.difficulty } : {}),
         requestedCount: request.requestedCount
       });
       return {

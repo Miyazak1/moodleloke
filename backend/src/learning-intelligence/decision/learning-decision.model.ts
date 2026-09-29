@@ -7,7 +7,7 @@ import type {
   TargetGapSnapshotV1
 } from '../contracts/learning-intelligence.contracts';
 
-export const LEARNING_DECISION_POLICY_VERSION = 'ls-v1-prescription-rules-2' as const;
+export const LEARNING_DECISION_POLICY_VERSION = 'ls-v1-prescription-rules-3-topic-supply' as const;
 export const LEARNING_ITEM_CALIBRATION_VERSION = 'not-enabled' as const;
 export const LEARNING_FORECAST_MODEL_VERSION = 'score-readiness-shadow-gate-v1' as const;
 
@@ -174,9 +174,9 @@ export function computeTargetGaps(input: LearningDecisionInput): TargetGapItemV1
           repeated ? 'concept_learning' : 'targeted_practice');
         gaps.push({ ...item, rank: item.severity * (1 + subjectWeight * 0.2) + (repeated ? 0.25 : 0) });
       }
-      if ((topic.independence ?? 0) < 0.55 || !topic.difficultyCeiling) {
-        const item = gap(input, 'difficulty', subject, [topic.topicId], Math.max(0.35, 0.55 - (topic.independence ?? 0)),
-          topic.confidence, ['INDEPENDENCE_OR_DIFFICULTY_LIMIT'], 'targeted_practice');
+      if (interventionSignal?.kind !== 'stable' && (topic.independence ?? 0) < 0.55) {
+        const item = gap(input, 'mastery', subject, [topic.topicId], Math.max(0.35, 0.55 - (topic.independence ?? 0)),
+          topic.confidence, ['INDEPENDENCE_BELOW_BASELINE'], 'targeted_practice');
         gaps.push({ ...item, rank: item.severity * 0.9 });
       }
       if (interventionSignal?.kind !== 'stable' && (dueReview.has(topic.topicId) || (topic.retention ?? 1) < 0.55)) {
@@ -258,7 +258,6 @@ export function buildLearningPrescription(input: LearningDecisionInput, gaps: Ta
       type: taskType,
       subject,
       topicIds,
-      ...(taskType === 'targeted_practice' ? { difficulty: primary?.type === 'difficulty' ? 'foundation' : 'medium' } : {}),
       ...(questionCount ? { questionCount } : {}),
       ...(primary?.interventionVerificationId ? {
         interventionVerificationId: primary.interventionVerificationId,

@@ -60,7 +60,7 @@ export const LearningReadCapabilityInputSchemas = {
     difficulty: z.string().trim().min(1).max(40).optional(),
     questionType: z.string().trim().min(1).max(100).optional(),
     requestedCount: z.number().int().min(1).max(100).optional()
-  }),
+  }).transform(({ difficulty: _legacyDifficulty, ...input }) => input),
   get_intervention_stability: z.strictObject({
     verificationId: z.string().trim().min(1).max(120)
   }),
@@ -148,6 +148,9 @@ export const LearningReadCapabilityOutputSchemas = {
       priority: z.number().int().min(1).max(3),
       recurrenceCount: z.number().int().positive(),
       status: z.string().min(1),
+      consecutiveVerificationPassCount: z.number().int().nonnegative(),
+      requiredConsecutiveVerificationPassCount: z.number().int().positive(),
+      lastVerificationPassedAt: z.iso.datetime().nullable(),
       href: z.string().min(1)
     }))
   }),
