@@ -42,7 +42,7 @@ export function AppLoadingState({ variant = 'page' }: AppLoadingStateProps) {
           <i />
         </div>
         <div className="app-loading-copy">
-          <span>Moodlelike</span>
+          <span>CSCAPilot</span>
           <strong>{title}</strong>
           <p>{detail}</p>
           <div className="app-loading-dots" aria-hidden="true"><i /><i /><i /></div>

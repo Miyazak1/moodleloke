@@ -37,7 +37,7 @@ test('publishes an approved teaching asset through the isolated authoring entry'
   await page.route((url) => url.pathname === '/api/v1/admin/teaching-assets', (route) => json(route, { schemaVersion: '1', items: [asset(published ? 'published' : 'approved')], topics: [topic], componentKeys: ['math.function-horizontal-shift'] }));
 
   await page.goto('/authoring.html?workspace=teaching-assets');
-  await expect(page.getByText('Moodlelike Authoring')).toBeVisible();
+  await expect(page.getByText('CSCAPilot Authoring')).toBeVisible();
   await expect(page.getByRole('button', { name: '发布上线' })).toBeVisible();
   await page.getByRole('button', { name: '发布上线' }).click();
   await expect.poll(() => published).toBe(true);

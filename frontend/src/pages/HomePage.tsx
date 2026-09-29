@@ -519,7 +519,7 @@ export function HomePage({
           <article className="home-csca-definition" data-animate="fade-up">
             <span>{t('homeLite.intro.coreLabel', '一句话理解')}</span>
             <h2>{t('homeLite.intro.coreTitle', '覆盖数学、物理、化学的标准化学业能力测试')}</h2>
-            <p>{t('homeLite.intro.coreBody', 'Moodlelike 用模考、短题训练、错题复盘和独立验证，把考试要求转成可以持续执行的学习路径。')}</p>
+            <p>{t('homeLite.intro.coreBody', 'CSCAPilot 用模考、短题训练、错题复盘和独立验证，把考试要求转成可以持续执行的学习路径。')}</p>
             <div className="home-csca-impact-tags">
               <span><Icon name="lucide:scan-search" />{t('homeLite.intro.admissionSignal', '真实作答诊断')}</span>
               <span><Icon name="lucide:list-checks" />{t('homeLite.intro.scholarshipSignal', '三科专项训练')}</span>

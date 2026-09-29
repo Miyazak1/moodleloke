@@ -77,7 +77,7 @@ export const enMessages = {
     journey: { aria: 'Learning journey navigation', navAria: 'Learning journey', today: 'Practice', todayHint: 'Recommended or free practice', plan: 'Learning plan', planHint: 'Goals and upcoming work', history: 'Goal progress', historyHint: 'Coverage, mastery, and gaps', weakness: 'Mistakes and weak points', weaknessHint: 'Based on real answer evidence', resources: 'Learning resources', resourcesHint: 'Past papers and trusted material', settings: 'Learning settings', settingsHint: 'Goals and learning preferences', savedStages: 'Saved learning stages', empty: 'Your journey will appear here after the first learning task.', planKicker: 'Current plan', planTitle: 'Keep one clear next step aligned with your goal', planBody: 'This view reads plans already generated and saved by the Agent; it does not invent progress.', currentPlan: 'Current learning plan', noPlan: 'No plan is available yet', noPlanBody: 'Ask what to study today and the system will check goals, evidence, and question supply first.', planVersions: 'Plan versions', historyKicker: 'Learning journey', historyTitle: 'See what you did and why the next step changed', historyBody: 'This timeline records practice, teaching, and results by learning stage; only Subject Q&A is a conversation.', loadingHistory: 'Organizing your learning journey', messages: 'records', plans: 'plans', emptyTitle: 'Your journey starts with the first learning task', decisionImpact: 'Learning decision change', impactStable: 'Stable mastery confirmed', impactStableBody: 'All three checks passed, so the next task now targets the highest remaining priority.', impactConsolidate: 'Continue consolidation', impactConsolidateBody: 'Mastery was not stable in the staged check, so this topic remains in the priority plan.', impactInconclusive: 'More evidence needed', impactInconclusiveBody: 'Evidence was insufficient, so the system did not raise the mastery judgment.', impactScheduled: 'Follow-up check scheduled', impactScheduledBody: 'This phase is recorded; retention or transfer verification will enter the plan when due.', impactRecorded: 'Phase result recorded', impactRecordedBody: 'This independent performance is now included in the learning decision.', weaknessKicker: 'Real learning evidence', weaknessTitle: 'Address the weak point with the greatest impact first', weaknessBody: 'This view reads projected answer evidence and the review queue; it never guesses mastery from chat.', loadingWeakness: 'Loading learning evidence', dataUnavailable: 'Data is temporarily unavailable', weakTopics: 'Weak topics', attempts: 'attempts', reviewQueue: 'Due for review', recurrences: 'repeated errors', noWeakness: 'Not enough evidence yet', noWeaknessBody: 'Weak topics will appear after a diagnostic or practice session.', resourcesKicker: 'Trusted learning resources', resourcesTitle: 'Use published past papers for your target subjects', resourcesBody: 'These resources come from published sources and open inside the Agent for answers, help, and evidence.', loadingResources: 'Loading trusted resources', availableResources: 'Available learning resources', publishedResource: 'Published resource', noResources: 'No matching resources yet', noResourcesBody: 'Published past papers matching your target subjects will appear here.' },
     progress: { kicker: 'Goal progress', title: 'How far you are from the exam goal', body: 'This view shows topic coverage and mastery evidence. Finishing one batch adds evidence; it does not automatically complete a topic.', loading: 'Calculating goal progress', examGoal: 'Exam goal', examDateUnset: 'Exam date not set', daysRemaining: 'Until exam', days: 'days', coverage: 'Topic coverage', strongEvidence: 'Strong mastery evidence', answerEvidence: 'Valid answer evidence', adjustGoal: 'Adjust goal', subjectProgress: 'Subject progress', targetScoreUnset: 'Target score not set', targetScore: 'Target', attemptEvidence: 'answer evidence', coveredTopics: 'Topics covered', strongTopics: 'Strong evidence', developingTopics: 'Developing', attentionTopics: 'Needs work', unverifiedTopics: 'Unverified', completionRule: 'What counts as completing a topic', completionRuleBody: 'Completion needs enough volume and type coverage, stable independent answers, resolved repeated errors, and later retention or transfer verification. Finishing one batch is not topic completion.', viewGaps: 'View current gaps', noProgress: 'No goal progress yet', noProgressBody: 'Set an exam goal and finish one practice session to create verifiable progress.' },
     journeyAction: { planEmptyBody: 'Complete a practice session first, then the system will build a plan from your goal, real answers, and available questions.', goPractice: 'Go to practice', startEvidence: 'Start practicing to build evidence', practiceWeakness: 'Use the next set to strengthen weak points', practiceWeaknessHint: 'Recommendations will prioritize the real answer evidence shown here.', openResource: 'Open', todayPlan: "Today's plan", previousPlan: 'Previous plan', execution: 'Plan execution', ready: 'Ready to start', refreshRequired: 'Update required', readyBody: 'Start this task directly; the plan will update from your real results afterward.', refreshBody: 'This is not an executable task for today. Generate a new plan from the latest evidence first.', startTask: 'Start this task', generateToday: "Generate today's plan", adjustPlan: 'Adjust goals and preferences' },
-    account: { settings: 'Personal settings', backHome: 'Back to Moodlelike home' },
+    account: { settings: 'Personal settings', backHome: 'Back to CSCAPilot home' },
     brand: { title: 'Learning Agent', subtitle: 'Goal-driven CSCA preparation' },
     thread: { kicker: 'Learning workspace', title: "Today's learning plan" },
     status: { started: 'Reading your learning state', planning: "Choosing today's priority", reading: 'Checking learning evidence', artifact: "Today's plan has been created", completed: 'Plan ready', failed: 'This analysis did not finish', running: 'Analyzing', connecting: 'Connecting to learning analysis', reconnecting: 'Connection interrupted, recovering', ready: 'Learning data connected', queued: 'Preparing analysis' },
@@ -88,7 +88,7 @@ export const enMessages = {
     settings: { workspaceAria: 'Agent learning settings', kicker: 'Learning preferences and goals', title: 'Set how the Agent organizes learning', hint: 'Manage long-term learning mode, learner profile, exam goals, and schedule without changing the practice currently in progress.' }
   },
   header: {
-    brandKicker: 'Moodlelike',
+    brandKicker: 'CSCAPilot',
     adminAccount: 'Admin account',
     admin: 'Admin',
     adminDashboard: 'Dashboard',
@@ -856,7 +856,7 @@ export const enMessages = {
     consultRequirements: 'Ask about requirements',
     statsAria: 'CSCA mock exam summary',
     reportPreviewAria: 'Mock report and subject practice preview',
-    coreEntryAria: 'Moodlelike core entry points',
+    coreEntryAria: 'CSCAPilot core entry points',
     processAria: 'CSCA prep flow summary',
     pathAria: 'CSCA prep path',
     mockVisualAlt: 'Preview of the CSCA online mock, report, and subject practice interface',
@@ -890,7 +890,7 @@ export const enMessages = {
     orgCreditsBody: 'Configure shared AI Coach credits for the team.'
   },
   homeNav: {
-    brand: 'CSCA Learning Agent',
+    brand: 'CSCAPilot',
     practice: 'Practice',
     review: 'Mistake Review',
     resources: 'Past Papers',
@@ -898,7 +898,18 @@ export const enMessages = {
   },
   homeFooter: {
     focus: 'Focused math, physics, and chemistry practice',
-    start: 'Start Learning'
+    start: 'Start Learning',
+    brandTagline: 'Focused CSCA learning and practice for math, physics, and chemistry.',
+    productTitle: 'Product',
+    productName: 'CSCA Learning Agent',
+    productBody: 'One Agent connecting diagnosis, practice, and review.',
+    capabilitiesTitle: 'Agent capabilities',
+    trustTitle: 'Service & trust',
+    aiDisclosure: 'AI-assisted learning disclosure',
+    recordPrivacy: 'Account and learning-record protection',
+    originalContent: 'Original practice content',
+    deepSeek: 'AI capabilities supported by DeepSeek models',
+    rights: 'All rights reserved.'
   },
   homeLite: {
     intro: {
@@ -909,7 +920,7 @@ export const enMessages = {
       factsAria: 'Essential CSCA exam information',
       coreLabel: 'In one sentence',
       coreTitle: 'A standardized academic assessment covering math, physics, and chemistry',
-      coreBody: 'Moodlelike turns exam requirements into a sustainable learning path through mocks, short drills, mistake review, and independent verification.',
+      coreBody: 'CSCAPilot turns exam requirements into a sustainable learning path through mocks, short drills, mistake review, and independent verification.',
       admissionSignal: 'Diagnosis from real answers',
       scholarshipSignal: 'Focused practice in three subjects',
       notOnlyFactor: 'Agent plans the next step',
@@ -957,7 +968,7 @@ export const enMessages = {
       titleLine1: 'Start with one CSCA mock',
       titleLine2: 'see your weak spots',
       titleLine3: 'then practice by subject.',
-      body: 'Moodlelike connects online mocks, subject drills, instant explanations, and mistake review into one clear prep path. Check your current level first, then move into short math, physics, and chemistry sets where every answer shows the next step.',
+      body: 'CSCAPilot connects online mocks, subject drills, instant explanations, and mistake review into one clear prep path. Check your current level first, then move into short math, physics, and chemistry sets where every answer shows the next step.',
       startMock: 'Start Free Mock',
       choosePractice: 'Start Subject Practice',
       proofAria: 'Platform strengths',
@@ -1192,7 +1203,7 @@ export const enMessages = {
     faqSixAnswer: 'It is not an isolated exam. First check whether a school requires it, which subjects are needed, and when to submit results; then plan registration and practice.',
     heroKicker: 'CSCA Prep Path',
     heroTitle: 'Start with a mock, then train the three subjects.',
-    heroBody: 'Moodlelike connects online mock exams, report diagnosis, short subject drills, and past-paper review. Students see weak points first, then train math, physics, and chemistry separately.',
+    heroBody: 'CSCAPilot connects online mock exams, report diagnosis, short subject drills, and past-paper review. Students see weak points first, then train math, physics, and chemistry separately.',
     heroPrimary: 'Start online mock',
     heroSecondary: 'View subject learning',
     heroTertiary: 'Convert exam time',

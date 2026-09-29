@@ -10,6 +10,7 @@ const localizedRoot = path.join(srcRoot, 'content', 'localized');
 const specialPracticeRoot = path.join(srcRoot, 'pages', 'special-practice');
 const allowedSharedMessageValues = new Set([
   'header.brandKicker',
+  'homeNav.brand',
   'home.aiCoachKicker',
   'homeLite.visual.mathMetricOneValue',
   'homeLite.visual.mathMetricTwoValue',

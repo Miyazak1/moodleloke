@@ -47,26 +47,27 @@ test('renders the inherited public home and routes every student intent into Age
   await footer.scrollIntoViewIfNeeded();
   await expect(footer).toBeVisible();
   await expect(footer.getByRole('navigation', { name: '页脚导航' })).toBeVisible();
-  await expect(footer.getByText(/© \d{4} Moodlelike/)).toBeVisible();
+  await expect(footer.getByText(/© \d{4} CSCAPilot/)).toBeVisible();
 
-  await page.getByLabel('界面语言').click();
-  await page.getByRole('option', { name: /English/ }).click();
+  await page.getByLabel('选择语言').click();
+  await page.getByRole('menuitemradio', { name: /English/ }).click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await expect(footer.getByRole('navigation', { name: 'Footer navigation' }).getByRole('button', { name: 'Practice' })).toBeVisible();
-  await expect(footer.getByRole('button', { name: /Start Learning/ })).toBeVisible();
+  await expect(footer.getByRole('button', { name: /CSCA Learning Agent/ })).toBeVisible();
+  await expect(footer.getByText('AI capabilities supported by DeepSeek models')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'New to CSCA?' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Take one mock first. See exactly what to improve.' })).toBeAttached();
   await expect.poll(() => page.locator('body').innerText()).not.toMatch(/[\u3400-\u9fff]/);
 
-  await page.getByLabel('Interface language').click();
-  await page.getByRole('option', { name: /Tiếng Việt/ }).click();
+  await page.getByLabel('Choose language').click();
+  await page.getByRole('menuitemradio', { name: /Tiếng Việt/ }).click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
   await expect(page.getByRole('heading', { name: 'Lần đầu tìm hiểu CSCA?' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Làm một đề thi thử trước để biết chính xác cần cải thiện gì.' })).toBeAttached();
   await expect.poll(() => page.locator('body').innerText()).not.toMatch(/[\u3400-\u9fff]/);
 
-  await page.getByLabel('Ngôn ngữ giao diện').click();
-  await page.getByRole('option', { name: /中文/ }).click();
+  await page.getByLabel('Chọn ngôn ngữ').click();
+  await page.getByRole('menuitemradio', { name: /中文/ }).click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN');
 
   await page.getByRole('link', { name: /开始免费模考/ }).click();

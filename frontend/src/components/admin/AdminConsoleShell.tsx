@@ -45,7 +45,7 @@ type AdminConsoleShellProps = {
 const ADMIN_CONSOLE_COPY = {
   zh: {
     product: '管理员后台',
-    subtitle: 'Moodlelike Console',
+    subtitle: 'CSCAPilot Console',
     navLabel: '后台工作区导航',
     workspace: '工作区',
     account: '当前账号',
@@ -73,7 +73,7 @@ const ADMIN_CONSOLE_COPY = {
   },
   en: {
     product: 'Admin Console',
-    subtitle: 'Moodlelike Console',
+    subtitle: 'CSCAPilot Console',
     navLabel: 'Admin workspace navigation',
     workspace: 'Workspace',
     account: 'Current account',
@@ -138,7 +138,7 @@ export function AdminConsoleShell({
   const orgShellText = (key: string, fallback: string) => t(`organizationConsole.${key}`, fallback);
   const accountLabel = currentUser?.email ?? copy.signedOut;
   const accessLabel = isOrganizationMode ? (currentUser ? orgShellText('loginAccount', '登录账号') : copy.signedOut) : currentUser?.role === 'admin' ? copy.adminReady : copy.noAdmin;
-  const productLabel = isStandaloneAuthoring ? 'Moodlelike Authoring' : isOrganizationMode ? orgShellText('product', '机构控制台') : copy.product;
+  const productLabel = isStandaloneAuthoring ? 'CSCAPilot Authoring' : isOrganizationMode ? orgShellText('product', '机构控制台') : copy.product;
   const subtitleLabel = isStandaloneAuthoring ? 'Question & Teaching Studio' : isOrganizationMode ? orgShellText('subtitle', 'Organization Console') : copy.subtitle;
   const navLabel = isOrganizationMode ? orgShellText('navLabel', '机构工作区导航') : copy.navLabel;
   const workspaceLabel = isOrganizationMode ? orgShellText('workspaceLabel', '工作区') : copy.workspace;

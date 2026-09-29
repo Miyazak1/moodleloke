@@ -77,7 +77,7 @@ export const zhCNMessages = {
     journey: { aria: '学习旅程导航', navAria: '学习旅程', today: '做题', todayHint: '系统推荐或自由练习', plan: '学习计划', planHint: '目标与近期安排', history: '目标进度', historyHint: '覆盖、掌握与差距', weakness: '错题与薄弱点', weaknessHint: '来自真实作答证据', resources: '学习资料', resourcesHint: '真题与可信资料', settings: '学习设置', settingsHint: '目标与学习偏好', savedStages: '已保存的学习阶段', empty: '完成第一项学习任务后，这里会形成学习历程。', planKicker: '当前计划', planTitle: '围绕目标，只保留一个明确的下一步', planBody: '这里读取 Agent 已生成并保存的方案，不用临时文案伪造进度。', currentPlan: '当前学习计划', noPlan: '还没有可用计划', noPlanBody: '在聊天中询问今天学什么，系统会先核对目标、证据和题源。', planVersions: '计划版本', historyKicker: '学习历程', historyTitle: '看见做过什么，以及下一步如何变化', historyBody: '这里按学习阶段记录做题、讲解与结果；只有学科问答属于对话。', loadingHistory: '正在整理学习历程', messages: '条记录', plans: '个方案', emptyTitle: '历程会从第一次学习开始', decisionImpact: '学习决策变化', impactStable: '已确认稳定掌握', impactStableBody: '三阶段验证通过，系统已将下一任务移向新的最高优先级差距。', impactConsolidate: '继续巩固', impactConsolidateBody: '阶段验证尚未稳定，当前知识点仍保留在优先计划中。', impactInconclusive: '等待更多证据', impactInconclusiveBody: '本轮证据不足，系统没有提高掌握判断。', impactScheduled: '后续验证已安排', impactScheduledBody: '当前阶段已记录，保持或迁移验证将在到期后进入计划。', impactRecorded: '阶段结果已记录', impactRecordedBody: '本次独立作答结果已进入学习决策。', weaknessKicker: '真实学习证据', weaknessTitle: '先处理最影响下一步的薄弱点', weaknessBody: '这里只读取已投影的作答证据和复习队列，不根据聊天内容猜测掌握度。', loadingWeakness: '正在读取学习证据', dataUnavailable: '暂时无法读取', weakTopics: '薄弱知识点', attempts: '次作答', reviewQueue: '待复习', recurrences: '次重复错误', noWeakness: '还没有足够证据', noWeaknessBody: '完成诊断或练习后，薄弱知识点会出现在这里。', resourcesKicker: '可信学习资料', resourcesTitle: '围绕目标科目使用已发布真题', resourcesBody: '资料来自已发布题源；打开后仍在 Agent 内作答、求助和记录证据。', loadingResources: '正在读取可信资料', availableResources: '可用学习资料', publishedResource: '已发布资料', noResources: '当前没有匹配资料', noResourcesBody: '发布与你目标科目匹配的真题后会显示在这里。' },
     progress: { kicker: '目标进度', title: '离考试目标还有多远', body: '这里展示知识点覆盖和掌握证据；做完一批题只会增加证据，不会自动把知识点标记为完成。', loading: '正在计算目标进度', examGoal: '考试目标', examDateUnset: '尚未设置考试日期', daysRemaining: '距离考试', days: '天', coverage: '知识点覆盖', strongEvidence: '掌握证据较强', answerEvidence: '有效作答证据', adjustGoal: '调整目标', subjectProgress: '科目进度', targetScoreUnset: '未设置目标分', targetScore: '目标', attemptEvidence: '次作答证据', coveredTopics: '已覆盖知识点', strongTopics: '证据较强', developingTopics: '学习中', attentionTopics: '需巩固', unverifiedTopics: '待验证', completionRule: '什么才算知识点完成', completionRuleBody: '需要足够题量与题型覆盖、独立作答稳定、重复错误消失，并通过之后的保持或迁移验证。单批练习结束不等于知识点完成。', viewGaps: '查看当前缺口', noProgress: '还没有目标进度', noProgressBody: '先设置考试目标并完成一次练习，系统才会形成可验证的进度。' },
     journeyAction: { planEmptyBody: '先完成一次做题，系统会根据目标、真实作答和题源生成学习计划。', goPractice: '去做题', startEvidence: '开始做题积累证据', practiceWeakness: '用下一组题巩固薄弱点', practiceWeaknessHint: '系统推荐会优先参考这里的真实作答证据。', openResource: '打开', todayPlan: '今日计划', previousPlan: '过往计划', execution: '计划执行', ready: '可以开始', refreshRequired: '需要更新', readyBody: '从这项任务直接进入做题，完成后计划会根据真实结果更新。', refreshBody: '这不是今天可执行的任务，请先生成基于最新证据的今日计划。', startTask: '开始此任务', generateToday: '生成今日计划', adjustPlan: '调整目标与偏好' },
-    account: { settings: '个人设置', backHome: '返回 Moodlelike 首页' },
+    account: { settings: '个人设置', backHome: '返回 CSCAPilot 首页' },
     brand: { title: '学习 Agent', subtitle: '目标驱动的 CSCA 训练' },
     thread: { kicker: '学习工作台', title: '今天的学习方案' },
     status: { started: '正在读取你的学习情况', planning: '正在确定今日优先任务', reading: '正在核对学习证据', artifact: '今日方案已经生成', completed: '方案已就绪', failed: '本次分析没有完成', running: '正在分析', connecting: '正在连接学习分析', reconnecting: '连接中断，正在恢复', ready: '学习数据已连接', queued: '正在准备分析' },
@@ -88,7 +88,7 @@ export const zhCNMessages = {
     settings: { workspaceAria: 'Agent 学习设置', kicker: '学习偏好与目标', title: '设置 Agent 如何安排学习', hint: '管理长期学习方式、学习画像、考试目标和时间安排；不会改变正在进行的练习。' }
   },
   header: {
-    brandKicker: 'Moodlelike',
+    brandKicker: 'CSCAPilot',
     adminAccount: '管理员账号',
     admin: '后台',
     adminDashboard: '后台管理',
@@ -860,7 +860,7 @@ export const zhCNMessages = {
     consultRequirements: '咨询服务',
     statsAria: 'CSCA 模考摘要',
     reportPreviewAria: '模考报告与科目练习推荐预览',
-    coreEntryAria: 'Moodlelike 核心入口',
+    coreEntryAria: 'CSCAPilot 核心入口',
     processAria: 'CSCA 备考流程摘要',
     pathAria: 'CSCA 备考路径',
     mockVisualAlt: 'CSCA 在线模考、报告和科目练习建议界面预览',
@@ -894,7 +894,7 @@ export const zhCNMessages = {
     orgCreditsBody: '为团队统一配置 AI Coach 使用额度。'
   },
   homeNav: {
-    brand: 'CSCA 学习 Agent',
+    brand: 'CSCAPilot',
     practice: '做题训练',
     review: '错题复盘',
     resources: '真题资料',
@@ -902,7 +902,18 @@ export const zhCNMessages = {
   },
   homeFooter: {
     focus: '专注数学、物理、化学做题训练',
-    start: '开始学习'
+    start: '开始学习',
+    brandTagline: '专注 CSCA 数学、物理、化学学习与训练。',
+    productTitle: '产品',
+    productName: 'CSCA 学习 Agent',
+    productBody: '一个 Agent 串联诊断、训练与复盘。',
+    capabilitiesTitle: 'Agent 能力',
+    trustTitle: '服务与信任',
+    aiDisclosure: 'AI 辅助学习说明',
+    recordPrivacy: '账号与学习记录保护',
+    originalContent: '原创训练内容',
+    deepSeek: 'AI 能力由 DeepSeek 模型支持',
+    rights: '保留所有权利。'
   },
   homeLite: {
     intro: {
@@ -913,7 +924,7 @@ export const zhCNMessages = {
       factsAria: 'CSCA 考试关键信息',
       coreLabel: '一句话理解',
       coreTitle: '覆盖数学、物理、化学的标准化学业能力测试',
-      coreBody: 'Moodlelike 用模考、短题训练、错题复盘和独立验证，把考试要求转成可以持续执行的学习路径。',
+      coreBody: 'CSCAPilot 用模考、短题训练、错题复盘和独立验证，把考试要求转成可以持续执行的学习路径。',
       admissionSignal: '真实作答诊断',
       scholarshipSignal: '三科专项训练',
       notOnlyFactor: 'Agent 安排下一步',
@@ -961,7 +972,7 @@ export const zhCNMessages = {
       titleLine1: '先做一套 CSCA 模考',
       titleLine2: '看清薄弱点',
       titleLine3: '再进入科目训练。',
-      body: 'Moodlelike 把在线模考、科目训练、即时解析和错题复盘串成一条清楚的备考路径。先定位当前水平，再进入数学、物理、化学的短题组训练，每一次答题都能看到下一步。',
+      body: 'CSCAPilot 把在线模考、科目训练、即时解析和错题复盘串成一条清楚的备考路径。先定位当前水平，再进入数学、物理、化学的短题组训练，每一次答题都能看到下一步。',
       startMock: '开始免费模考',
       choosePractice: '进入科目训练',
       proofAria: '平台特点',
@@ -1196,7 +1207,7 @@ export const zhCNMessages = {
     faqSixAnswer: '它不是孤立考试。你需要先看学校是否要求、要求哪些科目、什么时候提交，再安排报名和练习。',
     heroKicker: 'CSCA 备考路径',
     heroTitle: '先模考定位，再进入三科练习。',
-    heroBody: 'Moodlelike 把在线模考、报告诊断、科目短题和真题复盘连成一条路径。学生先知道薄弱点，再按数学、物理、化学分别训练。',
+    heroBody: 'CSCAPilot 把在线模考、报告诊断、科目短题和真题复盘连成一条路径。学生先知道薄弱点，再按数学、物理、化学分别训练。',
     heroPrimary: '开始在线模考',
     heroSecondary: '查看科目学习',
     heroTertiary: '考试时间换算',

@@ -205,7 +205,7 @@ export default function StandaloneAgentApp() {
           <div className="site-footer-account-inner">
             <div className="site-footer-account-brand">
               <span className="site-brand-mark" aria-hidden="true">CS</span>
-              <div><strong>Moodlelike</strong><span>© {new Date().getFullYear()} · {t('footer.accountPrivacy', '账号信息仅用于登录、安全与学习记录。')}</span></div>
+              <div><strong>CSCAPilot</strong><span>© {new Date().getFullYear()} · {t('footer.accountPrivacy', '账号信息仅用于登录、安全与学习记录。')}</span></div>
             </div>
             <nav aria-label={t('footer.accountAria', '账号页页脚导航')}>
               <button type="button" onClick={() => navigate(routes.home)}>{t('footer.backHome', '返回首页')}</button>

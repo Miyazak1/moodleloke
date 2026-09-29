@@ -87,7 +87,7 @@ export const viMessages = {
     journey: { aria: 'Điều hướng hành trình học', navAria: 'Hành trình học', today: 'Làm bài', todayHint: 'Đề xuất hoặc luyện tập tự do', plan: 'Kế hoạch học', planHint: 'Mục tiêu và công việc sắp tới', history: 'Tiến độ mục tiêu', historyHint: 'Phủ kiến thức, mức độ và khoảng trống', weakness: 'Câu sai và điểm yếu', weaknessHint: 'Từ bằng chứng trả lời thực tế', resources: 'Tài liệu học', resourcesHint: 'Đề thật và tài liệu tin cậy', settings: 'Cài đặt học tập', settingsHint: 'Mục tiêu và sở thích học', savedStages: 'Các giai đoạn đã lưu', empty: 'Hành trình sẽ xuất hiện sau nhiệm vụ học đầu tiên.', planKicker: 'Kế hoạch hiện tại', planTitle: 'Chỉ giữ một bước tiếp theo rõ ràng theo mục tiêu', planBody: 'Chế độ xem này đọc kế hoạch Agent đã tạo và lưu, không dựng tiến độ giả.', currentPlan: 'Kế hoạch học hiện tại', noPlan: 'Chưa có kế hoạch phù hợp', noPlanBody: 'Hãy hỏi hôm nay nên học gì để hệ thống kiểm tra mục tiêu, bằng chứng và nguồn câu hỏi.', planVersions: 'Các phiên bản kế hoạch', historyKicker: 'Hành trình học', historyTitle: 'Xem đã học gì và vì sao bước tiếp theo thay đổi', historyBody: 'Dòng thời gian này ghi lại bài tập, phần giảng dạy và kết quả theo từng giai đoạn; chỉ mục Hỏi đáp môn học mới là hội thoại.', loadingHistory: 'Đang sắp xếp hành trình học', messages: 'bản ghi', plans: 'kế hoạch', emptyTitle: 'Hành trình bắt đầu từ nhiệm vụ học đầu tiên', decisionImpact: 'Thay đổi quyết định học', impactStable: 'Đã xác nhận nắm vững ổn định', impactStableBody: 'Đã vượt qua ba giai đoạn kiểm tra; nhiệm vụ tiếp theo chuyển sang ưu tiên còn lại cao nhất.', impactConsolidate: 'Tiếp tục củng cố', impactConsolidateBody: 'Kết quả chưa ổn định nên chủ đề này vẫn nằm trong kế hoạch ưu tiên.', impactInconclusive: 'Cần thêm bằng chứng', impactInconclusiveBody: 'Bằng chứng chưa đủ nên hệ thống không nâng mức đánh giá.', impactScheduled: 'Đã lên lịch kiểm tra tiếp theo', impactScheduledBody: 'Giai đoạn này đã được ghi nhận; kiểm tra duy trì hoặc chuyển giao sẽ vào kế hoạch khi đến hạn.', impactRecorded: 'Đã ghi nhận kết quả', impactRecordedBody: 'Kết quả làm bài độc lập đã được đưa vào quyết định học.', weaknessKicker: 'Bằng chứng học tập thực', weaknessTitle: 'Xử lý điểm yếu ảnh hưởng lớn nhất trước', weaknessBody: 'Chỉ đọc bằng chứng trả lời đã được tổng hợp và hàng đợi ôn tập, không đoán mức độ từ hội thoại.', loadingWeakness: 'Đang đọc bằng chứng học tập', dataUnavailable: 'Tạm thời không thể đọc dữ liệu', weakTopics: 'Kiến thức còn yếu', attempts: 'lần làm', reviewQueue: 'Cần ôn tập', recurrences: 'lỗi lặp lại', noWeakness: 'Chưa đủ bằng chứng', noWeaknessBody: 'Điểm yếu sẽ xuất hiện sau khi hoàn thành chẩn đoán hoặc luyện tập.', resourcesKicker: 'Tài liệu học đáng tin cậy', resourcesTitle: 'Dùng đề thật đã xuất bản cho môn mục tiêu', resourcesBody: 'Tài liệu đến từ nguồn đã xuất bản và mở trong Agent để làm bài, nhận trợ giúp và ghi bằng chứng.', loadingResources: 'Đang đọc tài liệu tin cậy', availableResources: 'Tài liệu học có sẵn', publishedResource: 'Tài liệu đã xuất bản', noResources: 'Chưa có tài liệu phù hợp', noResourcesBody: 'Đề thật phù hợp với môn mục tiêu sẽ xuất hiện tại đây.' },
     progress: { kicker: 'Tiến độ mục tiêu', title: 'Bạn còn cách mục tiêu kỳ thi bao xa', body: 'Trang này hiển thị độ phủ kiến thức và bằng chứng nắm vững. Hoàn thành một nhóm câu chỉ thêm bằng chứng, không tự động hoàn thành chủ đề.', loading: 'Đang tính tiến độ mục tiêu', examGoal: 'Mục tiêu kỳ thi', examDateUnset: 'Chưa đặt ngày thi', daysRemaining: 'Còn đến kỳ thi', days: 'ngày', coverage: 'Độ phủ kiến thức', strongEvidence: 'Bằng chứng nắm vững tốt', answerEvidence: 'Bằng chứng trả lời hợp lệ', adjustGoal: 'Điều chỉnh mục tiêu', subjectProgress: 'Tiến độ môn học', targetScoreUnset: 'Chưa đặt điểm mục tiêu', targetScore: 'Mục tiêu', attemptEvidence: 'lượt bằng chứng', coveredTopics: 'Chủ đề đã phủ', strongTopics: 'Bằng chứng tốt', developingTopics: 'Đang học', attentionTopics: 'Cần củng cố', unverifiedTopics: 'Chờ xác minh', completionRule: 'Khi nào một chủ đề được coi là hoàn thành', completionRuleBody: 'Cần đủ số lượng và dạng câu, trả lời độc lập ổn định, hết lỗi lặp lại và vượt qua kiểm tra ghi nhớ hoặc chuyển giao sau đó. Hoàn thành một nhóm câu không đồng nghĩa hoàn thành chủ đề.', viewGaps: 'Xem khoảng trống hiện tại', noProgress: 'Chưa có tiến độ mục tiêu', noProgressBody: 'Hãy đặt mục tiêu kỳ thi và hoàn thành một lượt luyện tập để tạo tiến độ có thể xác minh.' },
     journeyAction: { planEmptyBody: 'Hãy hoàn thành một lượt làm bài trước; hệ thống sẽ tạo kế hoạch từ mục tiêu, câu trả lời thực tế và nguồn câu hỏi hiện có.', goPractice: 'Đi làm bài', startEvidence: 'Bắt đầu làm bài để tạo bằng chứng', practiceWeakness: 'Củng cố điểm yếu bằng nhóm câu tiếp theo', practiceWeaknessHint: 'Đề xuất sẽ ưu tiên bằng chứng trả lời thực tế hiển thị ở đây.', openResource: 'Mở', todayPlan: 'Kế hoạch hôm nay', previousPlan: 'Kế hoạch trước', execution: 'Thực hiện kế hoạch', ready: 'Có thể bắt đầu', refreshRequired: 'Cần cập nhật', readyBody: 'Bắt đầu trực tiếp nhiệm vụ này; kế hoạch sẽ cập nhật theo kết quả thực tế sau đó.', refreshBody: 'Đây không phải nhiệm vụ có thể thực hiện hôm nay. Hãy tạo kế hoạch mới từ bằng chứng mới nhất.', startTask: 'Bắt đầu nhiệm vụ', generateToday: 'Tạo kế hoạch hôm nay', adjustPlan: 'Điều chỉnh mục tiêu và sở thích' },
-    account: { settings: 'Cài đặt cá nhân', backHome: 'Quay lại trang chủ Moodlelike' },
+    account: { settings: 'Cài đặt cá nhân', backHome: 'Quay lại trang chủ CSCAPilot' },
     brand: { title: 'Trợ lý học tập', subtitle: 'Ôn CSCA theo mục tiêu' },
     thread: { kicker: 'Không gian học tập', title: 'Kế hoạch học hôm nay' },
     status: { started: 'Đang đọc tình trạng học tập', planning: 'Đang chọn ưu tiên hôm nay', reading: 'Đang kiểm tra bằng chứng học tập', artifact: 'Đã tạo kế hoạch hôm nay', completed: 'Kế hoạch đã sẵn sàng', failed: 'Lần phân tích này chưa hoàn tất', running: 'Đang phân tích', connecting: 'Đang kết nối phân tích học tập', reconnecting: 'Kết nối gián đoạn, đang khôi phục', ready: 'Đã kết nối dữ liệu học', queued: 'Đang chuẩn bị phân tích' },
@@ -99,7 +99,7 @@ export const viMessages = {
   },
   header: {
     ...zhCNMessages.header,
-    brandKicker: 'Moodlelike',
+    brandKicker: 'CSCAPilot',
     adminAccount: 'Tài khoản quản trị',
     admin: 'Quản trị',
     adminDashboard: 'Bảng điều khiển',
@@ -870,7 +870,7 @@ export const viMessages = {
     consultRequirements: 'Hỏi về yêu cầu',
     statsAria: 'Tóm tắt đề thi thử CSCA',
     reportPreviewAria: 'Xem trước báo cáo thi thử và gợi ý luyện theo môn',
-    coreEntryAria: 'Các lối vào chính của Moodlelike',
+    coreEntryAria: 'Các lối vào chính của CSCAPilot',
     processAria: 'Tóm tắt quy trình ôn CSCA',
     pathAria: 'Lộ trình ôn CSCA',
     mockVisualAlt: 'Xem trước giao diện thi thử CSCA trực tuyến, báo cáo và luyện theo môn',
@@ -904,7 +904,7 @@ export const viMessages = {
     orgCreditsBody: 'Cấu hình credit AI Coach dùng chung cho đội nhóm.'
   },
   homeNav: {
-    brand: 'Trợ lý học CSCA',
+    brand: 'CSCAPilot',
     practice: 'Luyện tập',
     review: 'Ôn câu sai',
     resources: 'Đề thi thật',
@@ -912,7 +912,18 @@ export const viMessages = {
   },
   homeFooter: {
     focus: 'Tập trung luyện Toán, Vật lý và Hóa học',
-    start: 'Bắt đầu học'
+    start: 'Bắt đầu học',
+    brandTagline: 'Tập trung học và luyện CSCA cho Toán, Vật lý và Hóa học.',
+    productTitle: 'Sản phẩm',
+    productName: 'Trợ lý học CSCA',
+    productBody: 'Một Agent kết nối chẩn đoán, luyện tập và ôn lại.',
+    capabilitiesTitle: 'Khả năng của Agent',
+    trustTitle: 'Dịch vụ và tin cậy',
+    aiDisclosure: 'Thông tin về hỗ trợ học tập bằng AI',
+    recordPrivacy: 'Bảo vệ tài khoản và dữ liệu học tập',
+    originalContent: 'Nội dung luyện tập nguyên bản',
+    deepSeek: 'Khả năng AI được hỗ trợ bởi mô hình DeepSeek',
+    rights: 'Bảo lưu mọi quyền.'
   },
   homeLite: {
     intro: {
@@ -923,7 +934,7 @@ export const viMessages = {
       factsAria: 'Thông tin chính về kỳ thi CSCA',
       coreLabel: 'Hiểu trong một câu',
       coreTitle: 'Bài đánh giá năng lực học thuật chuẩn hóa gồm Toán, Vật lý và Hóa học',
-      coreBody: 'Moodlelike biến yêu cầu kỳ thi thành lộ trình học bền vững qua thi thử, nhóm bài ngắn, ôn câu sai và kiểm chứng độc lập.',
+      coreBody: 'CSCAPilot biến yêu cầu kỳ thi thành lộ trình học bền vững qua thi thử, nhóm bài ngắn, ôn câu sai và kiểm chứng độc lập.',
       admissionSignal: 'Chẩn đoán từ bài làm thật',
       scholarshipSignal: 'Luyện trọng tâm ba môn',
       notOnlyFactor: 'Agent sắp xếp bước tiếp theo',
@@ -971,7 +982,7 @@ export const viMessages = {
       titleLine1: 'Làm một đề thi thử CSCA',
       titleLine2: 'nhìn rõ điểm yếu',
       titleLine3: 'rồi luyện theo môn.',
-      body: 'Moodlelike nối thi thử trực tuyến, luyện theo môn, giải thích tức thì và ôn lỗi thành một lộ trình rõ ràng. Trước hết xác định trình độ hiện tại, sau đó vào các nhóm bài ngắn của Toán, Vật lý và Hóa học; mỗi lần trả lời đều thấy bước tiếp theo.',
+      body: 'CSCAPilot nối thi thử trực tuyến, luyện theo môn, giải thích tức thì và ôn lỗi thành một lộ trình rõ ràng. Trước hết xác định trình độ hiện tại, sau đó vào các nhóm bài ngắn của Toán, Vật lý và Hóa học; mỗi lần trả lời đều thấy bước tiếp theo.',
       startMock: 'Bắt đầu thi thử miễn phí',
       choosePractice: 'Bắt đầu luyện theo môn',
       proofAria: 'Điểm mạnh nền tảng',
@@ -1361,7 +1372,7 @@ export const viMessages = {
     faqSixAnswer: 'Đây không phải một kỳ thi tách rời. Trước hết hãy xem trường có yêu cầu không, cần môn nào và khi nào phải nộp kết quả; sau đó mới lên kế hoạch đăng ký và luyện tập.',
     heroKicker: 'Lộ trình ôn CSCA',
     heroTitle: 'Thi thử trước, rồi luyện ba môn.',
-    heroBody: 'Moodlelike nối thi thử trực tuyến, chẩn đoán báo cáo, bài ngắn theo môn và ôn đề thật thành một lộ trình. Học sinh thấy điểm yếu trước, rồi luyện riêng Toán, Vật lý và Hóa học.',
+    heroBody: 'CSCAPilot nối thi thử trực tuyến, chẩn đoán báo cáo, bài ngắn theo môn và ôn đề thật thành một lộ trình. Học sinh thấy điểm yếu trước, rồi luyện riêng Toán, Vật lý và Hóa học.',
     heroPrimary: 'Bắt đầu thi thử trực tuyến',
     heroSecondary: 'Xem học theo môn',
     heroTertiary: 'Quy đổi giờ thi',

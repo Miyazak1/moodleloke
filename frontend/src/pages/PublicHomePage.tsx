@@ -77,22 +77,31 @@ export function PublicHomePage({ currentUser, isResolvingAuth, onCurrentUserChan
           <div className="public-home-footer-brand">
             <span className="site-brand-mark" aria-hidden="true">CS</span>
             <span>
-              <strong>{t('homeNav.brand', 'CSCA 学习 Agent')}</strong>
-              <small>{t('homeFooter.focus', '专注数学、物理、化学做题训练')}</small>
+              <strong>CSCAPilot</strong>
+              <small>{t('homeFooter.brandTagline', '专注 CSCA 数学、物理、化学学习与训练。')}</small>
             </span>
           </div>
-          <nav className="public-home-footer-nav" aria-label={t('footer.aria', '页脚导航')}>
+          <div className="public-home-footer-column public-home-footer-product">
+            <strong>{t('homeFooter.productTitle', '产品')}</strong>
+            <button type="button" onClick={() => onNavigate(routes.agent)}>{t('homeFooter.productName', 'CSCA 学习 Agent')}<Icon name="lucide:arrow-up-right" /></button>
+            <small>{t('homeFooter.productBody', '一个 Agent 串联诊断、训练与复盘。')}</small>
+          </div>
+          <nav className="public-home-footer-column public-home-footer-nav" aria-label={t('footer.aria', '页脚导航')}>
+            <strong>{t('homeFooter.capabilitiesTitle', 'Agent 能力')}</strong>
             <button type="button" onClick={() => onNavigate(routes.agent)}>{t('homeNav.practice', '做题训练')}</button>
             <button type="button" onClick={() => onNavigate(`${routes.agent}?agentSection=weakness`)}>{t('homeNav.review', '错题复盘')}</button>
             <button type="button" onClick={() => onNavigate(`${routes.agent}?agentSection=resources`)}>{t('homeNav.resources', '真题资料')}</button>
           </nav>
-          <button className="public-home-footer-action" type="button" onClick={() => onNavigate(routes.agent)}>
-            {t('homeFooter.start', '开始学习')}<Icon name="lucide:arrow-right" />
-          </button>
+          <div className="public-home-footer-column public-home-footer-trust">
+            <strong>{t('homeFooter.trustTitle', '服务与信任')}</strong>
+            <span>{t('homeFooter.aiDisclosure', 'AI 辅助学习说明')}</span>
+            <span>{t('homeFooter.recordPrivacy', '账号与学习记录保护')}</span>
+            <span>{t('homeFooter.originalContent', '原创训练内容')}</span>
+          </div>
         </div>
         <div className="public-home-footer-note">
-          <span>{t('footer.legal', '原创模拟与备考练习，帮助学生把 CSCA 准备做得更清楚。')}</span>
-          <span>© {new Date().getFullYear()} Moodlelike</span>
+          <span className="public-home-footer-ai"><Icon name="lucide:sparkles" />{t('homeFooter.deepSeek', 'AI 能力由 DeepSeek 模型支持')}</span>
+          <span>© {new Date().getFullYear()} CSCAPilot. {t('homeFooter.rights', '保留所有权利。')}</span>
         </div>
       </footer>
     </>

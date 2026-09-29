@@ -280,7 +280,7 @@ function AgentUnavailable({ onNavigate }: { onNavigate: (path: string) => void }
     <div className="agent-gate-page">
       <section className="agent-gate-card">
         <span className="agent-gate-mark"><Icon name="lucide:bot" /></span>
-        <p className="agent-kicker">Moodlelike Lab</p>
+        <p className="agent-kicker">CSCAPilot Lab</p>
         <h1>{t('agent.disabled.title', '学习 Agent 正在内测。')}</h1>
         <p>{t('agent.disabled.body', '当前入口默认关闭，原有模考、科目训练、错题和真题功能不受影响。')}</p>
         <button type="button" onClick={leaveAgent}>{t('agent.disabled.fallback', '返回原做题入口')}</button>
@@ -1960,7 +1960,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
             </button>
             <button type="button" className="agent-back-home" onClick={() => onNavigate(routes.home)}>
               <Icon name="lucide:arrow-left" />
-              <span>{t('agent.account.backHome', '返回 Moodlelike 首页')}</span>
+              <span>{t('agent.account.backHome', '返回 CSCAPilot 首页')}</span>
             </button>
           </div>
         </aside>
