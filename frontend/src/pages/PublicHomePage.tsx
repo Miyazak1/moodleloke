@@ -48,6 +48,7 @@ export function PublicHomePage({ currentUser, isResolvingAuth, onCurrentUserChan
             <img className="site-brand-logo" src="/logo-candidate-v2-csca.png" alt={t('homeNav.brand', 'CSCA 学习 Agent')} />
           </button>
           <nav className="site-nav" aria-label={t('nav.aria', '主导航')}>
+            <button type="button" className="site-link" onClick={() => onNavigate(routes.cscaPrep)}>{t('homeNav.cscaPrep', 'CSCA 准备')}</button>
             <button type="button" className="site-link" onClick={() => onNavigate(routes.agent)}>{t('homeNav.practice', '做题训练')}</button>
             <button type="button" className="site-link" onClick={() => onNavigate(`${routes.agent}?agentSection=weakness`)}>{t('homeNav.review', '错题复盘')}</button>
             <button type="button" className="site-link" onClick={() => onNavigate(`${routes.agent}?agentSection=resources`)}>{t('homeNav.resources', '真题资料')}</button>
@@ -86,6 +87,7 @@ export function PublicHomePage({ currentUser, isResolvingAuth, onCurrentUserChan
           </div>
           <nav className="public-home-footer-column public-home-footer-nav" aria-label={t('footer.aria', '页脚导航')}>
             <strong>{t('homeFooter.capabilitiesTitle', 'Agent 能力')}</strong>
+            <button type="button" onClick={() => onNavigate(routes.cscaPrep)}>{t('homeNav.cscaPrep', 'CSCA 准备')}</button>
             <button type="button" onClick={() => onNavigate(routes.agent)}>{t('homeNav.practice', '做题训练')}</button>
             <button type="button" onClick={() => onNavigate(`${routes.agent}?agentSection=weakness`)}>{t('homeNav.review', '错题复盘')}</button>
             <button type="button" onClick={() => onNavigate(`${routes.agent}?agentSection=resources`)}>{t('homeNav.resources', '真题资料')}</button>

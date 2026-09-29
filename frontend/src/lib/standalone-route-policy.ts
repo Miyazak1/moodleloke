@@ -1,4 +1,4 @@
-export type StandaloneRoute = 'home' | 'agent' | 'auth' | 'onboarding' | 'me' | 'not-found';
+export type StandaloneRoute = 'home' | 'csca-prep' | 'agent' | 'auth' | 'onboarding' | 'me' | 'not-found';
 
 export type StandaloneRouteResolution = {
   route: StandaloneRoute;
@@ -9,6 +9,7 @@ export type StandaloneRouteResolution = {
 
 const ROUTE_PATHS = {
   home: '/',
+  cscaPrep: '/csca-prep',
   agent: '/agent',
   auth: '/auth',
   login: '/login',
@@ -65,6 +66,9 @@ export function resolveStandaloneLocation(pathname: string, search = '', hash = 
   }
   if (normalizedPathname === ROUTE_PATHS.home) {
     return { route: 'home', pathname: normalizedPathname, href: `${normalizedPathname}${normalizedSearch}${normalizedHash}`, shouldCanonicalize };
+  }
+  if (normalizedPathname === ROUTE_PATHS.cscaPrep) {
+    return { route: 'csca-prep', pathname: normalizedPathname, href: `${normalizedPathname}${normalizedSearch}${normalizedHash}`, shouldCanonicalize };
   }
   if (normalizedPathname === ROUTE_PATHS.agent) {
     return { route: 'agent', pathname: normalizedPathname, href: `${normalizedPathname}${normalizedSearch}${normalizedHash}`, shouldCanonicalize };

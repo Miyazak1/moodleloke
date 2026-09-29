@@ -50,7 +50,7 @@ export type CscaExamSchedule = {
 export const CSCA_EXAM_BLOCK_KEY = 'csca.exam.schedule';
 
 export const DEFAULT_CSCA_EXAM_SCHEDULE: CscaExamSchedule = {
-  title: '2026年6月27日 CSCA 考试安排',
+  title: '2026年 CSCA 考试安排',
   subtitle: '考试时间与费用',
   nextExamDate: '2026-06-27',
   registrationWindow: {
@@ -59,7 +59,7 @@ export const DEFAULT_CSCA_EXAM_SCHEDULE: CscaExamSchedule = {
     timezone: 'Asia/Shanghai'
   },
   regularScheduleText: '2026年起每年5次：1月、3月、4月、6月、12月',
-  scoreReleaseText: '考试后2周内',
+  scoreReleaseText: '居家网考和集中机考考后7个工作日内；纸笔考试考后14个工作日内',
   examFormat: {
     mode: '在线机考',
     location: '线上、线下考点',
@@ -84,9 +84,9 @@ export const DEFAULT_CSCA_EXAM_SCHEDULE: CscaExamSchedule = {
     { subject: '数学', startsAtBeijing: '2026-06-27T18:00:00+08:00', endsAtBeijing: '2026-06-27T19:00:00+08:00' },
     { subject: '化学', startsAtBeijing: '2026-06-27T20:30:00+08:00', endsAtBeijing: '2026-06-27T21:30:00+08:00' }
   ],
-  sourceUrl: 'https://csca.apply4ch.com/',
+  sourceUrl: 'https://csca.cn/about/examintro',
   sourceLabel: 'CSCA 官方报名与考试信息',
-  lastVerifiedAt: '2026-05-08'
+  lastVerifiedAt: '2026-09-29'
 };
 
 function readString(value: unknown, fallback: string) {

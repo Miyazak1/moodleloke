@@ -17,6 +17,7 @@ import { useI18n } from './i18n/useI18n';
 
 const AgentPage = lazy(() => import('./pages/AgentPage').then((module) => ({ default: module.AgentPage })));
 const PublicHomePage = lazy(() => import('./pages/PublicHomePage').then((module) => ({ default: module.PublicHomePage })));
+const CscaPrepPage = lazy(() => import('./pages/CscaPrepPage').then((module) => ({ default: module.CscaPrepPage })));
 const PublicAuthPage = lazy(() => import('./pages/PublicAuthPage').then((module) => ({ default: module.PublicAuthPage })));
 const PublicMePage = lazy(() => import('./pages/PublicMePage').then((module) => ({ default: module.PublicMePage })));
 const StudentOnboardingPage = lazy(() => import('./pages/StudentOnboardingPage').then((module) => ({ default: module.StudentOnboardingPage })));
@@ -91,7 +92,7 @@ export default function StandaloneAgentApp() {
   const isAgent = route === 'agent';
   const mainClassName = isAgent
     ? 'site-main site-main-agent'
-    : route === 'home'
+    : route === 'home' || route === 'csca-prep'
       ? 'site-main site-main-home'
       : 'site-main';
   const agentHost = createAgentHostBridge({
@@ -140,12 +141,20 @@ export default function StandaloneAgentApp() {
           </div>
         </header>
       ) : null}
-      {(route !== 'home' && route !== 'me' && (!isAgent || !currentUser)) ? <div className="standalone-language-bar"><LanguageSelector compact /></div> : null}
+      {(route !== 'home' && route !== 'csca-prep' && route !== 'me' && (!isAgent || !currentUser)) ? <div className="standalone-language-bar"><LanguageSelector compact /></div> : null}
       <main className={mainClassName}>
         <ErrorBanner message={error} />
         <Suspense fallback={<AppLoadingState variant="page" />}>
           {route === 'home' && (
             <PublicHomePage
+              currentUser={currentUser}
+              isResolvingAuth={isResolvingAuth}
+              onCurrentUserChange={setCurrentUser}
+              onNavigate={navigate}
+            />
+          )}
+          {route === 'csca-prep' && (
+            <CscaPrepPage
               currentUser={currentUser}
               isResolvingAuth={isResolvingAuth}
               onCurrentUserChange={setCurrentUser}
