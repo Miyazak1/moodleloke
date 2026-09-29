@@ -97,6 +97,10 @@ const AGENT_TASK_RAIL_DEFAULT_WIDTH = 720;
 const AGENT_TASK_RAIL_MIN_WIDTH = 480;
 const AGENT_TASK_RAIL_STORAGE_KEY = 'moodlelike.agent.taskRailWidth';
 const AGENT_TASK_RAIL_POSITION_STORAGE_KEY = 'moodlelike.agent.taskRailPosition';
+const AGENT_CONTEXT_RAIL_DEFAULT_WIDTH = 380;
+const AGENT_CONTEXT_RAIL_MIN_WIDTH = 320;
+const AGENT_CONTEXT_RAIL_MAX_WIDTH = 560;
+const AGENT_CONTEXT_RAIL_STORAGE_KEY = 'moodlelike.agent.contextRailWidth';
 const AGENT_JOURNEY_SECTION_STORAGE_KEY = 'moodlelike.agent.journeySection';
 const AGENT_LEARNING_MODE_STORAGE_KEY = 'moodlelike.agent.learningMode';
 const AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY = 'moodlelike.agent.freePracticeSubject';
@@ -365,6 +369,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
   const threadContextRef = useRef('');
   const [isThreadFollowingLatest, setIsThreadFollowingLatest] = useState(true);
   const taskRailDragRef = useRef<{ pointerId: number; startX: number; startWidth: number } | null>(null);
+  const contextRailDragRef = useRef<{ pointerId: number; startX: number; startWidth: number } | null>(null);
   const interventionOfferContextRef = useRef<string | null>(null);
   const focusComposer = useCallback(() => {
     window.requestAnimationFrame(() => composerInputRef.current?.focus());
@@ -394,6 +399,14 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     return Number.isFinite(saved) && saved >= AGENT_TASK_RAIL_MIN_WIDTH ? saved : AGENT_TASK_RAIL_DEFAULT_WIDTH;
   });
   const [isTaskRailResizing, setIsTaskRailResizing] = useState(false);
+  const [contextRailWidth, setContextRailWidth] = useState(() => {
+    if (typeof window === 'undefined') return AGENT_CONTEXT_RAIL_DEFAULT_WIDTH;
+    const saved = Number(window.localStorage.getItem(AGENT_CONTEXT_RAIL_STORAGE_KEY));
+    return Number.isFinite(saved) && saved >= AGENT_CONTEXT_RAIL_MIN_WIDTH && saved <= AGENT_CONTEXT_RAIL_MAX_WIDTH
+      ? saved
+      : AGENT_CONTEXT_RAIL_DEFAULT_WIDTH;
+  });
+  const [isContextRailResizing, setIsContextRailResizing] = useState(false);
   const [taskRailPosition, setTaskRailPosition] = useState<'right' | 'center'>(() => {
     if (typeof window === 'undefined') return 'center';
     return readMigratedLocalStorage(AGENT_TASK_RAIL_POSITION_STORAGE_KEY, LEGACY_AGENT_TASK_RAIL_POSITION_STORAGE_KEY) === 'right' ? 'right' : 'center';
@@ -1082,11 +1095,28 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     if (typeof window !== 'undefined') writeMigratedLocalStorage(AGENT_TASK_RAIL_STORAGE_KEY, LEGACY_AGENT_TASK_RAIL_STORAGE_KEY, String(Math.round(width)));
   }, []);
 
+  const clampContextRailWidth = useCallback((width: number) => {
+    if (typeof window === 'undefined') return Math.min(AGENT_CONTEXT_RAIL_MAX_WIDTH, Math.max(AGENT_CONTEXT_RAIL_MIN_WIDTH, width));
+    const viewportWidth = window.innerWidth;
+    const conversationWidth = viewportWidth > 1200 ? 248 : 220;
+    const minimumThreadWidth = viewportWidth > 1200 ? 520 : 420;
+    const availableWidth = viewportWidth - conversationWidth - minimumThreadWidth;
+    const maximumWidth = Math.max(AGENT_CONTEXT_RAIL_MIN_WIDTH, Math.min(AGENT_CONTEXT_RAIL_MAX_WIDTH, availableWidth));
+    return Math.min(maximumWidth, Math.max(AGENT_CONTEXT_RAIL_MIN_WIDTH, width));
+  }, []);
+
+  const persistContextRailWidth = useCallback((width: number) => {
+    if (typeof window !== 'undefined') window.localStorage.setItem(AGENT_CONTEXT_RAIL_STORAGE_KEY, String(Math.round(width)));
+  }, []);
+
   useEffect(() => {
-    const handleResize = () => setTaskRailWidth((current) => clampTaskRailWidth(current));
+    const handleResize = () => {
+      setTaskRailWidth((current) => clampTaskRailWidth(current));
+      setContextRailWidth((current) => clampContextRailWidth(current));
+    };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [clampTaskRailWidth]);
+  }, [clampContextRailWidth, clampTaskRailWidth]);
 
   function handleTaskRailPointerDown(event: ReactPointerEvent<HTMLDivElement>) {
     if (window.innerWidth <= 720) return;
@@ -1128,6 +1158,48 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     const nextWidth = clampTaskRailWidth(AGENT_TASK_RAIL_DEFAULT_WIDTH);
     setTaskRailWidth(nextWidth);
     persistTaskRailWidth(nextWidth);
+  }
+
+  function handleContextRailPointerDown(event: ReactPointerEvent<HTMLDivElement>) {
+    if (window.innerWidth <= 1100) return;
+    contextRailDragRef.current = { pointerId: event.pointerId, startX: event.clientX, startWidth: contextRailWidth };
+    event.currentTarget.setPointerCapture(event.pointerId);
+    setIsContextRailResizing(true);
+    event.preventDefault();
+  }
+
+  function handleContextRailPointerMove(event: ReactPointerEvent<HTMLDivElement>) {
+    const drag = contextRailDragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    setContextRailWidth(clampContextRailWidth(drag.startWidth + drag.startX - event.clientX));
+  }
+
+  function finishContextRailResize(event: ReactPointerEvent<HTMLDivElement>) {
+    const drag = contextRailDragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    const nextWidth = clampContextRailWidth(drag.startWidth + drag.startX - event.clientX);
+    contextRailDragRef.current = null;
+    setContextRailWidth(nextWidth);
+    persistContextRailWidth(nextWidth);
+    setIsContextRailResizing(false);
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+  }
+
+  function handleContextRailResizeKey(event: ReactKeyboardEvent<HTMLDivElement>) {
+    if (!['ArrowLeft', 'ArrowRight', 'Home'].includes(event.key)) return;
+    event.preventDefault();
+    const step = event.shiftKey ? 48 : 16;
+    const nextWidth = event.key === 'Home'
+      ? clampContextRailWidth(AGENT_CONTEXT_RAIL_DEFAULT_WIDTH)
+      : clampContextRailWidth(contextRailWidth + (event.key === 'ArrowLeft' ? step : -step));
+    setContextRailWidth(nextWidth);
+    persistContextRailWidth(nextWidth);
+  }
+
+  function resetContextRailWidth() {
+    const nextWidth = clampContextRailWidth(AGENT_CONTEXT_RAIL_DEFAULT_WIDTH);
+    setContextRailWidth(nextWidth);
+    persistContextRailWidth(nextWidth);
   }
 
   function toggleTaskRailPosition() {
@@ -1921,6 +1993,25 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
       onKeyDown={handleTaskRailResizeKey}
     ><span /></div>
   );
+  const contextRailResizeHandle = (
+    <div
+      className="agent-context-rail-resizer"
+      role="separator"
+      aria-label={t('agent.workspace.resizeContext', '调整右侧栏宽度')}
+      aria-orientation="vertical"
+      aria-valuemin={AGENT_CONTEXT_RAIL_MIN_WIDTH}
+      aria-valuemax={AGENT_CONTEXT_RAIL_MAX_WIDTH}
+      aria-valuenow={Math.round(contextRailWidth)}
+      tabIndex={0}
+      title={t('agent.workspace.resizeHint', '拖动调整宽度，双击恢复默认')}
+      onPointerDown={handleContextRailPointerDown}
+      onPointerMove={handleContextRailPointerMove}
+      onPointerUp={finishContextRailResize}
+      onPointerCancel={finishContextRailResize}
+      onDoubleClick={resetContextRailWidth}
+      onKeyDown={handleContextRailResizeKey}
+    ><span /></div>
+  );
 
   return (
     <div className="agent-page">
@@ -1932,9 +2023,13 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
           hasAuxiliaryTask && !isLearningSupportVisible ? 'is-practice-help-closed' : '',
           hasTaskWorkspace && taskRailPosition === 'center' ? 'is-task-first' : '',
           isJourneyOverview || (!isSubjectQa && !hasTaskWorkspace && !learningWorkspace && !mockExamWorkspace && !intervention && !interventionVerification && !currentWorkspaceOutput && !error) ? 'is-single-workbench' : '',
-          isTaskRailResizing ? 'is-resizing-task-rail' : ''
+          isTaskRailResizing ? 'is-resizing-task-rail' : '',
+          isContextRailResizing ? 'is-resizing-context-rail' : ''
         ].filter(Boolean).join(' ')}
-        style={hasTaskWorkspace ? { '--agent-task-rail-width': `${taskRailWidth}px` } as CSSProperties : undefined}
+        style={{
+          '--agent-context-rail-width': `${contextRailWidth}px`,
+          ...(hasTaskWorkspace ? { '--agent-task-rail-width': `${taskRailWidth}px` } : {})
+        } as CSSProperties}
       >
         <aside className="agent-conversation-rail" aria-label={t('agent.journey.aria', '学习旅程导航')}>
           <div className="agent-rail-brand">
@@ -2441,6 +2536,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
           </aside>
         ) : journeySection === 'today' && learningWorkspace?.phase === 'report' ? (
           <aside className="agent-context-rail agent-report-rail" aria-label={t('agent.reportRail.aria', '本轮结果与下一步')}>
+            {contextRailResizeHandle}
             <section className="agent-report-rail-summary">
               <header><span><Icon name="lucide:chart-no-axes-combined" /></span><div><small>{t('agent.reportRail.kicker', '本轮概览')}</small><strong>{subjectLabel(workspaceSubject, t)} · {workspaceTaskType === 'free_practice' ? t('agent.freePractice.titleShort', '自由练习') : taskLabel(workspaceTaskType, t)}</strong></div></header>
               {adaptiveReport ? <>
@@ -2470,10 +2566,10 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
             </section> : null}
 
             <button type="button" className="agent-report-rail-qa" onClick={() => chooseJourneySection('qa')}><Icon name="lucide:messages-square" /><span><strong>{t('agent.reportRail.askTitle', '这轮有疑问？')}</strong><small>{t('agent.reportRail.askBody', '去学科问答，自由询问数学、物理或化学知识。')}</small></span><Icon name="lucide:arrow-right" /></button>
-            <section className="agent-context-note"><Icon name="lucide:shield-check" /><p>{t('agent.reportRail.evidence', '报告来自本轮真实作答；自由问答不会直接修改掌握度。')}</p></section>
           </aside>
         ) : journeySection === 'today' && mockExamWorkspace?.phase === 'report' ? (
           <aside className="agent-context-rail agent-report-rail" aria-label={t('agent.mockExam.report', '模考报告与下一步')}>
+            {contextRailResizeHandle}
             <section className="agent-report-rail-summary">
               <header><span><Icon name="lucide:clipboard-check" /></span><div><small>{t('agent.mockExam.report', '模考报告与下一步')}</small><strong>{mockExamSettlement?.paperTitle ?? t('agent.task.mockExam', '在线模考')}</strong></div></header>
               {mockExamSettlement ? <>
@@ -2484,6 +2580,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
             <button type="button" className="agent-report-rail-qa" onClick={() => chooseJourneySection('qa')}><Icon name="lucide:messages-square" /><span><strong>{t('agent.reportRail.askTitle', '这轮有疑问？')}</strong><small>{t('agent.reportRail.askBody', '去学科问答，自由询问数学、物理或化学知识。')}</small></span><Icon name="lucide:arrow-right" /></button>
           </aside>
         ) : <aside className={journeySection === 'today' ? `agent-context-rail${effectiveLearningMode === 'free' ? ' is-free-practice' : ''}` : 'agent-context-rail is-journey-view'} aria-label={journeySection === 'weakness' ? t('agent.journey.weakness', '错题与薄弱点') : journeySection === 'resources' ? t('agent.journey.resources', '学习资料') : t('agent.context.aria', '当前学习上下文')}>
+          {contextRailResizeHandle}
           {journeySection === 'settings' ? <>
             <section className="agent-context-intro">
               <span className="agent-kicker">{t('agent.settings.kicker', 'Agent 使用的信息')}</span>

@@ -45,8 +45,7 @@ export function PublicHomePage({ currentUser, isResolvingAuth, onCurrentUserChan
       <header className="site-header site-header-home public-home-header">
         <div className="site-header-inner">
           <button type="button" className="site-brand" onClick={() => onNavigate(routes.home)}>
-            <span className="site-brand-mark" aria-hidden="true">CS</span>
-            <span><strong>{t('homeNav.brand', 'CSCA 学习 Agent')}</strong></span>
+            <img className="site-brand-logo" src="/logo-candidate-v2-csca.png" alt={t('homeNav.brand', 'CSCA 学习 Agent')} />
           </button>
           <nav className="site-nav" aria-label={t('nav.aria', '主导航')}>
             <button type="button" className="site-link" onClick={() => onNavigate(routes.agent)}>{t('homeNav.practice', '做题训练')}</button>
@@ -75,9 +74,8 @@ export function PublicHomePage({ currentUser, isResolvingAuth, onCurrentUserChan
       <footer className="public-home-footer">
         <div className="public-home-footer-inner">
           <div className="public-home-footer-brand">
-            <span className="site-brand-mark" aria-hidden="true">CS</span>
+            <img className="site-brand-logo site-brand-logo-footer" src="/logo-candidate-v2-csca.png" alt="CSCA" />
             <span>
-              <strong>CSCAPilot</strong>
               <small>{t('homeFooter.brandTagline', '专注 CSCA 数学、物理、化学学习与训练。')}</small>
             </span>
           </div>

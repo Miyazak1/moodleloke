@@ -158,8 +158,7 @@ export default function AdminApp() {
       <header className="site-header site-header-home admin-site-header">
         <div className="site-header-inner">
           <button type="button" className="site-brand" onClick={() => leaveAdmin(routes.home)}>
-            <span className="site-brand-mark" aria-hidden="true">CS</span>
-            <span><strong>{t('homeNav.brand', 'CSCA 学习 Agent')}</strong></span>
+            <img className="site-brand-logo" src="/logo-candidate-v2-csca.png" alt={t('homeNav.brand', 'CSCA 学习 Agent')} />
           </button>
           <nav className="site-nav" aria-label={t('nav.aria', '主导航')}>
             <button type="button" className="site-link" onClick={() => leaveAdmin(routes.home)}>{t('nav.home', '首页')}</button>

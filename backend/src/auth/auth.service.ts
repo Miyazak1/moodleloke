@@ -13,6 +13,7 @@ const scrypt = promisify(scryptCallback);
 const ACCESS_TOKEN_TTL_SECONDS = 15 * 60;
 const REFRESH_TOKEN_TTL_SECONDS = 30 * 24 * 60 * 60;
 const LOCAL_AUTH_SECRET = 'moodlelike-local-development-secret-change-before-production';
+const PUBLIC_BRAND_NAME = 'CSCAPilot';
 const AUTH_WINDOW_MS = 15 * 60 * 1000;
 const ADMIN_USER_STATUS_LOCK_NAMESPACE = 43021;
 const GOOGLE_OAUTH_STATE_TTL_SECONDS = 10 * 60;
@@ -189,7 +190,10 @@ function getPublicAppOrigin() {
 }
 
 function getPublicApiOrigin() {
-  const origin = process.env.PUBLIC_API_ORIGIN?.trim() || process.env.API_BASE_URL?.trim() || 'http://localhost:3000';
+  const origin = process.env.PUBLIC_API_ORIGIN?.trim()
+    || process.env.API_BASE_URL?.trim()
+    || process.env.PUBLIC_APP_ORIGIN?.trim()
+    || 'http://localhost:3000';
   try {
     return new URL(origin).origin;
   } catch {
@@ -811,12 +815,12 @@ export class AuthService {
     try {
       const result = await sendAuthEmail({
         to: email,
-        subject: 'Verify your Moodlelike email / 验证你的 Moodlelike 邮箱',
+        subject: `Verify your ${PUBLIC_BRAND_NAME} email / 验证你的 ${PUBLIC_BRAND_NAME} 邮箱`,
         text: [
-          'Please verify your Moodlelike email address within 24 hours:',
+          `Please verify your ${PUBLIC_BRAND_NAME} email address within 24 hours:`,
           verifyUrl,
           '',
-          '请在 24 小时内验证你的 Moodlelike 登录邮箱：',
+          `请在 24 小时内验证你的 ${PUBLIC_BRAND_NAME} 登录邮箱：`,
           verifyUrl
         ].join('\n')
       });
@@ -841,12 +845,12 @@ export class AuthService {
     try {
       await sendAuthEmail({
         to: email,
-        subject: 'Reset your Moodlelike password / 重置你的 Moodlelike 密码',
+        subject: `Reset your ${PUBLIC_BRAND_NAME} password / 重置你的 ${PUBLIC_BRAND_NAME} 密码`,
         text: [
-          'Use this link to reset your Moodlelike password within 30 minutes:',
+          `Use this link to reset your ${PUBLIC_BRAND_NAME} password within 30 minutes:`,
           resetUrl,
           '',
-          '请在 30 分钟内使用这个链接重置你的 Moodlelike 密码：',
+          `请在 30 分钟内使用这个链接重置你的 ${PUBLIC_BRAND_NAME} 密码：`,
           resetUrl
         ].join('\n')
       });

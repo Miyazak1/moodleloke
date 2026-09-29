@@ -122,8 +122,7 @@ export default function StandaloneAgentApp() {
         <header className="site-header site-header-home account-site-header">
           <div className="site-header-inner">
             <button type="button" className="site-brand" onClick={() => navigate(routes.home)}>
-              <span className="site-brand-mark" aria-hidden="true">CS</span>
-              <span><strong>{t('homeNav.brand', 'CSCA 学习 Agent')}</strong></span>
+              <img className="site-brand-logo" src="/logo-candidate-v2-csca.png" alt={t('homeNav.brand', 'CSCA 学习 Agent')} />
             </button>
             <nav className="site-nav" aria-label={t('nav.aria', '主导航')}>
               <button type="button" className="site-link" onClick={() => navigate(routes.home)}>{t('nav.home', '首页')}</button>
@@ -205,8 +204,8 @@ export default function StandaloneAgentApp() {
         <footer className="site-footer site-footer-account">
           <div className="site-footer-account-inner">
             <div className="site-footer-account-brand">
-              <span className="site-brand-mark" aria-hidden="true">CS</span>
-              <div><strong>CSCAPilot</strong><span>© {new Date().getFullYear()} · {t('footer.accountPrivacy', '账号信息仅用于登录、安全与学习记录。')}</span></div>
+              <img className="site-brand-logo site-brand-logo-footer" src="/logo-candidate-v2-csca.png" alt="CSCA" />
+              <div><span>© {new Date().getFullYear()} · {t('footer.accountPrivacy', '账号信息仅用于登录、安全与学习记录。')}</span></div>
             </div>
             <nav aria-label={t('footer.accountAria', '账号页页脚导航')}>
               <button type="button" onClick={() => navigate(routes.home)}>{t('footer.backHome', '返回首页')}</button>

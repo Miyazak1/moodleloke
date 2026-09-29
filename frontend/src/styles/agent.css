@@ -43,7 +43,7 @@
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: 248px minmax(520px, 1fr) 286px;
+  grid-template-columns: 248px minmax(520px, 1fr) minmax(320px, var(--agent-context-rail-width, 380px));
   width: 100%;
   height: 100%;
   min-height: 0;
@@ -66,8 +66,8 @@
 .agent-workspace.is-single-workbench .agent-context-rail > * { width: min(1120px, 100%); }
 .agent-workspace.is-subject-qa { grid-template-columns: 248px minmax(0, 1fr); }
 .agent-workspace.is-subject-qa .agent-thread { grid-column: 2; }
-.agent-workspace.is-resizing-task-rail { cursor: col-resize; user-select: none; }
-.agent-workspace.is-resizing-task-rail iframe { pointer-events: none; }
+.agent-workspace:is(.is-resizing-task-rail, .is-resizing-context-rail) { cursor: col-resize; user-select: none; }
+.agent-workspace:is(.is-resizing-task-rail, .is-resizing-context-rail) iframe { pointer-events: none; }
 .agent-workspace.is-task-first .agent-task-rail { order: 1; border-right: 1px solid var(--agent-line); border-left: 0; box-shadow: 18px 0 42px rgba(35, 62, 84, .045); }
 .agent-workspace.is-task-first .agent-thread { order: 2; border-left: 1px solid var(--agent-line); box-shadow: -18px 0 42px rgba(35, 62, 84, .055); }
 .agent-task-rail {
@@ -80,15 +80,24 @@
   background: rgba(247, 251, 250, .96);
   box-shadow: -18px 0 42px rgba(35, 62, 84, .055);
 }
-.agent-task-rail-resizer { position: absolute; z-index: 30; top: 0; bottom: 0; left: -6px; width: 12px; cursor: col-resize; touch-action: none; outline: 0; }
-.agent-task-rail-resizer::before { position: absolute; top: 0; bottom: 0; left: 5px; width: 2px; background: transparent; content: ""; transition: background .16s ease, box-shadow .16s ease; }
-.agent-task-rail-resizer > span { position: absolute; top: 50%; left: 2px; width: 8px; height: 46px; border: 1px solid var(--agent-line); border-radius: 999px; background: rgba(255, 255, 255, .94); box-shadow: 0 5px 15px rgba(32, 55, 78, .1); opacity: 0; transform: translateY(-50%); transition: opacity .16s ease, border-color .16s ease; }
+.agent-task-rail-resizer,
+.agent-context-rail-resizer { position: absolute; z-index: 30; top: 0; bottom: 0; left: -6px; width: 12px; cursor: col-resize; touch-action: none; outline: 0; }
+.agent-task-rail-resizer::before,
+.agent-context-rail-resizer::before { position: absolute; top: 0; bottom: 0; left: 5px; width: 2px; background: transparent; content: ""; transition: background .16s ease, box-shadow .16s ease; }
+.agent-task-rail-resizer > span,
+.agent-context-rail-resizer > span { position: absolute; top: 50%; left: 2px; width: 8px; height: 46px; border: 1px solid var(--agent-line); border-radius: 999px; background: rgba(255, 255, 255, .94); box-shadow: 0 5px 15px rgba(32, 55, 78, .1); opacity: 0; transform: translateY(-50%); transition: opacity .16s ease, border-color .16s ease; }
 .agent-task-rail-resizer:hover::before,
 .agent-task-rail-resizer:focus-visible::before,
-.agent-workspace.is-resizing-task-rail .agent-task-rail-resizer::before { background: var(--agent-blue); box-shadow: 0 0 0 3px rgba(49, 93, 255, .1); }
+.agent-context-rail-resizer:hover::before,
+.agent-context-rail-resizer:focus-visible::before,
+.agent-workspace.is-resizing-task-rail .agent-task-rail-resizer::before,
+.agent-workspace.is-resizing-context-rail .agent-context-rail-resizer::before { background: var(--agent-blue); box-shadow: 0 0 0 3px rgba(49, 93, 255, .1); }
 .agent-task-rail-resizer:hover > span,
 .agent-task-rail-resizer:focus-visible > span,
-.agent-workspace.is-resizing-task-rail .agent-task-rail-resizer > span { border-color: var(--agent-blue); opacity: 1; }
+.agent-context-rail-resizer:hover > span,
+.agent-context-rail-resizer:focus-visible > span,
+.agent-workspace.is-resizing-task-rail .agent-task-rail-resizer > span,
+.agent-workspace.is-resizing-context-rail .agent-context-rail-resizer > span { border-color: var(--agent-blue); opacity: 1; }
 .agent-task-rail-header { display: flex; min-height: 70px; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 15px 11px 17px; border-bottom: 1px solid var(--agent-line); background: rgba(255, 255, 255, .94); }
 .agent-task-rail-header > div { display: grid; min-width: 0; gap: 2px; }
 .agent-task-rail-header strong { overflow: hidden; color: var(--agent-ink); font-size: 15px; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
@@ -1133,7 +1142,11 @@
 .agent-inline-error-actions button.primary { background: #a44c3e; color: #fff; }
 .agent-inline-error-actions button svg { width: 12px; height: 12px; }
 
-.agent-context-rail { display: grid; align-content: start; gap: 13px; padding: 23px 18px; border-left: 1px solid var(--agent-line); overflow-y: auto; }
+.agent-context-rail { position: relative; display: grid; align-content: start; gap: 13px; padding: 23px 18px; border-left: 1px solid var(--agent-line); overflow-y: auto; }
+.agent-context-rail-resizer { left: 0; }
+.agent-context-rail-resizer::before { left: 0; }
+.agent-context-rail-resizer > span { left: 0; }
+.agent-workspace.is-single-workbench .agent-context-rail-resizer { display: none; }
 .agent-context-intro h2 { margin: 5px 0 8px; font-size: 21px; line-height: 1.2; }
 .agent-context-intro p { margin: 0; color: var(--agent-muted); font-size: 13px; line-height: 1.65; }
 .agent-workbench-heading { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 18px; align-items: start; padding-bottom: 6px; }
@@ -1545,7 +1558,7 @@
 @keyframes agentStatusPulse { 0%, 100% { opacity: .55; transform: scale(.84); } 50% { opacity: 1; transform: scale(1.12); } }
 
 @media (max-width: 1200px) {
-  .agent-workspace { grid-template-columns: 220px minmax(480px, 1fr) 250px; }
+  .agent-workspace { grid-template-columns: 220px minmax(420px, 1fr) minmax(320px, var(--agent-context-rail-width, 380px)); }
   .agent-workspace.is-subject-qa { grid-template-columns: 220px minmax(0, 1fr); }
   .agent-workspace.is-task-active { grid-template-columns: 220px minmax(360px, 1fr) minmax(380px, var(--agent-task-rail-width, 460px)); }
   .agent-workspace.is-task-active.is-practice-help-closed { grid-template-columns: 220px minmax(0, 1fr); }
@@ -1561,6 +1574,7 @@
   .agent-workspace.is-task-active.is-practice-help-closed .agent-task-rail { grid-column: 1; }
   .agent-workspace.is-task-active .agent-conversation-rail { display: none; }
   .agent-context-rail { display: none; }
+  .agent-context-rail-resizer { display: none; }
   .agent-goal-summary { grid-template-columns: 1fr; }
   .agent-goal-summary dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .agent-subject-progress-list { grid-template-columns: 1fr; }

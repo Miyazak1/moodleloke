@@ -5,8 +5,8 @@ require('reflect-metadata');
 
 process.env.AUTH_SECRET = process.env.AUTH_SECRET || 'backend-security-tests-secret';
 process.env.AUTH_EMAIL_CAPTURE = 'true';
-process.env.PUBLIC_APP_ORIGIN = 'http://localhost:5174';
-process.env.PUBLIC_API_ORIGIN = 'http://localhost:3000';
+process.env.PUBLIC_APP_ORIGIN = 'https://new-site.example.com';
+delete process.env.PUBLIC_API_ORIGIN;
 
 const { AuthService } = require('../dist/backend/src/auth/auth.service.js');
 const { AuthController } = require('../dist/backend/src/auth/auth.controller.js');
@@ -252,7 +252,13 @@ async function run() {
   assert.equal(prisma.__state.refreshSessions.length, 1);
   assert.equal(prisma.__state.authEmailTokens.length, 1, 'register creates verification token');
   assert.equal(globalThis.__CSC_AUTH_EMAILS__.length, 1, 'register sends verification email');
-  const verificationToken = extractTokenFromEmail(lastCapturedEmail());
+  const verificationEmail = lastCapturedEmail();
+  assert.equal(verificationEmail.subject, 'Verify your CSCAPilot email / 验证你的 CSCAPilot 邮箱');
+  assert.match(verificationEmail.text, /Please verify your CSCAPilot email address within 24 hours:/);
+  assert.match(verificationEmail.text, /请在 24 小时内验证你的 CSCAPilot 登录邮箱：/);
+  assert.match(verificationEmail.text, /https:\/\/new-site\.example\.com\/api\/v1\/auth\/email\/verify\?token=/);
+  assert.doesNotMatch(`${verificationEmail.subject}\n${verificationEmail.text}`, /Moodlelike/i);
+  const verificationToken = extractTokenFromEmail(verificationEmail);
   assert.notEqual(prisma.__state.authEmailTokens[0].tokenHash, verificationToken, 'verification token stores hash only');
   assert.equal(prisma.__state.authEmailTokens[0].tokenHash.includes(verificationToken), false, 'verification token hash must not contain raw token');
   await auth.verifyEmailToken(verificationToken);
@@ -344,7 +350,11 @@ async function run() {
   const forgotMissing = await auth.forgotPassword({ email: 'missing@example.com' });
   assert.deepEqual(forgotExisting, forgotMissing, 'forgot password response does not expose account existence');
   assert.equal(globalThis.__CSC_AUTH_EMAILS__.length, 1, 'forgot password sends reset only for existing password account');
-  const resetToken = extractTokenFromEmail(lastCapturedEmail());
+  const resetEmail = lastCapturedEmail();
+  assert.equal(resetEmail.subject, 'Reset your CSCAPilot password / 重置你的 CSCAPilot 密码');
+  assert.match(resetEmail.text, /Use this link to reset your CSCAPilot password within 30 minutes:/);
+  assert.doesNotMatch(`${resetEmail.subject}\n${resetEmail.text}`, /Moodlelike/i);
+  const resetToken = extractTokenFromEmail(resetEmail);
   const resetTokenRecord = prisma.__state.authEmailTokens.find((token) => token.type === 'password_reset');
   assert.ok(resetTokenRecord, 'forgot password creates reset token');
   assert.notEqual(resetTokenRecord.tokenHash, resetToken, 'reset token stores hash only');
