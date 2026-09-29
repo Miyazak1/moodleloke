@@ -11,6 +11,7 @@
     "build": "node scripts/clean-dist.cjs && npm run prisma:generate && nest build",
     "build:with-prisma": "npm run build",
     "test:security": "node scripts/security-tests.cjs",
+    "test:home-mini-mock-fallback": "npm run build && node scripts/home-mini-mock-fallback-test.cjs",
     "test:auth-google-oauth": "npm run build && node scripts/auth-google-oauth-test.cjs",
     "test:mock-exam-review-rules": "node scripts/mock-exam-review-rules-test.cjs",
     "test:learning-intelligence-contracts": "npm run build && node scripts/learning-intelligence-contracts-test.cjs",

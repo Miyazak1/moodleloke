@@ -51,6 +51,19 @@ const HOME_MINI_MOCK_TOTAL = HOME_MINI_MOCK_PER_SUBJECT * SUBJECTS.length;
 type DbTopic = SpecialPracticeTopic;
 type DbQuestion = SpecialPracticeQuestion;
 type DbQualifiedQuestionWithTopic = CscaQuestion & { topic: CscaExamTopic };
+type DbSpecialQuestionWithTopic = SpecialPracticeQuestion & { topic: SpecialPracticeTopic };
+type HomeMiniMockQuestionSource = {
+  id: number;
+  subject: SpecialPracticeSubject;
+  difficulty: string;
+  questionType: string;
+  prompt: string;
+  options: SpecialPracticeOption[];
+  correctAnswer: string;
+  explanation: string;
+  knowledgeTags: string[];
+  topic: { id: number; slug: string; title: string; module: string };
+};
 type DbSession = SpecialPracticeSession;
 type AdminImportQuestion = Partial<DbQuestion> & { options?: SpecialPracticeOption[]; knowledgeTags?: string[] };
 type AdminImportTopic = Partial<DbTopic> & { questions?: AdminImportQuestion[] };
@@ -396,31 +409,70 @@ function seededRank(seed: string, id: number) {
   return hash >>> 0;
 }
 
-function homeMiniMockQuestion(question: DbQualifiedQuestionWithTopic, orderNumber: number) {
+function approvedAiMiniMockQuestion(question: DbQualifiedQuestionWithTopic): HomeMiniMockQuestionSource {
   const subject = assertSubject(question.subject);
-  const subjectMeta = SUBJECTS.find((item) => item.id === subject);
   return {
     id: question.id,
-    orderNumber,
+    subject,
     difficulty: cleanString(question.empiricalDifficulty, question.designedDifficulty) || '基础',
     questionType: question.questionType,
     prompt: question.prompt,
     options: optionsFromJson(question.options),
-    subject,
-    subjectTitle: subjectMeta?.title ?? subject,
+    correctAnswer: question.correctAnswer,
+    explanation: question.explanation,
+    knowledgeTags: tagsFromJson(question.knowledgeTags),
     topic: {
       id: question.topic.id,
       slug: question.topic.code,
       title: question.topic.title,
       module: cleanString(question.topic.module, question.topic.title)
-    },
-    knowledgeTags: tagsFromJson(question.knowledgeTags)
+    }
+  };
+}
+
+function publishedSpecialMiniMockQuestion(question: DbSpecialQuestionWithTopic): HomeMiniMockQuestionSource {
+  const subject = assertSubject(question.topic.subject);
+  return {
+    // Keep the public ID namespace unambiguous without changing the frontend contract.
+    // Prisma autoincrement IDs are positive, so negative IDs safely identify fixed-bank questions.
+    id: -question.id,
+    subject,
+    difficulty: question.difficulty || '基础',
+    questionType: question.questionType,
+    prompt: question.prompt,
+    options: optionsFromJson(question.options),
+    correctAnswer: question.correctAnswer,
+    explanation: question.explanation,
+    knowledgeTags: tagsFromJson(question.knowledgeTags),
+    topic: {
+      id: question.topic.id,
+      slug: question.topic.slug,
+      title: question.topic.title,
+      module: question.topic.module
+    }
+  };
+}
+
+function homeMiniMockQuestion(question: HomeMiniMockQuestionSource, orderNumber: number) {
+  const subject = question.subject;
+  const subjectMeta = SUBJECTS.find((item) => item.id === subject);
+  return {
+    id: question.id,
+    orderNumber,
+    difficulty: question.difficulty,
+    questionType: question.questionType,
+    prompt: question.prompt,
+    options: question.options,
+    subject,
+    subjectTitle: subjectMeta?.title ?? subject,
+    topic: question.topic,
+    knowledgeTags: question.knowledgeTags
   };
 }
 
 function parseMiniMockQuestionIds(value: unknown) {
   if (!Array.isArray(value)) throw new BadRequestException('请提交本轮 12 道题的题号。');
-  const ids = value.map((item) => Number(item)).filter((item) => Number.isInteger(item) && item > 0);
+  const ids = value.map((item) => Number(item)).filter((item) => Number.isSafeInteger(item) && item !== 0);
   const uniqueIds = Array.from(new Set(ids));
   if (!uniqueIds.length) throw new BadRequestException('请提交本轮 12 道题的题号。');
   if (uniqueIds.length > HOME_MINI_MOCK_TOTAL) throw new BadRequestException(`首页小测最多提交 ${HOME_MINI_MOCK_TOTAL} 道题。`);
@@ -709,10 +761,10 @@ export class CscaSpecialPracticeService {
   async getHomeMiniMock(query: Record<string, string | undefined> = {}) {
     const today = new Date().toISOString().slice(0, 10);
     const seed = cleanString(query.seed, today).slice(0, 80) || today;
-    const selectedBySubject = new Map<SpecialPracticeSubject, DbQualifiedQuestionWithTopic[]>();
+    const selectedBySubject = new Map<SpecialPracticeSubject, HomeMiniMockQuestionSource[]>();
 
     for (const subject of SUBJECTS) {
-      const candidates = await this.prisma.cscaQuestion.findMany({
+      const approvedAiCandidates = await this.prisma.cscaQuestion.findMany({
         where: {
           subject: subject.id,
           status: 'approved',
@@ -721,13 +773,30 @@ export class CscaSpecialPracticeService {
         include: { topic: true },
         orderBy: [{ topicId: 'asc' }, { id: 'asc' }]
       });
-      const picked = [...candidates]
+      const picked = [...approvedAiCandidates]
         .sort((left, right) => seededRank(`${seed}:${subject.id}`, left.id) - seededRank(`${seed}:${subject.id}`, right.id))
-        .slice(0, HOME_MINI_MOCK_PER_SUBJECT);
+        .slice(0, HOME_MINI_MOCK_PER_SUBJECT)
+        .map(approvedAiMiniMockQuestion);
+
+      const missingCount = HOME_MINI_MOCK_PER_SUBJECT - picked.length;
+      if (missingCount > 0) {
+        const publishedSpecialCandidates = await this.prisma.specialPracticeQuestion.findMany({
+          where: {
+            status: 'published',
+            topic: { subject: subject.id, status: 'published' }
+          },
+          include: { topic: true },
+          orderBy: [{ topicId: 'asc' }, { orderNumber: 'asc' }, { id: 'asc' }]
+        });
+        picked.push(...publishedSpecialCandidates
+          .sort((left, right) => seededRank(`${seed}:${subject.id}:fixed`, left.id) - seededRank(`${seed}:${subject.id}:fixed`, right.id))
+          .slice(0, missingCount)
+          .map(publishedSpecialMiniMockQuestion));
+      }
       selectedBySubject.set(subject.id, picked);
     }
 
-    const questions: DbQualifiedQuestionWithTopic[] = [];
+    const questions: HomeMiniMockQuestionSource[] = [];
     for (let index = 0; index < HOME_MINI_MOCK_PER_SUBJECT; index += 1) {
       for (const subject of SUBJECTS) {
         const question = selectedBySubject.get(subject.id)?.[index];
@@ -753,18 +822,32 @@ export class CscaSpecialPracticeService {
   async scoreHomeMiniMock(body: Record<string, unknown>) {
     const questionIds = parseMiniMockQuestionIds(body.questionIds);
     const answers = recordStringMap(body.answers);
-    const rows = await this.prisma.cscaQuestion.findMany({
+    const approvedAiIds = questionIds.filter((id) => id > 0);
+    const publishedSpecialIds = questionIds.filter((id) => id < 0).map((id) => Math.abs(id));
+    const approvedAiRows = approvedAiIds.length ? await this.prisma.cscaQuestion.findMany({
       where: {
-        id: { in: questionIds },
+        id: { in: approvedAiIds },
         status: 'approved',
         topic: { status: 'published' }
       },
       include: { topic: true },
       orderBy: [{ id: 'asc' }]
-    });
-    const byId = new Map(rows.map((question) => [question.id, question]));
-    const ordered = questionIds.map((id) => byId.get(id)).filter((question): question is DbQualifiedQuestionWithTopic => Boolean(question));
-    if (!ordered.length) throw new BadRequestException('本轮题目已不可用，请重新抽题。');
+    }) : [];
+    const publishedSpecialRows = publishedSpecialIds.length ? await this.prisma.specialPracticeQuestion.findMany({
+      where: {
+        id: { in: publishedSpecialIds },
+        status: 'published',
+        topic: { status: 'published' }
+      },
+      include: { topic: true },
+      orderBy: [{ id: 'asc' }]
+    }) : [];
+    const byId = new Map<number, HomeMiniMockQuestionSource>([
+      ...approvedAiRows.map((question) => [question.id, approvedAiMiniMockQuestion(question)] as const),
+      ...publishedSpecialRows.map((question) => [-question.id, publishedSpecialMiniMockQuestion(question)] as const)
+    ]);
+    const ordered = questionIds.map((id) => byId.get(id)).filter((question): question is HomeMiniMockQuestionSource => Boolean(question));
+    if (ordered.length !== questionIds.length) throw new BadRequestException('本轮题目已不可用，请重新抽题。');
 
     const items = ordered.map((question, index) => {
       const selected = cleanString(answers[String(question.id)]);
@@ -777,7 +860,7 @@ export class CscaSpecialPracticeService {
         isCorrect,
         isUnanswered,
         explanation: question.explanation,
-        knowledgeTags: tagsFromJson(question.knowledgeTags)
+        knowledgeTags: question.knowledgeTags
       };
     });
 
