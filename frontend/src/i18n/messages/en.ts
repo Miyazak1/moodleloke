@@ -718,6 +718,7 @@ export const enMessages = {
       accountBody: 'Maintain your public display name and sign-in status. Learning settings do not affect your login credentials.',
       email: 'Email',
       emailStatusNote: 'Used for sign-in, password recovery, and important notices',
+      interfaceLanguageNote: 'Choose the interface language used across your account and learning workspace',
       agentContextKicker: 'Agent learning context',
       learningTitle: 'Learning profile',
       learningBody: 'This information helps choose suitable content, language, and explanation depth. It is not used for identity verification.',

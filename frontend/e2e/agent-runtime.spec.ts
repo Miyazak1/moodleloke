@@ -175,31 +175,14 @@ test('renders an evidence-based learning workspace without horizontal overflow',
   await expect(page.locator('.agent-learning-mode')).toHaveCount(0);
   if (testInfo.project.name === 'desktop') {
     await expect(page.getByText('你的目标与考试日期')).toBeVisible();
-    await expect(page.locator('.agent-header-account')).toBeVisible();
-    await expect(page.locator('.agent-header-language')).toBeVisible();
+    await expect(page.locator('.agent-account-card')).toContainText('林澈');
+    await expect(page.locator('.agent-account-card')).toContainText('个人设置');
   }
   if (testInfo.project.name === 'mobile') {
-    await expect(page.locator('.agent-mobile-language')).toBeVisible();
     await expect(page.locator('.agent-mobile-account')).toBeVisible();
-    await expect(page.locator('.agent-header-language')).toBeHidden();
     await expect(page.locator('.agent-journey-nav')).toHaveCSS('overflow-x', 'auto');
   }
-  const activeLanguageSelector = testInfo.project.name === 'mobile'
-    ? page.locator('.agent-mobile-language')
-    : page.locator('.agent-header-language');
-  await activeLanguageSelector.locator('.language-selector-trigger').click();
-  const languageMenu = page.locator('.language-selector-menu.is-portal');
-  await expect(languageMenu).toBeVisible();
-  const menuBounds = await languageMenu.evaluate((element) => {
-    const rect = element.getBoundingClientRect();
-    return { top: rect.top, right: rect.right, bottom: rect.bottom, left: rect.left, viewportWidth: window.innerWidth, viewportHeight: window.innerHeight };
-  });
-  expect(menuBounds.top).toBeGreaterThanOrEqual(0);
-  expect(menuBounds.left).toBeGreaterThanOrEqual(0);
-  expect(menuBounds.right).toBeLessThanOrEqual(menuBounds.viewportWidth);
-  expect(menuBounds.bottom).toBeLessThanOrEqual(menuBounds.viewportHeight);
-  await page.keyboard.press('Escape');
-  await expect(languageMenu).toBeHidden();
+  await expect(page.locator('.agent-page .language-selector')).toHaveCount(0);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(2);
   const workspace = await page.locator('.agent-workspace').boundingBox();
@@ -768,16 +751,18 @@ test('inherits the CSCALite personal center, language control, avatar, and organ
 
   await page.goto('/me?section=settings');
   await expect(page.getByRole('heading', { name: '个人设置' })).toBeVisible();
-  await expect(page.locator('.account-site-header .site-language-selector')).toBeVisible();
+  await expect(page.locator('.account-site-header .site-language-selector')).toHaveCount(0);
+  const settingsLanguage = page.locator('.me-settings-language-row .language-selector');
+  await expect(settingsLanguage).toBeVisible();
   await expect(page.locator('.account-site-header .user-avatar')).toHaveAttribute('data-avatar-variant');
-  await expect(page.getByText('机构与额度', { exact: true })).toBeVisible();
-  await page.getByText('机构与额度', { exact: true }).click();
-  await expect(page.getByRole('button', { name: '加入机构', exact: true })).toBeVisible();
-  expect(creditRequestCount).toBeGreaterThan(0);
-  await page.getByRole('button', { name: '选择语言' }).click();
-  await page.getByRole('menuitemradio', { name: /English/ }).click();
+  await settingsLanguage.getByLabel('界面语言').click();
+  await page.getByRole('option', { name: /English/ }).click();
   await expect(page.getByRole('heading', { name: 'Personal settings' })).toBeVisible();
-  await expect(page.locator('.account-site-header .site-language-selector')).toContainText('English');
+  await expect(settingsLanguage).toContainText('English');
+  await expect(page.getByText('Organization and credits', { exact: true })).toBeVisible();
+  await page.getByText('Organization and credits', { exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Join organization', exact: true })).toBeVisible();
+  expect(creditRequestCount).toBeGreaterThan(0);
 });
 
 test('recovers a failed past-paper workspace without leaving the Agent', async ({ page }, testInfo) => {

@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import type { AgentLearningSettings, MyAICredits, User } from '../../lib/api-types';
 import { useI18n } from '../../i18n/useI18n';
 import { Icon } from '../Icon';
+import { LanguageSelector } from '../LanguageSelector';
 import { StudentProfileFields, type StudentProfileDraft } from '../StudentProfileFields';
 
 type SettingsPanel = 'account' | 'learning' | 'goal' | 'schedule' | 'organization';
@@ -176,6 +177,10 @@ export function AccountSettingsWorkspace(props: Props) {
             <div className="me-settings-form-grid">
               <label><span>{t('me.settings.displayName', '显示名')}</span><input value={props.displayName} maxLength={40} onChange={(event) => props.onDisplayNameChange(event.target.value)} /></label>
               <label><span>{t('me.settings.email', '邮箱')}</span><input readOnly value={props.user.email} /></label>
+            </div>
+            <div className="me-settings-language-row">
+              <span><Icon name="lucide:languages" color="currentColor" /><span><strong>{t('header.languageLabel', '界面语言')}</strong><small>{t('me.settings.interfaceLanguageNote', '选择账号与学习工作区使用的界面语言')}</small></span></span>
+              <LanguageSelector compact />
             </div>
             <div className="me-settings-summary-row">
               <div><Icon name={props.user.emailVerifiedAt ? 'lucide:badge-check' : 'lucide:circle-alert'} color="currentColor" /><span><strong>{props.user.emailVerifiedAt ? t('me.profile.emailVerified', '邮箱已验证') : t('me.profile.emailUnverified', '邮箱未验证')}</strong><small>{t('me.settings.emailStatusNote', '用于登录、找回密码和重要通知')}</small></span></div>

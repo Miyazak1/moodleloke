@@ -13,6 +13,7 @@ type SiteHeaderControlsProps = {
   onNavigate: (path: string) => void;
   onAdminNavigate?: (path: string) => void;
   onCurrentUserChange: (user: User | null) => void;
+  showLanguage?: boolean;
 };
 
 export function SiteHeaderControls({
@@ -21,7 +22,8 @@ export function SiteHeaderControls({
   currentPath,
   onNavigate,
   onAdminNavigate,
-  onCurrentUserChange
+  onCurrentUserChange,
+  showLanguage = true
 }: SiteHeaderControlsProps) {
   const { locale, localeOption, locales, setLocale, t } = useI18n();
   const [languageOpen, setLanguageOpen] = useState(false);
@@ -84,7 +86,7 @@ export function SiteHeaderControls({
 
   return (
     <div className="site-account-group" ref={controlsRef}>
-      <div className="site-language-selector">
+      {showLanguage ? <div className="site-language-selector">
         <button
           type="button"
           className="site-language-button"
@@ -124,7 +126,7 @@ export function SiteHeaderControls({
             ))}
           </div>
         ) : null}
-      </div>
+      </div> : null}
 
       {!currentUser ? (
         <div className="site-auth-actions">

@@ -722,6 +722,7 @@ export const zhCNMessages = {
       accountBody: '维护公开显示名和登录状态。学习设置不会影响你的登录凭据。',
       email: '邮箱',
       emailStatusNote: '用于登录、找回密码和重要通知',
+      interfaceLanguageNote: '选择账号与学习工作区使用的界面语言',
       agentContextKicker: 'Agent 学习上下文',
       learningTitle: '学习画像',
       learningBody: '这些信息帮助系统选择合适的内容、语言和解释方式，不用于身份核验。',

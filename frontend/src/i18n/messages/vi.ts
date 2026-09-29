@@ -410,6 +410,7 @@ export const viMessages = {
       accountBody: 'Quản lý tên hiển thị công khai và trạng thái đăng nhập. Cài đặt học tập không ảnh hưởng đến thông tin đăng nhập.',
       email: 'Địa chỉ email',
       emailStatusNote: 'Dùng để đăng nhập, khôi phục mật khẩu và nhận thông báo quan trọng',
+      interfaceLanguageNote: 'Chọn ngôn ngữ giao diện dùng cho tài khoản và không gian học tập',
       agentContextKicker: 'Ngữ cảnh học tập của Agent',
       learningTitle: 'Hồ sơ học tập',
       learningBody: 'Thông tin này giúp hệ thống chọn nội dung, ngôn ngữ và mức giải thích phù hợp; không dùng để xác minh danh tính.',

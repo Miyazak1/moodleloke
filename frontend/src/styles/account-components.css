@@ -967,6 +967,68 @@
   line-height: 1.55;
 }
 
+.me-settings-language-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 72px;
+  margin-top: 18px;
+  padding: 12px 14px;
+  border: 1px solid var(--account-border);
+  border-radius: 12px;
+  background: var(--account-surface-soft);
+}
+
+.me-settings-language-row > span {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.me-settings-language-row > span > svg {
+  width: 18px;
+  flex: 0 0 18px;
+  color: var(--account-accent);
+}
+
+.me-settings-language-row > span > span {
+  display: grid;
+  gap: 3px;
+}
+
+.me-settings-language-row strong,
+.me-settings-language-row small {
+  display: block;
+}
+
+.me-settings-language-row strong {
+  color: var(--account-ink);
+  font-size: 14px;
+}
+
+.me-settings-language-row small {
+  color: var(--account-muted);
+  font-size: 12px;
+}
+
+.me-settings-language-row .language-selector-trigger {
+  min-width: 150px;
+}
+
+@media (max-width: 640px) {
+  .me-settings-language-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .me-settings-language-row .language-selector,
+  .me-settings-language-row .language-selector-trigger {
+    width: 100%;
+  }
+}
+
 .me-settings-section .me-settings-grid {
   gap: 14px 22px;
 }

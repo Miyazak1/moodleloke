@@ -2,7 +2,6 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, typ
 import { Icon } from '../components/Icon';
 import { MathContent } from '../components/MathContent';
 import { UserAvatar } from '../components/UserAvatar';
-import { LanguageSelector } from '../components/LanguageSelector';
 import { AgentPastPaperWorkspace } from '../components/agent/AgentPastPaperWorkspace';
 import {
   AgentJourneyResourcesView,
@@ -1942,13 +1941,6 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
             <span><Icon name="lucide:bot" /></span>
             <div><strong>{t('agent.brand.title', '学习 Agent')}</strong><small>{t('agent.brand.subtitle', '目标驱动的 CSCA 训练')}</small></div>
           </div>
-          <div className="agent-rail-controls">
-            <LanguageSelector compact className="agent-header-language" />
-            <button type="button" className="agent-header-account" aria-label={t('agent.account.settings', '个人设置')} title={t('agent.account.settings', '个人设置')} onClick={() => onNavigate(`${routes.me}?section=settings`)}>
-              <UserAvatar user={currentUser} size="sm" />
-            </button>
-          </div>
-          <LanguageSelector compact className="agent-mobile-language" />
           <nav className="agent-journey-nav" aria-label={t('agent.journey.navAria', '学习旅程')}>
             <button type="button" className={journeySection === 'today' ? 'active' : ''} aria-label={t('agent.journey.today', '做题')} aria-current={journeySection === 'today' ? 'page' : undefined} onClick={() => chooseJourneySection('today')}>
               <Icon name="lucide:target" /><span><strong>{t('agent.journey.today', '做题')}</strong><small>{t('agent.journey.todayHint', '系统推荐或自由练习')}</small></span>
@@ -1971,6 +1963,14 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
           </button>
           <div className="agent-rail-footer">
             <div className="agent-rail-trust"><Icon name="lucide:shield-check" /><span>{t('agent.history.trust', '只读取你的学习数据；不会直接修改掌握度或自动出题。')}</span></div>
+            <button type="button" className="agent-account-card" aria-label={t('agent.account.settings', '个人设置')} onClick={() => onNavigate(`${routes.me}?section=settings`)}>
+              <UserAvatar user={currentUser} size="sm" />
+              <span>
+                <strong>{currentUser.displayName || currentUser.email}</strong>
+                <small>{t('agent.account.settings', '个人设置')}</small>
+              </span>
+              <Icon name="lucide:settings" />
+            </button>
             <button type="button" className="agent-back-home" onClick={() => onNavigate(routes.home)}>
               <Icon name="lucide:arrow-left" />
               <span>{t('agent.account.backHome', '返回 CSCAPilot 首页')}</span>

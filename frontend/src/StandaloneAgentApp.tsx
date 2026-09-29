@@ -136,6 +136,7 @@ export default function StandaloneAgentApp() {
               currentPath={window.location.pathname}
               onNavigate={navigate}
               onCurrentUserChange={setCurrentUser}
+              showLanguage={false}
             />
           </div>
         </header>
