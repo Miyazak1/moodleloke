@@ -2281,5 +2281,39 @@ export const viMessages = {
 
 Object.assign(viMessages.agent.journey, {
   subjectQa: 'Hỏi đáp môn học',
-  subjectQaHint: 'Toán, vật lý và hóa học'
+  subjectQaHint: 'Toán, vật lý và hóa học',
+  progress: 'Tiến độ mục tiêu',
+  loadingPlanBody: 'Đang kiểm tra mục tiêu, thời gian khả dụng và bằng chứng trả lời gần đây.',
+  retry: 'Thử lại'
+});
+
+Object.assign(viMessages.me.status, {
+  agentLearningPreferenceUpdated: 'Đã lưu chế độ học mặc định và đồng bộ trên các thiết bị cùng tích hợp Agent.',
+  agentLearningPreferenceSaveFailed: 'Tạm thời không thể lưu chế độ học mặc định. Hãy tải lại và thử lại.'
+});
+
+Object.assign(viMessages.me.settings, {
+  loadingBody: 'Đang đồng bộ sở thích học tập, mục tiêu và kế hoạch của bạn.',
+  modePanel: 'Chế độ học',
+  modeKicker: 'Lối vào học mặc định',
+  modeTitle: 'Agent nên bắt đầu mặc định như thế nào?',
+  modeBody: 'Đề xuất thông minh so sánh tất cả mục tiêu thi và đưa ra nhiệm vụ ưu tiên nhất. Luyện tập tự do bắt đầu bằng môn và số câu mặc định. Hai chế độ không tự thay đổi lẫn nhau.',
+  defaultFreeSubject: 'Môn luyện tập mặc định',
+  defaultFreeBatch: 'Số câu mặc định mỗi lượt',
+  modeNote: 'Khu vực làm bài xử lý câu trả lời hiện tại; phần giải thích, hoạt ảnh và kết quả theo trạng thái học hiện tại, còn Hỏi đáp môn học được lưu riêng.',
+  modeSaved: 'Đã lưu chế độ học.'
+});
+
+Object.assign(viMessages.agent.progress, {
+  loadingBody: 'Đang tổng hợp độ phủ chủ đề và bằng chứng trả lời độc lập.'
+});
+
+Object.assign(viMessages.agent, {
+  mode: {
+    aria: 'Chế độ học',
+    recommended: 'Đề xuất thông minh',
+    recommendedHint: 'Chọn nhiệm vụ ưu tiên trong tất cả mục tiêu thi',
+    free: 'Luyện tập tự do',
+    freeHint: 'Bắt đầu bằng môn và số câu mặc định'
+  }
 });

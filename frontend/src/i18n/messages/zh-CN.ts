@@ -2264,4 +2264,41 @@ export const zhCNMessages = {
   }
 } as const;
 
+Object.assign(zhCNMessages.me.status, {
+  agentLearningPreferenceUpdated: '默认学习方式已保存，并会同步到其他设备和 Agent 集成。',
+  agentLearningPreferenceSaveFailed: '默认学习方式暂时无法保存，请刷新后重试。'
+});
+
+Object.assign(zhCNMessages.me.settings, {
+  loadingBody: '正在同步你的学习偏好、目标和计划。',
+  modePanel: '学习方式',
+  modeKicker: '默认学习入口',
+  modeTitle: '你希望 Agent 默认怎样开始',
+  modeBody: '智能推荐会比较全部考试目标并提出优先任务；自由练习则按你的默认科目和题量开始。两者不会互相修改设置。',
+  defaultFreeSubject: '默认练习科目',
+  defaultFreeBatch: '默认每批题量',
+  modeNote: '做题区负责当前作答；讲解、动画和结果按当前学习状态呈现，学科问答独立保留。',
+  modeSaved: '学习方式已保存。'
+});
+
+Object.assign(zhCNMessages.agent.journey, {
+  progress: '目标进度',
+  loadingPlanBody: '正在核对目标、可用时间和近期作答证据。',
+  retry: '重试读取'
+});
+
+Object.assign(zhCNMessages.agent.progress, {
+  loadingBody: '正在汇总知识点覆盖和独立作答证据。'
+});
+
+Object.assign(zhCNMessages.agent, {
+  mode: {
+    aria: '学习模式',
+    recommended: '智能推荐',
+    recommendedHint: '跨全部考试目标选择优先任务',
+    free: '自由练习',
+    freeHint: '按默认科目与题量开始'
+  }
+});
+
 

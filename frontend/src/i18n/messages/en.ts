@@ -2259,3 +2259,40 @@ export const enMessages = {
     schoolDetailLoadFailed: 'School details are temporarily unavailable.'
   }
 } as const;
+
+Object.assign(enMessages.me.status, {
+  agentLearningPreferenceUpdated: 'Default learning mode saved and synced across your devices and Agent integrations.',
+  agentLearningPreferenceSaveFailed: 'Default learning mode could not be saved. Refresh and try again.'
+});
+
+Object.assign(enMessages.me.settings, {
+  loadingBody: 'Syncing your learning preferences, goals, and plan.',
+  modePanel: 'Learning mode',
+  modeKicker: 'Default learning entry',
+  modeTitle: 'How should the Agent start by default?',
+  modeBody: 'Smart recommendations compare all exam goals and propose the highest-priority task. Free practice starts with your default subject and batch size. Neither changes the other.',
+  defaultFreeSubject: 'Default practice subject',
+  defaultFreeBatch: 'Default batch size',
+  modeNote: 'The practice area handles current answers; explanations, animations, and results follow the current learning state, while Subject Q&A remains separate.',
+  modeSaved: 'Learning mode saved.'
+});
+
+Object.assign(enMessages.agent.journey, {
+  progress: 'Goal progress',
+  loadingPlanBody: 'Checking your goals, available time, and recent answer evidence.',
+  retry: 'Retry'
+});
+
+Object.assign(enMessages.agent.progress, {
+  loadingBody: 'Summarizing topic coverage and independent answer evidence.'
+});
+
+Object.assign(enMessages.agent, {
+  mode: {
+    aria: 'Learning mode',
+    recommended: 'Smart recommendation',
+    recommendedHint: 'Choose a priority task across all exam goals',
+    free: 'Free practice',
+    freeHint: 'Start with the default subject and batch size'
+  }
+});

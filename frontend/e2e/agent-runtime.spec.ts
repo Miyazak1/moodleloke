@@ -382,6 +382,29 @@ test('localizes the English Agent resume surface instead of using Chinese fallba
   await expect(page.getByRole('button', { name: 'Continue previous practice', exact: true })).toBeVisible();
 });
 
+test('localizes every Agent learning-settings navigation item in English', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the settings locale regression contract.');
+  await mockAgentWorkspace(page);
+  await page.goto('/agent');
+  await page.evaluate(() => {
+    window.localStorage.setItem('moodlelike.locale', 'en');
+    window.localStorage.setItem('moodlelike.localeSource', 'manual');
+  });
+  await page.reload();
+  await page.getByRole('button', { name: 'Learning settings', exact: true }).click();
+
+  await expect(page.getByRole('heading', { name: 'Set how the Agent organizes learning' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Goal progress', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Learning mode', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: '目标进度', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: '学习方式', exact: true })).toHaveCount(0);
+
+  await page.getByRole('button', { name: 'Learning mode', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'How should the Agent start by default?' })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Smart recommendation/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Free practice/ })).toBeVisible();
+});
+
 test('stops polling and exits an unavailable restored round', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'One browser project is enough for the stale round recovery contract.');
   await mockAgentWorkspace(page);
