@@ -65,11 +65,13 @@ export class AgentController {
   }
 
   @Get('journey/overview')
+  @Access('user')
   getJourneyOverview(@CurrentUser() user: PrismaUser, @Query('locale') locale?: string) {
     return this.agent.getJourneyOverview(user.id, locale);
   }
 
   @Post('journey/prescriptions/:prescriptionId/exposure')
+  @Access('user')
   recordPrescriptionExposure(
     @CurrentUser() user: PrismaUser,
     @Param('prescriptionId') prescriptionId: string,
@@ -79,6 +81,7 @@ export class AgentController {
   }
 
   @Post('journey/prescriptions/:prescriptionId/start')
+  @Access('user')
   startPrescription(
     @CurrentUser() user: PrismaUser,
     @Param('prescriptionId') prescriptionId: string,
@@ -88,6 +91,7 @@ export class AgentController {
   }
 
   @Get('journey/state')
+  @Access('user')
   getJourneyState(@CurrentUser() user: PrismaUser) {
     return this.journeyRead.read(user.id);
   }

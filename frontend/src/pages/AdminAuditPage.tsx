@@ -135,6 +135,20 @@ const ADMIN_AUDIT_COPY = {
     authCompletionRateBody: '{completed}/{started} 次账号流程完成 · 注册 {registered}',
     verificationHealth: '邮箱验证',
     verificationHealthBody: '成功 {success} · 失败 {failure} · 客户端错误 {errors}',
+    activationFirstAnswer: '新用户首次作答',
+    activationFirstAnswerBody: '注册同期群 {registered} 人 · 首答中位耗时 {minutes}',
+    activationFirstRound: '新用户完成首轮',
+    activationFirstRoundBody: '首次作答 {answered} 人 · 完成首轮 {completed} 人',
+    activationFunnel: '新用户激活漏斗',
+    activationFunnelHint: '按所选时间范围内注册的学生同期群统计；邮箱验证可稍后完成，不阻断首轮学习。',
+    activationLabels: {
+      registered: '注册账号',
+      email_verified: '验证邮箱',
+      onboarding_reached: '完成或跳过设置',
+      agent_entered: '进入学习 Agent',
+      first_answer_submitted: '提交首次作答',
+      first_round_completed: '完成首轮训练'
+    } as Record<string, string>,
     publicFunnel: '公开站转化漏斗',
     publicFunnelHint: '仅统计第一方匿名事件；不记录邮箱、题目、答案或错误正文。',
     publicRouteBreakdown: '公开页访问分布',
@@ -706,6 +720,20 @@ const ADMIN_AUDIT_COPY = {
     authCompletionRateBody: '{completed}/{started} account flows completed · {registered} registrations',
     verificationHealth: 'Email verification',
     verificationHealthBody: '{success} succeeded · {failure} failed · {errors} client errors',
+    activationFirstAnswer: 'New-user first answer',
+    activationFirstAnswerBody: '{registered} registered in cohort · median time {minutes}',
+    activationFirstRound: 'New-user first round',
+    activationFirstRoundBody: '{answered} answered · {completed} completed a round',
+    activationFunnel: 'New-user activation funnel',
+    activationFunnelHint: 'Cohort is based on students registered in the selected range. Email verification can happen later and does not block the first learning round.',
+    activationLabels: {
+      registered: 'Registered',
+      email_verified: 'Email verified',
+      onboarding_reached: 'Completed or skipped setup',
+      agent_entered: 'Entered Learning Agent',
+      first_answer_submitted: 'Submitted first answer',
+      first_round_completed: 'Completed first round'
+    } as Record<string, string>,
     publicFunnel: 'Public-site conversion funnel',
     publicFunnelHint: 'First-party anonymous events only; no email, question, answer, or error body is stored.',
     publicRouteBreakdown: 'Public-page distribution',
@@ -1446,6 +1474,18 @@ const EMPTY_TRAINING_OBSERVABILITY: AdminTrainingEventObservability = {
     byEventType: [],
     byRoute: [],
     byDay: []
+  },
+  activation: {
+    cohortRegistered: 0,
+    emailVerified: 0,
+    onboardingCompleted: 0,
+    onboardingSkipped: 0,
+    onboardingReached: 0,
+    agentEntered: 0,
+    firstAnswerSubmitted: 0,
+    firstRoundCompleted: 0,
+    medianMinutesToFirstAnswer: null,
+    funnel: []
   },
   readinessActions: {
     clickedCount: 0,
@@ -2350,6 +2390,24 @@ export function AdminAuditPage({
                 errors: trainingObservability.publicSite.clientErrors.toLocaleString()
               })}</p>
             </MetricCard>
+            <MetricCard label={copy.activationFirstAnswer} value={formatPercent(trainingObservability.activation.cohortRegistered
+              ? trainingObservability.activation.firstAnswerSubmitted / trainingObservability.activation.cohortRegistered
+              : 0)}>
+              <p>{fillTemplate(copy.activationFirstAnswerBody, {
+                registered: trainingObservability.activation.cohortRegistered.toLocaleString(),
+                minutes: trainingObservability.activation.medianMinutesToFirstAnswer === null
+                  ? '-'
+                  : `${Math.round(trainingObservability.activation.medianMinutesToFirstAnswer)} min`
+              })}</p>
+            </MetricCard>
+            <MetricCard label={copy.activationFirstRound} value={formatPercent(trainingObservability.activation.cohortRegistered
+              ? trainingObservability.activation.firstRoundCompleted / trainingObservability.activation.cohortRegistered
+              : 0)}>
+              <p>{fillTemplate(copy.activationFirstRoundBody, {
+                answered: trainingObservability.activation.firstAnswerSubmitted.toLocaleString(),
+                completed: trainingObservability.activation.firstRoundCompleted.toLocaleString()
+              })}</p>
+            </MetricCard>
             <MetricCard label={copy.aiCalls} value={aiObservability.summary.interactions.toLocaleString()}>
               <p>{fillTemplate(copy.aiCallsBody, {
                 feedbackCount: aiObservability.summary.feedbackCount.toLocaleString(),
@@ -2396,6 +2454,25 @@ export function AdminAuditPage({
                 rolloutPercent: aiProviderConfig.provider.rollout.percent
               })}</p>
             </MetricCard>
+          </section>
+
+          <section className="process-list admin-compact-section">
+            <div className="admin-section-head">
+              <div>
+                <p className="page-kicker">{adaptiveKicker}</p>
+                <h2>{copy.activationFunnel}</h2>
+              </div>
+              <span>{trainingObservability.activation.cohortRegistered}</span>
+            </div>
+            <p className="admin-section-description">{copy.activationFunnelHint}</p>
+            {trainingObservability.activation.funnel.length === 0 && <AdminEmptyState>{copy.noEvents}</AdminEmptyState>}
+            {trainingObservability.activation.funnel.map((item, index) => (
+              <article key={item.key} className="process-row admin-data-row">
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <div><strong>{copy.activationLabels[item.key] ?? item.key}</strong></div>
+                <b>{item.count.toLocaleString()} · {formatPercent(item.rate)}</b>
+              </article>
+            ))}
           </section>
 
           <section className="admin-work-grid two">

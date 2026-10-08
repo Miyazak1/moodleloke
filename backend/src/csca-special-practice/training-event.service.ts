@@ -14,6 +14,15 @@ type TrainingEventInput = {
   metadata?: Record<string, unknown>;
 };
 
+export type ActivationMilestoneInput = {
+  userId: number;
+  eventType: 'onboarding_completed' | 'onboarding_skipped' | 'first_answer_submitted' | 'first_round_completed';
+  subject?: string | null;
+  sessionId?: number | null;
+  roundId?: number | null;
+  metadata?: Record<string, unknown>;
+};
+
 type TrainingEventQuery = {
   days?: string;
   from?: string;
@@ -47,6 +56,13 @@ const DEFAULT_HIGH_DIFFICULTY_REQUIRED: Record<CscaSubject, number> = {
 const HIGH_DIFFICULTY_DISTRIBUTION_SAMPLE_MIN = 8;
 const SAMPLED_THRESHOLD_MAX_IMPACT_USER_SUBJECTS = 5;
 const DAY_MS = 24 * 60 * 60 * 1000;
+const ACTIVATION_EVENT_LOCK_NAMESPACE = 2_147_001_213;
+const ACTIVATION_EVENT_TYPES = [
+  'onboarding_completed',
+  'onboarding_skipped',
+  'first_answer_submitted',
+  'first_round_completed'
+] as const;
 const PUBLIC_SITE_EVENT_TYPES = new Set([
   'public_page_view',
   'public_cta_click',
@@ -143,6 +159,28 @@ function aggregate(rows: EventRow[], keyOf: (row: EventRow) => string) {
   return Array.from(buckets.entries())
     .map(([key, count]) => ({ key, count }))
     .sort((a, b) => a.key.localeCompare(b.key));
+}
+
+function emptyActivationObservability() {
+  return {
+    cohortRegistered: 0,
+    emailVerified: 0,
+    onboardingCompleted: 0,
+    onboardingSkipped: 0,
+    onboardingReached: 0,
+    agentEntered: 0,
+    firstAnswerSubmitted: 0,
+    firstRoundCompleted: 0,
+    medianMinutesToFirstAnswer: null,
+    funnel: [
+      { key: 'registered', count: 0, rate: 0 },
+      { key: 'email_verified', count: 0, rate: 0 },
+      { key: 'onboarding_reached', count: 0, rate: 0 },
+      { key: 'agent_entered', count: 0, rate: 0 },
+      { key: 'first_answer_submitted', count: 0, rate: 0 },
+      { key: 'first_round_completed', count: 0, rate: 0 }
+    ]
+  };
 }
 
 function jsonRecord(value: unknown): Record<string, unknown> {
@@ -281,6 +319,30 @@ export class TrainingEventService {
     });
   }
 
+  async recordActivationMilestone(input: ActivationMilestoneInput) {
+    return this.prisma.$transaction(async (tx) => {
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(${ACTIVATION_EVENT_LOCK_NAMESPACE}::int, ${input.userId}::int)`;
+      const existing = await tx.cscaTrainingEvent.findFirst({
+        where: { userId: input.userId, eventType: input.eventType, source: 'activation' },
+        select: { id: true }
+      });
+      if (existing) return { recorded: false, id: existing.id };
+      const event = await tx.cscaTrainingEvent.create({
+        data: {
+          userId: input.userId,
+          subject: input.subject ?? null,
+          sessionId: input.sessionId ?? null,
+          roundId: input.roundId ?? null,
+          eventType: input.eventType,
+          source: 'activation',
+          metadata: input.metadata ? input.metadata as Prisma.InputJsonValue : undefined
+        },
+        select: { id: true }
+      });
+      return { recorded: true, id: event.id };
+    });
+  }
+
   async recordPublicSiteEvent(userId: number | null | undefined, input: PublicSiteEventInput) {
     const unknownFields = Object.keys(input).filter((key) => !PUBLIC_SITE_INPUT_FIELDS.has(key));
     if (unknownFields.length) throw new BadRequestException('Public telemetry contains unsupported fields.');
@@ -340,6 +402,7 @@ export class TrainingEventService {
     const conceptCardEffect = await this.conceptCardEffectObservability(rows);
     const variantEffect = await this.variantEffectObservability(rows);
     const publicSite = this.publicSiteObservability(rows);
+    const activation = await this.activationObservability(start, end);
 
     return {
       range: {
@@ -365,6 +428,7 @@ export class TrainingEventService {
       byEventType: aggregate(rows, (row) => row.eventType),
       bySubject: aggregate(rows, (row) => row.subject ?? 'unknown'),
       publicSite,
+      activation,
       readinessActions,
       readinessEvidence,
       readinessDifficultyThresholds,
@@ -385,6 +449,63 @@ export class TrainingEventService {
         source: row.source,
         metadata: row.metadata
       }))
+    };
+  }
+
+  private async activationObservability(start: Date, end: Date) {
+    const prismaRecord = this.prisma as unknown as { user?: { findMany?: unknown } };
+    if (typeof prismaRecord.user?.findMany !== 'function') return emptyActivationObservability();
+    const users = await this.prisma.user.findMany({
+      where: { role: 'student', createdAt: { gte: start, lt: end } },
+      select: { id: true, createdAt: true, emailVerifiedAt: true },
+      orderBy: { createdAt: 'asc' }
+    });
+    const userIds = users.map((user) => user.id);
+    const events = userIds.length ? await this.prisma.cscaTrainingEvent.findMany({
+      where: {
+        userId: { in: userIds },
+        OR: [
+          { source: 'activation', eventType: { in: [...ACTIVATION_EVENT_TYPES] } },
+          { source: 'public_site', eventType: 'agent_entry' }
+        ]
+      },
+      select: { userId: true, eventType: true, createdAt: true },
+      orderBy: { createdAt: 'asc' }
+    }) : [];
+    const usersFor = (eventType: string) => new Set(events
+      .filter((event) => event.eventType === eventType && typeof event.userId === 'number')
+      .map((event) => event.userId as number));
+    const onboardingCompleted = usersFor('onboarding_completed');
+    const onboardingSkipped = usersFor('onboarding_skipped');
+    const onboardingReached = new Set([...onboardingCompleted, ...onboardingSkipped]);
+    const agentEntered = usersFor('agent_entry');
+    const firstAnswer = usersFor('first_answer_submitted');
+    const firstRound = usersFor('first_round_completed');
+    const registered = users.length;
+    const verified = users.filter((user) => Boolean(user.emailVerifiedAt)).length;
+    const rate = (count: number) => registered ? Number((count / registered).toFixed(4)) : 0;
+    const firstAnswerMinutes = users.flatMap((user) => {
+      const event = events.find((item) => item.userId === user.id && item.eventType === 'first_answer_submitted');
+      return event ? [Math.max(0, (event.createdAt.getTime() - user.createdAt.getTime()) / 60_000)] : [];
+    });
+    return {
+      cohortRegistered: registered,
+      emailVerified: verified,
+      onboardingCompleted: onboardingCompleted.size,
+      onboardingSkipped: onboardingSkipped.size,
+      onboardingReached: onboardingReached.size,
+      agentEntered: agentEntered.size,
+      firstAnswerSubmitted: firstAnswer.size,
+      firstRoundCompleted: firstRound.size,
+      medianMinutesToFirstAnswer: percentile(firstAnswerMinutes, 0.5),
+      funnel: [
+        { key: 'registered', count: registered, rate: rate(registered) },
+        { key: 'email_verified', count: verified, rate: rate(verified) },
+        { key: 'onboarding_reached', count: onboardingReached.size, rate: rate(onboardingReached.size) },
+        { key: 'agent_entered', count: agentEntered.size, rate: rate(agentEntered.size) },
+        { key: 'first_answer_submitted', count: firstAnswer.size, rate: rate(firstAnswer.size) },
+        { key: 'first_round_completed', count: firstRound.size, rate: rate(firstRound.size) }
+      ]
     };
   }
 

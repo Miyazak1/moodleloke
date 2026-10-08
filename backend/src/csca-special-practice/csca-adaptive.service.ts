@@ -841,6 +841,16 @@ export class CscaAdaptiveService {
         }
       });
     }
+    if (Object.keys(recordStringMap(round.answers)).length === 0 && Object.keys(answers).length > 0) {
+      await this.trainingEvents.recordActivationMilestone({
+        userId,
+        subject: round.session.subject,
+        sessionId: round.sessionId,
+        roundId: round.id,
+        eventType: 'first_answer_submitted',
+        metadata: { mode: round.session.mode }
+      });
+    }
     return this.roundSummary(updated);
   }
 
@@ -866,6 +876,14 @@ export class CscaAdaptiveService {
     await this.prisma.cscaAdaptiveRoundItem.update({
       where: { id: item.id },
       data: { selectedAnswer: selected, isCorrect }
+    });
+    await this.trainingEvents.recordActivationMilestone({
+      userId,
+      subject: round.session.subject,
+      sessionId: round.sessionId,
+      roundId: round.id,
+      eventType: 'first_answer_submitted',
+      metadata: { mode: round.session.mode }
     });
     return {
       questionId,
@@ -1014,6 +1032,14 @@ export class CscaAdaptiveService {
           usedExplanation: result.item.usedExplanation
         }))
       }
+    });
+    await this.trainingEvents.recordActivationMilestone({
+      userId,
+      subject: round.session.subject,
+      sessionId: round.sessionId,
+      roundId: round.id,
+      eventType: 'first_round_completed',
+      metadata: { mode: round.session.mode }
     });
 
     await this.cscaLearningService.recordLearningActivity({

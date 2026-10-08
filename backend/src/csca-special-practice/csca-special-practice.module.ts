@@ -36,6 +36,6 @@ import { TrainingEventService } from './training-event.service';
     PlannerAssistantService,
     TrainingEventService
   ],
-  exports: [MasteryEngineService, CscaAdaptiveService, AdaptiveQuestionProviderService, AICoachService]
+  exports: [MasteryEngineService, CscaAdaptiveService, AdaptiveQuestionProviderService, AICoachService, TrainingEventService]
 })
 export class CscaSpecialPracticeModule {}

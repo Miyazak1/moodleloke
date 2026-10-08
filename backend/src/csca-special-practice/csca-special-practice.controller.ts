@@ -65,6 +65,7 @@ export class CscaSpecialPracticeController {
   }
 
   @Post(['csca-special-practice/adaptive/sessions', 'api/v1/csca-special-practice/adaptive/sessions'])
+  @Access('user')
   @UseGuards(RequiredUserGuard)
   createAdaptiveSession(@Body() body: Record<string, unknown>, @CurrentUser() user: PrismaUser) {
     return this.cscaAdaptiveService.createSession(user.id, body);
@@ -177,54 +178,63 @@ export class CscaSpecialPracticeController {
   }
 
   @Get(['csca-special-practice/adaptive/sessions/:id', 'api/v1/csca-special-practice/adaptive/sessions/:id'])
+  @Access('user')
   @UseGuards(RequiredUserGuard)
   getAdaptiveSession(@Param('id') id: string, @CurrentUser() user: PrismaUser) {
     return this.cscaAdaptiveService.getSession(user.id, id);
   }
 
   @Post(['csca-special-practice/adaptive/sessions/:id/rounds', 'api/v1/csca-special-practice/adaptive/sessions/:id/rounds'])
+  @Access('user')
   @UseGuards(RequiredUserGuard)
   createAdaptiveRound(@Param('id') id: string, @Body() body: AdaptiveRoundCreatePayload, @CurrentUser() user: PrismaUser) {
     return this.cscaAdaptiveService.createRound(user.id, id, body);
   }
 
   @Get(['csca-special-practice/adaptive/rounds/:id', 'api/v1/csca-special-practice/adaptive/rounds/:id'])
+  @Access('user')
   @UseGuards(RequiredUserGuard)
   getAdaptiveRound(@Param('id') id: string, @Query() query: Record<string, string | undefined>, @CurrentUser() user: PrismaUser) {
     return this.cscaAdaptiveService.getRound(user.id, id, query.language);
   }
 
   @Patch(['csca-special-practice/adaptive/rounds/:id', 'api/v1/csca-special-practice/adaptive/rounds/:id'])
+  @Access('user')
   @UseGuards(RequiredUserGuard)
   patchAdaptiveRound(@Param('id') id: string, @Body() body: AdaptiveRoundPatchPayload, @CurrentUser() user: PrismaUser) {
     return this.cscaAdaptiveService.patchRound(user.id, id, body);
   }
 
   @Post(['csca-special-practice/adaptive/rounds/:id/check', 'api/v1/csca-special-practice/adaptive/rounds/:id/check'])
+  @Access('user')
   @UseGuards(RequiredUserGuard)
   checkAdaptiveAnswer(@Param('id') id: string, @Body() body: Record<string, unknown>, @CurrentUser() user: PrismaUser) {
     return this.cscaAdaptiveService.checkAnswer(user.id, id, body);
   }
 
   @Post(['csca-special-practice/adaptive/rounds/:id/submit', 'api/v1/csca-special-practice/adaptive/rounds/:id/submit'])
+  @Access('user')
   @UseGuards(RequiredUserGuard)
   submitAdaptiveRound(@Param('id') id: string, @Query() query: Record<string, string | undefined>, @CurrentUser() user: PrismaUser) {
     return this.cscaAdaptiveService.submitRound(user.id, id, query.language);
   }
 
   @Get(['csca-special-practice/adaptive/rounds/:id/report', 'api/v1/csca-special-practice/adaptive/rounds/:id/report'])
+  @Access('user')
   @UseGuards(RequiredUserGuard)
   getAdaptiveRoundReport(@Param('id') id: string, @Query() query: Record<string, string | undefined>, @CurrentUser() user: PrismaUser) {
     return this.cscaAdaptiveService.getReport(user.id, id, query.language);
   }
 
   @Post(['csca-special-practice/adaptive/rounds/:id/concept-cards/:cardId/complete', 'api/v1/csca-special-practice/adaptive/rounds/:id/concept-cards/:cardId/complete'])
+  @Access('user')
   @UseGuards(RequiredUserGuard)
   completeAdaptiveConceptCard(@Param('id') id: string, @Param('cardId') cardId: string, @CurrentUser() user: PrismaUser) {
     return this.cscaAdaptiveService.completeConceptCard(user.id, id, cardId);
   }
 
   @Get(['csca-special-practice/adaptive/mastery', 'api/v1/csca-special-practice/adaptive/mastery'])
+  @Access('user')
   @UseGuards(RequiredUserGuard)
   getAdaptiveMastery(@Query() query: Record<string, string | undefined>, @CurrentUser() user: PrismaUser) {
     return this.cscaAdaptiveService.getMastery(user.id, query);

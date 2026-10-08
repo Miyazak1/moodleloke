@@ -4,6 +4,7 @@ import { isStudentConsumableAiVersionStatus } from '../ai-questioning/question-v
 import { PrismaService } from '../prisma/prisma.service';
 import { SchoolsService } from '../schools/schools.service';
 import { organizationRoleAllows } from '../csca-special-practice/organization-permissions';
+import { TrainingEventService } from '../csca-special-practice/training-event.service';
 import { UpdateScoreGoalInputV1Schema, UpdateStudyAvailabilityInputV1Schema } from '../learning-intelligence/contracts/learning-intelligence.contracts';
 import { AgentLearningPreferenceRecord, AgentLearningSettingsRecord, AgentScoreGoalRecord, AgentStudyAvailabilityRecord, CompareSchoolRecord, CscaWrongQuestionItem, CscaWrongQuestionPattern, CscaWrongQuestionResponse, CscaWrongQuestionSourceType, CscaWrongQuestionStructuredExplanation, MyAICredits, SavedSchoolRecord, StudentProfileRecord } from './me.types';
 
@@ -535,7 +536,8 @@ function toCompareSchoolRecord(createdAt: Date, school: Awaited<ReturnType<Schoo
 export class MeService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly schoolsService: SchoolsService
+    private readonly schoolsService: SchoolsService,
+    private readonly trainingEvents: TrainingEventService
   ) {}
 
   async listSavedSchools(userId: number): Promise<SavedSchoolRecord[]> {
@@ -698,6 +700,12 @@ export class MeService {
       update: changes,
       select: STUDENT_PROFILE_SELECT
     });
+    if (onboardingAction === 'complete' || onboardingAction === 'skip') {
+      await this.trainingEvents.recordActivationMilestone({
+        userId,
+        eventType: onboardingAction === 'complete' ? 'onboarding_completed' : 'onboarding_skipped'
+      });
+    }
     return serializeStudentProfile(profile);
   }
 

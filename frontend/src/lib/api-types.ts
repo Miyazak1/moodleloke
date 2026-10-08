@@ -3985,6 +3985,22 @@ export type AdminTrainingEventObservability = {
     byRoute: Array<{ key: string; count: number }>;
     byDay: Array<{ key: string; count: number }>;
   };
+  activation: {
+    cohortRegistered: number;
+    emailVerified: number;
+    onboardingCompleted: number;
+    onboardingSkipped: number;
+    onboardingReached: number;
+    agentEntered: number;
+    firstAnswerSubmitted: number;
+    firstRoundCompleted: number;
+    medianMinutesToFirstAnswer: number | null;
+    funnel: Array<{
+      key: 'registered' | 'email_verified' | 'onboarding_reached' | 'agent_entered' | 'first_answer_submitted' | 'first_round_completed' | string;
+      count: number;
+      rate: number;
+    }>;
+  };
   readinessActions: {
     clickedCount: number;
     followedCount: number;
