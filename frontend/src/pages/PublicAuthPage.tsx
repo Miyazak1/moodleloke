@@ -1,8 +1,9 @@
-import { FormEvent, useState, type CSSProperties } from 'react';
+import { FormEvent, useEffect, useState, type CSSProperties } from 'react';
 import { GhostButton, InlineActions } from '../components/UiPrimitives';
 import { useI18n } from '../i18n/useI18n';
 import type { User } from '../lib/api';
 import { forgotPassword, getMe, login, register, resendEmailVerification, resetPassword, startGoogleLogin } from '../lib/auth';
+import { trackPublicEvent } from '../lib/public-telemetry';
 import '../styles/account.css';
 import '../styles/content-typography.css';
 
@@ -244,12 +245,34 @@ export function PublicAuthPage({
   const mode: AuthMode = step === 'register' ? 'register' : 'login';
   const resetToken = new URLSearchParams(window.location.search).get('token') || '';
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const authError = params.get('error');
+    trackPublicEvent({ eventType: 'auth_started', route: 'auth', locale, method: 'session', mode: getInitialStep(initialMode), component: 'auth' });
+    if (authError === 'email_verification_failed') {
+      trackPublicEvent({ eventType: 'email_verification_result', route: 'auth', locale, method: 'email', result: 'failure', reason: 'invalid_or_expired', component: 'auth' });
+      return;
+    }
+    const googleReasons = new Set(['google_failed', 'google_denied', 'account_disabled', 'admin_google_binding_required', 'google_not_configured', 'google_email_unverified']);
+    if (authError && googleReasons.has(authError)) {
+      trackPublicEvent({
+        eventType: 'auth_completed', route: 'auth', locale, method: 'google', mode: initialMode,
+        result: authError === 'google_denied' ? 'cancelled' : 'failure',
+        reason: authError as 'google_failed' | 'google_denied' | 'account_disabled' | 'admin_google_binding_required' | 'google_not_configured' | 'google_email_unverified',
+        component: 'auth'
+      });
+    }
+  }, [locale]);
+
   function switchStep(nextStep: AuthStep) {
     setStep(nextStep);
     setPassword('');
     setConfirmPassword('');
     setError(null);
     setSuccess(null);
+    if (nextStep === 'login' || nextStep === 'register') {
+      trackPublicEvent({ eventType: 'auth_started', route: 'auth', locale, method: 'email', mode: nextStep, component: 'auth' });
+    }
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -265,9 +288,11 @@ export function PublicAuthPage({
       try {
         const refreshedUser = await getMe();
         if (!refreshedUser.emailVerifiedAt) {
+          trackPublicEvent({ eventType: 'email_verification_result', route: 'auth', locale, method: 'email', mode: 'verify', result: 'pending', reason: 'not_verified', component: 'auth' });
           setError(copy.verifyPending);
           return;
         }
+        trackPublicEvent({ eventType: 'email_verification_result', route: 'auth', locale, method: 'email', mode: 'verify', result: 'success', component: 'auth' });
         onGoToMe(refreshedUser, redirectTo, true);
       } catch {
         setError(copy.serviceUnavailable);
@@ -310,8 +335,10 @@ export function PublicAuthPage({
       let result;
       if (step === 'login') {
         result = await login(email, password);
+        trackPublicEvent({ eventType: 'auth_completed', route: 'auth', locale, method: 'email', mode: 'login', result: 'success', component: 'auth' });
       } else if (step === 'register') {
         result = await register(email, password);
+        trackPublicEvent({ eventType: 'auth_completed', route: 'auth', locale, method: 'email', mode: 'register', result: 'success', component: 'auth' });
         setRegisteredUser(result.user);
         setVerificationEmailSent(result.verificationEmailSent !== false);
         setStep('verify');
@@ -328,6 +355,9 @@ export function PublicAuthPage({
       }
       onGoToMe(result.user, redirectTo, step === 'register');
     } catch (nextError) {
+      if (step === 'login' || step === 'register') {
+        trackPublicEvent({ eventType: 'auth_completed', route: 'auth', locale, method: 'email', mode: step, result: 'failure', reason: 'api_error', component: 'auth' });
+      }
       setError(locale === 'zh-CN' ? (nextError as Error).message || copy.serviceUnavailable : copy.serviceUnavailable);
     } finally {
       setIsSubmitting(false);
@@ -347,9 +377,11 @@ export function PublicAuthPage({
       }
       setVerificationEmailSent(true);
       setSuccess(copy.verifyResent);
+      trackPublicEvent({ eventType: 'email_verification_result', route: 'auth', locale, method: 'email', mode: 'verify', result: 'pending', reason: 'resend_success', component: 'auth' });
     } catch {
       setVerificationEmailSent(false);
       setError(copy.verifySendFailed);
+      trackPublicEvent({ eventType: 'email_verification_result', route: 'auth', locale, method: 'email', mode: 'verify', result: 'failure', reason: 'send_failed', component: 'auth' });
     } finally {
       setIsResending(false);
     }
@@ -360,12 +392,14 @@ export function PublicAuthPage({
       switchStep('register');
       return;
     }
+    trackPublicEvent({ eventType: 'email_verification_result', route: 'auth', locale, method: 'email', mode: 'verify', result: 'continued_unverified', component: 'auth' });
     onGoToMe(registeredUser, redirectTo, true);
   }
 
   function continueWithGoogle() {
     setError(null);
     setSuccess(null);
+    trackPublicEvent({ eventType: 'auth_started', route: 'auth', locale, method: 'google', mode: mode, component: 'auth' });
     startGoogleLogin(redirectTo);
   }
 

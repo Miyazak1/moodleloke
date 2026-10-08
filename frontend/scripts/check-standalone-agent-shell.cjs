@@ -9,6 +9,7 @@ const agentPage = fs.readFileSync(path.join(root, 'src', 'pages', 'AgentPage.tsx
 const accountPage = fs.readFileSync(path.join(root, 'src', 'pages', 'PublicMePage.tsx'), 'utf8');
 const authPage = fs.readFileSync(path.join(root, 'src', 'pages', 'PublicAuthPage.tsx'), 'utf8');
 const publicHomePage = fs.readFileSync(path.join(root, 'src', 'pages', 'PublicHomePage.tsx'), 'utf8');
+const publicAboutPage = fs.readFileSync(path.join(root, 'src', 'pages', 'PublicAboutPage.tsx'), 'utf8');
 const siteHeaderControls = fs.readFileSync(path.join(root, 'src', 'components', 'SiteHeaderControls.tsx'), 'utf8');
 const loadingState = fs.readFileSync(path.join(root, 'src', 'components', 'AppLoadingState.tsx'), 'utf8');
 const loadingStyles = fs.readFileSync(path.join(root, 'src', 'styles', 'loading.css'), 'utf8');
@@ -55,6 +56,8 @@ const checks = [
   [/run-agent-playwright\.cjs/.test(packageJson.scripts['test:i18n']), 'i18n browser checks must use the managed Vite runner so Windows exits cleanly'],
   [shell.includes("import('./pages/AgentPage')"), 'AgentPage must be route-lazy-loaded'],
   [shell.includes("import('./pages/PublicHomePage')"), 'the inherited public home must be route-lazy-loaded'],
+  [shell.includes("import('./pages/PublicAboutPage')") && shell.includes("route === 'about'"), 'the public trust and disclosure page must be route-lazy-loaded'],
+  [publicAboutPage.includes("t('about.independentBody'") && publicAboutPage.includes('https://csca.cn/about/examintro'), 'the public about page must disclose its independent status and link to official CSCA information'],
   [shell.includes("route === 'home'"), 'the root route must render the inherited public home'],
   [shell.includes("route !== 'home'"), 'the public home must not receive a duplicate shell language selector'],
   [publicHomePage.includes('getPublicContent({ locale })'), 'the public home must load locale-aware CMS content'],

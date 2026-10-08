@@ -3967,6 +3967,24 @@ export type AdminTrainingEventObservability = {
   byDay: Array<{ key: string; count: number }>;
   byEventType: Array<{ key: string; count: number }>;
   bySubject: Array<{ key: string; count: number }>;
+  publicSite: {
+    totalEvents: number;
+    uniqueVisits: number;
+    pageViews: number;
+    agentEntries: number;
+    agentVisitCount: number;
+    agentEntryRate: number;
+    authStarts: number;
+    authCompletions: number;
+    authCompletionRate: number;
+    registrationCompletions: number;
+    verificationSuccesses: number;
+    verificationFailures: number;
+    clientErrors: number;
+    byEventType: Array<{ key: string; count: number }>;
+    byRoute: Array<{ key: string; count: number }>;
+    byDay: Array<{ key: string; count: number }>;
+  };
   readinessActions: {
     clickedCount: number;
     followedCount: number;

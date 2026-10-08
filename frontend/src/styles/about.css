@@ -1,0 +1,83 @@
+.public-about-shell {
+  min-height: 100vh;
+  color: var(--ink-900);
+  background:
+    linear-gradient(90deg, rgba(49, 93, 255, .05) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .05) 1px, transparent 1px),
+    linear-gradient(135deg, #fbfff9, #f4faf8 55%, #edf7f7);
+  background-size: 42px 42px, 42px 42px, auto;
+}
+
+.public-about-main {
+  width: min(1180px, calc(100vw - 56px));
+  margin: 0 auto;
+  padding: 86px 0 104px;
+}
+
+.public-about-hero { max-width: 850px; }
+.public-about-hero > span,
+.public-about-support span { color: var(--brand-blue); font-size: 12px; font-weight: 950; text-transform: uppercase; }
+.public-about-hero h1 { margin: 14px 0 18px; font-size: clamp(48px, 7vw, 82px); line-height: 1; letter-spacing: -.05em; }
+.public-about-hero > p { max-width: 760px; margin: 0; color: var(--ink-700); font-size: 19px; line-height: 1.8; }
+
+.public-about-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+.public-about-actions button,
+.public-about-support button,
+.public-about-footer button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255,255,255,.9);
+  color: var(--ink-900);
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+.public-about-actions .primary,
+.public-about-support .primary { border-color: var(--brand-blue); background: var(--brand-blue); color: #fff; }
+
+.public-about-notice {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  margin-top: 70px;
+  padding: 24px;
+  border: 1px solid rgba(255, 105, 88, .3);
+  border-radius: 20px;
+  background: linear-gradient(110deg, rgba(255,244,240,.96), rgba(244,251,248,.94));
+}
+.public-about-notice > svg { width: 42px; height: 42px; padding: 9px; border-radius: 13px; background: #fff; color: #e45c4e; }
+.public-about-notice p { margin: 5px 0 0; color: var(--ink-700); line-height: 1.65; }
+.public-about-notice a { display: inline-flex; align-items: center; gap: 6px; color: var(--brand-blue); font-weight: 850; text-decoration: none; white-space: nowrap; }
+.public-about-notice a svg { width: 16px; height: 16px; }
+
+.public-about-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 24px; }
+.public-about-grid article { scroll-margin-top: 100px; padding: 28px; border: 1px solid var(--line); border-radius: 22px; background: rgba(255,255,255,.87); box-shadow: var(--shadow-soft); }
+.public-about-grid article > svg { width: 38px; height: 38px; padding: 9px; border-radius: 12px; background: var(--brand-sky); color: var(--brand-blue); }
+.public-about-grid h2 { margin: 22px 0 10px; font-size: 23px; }
+.public-about-grid p { margin: 0; color: var(--ink-700); line-height: 1.75; }
+
+.public-about-support { display: flex; align-items: flex-end; justify-content: space-between; gap: 34px; margin-top: 72px; padding-top: 38px; border-top: 1px solid var(--line); }
+.public-about-support h2 { margin: 8px 0; font-size: clamp(28px, 3vw, 40px); }
+.public-about-support p { max-width: 700px; margin: 0; color: var(--ink-700); line-height: 1.7; }
+.public-about-support > div:last-child { display: flex; flex: 0 0 auto; gap: 10px; }
+
+.public-about-footer { display: flex; min-height: 92px; align-items: center; justify-content: space-between; gap: 18px; padding: 20px max(28px, calc((100vw - 1180px) / 2)); border-top: 1px solid var(--line); background: rgba(255,255,255,.86); color: var(--ink-700); }
+.public-about-footer button { min-height: 38px; }
+
+@media (max-width: 760px) {
+  .public-about-main { width: min(100%, calc(100vw - 28px)); padding: 48px 0 72px; }
+  .public-about-hero h1 { font-size: 48px; }
+  .public-about-notice { grid-template-columns: 42px minmax(0, 1fr); }
+  .public-about-notice a { grid-column: 2; justify-self: start; white-space: normal; }
+  .public-about-grid { grid-template-columns: 1fr; }
+  .public-about-support { align-items: stretch; flex-direction: column; }
+  .public-about-support > div:last-child { flex-wrap: wrap; }
+  .public-about-footer { align-items: flex-start; flex-direction: column; }
+}

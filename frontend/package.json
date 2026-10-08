@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --config vite.config.mjs",
     "dev:force": "vite --config vite.config.mjs --force",
-    "build": "vite build --config vite.config.mjs",
+    "build": "vite build --config vite.config.mjs && node scripts/prerender-public-routes.mjs",
     "test:minimal": "node scripts/test-standalone-minimal.cjs",
     "test:agent-workspace-route": "node scripts/check-agent-workspace-route.mjs",
     "test:e2e": "npm run test:e2e:golden",
@@ -35,6 +35,7 @@
     "test:syllabus-imports": "node --loader ../backend/node_modules/ts-node/esm.mjs scripts/check-syllabus-import-export.mjs",
     "test:css-architecture": "node scripts/check-css-architecture.cjs",
     "test:standalone-shell": "node scripts/check-standalone-agent-shell.cjs && node scripts/check-standalone-route-policy.mjs",
+    "test:public-seo": "node scripts/check-public-seo.mjs",
     "audit:standalone-reachability": "node scripts/audit-standalone-reachability.cjs",
     "test:e2e:golden:core": "node scripts/run-golden-playwright.cjs e2e/agent-runtime.spec.ts --grep \"starts student-initiated free practice|reviews a concrete mistake|restores a verification report|shows the latest evidence-driven decision|retries a failed journey overview|keeps the active question stable\"",
     "test:e2e:golden:student": "node scripts/run-golden-playwright.cjs e2e/agent-runtime.spec.ts --grep \"starts student-initiated free practice|shows the latest evidence-driven decision\"",

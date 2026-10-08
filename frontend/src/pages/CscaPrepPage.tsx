@@ -6,6 +6,7 @@ import { useI18n } from '../i18n/useI18n';
 import type { User } from '../lib/api';
 import { getPublicContent } from '../lib/api-content';
 import { routes } from '../lib/routes';
+import { trackPublicEvent } from '../lib/public-telemetry';
 import '../styles/csca-prep.css';
 
 type CscaPrepPageProps = {
@@ -51,6 +52,12 @@ export function CscaPrepPage({ currentUser, isResolvingAuth, onCurrentUserChange
     };
   })();
   const officialSourceUrl = schedule.sourceUrl.includes('apply4ch.com') ? 'https://csca.cn/about/examintro' : schedule.sourceUrl;
+  const verifiedDate = (() => {
+    const date = new Date(`${schedule.lastVerifiedAt}T00:00:00Z`);
+    return Number.isNaN(date.getTime())
+      ? schedule.lastVerifiedAt
+      : new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }).format(date);
+  })();
   const subjectRows = schedule.subjects.filter((item) => ['数学', '物理', '化学'].some((name) => item.name.includes(name)));
   const prepSteps = [
     ['stepSchoolLabel', 'stepSchoolTitle', 'stepSchoolBody', 'stepSchoolAction', routes.agent],
@@ -69,6 +76,7 @@ export function CscaPrepPage({ currentUser, isResolvingAuth, onCurrentUserChange
         <div className="site-header-inner">
           <button type="button" className="site-brand" onClick={() => onNavigate(routes.home)}>
             <img className="site-brand-logo" src="/logo-candidate-v2-csca.png" alt="CSCAPilot" />
+            <span className="site-brand-parent">by Holalobe</span>
           </button>
           <nav className="site-nav" aria-label={t('nav.aria', '主导航')}>
             <button type="button" className="site-link" onClick={() => onNavigate(routes.home)}>{t('nav.home', '首页')}</button>
@@ -84,10 +92,10 @@ export function CscaPrepPage({ currentUser, isResolvingAuth, onCurrentUserChange
         <section className="csca-prep-hero">
           <div className="csca-prep-hero-copy">
             <span className="csca-prep-kicker">{t('cscaPrep.heroKicker', 'CSCA 备考路径')}</span>
-            <h1>{t('cscaPrep.heroTitle', '先模考定位，再进入三科练习。')}</h1>
-            <p>{t('cscaPrep.heroBody', 'CSCAPilot 把在线模考、报告诊断、科目短题和真题复盘连成一条路径。')}</p>
+            <h1>{t('cscaPrep.heroTitle', '先快速诊断，再进入三科练习。')}</h1>
+            <p>{t('cscaPrep.heroBody', 'CSCAPilot 学习 Agent 把真实作答诊断、科目短题和错题复盘连成一条路径。')}</p>
             <div className="csca-prep-actions">
-              <button type="button" className="primary" onClick={() => onNavigate(routes.agent)}><Icon name="lucide:play" />{t('cscaPrep.heroPrimary', '开始在线模考')}</button>
+              <button type="button" className="primary" onClick={() => onNavigate(routes.agent)}><Icon name="lucide:play" />{t('cscaPrep.heroPrimary', '进入学习 Agent')}</button>
               <button type="button" onClick={() => onNavigate(`${routes.agent}?mode=free&subject=math`)}><Icon name="lucide:book-open-check" />{t('cscaPrep.heroSecondary', '查看科目学习')}</button>
               <a href="#exam-info"><Icon name="lucide:calendar-days" />{t('cscaPrep.heroTertiary', '考试时间换算')}</a>
             </div>
@@ -107,7 +115,7 @@ export function CscaPrepPage({ currentUser, isResolvingAuth, onCurrentUserChange
             <span className="csca-prep-kicker">{t('cscaPrep.whatIsKicker', 'CSCA 是什么')}</span>
             <h2>{t('cscaPrep.whatIsTitle', '备考页只做一件事：让下一步练习更清楚。')}</h2>
           </div>
-          <p>{t('cscaPrep.whatIsBody', '先完成在线模考，看清三科薄弱点和解析，再回到对应科目继续训练。')}</p>
+          <p>{t('cscaPrep.whatIsBody', '先完成一次真实作答诊断，看清三科薄弱点和解析，再由 Agent 安排对应科目训练。')}</p>
         </section>
 
         <section id="exam-info" className="csca-prep-info-grid" aria-label={t('cscaPrep.keyInfoAria', 'CSCA 考试关键信息')}>
@@ -118,7 +126,7 @@ export function CscaPrepPage({ currentUser, isResolvingAuth, onCurrentUserChange
         </section>
 
         <section className="csca-prep-section">
-          <div className="csca-prep-section-heading"><span className="csca-prep-kicker">{t('cscaPrep.subjectsKicker', '考试科目')}</span><h2>{t('cscaPrep.subjectsTitle', '数学、物理、化学分开练，但结果回到同一份报告。')}</h2><p>{t('cscaPrep.subjectsBody', '科目学习负责短题训练，在线模考负责限时校准。')}</p></div>
+          <div className="csca-prep-section-heading"><span className="csca-prep-kicker">{t('cscaPrep.subjectsKicker', '考试科目')}</span><h2>{t('cscaPrep.subjectsTitle', '数学、物理、化学分开练，但结果回到同一份报告。')}</h2><p>{t('cscaPrep.subjectsBody', '学习 Agent 用真实作答诊断薄弱点，再安排短题训练和复盘。')}</p></div>
           <div className="csca-prep-subjects">
             {SUBJECTS.map((subject, index) => {
               const row = subjectRows[index];
@@ -128,7 +136,7 @@ export function CscaPrepPage({ currentUser, isResolvingAuth, onCurrentUserChange
         </section>
 
         <section className="csca-prep-section csca-prep-steps">
-          <div className="csca-prep-section-heading"><span className="csca-prep-kicker">{t('cscaPrep.prepStepsKicker', '准备步骤')}</span><h2>{t('cscaPrep.prepStepsTitle', '把模考、诊断、练习和复盘连起来。')}</h2><p>{t('cscaPrep.prepStepsBody', '沿着清楚的路径完成定位、学习与复盘。')}</p></div>
+          <div className="csca-prep-section-heading"><span className="csca-prep-kicker">{t('cscaPrep.prepStepsKicker', '准备步骤')}</span><h2>{t('cscaPrep.prepStepsTitle', '把诊断、练习、复盘和验证连起来。')}</h2><p>{t('cscaPrep.prepStepsBody', '沿着清楚的路径完成定位、学习与复盘。')}</p></div>
           <div className="csca-prep-step-list">{prepSteps.map(([label, title, body, action, href], index) => <article key={label}><b>{String(index + 1).padStart(2, '0')}</b><div><span>{t(`cscaPrep.${label}`, '')}</span><h3>{t(`cscaPrep.${title}`, '')}</h3><p>{t(`cscaPrep.${body}`, '')}</p></div><button type="button" onClick={() => onNavigate(href)}>{t(`cscaPrep.${action}`, '')}<Icon name="lucide:arrow-right" /></button></article>)}</div>
         </section>
 
@@ -137,10 +145,10 @@ export function CscaPrepPage({ currentUser, isResolvingAuth, onCurrentUserChange
           <div>{faqs.map((faq, index) => <details key={faq.question} open={index === 0}><summary>{faq.question}<Icon name="lucide:chevron-down" /></summary><p>{faq.answer}</p></details>)}</div>
         </section>
 
-        <section className="csca-prep-source"><Icon name="lucide:badge-info" /><div><span className="csca-prep-kicker">{t('cscaPrep.sourceKicker', '官方信息')}</span><h2>{t('cscaPrep.sourceTitle', '考试安排最终以官方发布为准。')}</h2><p>{t('cscaPrep.sourceBody', '本页用于组织练习路径和时间提醒。')}</p></div><a href={officialSourceUrl} target="_blank" rel="noreferrer">{schedule.sourceLabel}<Icon name="lucide:arrow-up-right" /></a></section>
+        <section className="csca-prep-source"><Icon name="lucide:badge-info" /><div><span className="csca-prep-kicker">{t('cscaPrep.sourceKicker', '官方信息')}</span><h2>{t('cscaPrep.sourceTitle', '考试安排最终以官方发布为准。')}</h2><p>{t('cscaPrep.sourceBody', '本页用于组织练习路径和时间提醒。')}</p><small className="csca-prep-verified">{t('cscaPrep.lastVerified', '本页信息最近核验：')} {verifiedDate}</small><strong className="csca-prep-independent">{t('cscaPrep.independentNotice', 'CSCAPilot 是独立学习与备考工具，不是 CSCA 官方报名网站。')}</strong></div><a href={officialSourceUrl} target="_blank" rel="noreferrer" onClick={() => trackPublicEvent({ eventType: 'public_cta_click', route: 'csca_prep', target: 'official_csca' })}>{schedule.sourceLabel}<Icon name="lucide:arrow-up-right" /></a></section>
       </main>
 
-      <footer className="csca-prep-footer"><img className="site-brand-logo site-brand-logo-footer" src="/logo-candidate-v2-csca.png" alt="CSCAPilot" /><span>© {new Date().getFullYear()} CSCAPilot</span><button type="button" onClick={() => onNavigate(routes.agent)}>{t('cscaPrep.practiceAction', '进入在线模考')}<Icon name="lucide:arrow-right" /></button></footer>
+      <footer className="csca-prep-footer"><img className="site-brand-logo site-brand-logo-footer" src="/logo-candidate-v2-csca.png" alt="CSCAPilot" /><span>© {new Date().getFullYear()} CSCAPilot · by Holalobe</span><button type="button" onClick={() => onNavigate(routes.about)}>{t('homeFooter.trustTitle', '服务与信任')}</button><button type="button" onClick={() => onNavigate(routes.agent)}>{t('cscaPrep.practiceAction', '进入学习 Agent')}<Icon name="lucide:arrow-right" /></button></footer>
     </div>
   );
 }

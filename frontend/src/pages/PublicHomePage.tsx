@@ -46,6 +46,7 @@ export function PublicHomePage({ currentUser, isResolvingAuth, onCurrentUserChan
         <div className="site-header-inner">
           <button type="button" className="site-brand" onClick={() => onNavigate(routes.home)}>
             <img className="site-brand-logo" src="/logo-candidate-v2-csca.png" alt={t('homeNav.brand', 'CSCA 学习 Agent')} />
+            <span className="site-brand-parent">by Holalobe</span>
           </button>
           <nav className="site-nav" aria-label={t('nav.aria', '主导航')}>
             <button type="button" className="site-link" onClick={() => onNavigate(routes.cscaPrep)}>{t('homeNav.cscaPrep', 'CSCA 准备')}</button>
@@ -94,14 +95,15 @@ export function PublicHomePage({ currentUser, isResolvingAuth, onCurrentUserChan
           </nav>
           <div className="public-home-footer-column public-home-footer-trust">
             <strong>{t('homeFooter.trustTitle', '服务与信任')}</strong>
-            <span>{t('homeFooter.aiDisclosure', 'AI 辅助学习说明')}</span>
-            <span>{t('homeFooter.recordPrivacy', '账号与学习记录保护')}</span>
-            <span>{t('homeFooter.originalContent', '原创训练内容')}</span>
+            <button type="button" onClick={() => onNavigate(`${routes.about}#ai`)}>{t('homeFooter.aiDisclosure', 'AI 辅助学习说明')}</button>
+            <button type="button" onClick={() => onNavigate(`${routes.about}#privacy`)}>{t('homeFooter.recordPrivacy', '账号与学习记录保护')}</button>
+            <button type="button" onClick={() => onNavigate(`${routes.about}#content`)}>{t('homeFooter.contentSources', '题目与内容来源')}</button>
+            <button type="button" onClick={() => onNavigate(routes.about)}>{t('homeFooter.aboutHolalobe', '关于 CSCAPilot 与 Holalobe')}</button>
           </div>
         </div>
         <div className="public-home-footer-note">
           <span className="public-home-footer-ai"><Icon name="lucide:sparkles" />{t('homeFooter.deepSeek', 'AI 能力由 DeepSeek 模型支持')}</span>
-          <span>© {new Date().getFullYear()} CSCAPilot. {t('homeFooter.rights', '保留所有权利。')}</span>
+          <span>© {new Date().getFullYear()} CSCAPilot · by Holalobe. {t('homeFooter.rights', '保留所有权利。')}</span>
         </div>
       </footer>
     </>

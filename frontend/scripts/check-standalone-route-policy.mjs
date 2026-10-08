@@ -13,6 +13,9 @@ const policy = await import(`data:text/javascript;base64,${Buffer.from(compiled)
 assert.deepEqual(policy.resolveStandaloneLocation('/', '', ''), {
   route: 'home', pathname: '/', href: '/', shouldCanonicalize: false
 });
+assert.deepEqual(policy.resolveStandaloneLocation('/about/', '', '#ai'), {
+  route: 'about', pathname: '/about', href: '/about#ai', shouldCanonicalize: true
+});
 assert.deepEqual(policy.resolveStandaloneLocation('/agent/', '?agentSection=settings', '#top'), {
   route: 'agent', pathname: '/agent', href: '/agent?agentSection=settings#top', shouldCanonicalize: true
 });
@@ -25,6 +28,10 @@ assert.deepEqual(policy.resolveStandaloneLocation('/register', '?redirect=%2Fage
 assert.equal(policy.resolveStandaloneHref('/removed-route?stale=1').route, 'not-found');
 assert.equal(policy.resolveStandaloneHref('/removed-route?stale=1').href, '/removed-route?stale=1');
 assert.equal(policy.resolveStandaloneHref('https://evil.example/agent').route, 'not-found');
+assert.equal(policy.resolveStandaloneHref('/csca-mock-exam/math').href, '/agent?agentSection=progress');
+assert.equal(policy.resolveStandaloneHref('/past-papers/math-2026').href, '/agent?agentSection=resources');
+assert.equal(policy.resolveStandaloneHref('/csca-subjects/physics').href, '/agent?mode=free&subject=physics');
+assert.equal(policy.resolveStandaloneHref('/csca-special-practice/chemistry').href, '/agent?agentSection=practice');
 
 assert.equal(policy.safeStandaloneReturnPath('/agent?agentSection=weakness'), '/agent?agentSection=weakness');
 assert.equal(policy.safeStandaloneReturnPath('/me?section=settings'), '/me?section=settings');

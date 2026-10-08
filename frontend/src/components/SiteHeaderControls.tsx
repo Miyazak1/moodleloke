@@ -90,7 +90,7 @@ export function SiteHeaderControls({
         <button
           type="button"
           className="site-language-button"
-          aria-label={t('header.languageLabel', '选择语言')}
+          aria-label={`${localeOption.shortCode} ${localeOption.nativeName} · ${t('header.languageLabel', '选择语言')}`}
           aria-haspopup="menu"
           aria-expanded={languageOpen}
           onClick={() => {

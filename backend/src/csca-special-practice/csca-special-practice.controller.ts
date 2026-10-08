@@ -44,6 +44,13 @@ export class CscaSpecialPracticeController {
     return this.cscaSpecialPracticeService.getHomeMiniMock(query);
   }
 
+  @Post(['public/telemetry', 'api/v1/public/telemetry'])
+  @Access('optionalUser')
+  @UseGuards(OptionalUserGuard)
+  recordPublicTelemetry(@Body() body: Record<string, unknown>, @CurrentUser() user?: PrismaUser) {
+    return this.trainingEvents.recordPublicSiteEvent(user?.id, body);
+  }
+
   @Post(['csca-special-practice/home-mini-mock/score', 'api/v1/csca-special-practice/home-mini-mock/score'])
   @Access('public')
   scoreHomeMiniMock(@Body() body: Record<string, unknown>) {

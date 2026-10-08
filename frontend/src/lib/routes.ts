@@ -1,5 +1,6 @@
 export const routes = {
   home: '/',
+  about: '/about',
   cscaPrep: '/csca-prep',
   cscaExamTime: '/csca-exam-time',
   cscaSubjects: '/csca-subjects',

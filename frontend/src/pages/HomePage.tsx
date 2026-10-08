@@ -323,9 +323,9 @@ export function HomePage({
   }));
   const routeCards = [
     {
-      title: t('homeLite.routes.mockTitle', '先完成一套在线模考'),
-      body: t('homeLite.routes.mockBody', '按考试节奏完成一套题，快速了解当前水平、用时压力和优先复盘的知识点。'),
-      action: t('homeLite.routes.mockAction', '开始模考'),
+      title: t('homeLite.routes.mockTitle', '先完成一次快速诊断'),
+      body: t('homeLite.routes.mockBody', '用真实题完成一轮作答，快速了解当前状态和优先复盘的知识点。'),
+      action: t('homeLite.routes.mockAction', '进入学习 Agent'),
       href: routes.agent,
       icon: 'lucide:play',
       tag: t('homeLite.routes.mockTag', '入口 01'),
@@ -604,7 +604,7 @@ export function HomePage({
             <p className="home-lead">{copy.hero.body}</p>
             <div className="home-button-row">
               <HomeLink href={routes.agent} onNavigate={onNavigate} className="home-button primary">
-                <Icon name="lucide:play" />{t('homeLite.hero.startMock', '开始免费模考')}
+                <Icon name="lucide:play" />{t('homeLite.hero.startMock', '进入学习 Agent')}
               </HomeLink>
               <HomeLink href={`${routes.agent}?mode=free&subject=math`} onNavigate={onNavigate} className="home-button lime">
                 <Icon name="lucide:list-checks" />{t('homeLite.hero.choosePractice', '进入科目训练')}
@@ -655,6 +655,8 @@ export function HomePage({
                   key={item.key}
                   className={subject === item.key ? 'home-subject-pill active' : 'home-subject-pill'}
                   type="button"
+                  role="tab"
+                  aria-selected={subject === item.key}
                   data-subject={item.key}
                   onClick={() => setSubject(item.key)}
                 >
@@ -734,7 +736,6 @@ export function HomePage({
               href={lab.href}
               onNavigate={onNavigate}
               className={`home-science-lab-card ${lab.key}`}
-              ariaLabel={`${lab.title} · ${lab.action}`}
             >
               <span className="home-science-lab-preview">
                 <span className="home-science-lab-index">{lab.index}</span>
@@ -767,7 +768,7 @@ export function HomePage({
             <div className="home-question-toolbar">
               <h3>{miniMockReport
                 ? formatHomeText(t('homeLite.practice.reportHeading', '交卷报告 · 准备度 {score}'), { score: miniMockReport.summary.accuracy })
-                : formatHomeText(t('homeLite.practice.quickHeading', '快速模考 · {done}/{total}'), { done: miniMockCheckedCount, total: miniMockQuestions.length || 12 })}</h3>
+                : formatHomeText(t('homeLite.practice.quickHeading', '快速诊断 · {done}/{total}'), { done: miniMockCheckedCount, total: miniMockQuestions.length || 12 })}</h3>
               <span className="home-timer">
                 <Icon name={miniMockReport ? 'lucide:check-circle-2' : 'lucide:database'} />
                 {miniMockReport ? t('homeLite.practice.completed', '已完成') : t('homeLite.practice.bankSample', '合格题库抽样')}
@@ -880,7 +881,7 @@ export function HomePage({
                         <button type="button" className="home-mini-primary" onClick={startOnlineMock} disabled={!miniMockCompleted}>
                           <Icon name={miniMockCompleted ? 'lucide:play-circle' : 'lucide:send'} />
                           {miniMockCompleted
-                            ? (hasHomeAuth ? t('homeLite.practice.enterMock', '进入在线模考') : t('homeLite.practice.loginEnterMock', '登录后进入模考'))
+                            ? (hasHomeAuth ? t('homeLite.practice.enterMock', '进入学习 Agent') : t('homeLite.practice.loginEnterMock', '登录后进入学习 Agent'))
                             : formatHomeText(t('homeLite.practice.remaining', '还差 {count} 题'), { count: Math.max(0, miniMockQuestions.length - miniMockCheckedCount) })}
                         </button>
                       )}
@@ -914,7 +915,7 @@ export function HomePage({
                 </div>
                 <span className="home-tag lime">
                   {miniMockReport
-                    ? t('homeLite.practice.readyMock', '可以进入在线模考')
+                    ? t('homeLite.practice.readyMock', '可以进入学习 Agent')
                     : miniMockCanSubmit
                       ? t('homeLite.practice.generatingResult', '正在生成本轮结果')
                       : t('homeLite.practice.instantMap', '答完一题看一题解析')}
@@ -942,7 +943,7 @@ export function HomePage({
               {miniMockReport && (
                 <button type="button" className="home-mini-formal-cta" onClick={startOnlineMock}>
                   <Icon name={hasHomeAuth ? 'lucide:play-circle' : 'lucide:log-in'} />
-                  {hasHomeAuth ? t('homeLite.practice.enterMock', '进入在线模考') : t('homeLite.practice.loginEnterMock', '登录后进入模考')}
+                  {hasHomeAuth ? t('homeLite.practice.enterMock', '进入学习 Agent') : t('homeLite.practice.loginEnterMock', '登录后进入学习 Agent')}
                 </button>
               )}
             </div>
@@ -951,7 +952,7 @@ export function HomePage({
               <p>{miniMockReport
                 ? t('homeLite.practice.subjectAccuracyBody', '每科单独拆开，交卷后能看到该补哪一科。')
                 : t('homeLite.practice.subjectDistributionBody', '默认数学、物理、化学各 4 题；题库不足时不会用假题填充。')}</p>
-              <div className="home-subject-breakdown" aria-label={t('homeLite.practice.subjectDistributionAria', '三科分布')}>
+              <div className="home-subject-breakdown" role="group" aria-label={t('homeLite.practice.subjectDistributionAria', '三科分布')}>
                 {miniMockSubjectRows.map((row) => {
                   const meta = MINI_MOCK_SUBJECTS[row.id];
                   return (
@@ -1014,10 +1015,10 @@ export function HomePage({
 
         <div className="home-path-canvas" id="review" data-animate>
           {[
-            ['01', t('homeLite.path.step1Title', '模考定位'), t('homeLite.path.step1Body', '先完成一套限时题，建立当前水平和时间分配感。')],
+            ['01', t('homeLite.path.step1Title', '快速诊断'), t('homeLite.path.step1Body', '先完成一轮真实题作答，建立当前状态和薄弱点基线。')],
             ['02', t('homeLite.path.step2Title', '错因诊断'), t('homeLite.path.step2Body', '把错误归到知识点、题型和常见陷阱，而不是只展示分数。')],
             ['03', t('homeLite.path.step3Title', '科目复盘'), t('homeLite.path.step3Body', '系统把薄弱点推回短题组，练到同类题能稳定答对。')],
-            ['04', t('homeLite.path.step4Title', '回到在线模考'), t('homeLite.path.step4Body', '复盘后再做一套在线模考，确认速度、准确率和题型稳定度。')]
+            ['04', t('homeLite.path.step4Title', '回到验证练习'), t('homeLite.path.step4Body', '复盘后再做一轮验证练习，确认准确率和题型稳定度。')]
           ].map(([num, title, body], index) => (
             <article key={num} className="home-path-step" data-animate="pop" style={{ '--delay': `${index * 130}ms` } as CSSProperties}>
               <span className="home-step-num">{num}</span>
@@ -1044,7 +1045,7 @@ export function HomePage({
             <p>{copy.library.body}</p>
           </div>
           <div className="home-button-row">
-            <HomeLink href={routes.agent} onNavigate={onNavigate} className="home-button primary"><Icon name="lucide:play" />{t('homeLite.footer.startMock', '开始模考')}</HomeLink>
+            <HomeLink href={routes.agent} onNavigate={onNavigate} className="home-button primary"><Icon name="lucide:play" />{t('homeLite.footer.startMock', '进入学习 Agent')}</HomeLink>
             <HomeLink href={routes.agent} onNavigate={onNavigate} className="home-button"><Icon name="lucide:book-open-check" />{t('homeLite.footer.consulting', 'CSCA 备考')}</HomeLink>
           </div>
           <div className="home-footer-landing-pad" aria-hidden="true">

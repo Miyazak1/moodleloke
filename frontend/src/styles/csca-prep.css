@@ -187,6 +187,8 @@
 .csca-prep-source > svg { width: 42px; height: 42px; padding: 9px; border-radius: 13px; background: #fff; color: var(--brand-blue); }
 .csca-prep-source h2 { margin: 5px 0; font-size: 22px; }
 .csca-prep-source p { margin: 0; color: var(--ink-700); }
+.csca-prep-verified { display: block; margin-top: 9px; color: var(--ink-500); font-weight: 750; }
+.csca-prep-independent { display: block; margin-top: 9px; color: #9f493d; font-size: 13px; line-height: 1.55; }
 .csca-prep-source a { white-space: nowrap; color: var(--brand-blue); }
 
 .csca-prep-footer { display: flex; min-height: 112px; align-items: center; gap: 22px; padding: 24px max(28px, calc((100vw - 1240px) / 2)); border-top: 1px solid var(--line); background: rgba(255,255,255,.88); }

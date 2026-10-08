@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { assertRateLimit } from '../common/rate-limit';
 
 type TrainingEventInput = {
   userId?: number | null;
@@ -21,6 +22,19 @@ type TrainingEventQuery = {
   subject?: string;
 };
 
+export type PublicSiteEventInput = {
+  eventType?: unknown;
+  visitId?: unknown;
+  route?: unknown;
+  locale?: unknown;
+  target?: unknown;
+  method?: unknown;
+  mode?: unknown;
+  result?: unknown;
+  reason?: unknown;
+  component?: unknown;
+};
+
 type EventRow = Awaited<ReturnType<PrismaService['cscaTrainingEvent']['findMany']>>[number];
 type CscaSubject = 'math' | 'physics' | 'chemistry';
 
@@ -33,6 +47,53 @@ const DEFAULT_HIGH_DIFFICULTY_REQUIRED: Record<CscaSubject, number> = {
 const HIGH_DIFFICULTY_DISTRIBUTION_SAMPLE_MIN = 8;
 const SAMPLED_THRESHOLD_MAX_IMPACT_USER_SUBJECTS = 5;
 const DAY_MS = 24 * 60 * 60 * 1000;
+const PUBLIC_SITE_EVENT_TYPES = new Set([
+  'public_page_view',
+  'public_cta_click',
+  'auth_started',
+  'auth_completed',
+  'email_verification_result',
+  'agent_entry',
+  'public_client_error'
+]);
+const PUBLIC_SITE_ROUTES = new Set(['home', 'about', 'csca_prep', 'auth', 'agent', 'me', 'onboarding']);
+const PUBLIC_SITE_TARGETS = new Set(['home', 'about', 'csca_prep', 'agent', 'auth', 'me', 'onboarding', 'official_csca']);
+const PUBLIC_SITE_METHODS = new Set(['email', 'google', 'session']);
+const PUBLIC_SITE_MODES = new Set(['login', 'register', 'forgot', 'reset', 'verify']);
+const PUBLIC_SITE_RESULTS = new Set(['success', 'failure', 'cancelled', 'pending', 'continued_unverified']);
+const PUBLIC_SITE_REASONS = new Set([
+  'api_error',
+  'invalid_or_expired',
+  'not_verified',
+  'send_failed',
+  'resend_success',
+  'google_failed',
+  'google_denied',
+  'account_disabled',
+  'admin_google_binding_required',
+  'google_not_configured',
+  'google_email_unverified',
+  'unknown'
+]);
+const PUBLIC_SITE_COMPONENTS = new Set(['route', 'auth', 'content', 'agent_entry']);
+const PUBLIC_SITE_LOCALES = new Set(['zh-CN', 'en', 'vi']);
+const PUBLIC_SITE_INPUT_FIELDS = new Set(['eventType', 'visitId', 'route', 'locale', 'target', 'method', 'mode', 'result', 'reason', 'component']);
+
+function optionalAllowlistedString(value: unknown, allowed: Set<string>, field: string) {
+  if (value === undefined || value === null || value === '') return undefined;
+  const normalized = String(value).trim();
+  if (!allowed.has(normalized)) throw new BadRequestException(`Invalid public telemetry ${field}.`);
+  return normalized;
+}
+
+function publicVisitId(value: unknown) {
+  if (value === undefined || value === null || value === '') return undefined;
+  const normalized = String(value).trim().toLowerCase();
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(normalized)) {
+    throw new BadRequestException('Invalid public telemetry visitId.');
+  }
+  return normalized;
+}
 
 function clampDays(value: unknown) {
   const parsed = Number(value ?? 14);
@@ -220,6 +281,35 @@ export class TrainingEventService {
     });
   }
 
+  async recordPublicSiteEvent(userId: number | null | undefined, input: PublicSiteEventInput) {
+    const unknownFields = Object.keys(input).filter((key) => !PUBLIC_SITE_INPUT_FIELDS.has(key));
+    if (unknownFields.length) throw new BadRequestException('Public telemetry contains unsupported fields.');
+    const eventType = optionalAllowlistedString(input.eventType, PUBLIC_SITE_EVENT_TYPES, 'eventType');
+    if (!eventType) throw new BadRequestException('Public telemetry eventType is required.');
+    const safeVisitId = publicVisitId(input.visitId);
+    if (!safeVisitId) throw new BadRequestException('Public telemetry visitId is required.');
+    await assertRateLimit(`public-telemetry:${safeVisitId}`, 120, 15 * 60 * 1000, 'Public telemetry rate limit exceeded.');
+    const metadata = {
+      schemaVersion: '1',
+      visitId: safeVisitId,
+      route: optionalAllowlistedString(input.route, PUBLIC_SITE_ROUTES, 'route'),
+      locale: optionalAllowlistedString(input.locale, PUBLIC_SITE_LOCALES, 'locale'),
+      target: optionalAllowlistedString(input.target, PUBLIC_SITE_TARGETS, 'target'),
+      method: optionalAllowlistedString(input.method, PUBLIC_SITE_METHODS, 'method'),
+      mode: optionalAllowlistedString(input.mode, PUBLIC_SITE_MODES, 'mode'),
+      result: optionalAllowlistedString(input.result, PUBLIC_SITE_RESULTS, 'result'),
+      reason: optionalAllowlistedString(input.reason, PUBLIC_SITE_REASONS, 'reason'),
+      component: optionalAllowlistedString(input.component, PUBLIC_SITE_COMPONENTS, 'component')
+    };
+    await this.record({
+      userId: userId ?? null,
+      eventType,
+      source: 'public_site',
+      metadata: Object.fromEntries(Object.entries(metadata).filter(([, value]) => value !== undefined))
+    });
+    return { received: true };
+  }
+
   async getOverview(query: TrainingEventQuery = {}) {
     const { start, end } = dateRange(query);
     const rows = await this.prisma.cscaTrainingEvent.findMany({
@@ -249,6 +339,7 @@ export class TrainingEventService {
     );
     const conceptCardEffect = await this.conceptCardEffectObservability(rows);
     const variantEffect = await this.variantEffectObservability(rows);
+    const publicSite = this.publicSiteObservability(rows);
 
     return {
       range: {
@@ -273,6 +364,7 @@ export class TrainingEventService {
       byDay: aggregate(rows, (row) => dayKey(row.createdAt)),
       byEventType: aggregate(rows, (row) => row.eventType),
       bySubject: aggregate(rows, (row) => row.subject ?? 'unknown'),
+      publicSite,
       readinessActions,
       readinessEvidence,
       readinessDifficultyThresholds,
@@ -281,7 +373,7 @@ export class TrainingEventService {
       plannerAssistant: this.plannerAssistantObservability(rows),
       conceptCardEffect,
       variantEffect,
-      recentEvents: rows.slice(-30).reverse().map((row) => ({
+      recentEvents: rows.filter((row) => row.source !== 'public_site').slice(-30).reverse().map((row) => ({
         id: row.id,
         createdAt: row.createdAt.toISOString(),
         userId: row.userId,
@@ -293,6 +385,42 @@ export class TrainingEventService {
         source: row.source,
         metadata: row.metadata
       }))
+    };
+  }
+
+  private publicSiteObservability(rows: EventRow[]) {
+    const publicRows = rows.filter((row) => row.source === 'public_site');
+    const count = (eventType: string, result?: string) => publicRows.filter((row) => {
+      if (row.eventType !== eventType) return false;
+      return result ? metadataString(row.metadata, 'result') === result : true;
+    }).length;
+    const uniqueVisits = new Set(publicRows.map((row) => metadataString(row.metadata, 'visitId')).filter(Boolean)).size;
+    const pageViews = count('public_page_view');
+    const agentEntries = count('agent_entry');
+    const agentVisitCount = new Set(publicRows.filter((row) => row.eventType === 'agent_entry')
+      .map((row) => metadataString(row.metadata, 'visitId')).filter(Boolean)).size;
+    const authStarts = count('auth_started');
+    const authCompletions = count('auth_completed', 'success');
+    const registrationCompletions = publicRows.filter((row) => row.eventType === 'auth_completed'
+      && metadataString(row.metadata, 'result') === 'success'
+      && metadataString(row.metadata, 'mode') === 'register').length;
+    return {
+      totalEvents: publicRows.length,
+      uniqueVisits,
+      pageViews,
+      agentEntries,
+      agentVisitCount,
+      agentEntryRate: uniqueVisits ? Number((agentVisitCount / uniqueVisits).toFixed(4)) : 0,
+      authStarts,
+      authCompletions,
+      authCompletionRate: authStarts ? Number((authCompletions / authStarts).toFixed(4)) : 0,
+      registrationCompletions,
+      verificationSuccesses: count('email_verification_result', 'success'),
+      verificationFailures: count('email_verification_result', 'failure'),
+      clientErrors: count('public_client_error'),
+      byEventType: aggregate(publicRows, (row) => row.eventType),
+      byRoute: aggregate(publicRows.filter((row) => Boolean(metadataString(row.metadata, 'route'))), (row) => metadataString(row.metadata, 'route')),
+      byDay: aggregate(publicRows, (row) => dayKey(row.createdAt))
     };
   }
 

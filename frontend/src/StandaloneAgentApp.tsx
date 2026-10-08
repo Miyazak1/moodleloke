@@ -11,12 +11,15 @@ import { isAgentPracticeWriteEnabled, isAgentWebEnabled } from './lib/agent-feat
 import { requestJson } from './lib/request';
 import { EMAIL_UNVERIFIED_EVENT } from './lib/request';
 import { routes } from './lib/routes';
+import { applyPublicMetadata } from './lib/public-metadata';
+import { trackPublicEvent, trackPublicPageView, type PublicTelemetryRoute, type PublicTelemetryTarget } from './lib/public-telemetry';
 import { resolveStandaloneHref, resolveStandaloneLocation, type StandaloneRoute } from './lib/standalone-route-policy';
 import { useAuthSession } from './lib/use-auth-session';
 import { useI18n } from './i18n/useI18n';
 
 const AgentPage = lazy(() => import('./pages/AgentPage').then((module) => ({ default: module.AgentPage })));
 const PublicHomePage = lazy(() => import('./pages/PublicHomePage').then((module) => ({ default: module.PublicHomePage })));
+const PublicAboutPage = lazy(() => import('./pages/PublicAboutPage').then((module) => ({ default: module.PublicAboutPage })));
 const CscaPrepPage = lazy(() => import('./pages/CscaPrepPage').then((module) => ({ default: module.CscaPrepPage })));
 const PublicAuthPage = lazy(() => import('./pages/PublicAuthPage').then((module) => ({ default: module.PublicAuthPage })));
 const PublicMePage = lazy(() => import('./pages/PublicMePage').then((module) => ({ default: module.PublicMePage })));
@@ -30,6 +33,12 @@ function readInitialAuthMode() {
   const resolution = resolveStandaloneLocation(window.location.pathname, window.location.search, window.location.hash);
   const search = new URL(resolution.href, window.location.origin).searchParams;
   return search.get('mode') === 'register' ? 'register' : 'login';
+}
+
+function telemetryRoute(route: StandaloneRoute): PublicTelemetryRoute | null {
+  if (route === 'csca-prep') return 'csca_prep';
+  if (route === 'home' || route === 'about' || route === 'agent' || route === 'auth' || route === 'me' || route === 'onboarding') return route;
+  return null;
 }
 
 export default function StandaloneAgentApp() {
@@ -51,6 +60,38 @@ export default function StandaloneAgentApp() {
   }, []);
 
   useEffect(() => {
+    applyPublicMetadata(route, locale);
+  }, [route, locale]);
+
+  useEffect(() => {
+    const safeRoute = telemetryRoute(route);
+    if (!safeRoute) return;
+    trackPublicPageView(safeRoute, locale);
+    if (safeRoute === 'agent') {
+      trackPublicEvent({ eventType: 'agent_entry', route: safeRoute, locale, component: 'agent_entry' });
+      if (new URLSearchParams(window.location.search).get('auth') === 'google') {
+        trackPublicEvent({ eventType: 'auth_completed', route: safeRoute, locale, method: 'google', mode: readInitialAuthMode(), result: 'success', component: 'auth' });
+      }
+    }
+    if (safeRoute === 'me' && new URLSearchParams(window.location.search).get('verified') === 'email') {
+      trackPublicEvent({ eventType: 'email_verification_result', route: safeRoute, locale, method: 'email', result: 'success', component: 'auth' });
+    }
+  }, [route, locale]);
+
+  useEffect(() => {
+    const report = () => {
+      const safeRoute = telemetryRoute(route);
+      if (safeRoute) trackPublicEvent({ eventType: 'public_client_error', route: safeRoute, locale, component: 'route' });
+    };
+    window.addEventListener('error', report);
+    window.addEventListener('unhandledrejection', report);
+    return () => {
+      window.removeEventListener('error', report);
+      window.removeEventListener('unhandledrejection', report);
+    };
+  }, [route, locale]);
+
+  useEffect(() => {
     const handleEmailUnverified = (event: Event) => {
       const detail = (event as CustomEvent<{ message?: string }>).detail;
       setError(detail?.message || '请先验证邮箱后继续使用。');
@@ -60,15 +101,13 @@ export default function StandaloneAgentApp() {
   }, []);
 
   function navigate(next: string) {
-    const legacyLearningPath = (() => {
-      const value = String(next ?? '');
-      const subjectMatch = value.match(/^\/csca-subjects\/(math|physics|chemistry)/);
-      if (subjectMatch) return `${routes.agent}?mode=free&subject=${subjectMatch[1]}`;
-      if (value.startsWith('/csca-mock-exam')) return `${routes.agent}?agentSection=progress`;
-      if (value.startsWith('/csca-special-practice')) return routes.agent;
-      return value;
-    })();
+    const legacyLearningPath = String(next ?? '');
     const resolution = resolveStandaloneHref(legacyLearningPath, window.location.origin);
+    const from = telemetryRoute(route);
+    const target = telemetryRoute(resolution.route) as PublicTelemetryTarget | null;
+    if (from && target && from !== target && (from === 'home' || from === 'about' || from === 'csca_prep' || from === 'auth')) {
+      trackPublicEvent({ eventType: 'public_cta_click', route: from, locale, target });
+    }
     window.history.pushState({}, '', resolution.href);
     window.dispatchEvent(new Event('moodlelike:navigation'));
     setRoute(resolution.route);
@@ -92,7 +131,7 @@ export default function StandaloneAgentApp() {
   const isAgent = route === 'agent';
   const mainClassName = isAgent
     ? 'site-main site-main-agent'
-    : route === 'home' || route === 'csca-prep'
+    : route === 'home' || route === 'about' || route === 'csca-prep'
       ? 'site-main site-main-home'
       : 'site-main';
   const agentHost = createAgentHostBridge({
@@ -141,7 +180,7 @@ export default function StandaloneAgentApp() {
           </div>
         </header>
       ) : null}
-      {(route !== 'home' && route !== 'csca-prep' && route !== 'me' && (!isAgent || !currentUser)) ? <div className="standalone-language-bar"><LanguageSelector compact /></div> : null}
+      {(route !== 'home' && route !== 'about' && route !== 'csca-prep' && route !== 'me' && (!isAgent || !currentUser)) ? <div className="standalone-language-bar"><LanguageSelector compact /></div> : null}
       <main className={mainClassName}>
         <ErrorBanner message={error} />
         <Suspense fallback={<AppLoadingState variant="page" />}>
@@ -155,6 +194,14 @@ export default function StandaloneAgentApp() {
           )}
           {route === 'csca-prep' && (
             <CscaPrepPage
+              currentUser={currentUser}
+              isResolvingAuth={isResolvingAuth}
+              onCurrentUserChange={setCurrentUser}
+              onNavigate={navigate}
+            />
+          )}
+          {route === 'about' && (
+            <PublicAboutPage
               currentUser={currentUser}
               isResolvingAuth={isResolvingAuth}
               onCurrentUserChange={setCurrentUser}

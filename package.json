@@ -7,6 +7,8 @@
     "frontend:dev": "npm --prefix frontend run dev:force -- --port 5190",
     "backend:dev": "node scripts/start-backend-dev.cjs",
     "frontend:build": "npm --prefix frontend run build",
+    "public-site:verify": "node scripts/verify-cscapilot-public-site.cjs",
+    "public-telemetry:test": "npm run backend:build && node scripts/public-telemetry-contract-self-test.cjs",
     "backend:build": "npm --prefix backend run build",
     "backend:dev:observation": "node scripts/start-observation-backend-dev.cjs",
     "backend:dev:observation:local-shadow": "node scripts/start-observation-backend-dev.cjs --local-shadow-qualification",

@@ -127,6 +127,21 @@ const ADMIN_AUDIT_COPY = {
     days90: '90 天',
     diagnosticCompletion: '诊断完成率',
     practiceCompletion: '训练完成率',
+    publicVisits: '公开站访问',
+    publicVisitsBody: '{views} 次页面浏览 · {events} 条匿名事件',
+    agentEntryRate: '进入 Agent',
+    agentEntryRateBody: '{entries} 个会话进入 · {visits} 个访问会话',
+    authCompletionRate: '账号转化',
+    authCompletionRateBody: '{completed}/{started} 次账号流程完成 · 注册 {registered}',
+    verificationHealth: '邮箱验证',
+    verificationHealthBody: '成功 {success} · 失败 {failure} · 客户端错误 {errors}',
+    publicFunnel: '公开站转化漏斗',
+    publicFunnelHint: '仅统计第一方匿名事件；不记录邮箱、题目、答案或错误正文。',
+    publicRouteBreakdown: '公开页访问分布',
+    funnelVisits: '访问会话',
+    funnelAgent: '进入学习 Agent',
+    funnelAuth: '开始账号流程',
+    funnelCompleted: '完成账号流程',
     aiCalls: 'AI Coach 调用',
     aiCallsBody: '{feedbackCount} 条反馈 · {tokenCount} 估算 token',
     aiQuality: 'AI 质量',
@@ -683,6 +698,21 @@ const ADMIN_AUDIT_COPY = {
     days90: '90 days',
     diagnosticCompletion: 'Diagnostic completion',
     practiceCompletion: 'Practice completion',
+    publicVisits: 'Public-site visits',
+    publicVisitsBody: '{views} page views · {events} anonymous events',
+    agentEntryRate: 'Agent entry',
+    agentEntryRateBody: '{entries} sessions entered · {visits} visit sessions',
+    authCompletionRate: 'Account conversion',
+    authCompletionRateBody: '{completed}/{started} account flows completed · {registered} registrations',
+    verificationHealth: 'Email verification',
+    verificationHealthBody: '{success} succeeded · {failure} failed · {errors} client errors',
+    publicFunnel: 'Public-site conversion funnel',
+    publicFunnelHint: 'First-party anonymous events only; no email, question, answer, or error body is stored.',
+    publicRouteBreakdown: 'Public-page distribution',
+    funnelVisits: 'Visit sessions',
+    funnelAgent: 'Entered Learning Agent',
+    funnelAuth: 'Started account flow',
+    funnelCompleted: 'Completed account flow',
     aiCalls: 'AI Coach calls',
     aiCallsBody: '{feedbackCount} feedback · {tokenCount} estimated tokens',
     aiQuality: 'AI quality',
@@ -1399,6 +1429,24 @@ const EMPTY_TRAINING_OBSERVABILITY: AdminTrainingEventObservability = {
   byDay: [],
   byEventType: [],
   bySubject: [],
+  publicSite: {
+    totalEvents: 0,
+    uniqueVisits: 0,
+    pageViews: 0,
+    agentEntries: 0,
+    agentVisitCount: 0,
+    agentEntryRate: 0,
+    authStarts: 0,
+    authCompletions: 0,
+    authCompletionRate: 0,
+    registrationCompletions: 0,
+    verificationSuccesses: 0,
+    verificationFailures: 0,
+    clientErrors: 0,
+    byEventType: [],
+    byRoute: [],
+    byDay: []
+  },
   readinessActions: {
     clickedCount: 0,
     followedCount: 0,
@@ -2276,6 +2324,32 @@ export function AdminAuditPage({
             <MetricCard label={copy.practiceCompletion} value={formatPercent(trainingObservability.summary.practiceCompletionRate)}>
               <p>{trainingObservability.summary.practiceCompleted} / {trainingObservability.summary.practiceStarted}</p>
             </MetricCard>
+            <MetricCard label={copy.publicVisits} value={trainingObservability.publicSite.uniqueVisits.toLocaleString()}>
+              <p>{fillTemplate(copy.publicVisitsBody, {
+                views: trainingObservability.publicSite.pageViews.toLocaleString(),
+                events: trainingObservability.publicSite.totalEvents.toLocaleString()
+              })}</p>
+            </MetricCard>
+            <MetricCard label={copy.agentEntryRate} value={formatPercent(trainingObservability.publicSite.agentEntryRate)}>
+              <p>{fillTemplate(copy.agentEntryRateBody, {
+                entries: trainingObservability.publicSite.agentVisitCount.toLocaleString(),
+                visits: trainingObservability.publicSite.uniqueVisits.toLocaleString()
+              })}</p>
+            </MetricCard>
+            <MetricCard label={copy.authCompletionRate} value={formatPercent(trainingObservability.publicSite.authCompletionRate)}>
+              <p>{fillTemplate(copy.authCompletionRateBody, {
+                completed: trainingObservability.publicSite.authCompletions.toLocaleString(),
+                started: trainingObservability.publicSite.authStarts.toLocaleString(),
+                registered: trainingObservability.publicSite.registrationCompletions.toLocaleString()
+              })}</p>
+            </MetricCard>
+            <MetricCard label={copy.verificationHealth} value={trainingObservability.publicSite.verificationSuccesses.toLocaleString()}>
+              <p>{fillTemplate(copy.verificationHealthBody, {
+                success: trainingObservability.publicSite.verificationSuccesses.toLocaleString(),
+                failure: trainingObservability.publicSite.verificationFailures.toLocaleString(),
+                errors: trainingObservability.publicSite.clientErrors.toLocaleString()
+              })}</p>
+            </MetricCard>
             <MetricCard label={copy.aiCalls} value={aiObservability.summary.interactions.toLocaleString()}>
               <p>{fillTemplate(copy.aiCallsBody, {
                 feedbackCount: aiObservability.summary.feedbackCount.toLocaleString(),
@@ -2322,6 +2396,49 @@ export function AdminAuditPage({
                 rolloutPercent: aiProviderConfig.provider.rollout.percent
               })}</p>
             </MetricCard>
+          </section>
+
+          <section className="admin-work-grid two">
+            <section className="process-list admin-compact-section">
+              <div className="admin-section-head">
+                <div>
+                  <p className="page-kicker">{adaptiveKicker}</p>
+                  <h2>{copy.publicFunnel}</h2>
+                </div>
+                <span>{trainingObservability.publicSite.totalEvents}</span>
+              </div>
+              <p className="admin-section-description">{copy.publicFunnelHint}</p>
+              {[
+                [copy.funnelVisits, trainingObservability.publicSite.uniqueVisits],
+                [copy.funnelAgent, trainingObservability.publicSite.agentVisitCount],
+                [copy.funnelAuth, trainingObservability.publicSite.authStarts],
+                [copy.funnelCompleted, trainingObservability.publicSite.authCompletions]
+              ].map(([label, value], index) => (
+                <article key={String(label)} className="process-row admin-data-row">
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <div><strong>{label}</strong></div>
+                  <b>{Number(value).toLocaleString()}</b>
+                </article>
+              ))}
+            </section>
+
+            <section className="process-list admin-compact-section">
+              <div className="admin-section-head">
+                <div>
+                  <p className="page-kicker">{adaptiveKicker}</p>
+                  <h2>{copy.publicRouteBreakdown}</h2>
+                </div>
+                <span>{trainingObservability.publicSite.byRoute.length}</span>
+              </div>
+              {trainingObservability.publicSite.byRoute.length === 0 && <AdminEmptyState>{copy.noEvents}</AdminEmptyState>}
+              {trainingObservability.publicSite.byRoute.slice(0, 8).map((item, index) => (
+                <article key={item.key} className="process-row admin-data-row">
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <div><strong>{item.key}</strong></div>
+                  <b>{item.count.toLocaleString()}</b>
+                </article>
+              ))}
+            </section>
           </section>
 
           <section className="admin-work-grid two">

@@ -1,4 +1,4 @@
-export type StandaloneRoute = 'home' | 'csca-prep' | 'agent' | 'auth' | 'onboarding' | 'me' | 'not-found';
+export type StandaloneRoute = 'home' | 'about' | 'csca-prep' | 'agent' | 'auth' | 'onboarding' | 'me' | 'not-found';
 
 export type StandaloneRouteResolution = {
   route: StandaloneRoute;
@@ -9,6 +9,7 @@ export type StandaloneRouteResolution = {
 
 const ROUTE_PATHS = {
   home: '/',
+  about: '/about',
   cscaPrep: '/csca-prep',
   agent: '/agent',
   auth: '/auth',
@@ -41,11 +42,31 @@ function authAliasHref(pathname: string, search: string, hash: string) {
   return `${ROUTE_PATHS.auth}${query ? `?${query}` : ''}${hash}`;
 }
 
+function legacyLearningAliasHref(pathname: string, hash: string) {
+  const subjectMatch = pathname.match(/^\/csca-subjects\/(math|physics|chemistry)(?:\/|$)/);
+  if (subjectMatch) return `${ROUTE_PATHS.agent}?mode=free&subject=${subjectMatch[1]}${hash}`;
+  if (pathname === '/csca-subjects') return `${ROUTE_PATHS.agent}?agentSection=practice${hash}`;
+  if (pathname.startsWith('/csca-mock-exam')) return `${ROUTE_PATHS.agent}?agentSection=progress${hash}`;
+  if (pathname.startsWith('/past-papers')) return `${ROUTE_PATHS.agent}?agentSection=resources${hash}`;
+  if (pathname.startsWith('/csca-special-practice')) return `${ROUTE_PATHS.agent}?agentSection=practice${hash}`;
+  return null;
+}
+
 export function resolveStandaloneLocation(pathname: string, search = '', hash = ''): StandaloneRouteResolution {
   const normalizedPathname = normalizePathname(pathname);
   const normalizedSearch = safeSearch(search);
   const normalizedHash = safeHash(hash);
   const shouldCanonicalize = normalizedPathname !== pathname;
+
+  const legacyHref = legacyLearningAliasHref(normalizedPathname, normalizedHash);
+  if (legacyHref) {
+    return {
+      route: 'agent',
+      pathname: ROUTE_PATHS.agent,
+      href: legacyHref,
+      shouldCanonicalize: true
+    };
+  }
 
   if (normalizedPathname === ROUTE_PATHS.login || normalizedPathname === ROUTE_PATHS.register) {
     return {
@@ -66,6 +87,9 @@ export function resolveStandaloneLocation(pathname: string, search = '', hash = 
   }
   if (normalizedPathname === ROUTE_PATHS.home) {
     return { route: 'home', pathname: normalizedPathname, href: `${normalizedPathname}${normalizedSearch}${normalizedHash}`, shouldCanonicalize };
+  }
+  if (normalizedPathname === ROUTE_PATHS.about) {
+    return { route: 'about', pathname: normalizedPathname, href: `${normalizedPathname}${normalizedSearch}${normalizedHash}`, shouldCanonicalize };
   }
   if (normalizedPathname === ROUTE_PATHS.cscaPrep) {
     return { route: 'csca-prep', pathname: normalizedPathname, href: `${normalizedPathname}${normalizedSearch}${normalizedHash}`, shouldCanonicalize };

@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Disallow: /agent
+Disallow: /auth
+Disallow: /login
+Disallow: /register
+Disallow: /onboarding
+Disallow: /me
+Disallow: /admin
+Disallow: /authoring.html
+Disallow: /api/
+
+Sitemap: https://www.cscapilot.com/sitemap.xml

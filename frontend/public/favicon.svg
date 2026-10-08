@@ -1,5 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="16" fill="#55d13b"/>
-  <path d="M18 40c8-18 17-24 28-26-3 11-9 22-24 31l-4-5Z" fill="#fff8e8"/>
-  <circle cx="43" cy="21" r="4" fill="#173326"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="CSCAPilot">
+  <defs>
+    <linearGradient id="g" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2f67ff"/>
+      <stop offset="1" stop-color="#10bfa4"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="15" fill="url(#g)"/>
+  <path d="M14 18.5C20 15.5 26 16 32 20v27c-5.5-4-11.5-5-18-3V18.5Zm36 0C44 15.5 38 16 32 20v27c5.5-4 11.5-5 18-3V18.5Z" fill="#fff" fill-opacity=".96"/>
+  <path d="m32 10 2.3 5.2L40 17.5l-5.7 2.3L32 25l-2.3-5.2-5.7-2.3 5.7-2.3L32 10Z" fill="#ffd15a"/>
 </svg>

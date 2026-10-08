@@ -600,6 +600,17 @@
   flex: 0 0 auto;
 }
 
+.site-brand-parent {
+  flex: 0 0 auto;
+  padding-left: 10px;
+  border-left: 1px solid rgba(71, 84, 106, .22);
+  color: #5f6c80;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+
 .site-brand-mark,
 .site-footer-brand .site-brand-mark,
 .site-footer-home .site-footer-brand .site-brand-mark {
@@ -1376,6 +1387,7 @@
 }
 
 @media (max-width: 760px) {
+  .site-brand-parent { display: none; }
   .organization-invite-page {
     width: min(100%, calc(100vw - 28px));
     padding-top: 28px;
