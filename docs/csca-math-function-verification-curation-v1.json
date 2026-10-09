@@ -1,0 +1,80 @@
+{
+  "schemaVersion": "1",
+  "curationId": "math-function-verification-v1",
+  "topicCode": "M-FUNC-001",
+  "reviewPolicy": "independent-content-scope-and-answer-recomputation-v1",
+  "questions": [
+    {
+      "contentHash": "b3412a60a7003e277701160bbf177f3661cbc89bde48383a2b9e8349ab5f5535",
+      "expectedAnswer": "A",
+      "taskFamily": "inverse_restriction",
+      "explanation": "抛物线的顶点横坐标为 -2。在区间 [-2,∞) 上函数单调递增，因此可逆；若 c<-2，区间会同时包含顶点两侧，不能保持一一对应。"
+    },
+    {
+      "contentHash": "f4026aa0218fc1bda85bb7210491b1989f06ea9c9df33ec88e548cb7bc93233b",
+      "expectedAnswer": "D",
+      "taskFamily": "nested_rational_domain",
+      "explanation": "原式逐层要求 x≠0、x≠-1 且 2x+1≠0，所以排除 0、-1、-1/2，三者之和为 -3/2。"
+    },
+    {
+      "contentHash": "619687ddc6a8b86cdc912c8fb76d83c87ef432ee92f49a45aa9a7ef9929e03c9",
+      "expectedAnswer": "D",
+      "taskFamily": "linear_context_model",
+      "explanation": "两个完整备课时段可批改 2×20=40 份，在家 x 小时可批改 10x 份，总数为 40+10x。"
+    },
+    {
+      "contentHash": "9e17233533dbd5ca4c3fba81bbfb6a7d67b3c50ad0446d7e683f26e2ebce8675",
+      "expectedAnswer": "C",
+      "taskFamily": "radical_rational_domain",
+      "explanation": "分母中的根式必须严格大于 0：(x-4)(x+1)>0，因此 x<-1 或 x>4。"
+    },
+    {
+      "contentHash": "bfd17c752af2ef0b9465de8b261d979627f51b7842efc6fc62eee7080823830b",
+      "expectedAnswer": "A",
+      "taskFamily": "radical_intersection_domain",
+      "explanation": "两个根式分别要求 -5≤x≤5 和 x≤2，交集为 [-5,2]，区间宽度为 2-(-5)=7。"
+    },
+    {
+      "contentHash": "7151d83bb107dbe3d96a8f4cd2e9f6c8107351e98ec89e509e85b2f378877498",
+      "expectedAnswer": "A",
+      "taskFamily": "period_scaling",
+      "explanation": "f 的最小正周期为 20。对 f(x/5)，自变量需要增加 5×20=100 才使函数内部增加一个周期。"
+    },
+    {
+      "contentHash": "793662ea60f906e36eb901530c706a27c7c68d1cd84e00e41c1e856cb961648c",
+      "expectedAnswer": "A",
+      "taskFamily": "polynomial_zero_structure",
+      "explanation": "f(x)=(x+2)(x-3)(x+3)，零点为 -3、-2、3，因此方程 f(x)=0 有三个实数解。"
+    },
+    {
+      "contentHash": "6828c75bc21f50f99067b9d285c8b6f265fbc97d6afe7a02f4b84096f7237a44",
+      "expectedAnswer": "C",
+      "taskFamily": "iterated_function_composition",
+      "explanation": "计算可得 g(f(x))=x-1。每一组 g∘f 使数值减 1，重复 8 组后由 12 变为 4。"
+    },
+    {
+      "contentHash": "834fcb40d5a66b611e9b03296fdf5b6cb30addf6128318c2f0b0b313a7fdd264",
+      "expectedAnswer": "D",
+      "taskFamily": "trigonometric_range_transform",
+      "explanation": "sin(2x) 的定义域仍为全体实数；乘以 3 后值域由 [-1,1] 变为 [-3,3]，即值域扩大为原来的 3 倍。"
+    },
+    {
+      "contentHash": "16d27ae4fd88ae157158dc788cbd79ea96a0320b58c1e53e2f9a15c885ef85a9",
+      "expectedAnswer": "D",
+      "taskFamily": "trigonometric_range",
+      "explanation": "sin(π-x)=sin x，且 sin x∈[-1,1]，所以 y=5+3sin x 的值域为 [2,8]。"
+    },
+    {
+      "contentHash": "e6cb2fcdbffdd636d9ffa47a5aad8b44feb3ac4e051c1f2d7faefdd64fb8e00e",
+      "expectedAnswer": "B",
+      "taskFamily": "inverse_composition",
+      "explanation": "f⁻¹(2)=4 等价于 f(4)=2；又 f(2)=4，所以 f(f(2))=f(4)=2。"
+    },
+    {
+      "contentHash": "e7b8de5a962a16a00fa7069823272ea597d827bdd2d6438026e117cc70715890",
+      "expectedAnswer": "A",
+      "taskFamily": "linear_injectivity",
+      "explanation": "斜率非零的一次函数是一一对应的。c<d 意味着 c≠d，因此必有 f(c)≠f(d)，等式 f(c)=f(d) 必为假。"
+    }
+  ]
+}

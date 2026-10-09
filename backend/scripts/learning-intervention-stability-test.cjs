@@ -25,7 +25,12 @@ function verification(phase, overrides = {}) {
 
 function trustedQuestion(id, skill) {
   return {
-    id, version: 1, questionType: 'single-choice', knowledgeTags: ['函数'],
+    id, version: 1, sourceType: 'manual', questionType: 'single-choice',
+    options: [
+      { id: 'A', text: '1' }, { id: 'B', text: '2' },
+      { id: 'C', text: '3' }, { id: 'D', text: '4' }
+    ],
+    correctAnswer: 'A', knowledgeTags: ['函数'],
     generationMetadata: null, reviewMetadata: null, blueprint: skill ? { skill } : null,
     designedDifficulty: '中等', empiricalDifficulty: null, difficultyConfidence: null,
     qualityMetric: null, topic: { id: 11, code: 'FUNC', title: '函数' }

@@ -11,6 +11,7 @@ RUN npm ci && npm --prefix backend ci
 
 FROM deps AS build
 COPY scripts ./scripts
+COPY docs/csca-math-function-verification-curation-v1.json ./docs/csca-math-function-verification-curation-v1.json
 COPY question-engine ./question-engine
 COPY backend ./backend
 RUN npm --prefix backend run build

@@ -23,11 +23,15 @@ function row(overrides = {}) {
 }
 
 async function testStrictUnexposedSelection() {
+  const options = [
+    { id: 'A', text: '1' }, { id: 'B', text: '2' },
+    { id: 'C', text: '3' }, { id: 'D', text: '4' }
+  ];
   const prisma = {
     cscaQuestion: { findMany: async () => [
-      { id: 1, version: 2, questionType: 'single-choice', knowledgeTags: ['函数'], blueprint: { skill: 'direct' }, designedDifficulty: '中等', empiricalDifficulty: null, difficultyConfidence: null, qualityMetric: null, topic: { id: 11, code: 'FUNC', title: '函数' } },
-      { id: 2, version: 1, questionType: 'single-choice', knowledgeTags: ['函数'], blueprint: { skill: 'direct' }, designedDifficulty: '中等', empiricalDifficulty: null, difficultyConfidence: null, qualityMetric: { needsReview: true }, topic: { id: 11, code: 'FUNC', title: '函数' } },
-      { id: 3, version: 1, questionType: 'single-choice', knowledgeTags: ['函数图像'], blueprint: { skill: 'graph' }, designedDifficulty: '较难', empiricalDifficulty: null, difficultyConfidence: null, qualityMetric: null, topic: { id: 11, code: 'FUNC', title: '函数' } }
+      { id: 1, version: 2, sourceType: 'manual', questionType: 'single-choice', options, correctAnswer: 'A', knowledgeTags: ['函数'], blueprint: { skill: 'direct' }, designedDifficulty: '中等', empiricalDifficulty: null, difficultyConfidence: null, qualityMetric: null, topic: { id: 11, code: 'FUNC', title: '函数' } },
+      { id: 2, version: 1, sourceType: 'manual', questionType: 'single-choice', options, correctAnswer: 'B', knowledgeTags: ['函数'], blueprint: { skill: 'direct' }, designedDifficulty: '中等', empiricalDifficulty: null, difficultyConfidence: null, qualityMetric: { needsReview: true }, topic: { id: 11, code: 'FUNC', title: '函数' } },
+      { id: 3, version: 1, sourceType: 'manual', questionType: 'single-choice', options, correctAnswer: 'C', knowledgeTags: ['函数图像'], blueprint: { skill: 'graph' }, designedDifficulty: '较难', empiricalDifficulty: null, difficultyConfidence: null, qualityMetric: null, topic: { id: 11, code: 'FUNC', title: '函数' } }
     ] },
     cscaQuestionExposure: { findMany: async () => [{ questionId: 1 }] },
     assessmentItemExposure: { findMany: async () => [] },
@@ -35,6 +39,34 @@ async function testStrictUnexposedSelection() {
   };
   const selected = await new AdaptiveQuestionProviderService(prisma).pickIndependentVerificationQuestions(42, 11, 3);
   assert.deepEqual(selected.map((item) => item.questionId), [3]);
+}
+
+async function testExternalOerPracticeAliasDoesNotBypassVerificationReview() {
+  const options = [
+    { id: 'A', text: '1' }, { id: 'B', text: '2' },
+    { id: 'C', text: '3' }, { id: 'D', text: '4' }
+  ];
+  const prisma = {
+    cscaQuestion: { findMany: async () => [
+      {
+        id: 10, version: 1, sourceType: 'external_oer', questionType: 'single_choice', options, correctAnswer: 'A',
+        knowledgeTags: ['函数'], blueprint: null, designedDifficulty: '中等', empiricalDifficulty: null,
+        difficultyConfidence: null, qualityMetric: null, topic: { id: 11, code: 'FUNC', title: '函数' },
+        reviewMetadata: { externalImport: { publicationScope: 'ordinary_practice_only', contentReviewed: false, answerRecomputed: false } }
+      },
+      {
+        id: 11, version: 1, sourceType: 'external_oer', questionType: 'single_choice', options, correctAnswer: 'B',
+        knowledgeTags: ['函数图像'], blueprint: { skill: 'graph' }, designedDifficulty: '中等', empiricalDifficulty: null,
+        difficultyConfidence: null, qualityMetric: null, topic: { id: 11, code: 'FUNC', title: '函数' },
+        reviewMetadata: { externalImport: { publicationScope: 'independent_verification', contentReviewed: true, answerRecomputed: true } }
+      }
+    ] },
+    cscaQuestionExposure: { findMany: async () => [] },
+    assessmentItemExposure: { findMany: async () => [] },
+    learningEvidenceEvent: { findMany: async () => [] }
+  };
+  const selected = await new AdaptiveQuestionProviderService(prisma).pickIndependentVerificationQuestions(42, 11, 3);
+  assert.deepEqual(selected.map((item) => item.questionId), [11]);
 }
 
 async function testShortageAndMockSuppression() {
@@ -147,6 +179,7 @@ function testIsolationAndLeakageGuards() {
 
 async function main() {
   await testStrictUnexposedSelection();
+  await testExternalOerPracticeAliasDoesNotBypassVerificationReview();
   await testShortageAndMockSuppression();
   await testStartReplayAndOutcomeEvidence();
   await testSuccessfulStartConfirmsRecoveredSupply();

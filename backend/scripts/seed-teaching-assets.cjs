@@ -3,18 +3,18 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const catalog = [
-  ['DEMO-MATH-FUNCTIONS', 'visualizer.math.trigonometry', '三角函数与单位圆', '拖动角度，同时观察单位圆坐标与三角函数曲线。', '角度变化与 sin、cos、tan 图像之间的对应关系'],
-  ['DEMO-MATH-FUNCTIONS', 'visualizer.math.function-transform', '函数图像变换', '调节参数，比较平移、伸缩和翻转前后的函数图像。', '参数变化如何改变函数图像的位置和形状'],
-  ['DEMO-MATH-FUNCTIONS', 'visualizer.math.elementary-functions', '基本初等函数', '比较一次、二次、指数、对数和幂函数的典型图像。', '不同函数族的定义域、值域与增长特征'],
-  ['DEMO-MATH-FUNCTIONS', 'visualizer.math.inequality-solutions', '不等式解集', '改变系数和不等号，观察数轴与函数图像上的解集。', '不等式符号、零点与解集区间之间的关系'],
-  ['DEMO-MATH-FUNCTIONS', 'visualizer.math.sequence', '数列变化规律', '切换等差与等比数列，观察项值和公差、公比的影响。', '递推参数如何影响数列的增长模式'],
-  ['DEMO-MATH-FUNCTIONS', 'visualizer.math.probability', '概率收敛模拟', '重复随机试验，观察频率如何逐渐接近理论概率。', '试验次数增加时频率与概率的关系'],
-  ['DEMO-MATH-FUNCTIONS', 'visualizer.math.calculus', '导数与积分', '移动观察点和积分区间，连接斜率、切线与面积。', '导数的局部变化率和积分的累积量含义'],
-  ['DEMO-MATH-FUNCTIONS', 'visualizer.math.set-operations', '集合运算', '调整集合并切换交、并、差和补集，高亮对应区域。', '集合运算符与维恩图区域的对应关系'],
-  ['DEMO-MATH-GEOMETRY', 'visualizer.math.vector-operations', '向量运算', '改变向量方向和长度，观察加减法与数量积。', '向量分量、合向量和夹角之间的关系'],
-  ['DEMO-MATH-GEOMETRY', 'visualizer.math.conic-sections', '圆锥曲线', '切换椭圆、抛物线与双曲线，比较参数和几何特征。', '方程参数与焦点、顶点和渐近线的关系'],
-  ['DEMO-MATH-GEOMETRY', 'visualizer.math.coordinate-geometry', '解析几何', '拖动关键点，观察直线、距离、斜率和坐标变化。', '几何位置如何转化为坐标与代数关系'],
-  ['DEMO-MATH-GEOMETRY', 'visualizer.math.solid-geometry', '立体几何', '旋转并比较常见立体，观察截面、表面积与体积。', '空间形状、尺寸与截面之间的关系'],
+  ['M-FUNC-002', 'visualizer.math.trigonometry', '三角函数与单位圆', '拖动角度，同时观察单位圆坐标与三角函数曲线。', '角度变化与 sin、cos、tan 图像之间的对应关系'],
+  ['M-FUNC-001', 'visualizer.math.function-transform', '函数图像变换', '调节参数，比较平移、伸缩和翻转前后的函数图像。', '参数变化如何改变函数图像的位置和形状'],
+  ['M-FUNC-002', 'visualizer.math.elementary-functions', '基本初等函数', '比较一次、二次、指数、对数和幂函数的典型图像。', '不同函数族的定义域、值域与增长特征'],
+  ['M-INEQ-001', 'visualizer.math.inequality-solutions', '不等式解集', '改变系数和不等号，观察数轴与函数图像上的解集。', '不等式符号、零点与解集区间之间的关系'],
+  ['M-SEQ-001', 'visualizer.math.sequence', '数列变化规律', '切换等差与等比数列，观察项值和公差、公比的影响。', '递推参数如何影响数列的增长模式'],
+  ['M-PROB-001', 'visualizer.math.probability', '概率收敛模拟', '重复随机试验，观察频率如何逐渐接近理论概率。', '试验次数增加时频率与概率的关系'],
+  ['M-CALC-001', 'visualizer.math.calculus', '导数与积分', '移动观察点和积分区间，连接斜率、切线与面积。', '导数的局部变化率和积分的累积量含义'],
+  ['M-SET-001', 'visualizer.math.set-operations', '集合运算', '调整集合并切换交、并、差和补集，高亮对应区域。', '集合运算符与维恩图区域的对应关系'],
+  ['M-ALG-001', 'visualizer.math.vector-operations', '向量运算', '改变向量方向和长度，观察加减法与数量积。', '向量分量、合向量和夹角之间的关系'],
+  ['M-GEO-001', 'visualizer.math.conic-sections', '圆锥曲线', '切换椭圆、抛物线与双曲线，比较参数和几何特征。', '方程参数与焦点、顶点和渐近线的关系'],
+  ['M-GEO-001', 'visualizer.math.coordinate-geometry', '解析几何', '拖动关键点，观察直线、距离、斜率和坐标变化。', '几何位置如何转化为坐标与代数关系'],
+  ['M-GEO-002', 'visualizer.math.solid-geometry', '立体几何', '旋转并比较常见立体，观察截面、表面积与体积。', '空间形状、尺寸与截面之间的关系'],
   ['DEMO-PHYSICS-MECHANICS', 'visualizer.physics.kinematics-graphs', '运动学图像', '调节运动参数，联动观察位移、速度和加速度图像。', 'x-t、v-t 与 a-t 图像之间的对应关系'],
   ['DEMO-PHYSICS-MECHANICS', 'visualizer.physics.newton-second-law', '牛顿第二定律', '改变合力与质量，实时观察加速度的变化。', '合力、质量和加速度之间的定量关系'],
   ['DEMO-PHYSICS-MECHANICS', 'visualizer.physics.energy-conservation', '机械能守恒', '调节初始条件，观察动能、势能与机械能的转换。', '动能和势能转化时总机械能的变化'],
@@ -66,8 +66,15 @@ async function main() {
   const topicCodes = [...new Set(catalog.map(([topicCode]) => topicCode).filter(Boolean))];
   const topics = await prisma.cscaExamTopic.findMany({ where: { code: { in: topicCodes }, status: 'published' } });
   const topicByCode = new Map(topics.map((topic) => [topic.code, topic]));
+  const legacyDemoTopics = await prisma.cscaExamTopic.findMany({
+    where: { code: { in: ['DEMO-MATH-FUNCTIONS', 'DEMO-MATH-GEOMETRY'] } },
+    select: { id: true }
+  });
+  const legacyDemoTopicIds = legacyDemoTopics.map((topic) => topic.id);
   const missing = topicCodes.filter((code) => !topicByCode.has(code));
-  if (missing.length) throw new Error(`Published topics are missing: ${missing.join(', ')}`);
+  if (missing.length) {
+    console.warn(`Teaching assets will remain draft where published topics are missing: ${missing.join(', ')}`);
+  }
 
   for (const [topicCode, componentKey, title, summary, focus] of catalog) {
     const topic = topicCode ? topicByCode.get(topicCode) : null;
@@ -95,6 +102,14 @@ async function main() {
       }
     });
     if (topic) {
+      // These catalog entries used to share broad DEMO topics. Remove only
+      // those seed-owned legacy bindings; never delete manually curated
+      // production bindings to other real syllabus topics.
+      if (componentKey.startsWith('visualizer.math.') && legacyDemoTopicIds.length) {
+        await prisma.teachingAssetTopic.deleteMany({
+          where: { assetId: asset.id, relationship: 'primary', topicId: { in: legacyDemoTopicIds } }
+        });
+      }
       await prisma.teachingAssetTopic.upsert({
         where: { assetId_topicId_relationship: { assetId: asset.id, topicId: topic.id, relationship: 'primary' } },
         create: { assetId: asset.id, topicId: topic.id, relationship: 'primary', sortOrder: 0 },
@@ -103,7 +118,7 @@ async function main() {
     }
   }
 
-  const published = catalog.filter(([topicCode]) => topicCode).length;
+  const published = catalog.filter(([topicCode]) => topicCode && topicByCode.has(topicCode)).length;
   console.log(`Registered ${catalog.length} teaching assets; published ${published} across ${topics.length} topics (${catalog.length - published} awaiting topic bindings).`);
 }
 

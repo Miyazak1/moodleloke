@@ -16,7 +16,7 @@ function loadDatabaseUrl() {
 
 function reasonsFor(row) {
   const reasons = [];
-  if (row.questionType !== 'single-choice') reasons.push('question_type_not_single_choice');
+  if (String(row.questionType ?? '').replaceAll('_', '-') !== 'single-choice') reasons.push('question_type_not_single_choice');
   if (!Array.isArray(row.options)) return [...reasons, 'options_not_array'];
   const valid = row.options.filter((option) => {
     return option && typeof option === 'object' && !Array.isArray(option)
@@ -36,8 +36,10 @@ function short(value, max = 100) {
 
 function selfTest() {
   const valid = { questionType: 'single-choice', options: ['A', 'B', 'C', 'D'].map((id) => ({ id, text: id })), correctAnswer: 'A' };
+  const importedAlias = { ...valid, questionType: 'single_choice' };
   const ten = { ...valid, options: Array.from({ length: 10 }, (_, index) => ({ id: String(index), text: String(index) })) };
   if (reasonsFor(valid).length) throw new Error('valid four-option fixture was rejected');
+  if (reasonsFor(importedAlias).length) throw new Error('valid imported single_choice alias was rejected');
   if (!reasonsFor(ten).includes('option_count_not_four')) throw new Error('ten-option fixture was not rejected');
   console.log('external OER quarantine eligibility self-test: ok');
 }

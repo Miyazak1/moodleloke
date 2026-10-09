@@ -441,9 +441,19 @@ async function run() {
     AGENT_WEB_ENABLED: 'true', CSCA_AGENT_PRACTICE_WRITE_ENABLED: 'true', AI_GATEWAY_ENABLED: 'true', AI_DEFAULT_PROVIDER: 'deepseek',
     DEEPSEEK_PERSONAL_API_KEYS: 'private-key-must-not-leak', DEEPSEEK_PERSONAL_DEFAULT_MODEL: 'deepseek-flash',
     CSCA_AI_QUESTION_GENERATION_ENABLED: 'false', CSCA_AI_QUESTIONING_SCHEDULER_ENABLED: 'false',
-    CSCA_SUBJECT_PRACTICE_PRODUCTION_ENABLED: 'false', CSCA_SUBJECT_PRACTICE_PREDICTIVE_REPLENISHMENT_ENABLED: 'false'
+    CSCA_SUBJECT_PRACTICE_PRODUCTION_ENABLED: 'false', CSCA_SUBJECT_PRACTICE_PREDICTIVE_REPLENISHMENT_ENABLED: 'false',
+    CSCA_AGENT_FOUNDATION_ENABLED: 'true', CSCA_LEARNING_EVIDENCE_WRITE_ENABLED: 'true',
+    CSCA_LEARNING_SHADOW_PROJECTION_ENABLED: 'true', CSCA_TARGET_GAP_ENABLED: 'true',
+    CSCA_LEARNING_PRESCRIPTION_ENABLED: 'true', CSCA_LEARNING_INTERVENTION_SHADOW_ENABLED: 'true',
+    CSCA_LEARNING_INTERVENTION_DELIVERY_ENABLED: 'false', CSCA_LEARNING_INTERVENTION_VERIFICATION_ENABLED: 'false',
+    CSCA_AGENT_TEACHING_ASSET_ENABLED: 'true', CSCA_AGENT_TEACHING_ASSET_ROUTING_MODE: 'shadow',
+    CSCA_AGENT_TEACHING_ASSET_ROUTING_ACTIVE_SUBJECTS: '', CSCA_AGENT_TEACHING_ASSET_ROUTING_ACTIVE_PERCENT: '0'
   });
   assert.equal(integrationReady.status, 'ready');
+  assert.equal(integrationReady.learningLoop.interventionShadowEnabled, true);
+  assert.equal(integrationReady.learningLoop.interventionDeliveryEnabled, false);
+  assert.equal(integrationReady.learningLoop.teachingRoutingMode, 'shadow');
+  assert.equal(integrationReady.learningLoop.teachingRoutingActivePercent, 0);
   assert.equal(JSON.stringify(integrationReady).includes('private-key-must-not-leak'), false, 'integration readiness must not leak provider credentials');
   process.env.NODE_ENV = 'test';
   process.env.MOODLELIKE_ENV = 'production';

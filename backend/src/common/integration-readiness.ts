@@ -14,6 +14,14 @@ function keyPoolConfigured(value: string | undefined) {
 export function getStudentAgentIntegrationReadiness(env: NodeJS.ProcessEnv = process.env) {
   const hostMode = String(env.MOODLELIKE_HOST_INTEGRATION_MODE || 'standalone').trim().toLowerCase();
   const model = String(env.DEEPSEEK_PERSONAL_DEFAULT_MODEL || env.DEEPSEEK_DEFAULT_MODEL || '').trim();
+  const configuredRoutingMode = String(env.CSCA_AGENT_TEACHING_ASSET_ROUTING_MODE || 'legacy').trim().toLowerCase();
+  const teachingRoutingMode = configuredRoutingMode === 'active' || configuredRoutingMode === 'shadow'
+    ? configuredRoutingMode
+    : 'legacy';
+  const rolloutPercentValue = Number(env.CSCA_AGENT_TEACHING_ASSET_ROUTING_ACTIVE_PERCENT || 0);
+  const teachingRoutingActivePercent = Number.isFinite(rolloutPercentValue)
+    ? Math.max(0, Math.min(100, Math.floor(rolloutPercentValue)))
+    : 0;
   const checks = {
     hostModeValid: hostMode === 'standalone' || hostMode === 'cscalite',
     contractVersionValid: env.MOODLELIKE_HOST_CONTRACT_VERSION === 'cscalite-agent-host-v1',
@@ -33,6 +41,21 @@ export function getStudentAgentIntegrationReadiness(env: NodeJS.ProcessEnv = pro
     hostMode,
     contractVersion: env.MOODLELIKE_HOST_CONTRACT_VERSION || null,
     model: model || null,
-    checks
+    checks,
+    learningLoop: {
+      foundationEnabled: enabled(env.CSCA_AGENT_FOUNDATION_ENABLED),
+      evidenceWriteEnabled: enabled(env.CSCA_LEARNING_EVIDENCE_WRITE_ENABLED),
+      shadowProjectionEnabled: enabled(env.CSCA_LEARNING_SHADOW_PROJECTION_ENABLED),
+      targetGapEnabled: enabled(env.CSCA_TARGET_GAP_ENABLED),
+      prescriptionEnabled: enabled(env.CSCA_LEARNING_PRESCRIPTION_ENABLED),
+      interventionShadowEnabled: enabled(env.CSCA_LEARNING_INTERVENTION_SHADOW_ENABLED),
+      interventionDeliveryEnabled: enabled(env.CSCA_LEARNING_INTERVENTION_DELIVERY_ENABLED),
+      interventionVerificationEnabled: enabled(env.CSCA_LEARNING_INTERVENTION_VERIFICATION_ENABLED),
+      teachingAssetEnabled: enabled(env.CSCA_AGENT_TEACHING_ASSET_ENABLED),
+      teachingRoutingMode,
+      teachingRoutingActiveSubjects: String(env.CSCA_AGENT_TEACHING_ASSET_ROUTING_ACTIVE_SUBJECTS || '')
+        .split(',').map((value) => value.trim()).filter(Boolean),
+      teachingRoutingActivePercent
+    }
   };
 }

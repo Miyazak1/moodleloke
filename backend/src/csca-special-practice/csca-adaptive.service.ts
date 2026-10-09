@@ -15,7 +15,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { AdaptivePlannerService } from './adaptive-planner.service';
 import { decideAdaptiveLearning } from './adaptive-learning-decision.policy';
 import { AdaptiveQuestionProviderService, trustedQuestionTransferSignature } from './adaptive-question-provider.service';
-import { isStandardStudentChoiceQuestion } from './student-question-eligibility';
+import { isIndependentVerificationQuestion } from './student-question-eligibility';
 import {
   ADAPTIVE_EXPOSURE_SOURCE,
   ADAPTIVE_DIAGNOSTIC_ROUND_SIZE,
@@ -449,7 +449,7 @@ export class CscaAdaptiveService {
           AND (
             q."source_type" <> 'external_oer'
             OR (
-              q."question_type" = 'single-choice'
+              REPLACE(q."question_type", '_', '-') = 'single-choice'
               AND jsonb_typeof(q."options") = 'array'
               AND jsonb_array_length(q."options") = 4
               AND (
@@ -657,7 +657,7 @@ export class CscaAdaptiveService {
     if (input.questions.some((item) => {
       const row = trustedMap.get(item.questionId);
       return row?.version !== item.questionVersion || row?.qualityMetric?.needsReview
-        || (row?.sourceType === 'external_oer' && !isStandardStudentChoiceQuestion(row));
+        || (row ? !isIndependentVerificationQuestion(row) : true);
     })) {
       throw new ConflictException({ code: 'INTERVENTION_VERIFICATION_SUPPLY_CHANGED', message: '验证题状态已变化，请重新获取方案。' });
     }

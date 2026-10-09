@@ -6,11 +6,20 @@
 
 ## 当前注册能力
 
-| Registry key | 类型 | 展示面 |
-| --- | --- | --- |
-| `math.function-horizontal-shift@1` | 交互模拟 | assistant |
-| `physics.newton-second-law@1` | 交互模拟 | assistant |
-| `chemistry.acid-base-neutralization@1` | 交互模拟 | assistant |
+运行时白名单当前包含两组能力：
+
+- 3 个原生 Micro Lesson：`math.function-horizontal-shift@1`、`physics.newton-second-law@1`、`chemistry.acid-base-neutralization@1`；
+- 35 个复用现有可视化器的 TeachingAsset 组件，覆盖数学、物理和化学。完整键集合以 `backend/src/agent/teaching-asset-registry.ts` 和 `frontend/src/components/agent/TeachingVisualizerCatalog.tsx` 为准。
+
+组件进入白名单不代表已经生产发布。数据库版本仍必须通过正式知识点绑定、审核、发布和题源验证门。第一批已修正的正式绑定为：
+
+| 正式知识点 | Registry key | 类型 | 展示面 |
+| --- | --- | --- | --- |
+| `M-FUNC-001` 函数的概念与性质 | `visualizer.math.function-transform@1` | 交互模拟 | assistant |
+| `M-FUNC-002` 基本初等函数 | `visualizer.math.elementary-functions@1` | 交互模拟 | assistant |
+| `M-INEQ-001` 不等式的基本性质与解法 | `visualizer.math.inequality-solutions@1` | 交互模拟 | assistant |
+
+首个生产验收门只覆盖 `M-FUNC-001`。另两个绑定保留为后续扩展，等待各自题源达到最低容量。
 
 ## 契约
 
@@ -24,3 +33,7 @@
 ## 扩展新类型
 
 新增动画或视频时，需要同时完成：后端 payload schema、后端 capability registry、前端 renderer registry、管理端审核预览、互动事件策略和契约测试。不得在 AgentPage 内新增按组件名判断的分支。
+
+## 生产门禁
+
+运行 `node scripts/agent-teaching-production-readiness.cjs` 查看只读报告；发布流水线追加 `--strict` 启用失败退出。门禁复用正式独立验证选题器，检查每个目标知识点的发布资产、可用题量以及即时、保持和迁移三阶段供应，不调用自动出题，也不修改数据库。

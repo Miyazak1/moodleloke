@@ -5,7 +5,7 @@ import {
 import { isStudentConsumableAiVersionStatus } from '../ai-questioning/question-version-governance';
 import { PrismaService } from '../prisma/prisma.service';
 import { ADAPTIVE_EXPOSURE_SOURCE, AdaptivePlannedQuestion, AdaptivePlannedTopic, IndependentVerificationQuestion } from './csca-adaptive.types';
-import { isStandardStudentChoiceQuestion } from './student-question-eligibility';
+import { isIndependentVerificationQuestion, isStandardStudentChoiceQuestion } from './student-question-eligibility';
 
 type CandidateQuestion = {
   id: number;
@@ -162,7 +162,7 @@ export class AdaptiveQuestionProviderService {
     const excludedSignatures = new Set(constraints.excludedTransferSignatures ?? []);
     const allowed = candidates.filter((item) => {
       if (item.qualityMetric?.needsReview || excludedRefs.includes(`csca_question:${item.id}:v${item.version}`)) return false;
-      if (item.sourceType === 'external_oer' && !isStandardStudentChoiceQuestion(item)) return false;
+      if (!isIndependentVerificationQuestion(item)) return false;
       const signature = trustedQuestionTransferSignature(item);
       return !constraints.requireDifferentTransferSignature || Boolean(signature && !excludedSignatures.has(signature));
     });

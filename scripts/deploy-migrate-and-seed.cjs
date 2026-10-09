@@ -19,6 +19,8 @@ try {
   run('Prisma migrate deploy', ['scripts/prisma-cli.cjs', 'migrate', 'deploy']);
   run('Ensure mock exams', ['scripts/ensure-mock-exams.cjs']);
   run('Ensure special practice', ['scripts/ensure-special-practice.cjs']);
+  run('Publish reviewed teaching assets', ['backend/scripts/seed-teaching-assets.cjs']);
+  run('Apply reviewed math function verification curation', ['scripts/apply-math-function-verification-curation.cjs', '--apply', '--allow-absent']);
 } catch (error) {
   console.error(error.message);
   process.exitCode = 1;
