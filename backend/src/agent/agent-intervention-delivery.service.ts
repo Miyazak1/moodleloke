@@ -1,7 +1,7 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { z } from 'zod';
-import { LearningIntelligenceFeatureFlagsService } from '../learning-intelligence/learning-intelligence-feature-flags.service';
+import { InterventionRolloutEligibility, LearningIntelligenceFeatureFlagsService } from '../learning-intelligence/learning-intelligence-feature-flags.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { AgentTeachingAssetService } from './agent-teaching-asset.service';
 
@@ -41,6 +41,8 @@ function isPlaceholderContent(...values: unknown[]) {
 
 @Injectable()
 export class AgentInterventionDeliveryService {
+  private readonly logger = new Logger(AgentInterventionDeliveryService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly flags: LearningIntelligenceFeatureFlagsService,
@@ -90,6 +92,44 @@ export class AgentInterventionDeliveryService {
 
   private includeIntervention() {
     return { intervention: true } as const;
+  }
+
+  private async rolloutEligibility(userId: number, intervention: { subjectCode: string; topicId: number }) {
+    const topic = await this.prisma.cscaExamTopic.findUnique({
+      where: { id: intervention.topicId }, select: { code: true }
+    });
+    if (!topic) return {
+      eligible: false, mode: this.flags.interventionRolloutMode(), subjectCode: intervention.subjectCode,
+      topicCode: '', bucket: null, percent: this.flags.interventionRollout().percent,
+      reasonCodes: ['TOPIC_NOT_FOUND']
+    };
+    return this.flags.interventionRolloutEligibility(userId, intervention.subjectCode, topic.code);
+  }
+
+  private async recordRolloutDecision(
+    userId: number,
+    requestId: string,
+    subjectCode: string,
+    topicCode: string,
+    rollout: InterventionRolloutEligibility
+  ) {
+    try {
+      const prior = await this.prisma.cscaTrainingEvent.findFirst({
+        where: {
+          userId, eventType: 'learning_intervention_rollout_decision', source: 'agent',
+          metadata: { path: ['requestId'], equals: requestId }
+        },
+        select: { id: true }
+      });
+      if (!prior) await this.prisma.cscaTrainingEvent.create({
+        data: {
+          userId, subject: subjectCode, eventType: 'learning_intervention_rollout_decision', source: 'agent',
+          metadata: { schemaVersion: '1', ...rollout, requestId, topicCode }
+        }
+      });
+    } catch (error) {
+      this.logger.warn(`Intervention rollout decision could not be recorded: ${error instanceof Error ? error.message : String(error)}`);
+    }
   }
 
   async get(userId: number, deliveryId: string) {
@@ -169,6 +209,10 @@ export class AgentInterventionDeliveryService {
       include: this.includeIntervention(), orderBy: { updatedAt: 'desc' }
     });
     if (existing) {
+      const rollout = await this.rolloutEligibility(userId, existing.intervention);
+      if (existing.status !== 'in_progress' && !rollout.eligible) {
+        return { schemaVersion: OFFER_SCHEMA_VERSION, item: null, suppressedReason: 'ROLLOUT_NOT_ELIGIBLE' };
+      }
       const existingContent = jsonObject(existing.contentSnapshot);
       if (isPlaceholderContent(existingContent.title, existingContent.body, existingContent.topicTitle, existing.contentSourceId)) {
         return { schemaVersion: OFFER_SCHEMA_VERSION, item: null, suppressedReason: 'PLACEHOLDER_CONTENT_REJECTED' };
@@ -198,11 +242,34 @@ export class AgentInterventionDeliveryService {
       orderBy: { createdAt: 'desc' }, take: 20
     });
     const urgencyRank: Record<string, number> = { high: 3, medium: 2, low: 1 };
-    const proposal = proposals.sort((left, right) =>
+    const ranked = proposals.sort((left, right) =>
       (urgencyRank[right.urgency] ?? 0) - (urgencyRank[left.urgency] ?? 0)
       || right.createdAt.getTime() - left.createdAt.getTime()
-    )[0];
-    if (!proposal) return { schemaVersion: OFFER_SCHEMA_VERSION, item: null, suppressedReason: null };
+    );
+    const topics = await this.prisma.cscaExamTopic.findMany({
+      where: { id: { in: [...new Set(ranked.map((item) => item.topicId))] } }, select: { id: true, code: true }
+    });
+    const topicCodes = new Map(topics.map((item) => [item.id, item.code]));
+    const candidates = ranked.map((item) => ({
+      item,
+      rollout: this.flags.interventionRolloutEligibility(userId, item.subjectCode, topicCodes.get(item.topicId) ?? '')
+    }));
+    const selected = candidates.find((item) => item.rollout.eligible);
+    const observed = selected ?? candidates[0];
+    if (observed) await this.recordRolloutDecision(
+      userId,
+      input.clientRequestId,
+      observed.item.subjectCode,
+      topicCodes.get(observed.item.topicId) ?? '',
+      observed.rollout
+    );
+    const proposal = selected?.item;
+    if (!proposal) return {
+      schemaVersion: OFFER_SCHEMA_VERSION,
+      item: null,
+      suppressedReason: ranked.length ? 'ROLLOUT_NOT_ELIGIBLE' : null
+    };
+    const rollout = selected.rollout;
     const content = await this.resolveContent(userId, proposal.topicId, proposal.subjectCode, input.language, proposal.contentPlan, { type: 'proactive_intervention', key: `intervention:${proposal.id}` });
     let delivery: any;
     try {
@@ -220,6 +287,7 @@ export class AgentInterventionDeliveryService {
             schemaVersion: '1', context: input.context, conversationId: input.conversationId ?? null,
             proposalPlacement: proposal.placement, automaticQuestionGenerationInvoked: false,
             aiExplanationGenerated: false, masteryMutationAllowed: false,
+            interventionRollout: rollout,
             teachingAssetSelection: content?.sourceType === 'teaching_asset' ? jsonObject(content.snapshot.teachingAsset).selectionDecision ?? null : null
           }
         },
@@ -269,6 +337,12 @@ export class AgentInterventionDeliveryService {
     const canFinishExisting = delivery.status === 'in_progress' && ['complete', 'defer', 'skip'].includes(input.action);
     if (!this.flags.isEnabled('interventionDelivery') && !canFinishExisting) {
       throw new ServiceUnavailableException({ code: 'LEARNING_INTERVENTION_DELIVERY_DISABLED', message: '学习讲解建议暂未开放。' });
+    }
+    if (input.action === 'start') {
+      const rollout = await this.rolloutEligibility(userId, delivery.intervention);
+      if (!rollout.eligible) {
+        throw new ServiceUnavailableException({ code: 'LEARNING_INTERVENTION_ROLLOUT_NOT_ELIGIBLE', message: '学习讲解建议暂未对当前账号开放。' });
+      }
     }
     if (await this.hasActiveFormalMock(userId)) {
       throw new ConflictException({ code: 'FORMAL_MOCK_ACTIVE', message: '正式模考期间不会展示或推进知识讲解。' });

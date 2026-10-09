@@ -2,6 +2,7 @@ const assert = require('node:assert/strict');
 
 const contracts = require('../dist/backend/src/learning-intelligence/contracts/learning-intelligence.contracts.js');
 const { LearningIntelligenceFeatureFlagsService } = require('../dist/backend/src/learning-intelligence/learning-intelligence-feature-flags.service.js');
+const { AgentRuntimeFeatureFlagsService } = require('../dist/backend/src/agent/agent-runtime-feature-flags.service.js');
 const fixtures = require('../dist/backend/src/learning-intelligence/testing/fixtures.js');
 
 contracts.LearningEvidenceEventV1Schema.parse(fixtures.fixedLearningEvidenceEvent);
@@ -89,6 +90,47 @@ const verificationEnabled = new LearningIntelligenceFeatureFlagsService({
   CSCA_LEARNING_INTERVENTION_VERIFICATION_ENABLED: 'true'
 });
 assert.equal(verificationEnabled.isEnabled('interventionVerification'), true);
+
+const internalRollout = new LearningIntelligenceFeatureFlagsService({
+  CSCA_LEARNING_INTERVENTION_ROLLOUT_MODE: 'internal',
+  CSCA_LEARNING_INTERVENTION_INTERNAL_USER_IDS: '7,11,invalid',
+  CSCA_LEARNING_INTERVENTION_ACTIVE_SUBJECTS: 'math',
+  CSCA_LEARNING_INTERVENTION_ACTIVE_TOPIC_CODES: 'M-FUNC-001'
+});
+assert.equal(internalRollout.interventionRolloutEligibility(7, 'math', 'M-FUNC-001').eligible, true);
+assert.equal(internalRollout.interventionRolloutEligibility(8, 'math', 'M-FUNC-001').eligible, false);
+assert.equal(internalRollout.interventionRolloutEligibility(7, 'physics', 'M-FUNC-001').eligible, false);
+assert.equal(internalRollout.interventionRolloutEligibility(7, 'math', 'M-FUNC-002').eligible, false);
+
+const canaryRollout = new LearningIntelligenceFeatureFlagsService({
+  CSCA_LEARNING_INTERVENTION_ROLLOUT_MODE: 'canary',
+  CSCA_LEARNING_INTERVENTION_ACTIVE_SUBJECTS: 'math',
+  CSCA_LEARNING_INTERVENTION_ACTIVE_TOPIC_CODES: 'M-FUNC-001',
+  CSCA_LEARNING_INTERVENTION_ACTIVE_PERCENT: '5'
+});
+const canaryDecisions = Array.from({ length: 500 }, (_, index) => canaryRollout.interventionRolloutEligibility(index + 1, 'math', 'M-FUNC-001'));
+assert(canaryDecisions.some((item) => item.eligible), 'Stable canary bucketing must include a bounded learner cohort.');
+assert(canaryDecisions.some((item) => !item.eligible), 'Stable canary bucketing must exclude learners outside the cohort.');
+assert.deepEqual(
+  canaryRollout.interventionRolloutEligibility(42, 'math', 'M-FUNC-001'),
+  canaryRollout.interventionRolloutEligibility(42, 'math', 'M-FUNC-001'),
+  'Canary assignment must be stable for the same learner.'
+);
+const teachingCanary = new AgentRuntimeFeatureFlagsService({
+  AGENT_WEB_ENABLED: 'true',
+  CSCA_AGENT_PRACTICE_WRITE_ENABLED: 'true',
+  CSCA_AGENT_TEACHING_ASSET_ENABLED: 'true',
+  CSCA_AGENT_TEACHING_ASSET_ROUTING_MODE: 'active',
+  CSCA_AGENT_TEACHING_ASSET_ROUTING_ACTIVE_SUBJECTS: 'math',
+  CSCA_AGENT_TEACHING_ASSET_ROUTING_ACTIVE_PERCENT: '5'
+});
+for (let userId = 1; userId <= 500; userId += 1) {
+  assert.equal(
+    canaryRollout.interventionRolloutEligibility(userId, 'math', 'M-FUNC-001').eligible,
+    teachingCanary.teachingAssetRoutingModeFor(userId, 'math') === 'active',
+    'Intervention and TeachingAsset Canary assignment must use the same stable learner bucket.'
+  );
+}
 
 const incompleteDecisionFlags = new LearningIntelligenceFeatureFlagsService({
   CSCA_AGENT_FOUNDATION_ENABLED: 'true',

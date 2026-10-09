@@ -1,5 +1,5 @@
 import { Injectable, Optional } from '@nestjs/common';
-import { createHash } from 'node:crypto';
+import { stableLearningRolloutBucket } from '../common/stable-rollout-bucket';
 
 function enabled(value: string | undefined): boolean {
   return String(value ?? '').trim().toLowerCase() === 'true';
@@ -40,7 +40,7 @@ export class AgentRuntimeFeatureFlagsService {
     if (configured !== 'active') return configured;
     const rollout = this.teachingAssetRoutingRollout();
     if (!rollout.subjects.includes(subject) || rollout.percent <= 0) return 'shadow';
-    const bucket = createHash('sha256').update(`teaching-routing-rollout-v1:${userId}`).digest().readUInt16BE(0) % 100;
+    const bucket = stableLearningRolloutBucket(userId);
     return bucket < rollout.percent ? 'active' : 'shadow';
   }
 

@@ -36,4 +36,4 @@
 
 ## 生产门禁
 
-运行 `node scripts/agent-teaching-production-readiness.cjs` 查看只读报告；发布流水线追加 `--strict` 启用失败退出。门禁复用正式独立验证选题器，检查每个目标知识点的发布资产、可用题量以及即时、保持和迁移三阶段供应，不调用自动出题，也不修改数据库。
+运行 `node scripts/agent-teaching-production-readiness.cjs` 查看只读报告；发布流水线追加 `--strict --expect-stage shadow|internal|canary` 启用对应阶段的失败退出。Internal 阶段要求非空用户白名单并把范围精确限制为 `math + M-FUNC-001`；Canary 阶段使用干预和教学资产共享的稳定用户分桶，首次比例限制为 1%–5%。门禁复用正式独立验证选题器，检查每个目标知识点的发布资产、可用题量以及即时、保持和迁移三阶段供应，不调用自动出题，也不修改数据库。

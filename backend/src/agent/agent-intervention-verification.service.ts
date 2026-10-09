@@ -75,6 +75,19 @@ export class AgentInterventionVerificationService {
     return { sourceDelivery: { include: { intervention: true, stabilityAssessment: true } }, outcome: true } as const;
   }
 
+  private async rolloutEligibleDeliveries(userId: number, deliveries: Array<{ intervention: { subjectCode: string; topicId: number } }>) {
+    const topics = await this.prisma.cscaExamTopic.findMany({
+      where: { id: { in: [...new Set(deliveries.map((item) => item.intervention.topicId))] } },
+      select: { id: true, code: true }
+    });
+    const topicCodes = new Map(topics.map((item) => [item.id, item.code]));
+    return deliveries.filter((item) => this.flags.interventionRolloutEligibility(
+      userId,
+      item.intervention.subjectCode,
+      topicCodes.get(item.intervention.topicId) ?? ''
+    ).eligible);
+  }
+
   private serialize(item: any) {
     const refs = questionRefs(item.questionRefs);
     const snapshot = jsonObject(item.supplySnapshot);
@@ -303,10 +316,14 @@ export class AgentInterventionVerificationService {
         : null;
       return { schemaVersion: '2', item: ['recommended', 'starting', 'started'].includes(existing.status) ? this.serialize(existing) : null, shortage, nextDueAt: null };
     }
-    const delivery = await this.prisma.learningInterventionDelivery.findFirst({
+    const completedDeliveries = await this.prisma.learningInterventionDelivery.findMany({
       where: { userId, status: 'completed', verifications: { none: {} } },
-      include: { intervention: true }, orderBy: { completedAt: 'desc' }
+      include: { intervention: true }, orderBy: { completedAt: 'desc' }, take: 20
     });
+    const delivery = (await this.rolloutEligibleDeliveries(userId, completedDeliveries))[0];
+    if (!delivery && completedDeliveries.length) {
+      return { schemaVersion: '2', item: null, shortage: null, nextDueAt: null, suppressedReason: 'ROLLOUT_NOT_ELIGIBLE' };
+    }
     if (!delivery) return { schemaVersion: '2', item: null, shortage: null, nextDueAt: null };
     const created = await this.createImmediate(userId, delivery, input);
     return {

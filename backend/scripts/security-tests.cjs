@@ -452,6 +452,12 @@ async function run() {
   assert.equal(integrationReady.status, 'ready');
   assert.equal(integrationReady.learningLoop.interventionShadowEnabled, true);
   assert.equal(integrationReady.learningLoop.interventionDeliveryEnabled, false);
+  assert.equal(integrationReady.learningLoop.interventionRolloutMode, 'shadow');
+  assert.equal(integrationReady.learningLoop.interventionRolloutBucketVersion, 'csca-learning-rollout-v1');
+  assert.equal(integrationReady.learningLoop.interventionRolloutInternalUserCount, 0);
+  assert.deepEqual(integrationReady.learningLoop.interventionRolloutActiveSubjects, []);
+  assert.deepEqual(integrationReady.learningLoop.interventionRolloutActiveTopicCodes, []);
+  assert.equal(integrationReady.learningLoop.interventionRolloutActivePercent, 0);
   assert.equal(integrationReady.learningLoop.teachingRoutingMode, 'shadow');
   assert.equal(integrationReady.learningLoop.teachingRoutingActivePercent, 0);
   assert.equal(JSON.stringify(integrationReady).includes('private-key-must-not-leak'), false, 'integration readiness must not leak provider credentials');

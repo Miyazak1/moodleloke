@@ -1,3 +1,5 @@
+import { LEARNING_ROLLOUT_BUCKET_VERSION } from './stable-rollout-bucket';
+
 function enabled(value: string | undefined) {
   return String(value ?? '').trim().toLowerCase() === 'true';
 }
@@ -11,6 +13,15 @@ function keyPoolConfigured(value: string | undefined) {
   return String(value ?? '').split(',').map((item) => item.trim()).some((item) => present(item));
 }
 
+function list(value: string | undefined) {
+  return [...new Set(String(value ?? '').split(',').map((item) => item.trim()).filter(Boolean))];
+}
+
+function percent(value: string | undefined) {
+  const parsed = Number(String(value ?? '0').trim());
+  return Number.isFinite(parsed) ? Math.max(0, Math.min(100, Math.floor(parsed))) : 0;
+}
+
 export function getStudentAgentIntegrationReadiness(env: NodeJS.ProcessEnv = process.env) {
   const hostMode = String(env.MOODLELIKE_HOST_INTEGRATION_MODE || 'standalone').trim().toLowerCase();
   const model = String(env.DEEPSEEK_PERSONAL_DEFAULT_MODEL || env.DEEPSEEK_DEFAULT_MODEL || '').trim();
@@ -22,6 +33,10 @@ export function getStudentAgentIntegrationReadiness(env: NodeJS.ProcessEnv = pro
   const teachingRoutingActivePercent = Number.isFinite(rolloutPercentValue)
     ? Math.max(0, Math.min(100, Math.floor(rolloutPercentValue)))
     : 0;
+  const interventionRolloutModeValue = String(env.CSCA_LEARNING_INTERVENTION_ROLLOUT_MODE || 'shadow').trim().toLowerCase();
+  const interventionRolloutMode = interventionRolloutModeValue === 'internal' || interventionRolloutModeValue === 'canary'
+    ? interventionRolloutModeValue
+    : 'shadow';
   const checks = {
     hostModeValid: hostMode === 'standalone' || hostMode === 'cscalite',
     contractVersionValid: env.MOODLELIKE_HOST_CONTRACT_VERSION === 'cscalite-agent-host-v1',
@@ -51,6 +66,13 @@ export function getStudentAgentIntegrationReadiness(env: NodeJS.ProcessEnv = pro
       interventionShadowEnabled: enabled(env.CSCA_LEARNING_INTERVENTION_SHADOW_ENABLED),
       interventionDeliveryEnabled: enabled(env.CSCA_LEARNING_INTERVENTION_DELIVERY_ENABLED),
       interventionVerificationEnabled: enabled(env.CSCA_LEARNING_INTERVENTION_VERIFICATION_ENABLED),
+      interventionRolloutMode,
+      interventionRolloutBucketVersion: LEARNING_ROLLOUT_BUCKET_VERSION,
+      interventionRolloutInternalUserCount: new Set(list(env.CSCA_LEARNING_INTERVENTION_INTERNAL_USER_IDS)
+        .map(Number).filter((value) => Number.isInteger(value) && value > 0)).size,
+      interventionRolloutActiveSubjects: list(env.CSCA_LEARNING_INTERVENTION_ACTIVE_SUBJECTS),
+      interventionRolloutActiveTopicCodes: list(env.CSCA_LEARNING_INTERVENTION_ACTIVE_TOPIC_CODES),
+      interventionRolloutActivePercent: percent(env.CSCA_LEARNING_INTERVENTION_ACTIVE_PERCENT),
       teachingAssetEnabled: enabled(env.CSCA_AGENT_TEACHING_ASSET_ENABLED),
       teachingRoutingMode,
       teachingRoutingActiveSubjects: String(env.CSCA_AGENT_TEACHING_ASSET_ROUTING_ACTIVE_SUBJECTS || '')

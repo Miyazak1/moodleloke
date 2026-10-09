@@ -20,8 +20,8 @@ function parseArgs(argv) {
   if (!Number.isInteger(options.minimumQuestions) || options.minimumQuestions < 9) {
     throw new Error('--minimum-questions must be an integer of at least 9.');
   }
-  if (!['auto', 'shadow', 'canary'].includes(options.expectedStage)) {
-    throw new Error('--expect-stage must be one of: auto, shadow, canary.');
+  if (!['auto', 'shadow', 'internal', 'canary'].includes(options.expectedStage)) {
+    throw new Error('--expect-stage must be one of: auto, shadow, internal, canary.');
   }
   return options;
 }
@@ -35,7 +35,7 @@ Options:
   --json                    Print JSON only.
   --strict                  Exit non-zero when the slice is not ready.
   --minimum-questions <n>   Required eligible fresh questions per topic (default: 12).
-  --expect-stage <stage>    Validate auto, shadow, or canary rollout configuration (default: auto).
+  --expect-stage <stage>    Validate auto, shadow, internal, or canary rollout configuration (default: auto).
   -h, --help                Show this help.`);
 }
 
@@ -62,34 +62,71 @@ function activeSubjects(value) {
   return [...new Set(String(value ?? '').split(',').map((item) => item.trim()).filter(Boolean))];
 }
 
+function positiveUserIds(value) {
+  return [...new Set(activeSubjects(value).map(Number).filter((item) => Number.isInteger(item) && item > 0))];
+}
+
 function evaluateRolloutConfiguration(env, expectedStage = 'auto') {
   const mode = routingMode(env.CSCA_AGENT_TEACHING_ASSET_ROUTING_MODE);
   const subjects = activeSubjects(env.CSCA_AGENT_TEACHING_ASSET_ROUTING_ACTIVE_SUBJECTS);
   const percent = rolloutPercent(env.CSCA_AGENT_TEACHING_ASSET_ROUTING_ACTIVE_PERCENT);
+  const interventionModeRaw = String(env.CSCA_LEARNING_INTERVENTION_ROLLOUT_MODE ?? 'shadow').trim().toLowerCase();
+  const interventionMode = ['shadow', 'internal', 'canary'].includes(interventionModeRaw) ? interventionModeRaw : 'shadow';
+  const interventionSubjects = activeSubjects(env.CSCA_LEARNING_INTERVENTION_ACTIVE_SUBJECTS);
+  const interventionTopicCodes = activeSubjects(env.CSCA_LEARNING_INTERVENTION_ACTIVE_TOPIC_CODES);
+  const interventionPercent = rolloutPercent(env.CSCA_LEARNING_INTERVENTION_ACTIVE_PERCENT);
+  const internalUserCount = positiveUserIds(env.CSCA_LEARNING_INTERVENTION_INTERNAL_USER_IDS).length;
   const delivery = enabled(env.CSCA_LEARNING_INTERVENTION_DELIVERY_ENABLED);
   const verification = enabled(env.CSCA_LEARNING_INTERVENTION_VERIFICATION_ENABLED);
-  const inferredStage = mode === 'active' ? 'canary' : 'shadow';
+  const inferredStage = interventionMode;
   const stage = expectedStage === 'auto' ? inferredStage : expectedStage;
   const blockers = [];
 
-  if (!percent.valid) blockers.push('ROLLOUT_PERCENT_INVALID');
+  if (!percent.valid) blockers.push('TEACHING_ROLLOUT_PERCENT_INVALID');
+  if (!interventionPercent.valid) blockers.push('INTERVENTION_ROLLOUT_PERCENT_INVALID');
+  if (interventionModeRaw !== interventionMode) blockers.push('INTERVENTION_ROLLOUT_MODE_INVALID');
   if (verification && !delivery) blockers.push('VERIFICATION_REQUIRES_DELIVERY');
 
   if (stage === 'shadow') {
+    if (interventionMode !== 'shadow') blockers.push('SHADOW_REQUIRES_SHADOW_INTERVENTION_ROLLOUT');
     if (mode !== 'shadow') blockers.push('SHADOW_REQUIRES_SHADOW_ROUTING');
     if (delivery) blockers.push('SHADOW_REQUIRES_DELIVERY_DISABLED');
     if (verification) blockers.push('SHADOW_REQUIRES_VERIFICATION_DISABLED');
     if (subjects.length) blockers.push('SHADOW_REQUIRES_NO_ACTIVE_SUBJECTS');
     if (percent.value !== 0) blockers.push('SHADOW_REQUIRES_ZERO_PERCENT');
+    if (interventionSubjects.length || interventionTopicCodes.length) blockers.push('SHADOW_REQUIRES_NO_INTERVENTION_SCOPE');
+    if (interventionPercent.value !== 0) blockers.push('SHADOW_REQUIRES_ZERO_INTERVENTION_PERCENT');
+  } else if (stage === 'internal') {
+    if (interventionMode !== 'internal') blockers.push('INTERNAL_REQUIRES_INTERNAL_INTERVENTION_ROLLOUT');
+    if (mode !== 'shadow') blockers.push('INTERNAL_REQUIRES_SHADOW_TEACHING_ROUTING');
+    if (!delivery) blockers.push('INTERNAL_REQUIRES_DELIVERY_ENABLED');
+    if (!verification) blockers.push('INTERNAL_REQUIRES_VERIFICATION_ENABLED');
+    if (internalUserCount < 1) blockers.push('INTERNAL_USER_ALLOWLIST_EMPTY');
+    if (interventionSubjects.length !== 1 || interventionSubjects[0] !== 'math') blockers.push('INTERNAL_SCOPE_MUST_BE_MATH_ONLY');
+    if (interventionTopicCodes.length !== 1 || interventionTopicCodes[0] !== 'M-FUNC-001') blockers.push('INTERNAL_TOPIC_MUST_BE_M_FUNC_001');
+    if (interventionPercent.value !== 0) blockers.push('INTERNAL_PERCENT_MUST_BE_ZERO');
+    if (subjects.length || percent.value !== 0) blockers.push('INTERNAL_TEACHING_ACTIVE_SCOPE_MUST_BE_EMPTY');
   } else {
+    if (interventionMode !== 'canary') blockers.push('CANARY_REQUIRES_CANARY_INTERVENTION_ROLLOUT');
     if (mode !== 'active') blockers.push('CANARY_REQUIRES_ACTIVE_ROUTING');
     if (!delivery) blockers.push('CANARY_REQUIRES_DELIVERY_ENABLED');
     if (!verification) blockers.push('CANARY_REQUIRES_VERIFICATION_ENABLED');
     if (subjects.length !== 1 || subjects[0] !== 'math') blockers.push('CANARY_SCOPE_MUST_BE_MATH_ONLY');
-    if (percent.value < 1 || percent.value > 5) blockers.push('CANARY_PERCENT_MUST_BE_1_TO_5');
+    if (interventionSubjects.length !== 1 || interventionSubjects[0] !== 'math') blockers.push('CANARY_INTERVENTION_SCOPE_MUST_BE_MATH_ONLY');
+    if (interventionTopicCodes.length !== 1 || interventionTopicCodes[0] !== 'M-FUNC-001') blockers.push('CANARY_TOPIC_MUST_BE_M_FUNC_001');
+    if (percent.value < 1 || percent.value > 5 || interventionPercent.value < 1 || interventionPercent.value > 5) blockers.push('CANARY_PERCENT_MUST_BE_1_TO_5');
+    if (percent.value !== interventionPercent.value) blockers.push('CANARY_ROLLOUT_PERCENT_MISMATCH');
   }
 
-  return { stage, inferredStage, mode, subjects, percent: percent.value, percentRaw: percent.raw, delivery, verification, blockers };
+  return {
+    stage, inferredStage, delivery, verification,
+    teaching: { mode, subjects, percent: percent.value, percentRaw: percent.raw },
+    intervention: {
+      mode: interventionMode, internalUserCount, subjects: interventionSubjects,
+      topicCodes: interventionTopicCodes, percent: interventionPercent.value, percentRaw: interventionPercent.raw
+    },
+    blockers
+  };
 }
 
 function questionRef(item) {
@@ -274,6 +311,7 @@ async function main() {
       interventionShadow: enabled(process.env.CSCA_LEARNING_INTERVENTION_SHADOW_ENABLED),
       interventionDelivery: enabled(process.env.CSCA_LEARNING_INTERVENTION_DELIVERY_ENABLED),
       interventionVerification: enabled(process.env.CSCA_LEARNING_INTERVENTION_VERIFICATION_ENABLED),
+      interventionRolloutMode: String(process.env.CSCA_LEARNING_INTERVENTION_ROLLOUT_MODE ?? 'shadow').trim().toLowerCase(),
       teachingAsset: enabled(process.env.CSCA_AGENT_TEACHING_ASSET_ENABLED),
       teachingRoutingMode: routingMode(process.env.CSCA_AGENT_TEACHING_ASSET_ROUTING_MODE),
       teachingRoutingActiveSubjects: activeSubjects(process.env.CSCA_AGENT_TEACHING_ASSET_ROUTING_ACTIVE_SUBJECTS),
@@ -285,6 +323,14 @@ async function main() {
     }
     if (featureFlags.teachingRoutingMode === 'legacy') flagBlockers.push('TEACHING_ROUTING_NOT_IN_SHADOW');
     const rollout = evaluateRolloutConfiguration(process.env, options.expectedStage);
+    if (rollout.stage === 'internal') {
+      const internalUserIds = positiveUserIds(process.env.CSCA_LEARNING_INTERVENTION_INTERNAL_USER_IDS);
+      const activeInternalUserCount = await prisma.user.count({
+        where: { id: { in: internalUserIds }, status: 'active' }
+      });
+      rollout.intervention.activeInternalUserCount = activeInternalUserCount;
+      if (activeInternalUserCount !== internalUserIds.length) rollout.blockers.push('INTERNAL_USERS_NOT_FOUND_OR_INACTIVE');
+    }
 
     const blockers = [
       ...flagBlockers,
@@ -305,7 +351,7 @@ async function main() {
     if (options.json) console.log(JSON.stringify(report, null, 2));
     else {
       console.log(`Math functions teaching slice: ${report.status}`);
-      console.log(`Feature mode: intervention=${featureFlags.interventionShadow ? 'shadow' : 'off'}, delivery=${featureFlags.interventionDelivery}, verification=${featureFlags.interventionVerification}, routing=${featureFlags.teachingRoutingMode}, subjects=${rollout.subjects.join(',') || '-'}, percent=${rollout.percent}`);
+      console.log(`Feature mode: intervention=${featureFlags.interventionShadow ? 'shadow' : 'off'}, delivery=${featureFlags.interventionDelivery}, verification=${featureFlags.interventionVerification}, rollout=${rollout.intervention.mode}, interventionSubjects=${rollout.intervention.subjects.join(',') || '-'}, interventionTopics=${rollout.intervention.topicCodes.join(',') || '-'}, interventionPercent=${rollout.intervention.percent}, teachingRouting=${rollout.teaching.mode}, teachingSubjects=${rollout.teaching.subjects.join(',') || '-'}, teachingPercent=${rollout.teaching.percent}`);
       for (const target of targets) {
         console.log(`${target.status === 'ready' ? 'PASS' : 'BLOCK'} ${target.topicCode} ${target.label}: asset=${target.asset?.status ?? 'missing'}, practice=${target.supply.practiceEligible}/${target.supply.required}, verification=${target.supply.verificationEligible}/${target.supply.required}, phases=${target.supply.immediate}/${target.supply.retention}/${target.supply.transfer}`);
         for (const blocker of target.blockers) console.log(`  - ${blocker}`);
@@ -326,4 +372,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { activeSubjects, evaluateRolloutConfiguration, parseArgs, rolloutPercent, routingMode };
+module.exports = { activeSubjects, evaluateRolloutConfiguration, parseArgs, positiveUserIds, rolloutPercent, routingMode };

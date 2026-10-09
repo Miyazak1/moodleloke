@@ -9,6 +9,16 @@ const delivery = {
   intervention: { id: 'intervention-1', subjectCode: 'math', topicId: 11, reasonSummary: '函数概念反复出错。' }
 };
 
+function rolloutFlags(eligible = true) {
+  return {
+    isEnabled: () => true,
+    interventionRolloutEligibility: (_userId, subjectCode, topicCode) => ({
+      eligible, mode: 'internal', subjectCode, topicCode, bucket: null, percent: 0,
+      reasonCodes: eligible ? [] : ['USER_NOT_INTERNAL']
+    })
+  };
+}
+
 function row(overrides = {}) {
   return {
     id: 'verification-1', deliveryId: delivery.id, interventionId: delivery.interventionId, userId: 42,
@@ -80,13 +90,16 @@ async function testShortageAndMockSuppression() {
       findMany: async () => [],
       create: async ({ data }) => { saved = row({ ...data }); return saved; }
     },
-    learningInterventionDelivery: { findFirst: async () => delivery },
-    cscaExamTopic: { findFirst: async () => ({ title: '函数' }) },
+    learningInterventionDelivery: { findMany: async () => [delivery] },
+    cscaExamTopic: {
+      findFirst: async () => ({ title: '函数' }),
+      findMany: async () => [{ id: 11, code: 'M-FUNC-001' }]
+    },
     learningInterventionStabilityAssessment: { findUnique: async () => null, upsert: async ({ create }) => create }
   };
   prisma.$transaction = async (callback) => callback(prisma);
   const service = new AgentInterventionVerificationService(
-    prisma, { isEnabled: () => true }, { pickIndependentVerificationQuestions: async () => [] },
+    prisma, rolloutFlags(), { pickIndependentVerificationQuestions: async () => [] },
     { createInterventionVerificationRound: async () => { throw new Error('generator-like round creation must not run during offer'); } },
     { async recordBestEffort(input) { supplyRequests.push(input); } }
   );
@@ -102,6 +115,22 @@ async function testShortageAndMockSuppression() {
   assert.equal(supplyRequests[0].availableCount, 0);
   prisma.mockExamAttempt.findFirst = async () => ({ id: 9 });
   await assert.rejects(() => service.offer(42, { clientRequestId: 'mock-request-1' }), /正式模考/);
+}
+
+async function testExcludedDeliveryCannotCreateVerification() {
+  let created = false;
+  const prisma = {
+    mockExamAttempt: { findFirst: async () => null },
+    learningInterventionVerification: { findFirst: async () => null },
+    learningInterventionDelivery: { findMany: async () => [delivery] },
+    cscaExamTopic: { findMany: async () => [{ id: 11, code: 'M-FUNC-001' }] }
+  };
+  prisma.learningInterventionVerification.create = async () => { created = true; };
+  const service = new AgentInterventionVerificationService(prisma, rolloutFlags(false), {}, {});
+  const result = await service.offer(42, { clientRequestId: 'excluded-verification-1' });
+  assert.equal(result.item, null);
+  assert.equal(result.suppressedReason, 'ROLLOUT_NOT_ELIGIBLE');
+  assert.equal(created, false, 'An excluded delivery must not create an independent verification task.');
 }
 
 async function testStartReplayAndOutcomeEvidence() {
@@ -181,6 +210,7 @@ async function main() {
   await testStrictUnexposedSelection();
   await testExternalOerPracticeAliasDoesNotBypassVerificationReview();
   await testShortageAndMockSuppression();
+  await testExcludedDeliveryCannotCreateVerification();
   await testStartReplayAndOutcomeEvidence();
   await testSuccessfulStartConfirmsRecoveredSupply();
   testIsolationAndLeakageGuards();

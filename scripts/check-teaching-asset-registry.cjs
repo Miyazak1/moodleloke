@@ -38,8 +38,8 @@ for (const [topicCode, componentKey] of productionSlice) {
 if (!readiness.includes("topicCode: 'M-FUNC-001'") || !readiness.includes("componentKey: 'visualizer.math.function-transform'")) {
   throw new Error('The first production readiness slice must gate M-FUNC-001 and its function-transform asset.');
 }
-if (!readiness.includes('CANARY_PERCENT_MUST_BE_1_TO_5') || !readiness.includes('SHADOW_REQUIRES_DELIVERY_DISABLED')) {
-  throw new Error('The production readiness gate must enforce safe Shadow and 1%-5% Canary configurations.');
+if (!readiness.includes('CANARY_PERCENT_MUST_BE_1_TO_5') || !readiness.includes('SHADOW_REQUIRES_DELIVERY_DISABLED') || !readiness.includes('INTERNAL_USER_ALLOWLIST_EMPTY') || !readiness.includes('INTERNAL_USERS_NOT_FOUND_OR_INACTIVE')) {
+  throw new Error('The production readiness gate must enforce safe Shadow, allowlisted Internal, and 1%-5% Canary configurations.');
 }
 if (!readinessTest.includes('AGENT_TEACHING_PRODUCTION_READINESS_POLICY_OK')) {
   throw new Error('The production readiness rollout policy must have a contract test.');
