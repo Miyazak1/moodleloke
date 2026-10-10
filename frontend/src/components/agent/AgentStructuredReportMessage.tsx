@@ -93,6 +93,7 @@ export function AgentAdaptiveResultMessage({
       .then((result) => {
         if (!active) return;
         setReport(result);
+        setQuestionsOpen(result.summary.wrongCount >= 2 || (result.summary.wrongCount > 0 && result.summary.total >= 3 && result.summary.accuracy < 60));
         onReportLoaded?.(result);
       })
       .catch(() => { if (active) setError(t('agent.report.loadFailed', '本轮结果暂时无法加载。')); });
@@ -130,6 +131,7 @@ export function AgentAdaptiveResultMessage({
   const evidenceCount = Math.max(0, summary.total - summary.unansweredCount);
   const isDiagnostic = taskType === 'diagnostic';
   const wrongItems = report.items.filter((item) => !item.isCorrect);
+  const significantMistakes = summary.wrongCount >= 2 || (summary.wrongCount > 0 && summary.total >= 3 && summary.accuracy < 60);
   const roundMode = report.round.plannerSnapshot && typeof report.round.plannerSnapshot === 'object' && !Array.isArray(report.round.plannerSnapshot)
     ? (report.round.plannerSnapshot as { mode?: unknown }).mode
     : null;
@@ -232,6 +234,12 @@ export function AgentAdaptiveResultMessage({
           <div><small>{decision ? t('agent.reportVerification.ruleDecision', '规则判断 · 来自真实作答证据') : t('agent.reportVerification.pendingMastery', '掌握判断暂未形成')}</small><strong>{decision?.nextStep.reason ?? t('agent.reportVerification.noAccuracyMastery', '你仍可查看本轮题目，但系统不会仅凭正确率宣布已经掌握。')}</strong></div>
         </div>
 
+        {significantMistakes && !isVerification ? <section className="agent-report-mistake-response" aria-label={t('agent.mistakeResponse.aria', 'Agent 错题响应')}>
+          <header><span><Icon name="lucide:bot-message-square" /></span><div><small>{t('agent.mistakeResponse.kicker', 'Agent 已识别本轮问题')}</small><strong>{t('agent.mistakeResponse.title', '检测到 {count} 道错题，先复盘，再用新题验证').replace('{count}', String(summary.wrongCount))}</strong></div></header>
+          <p>{t('agent.mistakeResponse.body', '下面已经展开本轮错题与解析。看完错误原因后，进入“{topic}”同知识点练习；新题结果会继续更新学习证据。').replace('{topic}', primaryWeakTopic)}</p>
+          <ol><li><b>1</b><span><strong>{t('agent.mistakeResponse.stepReview', '复盘本轮错题')}</strong><small>{t('agent.mistakeResponse.stepReviewBody', '核对你的答案、正确答案和题目解析。')}</small></span></li><li><b>2</b><span><strong>{t('agent.mistakeResponse.stepVerify', '完成同知识点新题')}</strong><small>{t('agent.mistakeResponse.stepVerifyBody', '独立作答，用新证据确认是否真正理解。')}</small></span></li></ol>
+        </section> : null}
+
         {customActions ?? (isVerification ? (
           <div className="agent-report-actions">
             {wrongItems.length ? <button type="button" onClick={openQuestionReview}><Icon name="lucide:book-open-check" />{t('agent.report.reviewFirst', '先看错题')}</button> : null}
@@ -240,8 +248,8 @@ export function AgentAdaptiveResultMessage({
           </div>
         ) : (
           <div className="agent-report-actions">
-            {wrongItems.length ? <button type="button" onClick={openQuestionReview}><Icon name="lucide:book-open-check" />{t('agent.report.reviewFirst', '先看错题')}</button> : null}
-            <button type="button" className="primary" disabled={isContinuing || decision?.nextStep.type === 'delayed_verification'} onClick={runDecisionAction}><Icon name={isContinuing ? 'lucide:loader-circle' : decision?.nextStep.type === 'delayed_verification' ? 'lucide:calendar-clock' : 'lucide:play'} />{isContinuing ? t('agent.report.preparing', '正在准备') : decision?.nextStep.label ?? t('agent.report.nextRound', '继续下一轮')}</button>
+            {wrongItems.length ? <button type="button" onClick={openQuestionReview}><Icon name="lucide:book-open-check" />{significantMistakes ? t('agent.mistakeResponse.reviewButton', '复盘这 {count} 道错题').replace('{count}', String(summary.wrongCount)) : t('agent.report.reviewFirst', '先看错题')}</button> : null}
+            <button type="button" className="primary" disabled={isContinuing || decision?.nextStep.type === 'delayed_verification'} onClick={runDecisionAction}><Icon name={isContinuing ? 'lucide:loader-circle' : decision?.nextStep.type === 'delayed_verification' ? 'lucide:calendar-clock' : 'lucide:play'} />{isContinuing ? t('agent.report.preparing', '正在准备') : significantMistakes && (decision?.nextStep.type === 'review_mistakes' || decision?.nextStep.type === 'targeted_practice') ? t('agent.mistakeResponse.targetedButton', '复盘后练同知识点新题') : decision?.nextStep.label ?? t('agent.report.nextRound', '继续下一轮')}</button>
             {onContinue && (decision?.nextStep.type === 'review_mistakes' || decision?.nextStep.type === 'targeted_practice') ? <button type="button" disabled={isContinuing} onClick={onContinue}><Icon name="lucide:arrow-right" />{t('agent.reportVerification.continueBatch', '继续下一批')}</button> : null}
             {onOpenPlan ? <button type="button" onClick={onOpenPlan}><Icon name="lucide:calendar-range" />{t('agent.reportVerification.viewPlan', '查看学习计划')}</button> : null}
           </div>

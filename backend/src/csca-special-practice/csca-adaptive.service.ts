@@ -1186,9 +1186,10 @@ export class CscaAdaptiveService {
         mastery: masteryMap.get(item.topicId)?.mastery ?? null
       };
     });
-    const weakTopics = items
+    const weakTopics = [...new Map(items
       .filter((item) => item.isUnanswered || item.isCorrect === false)
-      .map((item) => ({ topicId: item.topicId, code: item.topicCode, title: item.topicTitle }));
+      .map((item) => [item.topicId, { topicId: item.topicId, code: item.topicCode, title: item.topicTitle }] as const))
+      .values()];
     const remediationPlan = await this.remediationPlan(userId, round.session.subject as SpecialPracticeSubject, round.items.map((item, index) => ({
       questionId: item.questionId,
       questionSource: item.questionSource || 'special_practice',

@@ -1131,14 +1131,17 @@ test('keeps free-practice defaults separate and preserves the current batch when
   await expect(page.getByLabel('本轮学习报告').getByText('本轮错误会进入复习队列；完成复盘后还需要用新题独立验证。')).toBeVisible();
   await expect(page.getByLabel('本轮学习报告')).toContainText('独立答对2/5');
   await expect(page.getByLabel('本轮学习报告')).toContainText('规则判断 · 来自真实作答证据');
-  await expect(page.getByLabel('本轮学习报告').getByRole('button', { name: '复习本轮错题' })).toBeVisible();
+  const mistakeResponse = page.getByLabel('本轮学习报告').getByLabel('Agent 错题响应');
+  await expect(mistakeResponse).toContainText('检测到 3 道错题，先复盘，再用新题验证');
+  await expect(page.getByLabel('本轮学习报告').getByRole('button', { name: '复盘这 3 道错题' })).toBeVisible();
+  await expect(page.getByLabel('本轮学习报告').getByRole('button', { name: '复盘后练同知识点新题' })).toBeVisible();
   await expect(page.getByLabel('本轮学习报告').getByRole('button', { name: '查看学习计划' })).toBeVisible();
   await expect(page.getByLabel('本轮学习报告').locator('.agent-report-disclosures details').nth(1)).toContainText('查看题目明细1');
   const embeddedSuggestion = page.getByLabel('本轮学习报告').locator('.agent-intervention-card.is-embedded');
   await expect(embeddedSuggestion).toContainText('针对本轮 · 巩固建议');
   await expect(embeddedSuggestion).toContainText('本轮函数与方程错题较集中');
   await expect(page.locator('.agent-intervention-card:not(.is-embedded)')).toHaveCount(0);
-  await expect(page.getByText('一次函数中 x 的系数是斜率。')).toBeHidden();
+  await expect(page.getByText('一次函数中 x 的系数是斜率。')).toBeVisible();
   await expect(page.getByLabel('Agent 学习任务工作区')).toHaveCount(0);
   const reportRail = page.getByRole('complementary', { name: '本轮结果与下一步' });
   if (testInfo.project.name === 'desktop') {
