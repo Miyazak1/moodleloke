@@ -1,5 +1,6 @@
 const assert = require('node:assert/strict');
 const { decideAdaptiveLearning } = require('../dist/backend/src/csca-special-practice/adaptive-learning-decision.policy');
+const { AdaptivePlannerService } = require('../dist/backend/src/csca-special-practice/adaptive-planner.service');
 const { decideWrongPatternVerification } = require('../dist/backend/src/csca-learning/wrong-pattern-verification.policy');
 
 function topic(overrides = {}) {
@@ -90,4 +91,31 @@ assert.equal(failed.resolved, false);
 assert.equal(failed.consecutivePassCount, 0);
 assert.equal(failed.nextReviewDelayDays, 2);
 
-console.log('Adaptive mastery decision tests passed.');
+async function testStrictSingleTopicVerificationPlan() {
+  const prisma = {
+    cscaExamTopic: {
+      findMany: async () => [
+        { id: 47, code: 'functions', title: '函数的概念与性质', module: 'algebra' },
+        { id: 48, code: 'geometry', title: '平面解析几何', module: 'geometry' }
+      ]
+    },
+    userCscaTopicMastery: { findMany: async () => [] }
+  };
+  const planner = new AdaptivePlannerService(prisma);
+  const plan = await planner.planVerificationRound(2, 'math', 5, {
+    topicId: 47,
+    reviewItemId: 71,
+    patternType: 'concept_gap'
+  });
+  assert.equal(plan.mode, 'verification');
+  assert.equal(plan.plannedTopics.length, 5);
+  assert.ok(plan.plannedTopics.every((item) => item.topicId === 47));
+  assert.ok(plan.plannedTopics.every((item) => item.reason === 'wrong_pattern_verification'));
+}
+
+testStrictSingleTopicVerificationPlan()
+  .then(() => console.log('Adaptive mastery decision tests passed.'))
+  .catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });

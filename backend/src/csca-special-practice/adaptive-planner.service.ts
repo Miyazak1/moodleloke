@@ -288,31 +288,18 @@ export class AdaptivePlannerService {
     const focusTopic = verification.topicId
       ? context.candidates.find((topic) => topic.id === verification.topicId)
       : undefined;
-    if (!focusTopic) return this.planRound(userId, subject, limit, verification.topicId);
+    if (!focusTopic) throw new BadRequestException('验证练习必须绑定当前科目的有效知识点。');
 
-    const plannedTopics: AdaptivePlannedTopic[] = [];
-    const verificationCount = Math.min(3, limit);
-    for (let index = 0; index < verificationCount; index += 1) {
-      plannedTopics.push(plannedTopic(focusTopic, 'wrong_pattern_verification', context.adjustment));
-    }
-
-    const weakest = [...context.candidates].sort((a, b) => a.mastery - b.mastery || a.confidence - b.confidence || a.id - b.id);
-    const addFiller = (topic: TopicWithMastery | undefined, reason: string) => {
-      if (!topic || plannedTopics.length >= limit) return;
-      plannedTopics.push(plannedTopic(topic, reason, context.adjustment));
-    };
-    addFiller(weakest.find((topic) => topic.id !== focusTopic.id), 'verification_support_weak_topic');
-    const stale = [...context.candidates].sort((a, b) => {
-      const aTime = a.lastPracticedAt?.getTime() ?? 0;
-      const bTime = b.lastPracticedAt?.getTime() ?? 0;
-      return aTime - bTime || a.id - b.id;
-    });
-    addFiller(stale.find((topic) => topic.id !== focusTopic.id), 'verification_support_stale_topic');
-    for (const topic of weakest) addFiller(topic, 'verification_fill_round');
+    // A verification round is presented as same-topic practice and is settled
+    // against the focus topic. Keep the entire batch on that topic so the
+    // visible round score and the verification score cannot diverge.
+    const plannedTopics = Array.from({ length: limit }, () => (
+      plannedTopic(focusTopic, 'wrong_pattern_verification', context.adjustment)
+    ));
 
     return {
       subject,
-      plannedTopics: plannedTopics.slice(0, limit),
+      plannedTopics,
       strategy: 'wrong_pattern_verification',
       mode: 'verification',
       focus: {
