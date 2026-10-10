@@ -722,7 +722,7 @@ test('reviews a concrete mistake and launches an independently verified targeted
   await page.getByRole('button', { name: '重试读取错题', exact: true }).click();
   await expect.poll(() => wrongQuestionLoads).toBe(2);
   await expect(page.locator('.agent-review-queue > button')).toHaveCount(1);
-  await expect(page.getByText('独立验证 1/2 · 3 次重复错误', { exact: true })).toBeVisible();
+  await expect(page.locator('.agent-review-queue > button')).toContainText('间隔验证已到期 · 1/2');
   await expect(page.getByLabel('具体错题证据')).toContainText('汽车急刹车时乘客向前倾');
   await expect(page.getByLabel('具体错题证据')).toContainText('你的答案 D. 摩擦力');
   await expect(page.locator('.agent-wrong-answer-comparison [data-math-formula="true"]')).toHaveCount(2);
@@ -924,7 +924,7 @@ test('retries a failed journey overview without reloading the Agent workspace', 
   let overviewLoads = 0;
   await page.route((url) => url.pathname === '/api/v1/agent/journey/overview', (route) => {
     overviewLoads += 1;
-    if (overviewLoads === 1) return json(route, { code: 'JOURNEY_OVERVIEW_UNAVAILABLE', message: '学习证据服务暂时不可用。' }, 503);
+    if (overviewLoads <= 2) return json(route, { code: 'JOURNEY_OVERVIEW_UNAVAILABLE', message: '学习证据服务暂时不可用。' }, 503);
     return json(route, {
       schemaVersion: '1', generatedAt: '2026-09-23T08:00:00.000Z',
       goal: null,
@@ -942,7 +942,7 @@ test('retries a failed journey overview without reloading the Agent workspace', 
   await expect(overviewError).toContainText('暂时无法读取');
   await expect(overviewError).not.toContainText('学习证据服务暂时不可用。');
   await page.getByRole('button', { name: '重试读取', exact: true }).click();
-  await expect.poll(() => overviewLoads).toBe(2);
+  await expect.poll(() => overviewLoads).toBe(3);
   await expect(overviewError).toHaveCount(0);
   await expect(page.getByRole('button', { name: '重试读取', exact: true })).toHaveCount(0);
   await expect(page.getByRole('heading', { name: '围绕目标，只保留一个明确的下一步' })).toBeVisible();

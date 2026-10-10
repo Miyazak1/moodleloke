@@ -7,9 +7,28 @@ function record(value: unknown): Record<string, unknown> {
 }
 
 function validDate(value: unknown) {
+  if (value instanceof Date) return Number.isFinite(value.getTime()) ? value : null;
   if (typeof value !== 'string' || !value) return null;
   const date = new Date(value);
   return Number.isFinite(date.getTime()) ? date : null;
+}
+
+export function getWrongPatternVerificationAvailability(input: {
+  status: string;
+  nextReviewAt: Date | string | null;
+  now?: Date;
+}) {
+  const now = input.now ?? new Date();
+  const nextReviewAt = validDate(input.nextReviewAt);
+  const waiting = input.status === 'improving'
+    && Boolean(nextReviewAt)
+    && nextReviewAt!.getTime() > now.getTime();
+  return {
+    allowed: !waiting,
+    due: !waiting,
+    nextReviewAt: nextReviewAt?.toISOString() ?? null,
+    remainingMs: waiting ? nextReviewAt!.getTime() - now.getTime() : 0
+  };
 }
 
 export function decideWrongPatternVerification(input: {

@@ -6,7 +6,7 @@ import {
 import { isStudentConsumableAiVersionStatus } from '../ai-questioning/question-version-governance';
 import { QuestionQualityService } from '../ai-questioning/question-quality.service';
 import { CscaLearningService } from '../csca-learning/csca-learning.service';
-import { WRONG_PATTERN_MINIMUM_TARGET_ITEMS } from '../csca-learning/wrong-pattern-verification.policy';
+import { getWrongPatternVerificationAvailability, WRONG_PATTERN_MINIMUM_TARGET_ITEMS } from '../csca-learning/wrong-pattern-verification.policy';
 import { mapTrustedQuestionEvidence } from '../learning-intelligence/evidence/learning-evidence-mapper';
 import { LEARNING_STATE_MODEL_VERSION, LEARNING_STATE_PROJECTOR_VERSION } from '../learning-intelligence/evidence/learning-evidence-writer.service';
 import { LearningIntelligenceFeatureFlagsService } from '../learning-intelligence/learning-intelligence-feature-flags.service';
@@ -554,6 +554,30 @@ export class CscaAdaptiveService {
         where: { id: focusTopicId, subject: session.subject, status: 'published' }
       });
       if (!focusTopic) throw new BadRequestException('该主题不属于当前自适应训练科目。');
+    }
+    if (verification) {
+      const reviewItem = await this.prisma.cscaWrongPattern.findFirst({
+        where: {
+          id: verification.reviewItemId,
+          userId,
+          subject: session.subject,
+          status: { in: ['active', 'improving'] }
+        },
+        select: { id: true, topicId: true, patternType: true, status: true, nextReviewAt: true }
+      });
+      if (!reviewItem
+        || reviewItem.patternType !== verification.patternType
+        || (verification.topicId && reviewItem.topicId !== verification.topicId)) {
+        throw new ConflictException({ code: 'ADAPTIVE_REVIEW_ITEM_UNAVAILABLE', message: '这项错题复习已经完成或发生变化，请刷新后重试。' });
+      }
+      const availability = getWrongPatternVerificationAvailability(reviewItem);
+      if (!availability.allowed) {
+        throw new ConflictException({
+          code: 'ADAPTIVE_VERIFICATION_NOT_DUE',
+          message: '间隔验证尚未到期，请先完成其他练习。',
+          nextReviewAt: availability.nextReviewAt
+        });
+      }
     }
 
     const basePlan = isDiagnostic

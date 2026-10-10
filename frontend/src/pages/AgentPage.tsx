@@ -1327,7 +1327,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
   }, [currentUser?.id, enabled, isResolvingAuth, journeySection, locale]);
 
   useEffect(() => {
-    if (isResolvingAuth || !currentUser || (journeySection !== 'settings' && journeySection !== 'weakness' && journeySection !== 'resources')) return;
+    if (isResolvingAuth || !currentUser || (journeySection !== 'today' && journeySection !== 'settings' && journeySection !== 'weakness' && journeySection !== 'resources')) return;
     let current = true;
     setIsJourneyOverviewLoading(true);
     setJourneyOverviewError('');
@@ -1868,6 +1868,12 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
   const latestPracticeStage = [...(journeyState?.stages ?? [])]
     .filter((stage) => stage.kind === 'practice' || stage.kind === 'free_practice')
     .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt))[0] ?? null;
+  const dueVerificationItem = (journeyOverview?.weaknesses?.reviewQueue ?? [])
+    .filter((item) => item.status === 'improving'
+      && Boolean(item.dueAt)
+      && new Date(item.dueAt!).getTime() <= Date.now()
+      && (item.consecutiveVerificationPassCount ?? 0) > 0)
+    .sort((left, right) => new Date(left.dueAt!).getTime() - new Date(right.dueAt!).getTime())[0] ?? null;
   const resumedTeachingContextId = resumableWorkspace?.kind === 'teaching'
     && resumableWorkspace.deliveryId === teachingDeliveryId
     ? resumableWorkspace.conversationId
@@ -2804,6 +2810,12 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
               <p>{resumableWorkspace ? resumableBody : t('agent.context.body', '根据你的目标、真实作答和当前题源安排下一步。')}</p></div>
               <span className={isSending ? 'agent-live-status running agent-workbench-status' : 'agent-live-status agent-workbench-status'} role="status" aria-live="polite"><i />{isSending ? runStatus : t('agent.status.ready', '学习数据已连接')}</span>
             </section>
+            {!resumableWorkspace && dueVerificationItem ? <section className="agent-learning-entry-card agent-due-verification-card" data-state="due-verification">
+              <div><span><Icon name="lucide:calendar-check-2" /></span><div><small>{t('agent.spacedVerification.due', '间隔验证已到期')}</small><strong>{subjectLabel(dueVerificationItem.subject, t)} · {dueVerificationItem.title}</strong></div></div>
+              <p>{t('agent.spacedVerification.dueBody', '现在可以用同知识点新题完成第二次独立验证。')}</p>
+              <div className="agent-due-verification-progress"><span>{t('agent.spacedVerification.progress', '独立验证进度')}</span><b>{dueVerificationItem.consecutiveVerificationPassCount ?? 1}/{dueVerificationItem.requiredConsecutiveVerificationPassCount ?? 2}</b></div>
+              <button type="button" disabled={isStartingFreePractice || isStartingLearning} onClick={() => void beginFreePractice({ subject: dueVerificationItem.subject, questionCount: 3, ...(dueVerificationItem.topicId ? { focusTopicId: dueVerificationItem.topicId } : {}), reviewItemId: Number(dueVerificationItem.reviewItemId), patternType: dueVerificationItem.patternType })}><Icon name={isStartingFreePractice ? 'lucide:loader-circle' : 'lucide:refresh-cw'} />{isStartingFreePractice ? t('agent.freePractice.starting', '正在准备题目') : t('agent.spacedVerification.startDue', '开始到期验证')}</button>
+            </section> : null}
             {resumableWorkspace && <section className="agent-learning-entry-card agent-primary-learning-card" data-state="resume">
               <div><span><Icon name="lucide:rotate-ccw" /></span><div><small>{t('agent.learningEntry.interrupted', '上次学习尚未完成')}</small><strong>{`${subjectLabel(resumableSubject, t)} · ${taskLabel(resumableTaskType, t)}`}</strong></div></div>
               {resumableStage?.metrics.allocatedQuestionCount ? <div className="agent-resume-progress"><span><b>{resumableStage.metrics.answeredQuestionCount}</b>/{resumableStage.metrics.allocatedQuestionCount} {t('agent.freePractice.questions', '题')}</span><i><em style={{ width: `${Math.min(100, Math.round((resumableStage.metrics.answeredQuestionCount / resumableStage.metrics.allocatedQuestionCount) * 100))}%` }} /></i></div> : null}

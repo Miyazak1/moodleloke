@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { CscaAdaptiveService } from '../csca-special-practice/csca-adaptive.service';
-import { WRONG_PATTERN_MINIMUM_TARGET_ITEMS, WRONG_PATTERN_REQUIRED_CONSECUTIVE_PASSES } from '../csca-learning/wrong-pattern-verification.policy';
+import { getWrongPatternVerificationAvailability, WRONG_PATTERN_MINIMUM_TARGET_ITEMS, WRONG_PATTERN_REQUIRED_CONSECUTIVE_PASSES } from '../csca-learning/wrong-pattern-verification.policy';
 import { CscaMockExamService } from '../csca-mock-exam/csca-mock-exam.service';
 import { LearningDecisionService } from '../learning-intelligence/decision/learning-decision.service';
 import { LearningStateProjectorService } from '../learning-intelligence/projection/learning-state-projector.service';
@@ -196,11 +196,21 @@ export class AgentPracticeActionService {
     const requestedReview = input.reviewItemId
       ? await this.prisma.cscaWrongPattern.findFirst({
           where: { id: input.reviewItemId, userId, subject: input.subject, status: { in: ['active', 'improving'] } },
-          select: { id: true, topicId: true, patternType: true }
+          select: { id: true, topicId: true, patternType: true, status: true, nextReviewAt: true }
         })
       : null;
     if (input.reviewItemId && (!requestedReview || requestedReview.patternType !== input.patternType)) {
       throw new ConflictException({ code: 'AGENT_REVIEW_ITEM_UNAVAILABLE', message: '这项错题复习已经完成或发生变化，请刷新薄弱点后重试。' });
+    }
+    if (requestedReview) {
+      const availability = getWrongPatternVerificationAvailability(requestedReview);
+      if (!availability.allowed) {
+        throw new ConflictException({
+          code: 'AGENT_VERIFICATION_NOT_DUE',
+          message: '间隔验证尚未到期，请先完成其他练习。',
+          nextReviewAt: availability.nextReviewAt
+        });
+      }
     }
 
     const conversation = input.conversationId

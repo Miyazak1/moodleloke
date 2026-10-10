@@ -37,6 +37,16 @@ function answerText(item: CscaWrongQuestionItem, answer: string, unanswered: str
   return option ? `${answer}. ${option.text}` : answer || unanswered;
 }
 
+function pendingVerificationDate(status: string | undefined, value: string | null | undefined) {
+  if (status !== 'improving' || !value) return null;
+  const date = new Date(value);
+  return Number.isFinite(date.getTime()) && date.getTime() > Date.now() ? date : null;
+}
+
+function formatReviewDate(date: Date, locale: string) {
+  return new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(date);
+}
+
 export function AgentWeaknessWorkspace({ overview, loading, error, onGoPractice, onStartPractice, onRetry }: {
   overview: AgentJourneyOverview | null;
   loading: boolean;
@@ -45,7 +55,7 @@ export function AgentWeaknessWorkspace({ overview, loading, error, onGoPractice,
   onGoPractice: () => void;
   onStartPractice: (selection: WeaknessPracticeSelection) => Promise<boolean>;
 }) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [wrongQuestions, setWrongQuestions] = useState<CscaWrongQuestionResponse | null>(null);
   const [wrongQuestionsLoading, setWrongQuestionsLoading] = useState(true);
   const [wrongQuestionsError, setWrongQuestionsError] = useState('');
@@ -95,6 +105,11 @@ export function AgentWeaknessWorkspace({ overview, loading, error, onGoPractice,
 
   const startFromQuestion = async (item: CscaWrongQuestionItem) => {
     if (expandedQuestionKey !== item.itemKey || startingQuestionKey) return;
+    const waitingUntil = pendingVerificationDate(item.reviewPattern?.status, item.reviewPattern?.nextReviewAt);
+    if (waitingUntil) {
+      setQuestionActionError((current) => ({ ...current, [item.itemKey]: `${t('agent.spacedVerification.waitingBody', '为避免短时记忆造成假掌握，请在到期后再用新题独立验证。')} ${t('agent.spacedVerification.nextDate', '下次验证')}：${formatReviewDate(waitingUntil, locale)}` }));
+      return;
+    }
     setStartingQuestionKey(item.itemKey);
     setQuestionActionError((current) => ({ ...current, [item.itemKey]: '' }));
     try {
@@ -145,17 +160,18 @@ export function AgentWeaknessWorkspace({ overview, loading, error, onGoPractice,
           <Icon name="lucide:chevron-right" />
         </button>)}
       </section>
-      {reviewQueue.length ? <section className="agent-context-card agent-review-queue"><header><Icon name="lucide:refresh-cw" /><strong>{t('agent.journey.reviewQueue', '待复习')}</strong></header>{reviewQueue.slice(0, 5).map((item) => <button type="button" aria-label={`${t('agent.weaknessEvidence.viewReview', '查看待复习项')}：${item.title}`} className={evidenceFilter?.key === `review:${item.reviewItemId}` ? 'active' : ''} key={item.reviewItemId} onClick={() => setEvidenceFilter({ key: `review:${item.reviewItemId}`, label: item.title, subject: item.subject, topicId: item.topicId, topicTitle: item.title, patternType: item.patternType, reviewItemId: Number(item.reviewItemId) })}><b>{item.title}</b><span>{item.consecutiveVerificationPassCount ? `${t('agent.weaknessEvidence.independentVerification', '独立验证')} ${item.consecutiveVerificationPassCount}/${item.requiredConsecutiveVerificationPassCount ?? 2} · ` : ''}{item.recurrenceCount} {t('agent.journey.recurrences', '次重复错误')}</span><Icon name="lucide:chevron-right" /></button>)}</section> : null}
+      {reviewQueue.length ? <section className="agent-context-card agent-review-queue"><header><Icon name="lucide:refresh-cw" /><strong>{t('agent.journey.reviewQueue', '待复习')}</strong></header>{reviewQueue.slice(0, 5).map((item) => { const waitingUntil = pendingVerificationDate(item.status, item.dueAt); const passed = item.consecutiveVerificationPassCount ?? 0; return <button type="button" aria-label={`${t('agent.weaknessEvidence.viewReview', '查看待复习项')}：${item.title}`} className={evidenceFilter?.key === `review:${item.reviewItemId}` ? 'active' : ''} key={item.reviewItemId} onClick={() => setEvidenceFilter({ key: `review:${item.reviewItemId}`, label: item.title, subject: item.subject, topicId: item.topicId, topicTitle: item.title, patternType: item.patternType, reviewItemId: Number(item.reviewItemId) })}><b>{item.title}</b><span>{waitingUntil ? `${t('agent.spacedVerification.waiting', '等待间隔验证')} · ${formatReviewDate(waitingUntil, locale)}` : passed ? `${t('agent.spacedVerification.due', '间隔验证已到期')} · ${passed}/${item.requiredConsecutiveVerificationPassCount ?? 2}` : `${item.recurrenceCount} ${t('agent.journey.recurrences', '次重复错误')}`}</span><Icon name="lucide:chevron-right" /></button>; })}</section> : null}
       <section className="agent-wrong-evidence" aria-label={t('agent.weaknessEvidence.aria', '具体错题证据')}>
         <header><div><span className="agent-kicker">{t('agent.weaknessEvidence.kicker', '具体错题')}</span><strong>{evidenceFilter ? `${t('agent.weaknessEvidence.viewing', '正在查看')}：${evidenceFilter.label}` : t('agent.weaknessEvidence.title', '从错题中学习并验证')}</strong><small>{t('agent.weaknessEvidence.body', '先看当时为什么错，再做同类题验证是否真正掌握。')}</small></div>{evidenceFilter && <button type="button" onClick={() => setEvidenceFilter(null)}><Icon name="lucide:x" />{t('agent.weaknessEvidence.viewAll', '查看全部')}</button>}</header>
         {wrongQuestionsLoading ? <div className="agent-journey-loading"><Icon name="lucide:loader-circle" />{t('agent.weaknessEvidence.loading', '正在读取具体错题')}</div> : wrongQuestionsError ? <div className="agent-wrong-evidence-state"><Icon name="lucide:circle-alert" /><span>{wrongQuestionsError}</span><button type="button" onClick={() => setWrongQuestionsRevision((current) => current + 1)}>{t('agent.weaknessEvidence.retry', '重试读取错题')}</button></div> : visibleWrongQuestions.length ? <div className="agent-wrong-question-list">
-          {visibleWrongQuestions.map((item) => { const expanded = expandedQuestionKey === item.itemKey; const explanation = item.structuredExplanation; return <article key={item.itemKey} className={expanded ? 'expanded' : ''}>
-            <header><div><small>{subjectLabel(item.subject, t)} · {item.topicTitle}</small><span>{item.patternLabel}</span></div><em>{item.status === 'mastered' ? t('agent.weaknessEvidence.mastered', '已掌握') : item.nextReviewAt ? t('agent.weaknessEvidence.dueReview', '待复习') : t('agent.weaknessEvidence.evidence', '错题证据')}</em></header>
+          {visibleWrongQuestions.map((item) => { const expanded = expandedQuestionKey === item.itemKey; const explanation = item.structuredExplanation; const waitingUntil = pendingVerificationDate(item.reviewPattern?.status, item.reviewPattern?.nextReviewAt); const verificationDue = item.reviewPattern?.status === 'improving' && !waitingUntil; return <article key={item.itemKey} className={expanded ? 'expanded' : ''}>
+            <header><div><small>{subjectLabel(item.subject, t)} · {item.topicTitle}</small><span>{item.patternLabel}</span></div><em>{item.status === 'mastered' ? t('agent.weaknessEvidence.mastered', '已掌握') : waitingUntil ? t('agent.spacedVerification.waiting', '等待间隔验证') : verificationDue ? t('agent.spacedVerification.due', '间隔验证已到期') : item.nextReviewAt ? t('agent.weaknessEvidence.dueReview', '待复习') : t('agent.weaknessEvidence.evidence', '错题证据')}</em></header>
             <MathContent text={item.prompt} />
             <div className="agent-wrong-answer-comparison"><span>{t('agent.weaknessEvidence.yourAnswer', '你的答案')} <b><MathContent text={answerText(item, item.selectedAnswer, t('agent.weaknessEvidence.unanswered', '未作答'))} /></b></span><span>{t('agent.weaknessEvidence.correctAnswer', '正确答案')} <b><MathContent text={answerText(item, item.correctAnswer, t('agent.weaknessEvidence.unanswered', '未作答'))} /></b></span></div>
             {expanded && <div className="agent-wrong-question-learning"><div className="agent-wrong-options">{item.options.map((option) => <div key={option.id} className={option.id === item.correctAnswer ? 'correct' : option.id === item.selectedAnswer ? 'selected-wrong' : ''}><b>{option.id}</b><MathContent text={option.text} /></div>)}</div><dl><div><dt>{t('agent.weaknessEvidence.whyWrong', '为什么错')}</dt><dd><MathContent text={explanation?.whyWrong || item.explanation || t('agent.weaknessEvidence.noExplanation', '当前题目暂未提供详细错因。')} /></dd></div>{explanation?.correctApproach && <div><dt>{t('agent.weaknessEvidence.correctApproach', '正确思路')}</dt><dd><MathContent text={explanation.correctApproach} /></dd></div>}{explanation?.avoidNextTime && <div><dt>{t('agent.weaknessEvidence.avoidNextTime', '下次如何避免')}</dt><dd><MathContent text={explanation.avoidNextTime} /></dd></div>}</dl><div className="agent-wrong-completion-rule"><Icon name="lucide:badge-check" /><span><strong>{t('agent.weaknessEvidence.completionRule', '本次完成标准')}</strong><small>{t('agent.weaknessEvidence.completionRuleBody', '先完成错因复盘，再独立完成 3 道同知识点新题；之后仍需连续独立验证，不能用一次答对代替掌握。')}</small></span></div></div>}
             {questionActionError[item.itemKey] && <p className="agent-wrong-action-error" role="alert">{questionActionError[item.itemKey]}</p>}
-            <footer><button type="button" className="secondary" onClick={() => setExpandedQuestionKey(expanded ? null : item.itemKey)}><Icon name={expanded ? 'lucide:chevron-up' : 'lucide:book-open-check'} />{expanded ? t('agent.weaknessEvidence.collapse', '收起解析') : t('agent.weaknessEvidence.openExplanation', '查看解析并学习')}</button><button type="button" disabled={!expanded || startingQuestionKey !== null || item.status === 'mastered'} title={!expanded ? t('agent.weaknessEvidence.reviewFirst', '请先查看错因和正确思路') : undefined} onClick={() => void startFromQuestion(item)}><Icon name={startingQuestionKey === item.itemKey ? 'lucide:loader-circle' : 'lucide:refresh-cw'} />{item.status === 'mastered' ? t('agent.weaknessEvidence.verified', '已完成验证') : startingQuestionKey === item.itemKey ? t('agent.weaknessEvidence.preparing', '正在准备验证') : t('agent.weaknessEvidence.startVerification', '已复盘，开始独立验证')}</button></footer>
+            {waitingUntil ? <p className="agent-verification-wait"><Icon name="lucide:calendar-clock" />{t('agent.spacedVerification.nextDate', '下次验证')}：{formatReviewDate(waitingUntil, locale)}</p> : null}
+            <footer><button type="button" className="secondary" onClick={() => setExpandedQuestionKey(expanded ? null : item.itemKey)}><Icon name={expanded ? 'lucide:chevron-up' : 'lucide:book-open-check'} />{expanded ? t('agent.weaknessEvidence.collapse', '收起解析') : t('agent.weaknessEvidence.openExplanation', '查看解析并学习')}</button><button type="button" disabled={!expanded || startingQuestionKey !== null || item.status === 'mastered' || Boolean(waitingUntil)} title={!expanded ? t('agent.weaknessEvidence.reviewFirst', '请先查看错因和正确思路') : waitingUntil ? t('agent.spacedVerification.waitingBody', '为避免短时记忆造成假掌握，请在到期后再用新题独立验证。') : undefined} onClick={() => void startFromQuestion(item)}><Icon name={startingQuestionKey === item.itemKey ? 'lucide:loader-circle' : waitingUntil ? 'lucide:calendar-clock' : 'lucide:refresh-cw'} />{item.status === 'mastered' ? t('agent.weaknessEvidence.verified', '已完成验证') : startingQuestionKey === item.itemKey ? t('agent.weaknessEvidence.preparing', '正在准备验证') : waitingUntil ? t('agent.spacedVerification.waiting', '等待间隔验证') : verificationDue ? t('agent.spacedVerification.startDue', '开始到期验证') : t('agent.weaknessEvidence.startVerification', '已复盘，开始独立验证')}</button></footer>
           </article>; })}
         </div> : <div className="agent-wrong-evidence-state"><Icon name="lucide:search-x" /><span>{evidenceFilter ? t('agent.weaknessEvidence.filteredEmpty', '这个薄弱点还没有可回看的具体错题，可直接开始针对练习。') : t('agent.weaknessEvidence.empty', '当前没有可回看的具体错题。')}</span>{evidenceFilter?.subject && <button type="button" onClick={() => onStartPractice({ subject: evidenceFilter.subject as 'math' | 'physics' | 'chemistry', questionCount: 3, ...(evidenceFilter.topicId ? { focusTopicId: evidenceFilter.topicId } : {}), ...(evidenceFilter.reviewItemId && evidenceFilter.patternType ? { reviewItemId: evidenceFilter.reviewItemId, patternType: evidenceFilter.patternType } : {}) })}>{t('agent.weaknessEvidence.startTargeted', '开始针对练习')}</button>}</div>}
       </section>

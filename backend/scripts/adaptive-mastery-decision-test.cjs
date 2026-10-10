@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const { decideAdaptiveLearning } = require('../dist/backend/src/csca-special-practice/adaptive-learning-decision.policy');
 const { AdaptivePlannerService } = require('../dist/backend/src/csca-special-practice/adaptive-planner.service');
-const { decideWrongPatternVerification } = require('../dist/backend/src/csca-learning/wrong-pattern-verification.policy');
+const { decideWrongPatternVerification, getWrongPatternVerificationAvailability } = require('../dist/backend/src/csca-learning/wrong-pattern-verification.policy');
 
 function topic(overrides = {}) {
   return {
@@ -87,6 +87,11 @@ const failed = decideWrongPatternVerification({
   occurredAt: new Date('2026-09-25T08:00:00.000Z'),
   metadata: firstPass.metadata
 });
+
+const availabilityNow = new Date('2026-10-10T00:00:00.000Z');
+assert.equal(getWrongPatternVerificationAvailability({ status: 'active', nextReviewAt: '2026-10-13T00:00:00.000Z', now: availabilityNow }).allowed, true, 'first verification remains immediately available');
+assert.equal(getWrongPatternVerificationAvailability({ status: 'improving', nextReviewAt: '2026-10-13T00:00:00.000Z', now: availabilityNow }).allowed, false, 'second verification must wait until its review date');
+assert.equal(getWrongPatternVerificationAvailability({ status: 'improving', nextReviewAt: '2026-10-10T00:00:00.000Z', now: availabilityNow }).allowed, true, 'verification is available exactly at its review date');
 assert.equal(failed.resolved, false);
 assert.equal(failed.consecutivePassCount, 0);
 assert.equal(failed.nextReviewDelayDays, 2);
