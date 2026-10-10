@@ -19,6 +19,7 @@ import { AgentAdaptiveResultMessage, AgentMockExamResultMessage } from '../compo
 import { useI18n } from '../i18n/useI18n';
 import { agentDisabledRedirectUrl, isAgentWebEnabled } from '../lib/agent-feature';
 import {
+  abandonAgentTask,
   actOnAgentIntervention,
   continueAgentFreePractice,
   createAgentConversation,
@@ -69,6 +70,8 @@ import {
 import { MockExamTakingView } from './CscaMockExamPage';
 import type { AdaptiveRoundReport, User } from '../lib/api';
 import { getMyStudentProfile } from '../lib/api-me';
+import { getAdaptivePracticeMastery } from '../lib/api-special-practice';
+import type { AdaptiveMasteryTopic } from '../lib/api-types';
 import { routes } from '../lib/routes';
 import {
   parseAgentWorkspaceRoute,
@@ -105,6 +108,7 @@ const AGENT_JOURNEY_SECTION_STORAGE_KEY = 'moodlelike.agent.journeySection';
 const AGENT_LEARNING_MODE_STORAGE_KEY = 'moodlelike.agent.learningMode';
 const AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY = 'moodlelike.agent.freePracticeSubject';
 const AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY = 'moodlelike.agent.freePracticeCount';
+const AGENT_FREE_PRACTICE_MODE_STORAGE_KEY = 'moodlelike.agent.freePracticeMode';
 const LEGACY_AGENT_TASK_RAIL_STORAGE_KEY = 'cscalite.agent.taskRailWidth';
 const LEGACY_AGENT_TASK_RAIL_POSITION_STORAGE_KEY = 'cscalite.agent.taskRailPosition';
 const LEGACY_AGENT_JOURNEY_SECTION_STORAGE_KEY = 'cscalite.agent.journeySection';
@@ -389,7 +393,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     clearErrorNotice();
     if (action.kind === 'send') return void sendMessage(action.value);
     if (action.kind === 'free-start') return void beginFreePractice(action.practiceSelection);
-    if (action.kind === 'free-continue') return void continueFreePracticeBatch(action.subject && action.questionCount ? { subject: action.subject, questionCount: action.questionCount } : undefined);
+    if (action.kind === 'free-continue') return void continueFreePracticeBatch(action.practiceSelection);
     if (action.kind === 'free-end') return void endFreePracticeJourney();
     return void continueAfterMockExam();
   }
@@ -454,6 +458,14 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     const saved = Number(readMigratedLocalStorage(AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY, LEGACY_AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY));
     return saved === 3 || saved === 10 ? saved : 5;
   });
+  const [freePracticeMode, setFreePracticeMode] = useState<'mixed' | 'single_topic'>(() => {
+    if (typeof window === 'undefined') return 'mixed';
+    return window.localStorage.getItem(AGENT_FREE_PRACTICE_MODE_STORAGE_KEY) === 'single_topic' ? 'single_topic' : 'mixed';
+  });
+  const [freePracticeTopicId, setFreePracticeTopicId] = useState<number | null>(null);
+  const [freePracticeTopics, setFreePracticeTopics] = useState<AdaptiveMasteryTopic[]>([]);
+  const [freePracticeTopicsLoading, setFreePracticeTopicsLoading] = useState(false);
+  const [freePracticeTopicsError, setFreePracticeTopicsError] = useState('');
   const [isStartingFreePractice, setIsStartingFreePractice] = useState(false);
   const [isStartingLearning, setIsStartingLearning] = useState(false);
   const [learningEntryError, setLearningEntryError] = useState('');
@@ -496,6 +508,42 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
   practiceQaQuestionKeyRef.current = practiceQaQuestionKey;
   const enabled = isAgentWebEnabled();
   const questionLanguage = preferredQuestionLanguage ?? (locale === 'en' ? 'en' : 'zh');
+
+  useEffect(() => {
+    if (!currentUser) {
+      setFreePracticeTopics([]);
+      setFreePracticeTopicId(null);
+      return;
+    }
+    let current = true;
+    setFreePracticeTopicsLoading(true);
+    setFreePracticeTopicsError('');
+    void getAdaptivePracticeMastery(freePracticeSubject)
+      .then((result) => {
+        if (!current) return;
+        const topics = result.items.filter((item) => item.subject === freePracticeSubject);
+        setFreePracticeTopics(topics);
+        const saved = Number(window.localStorage.getItem(`${AGENT_FREE_PRACTICE_MODE_STORAGE_KEY}.topic.${freePracticeSubject}`));
+        setFreePracticeTopicId((selected) => topics.some((item) => item.topicId === selected)
+          ? selected
+          : topics.some((item) => item.topicId === saved)
+            ? saved
+            : topics[0]?.topicId ?? null);
+      })
+      .catch((loadError) => {
+        if (!current) return;
+        setFreePracticeTopics([]);
+        setFreePracticeTopicId(null);
+        setFreePracticeTopicsError(loadError instanceof Error ? loadError.message : t('agent.freePractice.topicLoadError', '知识点暂时无法读取。'));
+      })
+      .finally(() => { if (current) setFreePracticeTopicsLoading(false); });
+    return () => { current = false; };
+  }, [currentUser?.id, freePracticeSubject, t]);
+
+  function selectFreePracticeTopic(topicId: number) {
+    setFreePracticeTopicId(topicId);
+    window.localStorage.setItem(`${AGENT_FREE_PRACTICE_MODE_STORAGE_KEY}.topic.${freePracticeSubject}`, String(topicId));
+  }
 
   useEffect(() => {
     let current = true;
@@ -1489,11 +1537,27 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     writeMigratedLocalStorage(AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY, LEGACY_AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY, String(count));
   }
 
+  function updateFreePracticeMode(mode: 'mixed' | 'single_topic') {
+    setFreePracticeMode(mode);
+    window.localStorage.setItem(AGENT_FREE_PRACTICE_MODE_STORAGE_KEY, mode);
+  }
+
+  function configuredFreePracticeSelection(): WeaknessPracticeSelection {
+    return {
+      subject: freePracticeSubject,
+      questionCount: freePracticeCount,
+      practiceMode: freePracticeMode,
+      ...(freePracticeMode === 'single_topic' && freePracticeTopicId ? { focusTopicId: freePracticeTopicId } : {})
+    };
+  }
+
   function currentFreePracticeConfig() {
     const subject = learningWorkspace?.subject === 'math' || learningWorkspace?.subject === 'physics' || learningWorkspace?.subject === 'chemistry'
       ? learningWorkspace.subject
       : freePracticeSubject;
-    return { subject, questionCount: freePracticeCount };
+    return configuredFreePracticeSelection().subject === subject
+      ? configuredFreePracticeSelection()
+      : { ...configuredFreePracticeSelection(), subject };
   }
 
   function toggleFreePracticeAdjustment() {
@@ -1507,7 +1571,15 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
 
   async function beginFreePractice(selection?: WeaknessPracticeSelection): Promise<boolean> {
     if (isStartingFreePractice || !currentUser) return false;
-    const next = selection ?? { subject: freePracticeSubject, questionCount: freePracticeCount };
+    const next = selection ?? configuredFreePracticeSelection();
+    const practiceMode = next.practiceMode ?? (next.focusTopicId ? 'single_topic' : 'mixed');
+    setFreePracticeSubject(next.subject);
+    setFreePracticeCount(next.questionCount);
+    updateFreePracticeMode(practiceMode);
+    if (next.focusTopicId) {
+      setFreePracticeTopicId(next.focusTopicId);
+      window.localStorage.setItem(`${AGENT_FREE_PRACTICE_MODE_STORAGE_KEY}.topic.${next.subject}`, String(next.focusTopicId));
+    }
     clearErrorNotice();
     setIsStartingFreePractice(true);
     try {
@@ -1515,7 +1587,8 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
         clientRequestId: clientRequestId(),
         subject: next.subject, questionCount: next.questionCount,
         questionLanguage,
-        ...(next.focusTopicId ? { focusTopicId: next.focusTopicId } : {}),
+        practiceMode,
+        ...(practiceMode === 'single_topic' && next.focusTopicId ? { focusTopicId: next.focusTopicId } : {}),
         ...(next.reviewItemId ? { reviewItemId: next.reviewItemId } : {}),
         ...(next.patternType ? { patternType: next.patternType } : {})
       });
@@ -1538,7 +1611,32 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     }
   }
 
-  async function continueFreePracticeBatch(selection?: { subject: 'math' | 'physics' | 'chemistry'; questionCount: number }) {
+  async function startConfiguredFreePractice() {
+    const selection = configuredFreePracticeSelection();
+    if (selection.practiceMode === 'single_topic' && !selection.focusTopicId) {
+      showError(t('agent.freePractice.selectTopicFirst', '请先选择一个知识点。'));
+      return;
+    }
+    if (resumableWorkspace?.kind === 'adaptive_round' && resumableWorkspace.artifactId) {
+      setIsStartingFreePractice(true);
+      try {
+        if (resumableWorkspace.taskType === 'free_practice') {
+          await endAgentFreePractice(resumableWorkspace.artifactId, { clientRequestId: clientRequestId() });
+        } else {
+          await abandonAgentTask(resumableWorkspace.artifactId, clientRequestId());
+        }
+        await loadJourneyState().catch(() => undefined);
+      } catch (endError) {
+        showError(formatAgentUserError(endError, locale, t('agent.freePractice.replaceFailed', '上次未完成练习暂时无法结束，请重试。')));
+        setIsStartingFreePractice(false);
+        return;
+      }
+      setIsStartingFreePractice(false);
+    }
+    await beginFreePractice(selection);
+  }
+
+  async function continueFreePracticeBatch(selection?: WeaknessPracticeSelection) {
     if (!learningWorkspace?.artifactId || freePracticeContinuationBusy) return;
     const next = selection ?? currentFreePracticeConfig();
     clearErrorNotice();
@@ -1547,7 +1645,9 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
       await settleAgentPractice(learningWorkspace.roundId);
       const launch = await continueAgentFreePractice(learningWorkspace.artifactId, {
         clientRequestId: clientRequestId(), subject: next.subject, questionCount: next.questionCount,
-        questionLanguage
+        questionLanguage,
+        practiceMode: next.practiceMode ?? (next.focusTopicId ? 'single_topic' : 'mixed'),
+        ...(next.focusTopicId ? { focusTopicId: next.focusTopicId } : {})
       });
       setIsAdjustingFreePractice(false);
       await loadJourneyState();
@@ -1555,7 +1655,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     } catch {
       showError(
         t('agent.freePractice.continueRecoverable', '下一批尚未创建；本批结果已经保留。'),
-        { kind: 'free-continue', label: t('agent.freePractice.retryContinue', '重试继续'), subject: next.subject, questionCount: next.questionCount }
+        { kind: 'free-continue', label: t('agent.freePractice.retryContinue', '重试继续'), practiceSelection: next }
       );
     } finally {
       setFreePracticeContinuationBusy(null);
@@ -1765,6 +1865,9 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
   const resumableStage = resumableWorkspace
     ? journeyState?.stages.find((stage) => stage.resume?.conversationId === resumableWorkspace.conversationId && stage.status === 'active') ?? null
     : null;
+  const latestPracticeStage = [...(journeyState?.stages ?? [])]
+    .filter((stage) => stage.kind === 'practice' || stage.kind === 'free_practice')
+    .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt))[0] ?? null;
   const resumedTeachingContextId = resumableWorkspace?.kind === 'teaching'
     && resumableWorkspace.deliveryId === teachingDeliveryId
     ? resumableWorkspace.conversationId
@@ -2553,15 +2656,17 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
             {workspaceTaskType === 'free_practice' ? <section className="agent-report-rail-next">
               <header><small>{t('agent.reportRail.next', '下一步')}</small><strong>{adaptiveReport?.learningDecision?.nextStep.label ?? t('agent.freePractice.nextBatch', '继续下一批')}</strong></header>
               <p>{adaptiveReport?.learningDecision?.nextStep.reason ?? t('agent.freePractice.nextBatchRailHint', '默认沿用本批科目和题量，也可以只调整下一批。')}</p>
-              <div className="agent-report-rail-config"><span>{subjectLabel(currentFreePracticeConfig().subject, t)}</span><span>{currentFreePracticeConfig().questionCount} {t('agent.freePractice.questions', '题')}</span></div>
+              <div className="agent-report-rail-config"><span>{subjectLabel(currentFreePracticeConfig().subject, t)}</span><span>{currentFreePracticeConfig().practiceMode === 'single_topic' ? t('agent.freePractice.topicMode', '按知识点练习') : t('agent.freePractice.mixedMode', '混合练习')}</span><span>{currentFreePracticeConfig().questionCount} {t('agent.freePractice.questions', '题')}</span></div>
               <button type="button" className="primary" disabled={freePracticeContinuationBusy !== null || adaptiveReport?.learningDecision?.nextStep.type === 'delayed_verification'} onClick={followAdaptiveDecision}><Icon name={freePracticeContinuationBusy === 'continue' ? 'lucide:loader-circle' : adaptiveReport?.learningDecision?.nextStep.type === 'delayed_verification' ? 'lucide:calendar-clock' : 'lucide:play'} />{adaptiveReport?.learningDecision?.nextStep.type === 'review_mistakes' ? '开始针对练习' : adaptiveReport?.learningDecision?.nextStep.label ?? t('agent.freePractice.continueSame', '继续下一批')}</button>
               {(adaptiveReport?.learningDecision?.nextStep.type === 'review_mistakes' || adaptiveReport?.learningDecision?.nextStep.type === 'targeted_practice') ? <button type="button" disabled={freePracticeContinuationBusy !== null} onClick={() => void continueFreePracticeBatch()}><Icon name="lucide:arrow-right" />{t('agent.freePractice.continueSame', '继续下一批')}</button> : null}
               <button type="button" disabled={freePracticeContinuationBusy !== null} onClick={toggleFreePracticeAdjustment}><Icon name="lucide:sliders-horizontal" />{isAdjustingFreePractice ? t('agent.freePractice.finishAdjust', '收起调整') : t('agent.freePractice.adjust', '调整下一批')}</button>
               <button type="button" onClick={() => chooseJourneySection('settings')}><Icon name="lucide:calendar-range" />查看学习计划</button>
               {isAdjustingFreePractice ? <div className="agent-report-rail-adjust">
+                <label><small>{t('agent.freePractice.mode', '练习方式')}</small><span><button type="button" className={freePracticeMode === 'mixed' ? 'active' : ''} onClick={() => updateFreePracticeMode('mixed')}>{t('agent.freePractice.mixedMode', '混合练习')}</button><button type="button" className={freePracticeMode === 'single_topic' ? 'active' : ''} onClick={() => updateFreePracticeMode('single_topic')}>{t('agent.freePractice.topicMode', '按知识点练习')}</button></span></label>
                 <label><small>{t('agent.freePractice.subject', '科目')}</small><span>{(['math', 'physics', 'chemistry'] as const).map((subject) => <button key={subject} type="button" className={freePracticeSubject === subject ? 'active' : ''} onClick={() => setFreePracticeSubject(subject)}>{subjectLabel(subject, t)}</button>)}</span></label>
+                {freePracticeMode === 'single_topic' ? <label><small>{t('agent.freePractice.topic', '知识点')}</small><select value={freePracticeTopicId ?? ''} disabled={freePracticeTopicsLoading || !freePracticeTopics.length} onChange={(event) => selectFreePracticeTopic(Number(event.target.value))}><option value="" disabled>{t('agent.freePractice.selectTopic', '请选择知识点')}</option>{freePracticeTopics.map((topic) => <option key={topic.topicId} value={topic.topicId}>{topic.title}</option>)}</select></label> : null}
                 <label><small>{t('agent.freePractice.batch', '题量')}</small><span>{([3, 5, 10] as const).map((count) => <button key={count} type="button" className={freePracticeCount === count ? 'active' : ''} onClick={() => setFreePracticeCount(count)}>{count}</button>)}</span></label>
-                <button type="button" className="confirm" disabled={freePracticeContinuationBusy !== null} onClick={() => void continueFreePracticeBatch({ subject: freePracticeSubject, questionCount: freePracticeCount })}>{t('agent.freePractice.startAdjusted', '按新设置开始')}<Icon name="lucide:arrow-right" /></button>
+                <button type="button" className="confirm" disabled={freePracticeContinuationBusy !== null || (freePracticeMode === 'single_topic' && !freePracticeTopicId)} onClick={() => void continueFreePracticeBatch(configuredFreePracticeSelection())}>{t('agent.freePractice.startAdjusted', '按新设置开始')}<Icon name="lucide:arrow-right" /></button>
               </div> : null}
             </section> : null}
 
@@ -2656,17 +2761,37 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
                 </button>
               ) : null}
             </section>
+            {latestPracticeStage ? <section className="agent-last-practice-summary" data-active={latestPracticeStage.status === 'active'}>
+              <header><span><Icon name={latestPracticeStage.status === 'active' ? 'lucide:pause-circle' : 'lucide:history'} /></span><div><small>{latestPracticeStage.status === 'active' ? t('agent.freePractice.interruptedSummary', '上次练习尚未完成') : t('agent.freePractice.lastSummary', '上次练习总结')}</small><strong>{subjectLabel(latestPracticeStage.subject, t)} · {latestPracticeStage.title}</strong></div></header>
+              <div><span><b>{latestPracticeStage.metrics.answeredQuestionCount}</b>/{latestPracticeStage.metrics.allocatedQuestionCount}<small>{t('agent.freePractice.answered', '已答')}</small></span><span><b>{latestPracticeStage.metrics.correctCount}</b><small>{t('agent.freePractice.correct', '答对')}</small></span><span><b>{latestPracticeStage.metrics.accuracy === null ? '—' : `${latestPracticeStage.metrics.accuracy}%`}</b><small>{t('agent.freePractice.accuracy', '正确率')}</small></span><span><b>{latestPracticeStage.metrics.completedBatchCount}</b>/{latestPracticeStage.metrics.batchCount}<small>{t('agent.freePractice.batches', '完成批次')}</small></span></div>
+              {resumableWorkspace ? <button type="button" onClick={() => void startOrResumeLearning()} disabled={isStartingLearning || isStartingFreePractice}><Icon name="lucide:rotate-ccw" />{resumableActionLabel}</button> : null}
+            </section> : null}
             <section className="agent-free-practice-card">
+              <fieldset>
+                <legend>{t('agent.freePractice.mode', '练习方式')}</legend>
+                <div role="radiogroup" aria-label={t('agent.freePractice.mode', '练习方式')}>
+                  <button type="button" role="radio" className={freePracticeMode === 'mixed' ? 'active' : ''} aria-checked={freePracticeMode === 'mixed'} onClick={() => updateFreePracticeMode('mixed')}>{t('agent.freePractice.mixedMode', '混合练习')}</button>
+                  <button type="button" role="radio" className={freePracticeMode === 'single_topic' ? 'active' : ''} aria-checked={freePracticeMode === 'single_topic'} onClick={() => updateFreePracticeMode('single_topic')}>{t('agent.freePractice.topicMode', '按知识点练习')}</button>
+                </div>
+              </fieldset>
               <fieldset>
                 <legend id="agent-free-practice-subject-label">{t('agent.freePractice.subject', '选择科目')}</legend>
                 <div role="radiogroup" aria-labelledby="agent-free-practice-subject-label">{(['math', 'physics', 'chemistry'] as const).map((subject) => <button key={subject} type="button" role="radio" className={freePracticeSubject === subject ? 'active' : ''} aria-checked={freePracticeSubject === subject} onClick={() => setFreePracticeSubject(subject)}>{subjectLabel(subject, t)}</button>)}</div>
               </fieldset>
+              {freePracticeMode === 'single_topic' ? <label className="agent-free-practice-topic-picker">
+                <span>{t('agent.freePractice.topic', '选择知识点')}</span>
+                <select value={freePracticeTopicId ?? ''} disabled={freePracticeTopicsLoading || !freePracticeTopics.length} onChange={(event) => selectFreePracticeTopic(Number(event.target.value))}>
+                  <option value="" disabled>{freePracticeTopicsLoading ? t('agent.freePractice.loadingTopics', '正在读取知识点…') : t('agent.freePractice.selectTopic', '请选择知识点')}</option>
+                  {freePracticeTopics.map((topic) => <option key={topic.topicId} value={topic.topicId}>{topic.module ? `${topic.module} · ` : ''}{topic.title}</option>)}
+                </select>
+                {freePracticeTopicsError ? <small role="alert">{freePracticeTopicsError}</small> : <small>{t('agent.freePractice.topicOnlyHint', '本批所有题目只来自所选知识点。')}</small>}
+              </label> : null}
               <fieldset>
                 <legend id="agent-free-practice-count-label">{t('agent.freePractice.batch', '本批题量')}</legend>
                 <div role="radiogroup" aria-labelledby="agent-free-practice-count-label">{[3, 5, 10].map((count) => <button key={count} type="button" role="radio" className={freePracticeCount === count ? 'active' : ''} aria-checked={freePracticeCount === count} onClick={() => setFreePracticeCount(count)}>{count} {t('agent.freePractice.questions', '题')}</button>)}</div>
               </fieldset>
-              <button type="button" className="agent-free-practice-start" disabled={isStartingFreePractice || isStartingLearning} onClick={() => void startOrResumeLearning()}>
-                <Icon name={isStartingFreePractice || isStartingLearning ? 'lucide:loader-circle' : resumableWorkspace ? 'lucide:rotate-ccw' : 'lucide:play'} />{isStartingLearning && resumableWorkspace ? t('agent.learningEntry.resuming', '正在恢复') : isStartingFreePractice || isStartingLearning ? t('agent.freePractice.starting', '正在准备题目') : resumableWorkspace ? resumableActionLabel : t('agent.freePractice.start', '开始自由练习')}
+              <button type="button" className="agent-free-practice-start" disabled={isStartingFreePractice || isStartingLearning || (freePracticeMode === 'single_topic' && (!freePracticeTopicId || freePracticeTopicsLoading))} onClick={() => void startConfiguredFreePractice()}>
+                <Icon name={isStartingFreePractice || isStartingLearning ? 'lucide:loader-circle' : 'lucide:play'} />{isStartingFreePractice || isStartingLearning ? t('agent.freePractice.starting', '正在准备题目') : resumableWorkspace?.kind === 'adaptive_round' ? t('agent.freePractice.replaceAndStart', '结束上次未完成练习并开始') : t('agent.freePractice.start', '开始练习')}
               </button>
               <p><Icon name="lucide:shield-check" />{sessionLearningModeOverride === 'free' && learningMode === 'recommended'
                 ? t('agent.freePractice.sessionOverride', '只调整本次学习，不会修改你在学习设置中的默认模式。')
@@ -2682,10 +2807,15 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
             {resumableWorkspace && <section className="agent-learning-entry-card agent-primary-learning-card" data-state="resume">
               <div><span><Icon name="lucide:rotate-ccw" /></span><div><small>{t('agent.learningEntry.interrupted', '上次学习尚未完成')}</small><strong>{`${subjectLabel(resumableSubject, t)} · ${taskLabel(resumableTaskType, t)}`}</strong></div></div>
               {resumableStage?.metrics.allocatedQuestionCount ? <div className="agent-resume-progress"><span><b>{resumableStage.metrics.answeredQuestionCount}</b>/{resumableStage.metrics.allocatedQuestionCount} {t('agent.freePractice.questions', '题')}</span><i><em style={{ width: `${Math.min(100, Math.round((resumableStage.metrics.answeredQuestionCount / resumableStage.metrics.allocatedQuestionCount) * 100))}%` }} /></i></div> : null}
+              {resumableStage ? <div className="agent-resume-metrics"><span><b>{resumableStage.metrics.correctCount}</b>{t('agent.freePractice.correct', '答对')}</span><span><b>{resumableStage.metrics.accuracy === null ? '—' : `${resumableStage.metrics.accuracy}%`}</b>{t('agent.freePractice.accuracy', '正确率')}</span><span><b>{resumableStage.metrics.completedBatchCount}/{resumableStage.metrics.batchCount}</b>{t('agent.freePractice.batches', '完成批次')}</span></div> : null}
               <p>{resumableBody}</p>
-              <button type="button" disabled={isStartingLearning || isStartingFreePractice} onClick={() => void startOrResumeLearning()}><Icon name={isStartingLearning ? 'lucide:loader-circle' : 'lucide:rotate-ccw'} />{isStartingLearning ? t('agent.learningEntry.resuming', '正在恢复') : resumableActionLabel}</button>
+              <div className="agent-resume-actions"><button type="button" disabled={isStartingLearning || isStartingFreePractice} onClick={() => void startOrResumeLearning()}><Icon name={isStartingLearning ? 'lucide:loader-circle' : 'lucide:rotate-ccw'} />{isStartingLearning ? t('agent.learningEntry.resuming', '正在恢复') : resumableActionLabel}</button>{resumableWorkspace.kind === 'adaptive_round' ? <button type="button" className="secondary" disabled={isStartingLearning || isStartingFreePractice} onClick={() => setSessionLearningModeOverride('free')}><Icon name="lucide:sliders-horizontal" />{t('agent.freePractice.chooseAgain', '重新选择科目与知识点')}</button> : null}</div>
               {learningEntryError ? <small role="alert">{learningEntryError}</small> : null}
             </section>}
+            {!resumableWorkspace && latestPracticeStage ? <section className="agent-last-practice-summary">
+              <header><span><Icon name="lucide:history" /></span><div><small>{t('agent.freePractice.lastSummary', '上次练习总结')}</small><strong>{subjectLabel(latestPracticeStage.subject, t)} · {latestPracticeStage.title}</strong></div></header>
+              <div><span><b>{latestPracticeStage.metrics.answeredQuestionCount}</b><small>{t('agent.freePractice.answered', '已答')}</small></span><span><b>{latestPracticeStage.metrics.correctCount}</b><small>{t('agent.freePractice.correct', '答对')}</small></span><span><b>{latestPracticeStage.metrics.accuracy === null ? '—' : `${latestPracticeStage.metrics.accuracy}%`}</b><small>{t('agent.freePractice.accuracy', '正确率')}</small></span><span><b>{latestPracticeStage.metrics.completedBatchCount}</b><small>{t('agent.freePractice.completedBatches', '完成批次')}</small></span></div>
+            </section> : null}
             <div className={`agent-workbench-support-grid${resumableWorkspace ? '' : ' is-primary'}`}>
             <section className="agent-context-card agent-recommendation-card">
               <header><Icon name="lucide:target" /><strong>{resumableWorkspace ? t('agent.context.afterResume', '完成后建议') : t('agent.context.currentTask', '当前推荐任务')}</strong></header>

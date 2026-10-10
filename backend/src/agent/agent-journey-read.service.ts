@@ -267,6 +267,12 @@ export class AgentJourneyReadService {
           completedBatchCount += 1;
           answeredQuestionCount += positiveInteger(settlement.targetTotal) ?? 0;
           correctCount += Number(settlement.targetCorrectCount ?? 0) || 0;
+        } else if (item.roundId) {
+          const activeRound = roundById.get(item.roundId);
+          if (activeRound) {
+            answeredQuestionCount += activeRound.items.filter((roundItem) => roundItem.selectedAnswer !== null).length;
+            correctCount += activeRound.items.filter((roundItem) => roundItem.isCorrect === true).length;
+          }
         }
         assistanceCount += assistanceByRun.get(item.artifact.runId) ?? 0;
         if (item.roundId && item.artifact.id === latest.artifact.id) latestRound = roundById.get(item.roundId);

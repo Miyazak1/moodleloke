@@ -10,7 +10,12 @@ const {
   normalizeAttachmentContentType,
   normalizeAttachmentSubject
 } = require('../dist/backend/src/agent/agent-attachment-analysis.service');
-const { routeAgentIntent, SubmitAgentMessageInputSchema } = require('../dist/backend/src/agent/agent.types');
+const {
+  ContinueAgentFreePracticeInputSchema,
+  routeAgentIntent,
+  StartAgentFreePracticeInputSchema,
+  SubmitAgentMessageInputSchema
+} = require('../dist/backend/src/agent/agent.types');
 const { decideWrongPatternVerification } = require('../dist/backend/src/csca-learning/wrong-pattern-verification.policy');
 
 function runtimeStore(overrides = {}) {
@@ -1313,6 +1318,29 @@ function testAttachmentAnalysisEnumNormalization() {
   assert.equal(normalizeAttachmentAssessment('not sure'), 'not_assessable');
 }
 
+function testFreePracticeTopicModeContract() {
+  const start = StartAgentFreePracticeInputSchema.parse({
+    clientRequestId: 'single-topic-start', subject: 'math', questionCount: 5,
+    practiceMode: 'single_topic', focusTopicId: 42
+  });
+  const next = ContinueAgentFreePracticeInputSchema.parse({
+    clientRequestId: 'single-topic-next', subject: 'physics', questionCount: 3,
+    practiceMode: 'single_topic', focusTopicId: 84
+  });
+  assert.equal(start.practiceMode, 'single_topic');
+  assert.equal(start.focusTopicId, 42);
+  assert.equal(next.practiceMode, 'single_topic');
+  assert.equal(next.focusTopicId, 84);
+  assert.throws(() => StartAgentFreePracticeInputSchema.parse({
+    clientRequestId: 'missing-topic-start', subject: 'math', questionCount: 5,
+    practiceMode: 'single_topic'
+  }));
+  assert.throws(() => ContinueAgentFreePracticeInputSchema.parse({
+    clientRequestId: 'missing-topic-next', subject: 'math', questionCount: 5,
+    practiceMode: 'single_topic'
+  }));
+}
+
 function testReviewQueueDedupesOneLearningTargetIntoOneAction() {
   const result = dedupeReviewQueue([
     { reviewItemId: 71, subject: 'physics', topicId: 47, patternType: 'concept_confusion', recurrenceCount: 3, priority: 3 },
@@ -1412,6 +1440,7 @@ async function main() {
   await testSubmittedPracticeCompletes();
   await testConversationListKeepsIndependentSubjectQaSeparate();
   testAttachmentAnalysisEnumNormalization();
+  testFreePracticeTopicModeContract();
   testReviewQueueDedupesOneLearningTargetIntoOneAction();
   testWrongPatternVerificationRequiresSeparatedConsecutivePasses();
   await testEventReplayIsUserScopedAndResumesAfterCursor();

@@ -9,6 +9,7 @@ import { MathContent } from '../MathContent';
 export type WeaknessPracticeSelection = {
   subject: 'math' | 'physics' | 'chemistry';
   questionCount: number;
+  practiceMode?: 'mixed' | 'single_topic';
   focusTopicId?: number;
   reviewItemId?: number;
   patternType?: string;

@@ -130,6 +130,41 @@ async function testPracticePlanner() {
   assertEqual(new Set(topicIds).size, topicIds.length, 'Practice planner must not duplicate planned topics.');
 }
 
+async function testSingleTopicPlannerNeverMixesTopics() {
+  const topics = makeTopics(6);
+  const planner = new AdaptivePlannerService({
+    cscaExamTopic: {
+      findMany: async () => topics
+    },
+    userCscaTopicMastery: {
+      findMany: async () => []
+    },
+    cscaQuestionExposure: {
+      findFirst: async () => null
+    },
+    cscaTopicMapping: {
+      findFirst: async () => null
+    },
+    cscaWrongPattern: {
+      findMany: async () => []
+    },
+    cscaQuestion: {
+      findMany: async () => []
+    },
+    cscaAdaptiveRound: {
+      findMany: async () => []
+    }
+  });
+
+  const plan = await planner.planSingleTopicRound(101, 'math', 5, 4);
+
+  assertEqual(plan.strategy, 'student_selected_single_topic', 'Single-topic planner strategy changed.');
+  assertEqual(plan.roundSize, 5, 'Single-topic planner must preserve the requested batch size.');
+  assertEqual(plan.plannedTopics.length, 1, 'Single-topic planner must expose only one allowed topic to question selection.');
+  assertEqual(plan.plannedTopics[0].topicId, 4, 'Single-topic planner must preserve the exact student-selected topic.');
+  assertEqual(plan.focus.topicId, 4, 'Single-topic focus metadata must preserve the selected topic.');
+}
+
 async function testPracticePlannerDifficultyAdjustment() {
   const topics = makeTopics(5);
   const masteryRows = topics.map((topic, index) => ({
@@ -2617,6 +2652,7 @@ async function testTrainingEventObservability() {
 async function main() {
   await testDiagnosticPlanner();
   await testPracticePlanner();
+  await testSingleTopicPlannerNeverMixesTopics();
   await testPracticePlannerDifficultyAdjustment();
   await testPracticePlannerPrioritizesMisconceptionVariants();
   await testPracticePlannerPrioritizesCompletedConceptCardVariants();

@@ -267,7 +267,7 @@ export class AgentPracticeActionService {
             }
           }
         : focusTopicId
-          ? { questionCount: input.questionCount, focusTopicId }
+          ? { questionCount: input.questionCount, focusTopicId, topicMode: input.practiceMode }
           : { questionCount: input.questionCount });
       const practiceKind = requestedReview ? 'review' : focusTopicId ? 'targeted_practice' : 'free_practice';
       const title = input.questionLanguage === 'zh'
@@ -287,7 +287,7 @@ export class AgentPracticeActionService {
           snapshot: {
             schemaVersion: '1',
             source: 'student_initiated',
-            task: { type: 'free_practice', practiceKind, subject: input.subject, questionCount: round.questions.length, ...(focusTopicId ? { topicIds: [focusTopicId] } : {}) },
+            task: { type: 'free_practice', practiceKind, practiceMode: input.practiceMode, subject: input.subject, questionCount: round.questions.length, ...(focusTopicId ? { topicIds: [focusTopicId] } : {}) },
             ...(requestedReview ? { review: { reviewItemId: requestedReview.id, patternType: requestedReview.patternType } } : {}),
             freePracticeJourneyId: journeyId,
             batchIndex: 1,
@@ -396,17 +396,28 @@ export class AgentPracticeActionService {
     });
     try {
       const session = await this.adaptive.createSession(userId, { subject: input.subject, mode: 'practice', questionLanguage: input.questionLanguage });
-      const round = await this.adaptive.createRound(userId, String(session.id), { questionCount: input.questionCount });
+      const round = await this.adaptive.createRound(userId, String(session.id), {
+        questionCount: input.questionCount,
+        topicMode: input.practiceMode,
+        ...(input.focusTopicId ? { focusTopicId: input.focusTopicId } : {})
+      });
       const batchIndex = positiveInteger(previousSnapshot.batchIndex) ? Number(previousSnapshot.batchIndex) + 1 : 2;
       const title = input.questionLanguage === 'zh'
-        ? `${input.subject === 'math' ? '数学' : input.subject === 'physics' ? '物理' : '化学'}自由练习 · 第 ${batchIndex} 批`
-        : `${input.subject === 'math' ? 'Math' : input.subject === 'physics' ? 'Physics' : 'Chemistry'} free practice · Batch ${batchIndex}`;
+        ? `${input.subject === 'math' ? '数学' : input.subject === 'physics' ? '物理' : '化学'}${input.practiceMode === 'single_topic' ? '知识点练习' : '混合练习'} · 第 ${batchIndex} 批`
+        : `${input.subject === 'math' ? 'Math' : input.subject === 'physics' ? 'Physics' : 'Chemistry'} ${input.practiceMode === 'single_topic' ? 'topic practice' : 'mixed practice'} · Batch ${batchIndex}`;
       const artifact = await this.prisma.agentArtifact.create({ data: {
         conversationId: previous.conversationId, runId: reserved.run.id, userId, type: 'learning_task', status: 'started', title,
         summary: input.questionLanguage === 'zh' ? `连续自由练习第 ${batchIndex} 批，共 ${round.questions.length} 题。` : `Continuous free practice batch ${batchIndex}, ${round.questions.length} questions.`,
         domainEntityType: 'csca_adaptive_round', domainEntityId: String(round.round.id),
         snapshot: {
-          schemaVersion: '1', source: 'student_initiated', task: { type: 'free_practice', subject: input.subject, questionCount: round.questions.length },
+          schemaVersion: '1', source: 'student_initiated', task: {
+            type: 'free_practice',
+            practiceKind: input.practiceMode === 'single_topic' ? 'targeted_practice' : 'free_practice',
+            practiceMode: input.practiceMode,
+            subject: input.subject,
+            questionCount: round.questions.length,
+            ...(input.focusTopicId ? { topicIds: [input.focusTopicId] } : {})
+          },
           freePracticeJourneyId: journeyId, batchIndex, previousArtifactId: previous.id, journeyStatus: 'active',
           sessionId: round.session.id, roundId: round.round.id
         }
@@ -417,7 +428,11 @@ export class AgentPracticeActionService {
         schemaVersion: '1', artifactId: artifact.id, conversationId: previous.conversationId, sessionId: round.session.id, roundId: round.round.id,
         mode: round.session.mode, questionCount: round.questions.length, subject: round.session.subject, questionLanguage: round.session.questionLanguage,
         toolName, taskType: 'free_practice', route, legacyRoute, journeyId, batchIndex,
-        workspace: { kind: 'adaptive_round', phase: 'practice', taskType: 'free_practice', subject: input.subject, reasonCodes: ['student_initiated', 'continuous_batch'], objective: null }
+        workspace: {
+          kind: 'adaptive_round', phase: 'practice', taskType: 'free_practice', subject: input.subject,
+          reasonCodes: ['student_initiated', 'continuous_batch', input.practiceMode === 'single_topic' ? 'student_selected_topic' : 'mixed_topics'],
+          objective: input.practiceMode === 'single_topic' ? '只练学生选择的知识点' : null
+        }
       };
       await this.prisma.$transaction(async (tx) => {
         await tx.agentArtifact.update({ where: { id: artifact.id }, data: { snapshot: { ...objectValue(artifact.snapshot), launch: output } as Prisma.InputJsonValue } });
@@ -425,7 +440,7 @@ export class AgentPracticeActionService {
         await tx.agentRun.update({ where: { id: reserved.run.id }, data: { status: 'completed', completedAt: new Date() } });
         await tx.agentMessage.create({ data: {
           conversationId: previous.conversationId, role: 'assistant', runId: reserved.run.id, clientMessageId: `assistant:${reserved.run.id}`,
-          content: { schemaVersion: '1', text: input.questionLanguage === 'zh' ? `已准备第 ${batchIndex} 批自由练习。科目和题量可以逐批调整。` : `Free-practice batch ${batchIndex} is ready. Subject and batch size can change between batches.`, artifactIds: [artifact.id], source: 'student_initiated' }
+          content: { schemaVersion: '1', text: input.questionLanguage === 'zh' ? `已准备第 ${batchIndex} 批练习。科目、练习方式和题量可以逐批调整。` : `Practice batch ${batchIndex} is ready. Subject, practice mode, and batch size can change between batches.`, artifactIds: [artifact.id], source: 'student_initiated' }
         } });
         await tx.agentConversation.update({ where: { id: previous.conversationId }, data: { lastMessageAt: new Date() } });
         await this.events.append(tx, { runId: reserved.run.id, conversationId: previous.conversationId, eventKey: `free-practice:${artifact.id}:continued`, eventType: 'free_practice.continued', data: { artifactId: artifact.id, previousArtifactId: previous.id, journeyId, batchIndex } });

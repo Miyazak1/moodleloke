@@ -1180,6 +1180,26 @@
 .agent-learning-entry-card > button:disabled { cursor: wait; opacity: .6; }
 .agent-learning-entry-card > button svg { width: 14px; height: 14px; }
 .agent-learning-entry-card > small[role="alert"] { color: #a53a2c; line-height: 1.45; }
+.agent-learning-entry-card > .agent-resume-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.agent-resume-metrics > span { display: flex; min-width: 0; min-height: 48px; align-items: baseline; justify-content: center; gap: 5px; padding: 9px; border: 1px solid rgba(8, 124, 102, .13); border-radius: 10px; background: rgba(255,255,255,.72); color: var(--agent-muted); font-size: 11px; font-weight: 750; }
+.agent-resume-metrics b { color: var(--agent-ink); font-size: 16px; }
+.agent-learning-entry-card > .agent-resume-actions { display: flex; grid-template-columns: none; flex-wrap: wrap; gap: 8px; }
+.agent-resume-actions > button { display: inline-flex; min-height: 36px; flex: 1 1 200px; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--agent-mint-dark); border-radius: 9px; background: var(--agent-mint-dark); color: #fff; font: inherit; font-size: 12px; font-weight: 900; cursor: pointer; }
+.agent-resume-actions > button.secondary { border-color: #bfd0ff; background: #fff; color: var(--agent-blue); }
+.agent-resume-actions > button:disabled { cursor: wait; opacity: .6; }
+
+.agent-last-practice-summary { display: grid; gap: 13px; padding: 15px 17px; border: 1px solid #dce7e3; border-radius: 15px; background: rgba(255,255,255,.88); }
+.agent-last-practice-summary > header { display: flex; align-items: center; gap: 10px; }
+.agent-last-practice-summary > header > span { display: grid; width: 34px; height: 34px; place-items: center; flex: 0 0 auto; border-radius: 10px; background: #edf2ff; color: var(--agent-blue); }
+.agent-last-practice-summary[data-active="true"] > header > span { background: #e8faf5; color: var(--agent-mint-dark); }
+.agent-last-practice-summary > header > div { display: grid; gap: 2px; }
+.agent-last-practice-summary > header small { color: var(--agent-blue); font-size: 10px; font-weight: 850; }
+.agent-last-practice-summary > header strong { color: var(--agent-ink); font-size: 14px; }
+.agent-last-practice-summary > div { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.agent-last-practice-summary > div > span { display: flex; min-height: 52px; align-items: baseline; justify-content: center; gap: 3px; padding: 10px 6px; border-radius: 10px; background: #f7faf9; color: var(--agent-muted); font-size: 11px; font-weight: 750; }
+.agent-last-practice-summary > div b { color: var(--agent-ink); font-size: 17px; }
+.agent-last-practice-summary > div small { align-self: center; }
+.agent-last-practice-summary > button { display: inline-flex; min-height: 38px; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--agent-mint-dark); border-radius: 10px; background: #fff; color: var(--agent-mint-dark); font: inherit; font-weight: 850; cursor: pointer; }
 .agent-primary-learning-card { gap: 14px; padding: 22px 24px; border-color: rgba(8, 124, 102, .24); border-radius: 16px; background: linear-gradient(135deg, rgba(237, 255, 249, .98), rgba(241, 246, 255, .96)); box-shadow: 0 16px 42px rgba(20, 92, 79, .09); }
 .agent-primary-learning-card > div:first-child { grid-template-columns: 46px minmax(0, 1fr); gap: 13px; }
 .agent-primary-learning-card > div:first-child > span { width: 46px; height: 46px; border-radius: 13px; }
@@ -1244,6 +1264,7 @@
 .agent-report-rail-adjust label > span { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
 .agent-report-rail-adjust label button { min-height: 29px; border: 1px solid var(--agent-line); border-radius: 8px; background: #fff; color: var(--agent-muted); font-size: 10px; font-weight: 800; }
 .agent-report-rail-adjust label button.active { border-color: var(--agent-mint); background: var(--agent-mint-soft); color: var(--agent-mint-dark); }
+.agent-report-rail-adjust label select { width: 100%; min-height: 34px; padding: 0 9px; border: 1px solid var(--agent-line); border-radius: 8px; background: #fff; color: var(--agent-ink); font: inherit; font-size: 11px; }
 .agent-report-rail-qa { display: grid; grid-template-columns: 30px minmax(0, 1fr) 14px; align-items: center; gap: 9px; width: 100%; padding: 11px; border: 1px solid rgba(49, 93, 255, .16); border-radius: 12px; background: rgba(241, 245, 255, .84); color: var(--agent-blue); text-align: left; }
 .agent-report-rail-qa > svg:first-child { width: 17px; justify-self: center; }
 .agent-report-rail-qa > svg:last-child { width: 13px; }
@@ -1836,6 +1857,7 @@
 .agent-free-practice-card fieldset { display: grid; gap: 9px; margin: 0; padding: 0; border: 0; }
 .agent-free-practice-card legend { margin-bottom: 8px; color: #44534f; font-size: 13px; font-weight: 800; }
 .agent-free-practice-card fieldset > div { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.agent-free-practice-card fieldset:first-child > div { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .agent-free-practice-card fieldset button {
   min-height: 38px;
   border: 1px solid #d5e2de;
@@ -1845,6 +1867,11 @@
   font-weight: 750;
 }
 .agent-free-practice-card fieldset button.active { border-color: #20c7a5; color: #08745f; background: #e9fbf6; }
+.agent-free-practice-topic-picker { display: grid; gap: 7px; }
+.agent-free-practice-topic-picker > span { color: #44534f; font-size: 13px; font-weight: 800; }
+.agent-free-practice-topic-picker select { width: 100%; min-height: 44px; padding: 0 38px 0 12px; border: 1px solid #cdded8; border-radius: 11px; background: #fff; color: #27352f; font: inherit; font-size: 13px; font-weight: 750; }
+.agent-free-practice-topic-picker small { color: #6f7e79; font-size: 12px; line-height: 1.45; }
+.agent-free-practice-topic-picker small[role="alert"] { color: #a53a2c; }
 .agent-free-practice-start {
   display: flex;
   align-items: center;
@@ -1888,6 +1915,10 @@
   .agent-learning-mode { grid-template-columns: 1fr; }
   .agent-learning-mode button small { white-space: normal; }
   .agent-settings-free-defaults { grid-template-columns: 1fr; }
+  .agent-last-practice-summary > div { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .agent-resume-metrics { grid-template-columns: 1fr; }
+  .agent-free-practice-card fieldset > div,
+  .agent-free-practice-card fieldset:first-child > div { grid-template-columns: 1fr; }
   .agent-free-practice-continuation-head { align-items: stretch; flex-direction: column; }
   .agent-free-practice-continuation-actions { justify-content: stretch; }
   .agent-free-practice-continuation-actions button { flex: 1 1 auto; }

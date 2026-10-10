@@ -103,6 +103,13 @@ async function mockAgentWorkspace(page: Page) {
       source: 'user', updatedAt: '2026-09-16T00:00:00.000Z'
     });
   });
+  await page.route('**/api/v1/csca-special-practice/adaptive/mastery**', (route) => json(route, {
+    items: [
+      { topicId: 11, subject: 'math', code: 'functions', title: '函数', module: '代数', mastery: .5, confidence: .2, attemptCount: 0, correctCount: 0, lastPracticedAt: null },
+      { topicId: 47, subject: 'physics', code: 'motion', title: '运动学', module: '力与运动', mastery: .5, confidence: .2, attemptCount: 0, correctCount: 0, lastPracticedAt: null },
+      { topicId: 73, subject: 'chemistry', code: 'atomic-structure', title: '原子结构', module: '物质结构', mastery: .5, confidence: .2, attemptCount: 0, correctCount: 0, lastPracticedAt: null }
+    ]
+  }));
   await page.route('**/api/v1/agent/**', (route) => json(route, { item: null, items: [] }));
   await page.route('**/api/v1/agent/journey/state', (route) => json(route, journeyState));
   await page.route(/\/api\/v1\/agent\/conversations(?:\?.*)?$/, (route) => json(route, [conversation]));
@@ -548,6 +555,12 @@ test('starts student-initiated free practice without turning it into a recommend
   }));
   await page.goto('/agent');
   await expect(page.getByRole('heading', { name: '你决定现在练什么、练多少' })).toBeVisible();
+  const modeChoices = page.getByRole('radiogroup', { name: '练习方式' });
+  await expect(modeChoices.getByRole('radio', { name: '混合练习', exact: true })).toHaveAttribute('aria-checked', 'true');
+  await modeChoices.getByRole('radio', { name: '按知识点练习', exact: true }).click();
+  await expect(page.getByRole('combobox', { name: '选择知识点' })).toBeVisible();
+  await expect(page.getByRole('combobox', { name: '选择知识点' })).toHaveValue('11');
+  await modeChoices.getByRole('radio', { name: '混合练习', exact: true }).click();
   const subjectChoices = page.getByRole('radiogroup', { name: '选择科目' });
   const countChoices = page.getByRole('radiogroup', { name: '本批题量' });
   await expect(subjectChoices.getByRole('radio', { name: '数学', exact: true })).toHaveAttribute('aria-checked', 'true');
@@ -555,7 +568,7 @@ test('starts student-initiated free practice without turning it into a recommend
   await countChoices.getByRole('radio', { name: '3 题', exact: true }).click();
   await expect(subjectChoices.getByRole('radio', { name: '物理', exact: true })).toHaveAttribute('aria-checked', 'true');
   await expect(countChoices.getByRole('radio', { name: '3 题', exact: true })).toHaveAttribute('aria-checked', 'true');
-  const startFreePractice = page.getByRole('button', { name: '开始自由练习', exact: true });
+  const startFreePractice = page.getByRole('button', { name: '开始练习', exact: true });
   if (testInfo.project.name === 'mobile') {
     await expect.poll(async () => (await subjectChoices.getByRole('radio', { name: '物理', exact: true }).boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(44);
     await expect.poll(async () => (await startFreePractice.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(44);
@@ -564,7 +577,7 @@ test('starts student-initiated free practice without turning it into a recommend
   await expect(page.getByRole('alert')).toContainText('自由练习还没有开始；科目和题量已保留。');
   await page.getByRole('button', { name: '重试开始' }).click();
   await expect.poll(() => requestBody).not.toBeNull();
-  expect(requestBody).toMatchObject({ subject: 'physics', questionCount: 3, questionLanguage: 'zh' });
+  expect(requestBody).toMatchObject({ subject: 'physics', questionCount: 3, questionLanguage: 'zh', practiceMode: 'mixed' });
   expect(requestBody).not.toHaveProperty('conversationId');
   await expect(page.getByLabel('Agent 学习任务工作区')).toBeVisible();
   await expect(page).toHaveURL(/agentContextId=conversation-1/);

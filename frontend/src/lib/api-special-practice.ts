@@ -70,6 +70,7 @@ export function createAdaptivePracticeRound(
   sessionId: string | number,
   payload: {
     focusTopicId?: number;
+    topicMode?: 'mixed' | 'single_topic';
     verification?: {
       reviewItemId?: number;
       patternType?: string;

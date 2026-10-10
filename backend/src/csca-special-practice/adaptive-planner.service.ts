@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { isStudentConsumableAiVersionStatus } from '../ai-questioning/question-version-governance';
 import { PrismaService } from '../prisma/prisma.service';
 import { ADAPTIVE_DIAGNOSTIC_ROUND_SIZE, ADAPTIVE_ROUND_SIZE, AdaptivePlannedTopic, AdaptiveVerificationRequest } from './csca-adaptive.types';
@@ -263,6 +263,21 @@ export class AdaptivePlannerService {
       strategy: 'weakest_recent_wrong_stale_challenge',
       mode: 'regular',
       focus: focusTopicId ? { source: 'manual_topic', topicId: focusTopicId } : null,
+      adjustment: context.adjustment,
+      roundSize: limit
+    };
+  }
+
+  async planSingleTopicRound(userId: number, subject: SpecialPracticeSubject, limit: number, focusTopicId: number) {
+    const context = await this.buildPlanningContext(userId, subject);
+    const topic = context.candidates.find((candidate) => candidate.id === focusTopicId);
+    if (!topic) throw new BadRequestException('该知识点不属于当前训练科目。');
+    return {
+      subject,
+      plannedTopics: [plannedTopic(topic, 'student_selected_single_topic', context.adjustment)],
+      strategy: 'student_selected_single_topic',
+      mode: 'regular' as const,
+      focus: { source: 'manual_single_topic' as const, topicId: focusTopicId },
       adjustment: context.adjustment,
       roundSize: limit
     };

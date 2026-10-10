@@ -1070,6 +1070,7 @@ export function startAgentFreePractice(input: {
   subject: 'math' | 'physics' | 'chemistry';
   questionCount: number;
   questionLanguage: 'zh' | 'en';
+  practiceMode?: 'mixed' | 'single_topic';
   focusTopicId?: number;
   reviewItemId?: number;
   patternType?: string;
@@ -1231,6 +1232,8 @@ export function continueAgentFreePractice(artifactId: string, input: {
   subject: 'math' | 'physics' | 'chemistry';
   questionCount: number;
   questionLanguage: 'zh' | 'en';
+  practiceMode?: 'mixed' | 'single_topic';
+  focusTopicId?: number;
 }) {
   return requestJson<AgentPracticeLaunch>(`/api/v1/agent/free-practice/${encodeURIComponent(artifactId)}/continue`, {
     method: 'POST', withAuth: true, body: JSON.stringify(input)

@@ -77,10 +77,14 @@ export const StartAgentFreePracticeInputSchema = z.strictObject({
   subject: z.enum(['math', 'physics', 'chemistry']),
   questionCount: z.number().int().min(1).max(10).default(5),
   questionLanguage: z.enum(['zh', 'en']).default('zh'),
+  practiceMode: z.enum(['mixed', 'single_topic']).default('mixed'),
   focusTopicId: z.number().int().positive().optional(),
   reviewItemId: z.number().int().positive().optional(),
   patternType: z.string().trim().min(1).max(80).optional()
 }).superRefine((input, context) => {
+  if (input.practiceMode === 'single_topic' && !input.focusTopicId) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ['focusTopicId'], message: '按知识点练习必须选择知识点。' });
+  }
   if (input.reviewItemId && !input.patternType) {
     context.addIssue({ code: z.ZodIssueCode.custom, path: ['patternType'], message: '错题复习需要提供错因类型。' });
   }
@@ -90,7 +94,13 @@ export const ContinueAgentFreePracticeInputSchema = z.strictObject({
   clientRequestId: z.string().trim().min(1).max(120),
   subject: z.enum(['math', 'physics', 'chemistry']),
   questionCount: z.number().int().min(1).max(10),
-  questionLanguage: z.enum(['zh', 'en']).default('zh')
+  questionLanguage: z.enum(['zh', 'en']).default('zh'),
+  practiceMode: z.enum(['mixed', 'single_topic']).default('mixed'),
+  focusTopicId: z.number().int().positive().optional()
+}).superRefine((input, context) => {
+  if (input.practiceMode === 'single_topic' && !input.focusTopicId) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ['focusTopicId'], message: '按知识点练习必须选择知识点。' });
+  }
 });
 
 export const AgentTaskActionInputSchema = z.strictObject({

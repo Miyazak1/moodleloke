@@ -18,6 +18,7 @@ export type AdaptiveRoundPatchPayload = {
 export type AdaptiveRoundCreatePayload = {
   questionCount?: number;
   focusTopicId?: number;
+  topicMode?: 'mixed' | 'single_topic';
   verification?: {
     reviewItemId?: number;
     patternType?: string;

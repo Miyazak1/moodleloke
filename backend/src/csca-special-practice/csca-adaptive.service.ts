@@ -545,6 +545,10 @@ export class CscaAdaptiveService {
       : defaultRoundSize;
     const verification = isDiagnostic ? undefined : this.cleanVerificationInput(input.verification);
     const focusTopicId = isDiagnostic ? undefined : this.cleanFocusTopicId(input.focusTopicId ?? verification?.topicId);
+    const topicMode = !isDiagnostic && input.topicMode === 'single_topic' ? 'single_topic' : 'mixed';
+    if (topicMode === 'single_topic' && !focusTopicId) {
+      throw new BadRequestException('按知识点练习必须选择知识点。');
+    }
     if (!isDiagnostic && focusTopicId) {
       const focusTopic = await this.prisma.cscaExamTopic.findFirst({
         where: { id: focusTopicId, subject: session.subject, status: 'published' }
@@ -556,7 +560,9 @@ export class CscaAdaptiveService {
       ? await this.planner.planDiagnosticRound(session.subject as SpecialPracticeSubject, roundSize)
       : verification
         ? await this.planner.planVerificationRound(userId, session.subject as SpecialPracticeSubject, roundSize, { ...verification, topicId: focusTopicId })
-        : await this.planner.planRound(userId, session.subject as SpecialPracticeSubject, roundSize, focusTopicId);
+        : topicMode === 'single_topic'
+          ? await this.planner.planSingleTopicRound(userId, session.subject as SpecialPracticeSubject, roundSize, focusTopicId!)
+          : await this.planner.planRound(userId, session.subject as SpecialPracticeSubject, roundSize, focusTopicId);
     const plan = isDiagnostic
       ? basePlan
       : await this.plannerAssistant.assist({
@@ -624,6 +630,7 @@ export class CscaAdaptiveService {
         roundIndex: round.roundIndex,
         roundSize,
         focusTopicId: focusTopicId ?? null,
+        topicMode,
         plannerStrategy: plan.strategy,
         roundMode: 'mode' in plan ? plan.mode : isDiagnostic ? 'diagnostic' : 'regular',
         verification: verification ?? null,
