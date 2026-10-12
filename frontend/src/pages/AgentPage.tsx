@@ -47,6 +47,7 @@ import {
   type AgentArtifact,
   type AgentConversation,
   type AgentConversationSummary,
+  type AgentDailyPlanTask,
   type AgentInterventionDelivery,
   type AgentInterventionVerification,
   type AgentJourneyOverview,
@@ -1730,6 +1731,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
       setLearningWorkspace(null);
       syncWorkspaceUrl(null);
       await loadJourneyState().catch(() => undefined);
+      setJourneyOverviewRevision((current) => current + 1);
       return;
     }
 
@@ -1739,6 +1741,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
       setLearningWorkspace(null);
       syncWorkspaceUrl(null);
       await loadJourneyState().catch(() => undefined);
+      setJourneyOverviewRevision((current) => current + 1);
       return;
     }
     onNavigate(path);
@@ -1761,6 +1764,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     setMockExamSettlement(null);
     syncMockExamWorkspaceUrl(null);
     await loadJourneyState().catch(() => undefined);
+    setJourneyOverviewRevision((current) => current + 1);
   }
 
   async function startRecommendedDecision(prescriptionId: string) {
@@ -1781,6 +1785,26 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
       showError(message);
     } finally {
       setIsStartingLearning(false);
+    }
+  }
+
+  function runDailyPlanTask(task: AgentDailyPlanTask) {
+    if (task.action === 'open_weakness') {
+      chooseJourneySection('weakness');
+      return;
+    }
+    if (task.action === 'start_verification' && task.review) {
+      void beginFreePractice({
+        subject: task.subject,
+        questionCount: 3,
+        ...(task.topicId ? { focusTopicId: task.topicId } : {}),
+        reviewItemId: task.review.reviewItemId,
+        patternType: task.review.patternType
+      });
+      return;
+    }
+    if (task.action === 'start_prescription' && task.prescription) {
+      void startRecommendedDecision(task.prescription.prescriptionId);
     }
   }
 
@@ -1874,6 +1898,9 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
       && new Date(item.dueAt!).getTime() <= Date.now()
       && (item.consecutiveVerificationPassCount ?? 0) > 0)
     .sort((left, right) => new Date(left.dueAt!).getTime() - new Date(right.dueAt!).getTime())[0] ?? null;
+  const dailyPlan = journeyOverview?.dailyPlan ?? null;
+  const dailyPrimaryTask = dailyPlan?.primaryTask ?? null;
+  const dailyQueuedTasks = dailyPlan?.queuedTasks ?? [];
   const resumedTeachingContextId = resumableWorkspace?.kind === 'teaching'
     && resumableWorkspace.deliveryId === teachingDeliveryId
     ? resumableWorkspace.conversationId
@@ -2810,7 +2837,16 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
               <p>{resumableWorkspace ? resumableBody : t('agent.context.body', '根据你的目标、真实作答和当前题源安排下一步。')}</p></div>
               <span className={isSending ? 'agent-live-status running agent-workbench-status' : 'agent-live-status agent-workbench-status'} role="status" aria-live="polite"><i />{isSending ? runStatus : t('agent.status.ready', '学习数据已连接')}</span>
             </section>
-            {!resumableWorkspace && dueVerificationItem ? <section className="agent-learning-entry-card agent-due-verification-card" data-state="due-verification">
+            {!resumableWorkspace && dailyPrimaryTask ? <section className="agent-learning-entry-card agent-daily-plan-card" data-state={dailyPrimaryTask.kind}>
+              <header><span className="agent-kicker">{t('agent.dailyPlan.kicker', '今日首选任务')}</span><small>{t('agent.dailyPlan.rule', '由目标、到期任务和真实学习证据排序')}</small></header>
+              <div><span><Icon name={dailyPrimaryTask.kind === 'spaced_verification' ? 'lucide:calendar-check-2' : dailyPrimaryTask.kind === 'mistake_review' ? 'lucide:book-open-check' : 'lucide:target'} /></span><div><small>{dailyPrimaryTask.kind === 'spaced_verification' ? t('agent.dailyPlan.verificationDue', '间隔验证已到期') : dailyPrimaryTask.kind === 'mistake_review' ? t('agent.dailyPlan.reviewDue', '错题复盘优先') : t('agent.dailyPlan.recommended', '系统推荐任务')}</small><strong>{dailyPrimaryTask.title || `${subjectLabel(dailyPrimaryTask.subject, t)} · ${taskLabel(dailyPrimaryTask.prescription?.taskType, t)}`}</strong></div></div>
+              <p>{dailyPrimaryTask.kind === 'spaced_verification' ? t('agent.dailyPlan.verificationBody', '用同知识点新题完成下一次独立验证，确认不是短时记忆。') : dailyPrimaryTask.kind === 'mistake_review' ? t('agent.dailyPlan.reviewBody', '先看原题、错因和正确思路，再进入独立验证。') : t('agent.dailyPlan.recommendedBody', '这是当前目标下优先级最高、且现在可以执行的学习任务。')}</p>
+              <div className="agent-daily-primary-meta"><span><Icon name="lucide:clock-3" />{dailyPrimaryTask.estimatedMinutes} min</span>{dailyPrimaryTask.review ? <span>{t('agent.dailyPlan.verificationProgress', '验证进度')} {dailyPrimaryTask.review.consecutivePassCount}/{dailyPrimaryTask.review.requiredPassCount}</span> : dailyPrimaryTask.prescription?.questionCount ? <span>{dailyPrimaryTask.prescription.questionCount} {t('agent.freePractice.questions', '题')}</span> : null}</div>
+              <button type="button" disabled={isStartingFreePractice || isStartingLearning} onClick={() => runDailyPlanTask(dailyPrimaryTask)}><Icon name={isStartingFreePractice || isStartingLearning ? 'lucide:loader-circle' : 'lucide:play'} />{isStartingFreePractice || isStartingLearning ? t('agent.learningEntry.preparing', '正在准备') : dailyPrimaryTask.kind === 'spaced_verification' ? t('agent.spacedVerification.startDue', '开始到期验证') : dailyPrimaryTask.kind === 'mistake_review' ? t('agent.dailyPlan.openReview', '先复盘错题') : t('agent.learningEntry.start', '开始学习')}</button>
+              {dailyQueuedTasks.length || dailyPlan?.scheduledVerificationCount ? <div className="agent-daily-queue"><strong>{t('agent.dailyPlan.next', '完成后')}</strong>{dailyQueuedTasks.map((task, index) => <div key={task.taskId}><b>{index + 2}</b><span>{task.title || `${subjectLabel(task.subject, t)} · ${taskLabel(task.prescription?.taskType, t)}`}</span><small>{task.estimatedMinutes} min</small></div>)}{dailyPlan?.scheduledVerificationCount ? <p><Icon name="lucide:calendar-clock" />{dailyPlan.scheduledVerificationCount} {t('agent.dailyPlan.scheduled', '项间隔验证将在到期后自动加入')}</p> : null}</div> : null}
+              {learningEntryError ? <small role="alert">{learningEntryError}</small> : null}
+            </section> : null}
+            {!resumableWorkspace && !dailyPlan && dueVerificationItem ? <section className="agent-learning-entry-card agent-due-verification-card" data-state="due-verification">
               <div><span><Icon name="lucide:calendar-check-2" /></span><div><small>{t('agent.spacedVerification.due', '间隔验证已到期')}</small><strong>{subjectLabel(dueVerificationItem.subject, t)} · {dueVerificationItem.title}</strong></div></div>
               <p>{t('agent.spacedVerification.dueBody', '现在可以用同知识点新题完成第二次独立验证。')}</p>
               <div className="agent-due-verification-progress"><span>{t('agent.spacedVerification.progress', '独立验证进度')}</span><b>{dueVerificationItem.consecutiveVerificationPassCount ?? 1}/{dueVerificationItem.requiredConsecutiveVerificationPassCount ?? 2}</b></div>
@@ -2829,7 +2865,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
               <div><span><b>{latestPracticeStage.metrics.answeredQuestionCount}</b><small>{t('agent.freePractice.answered', '已答')}</small></span><span><b>{latestPracticeStage.metrics.correctCount}</b><small>{t('agent.freePractice.correct', '答对')}</small></span><span><b>{latestPracticeStage.metrics.accuracy === null ? '—' : `${latestPracticeStage.metrics.accuracy}%`}</b><small>{t('agent.freePractice.accuracy', '正确率')}</small></span><span><b>{latestPracticeStage.metrics.completedBatchCount}</b><small>{t('agent.freePractice.completedBatches', '完成批次')}</small></span></div>
             </section> : null}
             <div className={`agent-workbench-support-grid${resumableWorkspace ? '' : ' is-primary'}`}>
-            <section className="agent-context-card agent-recommendation-card">
+            {(!dailyPrimaryTask || resumableWorkspace) ? <section className="agent-context-card agent-recommendation-card">
               <header><Icon name="lucide:target" /><strong>{resumableWorkspace ? t('agent.context.afterResume', '完成后建议') : t('agent.context.currentTask', '当前推荐任务')}</strong></header>
               {latestTask ? <>
                 <h3>{localizedTaskTitle(latestArtifact?.title, locale, t) || `${subjectLabel(latestTask.subject, t)} · ${taskLabel(latestTask.type, t)}`}</h3>
@@ -2838,7 +2874,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
                 {!resumableWorkspace ? <button type="button" className="agent-primary-start" disabled={isStartingLearning || isStartingFreePractice} onClick={() => void startOrResumeLearning()}><Icon name={isStartingLearning || isStartingFreePractice ? 'lucide:loader-circle' : recommendationUnavailable ? 'lucide:shuffle' : 'lucide:play'} />{isStartingLearning || isStartingFreePractice ? t('agent.learningEntry.preparing', '正在准备') : recommendationUnavailable ? t('agent.plan.useFreePractice', '改做自由练习') : t('agent.learningEntry.start', '开始学习')}</button> : null}
                 {!resumableWorkspace && learningEntryError ? <small role="alert">{learningEntryError}</small> : null}
               </> : <><p>{t('agent.context.waiting', '完成一次真实练习后，这里会根据作答证据更新下一步。')}</p><button type="button" className="agent-generate-plan" disabled={isStartingLearning || isStartingFreePractice} onClick={() => void startOrResumeLearning()}><Icon name={isStartingLearning || isStartingFreePractice ? 'lucide:loader-circle' : 'lucide:play'} />{isStartingLearning || isStartingFreePractice ? t('agent.learningEntry.preparing', '正在准备') : t('agent.journeyAction.goPractice', '去做题')}</button></>}
-            </section>
+            </section> : null}
             <section className="agent-context-card sources">
               <header><Icon name="lucide:database" /><strong>{t('agent.context.sources', '事实来源')}</strong></header>
               <ul><li><i />{t('agent.context.sourceGoal', '你的目标与考试日期')}</li><li><i />{t('agent.context.sourceEvidence', '练习、错题和模考证据')}</li><li><i />{t('agent.context.sourceSupply', '当前已发布合格题源')}</li></ul>

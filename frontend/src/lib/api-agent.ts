@@ -484,9 +484,43 @@ export type AgentConversation = AgentConversationSummary & {
   attachments?: AgentAttachment[];
 };
 
+export type AgentDailyPlanTask = {
+  taskId: string;
+  kind: 'mistake_review' | 'spaced_verification' | 'prescription';
+  subject: 'math' | 'physics' | 'chemistry';
+  title: string | null;
+  topicId: number | null;
+  estimatedMinutes: number;
+  reasonCodes: string[];
+  action: 'open_weakness' | 'start_verification' | 'start_prescription';
+  review: null | {
+    reviewItemId: number;
+    patternType: string;
+    dueAt: string | null;
+    recurrenceCount: number;
+    consecutivePassCount: number;
+    requiredPassCount: number;
+  };
+  prescription: null | {
+    prescriptionId: string;
+    taskType: 'diagnostic' | 'review' | 'targeted_practice' | 'mock_exam' | 'concept_learning' | 'intervention_verification';
+    topicIds: number[];
+    questionCount: number | null;
+    confidence: 'low' | 'medium' | 'high';
+  };
+};
+
 export type AgentJourneyOverview = {
   schemaVersion: '1';
   generatedAt: string;
+  dailyPlan?: {
+    policyVersion: 'agent-daily-plan-v1';
+    date: string;
+    primaryTask: AgentDailyPlanTask | null;
+    queuedTasks: AgentDailyPlanTask[];
+    scheduledVerificationCount: number;
+    source: 'rules_and_learning_evidence';
+  };
   goal: {
     examDate: string | null;
     weeklyGoalDays: number | null;

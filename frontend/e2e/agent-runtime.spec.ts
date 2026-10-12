@@ -878,6 +878,15 @@ test('shows the latest evidence-driven decision in learning settings and starts 
       source: 'learning_prescription', generatedByAI: false,
       primaryTask: { type: 'diagnostic', subject: 'chemistry', topicIds: [3], questionCount: 3, priority: 1 }
     },
+    dailyPlan: {
+      policyVersion: 'agent-daily-plan-v1', date: '2026-09-22', scheduledVerificationCount: 0, source: 'rules_and_learning_evidence',
+      primaryTask: {
+        taskId: 'prescription:prescription-latest', kind: 'prescription', subject: 'chemistry', title: null, topicId: 3,
+        estimatedMinutes: 10, reasonCodes: ['SYLLABUS_COVERAGE_INCOMPLETE'], action: 'start_prescription', review: null,
+        prescription: { prescriptionId: 'prescription-latest', taskType: 'diagnostic', topicIds: [3], questionCount: 3, confidence: 'low' }
+      },
+      queuedTasks: []
+    },
     weaknesses: { stateSource: 'user_csca_topic_mastery_v1', subjects: [], reviewQueue: [] },
     resources: { source: 'published_past_papers', subjectScope: ['chemistry'], items: [] }
   }));
@@ -898,6 +907,10 @@ test('shows the latest evidence-driven decision in learning settings and starts 
   await page.route('**/api/v1/csca-special-practice/adaptive/ai/entitlement', (route) => json(route, { enabled: true, unlimited: false, balanceUnits: 50 }));
 
   await page.goto('/agent');
+  const dailyPlan = page.locator('.agent-daily-plan-card');
+  await expect(dailyPlan).toContainText('今日首选任务');
+  await expect(dailyPlan).toContainText('化学 · 短诊断');
+  await expect(page.locator('.agent-recommendation-card')).toHaveCount(0);
   await page.getByRole('button', { name: '学习设置', exact: true }).click();
   const currentDecision = page.locator('.agent-live-decision-card');
   await expect(currentDecision).toContainText('系统建议 · 不改变默认设置');

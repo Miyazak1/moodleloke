@@ -17,6 +17,28 @@ const {
   SubmitAgentMessageInputSchema
 } = require('../dist/backend/src/agent/agent.types');
 const { decideWrongPatternVerification } = require('../dist/backend/src/csca-learning/wrong-pattern-verification.policy');
+const { buildAgentDailyPlan } = require('../dist/backend/src/agent/agent-daily-plan.policy');
+
+function testDailyPlanPrioritizesDueLearningWork() {
+  const now = new Date('2026-10-12T08:00:00.000Z');
+  const plan = buildAgentDailyPlan({
+    now,
+    reviewQueue: [
+      { reviewItemId: 11, patternType: 'concept_gap', topicId: 7, subject: 'math', title: '函数', dueAt: '2026-10-11T08:00:00.000Z', priority: 3, recurrenceCount: 3, status: 'improving', consecutiveVerificationPassCount: 1, requiredConsecutiveVerificationPassCount: 2 },
+      { reviewItemId: 12, patternType: 'pacing', topicId: 8, subject: 'physics', title: '运动学', dueAt: null, priority: 2, recurrenceCount: 2, status: 'active', consecutiveVerificationPassCount: 0, requiredConsecutiveVerificationPassCount: 2 },
+      { reviewItemId: 13, patternType: 'concept_gap', topicId: 9, subject: 'chemistry', title: '酸碱', dueAt: '2026-10-15T08:00:00.000Z', priority: 3, recurrenceCount: 2, status: 'improving', consecutiveVerificationPassCount: 1, requiredConsecutiveVerificationPassCount: 2 }
+    ],
+    prescription: {
+      prescriptionId: 'rx-1', reasonCodes: ['MASTERY_BELOW_BASELINE'], confidence: 'high', estimatedMinutes: 15,
+      primaryTask: { type: 'targeted_practice', subject: 'math', topicIds: [7], questionCount: 5 }
+    }
+  });
+  assert.equal(plan.primaryTask.kind, 'spaced_verification');
+  assert.equal(plan.primaryTask.review.consecutivePassCount, 1);
+  assert.equal(plan.queuedTasks[0].kind, 'mistake_review');
+  assert.equal(plan.queuedTasks.some((item) => item.kind === 'prescription'), false, 'same-topic prescription must not duplicate a due review');
+  assert.equal(plan.scheduledVerificationCount, 1);
+}
 
 function runtimeStore(overrides = {}) {
   const state = {
@@ -1403,6 +1425,7 @@ async function testEventReplayIsUserScopedAndResumesAfterCursor() {
 }
 
 async function main() {
+  testDailyPlanPrioritizesDueLearningWork();
   await testTodayPlanCompletesInOrder();
   await testDiagnosticPreflightUsesTheSubjectPool();
   await testLlmRoutingCanRecognizeNaturalPlanRequestWithoutChoosingTools();

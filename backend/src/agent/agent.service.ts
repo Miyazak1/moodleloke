@@ -20,6 +20,7 @@ import { PastPapersService } from '../past-papers/past-papers.service';
 import { buildLearningQualitySnapshot } from './learning-quality.policy';
 import { AgentPracticeQuestionContextService } from './agent-practice-question-context.service';
 import { agentConversationLifecyclePolicy } from './agent-conversation-lifecycle.policy';
+import { buildAgentDailyPlan } from './agent-daily-plan.policy';
 import {
   AGENT_RUNTIME_SCHEMA_VERSION,
   CreateAgentConversationInputSchema,
@@ -186,9 +187,22 @@ export class AgentService {
       },
       supply
     });
+    const dedupedReviewQueue = dedupeReviewQueue(reviewQueue.items).slice(0, 12);
+    const generatedAt = new Date();
+    const dailyPlan = buildAgentDailyPlan({
+      now: generatedAt,
+      reviewQueue: dedupedReviewQueue,
+      prescription: currentPrescription ? {
+        prescriptionId: currentPrescription.prescriptionId,
+        reasonCodes: currentPrescription.reasonCodes,
+        confidence: currentPrescription.confidence,
+        estimatedMinutes: currentPrescription.estimatedMinutes,
+        primaryTask
+      } : null
+    });
     return {
       schemaVersion: '1',
-      generatedAt: new Date().toISOString(),
+      generatedAt: generatedAt.toISOString(),
       goal: {
         examDate: scoreGoal.goal?.examDate ?? profile.targetExamDate,
         weeklyGoalDays: profile.weeklyGoalDays,
@@ -233,11 +247,12 @@ export class AgentService {
         source: 'learning_prescription' as const,
         generatedByAI: false as const
       } : null,
+      dailyPlan,
       learningQuality: quality,
       weaknesses: {
         stateSource: mastery.stateSource,
         subjects: mastery.subjects,
-        reviewQueue: dedupeReviewQueue(reviewQueue.items).slice(0, 12)
+        reviewQueue: dedupedReviewQueue
       },
       resources: {
         source: 'published_past_papers',
