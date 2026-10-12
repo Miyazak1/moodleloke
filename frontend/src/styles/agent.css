@@ -1175,8 +1175,8 @@
 .agent-daily-plan-card { border-color: rgba(49,93,255,.28); background: linear-gradient(145deg, rgba(241,245,255,.98), rgba(238,255,249,.94)); }
 .agent-daily-plan-card > header { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--agent-line); }
 .agent-daily-plan-card > header small { color: var(--agent-muted); font-size: 10px; }
-.agent-daily-plan-card[data-state="spaced_verification"] > div > span,
-.agent-daily-plan-card[data-state="mistake_review"] > div > span { background: var(--agent-mint-dark); }
+.agent-daily-plan-card[data-state="spaced_verification"] > .agent-daily-primary > span,
+.agent-daily-plan-card[data-state="mistake_review"] > .agent-daily-primary > span { background: var(--agent-mint-dark); }
 .agent-learning-entry-card > .agent-daily-primary { display: grid; grid-template-columns: 38px minmax(0, 1fr); align-items: center; gap: 11px; }
 .agent-learning-entry-card > .agent-daily-primary > span { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 11px; color: #fff; }
 .agent-learning-entry-card > .agent-daily-primary > div { display: grid; gap: 3px; }

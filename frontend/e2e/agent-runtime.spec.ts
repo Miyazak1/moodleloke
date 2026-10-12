@@ -928,6 +928,8 @@ test('shows the latest evidence-driven decision in learning settings and starts 
   await expect(dailyMeta).toHaveCount(2);
   await expect.poll(async () => (await dailyMeta.first().boundingBox())?.width ?? 0).toBeGreaterThan(45);
   await expect.poll(async () => (await dailyMeta.first().boundingBox())?.height ?? 100).toBeLessThan(36);
+  await dailyPlan.evaluate((element) => element.setAttribute('data-state', 'mistake_review'));
+  await expect.poll(() => dailyMeta.first().evaluate((element) => getComputedStyle(element).backgroundColor)).toBe('rgb(255, 255, 255)');
   if (testInfo.project.name === 'desktop') {
     const planBox = await dailyPlan.boundingBox();
     const actionBox = await dailyPlan.getByRole('button').first().boundingBox();
