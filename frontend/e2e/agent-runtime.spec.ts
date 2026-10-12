@@ -739,6 +739,7 @@ test('reviews a concrete mistake and launches an independently verified targeted
   expect(startBodies[0]).toMatchObject({ subject: 'physics', questionCount: 3, focusTopicId: 47, reviewItemId: 71, patternType: 'concept_confusion' });
   expect(startBodies[0]).not.toHaveProperty('conversationId');
   await expect(page.getByLabel('具体错题证据').getByRole('alert')).toContainText('复盘记录已保存');
+  await expect(page.getByRole('button', { name: '继续普通练习', exact: true })).toBeVisible();
   await page.getByRole('button', { name: '已复盘，开始独立验证', exact: true }).click();
   await expect.poll(() => startBodies.length).toBe(2);
   expect(startBodies[1]).toMatchObject({ subject: 'physics', questionCount: 3, focusTopicId: 47, reviewItemId: 71, patternType: 'concept_confusion' });
@@ -924,6 +925,8 @@ test('shows the latest evidence-driven decision in learning settings and starts 
   await expect(dailyPlan).toContainText('今日已完成 1 项 Agent 任务');
   await expect(dailyPlan).toContainText('本周节奏正常');
   await expect(dailyPlan).toContainText('按进度今天需 44 分钟，但单次上限为 30 分钟；建议增加学习日');
+  const choosePracticeButton = dailyPlan.getByRole('button', { name: '自主选题', exact: true });
+  await expect(choosePracticeButton).toBeVisible();
   const dailyMeta = dailyPlan.locator('.agent-daily-primary-meta > span');
   await expect(dailyMeta).toHaveCount(2);
   await expect.poll(async () => (await dailyMeta.first().boundingBox())?.width ?? 0).toBeGreaterThan(45);
@@ -938,6 +941,11 @@ test('shows the latest evidence-driven decision in learning settings and starts 
     expect(actionBox!.width).toBeLessThan(planBox!.width * 0.6);
   }
   await expect(page.locator('.agent-recommendation-card')).toHaveCount(0);
+  await choosePracticeButton.click();
+  await expect(page.getByRole('heading', { name: '你决定现在练什么、练多少' })).toBeVisible();
+  await expect(page.getByText('只调整本次学习，不会修改你在学习设置中的默认模式。')).toBeVisible();
+  await page.getByRole('button', { name: '返回系统推荐', exact: true }).click();
+  await expect(dailyPlan).toBeVisible();
   await page.getByRole('button', { name: '学习设置', exact: true }).click();
   const currentDecision = page.locator('.agent-live-decision-card');
   await expect(currentDecision).toContainText('系统建议 · 不改变默认设置');

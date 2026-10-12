@@ -1543,6 +1543,11 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     window.localStorage.setItem(AGENT_FREE_PRACTICE_MODE_STORAGE_KEY, mode);
   }
 
+  function openSessionFreePractice() {
+    setSessionLearningModeOverride('free');
+    chooseJourneySection('today');
+  }
+
   function configuredFreePracticeSelection(): WeaknessPracticeSelection {
     return {
       subject: freePracticeSubject,
@@ -2760,7 +2765,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
               }}
               onGeneratePlan={() => chooseJourneySection('today')}
               onOpenWeakness={() => chooseJourneySection('weakness')}
-              onGoPractice={() => chooseJourneySection('today')}
+              onGoPractice={openSessionFreePractice}
             />
           </> : journeySection === 'weakness' ? (
             <AgentWeaknessWorkspace
@@ -2859,7 +2864,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
               <div className="agent-daily-primary"><span><Icon name={dailyPrimaryTask.kind === 'spaced_verification' ? 'lucide:calendar-check-2' : dailyPrimaryTask.kind === 'mistake_review' ? 'lucide:book-open-check' : dailyPrimaryTask.kind === 'free_practice' ? 'lucide:infinity' : 'lucide:target'} /></span><div><small>{dailyPrimaryTask.kind === 'spaced_verification' ? t('agent.dailyPlan.verificationDue', '间隔验证已到期') : dailyPrimaryTask.kind === 'mistake_review' ? t('agent.dailyPlan.reviewDue', '错题复盘优先') : dailyPrimaryTask.kind === 'free_practice' ? t('agent.dailyPlan.timeFallback', '补足今日学习时间') : t('agent.dailyPlan.recommended', '系统推荐任务')}</small><strong>{dailyPrimaryTask.title || `${subjectLabel(dailyPrimaryTask.subject, t)} · ${taskLabel(dailyPrimaryTask.kind === 'free_practice' ? 'free_practice' : dailyPrimaryTask.prescription?.taskType, t)}`}</strong></div></div>
               <p>{dailyPrimaryTask.kind === 'spaced_verification' ? t('agent.dailyPlan.verificationBody', '用同知识点新题完成下一次独立验证，确认不是短时记忆。') : dailyPrimaryTask.kind === 'mistake_review' ? t('agent.dailyPlan.reviewBody', '先看原题、错因和正确思路，再进入独立验证。') : dailyPrimaryTask.kind === 'free_practice' ? t('agent.dailyPlan.timeFallbackBody', '当前没有更紧急的复盘或验证任务，按你的默认科目完成一组练习。') : t('agent.dailyPlan.recommendedBody', '这是当前目标下优先级最高、且现在可以执行的学习任务。')}</p>
               <div className="agent-daily-primary-meta"><span><Icon name="lucide:clock-3" />{dailyPrimaryTask.estimatedMinutes} min</span>{dailyPrimaryTask.review ? <span>{t('agent.dailyPlan.verificationProgress', '验证进度')} {dailyPrimaryTask.review.consecutivePassCount}/{dailyPrimaryTask.review.requiredPassCount}</span> : dailyPrimaryTask.prescription?.questionCount ? <span>{dailyPrimaryTask.prescription.questionCount} {t('agent.freePractice.questions', '题')}</span> : dailyPrimaryTask.freePractice ? <span>{dailyPrimaryTask.freePractice.questionCount} {t('agent.freePractice.questions', '题')}</span> : null}</div>
-              <button type="button" disabled={isStartingFreePractice || isStartingLearning} onClick={() => runDailyPlanTask(dailyPrimaryTask)}><Icon name={isStartingFreePractice || isStartingLearning ? 'lucide:loader-circle' : 'lucide:play'} />{isStartingFreePractice || isStartingLearning ? t('agent.learningEntry.preparing', '正在准备') : dailyPrimaryTask.kind === 'spaced_verification' ? t('agent.spacedVerification.startDue', '开始到期验证') : dailyPrimaryTask.kind === 'mistake_review' ? t('agent.dailyPlan.openReview', '先复盘错题') : t('agent.learningEntry.start', '开始学习')}</button>
+              <div className="agent-daily-actions"><button type="button" disabled={isStartingFreePractice || isStartingLearning} onClick={() => runDailyPlanTask(dailyPrimaryTask)}><Icon name={isStartingFreePractice || isStartingLearning ? 'lucide:loader-circle' : 'lucide:play'} />{isStartingFreePractice || isStartingLearning ? t('agent.learningEntry.preparing', '正在准备') : dailyPrimaryTask.kind === 'spaced_verification' ? t('agent.spacedVerification.startDue', '开始到期验证') : dailyPrimaryTask.kind === 'mistake_review' ? t('agent.dailyPlan.openReview', '先复盘错题') : t('agent.learningEntry.start', '开始学习')}</button><button type="button" className="secondary" onClick={openSessionFreePractice}><Icon name="lucide:sliders-horizontal" />{t('agent.dailyPlan.choosePractice', '自主选题')}</button></div>
               {dailyQueuedTasks.length || dailyPlan?.scheduledVerificationCount || dailyPlan?.deferredTaskCount ? <div className="agent-daily-queue"><strong>{t('agent.dailyPlan.next', '完成后')}</strong>{dailyQueuedTasks.map((task, index) => <div key={task.taskId}><b>{index + 2}</b><span>{task.title || `${subjectLabel(task.subject, t)} · ${taskLabel(task.kind === 'free_practice' ? 'free_practice' : task.prescription?.taskType, t)}`}</span><small>{task.estimatedMinutes} min</small></div>)}{dailyPlan?.deferredTaskCount ? <p><Icon name="lucide:clock-arrow-down" />{dailyPlan.deferredTaskCount} {t('agent.dailyPlan.deferred', '项任务暂不放入本轮，将在完成后重新安排')}</p> : null}{dailyPlan?.scheduledVerificationCount ? <p><Icon name="lucide:calendar-clock" />{dailyPlan.scheduledVerificationCount} {t('agent.dailyPlan.scheduled', '项间隔验证将在到期后自动加入')}</p> : null}</div> : null}
               {learningEntryError ? <small role="alert">{learningEntryError}</small> : null}
             </section> : null}
