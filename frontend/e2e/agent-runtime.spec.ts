@@ -924,6 +924,17 @@ test('shows the latest evidence-driven decision in learning settings and starts 
   await expect(dailyPlan).toContainText('今日已完成 1 项 Agent 任务');
   await expect(dailyPlan).toContainText('本周节奏正常');
   await expect(dailyPlan).toContainText('按进度今天需 44 分钟，但单次上限为 30 分钟；建议增加学习日');
+  const dailyMeta = dailyPlan.locator('.agent-daily-primary-meta > span');
+  await expect(dailyMeta).toHaveCount(2);
+  await expect.poll(async () => (await dailyMeta.first().boundingBox())?.width ?? 0).toBeGreaterThan(45);
+  await expect.poll(async () => (await dailyMeta.first().boundingBox())?.height ?? 100).toBeLessThan(36);
+  if (testInfo.project.name === 'desktop') {
+    const planBox = await dailyPlan.boundingBox();
+    const actionBox = await dailyPlan.getByRole('button').first().boundingBox();
+    expect(planBox).not.toBeNull();
+    expect(actionBox).not.toBeNull();
+    expect(actionBox!.width).toBeLessThan(planBox!.width * 0.6);
+  }
   await expect(page.locator('.agent-recommendation-card')).toHaveCount(0);
   await page.getByRole('button', { name: '学习设置', exact: true }).click();
   const currentDecision = page.locator('.agent-live-decision-card');

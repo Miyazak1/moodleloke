@@ -1177,6 +1177,10 @@
 .agent-daily-plan-card > header small { color: var(--agent-muted); font-size: 10px; }
 .agent-daily-plan-card[data-state="spaced_verification"] > div > span,
 .agent-daily-plan-card[data-state="mistake_review"] > div > span { background: var(--agent-mint-dark); }
+.agent-learning-entry-card > .agent-daily-primary { display: grid; grid-template-columns: 38px minmax(0, 1fr); align-items: center; gap: 11px; }
+.agent-learning-entry-card > .agent-daily-primary > span { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 11px; color: #fff; }
+.agent-learning-entry-card > .agent-daily-primary > div { display: grid; gap: 3px; }
+.agent-daily-primary strong { font-size: 14px; }
 .agent-learning-entry-card > .agent-daily-progress { display: grid; grid-template-columns: none; gap: 7px; padding: 10px; border: 1px solid rgba(49,93,255,.11); border-radius: 10px; background: rgba(255,255,255,.7); }
 .agent-daily-progress > div { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 .agent-daily-progress > div > span { display: flex; width: auto; height: auto; align-items: baseline; justify-content: center; gap: 4px; padding: 7px; border-radius: 8px; background: rgba(241,245,255,.72); color: var(--agent-muted); font-size: 9px; font-weight: 800; }
@@ -1196,7 +1200,7 @@
 .agent-daily-supply-empty > span svg { width: 15px; }
 .agent-daily-supply-empty > div { display: grid; gap: 3px; }
 .agent-daily-supply-empty strong { font-size: 10px; font-weight: 700; line-height: 1.5; }
-.agent-daily-supply-candidates { display: flex; flex-wrap: wrap; gap: 6px; }
+.agent-learning-entry-card > .agent-daily-supply-candidates { display: flex; grid-template-columns: none; flex-wrap: wrap; gap: 6px; }
 .agent-daily-supply-candidates > span { padding: 5px 8px; border: 1px solid rgba(190,98,54,.18); border-radius: 999px; background: #fff; color: #805237; font-size: 9px; font-weight: 800; }
 .agent-weekly-progress { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 9px; background: rgba(49,93,255,.055); }
 .agent-weekly-progress > strong { font-size: 10px; }
@@ -1207,12 +1211,12 @@
 .agent-weekly-progress[data-status="behind"] > b { color: #a85b24; }
 .agent-weekly-progress[data-status="behind"] > small { color: #8d552d; }
 .agent-weekly-progress[data-status="goal_met"] > b { color: var(--agent-mint-dark); }
-.agent-learning-entry-card > .agent-daily-primary-meta { display: flex; grid-template-columns: none; flex-wrap: wrap; gap: 8px; }
-.agent-daily-primary-meta > span { display: inline-flex; width: auto; height: auto; align-items: center; gap: 5px; padding: 5px 8px; border-radius: 999px; background: #fff; color: var(--agent-muted); font-size: 10px; font-weight: 800; }
-.agent-daily-primary-meta > span svg { width: 12px; }
+.agent-learning-entry-card > .agent-daily-primary-meta { display: flex; grid-template-columns: none; align-items: center; flex-wrap: wrap; gap: 8px; }
+.agent-learning-entry-card > .agent-daily-primary-meta > span { display: inline-flex; width: auto; min-width: 0; height: auto; place-items: initial; align-items: center; flex: 0 0 auto; gap: 5px; padding: 6px 9px; border-radius: 999px; background: #fff; color: var(--agent-muted); font-size: 10px; font-weight: 800; white-space: nowrap; }
+.agent-learning-entry-card > .agent-daily-primary-meta > span svg { width: 12px; height: 12px; }
 .agent-learning-entry-card > .agent-daily-queue { display: grid; grid-template-columns: none; gap: 7px; padding-top: 10px; border-top: 1px solid var(--agent-line); }
 .agent-daily-queue > strong { color: var(--agent-ink); font-size: 10px; }
-.agent-daily-queue > div { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+.agent-learning-entry-card > .agent-daily-queue > div { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 9px; align-items: center; }
 .agent-daily-queue > div b { display: grid; width: 22px; height: 22px; place-items: center; border-radius: 7px; background: var(--agent-blue-soft); color: var(--agent-blue); font-size: 9px; }
 .agent-daily-queue > div span { color: var(--agent-ink); font-size: 10px; font-weight: 800; }
 .agent-daily-queue > div small { color: var(--agent-muted); font-size: 9px; }
@@ -1226,6 +1230,7 @@
 .agent-learning-entry-card strong { color: var(--agent-ink); font-size: 13px; line-height: 1.4; }
 .agent-learning-entry-card > p { margin: 0; color: var(--agent-muted); font-size: 11px; line-height: 1.55; }
 .agent-learning-entry-card > button { display: inline-flex; min-height: 36px; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--agent-blue); border-radius: 9px; background: var(--agent-blue); color: #fff; font-size: 12px; font-weight: 900; box-shadow: 0 8px 20px rgba(49, 93, 255, .16); }
+.agent-daily-plan-card > button { width: auto; min-width: 180px; justify-self: start; padding: 0 18px; }
 .agent-learning-entry-card[data-state="resume"] > button { border-color: var(--agent-mint-dark); background: var(--agent-mint-dark); box-shadow: 0 8px 20px rgba(8, 124, 102, .16); }
 .agent-learning-entry-card > button:disabled { cursor: wait; opacity: .6; }
 .agent-learning-entry-card > button svg { width: 14px; height: 14px; }
@@ -2069,4 +2074,5 @@
 
 @media (max-width: 720px) {
   .agent-weekly-progress { grid-template-columns: 1fr; gap: 5px; }
+  .agent-daily-plan-card > button { width: 100%; min-width: 0; justify-self: stretch; }
 }
