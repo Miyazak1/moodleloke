@@ -1177,6 +1177,36 @@
 .agent-daily-plan-card > header small { color: var(--agent-muted); font-size: 10px; }
 .agent-daily-plan-card[data-state="spaced_verification"] > div > span,
 .agent-daily-plan-card[data-state="mistake_review"] > div > span { background: var(--agent-mint-dark); }
+.agent-learning-entry-card > .agent-daily-progress { display: grid; grid-template-columns: none; gap: 7px; padding: 10px; border: 1px solid rgba(49,93,255,.11); border-radius: 10px; background: rgba(255,255,255,.7); }
+.agent-daily-progress > div { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.agent-daily-progress > div > span { display: flex; width: auto; height: auto; align-items: baseline; justify-content: center; gap: 4px; padding: 7px; border-radius: 8px; background: rgba(241,245,255,.72); color: var(--agent-muted); font-size: 9px; font-weight: 800; }
+.agent-daily-progress > div > span b { color: var(--agent-ink); font-size: 14px; }
+.agent-daily-progress > i { position: relative; display: block; height: 5px; overflow: hidden; border-radius: 999px; background: rgba(49,93,255,.1); }
+.agent-daily-progress > i > em { position: absolute; inset: 0 auto 0 0; border-radius: inherit; background: linear-gradient(90deg, var(--agent-blue), var(--agent-mint)); }
+.agent-daily-progress > p { display: flex; align-items: center; gap: 5px; margin: 0; color: var(--agent-mint-dark); font-size: 9px; font-weight: 850; }
+.agent-daily-progress > p svg { width: 12px; }
+.agent-daily-progress > small { color: var(--agent-muted); font-size: 9px; }
+.agent-daily-progress[data-status="goal_met"] > small { color: var(--agent-mint-dark); }
+.agent-daily-plan-card[data-state="completed"] { border-color: rgba(8,124,102,.3); }
+.agent-daily-plan-card[data-state="completed"] > .agent-daily-complete > span { background: var(--agent-mint-dark); }
+.agent-daily-complete strong { font-size: 11px; font-weight: 750; }
+.agent-daily-plan-card[data-state="supply-unavailable"] { border-color: rgba(190,98,54,.28); background: linear-gradient(135deg, rgba(255,249,245,.96), rgba(255,255,255,.94)); }
+.agent-daily-supply-empty { display: flex; align-items: flex-start; gap: 10px; padding: 10px; border-radius: 10px; background: rgba(190,98,54,.07); }
+.agent-daily-supply-empty > span { display: grid; width: 30px; height: 30px; place-items: center; flex: 0 0 auto; border-radius: 9px; background: #fff; color: #a85b24; }
+.agent-daily-supply-empty > span svg { width: 15px; }
+.agent-daily-supply-empty > div { display: grid; gap: 3px; }
+.agent-daily-supply-empty strong { font-size: 10px; font-weight: 700; line-height: 1.5; }
+.agent-daily-supply-candidates { display: flex; flex-wrap: wrap; gap: 6px; }
+.agent-daily-supply-candidates > span { padding: 5px 8px; border: 1px solid rgba(190,98,54,.18); border-radius: 999px; background: #fff; color: #805237; font-size: 9px; font-weight: 800; }
+.agent-weekly-progress { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 9px; background: rgba(49,93,255,.055); }
+.agent-weekly-progress > strong { font-size: 10px; }
+.agent-weekly-progress > div { display: flex; flex-wrap: wrap; gap: 6px; }
+.agent-weekly-progress > div span { color: var(--agent-muted); font-size: 9px; font-weight: 750; }
+.agent-weekly-progress > b { color: var(--agent-blue); font-size: 9px; }
+.agent-weekly-progress > small { grid-column: 1 / -1; color: var(--agent-muted); font-size: 9px; font-weight: 700; line-height: 1.45; }
+.agent-weekly-progress[data-status="behind"] > b { color: #a85b24; }
+.agent-weekly-progress[data-status="behind"] > small { color: #8d552d; }
+.agent-weekly-progress[data-status="goal_met"] > b { color: var(--agent-mint-dark); }
 .agent-learning-entry-card > .agent-daily-primary-meta { display: flex; grid-template-columns: none; flex-wrap: wrap; gap: 8px; }
 .agent-daily-primary-meta > span { display: inline-flex; width: auto; height: auto; align-items: center; gap: 5px; padding: 5px 8px; border-radius: 999px; background: #fff; color: var(--agent-muted); font-size: 10px; font-weight: 800; }
 .agent-daily-primary-meta > span svg { width: 12px; }
@@ -2035,4 +2065,8 @@
   padding: 40px 24px;
   color: var(--agent-muted, #61706a);
   text-align: center;
+}
+
+@media (max-width: 720px) {
+  .agent-weekly-progress { grid-template-columns: 1fr; gap: 5px; }
 }

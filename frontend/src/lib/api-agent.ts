@@ -486,13 +486,13 @@ export type AgentConversation = AgentConversationSummary & {
 
 export type AgentDailyPlanTask = {
   taskId: string;
-  kind: 'mistake_review' | 'spaced_verification' | 'prescription';
+  kind: 'mistake_review' | 'spaced_verification' | 'prescription' | 'free_practice';
   subject: 'math' | 'physics' | 'chemistry';
   title: string | null;
   topicId: number | null;
   estimatedMinutes: number;
   reasonCodes: string[];
-  action: 'open_weakness' | 'start_verification' | 'start_prescription';
+  action: 'open_weakness' | 'start_verification' | 'start_prescription' | 'start_free_practice';
   review: null | {
     reviewItemId: number;
     patternType: string;
@@ -508,6 +508,9 @@ export type AgentDailyPlanTask = {
     questionCount: number | null;
     confidence: 'low' | 'medium' | 'high';
   };
+  freePractice: null | {
+    questionCount: 3 | 5 | 10;
+  };
 };
 
 export type AgentJourneyOverview = {
@@ -518,7 +521,43 @@ export type AgentJourneyOverview = {
     date: string;
     primaryTask: AgentDailyPlanTask | null;
     queuedTasks: AgentDailyPlanTask[];
+    progress: {
+      targetMinutes: number | null;
+      completedMinutes: number;
+      remainingMinutes: number | null;
+      answeredCount: number;
+      correctCount: number;
+      accuracy: number | null;
+      completedTaskCount: number;
+      successfulTaskCount: number;
+      status: 'not_started' | 'in_progress' | 'goal_met';
+    };
+    weeklyProgress: {
+      targetMinutes: number | null;
+      completedMinutes: number;
+      remainingMinutes: number | null;
+      targetDays: number | null;
+      activeDays: number;
+      remainingStudyDays: number | null;
+      requiredTodayMinutes: number | null;
+      recommendedTodayMinutes: number | null;
+      sessionLimitMinutes: number | null;
+      capacityStatus: 'unset' | 'sufficient' | 'limited';
+      status: 'unset' | 'not_started' | 'behind' | 'on_track' | 'goal_met';
+    };
+    plannedMinutes: number;
+    deferredTaskCount: number;
     scheduledVerificationCount: number;
+    fallbackPracticeAvailability: {
+      status: 'not_needed' | 'ready' | 'unavailable' | 'unknown';
+      subject: 'math' | 'physics' | 'chemistry' | null;
+      questionCount: 3 | 5 | 10 | null;
+      candidates: Array<{
+        subject: 'math' | 'physics' | 'chemistry';
+        availableCount: number | null;
+        status: 'sufficient' | 'limited' | 'empty' | 'unknown';
+      }>;
+    };
     source: 'rules_and_learning_evidence';
   };
   goal: {

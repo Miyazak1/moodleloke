@@ -29,15 +29,89 @@ export type DailyPrescriptionCandidate = {
   };
 };
 
+export type DailyLearningProgressInput = {
+  targetMinutes: number | null;
+  answeredCount: number;
+  correctCount: number;
+  practiceSeconds: number;
+  mockSeconds: number;
+  completedTaskCount?: number;
+  successfulTaskCount?: number;
+};
+
+export type WeeklyLearningProgressInput = {
+  targetMinutes: number | null;
+  targetDays: number | null;
+  completedMinutes: number;
+  activeDays: number;
+  elapsedDays: number;
+  remainingStudyDays?: number | null;
+  requiredTodayMinutes?: number | null;
+  recommendedTodayMinutes?: number | null;
+  sessionLimitMinutes?: number | null;
+};
+
+export function buildWeeklyLearningProgress(input?: WeeklyLearningProgressInput) {
+  const targetMinutes = input?.targetMinutes && input.targetMinutes > 0 ? Math.round(input.targetMinutes) : null;
+  const targetDays = input?.targetDays && input.targetDays > 0 ? Math.min(7, Math.round(input.targetDays)) : null;
+  const completedMinutes = Math.max(0, Math.round(input?.completedMinutes ?? 0));
+  const activeDays = Math.min(7, Math.max(0, Math.floor(input?.activeDays ?? 0)));
+  const elapsedDays = Math.min(7, Math.max(1, Math.floor(input?.elapsedDays ?? 1)));
+  const remainingStudyDays = input?.remainingStudyDays && input.remainingStudyDays > 0
+    ? Math.min(7, Math.round(input.remainingStudyDays))
+    : null;
+  const requiredTodayMinutes = input?.requiredTodayMinutes && input.requiredTodayMinutes > 0
+    ? Math.round(input.requiredTodayMinutes)
+    : null;
+  const recommendedTodayMinutes = input?.recommendedTodayMinutes && input.recommendedTodayMinutes > 0
+    ? Math.round(input.recommendedTodayMinutes)
+    : null;
+  const sessionLimitMinutes = input?.sessionLimitMinutes && input.sessionLimitMinutes > 0
+    ? Math.round(input.sessionLimitMinutes)
+    : null;
+  const configured = targetMinutes !== null || targetDays !== null;
+  const minutesMet = targetMinutes === null || completedMinutes >= targetMinutes;
+  const daysMet = targetDays === null || activeDays >= targetDays;
+  const expectedMinutes = targetMinutes === null ? null : Math.round(targetMinutes * elapsedDays / 7);
+  const expectedDays = targetDays === null ? null : targetDays * elapsedDays / 7;
+  const behind = (expectedMinutes !== null && completedMinutes < expectedMinutes * 0.8)
+    || (expectedDays !== null && activeDays + 0.25 < expectedDays);
+  return {
+    targetMinutes,
+    completedMinutes,
+    remainingMinutes: targetMinutes === null ? null : Math.max(0, targetMinutes - completedMinutes),
+    targetDays,
+    activeDays,
+    remainingStudyDays,
+    requiredTodayMinutes,
+    recommendedTodayMinutes,
+    sessionLimitMinutes,
+    capacityStatus: requiredTodayMinutes !== null && recommendedTodayMinutes !== null && requiredTodayMinutes > recommendedTodayMinutes
+      ? 'limited' as const
+      : requiredTodayMinutes !== null
+        ? 'sufficient' as const
+        : 'unset' as const,
+    status: !configured
+      ? 'unset' as const
+      : minutesMet && daysMet
+        ? 'goal_met' as const
+        : completedMinutes === 0 && activeDays === 0 && elapsedDays === 1
+          ? 'not_started' as const
+          : behind
+            ? 'behind' as const
+            : 'on_track' as const
+  };
+}
+
 export type AgentDailyPlanTask = {
   taskId: string;
-  kind: 'mistake_review' | 'spaced_verification' | 'prescription';
+  kind: 'mistake_review' | 'spaced_verification' | 'prescription' | 'free_practice';
   subject: Subject;
   title: string | null;
   topicId: number | null;
   estimatedMinutes: number;
   reasonCodes: string[];
-  action: 'open_weakness' | 'start_verification' | 'start_prescription';
+  action: 'open_weakness' | 'start_verification' | 'start_prescription' | 'start_free_practice';
   review: null | {
     reviewItemId: number;
     patternType: string;
@@ -52,6 +126,9 @@ export type AgentDailyPlanTask = {
     topicIds: number[];
     questionCount: number | null;
     confidence: DailyPrescriptionCandidate['confidence'];
+  };
+  freePractice: null | {
+    questionCount: 3 | 5 | 10;
   };
 };
 
@@ -71,8 +148,16 @@ function supportedSubject(value: string): Subject | null {
 
 export function buildAgentDailyPlan(input: {
   now: Date;
+  localDate?: string;
   reviewQueue: DailyReviewCandidate[];
   prescription: DailyPrescriptionCandidate | null;
+  completedPrescriptionIds?: string[];
+  progress?: DailyLearningProgressInput;
+  weeklyProgress?: WeeklyLearningProgressInput;
+  fallbackPractice?: {
+    subject: Subject;
+    questionCount: 3 | 5 | 10;
+  };
 }) {
   const tasks: AgentDailyPlanTask[] = [];
   const occupiedTargets = new Set<string>();
@@ -113,12 +198,13 @@ export function buildAgentDailyPlan(input: {
         consecutivePassCount,
         requiredPassCount: Math.max(1, item.requiredConsecutiveVerificationPassCount ?? 2)
       },
-      prescription: null
+      prescription: null,
+      freePractice: null
     });
   }
 
   const prescriptionTask = input.prescription?.primaryTask;
-  if (input.prescription && prescriptionTask) {
+  if (input.prescription && prescriptionTask && !input.completedPrescriptionIds?.includes(input.prescription.prescriptionId)) {
     const prescriptionTarget = targetKey(prescriptionTask.subject, prescriptionTask.topicIds[0] ?? null);
     if (!prescriptionTarget || !occupiedTargets.has(prescriptionTarget)) {
       tasks.push({
@@ -137,17 +223,69 @@ export function buildAgentDailyPlan(input: {
           topicIds: prescriptionTask.topicIds,
           questionCount: prescriptionTask.questionCount ?? null,
           confidence: input.prescription.confidence
-        }
+        },
+        freePractice: null
       });
     }
   }
 
-  const readyTasks = tasks.slice(0, 3);
+  const targetMinutes = input.progress?.targetMinutes && input.progress.targetMinutes > 0
+    ? Math.round(input.progress.targetMinutes)
+    : null;
+  const completedSeconds = Math.max(0, input.progress?.practiceSeconds ?? 0)
+    + Math.max(0, input.progress?.mockSeconds ?? 0);
+  const completedMinutes = completedSeconds > 0 ? Math.max(1, Math.round(completedSeconds / 60)) : 0;
+  const remainingMinutes = targetMinutes === null ? null : Math.max(0, targetMinutes - completedMinutes);
+  if (input.fallbackPractice && remainingMinutes !== null && remainingMinutes > 0 && tasks.length === 0) {
+    tasks.push({
+      taskId: `free-practice:${input.localDate ?? input.now.toISOString().slice(0, 10)}:${input.fallbackPractice.subject}`,
+      kind: 'free_practice',
+      subject: input.fallbackPractice.subject,
+      title: null,
+      topicId: null,
+      estimatedMinutes: Math.max(8, input.fallbackPractice.questionCount * 2),
+      reasonCodes: ['DAILY_TIME_REMAINING'],
+      action: 'start_free_practice',
+      review: null,
+      prescription: null,
+      freePractice: { questionCount: input.fallbackPractice.questionCount }
+    });
+  }
+  const readyTasks = tasks.reduce<AgentDailyPlanTask[]>((selected, task) => {
+    if (selected.length >= 3) return selected;
+    if (!selected.length || remainingMinutes === null) return [...selected, task];
+    const selectedMinutes = selected.reduce((sum, item) => sum + item.estimatedMinutes, 0);
+    return selectedMinutes + task.estimatedMinutes <= Math.max(remainingMinutes, selected[0].estimatedMinutes)
+      ? [...selected, task]
+      : selected;
+  }, []);
+  const answeredCount = Math.max(0, Math.floor(input.progress?.answeredCount ?? 0));
+  const correctCount = Math.min(answeredCount, Math.max(0, Math.floor(input.progress?.correctCount ?? 0)));
+  const completedTaskCount = Math.max(0, Math.floor(input.progress?.completedTaskCount ?? 0));
+  const successfulTaskCount = Math.min(completedTaskCount, Math.max(0, Math.floor(input.progress?.successfulTaskCount ?? 0)));
   return {
     policyVersion: AGENT_DAILY_PLAN_POLICY_VERSION,
-    date: input.now.toISOString().slice(0, 10),
+    date: input.localDate ?? input.now.toISOString().slice(0, 10),
     primaryTask: readyTasks[0] ?? null,
     queuedTasks: readyTasks.slice(1),
+    progress: {
+      targetMinutes,
+      completedMinutes,
+      remainingMinutes,
+      answeredCount,
+      correctCount,
+      accuracy: answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : null,
+      completedTaskCount,
+      successfulTaskCount,
+      status: answeredCount === 0 && completedMinutes === 0
+        ? 'not_started' as const
+        : targetMinutes !== null && completedMinutes >= targetMinutes
+          ? 'goal_met' as const
+          : 'in_progress' as const
+    },
+    weeklyProgress: buildWeeklyLearningProgress(input.weeklyProgress),
+    plannedMinutes: readyTasks.reduce((sum, task) => sum + task.estimatedMinutes, 0),
+    deferredTaskCount: Math.max(0, tasks.length - readyTasks.length),
     scheduledVerificationCount: input.reviewQueue.filter((item) => item.status === 'improving' && !dueAtOrBefore(item.dueAt, input.now)).length,
     source: 'rules_and_learning_evidence' as const
   };

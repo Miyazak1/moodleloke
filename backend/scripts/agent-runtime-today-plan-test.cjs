@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const { AgentEventService } = require('../dist/backend/src/agent/agent-event.service');
 const { AgentRunnerService } = require('../dist/backend/src/agent/agent-runner.service');
-const { AgentService, dedupeReviewQueue } = require('../dist/backend/src/agent/agent.service');
+const { AgentService, dedupeReviewQueue, resolveAdaptiveDailyStudyTarget, resolveAgentFreePracticePreference, resolveDailyStudyTargetMinutes, selectSupplyAwareFallbackPractice } = require('../dist/backend/src/agent/agent.service');
 const { AgentToolExecutorService } = require('../dist/backend/src/agent/agent-tool-executor.service');
 const { AgentRuntimeFeatureFlagsService } = require('../dist/backend/src/agent/agent-runtime-feature-flags.service');
 const { AgentPracticeActionService } = require('../dist/backend/src/agent/agent-practice-action.service');
@@ -23,6 +23,7 @@ function testDailyPlanPrioritizesDueLearningWork() {
   const now = new Date('2026-10-12T08:00:00.000Z');
   const plan = buildAgentDailyPlan({
     now,
+    localDate: '2026-10-12',
     reviewQueue: [
       { reviewItemId: 11, patternType: 'concept_gap', topicId: 7, subject: 'math', title: '函数', dueAt: '2026-10-11T08:00:00.000Z', priority: 3, recurrenceCount: 3, status: 'improving', consecutiveVerificationPassCount: 1, requiredConsecutiveVerificationPassCount: 2 },
       { reviewItemId: 12, patternType: 'pacing', topicId: 8, subject: 'physics', title: '运动学', dueAt: null, priority: 2, recurrenceCount: 2, status: 'active', consecutiveVerificationPassCount: 0, requiredConsecutiveVerificationPassCount: 2 },
@@ -31,13 +32,120 @@ function testDailyPlanPrioritizesDueLearningWork() {
     prescription: {
       prescriptionId: 'rx-1', reasonCodes: ['MASTERY_BELOW_BASELINE'], confidence: 'high', estimatedMinutes: 15,
       primaryTask: { type: 'targeted_practice', subject: 'math', topicIds: [7], questionCount: 5 }
-    }
+    },
+    progress: { targetMinutes: 30, answeredCount: 5, correctCount: 4, practiceSeconds: 300, mockSeconds: 0, completedTaskCount: 2, successfulTaskCount: 1 },
+    weeklyProgress: { targetMinutes: 120, targetDays: 5, completedMinutes: 40, activeDays: 2, elapsedDays: 4 }
   });
   assert.equal(plan.primaryTask.kind, 'spaced_verification');
   assert.equal(plan.primaryTask.review.consecutivePassCount, 1);
   assert.equal(plan.queuedTasks[0].kind, 'mistake_review');
   assert.equal(plan.queuedTasks.some((item) => item.kind === 'prescription'), false, 'same-topic prescription must not duplicate a due review');
   assert.equal(plan.scheduledVerificationCount, 1);
+  assert.deepEqual(plan.progress, { targetMinutes: 30, completedMinutes: 5, remainingMinutes: 25, answeredCount: 5, correctCount: 4, accuracy: 80, completedTaskCount: 2, successfulTaskCount: 1, status: 'in_progress' });
+  assert.equal(plan.plannedMinutes, 22);
+  assert.equal(plan.deferredTaskCount, 0);
+  assert.deepEqual(plan.weeklyProgress, {
+    targetMinutes: 120, completedMinutes: 40, remainingMinutes: 80, targetDays: 5, activeDays: 2,
+    remainingStudyDays: null, requiredTodayMinutes: null, recommendedTodayMinutes: null,
+    sessionLimitMinutes: null, capacityStatus: 'unset', status: 'behind'
+  });
+}
+
+function testDailyPlanRespectsAvailableTime() {
+  const plan = buildAgentDailyPlan({
+    now: new Date('2026-10-12T08:00:00.000Z'),
+    reviewQueue: [
+      { reviewItemId: 21, patternType: 'concept_gap', topicId: 1, subject: 'math', title: '函数', dueAt: null, priority: 3, recurrenceCount: 3, status: 'improving', consecutiveVerificationPassCount: 1 },
+      { reviewItemId: 22, patternType: 'pacing', topicId: 2, subject: 'physics', title: '运动学', dueAt: null, priority: 2, recurrenceCount: 2, status: 'active' }
+    ],
+    prescription: null,
+    progress: { targetMinutes: 15, answeredCount: 3, correctCount: 2, practiceSeconds: 300, mockSeconds: 0 }
+  });
+  assert.equal(plan.primaryTask.kind, 'spaced_verification');
+  assert.equal(plan.queuedTasks.length, 0);
+  assert.equal(plan.deferredTaskCount, 1);
+  assert.equal(plan.progress.remainingMinutes, 10);
+  assert.equal(resolveDailyStudyTargetMinutes({ defaultSessionMinutes: 25, weeklyMinutesGoal: 120, preferredStudyDays: [1, 3, 5], weeklyGoalDays: 3 }), 25);
+  assert.equal(resolveDailyStudyTargetMinutes({ defaultSessionMinutes: null, weeklyMinutesGoal: 120, preferredStudyDays: [1, 3, 5], weeklyGoalDays: 3 }), 40);
+  assert.deepEqual(resolveAdaptiveDailyStudyTarget({
+    defaultSessionMinutes: null, weeklyMinutesGoal: 120, preferredStudyDays: [1, 3, 5], weeklyGoalDays: 3,
+    completedWeeklyMinutes: 20, activeDays: 1, currentWeekday: 3, todayActive: false
+  }), {
+    baseTargetMinutes: 40, recommendedTodayMinutes: 50, remainingStudyDays: 2,
+    requiredTodayMinutes: 50, sessionLimitMinutes: null
+  });
+  assert.deepEqual(resolveAdaptiveDailyStudyTarget({
+    defaultSessionMinutes: 30, weeklyMinutesGoal: 180, preferredStudyDays: [1, 3, 5], weeklyGoalDays: 3,
+    completedWeeklyMinutes: 30, activeDays: 1, currentWeekday: 5, todayActive: false
+  }), {
+    baseTargetMinutes: 30, recommendedTodayMinutes: 30, remainingStudyDays: 1,
+    requiredTodayMinutes: 150, sessionLimitMinutes: 30
+  });
+
+  const completedPlan = buildAgentDailyPlan({
+    now: new Date('2026-10-12T08:00:00.000Z'),
+    reviewQueue: [],
+    prescription: {
+      prescriptionId: 'rx-completed', reasonCodes: ['EVIDENCE_INSUFFICIENT'], confidence: 'low', estimatedMinutes: 10,
+      primaryTask: { type: 'diagnostic', subject: 'chemistry', topicIds: [3], questionCount: 3 }
+    },
+    completedPrescriptionIds: ['rx-completed'],
+    progress: { targetMinutes: 20, answeredCount: 3, correctCount: 3, practiceSeconds: 600, mockSeconds: 0, completedTaskCount: 1, successfulTaskCount: 1 },
+    weeklyProgress: { targetMinutes: 120, targetDays: 3, completedMinutes: 125, activeDays: 3, elapsedDays: 6 }
+  });
+  assert.equal(completedPlan.primaryTask, null, 'a completed current prescription must not be recommended again');
+  assert.equal(completedPlan.progress.completedTaskCount, 1);
+  assert.equal(completedPlan.deferredTaskCount, 0);
+  assert.equal(completedPlan.weeklyProgress.status, 'goal_met');
+
+  const fallbackPlan = buildAgentDailyPlan({
+    now: new Date('2026-10-12T08:00:00.000Z'),
+    localDate: '2026-10-12',
+    reviewQueue: [],
+    prescription: null,
+    fallbackPractice: { subject: 'physics', questionCount: 5 },
+    progress: { targetMinutes: 30, answeredCount: 0, correctCount: 0, practiceSeconds: 0, mockSeconds: 0 }
+  });
+  assert.equal(fallbackPlan.primaryTask.kind, 'free_practice');
+  assert.equal(fallbackPlan.primaryTask.action, 'start_free_practice');
+  assert.equal(fallbackPlan.primaryTask.subject, 'physics');
+  assert.deepEqual(fallbackPlan.primaryTask.freePractice, { questionCount: 5 });
+  assert.equal(fallbackPlan.primaryTask.estimatedMinutes, 10);
+
+  const noFallbackAfterGoal = buildAgentDailyPlan({
+    now: new Date('2026-10-12T08:00:00.000Z'), reviewQueue: [], prescription: null,
+    fallbackPractice: { subject: 'math', questionCount: 3 },
+    progress: { targetMinutes: 10, answeredCount: 3, correctCount: 2, practiceSeconds: 600, mockSeconds: 0 }
+  });
+  assert.equal(noFallbackAfterGoal.primaryTask, null, 'free practice must not be scheduled after the daily time target is met');
+  assert.deepEqual(resolveAgentFreePracticePreference({ agentLearningPreference: { defaultFreePracticeSubject: 'chemistry', defaultFreePracticeCount: 10 } }, 'math'), { subject: 'chemistry', questionCount: 10 });
+  assert.deepEqual(resolveAgentFreePracticePreference({}, 'physics'), { subject: 'physics', questionCount: 5 });
+  assert.deepEqual(selectSupplyAwareFallbackPractice({
+    preferredQuestionCount: 10,
+    candidates: [
+      { subject: 'chemistry', availableCount: 2, status: 'limited' },
+      { subject: 'math', availableCount: 5, status: 'limited' },
+      { subject: 'physics', availableCount: 20, status: 'sufficient' }
+    ]
+  }), {
+    status: 'ready', subject: 'math', questionCount: 5,
+    candidates: [
+      { subject: 'chemistry', availableCount: 2, status: 'limited' },
+      { subject: 'math', availableCount: 5, status: 'limited' },
+      { subject: 'physics', availableCount: 20, status: 'sufficient' }
+    ]
+  });
+  assert.equal(selectSupplyAwareFallbackPractice({
+    preferredQuestionCount: 5,
+    candidates: [
+      { subject: 'math', availableCount: 2, status: 'limited' },
+      { subject: 'physics', availableCount: 0, status: 'empty' }
+    ]
+  }).status, 'unavailable');
+  assert.equal(selectSupplyAwareFallbackPractice({
+    preferredQuestionCount: 5,
+    candidates: [{ subject: 'math', availableCount: null, status: 'unknown' }]
+  }).status, 'unknown');
 }
 
 function runtimeStore(overrides = {}) {
@@ -1426,6 +1534,7 @@ async function testEventReplayIsUserScopedAndResumesAfterCursor() {
 
 async function main() {
   testDailyPlanPrioritizesDueLearningWork();
+  testDailyPlanRespectsAvailableTime();
   await testTodayPlanCompletesInOrder();
   await testDiagnosticPreflightUsesTheSubjectPool();
   await testLlmRoutingCanRecognizeNaturalPlanRequestWithoutChoosingTools();

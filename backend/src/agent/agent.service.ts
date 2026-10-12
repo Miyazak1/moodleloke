@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import {
   ConflictException,
   Injectable,
+  Logger,
   NotFoundException,
   Optional,
   ServiceUnavailableException
@@ -51,6 +52,138 @@ function recordValue(value: Prisma.JsonValue | null | undefined): Record<string,
   return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
 }
 
+export function resolveAgentFreePracticePreference(metadataValue: unknown, fallbackSubject: 'math' | 'physics' | 'chemistry') {
+  const metadata = metadataValue && typeof metadataValue === 'object' && !Array.isArray(metadataValue)
+    ? metadataValue as Record<string, unknown>
+    : {};
+  const value = metadata.agentLearningPreference && typeof metadata.agentLearningPreference === 'object' && !Array.isArray(metadata.agentLearningPreference)
+    ? metadata.agentLearningPreference as Record<string, unknown>
+    : {};
+  const subject = value.defaultFreePracticeSubject === 'math' || value.defaultFreePracticeSubject === 'physics' || value.defaultFreePracticeSubject === 'chemistry'
+    ? value.defaultFreePracticeSubject
+    : fallbackSubject;
+  const questionCount = value.defaultFreePracticeCount === 3 || value.defaultFreePracticeCount === 10
+    ? value.defaultFreePracticeCount
+    : 5;
+  return { subject, questionCount } as const;
+}
+
+export function selectSupplyAwareFallbackPractice(input: {
+  preferredQuestionCount: 3 | 5 | 10;
+  candidates: Array<{
+    subject: 'math' | 'physics' | 'chemistry';
+    availableCount: number | null;
+    status: 'sufficient' | 'limited' | 'empty' | 'unknown';
+  }>;
+}) {
+  for (const candidate of input.candidates) {
+    if (candidate.availableCount === null) continue;
+    const availableCount = candidate.availableCount;
+    const questionCount = ([10, 5, 3] as const)
+      .find((count) => count <= input.preferredQuestionCount && count <= availableCount);
+    if (questionCount) {
+      return {
+        status: 'ready' as const,
+        subject: candidate.subject,
+        questionCount,
+        candidates: input.candidates
+      };
+    }
+  }
+  return {
+    status: input.candidates.some((candidate) => candidate.status === 'unknown')
+      ? 'unknown' as const
+      : 'unavailable' as const,
+    subject: null,
+    questionCount: null,
+    candidates: input.candidates
+  };
+}
+
+const SHANGHAI_OFFSET_MS = 8 * 60 * 60 * 1000;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+function shanghaiLocalDate(input: Date) {
+  return new Date(input.getTime() + SHANGHAI_OFFSET_MS).toISOString().slice(0, 10);
+}
+
+function shanghaiLocalDateStart(input: Date) {
+  const [year, month, day] = shanghaiLocalDate(input).split('-').map(Number);
+  return new Date(Date.UTC(year, month - 1, day) - SHANGHAI_OFFSET_MS);
+}
+
+function shanghaiWeekContext(input: Date) {
+  const [year, month, day] = shanghaiLocalDate(input).split('-').map(Number);
+  const localCalendarDate = new Date(Date.UTC(year, month - 1, day));
+  const elapsedDays = ((localCalendarDate.getUTCDay() + 6) % 7) + 1;
+  return {
+    start: new Date(localCalendarDate.getTime() - (elapsedDays - 1) * DAY_MS - SHANGHAI_OFFSET_MS),
+    elapsedDays
+  };
+}
+
+export function resolveDailyStudyTargetMinutes(input: {
+  defaultSessionMinutes: number | null;
+  weeklyMinutesGoal: number | null;
+  preferredStudyDays: Array<string | number>;
+  weeklyGoalDays: number | null;
+}) {
+  if (input.defaultSessionMinutes && input.defaultSessionMinutes > 0) return Math.round(input.defaultSessionMinutes);
+  if (!input.weeklyMinutesGoal || input.weeklyMinutesGoal <= 0) return null;
+  const studyDays = input.preferredStudyDays.length || input.weeklyGoalDays || 7;
+  return Math.max(1, Math.round(input.weeklyMinutesGoal / Math.max(1, studyDays)));
+}
+
+export function resolveAdaptiveDailyStudyTarget(input: {
+  defaultSessionMinutes: number | null;
+  weeklyMinutesGoal: number | null;
+  preferredStudyDays: Array<string | number>;
+  weeklyGoalDays: number | null;
+  completedWeeklyMinutes: number;
+  activeDays: number;
+  currentWeekday: number;
+  todayActive: boolean;
+}) {
+  const baseTargetMinutes = resolveDailyStudyTargetMinutes(input);
+  const weeklyMinutesGoal = input.weeklyMinutesGoal && input.weeklyMinutesGoal > 0
+    ? Math.round(input.weeklyMinutesGoal)
+    : null;
+  const remainingWeeklyMinutes = weeklyMinutesGoal === null
+    ? null
+    : Math.max(0, weeklyMinutesGoal - Math.max(0, Math.round(input.completedWeeklyMinutes)));
+  const currentWeekday = Math.min(7, Math.max(1, Math.round(input.currentWeekday)));
+  const preferredStudyDays = [...new Set(input.preferredStudyDays
+    .map(Number)
+    .filter((day) => Number.isInteger(day) && day >= 1 && day <= 7))];
+  const remainingCalendarDays = 8 - currentWeekday;
+  const remainingStudyDays = preferredStudyDays.length
+    ? Math.max(1, preferredStudyDays.filter((day) => day >= currentWeekday).length)
+    : input.weeklyGoalDays && input.weeklyGoalDays > 0
+      ? Math.max(1, Math.min(remainingCalendarDays, Math.round(input.weeklyGoalDays) - Math.max(0, input.activeDays) + (input.todayActive ? 1 : 0)))
+      : remainingCalendarDays;
+  const requiredTodayMinutes = remainingWeeklyMinutes === null || remainingWeeklyMinutes === 0
+    ? null
+    : Math.max(1, Math.ceil(remainingWeeklyMinutes / remainingStudyDays));
+  const sessionLimitMinutes = input.defaultSessionMinutes && input.defaultSessionMinutes > 0
+    ? Math.round(input.defaultSessionMinutes)
+    : null;
+  const unconstrainedRecommendation = requiredTodayMinutes === null
+    ? baseTargetMinutes
+    : Math.max(baseTargetMinutes ?? 0, requiredTodayMinutes);
+  const recommendedTodayMinutes = unconstrainedRecommendation === null
+    ? null
+    : sessionLimitMinutes === null
+      ? unconstrainedRecommendation
+      : Math.min(sessionLimitMinutes, unconstrainedRecommendation);
+  return {
+    baseTargetMinutes,
+    recommendedTodayMinutes,
+    remainingStudyDays,
+    requiredTodayMinutes,
+    sessionLimitMinutes
+  };
+}
+
 function questionBinding(value: unknown) {
   const pageContext = value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
   const context = pageContext.questionContext && typeof pageContext.questionContext === 'object' && !Array.isArray(pageContext.questionContext)
@@ -65,6 +198,8 @@ function questionBinding(value: unknown) {
 
 @Injectable()
 export class AgentService {
+  private readonly logger = new Logger(AgentService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly flags: AgentRuntimeFeatureFlagsService,
@@ -80,6 +215,7 @@ export class AgentService {
   async getJourneyOverview(userId: number, locale: string | undefined) {
     this.assertEnabled();
     if (!this.learningRead || !this.pastPapers) throw new ServiceUnavailableException('Agent journey data is unavailable.');
+    const generatedAt = new Date();
     const language = locale === 'en' ? 'en' as const : 'zh' as const;
     await this.projector?.processPending(200).catch(() => undefined);
     const [profile, mastery, reviewQueue, scoreGoal, planningDecision] = await Promise.all([
@@ -94,8 +230,10 @@ export class AgentService {
     const subjects = profile.targetSubjectCodes.length
       ? profile.targetSubjectCodes
       : ['math', 'physics', 'chemistry'] as const;
-    const qualityWindowStart = new Date(Date.now() - 30 * 86_400_000);
-    const [paperGroups, topicCounts, prescriptions, prescriptionOutcomes, validations, activePatterns, checkpoints, latestEvidence] = await Promise.all([
+    const qualityWindowStart = new Date(generatedAt.getTime() - 30 * 86_400_000);
+    const localDateStart = shanghaiLocalDateStart(generatedAt);
+    const weekContext = shanghaiWeekContext(generatedAt);
+    const [paperGroups, topicCounts, prescriptions, prescriptionOutcomes, validations, activePatterns, checkpoints, latestEvidence, dailySnapshot, dailySettlements, weeklySnapshots, learningPreferenceProfile] = await Promise.all([
       Promise.all(subjects.map((subject) => this.pastPapers!.listPublic({
         subject,
         category: 'past-paper',
@@ -131,7 +269,25 @@ export class AgentService {
       Promise.all(subjects.map((subject) => this.prisma.learningEvidenceEvent?.findFirst({
         where: { userId, subjectCode: subject, retraction: { is: null } },
         select: { subjectCode: true, eventSequence: true }, orderBy: { eventSequence: 'desc' }
-      }) ?? Promise.resolve(null)))
+      }) ?? Promise.resolve(null))),
+      this.prisma.cscaLearningDailySnapshot?.findUnique({
+        where: { userId_localDate_subject: { userId, localDate: localDateStart, subject: 'all' } },
+        select: { answeredCount: true, correctCount: true, practiceSeconds: true, mockSeconds: true }
+      }) ?? Promise.resolve(null),
+      this.prisma.agentToolCall?.findMany?.({
+        where: {
+          userId,
+          toolName: { in: ['settle_learning_task', 'settle_mock_exam'] },
+          status: 'completed',
+          completedAt: { gte: localDateStart }
+        },
+        select: { output: true }
+      }) ?? Promise.resolve([]),
+      this.prisma.cscaLearningDailySnapshot?.findMany?.({
+        where: { userId, subject: 'all', localDate: { gte: weekContext.start, lte: localDateStart } },
+        select: { practiceSeconds: true, mockSeconds: true, answeredCount: true, isStreakEligible: true }
+      }) ?? Promise.resolve([]),
+      this.prisma.studentProfile?.findUnique?.({ where: { userId }, select: { metadata: true } }) ?? Promise.resolve(null)
     ]);
     const resources = paperGroups.flatMap((group) => group.items)
       .filter((item, index, items) => items.findIndex((candidate) => candidate.id === item.id) === index)
@@ -188,10 +344,55 @@ export class AgentService {
       supply
     });
     const dedupedReviewQueue = dedupeReviewQueue(reviewQueue.items).slice(0, 12);
-    const generatedAt = new Date();
-    const dailyPlan = buildAgentDailyPlan({
+    const studyAvailability = profile.studyAvailability ?? {
+      defaultSessionMinutes: null,
+      weeklyMinutesGoal: null,
+      preferredStudyDays: []
+    };
+    const weeklyCompletedMinutes = weeklySnapshots.reduce((sum, item) => sum + item.practiceSeconds + item.mockSeconds, 0) / 60;
+    const weeklyActiveDays = weeklySnapshots.filter((item) => item.isStreakEligible || item.answeredCount > 0 || item.practiceSeconds + item.mockSeconds > 0).length;
+    const todayActive = Boolean(dailySnapshot && (dailySnapshot.answeredCount > 0 || dailySnapshot.practiceSeconds + dailySnapshot.mockSeconds > 0));
+    const adaptiveDailyTarget = resolveAdaptiveDailyStudyTarget({
+      defaultSessionMinutes: studyAvailability.defaultSessionMinutes,
+      weeklyMinutesGoal: studyAvailability.weeklyMinutesGoal,
+      preferredStudyDays: studyAvailability.preferredStudyDays,
+      weeklyGoalDays: profile.weeklyGoalDays,
+      completedWeeklyMinutes: weeklyCompletedMinutes,
+      activeDays: weeklyActiveDays,
+      currentWeekday: weekContext.elapsedDays,
+      todayActive
+    });
+    const freePracticePreference = resolveAgentFreePracticePreference(
+      learningPreferenceProfile?.metadata,
+      subjects[0] ?? 'math'
+    );
+    const dailyPlanInput = {
       now: generatedAt,
+      localDate: shanghaiLocalDate(generatedAt),
       reviewQueue: dedupedReviewQueue,
+      completedPrescriptionIds: prescriptionOutcomes
+        .filter((item) => item.decision === 'completed')
+        .map((item) => item.prescriptionId),
+      progress: {
+        targetMinutes: adaptiveDailyTarget.recommendedTodayMinutes,
+        answeredCount: dailySnapshot?.answeredCount ?? 0,
+        correctCount: dailySnapshot?.correctCount ?? 0,
+        practiceSeconds: dailySnapshot?.practiceSeconds ?? 0,
+        mockSeconds: dailySnapshot?.mockSeconds ?? 0,
+        completedTaskCount: dailySettlements.length,
+        successfulTaskCount: dailySettlements.filter((item) => recordValue(item.output).decision === 'completed').length
+      },
+      weeklyProgress: {
+        targetMinutes: studyAvailability.weeklyMinutesGoal,
+        targetDays: studyAvailability.preferredStudyDays.length || profile.weeklyGoalDays,
+        completedMinutes: weeklyCompletedMinutes,
+        activeDays: weeklyActiveDays,
+        elapsedDays: weekContext.elapsedDays,
+        remainingStudyDays: adaptiveDailyTarget.remainingStudyDays,
+        requiredTodayMinutes: adaptiveDailyTarget.requiredTodayMinutes,
+        recommendedTodayMinutes: adaptiveDailyTarget.recommendedTodayMinutes,
+        sessionLimitMinutes: adaptiveDailyTarget.sessionLimitMinutes
+      },
       prescription: currentPrescription ? {
         prescriptionId: currentPrescription.prescriptionId,
         reasonCodes: currentPrescription.reasonCodes,
@@ -199,7 +400,75 @@ export class AgentService {
         estimatedMinutes: currentPrescription.estimatedMinutes,
         primaryTask
       } : null
-    });
+    };
+    const baseDailyPlan = buildAgentDailyPlan(dailyPlanInput);
+    let fallbackPracticeAvailability: ReturnType<typeof selectSupplyAwareFallbackPractice> | { status: 'not_needed'; subject: null; questionCount: null; candidates: [] } = {
+      status: 'not_needed', subject: null, questionCount: null, candidates: []
+    };
+    let dailyPlan = baseDailyPlan;
+    if (!baseDailyPlan.primaryTask && (baseDailyPlan.progress.remainingMinutes ?? 0) > 0) {
+      const candidateSubjects = [...new Set([freePracticePreference.subject, ...subjects])];
+      const supplyCandidates = await Promise.all(candidateSubjects.map(async (subject) => {
+        try {
+          const status = await this.learningRead!.getQuestionSupplyStatus({
+            subject,
+            topicIds: [],
+            requestedCount: freePracticePreference.questionCount
+          });
+          return {
+            subject,
+            availableCount: status.availableCount,
+            status: status.status
+          };
+        } catch {
+          return { subject, availableCount: null, status: 'unknown' as const };
+        }
+      }));
+      fallbackPracticeAvailability = selectSupplyAwareFallbackPractice({
+        preferredQuestionCount: freePracticePreference.questionCount,
+        candidates: supplyCandidates
+      });
+      if (fallbackPracticeAvailability.status === 'ready') {
+        dailyPlan = buildAgentDailyPlan({
+          ...dailyPlanInput,
+          fallbackPractice: {
+            subject: fallbackPracticeAvailability.subject,
+            questionCount: fallbackPracticeAvailability.questionCount
+          }
+        });
+      }
+    }
+    const dailyPlanWithSupply = { ...dailyPlan, fallbackPracticeAvailability };
+    this.logger.log(JSON.stringify({
+      event: 'agent_daily_plan_resolved',
+      policyVersion: dailyPlanWithSupply.policyVersion,
+      userId,
+      localDate: dailyPlanWithSupply.date,
+      state: dailyPlanWithSupply.primaryTask
+        ? `task_${dailyPlanWithSupply.primaryTask.kind}`
+        : fallbackPracticeAvailability.status === 'unavailable'
+          ? 'question_supply_unavailable'
+          : fallbackPracticeAvailability.status === 'unknown'
+            ? 'question_supply_unknown'
+            : dailyPlanWithSupply.progress.status === 'goal_met'
+              ? 'daily_goal_met'
+              : 'no_actionable_task',
+      dailyProgressStatus: dailyPlanWithSupply.progress.status,
+      weeklyProgressStatus: dailyPlanWithSupply.weeklyProgress.status,
+      completedMinutes: dailyPlanWithSupply.progress.completedMinutes,
+      targetMinutes: dailyPlanWithSupply.progress.targetMinutes,
+      completedTaskCount: dailyPlanWithSupply.progress.completedTaskCount,
+      plannedMinutes: dailyPlanWithSupply.plannedMinutes,
+      deferredTaskCount: dailyPlanWithSupply.deferredTaskCount,
+      fallbackPracticeStatus: fallbackPracticeAvailability.status,
+      fallbackPracticeSubject: fallbackPracticeAvailability.subject,
+      fallbackPracticeQuestionCount: fallbackPracticeAvailability.questionCount,
+      supplyCandidates: fallbackPracticeAvailability.candidates.map((candidate) => ({
+        subject: candidate.subject,
+        availableCount: candidate.availableCount,
+        status: candidate.status
+      }))
+    }));
     return {
       schemaVersion: '1',
       generatedAt: generatedAt.toISOString(),
@@ -247,7 +516,7 @@ export class AgentService {
         source: 'learning_prescription' as const,
         generatedByAI: false as const
       } : null,
-      dailyPlan,
+      dailyPlan: dailyPlanWithSupply,
       learningQuality: quality,
       weaknesses: {
         stateSource: mastery.stateSource,

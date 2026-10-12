@@ -885,7 +885,15 @@ test('shows the latest evidence-driven decision in learning settings and starts 
         estimatedMinutes: 10, reasonCodes: ['SYLLABUS_COVERAGE_INCOMPLETE'], action: 'start_prescription', review: null,
         prescription: { prescriptionId: 'prescription-latest', taskType: 'diagnostic', topicIds: [3], questionCount: 3, confidence: 'low' }
       },
-      queuedTasks: []
+      queuedTasks: [],
+      progress: { targetMinutes: 30, completedMinutes: 8, remainingMinutes: 22, answeredCount: 5, correctCount: 4, accuracy: 80, completedTaskCount: 1, successfulTaskCount: 1, status: 'in_progress' },
+      weeklyProgress: {
+        targetMinutes: 150, completedMinutes: 62, remainingMinutes: 88, targetDays: 5, activeDays: 3,
+        remainingStudyDays: 2, requiredTodayMinutes: 44, recommendedTodayMinutes: 30,
+        sessionLimitMinutes: 30, capacityStatus: 'limited', status: 'on_track'
+      },
+      plannedMinutes: 10,
+      deferredTaskCount: 0
     },
     weaknesses: { stateSource: 'user_csca_topic_mastery_v1', subjects: [], reviewQueue: [] },
     resources: { source: 'published_past_papers', subjectScope: ['chemistry'], items: [] }
@@ -910,6 +918,12 @@ test('shows the latest evidence-driven decision in learning settings and starts 
   const dailyPlan = page.locator('.agent-daily-plan-card');
   await expect(dailyPlan).toContainText('今日首选任务');
   await expect(dailyPlan).toContainText('化学 · 短诊断');
+  await expect(dailyPlan).toContainText('今日已答');
+  await expect(dailyPlan).toContainText('80%');
+  await expect(dailyPlan).toContainText('8/30');
+  await expect(dailyPlan).toContainText('今日已完成 1 项 Agent 任务');
+  await expect(dailyPlan).toContainText('本周节奏正常');
+  await expect(dailyPlan).toContainText('按进度今天需 44 分钟，但单次上限为 30 分钟；建议增加学习日');
   await expect(page.locator('.agent-recommendation-card')).toHaveCount(0);
   await page.getByRole('button', { name: '学习设置', exact: true }).click();
   const currentDecision = page.locator('.agent-live-decision-card');
@@ -930,6 +944,123 @@ test('shows the latest evidence-driven decision in learning settings and starts 
   expect(startBody).toMatchObject({ questionLanguage: 'zh' });
   await expect(page).toHaveURL(/agentRoundId=171.*agentView=practice.*agentTaskType=diagnostic.*agentSubject=chemistry/);
   await expect(page.getByText('下列属于化学变化的是？')).toBeVisible();
+});
+
+test('shows the latest evidence-driven decision as completed without repeating it', async ({ page }) => {
+  await mockAgentWorkspace(page);
+  await page.route((url) => url.pathname === '/api/v1/agent/journey/overview', (route) => json(route, {
+    schemaVersion: '1', generatedAt: '2026-10-12T08:00:00.000Z',
+    goal: { examDate: '2027-06-01', weeklyGoalDays: 5, totalTargetScore: 255, subjects: [{ subject: 'chemistry', targetScore: 85 }] },
+    progress: { subjects: [] },
+    nextDecision: {
+      prescriptionId: 'prescription-completed', reasonSummary: 'Complete chemistry diagnostic.', reasonCodes: ['EVIDENCE_INSUFFICIENT'],
+      confidence: 'low', estimatedMinutes: 10, source: 'learning_prescription', generatedByAI: false,
+      primaryTask: { type: 'diagnostic', subject: 'chemistry', topicIds: [3], questionCount: 3, priority: 1 }
+    },
+    dailyPlan: {
+      policyVersion: 'agent-daily-plan-v1', date: '2026-10-12', primaryTask: null, queuedTasks: [],
+      progress: { targetMinutes: 20, completedMinutes: 10, remainingMinutes: 10, answeredCount: 3, correctCount: 3, accuracy: 100, completedTaskCount: 1, successfulTaskCount: 1, status: 'in_progress' },
+      weeklyProgress: {
+        targetMinutes: 120, completedMinutes: 125, remainingMinutes: 0, targetDays: 3, activeDays: 3,
+        remainingStudyDays: 1, requiredTodayMinutes: null, recommendedTodayMinutes: 20,
+        sessionLimitMinutes: 20, capacityStatus: 'unset', status: 'goal_met'
+      },
+      plannedMinutes: 0, deferredTaskCount: 0, scheduledVerificationCount: 1, source: 'rules_and_learning_evidence'
+    },
+    weaknesses: { stateSource: 'user_csca_topic_mastery_v1', subjects: [], reviewQueue: [] },
+    resources: { source: 'published_past_papers', subjectScope: ['chemistry'], items: [] }
+  }));
+
+  await page.goto('/agent');
+  const completedPlan = page.locator('.agent-daily-plan-card[data-state="completed"]');
+  await expect(completedPlan).toContainText('今日任务已完成');
+  await expect(completedPlan).toContainText('今日已完成 1 项 Agent 任务');
+  await expect(completedPlan).toContainText('不会重复推荐已经完成的任务');
+  await expect(completedPlan).toContainText('本周目标已完成');
+  await expect(page.locator('.agent-recommendation-card')).toHaveCount(0);
+});
+
+test('shows the latest evidence-driven decision plan with an actionable free-practice fallback', async ({ page }) => {
+  await mockAgentWorkspace(page);
+  const now = '2026-10-12T08:00:00.000Z';
+  let startBody: Record<string, unknown> | null = null;
+  await page.route((url) => url.pathname === '/api/v1/agent/journey/overview', (route) => json(route, {
+    schemaVersion: '1', generatedAt: '2026-10-12T08:00:00.000Z',
+    goal: { examDate: '2027-06-01', weeklyGoalDays: 3, totalTargetScore: 255, subjects: [{ subject: 'physics', targetScore: 85 }] },
+    progress: { subjects: [] }, nextDecision: null,
+    dailyPlan: {
+      policyVersion: 'agent-daily-plan-v1', date: '2026-10-12', queuedTasks: [],
+      primaryTask: {
+        taskId: 'free-practice:2026-10-12:physics', kind: 'free_practice', subject: 'physics', title: null, topicId: null,
+        estimatedMinutes: 10, reasonCodes: ['DAILY_TIME_REMAINING'], action: 'start_free_practice', review: null,
+        prescription: null, freePractice: { questionCount: 5 }
+      },
+      progress: { targetMinutes: 30, completedMinutes: 0, remainingMinutes: 30, answeredCount: 0, correctCount: 0, accuracy: null, completedTaskCount: 0, successfulTaskCount: 0, status: 'not_started' },
+      weeklyProgress: { targetMinutes: 90, completedMinutes: 0, remainingMinutes: 90, targetDays: 3, activeDays: 0, remainingStudyDays: 3, requiredTodayMinutes: 30, recommendedTodayMinutes: 30, sessionLimitMinutes: 30, capacityStatus: 'sufficient', status: 'not_started' },
+      plannedMinutes: 10, deferredTaskCount: 0, scheduledVerificationCount: 0,
+      fallbackPracticeAvailability: { status: 'ready', subject: 'physics', questionCount: 5, candidates: [{ subject: 'physics', availableCount: 42, status: 'sufficient' }] },
+      source: 'rules_and_learning_evidence'
+    },
+    weaknesses: { stateSource: 'user_csca_topic_mastery_v1', subjects: [], reviewQueue: [] },
+    resources: { source: 'published_past_papers', subjectScope: ['physics'], items: [] }
+  }));
+  await page.route('**/api/v1/agent/free-practice/start', async (route) => {
+    startBody = await route.request().postDataJSON();
+    return json(route, {
+      schemaVersion: '1', artifactId: 'fallback-free-1', conversationId, sessionId: 61, roundId: 161,
+      mode: 'practice', questionCount: 5, subject: 'physics', questionLanguage: 'zh',
+      toolName: 'start_student_initiated_practice', taskType: 'free_practice', route: '/agent', legacyRoute: '/csca-subjects/physics/practice/rounds/161',
+      workspace: { kind: 'adaptive_round', phase: 'practice', taskType: 'free_practice', subject: 'physics', reasonCodes: ['student_initiated'], objective: null }
+    });
+  });
+  await page.route('**/api/v1/csca-special-practice/adaptive/ai/entitlement', (route) => json(route, { enabled: true, unlimited: false, balanceUnits: 50 }));
+  await page.route('**/api/v1/csca-special-practice/adaptive/rounds/161**', (route) => json(route, {
+    session: { id: 61, userId: 42, subject: 'physics', mode: 'adaptive', status: 'active', questionLanguage: 'zh', startedAt: now, completedAt: null, createdAt: now, updatedAt: now },
+    round: { id: 161, sessionId: 61, roundIndex: 1, status: 'active', plannerSnapshot: { mode: 'practice' }, answers: {}, timeSpent: {}, currentQuestion: 1, correctCount: 0, wrongCount: 0, unansweredCount: 1, startedAt: now, submittedAt: null, version: 1 },
+    questions: [{ id: 1601, orderNumber: 1, difficulty: 'basic', questionType: 'single-choice', prompt: '自由落体的加速度方向是？', options: [{ id: 'A', text: '向上' }, { id: 'B', text: '向下' }], topicId: 47, topicCode: 'motion', topicTitle: '运动学', position: 1 }]
+  }));
+
+  await page.goto('/agent');
+  const dailyPlan = page.locator('.agent-daily-plan-card');
+  await expect(dailyPlan).toContainText('补足今日学习时间');
+  await expect(dailyPlan).toContainText('物理 · 自由练习');
+  await expect(dailyPlan).toContainText('5 题');
+  await dailyPlan.getByRole('button', { name: '开始学习', exact: true }).click();
+  await expect.poll(() => startBody).not.toBeNull();
+  expect(startBody).toMatchObject({ subject: 'physics', questionCount: 5, practiceMode: 'mixed' });
+  await expect(page).toHaveURL(/agentRoundId=161.*agentTaskType=free_practice.*agentSubject=physics/);
+  await expect(page.getByText('自由落体的加速度方向是？')).toBeVisible();
+});
+
+test('shows the latest evidence-driven decision plan with an honest question-supply empty state', async ({ page }) => {
+  await mockAgentWorkspace(page);
+  await page.route((url) => url.pathname === '/api/v1/agent/journey/overview', (route) => json(route, {
+    schemaVersion: '1', generatedAt: '2026-10-12T08:00:00.000Z',
+    goal: { examDate: '2027-06-01', weeklyGoalDays: 3, totalTargetScore: 255, subjects: [{ subject: 'math', targetScore: 85 }, { subject: 'physics', targetScore: 85 }] },
+    progress: { subjects: [] }, nextDecision: null,
+    dailyPlan: {
+      policyVersion: 'agent-daily-plan-v1', date: '2026-10-12', primaryTask: null, queuedTasks: [],
+      progress: { targetMinutes: 30, completedMinutes: 0, remainingMinutes: 30, answeredCount: 0, correctCount: 0, accuracy: null, completedTaskCount: 0, successfulTaskCount: 0, status: 'not_started' },
+      weeklyProgress: { targetMinutes: 90, completedMinutes: 0, remainingMinutes: 90, targetDays: 3, activeDays: 0, remainingStudyDays: 3, requiredTodayMinutes: 30, recommendedTodayMinutes: 30, sessionLimitMinutes: 30, capacityStatus: 'sufficient', status: 'not_started' },
+      plannedMinutes: 0, deferredTaskCount: 0, scheduledVerificationCount: 0,
+      fallbackPracticeAvailability: {
+        status: 'unavailable', subject: null, questionCount: null,
+        candidates: [{ subject: 'math', availableCount: 2, status: 'limited' }, { subject: 'physics', availableCount: 0, status: 'empty' }]
+      },
+      source: 'rules_and_learning_evidence'
+    },
+    weaknesses: { stateSource: 'user_csca_topic_mastery_v1', subjects: [], reviewQueue: [] },
+    resources: { source: 'published_past_papers', subjectScope: ['math', 'physics'], items: [] }
+  }));
+
+  await page.goto('/agent');
+  const supplyState = page.locator('.agent-daily-plan-card[data-state="supply-unavailable"]');
+  await expect(supplyState).toContainText('今日计划等待可用题目');
+  await expect(supplyState).toContainText('当前题源不足');
+  await expect(supplyState).toContainText('数学 · 2 题');
+  await expect(supplyState).toContainText('物理 · 0 题');
+  await expect(supplyState.getByRole('button', { name: '调整学习设置', exact: true })).toBeVisible();
+  await expect(supplyState.getByRole('button', { name: /开始学习|开始练习/ })).toHaveCount(0);
 });
 
 test('retries a failed journey overview without reloading the Agent workspace', async ({ page }, testInfo) => {
