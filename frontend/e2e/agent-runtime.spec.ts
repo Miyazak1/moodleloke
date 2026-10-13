@@ -465,6 +465,12 @@ test('shows a continue-learning entry for an interrupted stage', async ({ page }
   await expect(page.getByText('完成后建议')).toBeVisible();
   await expect(page.getByText('当前推荐任务')).toHaveCount(0);
   await expect(page.getByText('保留原科目、题目位置和作答状态。').first()).toBeVisible();
+  const resumeCard = page.locator('.agent-primary-learning-card');
+  const resumeMetrics = resumeCard.locator('.agent-resume-metrics > span');
+  await expect(resumeMetrics).toHaveCount(3);
+  await expect.poll(async () => (await resumeMetrics.first().boundingBox())?.width ?? 0).toBeGreaterThan(120);
+  await expect.poll(() => resumeMetrics.first().evaluate((element) => getComputedStyle(element).backgroundColor)).toBe('rgba(255, 255, 255, 0.78)');
+  await expect.poll(() => continueLearning.evaluate((element) => getComputedStyle(element).backgroundColor)).toBe('rgb(49, 93, 255)');
   await continueLearning.click();
   await expect(page).toHaveURL(new RegExp(`agentContextId=${resumedConversationId}.*agentRoundId=81`), { timeout: 500 });
   await expect(page).not.toHaveURL(/[?&](?:conversation|agentConversationId)=/);

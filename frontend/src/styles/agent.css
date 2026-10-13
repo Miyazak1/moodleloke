@@ -1169,7 +1169,7 @@
 .agent-learning-entry-card { display: grid; gap: 10px; padding: 14px; border: 1px solid rgba(49, 93, 255, .2); border-radius: 13px; background: linear-gradient(145deg, rgba(241, 245, 255, .96), rgba(238, 255, 249, .9)); box-shadow: 0 10px 26px rgba(49, 93, 255, .07); }
 .agent-learning-entry-card > div { display: grid; grid-template-columns: 34px minmax(0, 1fr); align-items: center; gap: 9px; }
 .agent-learning-entry-card > div > span { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 10px; background: var(--agent-blue); color: #fff; }
-.agent-learning-entry-card[data-state="resume"] > div > span { background: var(--agent-mint-dark); }
+.agent-learning-entry-card[data-state="resume"] > div:first-child > span { background: var(--agent-blue); }
 .agent-learning-entry-card[data-state="due-verification"] { border-color: rgba(8,124,102,.28); background: linear-gradient(145deg, rgba(238,255,249,.98), rgba(241,245,255,.92)); }
 .agent-learning-entry-card[data-state="due-verification"] > div > span { background: var(--agent-mint-dark); }
 .agent-daily-plan-card { border-color: rgba(49,93,255,.28); background: linear-gradient(145deg, rgba(241,245,255,.98), rgba(238,255,249,.94)); }
@@ -1242,16 +1242,16 @@
 .agent-daily-actions > button.secondary { min-width: 0; border-color: #bfd0ff; background: #fff; color: var(--agent-blue); box-shadow: none; }
 .agent-daily-actions > button:disabled { cursor: wait; opacity: .6; }
 .agent-daily-actions > button svg { width: 14px; height: 14px; }
-.agent-learning-entry-card[data-state="resume"] > button { border-color: var(--agent-mint-dark); background: var(--agent-mint-dark); box-shadow: 0 8px 20px rgba(8, 124, 102, .16); }
+.agent-learning-entry-card[data-state="resume"] > button { border-color: var(--agent-blue); background: var(--agent-blue); box-shadow: 0 8px 20px rgba(49, 93, 255, .16); }
 .agent-learning-entry-card > button:disabled { cursor: wait; opacity: .6; }
 .agent-learning-entry-card > button svg { width: 14px; height: 14px; }
 .agent-learning-entry-card > small[role="alert"] { color: #a53a2c; line-height: 1.45; }
 .agent-learning-entry-card > .agent-resume-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.agent-resume-metrics > span { display: flex; min-width: 0; min-height: 48px; align-items: baseline; justify-content: center; gap: 5px; padding: 9px; border: 1px solid rgba(8, 124, 102, .13); border-radius: 10px; background: rgba(255,255,255,.72); color: var(--agent-muted); font-size: 11px; font-weight: 750; }
+.agent-learning-entry-card > .agent-resume-metrics > span { display: flex; width: auto; min-width: 0; height: auto; min-height: 52px; align-items: baseline; justify-content: center; gap: 5px; padding: 10px 12px; border: 1px solid rgba(49, 93, 255, .13); border-radius: 10px; background: rgba(255,255,255,.78); color: var(--agent-muted); font-size: 11px; font-weight: 750; }
 .agent-resume-metrics b { color: var(--agent-ink); font-size: 16px; }
 .agent-learning-entry-card > .agent-resume-actions { display: flex; grid-template-columns: none; flex-wrap: wrap; gap: 8px; }
-.agent-resume-actions > button { display: inline-flex; min-height: 36px; flex: 1 1 200px; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--agent-mint-dark); border-radius: 9px; background: var(--agent-mint-dark); color: #fff; font: inherit; font-size: 12px; font-weight: 900; cursor: pointer; }
-.agent-resume-actions > button.secondary { border-color: #bfd0ff; background: #fff; color: var(--agent-blue); }
+.agent-resume-actions > button { display: inline-flex; min-height: 38px; flex: 1 1 200px; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--agent-blue); border-radius: 9px; background: var(--agent-blue); color: #fff; font: inherit; font-size: 12px; font-weight: 900; box-shadow: 0 8px 20px rgba(49, 93, 255, .14); cursor: pointer; }
+.agent-resume-actions > button.secondary { border-color: #bfd0ff; background: #fff; color: var(--agent-blue); box-shadow: none; }
 .agent-resume-actions > button:disabled { cursor: wait; opacity: .6; }
 
 .agent-last-practice-summary { display: grid; gap: 13px; padding: 15px 17px; border: 1px solid #dce7e3; border-radius: 15px; background: rgba(255,255,255,.88); }
@@ -1266,7 +1266,7 @@
 .agent-last-practice-summary > div b { color: var(--agent-ink); font-size: 17px; }
 .agent-last-practice-summary > div small { align-self: center; }
 .agent-last-practice-summary > button { display: inline-flex; min-height: 38px; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--agent-mint-dark); border-radius: 10px; background: #fff; color: var(--agent-mint-dark); font: inherit; font-weight: 850; cursor: pointer; }
-.agent-primary-learning-card { gap: 14px; padding: 22px 24px; border-color: rgba(8, 124, 102, .24); border-radius: 16px; background: linear-gradient(135deg, rgba(237, 255, 249, .98), rgba(241, 246, 255, .96)); box-shadow: 0 16px 42px rgba(20, 92, 79, .09); }
+.agent-primary-learning-card { gap: 14px; padding: 22px 24px; border-color: rgba(49, 93, 255, .22); border-radius: 16px; background: linear-gradient(135deg, rgba(246, 248, 255, .99), rgba(239, 244, 255, .96)); box-shadow: 0 16px 42px rgba(49, 93, 255, .09); }
 .agent-primary-learning-card > div:first-child { grid-template-columns: 46px minmax(0, 1fr); gap: 13px; }
 .agent-primary-learning-card > div:first-child > span { width: 46px; height: 46px; border-radius: 13px; }
 .agent-primary-learning-card > div:first-child > span svg { width: 20px; height: 20px; }
@@ -1276,9 +1276,9 @@
 .agent-primary-learning-card > button { min-width: 220px; min-height: 42px; justify-self: start; padding: 0 22px; font-size: 13px; }
 .agent-resume-progress { display: flex !important; grid-template-columns: none !important; align-items: center !important; gap: 12px !important; }
 .agent-resume-progress > span { width: auto !important; height: auto !important; border: 0 !important; border-radius: 0 !important; background: transparent !important; color: var(--agent-muted) !important; box-shadow: none !important; font-size: 12px; font-weight: 800; white-space: nowrap; }
-.agent-resume-progress > span b { color: var(--agent-mint-dark); font-size: 16px; }
-.agent-resume-progress > i { position: relative; display: block; width: min(360px, 45%); height: 6px; overflow: hidden; border-radius: 999px; background: rgba(8, 124, 102, .11); }
-.agent-resume-progress > i > em { position: absolute; inset: 0 auto 0 0; border-radius: inherit; background: linear-gradient(90deg, var(--agent-blue), var(--agent-mint)); }
+.agent-resume-progress > span b { color: var(--agent-blue); font-size: 16px; }
+.agent-resume-progress > i { position: relative; display: block; width: min(360px, 45%); height: 6px; overflow: hidden; border-radius: 999px; background: rgba(49, 93, 255, .11); }
+.agent-resume-progress > i > em { position: absolute; inset: 0 auto 0 0; border-radius: inherit; background: linear-gradient(90deg, #315dff, #6f8cff); }
 .agent-workbench-support-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(260px, .85fr); gap: 14px; }
 .agent-workbench-support-grid > .agent-context-card { min-width: 0; padding: 18px; }
 .agent-recommendation-card > h3 { font-size: 19px; }
