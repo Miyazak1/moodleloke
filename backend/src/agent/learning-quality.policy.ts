@@ -12,6 +12,12 @@ export type LearningQualityInput = {
     verification?: boolean;
   }>;
   validations: Array<{ status: string; result: string | null }>;
+  dailyPlanExecutions?: Array<{
+    executionKey: string;
+    completed: boolean;
+    positive: boolean;
+    entry: 'today_plan' | 'refreshed_next';
+  }>;
   contradictions: {
     strongWithActiveErrorCount: number;
     weakWithStableValidationCount: number;
@@ -49,6 +55,10 @@ export function buildLearningQualitySnapshot(input: LearningQualityInput) {
     inconclusive: input.validations.filter((item) => item.status === 'completed' && item.result === 'inconclusive').length,
     pending: input.validations.filter((item) => item.status !== 'completed').length
   };
+  const dailyPlanExecutions = new Map((input.dailyPlanExecutions ?? []).map((item) => [item.executionKey, item]));
+  const dailyPlanCompleted = [...dailyPlanExecutions.values()].filter((item) => item.completed);
+  const dailyPlanPositive = dailyPlanCompleted.filter((item) => item.positive);
+  const refreshedNextStarted = [...dailyPlanExecutions.values()].filter((item) => item.entry === 'refreshed_next').length;
   const status = input.evidenceCount === 0
     ? 'cold_start'
     : input.evidenceCount < 5 || input.evidencedTopicCount < 2
@@ -89,6 +99,14 @@ export function buildLearningQualitySnapshot(input: LearningQualityInput) {
       followThroughRate: percent(accepted.size, shown.size || publishedIds.size),
       completionRate: percent(completed.size, accepted.size),
       positiveOutcomeRate: percent(positive.size, completed.size)
+    },
+    dailyPlanExecution: {
+      startedCount: dailyPlanExecutions.size,
+      completedCount: dailyPlanCompleted.length,
+      positiveOutcomeCount: dailyPlanPositive.length,
+      refreshedNextStartedCount: refreshedNextStarted,
+      completionRate: percent(dailyPlanCompleted.length, dailyPlanExecutions.size),
+      positiveOutcomeRate: percent(dailyPlanPositive.length, dailyPlanCompleted.length)
     },
     validation: { ...validations, contradictionCount, ...input.contradictions },
     supply: input.supply,

@@ -511,16 +511,44 @@ export type AgentDailyPlanTask = {
   freePractice: null | {
     questionCount: 3 | 5 | 10;
   };
+  execution: {
+    status: 'ready' | 'review_only' | 'blocked';
+    supplyStatus: 'sufficient' | 'limited' | 'empty' | 'unknown' | 'not_required';
+    requestedCount: number | null;
+    availableCount: number | null;
+  };
+};
+
+export type AgentDailyPlanLaunchContext = {
+  taskId: string;
+  planDate: string;
+  policyVersion: 'agent-daily-plan-v1' | 'agent-daily-plan-v2-supply-aware' | 'agent-daily-plan-v3-feedback-aware';
+  taskKind: AgentDailyPlanTask['kind'];
+  subject: AgentDailyPlanTask['subject'];
+  entry: 'today_plan' | 'refreshed_next';
 };
 
 export type AgentJourneyOverview = {
   schemaVersion: '1';
   generatedAt: string;
   dailyPlan?: {
-    policyVersion: 'agent-daily-plan-v1';
+    policyVersion: 'agent-daily-plan-v1' | 'agent-daily-plan-v2-supply-aware' | 'agent-daily-plan-v3-feedback-aware';
     date: string;
     primaryTask: AgentDailyPlanTask | null;
     queuedTasks: AgentDailyPlanTask[];
+    blockedTasks?: AgentDailyPlanTask[];
+    adjustment?: {
+      mode: 'standard' | 'reduced_load' | 'reinforcement';
+      taskLimit: 1 | 3;
+      reasonCode: 'LOW_RECENT_COMPLETION' | 'LOW_RECENT_POSITIVE_OUTCOME' | null;
+      evidence: {
+        startedCount: number;
+        completedCount: number;
+        positiveOutcomeCount: number;
+        completionRate: number | null;
+        positiveOutcomeRate: number | null;
+      };
+    };
     progress: {
       targetMinutes: number | null;
       completedMinutes: number;
@@ -619,6 +647,10 @@ export type AgentJourneyOverview = {
       publishedCount: number; shownCount: number; acceptedCount: number; terminalCount: number;
       completedCount: number; positiveOutcomeCount: number; followThroughRate: number;
       completionRate: number; positiveOutcomeRate: number;
+    };
+    dailyPlanExecution?: {
+      startedCount: number; completedCount: number; positiveOutcomeCount: number;
+      refreshedNextStartedCount: number; completionRate: number; positiveOutcomeRate: number;
     };
     validation: {
       stable: number; notStable: number; inconclusive: number; pending: number; contradictionCount: number;
@@ -1128,7 +1160,7 @@ export function startAgentPractice(
 
 export function startAgentPrescription(
   prescriptionId: string,
-  input: { clientRequestId: string; questionLanguage?: 'zh' | 'en' }
+  input: { clientRequestId: string; questionLanguage?: 'zh' | 'en'; dailyPlanContext?: AgentDailyPlanLaunchContext }
 ) {
   return requestJson<AgentPracticeLaunch | AgentMockExamLaunch>(`/api/v1/agent/journey/prescriptions/${encodeURIComponent(prescriptionId)}/start`, {
     method: 'POST',
@@ -1147,6 +1179,7 @@ export function startAgentFreePractice(input: {
   focusTopicId?: number;
   reviewItemId?: number;
   patternType?: string;
+  dailyPlanContext?: AgentDailyPlanLaunchContext;
 }) {
   return requestJson<AgentPracticeLaunch>('/api/v1/agent/free-practice/start', {
     method: 'POST',

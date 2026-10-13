@@ -17,7 +17,7 @@ const {
   SubmitAgentMessageInputSchema
 } = require('../dist/backend/src/agent/agent.types');
 const { decideWrongPatternVerification } = require('../dist/backend/src/csca-learning/wrong-pattern-verification.policy');
-const { buildAgentDailyPlan } = require('../dist/backend/src/agent/agent-daily-plan.policy');
+const { buildAgentDailyPlan, resolveDailyPlanAdjustment } = require('../dist/backend/src/agent/agent-daily-plan.policy');
 
 function testDailyPlanPrioritizesDueLearningWork() {
   const now = new Date('2026-10-12T08:00:00.000Z');
@@ -112,6 +112,36 @@ function testDailyPlanRespectsAvailableTime() {
   assert.deepEqual(fallbackPlan.primaryTask.freePractice, { questionCount: 5 });
   assert.equal(fallbackPlan.primaryTask.estimatedMinutes, 10);
 
+  const reviewOnlyPlan = buildAgentDailyPlan({
+    now: new Date('2026-10-12T08:00:00.000Z'),
+    reviewQueue: [
+      { reviewItemId: 41, patternType: 'concept_gap', topicId: 7, subject: 'math', title: '函数', dueAt: null, priority: 3, recurrenceCount: 2, status: 'active' }
+    ],
+    prescription: null,
+    taskSupply: { reviews: { 41: { status: 'limited', requestedCount: 3, availableCount: 1 } } },
+    progress: { targetMinutes: 30, answeredCount: 0, correctCount: 0, practiceSeconds: 0, mockSeconds: 0 }
+  });
+  assert.equal(reviewOnlyPlan.primaryTask.kind, 'mistake_review');
+  assert.equal(reviewOnlyPlan.primaryTask.execution.status, 'review_only');
+  assert.equal(reviewOnlyPlan.primaryTask.execution.availableCount, 1);
+
+  const autoFallbackPlan = buildAgentDailyPlan({
+    now: new Date('2026-10-12T08:00:00.000Z'),
+    localDate: '2026-10-12',
+    reviewQueue: [
+      { reviewItemId: 42, patternType: 'concept_gap', topicId: 8, subject: 'physics', title: '运动学', dueAt: null, priority: 3, recurrenceCount: 3, status: 'improving', consecutiveVerificationPassCount: 1 }
+    ],
+    prescription: null,
+    fallbackPractice: { subject: 'math', questionCount: 5 },
+    taskSupply: { reviews: { 42: { status: 'empty', requestedCount: 3, availableCount: 0 } } },
+    progress: { targetMinutes: null, answeredCount: 0, correctCount: 0, practiceSeconds: 0, mockSeconds: 0 }
+  });
+  assert.equal(autoFallbackPlan.primaryTask.kind, 'free_practice', 'an unavailable due verification must not block an actionable practice batch');
+  assert.equal(autoFallbackPlan.primaryTask.execution.status, 'ready');
+  assert.equal(autoFallbackPlan.blockedTasks.length, 1);
+  assert.equal(autoFallbackPlan.blockedTasks[0].kind, 'spaced_verification');
+  assert.equal(autoFallbackPlan.blockedTasks[0].execution.status, 'blocked');
+
   const noFallbackAfterGoal = buildAgentDailyPlan({
     now: new Date('2026-10-12T08:00:00.000Z'), reviewQueue: [], prescription: null,
     fallbackPractice: { subject: 'math', questionCount: 3 },
@@ -146,6 +176,50 @@ function testDailyPlanRespectsAvailableTime() {
     preferredQuestionCount: 5,
     candidates: [{ subject: 'math', availableCount: null, status: 'unknown' }]
   }).status, 'unknown');
+}
+
+function testDailyPlanCalibratesWorkloadFromRecentExecution() {
+  const reviewQueue = [
+    { reviewItemId: 51, patternType: 'concept_gap', topicId: 1, subject: 'math', title: '函数', dueAt: null, priority: 3, recurrenceCount: 3, status: 'active' },
+    { reviewItemId: 52, patternType: 'concept_gap', topicId: 2, subject: 'physics', title: '运动学', dueAt: null, priority: 2, recurrenceCount: 2, status: 'active' },
+    { reviewItemId: 53, patternType: 'concept_gap', topicId: 3, subject: 'chemistry', title: '物质的量', dueAt: null, priority: 1, recurrenceCount: 1, status: 'active' }
+  ];
+  const reduced = buildAgentDailyPlan({
+    now: new Date('2026-10-12T08:00:00.000Z'), reviewQueue, prescription: null,
+    executionFeedback: { startedCount: 4, completedCount: 1, positiveOutcomeCount: 1 }
+  });
+  assert.equal(reduced.adjustment.mode, 'reduced_load');
+  assert.equal(reduced.adjustment.reasonCode, 'LOW_RECENT_COMPLETION');
+  assert.equal(reduced.queuedTasks.length, 0);
+  assert.equal(reduced.deferredTaskCount, 2);
+
+  const reinforcement = buildAgentDailyPlan({
+    now: new Date('2026-10-12T08:00:00.000Z'), reviewQueue, prescription: null,
+    executionFeedback: { startedCount: 4, completedCount: 4, positiveOutcomeCount: 1 }
+  });
+  assert.equal(reinforcement.adjustment.mode, 'reinforcement');
+  assert.equal(reinforcement.queuedTasks.length, 0);
+  assert.equal(reinforcement.adjustment.evidence.positiveOutcomeRate, 25);
+
+  assert.equal(resolveDailyPlanAdjustment({ startedCount: 2, completedCount: 0, positiveOutcomeCount: 0 }).mode, 'standard', 'fewer than three starts is not enough evidence to reduce the plan');
+  assert.equal(resolveDailyPlanAdjustment({ startedCount: 4, completedCount: 3, positiveOutcomeCount: 2 }).mode, 'standard');
+
+  const effectivenessTieBreak = buildAgentDailyPlan({
+    now: new Date('2026-10-12T08:00:00.000Z'),
+    reviewQueue: [
+      { reviewItemId: 61, patternType: 'concept_gap', topicId: 11, subject: 'math', title: '函数', dueAt: null, priority: 2, recurrenceCount: 2, status: 'active' },
+      { reviewItemId: 62, patternType: 'concept_gap', topicId: 12, subject: 'physics', title: '运动学', dueAt: null, priority: 2, recurrenceCount: 2, status: 'active' }
+    ],
+    prescription: null,
+    executionFeedback: {
+      startedCount: 6, completedCount: 6, positiveOutcomeCount: 3,
+      taskPerformance: [
+        { taskKind: 'mistake_review', subject: 'math', startedCount: 3, completedCount: 3, positiveOutcomeCount: 0 },
+        { taskKind: 'mistake_review', subject: 'physics', startedCount: 3, completedCount: 3, positiveOutcomeCount: 3 }
+      ]
+    }
+  });
+  assert.equal(effectivenessTieBreak.primaryTask.subject, 'physics', 'effectiveness may break a true priority tie without overriding urgency');
 }
 
 function runtimeStore(overrides = {}) {
@@ -1451,7 +1525,11 @@ function testAttachmentAnalysisEnumNormalization() {
 function testFreePracticeTopicModeContract() {
   const start = StartAgentFreePracticeInputSchema.parse({
     clientRequestId: 'single-topic-start', subject: 'math', questionCount: 5,
-    practiceMode: 'single_topic', focusTopicId: 42
+    practiceMode: 'single_topic', focusTopicId: 42,
+    dailyPlanContext: {
+      taskId: 'free-practice:2026-10-12:math', planDate: '2026-10-12',
+      policyVersion: 'agent-daily-plan-v3-feedback-aware', taskKind: 'free_practice', subject: 'math', entry: 'today_plan'
+    }
   });
   const next = ContinueAgentFreePracticeInputSchema.parse({
     clientRequestId: 'single-topic-next', subject: 'physics', questionCount: 3,
@@ -1459,6 +1537,7 @@ function testFreePracticeTopicModeContract() {
   });
   assert.equal(start.practiceMode, 'single_topic');
   assert.equal(start.focusTopicId, 42);
+  assert.equal(start.dailyPlanContext.taskKind, 'free_practice');
   assert.equal(next.practiceMode, 'single_topic');
   assert.equal(next.focusTopicId, 84);
   assert.throws(() => StartAgentFreePracticeInputSchema.parse({
@@ -1535,6 +1614,7 @@ async function testEventReplayIsUserScopedAndResumesAfterCursor() {
 async function main() {
   testDailyPlanPrioritizesDueLearningWork();
   testDailyPlanRespectsAvailableTime();
+  testDailyPlanCalibratesWorkloadFromRecentExecution();
   await testTodayPlanCompletesInOrder();
   await testDiagnosticPreflightUsesTheSubjectPool();
   await testLlmRoutingCanRecognizeNaturalPlanRequestWithoutChoosingTools();

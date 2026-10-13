@@ -11,6 +11,12 @@ const base = {
     { prescriptionId: 'p1', decision: 'completed', targetAccuracy: 100 },
     { prescriptionId: 'p2', decision: 'shown' }
   ],
+  dailyPlanExecutions: [
+    { executionKey: '2026-10-12:task-1:artifact-1', completed: true, positive: true, entry: 'today_plan' },
+    { executionKey: '2026-10-12:task-1:artifact-1', completed: true, positive: true, entry: 'today_plan' },
+    { executionKey: '2026-10-12:task-2:artifact-2', completed: true, positive: false, entry: 'refreshed_next' },
+    { executionKey: '2026-10-12:task-3:artifact-3', completed: false, positive: false, entry: 'today_plan' }
+  ],
   validations: [{ status: 'completed', result: 'stable' }, { status: 'completed', result: 'not_stable' }],
   contradictions: { strongWithActiveErrorCount: 0, weakWithStableValidationCount: 0 },
   supply: { status: 'sufficient', requestedCount: 5, availableCount: 8, teachingAssetCount: 1, conceptCardCount: 0, explainedQuestionCount: 1 }
@@ -21,6 +27,12 @@ assert.equal(calibrated.status, 'calibrated');
 assert.equal(calibrated.recommendationFunnel.followThroughRate, 50);
 assert.equal(calibrated.recommendationFunnel.completionRate, 100);
 assert.equal(calibrated.recommendationFunnel.positiveOutcomeRate, 100);
+assert.equal(calibrated.dailyPlanExecution.startedCount, 3);
+assert.equal(calibrated.dailyPlanExecution.completedCount, 2);
+assert.equal(calibrated.dailyPlanExecution.positiveOutcomeCount, 1);
+assert.equal(calibrated.dailyPlanExecution.refreshedNextStartedCount, 1);
+assert.equal(calibrated.dailyPlanExecution.completionRate, 67);
+assert.equal(calibrated.dailyPlanExecution.positiveOutcomeRate, 50);
 
 const cold = buildLearningQualitySnapshot({ ...base, evidenceCount: 0, evidencedTopicCount: 0, prescriptions: [], outcomes: [], validations: [] });
 assert.equal(cold.status, 'cold_start');

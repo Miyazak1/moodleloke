@@ -22,6 +22,7 @@ import { buildLearningQualitySnapshot } from './learning-quality.policy';
 import { AgentPracticeQuestionContextService } from './agent-practice-question-context.service';
 import { agentConversationLifecyclePolicy } from './agent-conversation-lifecycle.policy';
 import { buildAgentDailyPlan } from './agent-daily-plan.policy';
+import { AdaptiveQuestionProviderService } from '../csca-special-practice/adaptive-question-provider.service';
 import {
   AGENT_RUNTIME_SCHEMA_VERSION,
   CreateAgentConversationInputSchema,
@@ -48,7 +49,7 @@ export function dedupeReviewQueue<T extends { subject: string; topicId?: number;
   return [...byLearningTarget.values()];
 }
 
-function recordValue(value: Prisma.JsonValue | null | undefined): Record<string, unknown> {
+function recordValue(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
 }
 
@@ -209,7 +210,8 @@ export class AgentService {
     @Optional() private readonly pastPapers?: PastPapersService,
     @Optional() private readonly projector?: LearningStateProjectorService,
     @Optional() private readonly decisions?: LearningDecisionService,
-    @Optional() private readonly practiceQuestionContext?: AgentPracticeQuestionContextService
+    @Optional() private readonly practiceQuestionContext?: AgentPracticeQuestionContextService,
+    @Optional() private readonly adaptiveQuestionProvider?: AdaptiveQuestionProviderService
   ) {}
 
   async getJourneyOverview(userId: number, locale: string | undefined) {
@@ -233,7 +235,7 @@ export class AgentService {
     const qualityWindowStart = new Date(generatedAt.getTime() - 30 * 86_400_000);
     const localDateStart = shanghaiLocalDateStart(generatedAt);
     const weekContext = shanghaiWeekContext(generatedAt);
-    const [paperGroups, topicCounts, prescriptions, prescriptionOutcomes, validations, activePatterns, checkpoints, latestEvidence, dailySnapshot, dailySettlements, weeklySnapshots, learningPreferenceProfile] = await Promise.all([
+    const [paperGroups, topicCounts, prescriptions, prescriptionOutcomes, validations, activePatterns, checkpoints, latestEvidence, dailySnapshot, dailySettlements, dailyPlanArtifacts, weeklySnapshots, learningPreferenceProfile] = await Promise.all([
       Promise.all(subjects.map((subject) => this.pastPapers!.listPublic({
         subject,
         category: 'past-paper',
@@ -283,6 +285,11 @@ export class AgentService {
         },
         select: { output: true }
       }) ?? Promise.resolve([]),
+      this.prisma.agentArtifact?.findMany?.({
+        where: { userId, type: { in: ['learning_plan', 'learning_task'] }, createdAt: { gte: qualityWindowStart } },
+        select: { id: true, status: true, snapshot: true },
+        orderBy: { createdAt: 'desc' }, take: 300
+      }) ?? Promise.resolve([]),
       this.prisma.cscaLearningDailySnapshot?.findMany?.({
         where: { userId, subject: 'all', localDate: { gte: weekContext.start, lte: localDateStart } },
         select: { practiceSeconds: true, mockSeconds: true, answeredCount: true, isStreakEligible: true }
@@ -320,6 +327,56 @@ export class AgentService {
       .filter((topic) => topic.status === 'needs_attention').map((topic) => `${subject.subject}:${topic.topicId}`)));
     const stableTopics = new Set(validations.filter((item) => item.status === 'completed' && item.result === 'stable')
       .map((item) => `${item.intervention.subjectCode}:${item.intervention.topicId}`));
+    const completedPrescriptionOutcomeByArtifact = new Map(prescriptionOutcomes
+      .filter((item) => item.decision === 'completed' || item.decision === 'failed')
+      .map((item) => {
+        const metadata = recordValue(item.metadata);
+        return [String(metadata.artifactId ?? ''), metadata] as const;
+      })
+      .filter(([artifactId]) => Boolean(artifactId)));
+    const dailyPlanExecutions = dailyPlanArtifacts.flatMap((item) => {
+      const snapshot = recordValue(item.snapshot);
+      const context = recordValue(snapshot.dailyPlanContext);
+      const taskId = typeof context.taskId === 'string' ? context.taskId : '';
+      const planDate = typeof context.planDate === 'string' ? context.planDate : '';
+      const entry = context.entry === 'refreshed_next' ? 'refreshed_next' as const : context.entry === 'today_plan' ? 'today_plan' as const : null;
+      if (!taskId || !planDate || !entry) return [];
+      const taskKind = context.taskKind === 'mistake_review' || context.taskKind === 'spaced_verification'
+        || context.taskKind === 'prescription' || context.taskKind === 'free_practice' ? context.taskKind : null;
+      const subject = context.subject === 'math' || context.subject === 'physics' || context.subject === 'chemistry' ? context.subject : null;
+      const settlement = recordValue(snapshot.settlement);
+      const prescribedOutcome = completedPrescriptionOutcomeByArtifact.get(item.id);
+      const completed = item.status === 'completed' || item.status === 'failed';
+      const targetAccuracy = typeof settlement.targetAccuracy === 'number'
+        ? settlement.targetAccuracy
+        : typeof prescribedOutcome?.targetAccuracy === 'number' ? prescribedOutcome.targetAccuracy : 0;
+      const positive = completed && (settlement.verification === true || prescribedOutcome?.verification === true || targetAccuracy >= 80);
+      return [{ executionKey: `${planDate}:${taskId}:${item.id}`, planDate, taskKind, subject, completed, positive, entry }];
+    });
+    const recentExecutionStartDate = shanghaiLocalDate(new Date(generatedAt.getTime() - 6 * DAY_MS));
+    const recentDailyPlanExecutions = dailyPlanExecutions.filter((item) => item.planDate >= recentExecutionStartDate);
+    const recentTaskPerformance = new Map<string, {
+      taskKind: 'mistake_review' | 'spaced_verification' | 'prescription' | 'free_practice';
+      subject: 'math' | 'physics' | 'chemistry';
+      startedCount: number;
+      completedCount: number;
+      positiveOutcomeCount: number;
+    }>();
+    for (const execution of recentDailyPlanExecutions) {
+      if (!execution.taskKind || !execution.subject) continue;
+      const key = `${execution.taskKind}:${execution.subject}`;
+      const current = recentTaskPerformance.get(key) ?? {
+        taskKind: execution.taskKind as 'mistake_review' | 'spaced_verification' | 'prescription' | 'free_practice',
+        subject: execution.subject as 'math' | 'physics' | 'chemistry',
+        startedCount: 0,
+        completedCount: 0,
+        positiveOutcomeCount: 0
+      };
+      current.startedCount += 1;
+      if (execution.completed) current.completedCount += 1;
+      if (execution.positive) current.positiveOutcomeCount += 1;
+      recentTaskPerformance.set(key, current);
+    }
     const quality = buildLearningQualitySnapshot({
       evidenceCount: mastery.subjects.reduce((sum, subject) => sum + subject.evidenceCount, 0),
       evidencedTopicCount: mastery.subjects.reduce((sum, subject) => sum + subject.topics.filter((topic) => topic.attemptCount > 0).length, 0),
@@ -337,6 +394,7 @@ export class AgentService {
         };
       }),
       validations: validations.map((item) => ({ status: item.status, result: item.result })),
+      dailyPlanExecutions,
       contradictions: {
         strongWithActiveErrorCount: new Set(activePatterns.filter((item) => item.topicId && strongTopics.has(`${item.subject}:${item.topicId}`)).map((item) => `${item.subject}:${item.topicId}`)).size,
         weakWithStableValidationCount: [...stableTopics].filter((key) => weakTopics.has(key)).length
@@ -344,6 +402,59 @@ export class AgentService {
       supply
     });
     const dedupedReviewQueue = dedupeReviewQueue(reviewQueue.items).slice(0, 12);
+    const dueReviewQueue = dedupedReviewQueue.filter((item) => {
+      if (!item.dueAt) return true;
+      const dueAt = new Date(item.dueAt).getTime();
+      return Number.isFinite(dueAt) && dueAt <= generatedAt.getTime();
+    });
+    const reviewTaskSupply = Object.fromEntries(await Promise.all(dueReviewQueue.map(async (item) => {
+      const reviewItemId = Number(item.reviewItemId);
+      const topicId = Number(item.topicId);
+      const requestedCount = 3;
+      if (!Number.isInteger(reviewItemId) || reviewItemId <= 0 || !Number.isInteger(topicId) || topicId <= 0) {
+        return [String(item.reviewItemId), { status: 'empty' as const, requestedCount, availableCount: 0 }] as const;
+      }
+      try {
+        if (this.adaptiveQuestionProvider) {
+          const plannedTopic = {
+            topicId,
+            code: '',
+            title: item.title,
+            module: null,
+            targetDifficulty: 'standard',
+            reason: 'daily_plan_supply_preflight'
+          };
+          const selected = await this.adaptiveQuestionProvider.pickQuestions(
+            userId,
+            Array.from({ length: requestedCount }, () => ({ ...plannedTopic })),
+            requestedCount
+          );
+          const availableCount = selected.length;
+          return [String(reviewItemId), {
+            status: availableCount >= requestedCount ? 'sufficient' as const : availableCount > 0 ? 'limited' as const : 'empty' as const,
+            requestedCount,
+            availableCount
+          }] as const;
+        }
+        const status = await this.learningRead!.getQuestionSupplyStatus({
+          subject: item.subject as 'math' | 'physics' | 'chemistry',
+          topicIds: [topicId],
+          requestedCount
+        });
+        return [String(reviewItemId), {
+          status: status.status,
+          requestedCount,
+          availableCount: status.availableCount
+        }] as const;
+      } catch {
+        return [String(reviewItemId), { status: 'unknown' as const, requestedCount, availableCount: null }] as const;
+      }
+    })));
+    const prescriptionTaskSupply = baseSupply ? {
+      status: baseSupply.status,
+      requestedCount: baseSupply.requestedCount,
+      availableCount: baseSupply.availableCount
+    } : undefined;
     const studyAvailability = profile.studyAvailability ?? {
       defaultSessionMinutes: null,
       weeklyMinutesGoal: null,
@@ -399,14 +510,25 @@ export class AgentService {
         confidence: currentPrescription.confidence,
         estimatedMinutes: currentPrescription.estimatedMinutes,
         primaryTask
-      } : null
+      } : null,
+      taskSupply: {
+        reviews: reviewTaskSupply,
+        prescription: prescriptionTaskSupply
+      },
+      executionFeedback: {
+        startedCount: recentDailyPlanExecutions.length,
+        completedCount: recentDailyPlanExecutions.filter((item) => item.completed).length,
+        positiveOutcomeCount: recentDailyPlanExecutions.filter((item) => item.positive).length,
+        taskPerformance: [...recentTaskPerformance.values()]
+      }
     };
     const baseDailyPlan = buildAgentDailyPlan(dailyPlanInput);
     let fallbackPracticeAvailability: ReturnType<typeof selectSupplyAwareFallbackPractice> | { status: 'not_needed'; subject: null; questionCount: null; candidates: [] } = {
       status: 'not_needed', subject: null, questionCount: null, candidates: []
     };
     let dailyPlan = baseDailyPlan;
-    if (!baseDailyPlan.primaryTask && (baseDailyPlan.progress.remainingMinutes ?? 0) > 0) {
+    if (!baseDailyPlan.primaryTask
+      && (baseDailyPlan.blockedTasks.length > 0 || (baseDailyPlan.progress.remainingMinutes ?? 0) > 0)) {
       const candidateSubjects = [...new Set([freePracticePreference.subject, ...subjects])];
       const supplyCandidates = await Promise.all(candidateSubjects.map(async (subject) => {
         try {
@@ -460,6 +582,19 @@ export class AgentService {
       completedTaskCount: dailyPlanWithSupply.progress.completedTaskCount,
       plannedMinutes: dailyPlanWithSupply.plannedMinutes,
       deferredTaskCount: dailyPlanWithSupply.deferredTaskCount,
+      adjustmentMode: dailyPlanWithSupply.adjustment.mode,
+      adjustmentReasonCode: dailyPlanWithSupply.adjustment.reasonCode,
+      adjustmentEvidence: dailyPlanWithSupply.adjustment.evidence,
+      blockedTaskCount: dailyPlanWithSupply.blockedTasks.length,
+      blockedTasks: dailyPlanWithSupply.blockedTasks.map((task) => ({
+        taskId: task.taskId,
+        kind: task.kind,
+        subject: task.subject,
+        topicId: task.topicId,
+        supplyStatus: task.execution.supplyStatus,
+        requestedCount: task.execution.requestedCount,
+        availableCount: task.execution.availableCount
+      })),
       fallbackPracticeStatus: fallbackPracticeAvailability.status,
       fallbackPracticeSubject: fallbackPracticeAvailability.subject,
       fallbackPracticeQuestionCount: fallbackPracticeAvailability.questionCount,

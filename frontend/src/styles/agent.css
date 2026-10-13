@@ -1211,9 +1211,15 @@
 .agent-weekly-progress[data-status="behind"] > b { color: #a85b24; }
 .agent-weekly-progress[data-status="behind"] > small { color: #8d552d; }
 .agent-weekly-progress[data-status="goal_met"] > b { color: var(--agent-mint-dark); }
+.agent-daily-adjustment { display: flex; align-items: flex-start; gap: 7px; margin: 0; padding: 8px 10px; border: 1px solid #d8e3ff; border-radius: 9px; background: rgba(240,245,255,.78); color: #38527b; font-size: 10px; font-weight: 750; line-height: 1.5; }
+.agent-daily-adjustment .iconify { flex: 0 0 auto; margin-top: 2px; color: var(--agent-blue); }
+.agent-daily-adjustment[data-mode="reinforcement"] { border-color: #ccebe3; background: rgba(235,250,246,.82); color: #27695d; }
+.agent-daily-adjustment[data-mode="reinforcement"] .iconify { color: var(--agent-mint-dark); }
 .agent-learning-entry-card > .agent-daily-primary-meta { display: flex; grid-template-columns: none; align-items: center; flex-wrap: wrap; gap: 8px; }
 .agent-learning-entry-card > .agent-daily-primary-meta > span { display: inline-flex; width: auto; min-width: 0; height: auto; place-items: initial; align-items: center; flex: 0 0 auto; gap: 5px; padding: 6px 9px; border-radius: 999px; background: #fff; color: var(--agent-muted); font-size: 10px; font-weight: 800; white-space: nowrap; }
 .agent-learning-entry-card > .agent-daily-primary-meta > span svg { width: 12px; height: 12px; }
+.agent-learning-entry-card > .agent-daily-primary-meta > span[data-status="ready"] { color: var(--agent-mint-dark); }
+.agent-learning-entry-card > .agent-daily-primary-meta > span[data-status="review_only"] { background: #fff8df; color: #8a5a08; }
 .agent-learning-entry-card > .agent-daily-queue { display: grid; grid-template-columns: none; gap: 7px; padding-top: 10px; border-top: 1px solid var(--agent-line); }
 .agent-daily-queue > strong { color: var(--agent-ink); font-size: 10px; }
 .agent-learning-entry-card > .agent-daily-queue > div { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 9px; align-items: center; }
@@ -1222,6 +1228,7 @@
 .agent-daily-queue > div small { color: var(--agent-muted); font-size: 9px; }
 .agent-daily-queue > p { display: flex; align-items: center; gap: 5px; margin: 0; color: var(--agent-muted); font-size: 9px; }
 .agent-daily-queue > p svg { width: 12px; color: var(--agent-blue); }
+.agent-daily-queue > p.agent-daily-auto-fallback { padding: 7px 9px; border-radius: 8px; background: #fff8df; color: #765316; font-weight: 750; }
 .agent-learning-entry-card > .agent-due-verification-progress { display: flex; grid-template-columns: none; justify-content: space-between; padding: 9px 10px; border-radius: 9px; background: rgba(255,255,255,.72); color: var(--agent-muted); font-size: 11px; font-weight: 750; }
 .agent-learning-entry-card > .agent-due-verification-progress b { color: var(--agent-mint-dark); font-size: 13px; }
 .agent-learning-entry-card > div > span svg { width: 16px; height: 16px; }
@@ -1318,6 +1325,20 @@
 .agent-report-rail-adjust > button.confirm { border-color: var(--agent-blue); background: var(--agent-blue); color: #fff; }
 .agent-report-rail-next button:disabled { cursor: wait; opacity: .58; }
 .agent-report-rail-next button svg { width: 13px; height: 13px; }
+.agent-report-rail-plan-update { display: grid; grid-template-columns: 32px minmax(0, 1fr); align-items: start; gap: 9px; padding: 12px; border: 1px solid rgba(20, 184, 147, .22); border-radius: 12px; background: linear-gradient(135deg, rgba(236, 253, 248, .94), rgba(241, 245, 255, .92)); }
+.agent-report-rail-plan-update > svg { width: 16px; height: 16px; margin-top: 7px; justify-self: center; color: var(--agent-mint-dark); }
+.agent-report-rail-plan-update > div { display: grid; min-width: 0; gap: 4px; }
+.agent-report-rail-plan-update small { color: var(--agent-mint-dark); font-size: 10px; font-weight: 850; }
+.agent-report-rail-plan-update strong { overflow: hidden; color: var(--agent-ink); font-size: 12px; line-height: 1.45; text-overflow: ellipsis; white-space: nowrap; }
+.agent-report-rail-plan-update span { color: var(--agent-muted); font-size: 10px; font-weight: 750; }
+.agent-report-rail-plan-update button { display: inline-flex; width: fit-content; min-height: 30px; align-items: center; justify-content: center; gap: 5px; margin-top: 4px; padding: 0 10px; border: 1px solid var(--agent-mint); border-radius: 8px; background: #fff; color: var(--agent-mint-dark); font-size: 10px; font-weight: 850; }
+.agent-report-rail-plan-update button svg { width: 12px; height: 12px; }
+.agent-report-rail-plan-update button:disabled { cursor: wait; opacity: .58; }
+.agent-report-rail-plan-update[data-state="loading"] > svg,
+.agent-report-rail-plan-update button:disabled svg { animation: agentSpin 1s linear infinite; }
+.agent-report-rail-plan-update[data-state="error"] { border-color: rgba(220, 82, 63, .22); background: rgba(255, 245, 242, .94); }
+.agent-report-rail-plan-update[data-state="error"] > svg,
+.agent-report-rail-plan-update[data-state="error"] small { color: #a53a2c; }
 .agent-report-rail-adjust { display: grid; gap: 10px; padding-top: 11px; border-top: 1px solid var(--agent-line); }
 .agent-report-rail-adjust label { display: grid; gap: 6px; }
 .agent-report-rail-adjust label > span { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }

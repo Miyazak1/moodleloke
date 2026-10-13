@@ -1014,11 +1014,20 @@ test('shows the latest evidence-driven decision plan with an actionable free-pra
       primaryTask: {
         taskId: 'free-practice:2026-10-12:physics', kind: 'free_practice', subject: 'physics', title: null, topicId: null,
         estimatedMinutes: 10, reasonCodes: ['DAILY_TIME_REMAINING'], action: 'start_free_practice', review: null,
-        prescription: null, freePractice: { questionCount: 5 }
+        prescription: null, freePractice: { questionCount: 5 },
+        execution: { status: 'ready', supplyStatus: 'sufficient', requestedCount: 5, availableCount: 42 }
       },
+      blockedTasks: [{
+        taskId: 'review:42', kind: 'spaced_verification', subject: 'physics', title: '运动学', topicId: 8,
+        estimatedMinutes: 10, reasonCodes: ['SPACED_VERIFICATION_DUE'], action: 'start_verification',
+        review: { reviewItemId: 42, patternType: 'concept_gap', dueAt: now, recurrenceCount: 3, consecutivePassCount: 1, requiredPassCount: 2 },
+        prescription: null, freePractice: null,
+        execution: { status: 'blocked', supplyStatus: 'empty', requestedCount: 3, availableCount: 0 }
+      }],
+      adjustment: { mode: 'reduced_load', taskLimit: 1, reasonCode: 'LOW_RECENT_COMPLETION', evidence: { startedCount: 4, completedCount: 1, positiveOutcomeCount: 1, completionRate: 25, positiveOutcomeRate: 100 } },
       progress: { targetMinutes: 30, completedMinutes: 0, remainingMinutes: 30, answeredCount: 0, correctCount: 0, accuracy: null, completedTaskCount: 0, successfulTaskCount: 0, status: 'not_started' },
       weeklyProgress: { targetMinutes: 90, completedMinutes: 0, remainingMinutes: 90, targetDays: 3, activeDays: 0, remainingStudyDays: 3, requiredTodayMinutes: 30, recommendedTodayMinutes: 30, sessionLimitMinutes: 30, capacityStatus: 'sufficient', status: 'not_started' },
-      plannedMinutes: 10, deferredTaskCount: 0, scheduledVerificationCount: 0,
+      plannedMinutes: 10, deferredTaskCount: 1, scheduledVerificationCount: 0,
       fallbackPracticeAvailability: { status: 'ready', subject: 'physics', questionCount: 5, candidates: [{ subject: 'physics', availableCount: 42, status: 'sufficient' }] },
       source: 'rules_and_learning_evidence'
     },
@@ -1046,9 +1055,18 @@ test('shows the latest evidence-driven decision plan with an actionable free-pra
   await expect(dailyPlan).toContainText('补足今日学习时间');
   await expect(dailyPlan).toContainText('物理 · 自由练习');
   await expect(dailyPlan).toContainText('5 题');
+  await expect(dailyPlan).toContainText('可开始');
+  await expect(dailyPlan).toContainText('1 项任务因题源不足已自动后移');
+  await expect(dailyPlan).toContainText('近期有多项计划尚未完成，本轮先只安排 1 项');
   await dailyPlan.getByRole('button', { name: '开始学习', exact: true }).click();
   await expect.poll(() => startBody).not.toBeNull();
-  expect(startBody).toMatchObject({ subject: 'physics', questionCount: 5, practiceMode: 'mixed' });
+  expect(startBody).toMatchObject({
+    subject: 'physics', questionCount: 5, practiceMode: 'mixed',
+    dailyPlanContext: {
+      taskId: 'free-practice:2026-10-12:physics', planDate: '2026-10-12',
+      policyVersion: 'agent-daily-plan-v1', taskKind: 'free_practice', subject: 'physics', entry: 'today_plan'
+    }
+  });
   await expect(page).toHaveURL(/agentRoundId=161.*agentTaskType=free_practice.*agentSubject=physics/);
   await expect(page.getByText('自由落体的加速度方向是？')).toBeVisible();
 });
@@ -1133,6 +1151,7 @@ test('tracks recommendation exposure and explains learning quality with actionab
       schemaVersion: '1', policyVersion: 'learning-quality-v1', status: 'validating',
       evidence: { acceptedCount: 12, evidencedTopicCount: 4, totalTopicCount: 10, projectionPending: false },
       recommendationFunnel: { publishedCount: 2, shownCount: 2, acceptedCount: 1, terminalCount: 1, completedCount: 1, positiveOutcomeCount: 1, followThroughRate: 50, completionRate: 100, positiveOutcomeRate: 100 },
+      dailyPlanExecution: { startedCount: 4, completedCount: 3, positiveOutcomeCount: 2, refreshedNextStartedCount: 1, completionRate: 75, positiveOutcomeRate: 67 },
       validation: { stable: 1, notStable: 1, inconclusive: 0, pending: 1, contradictionCount: 1, strongWithActiveErrorCount: 1, weakWithStableValidationCount: 0 },
       supply: { status: 'limited', requestedCount: 5, availableCount: 2 },
       alerts: [
@@ -1159,6 +1178,11 @@ test('tracks recommendation exposure and explains learning quality with actionab
   await expect(page.getByRole('heading', { name: '推荐是否真的有效' })).toBeVisible();
   await expect(page.getByLabel('学习质量')).toContainText('建议执行率');
   await expect(page.getByLabel('学习质量')).toContainText('50%');
+  await expect(page.getByLabel('学习质量')).toContainText('每日计划执行');
+  await expect(page.getByLabel('学习质量')).toContainText('已启动4');
+  await expect(page.getByLabel('学习质量')).toContainText('已完成75%');
+  await expect(page.getByLabel('学习质量')).toContainText('正向结果67%');
+  await expect(page.getByLabel('学习质量')).toContainText('来自动态下一项1');
   await expect(page.getByLabel('学习质量')).toContainText('当前建议的题源不足');
   await expect(page.getByLabel('学习质量')).toContainText('发现需要重新校准的判断');
   await expect(page.getByLabel('学习质量')).toContainText('AI 可辅助讲解，但不直接修改掌握状态');
@@ -1245,6 +1269,8 @@ test('keeps free-practice defaults separate and preserves the current batch when
     items: [{ id: 101, orderNumber: 1, position: 1, difficulty: 'basic', questionType: 'single-choice', prompt: '函数 y=2x+1 的斜率是多少？', options: [{ id: 'A', text: '1' }, { id: 'B', text: '2' }], topicId: 67, topicCode: 'function', topicTitle: '函数与方程', selectedAnswer: 'A', correctAnswer: 'B', isCorrect: false, isUnanswered: false, explanation: '一次函数中 x 的系数是斜率。', knowledgeTags: ['函数'], timeSpentSeconds: 16, mastery: .32 }]
   };
   let reportAttempts = 0;
+  let practiceSettled = false;
+  let postSettlementOverviewCalls = 0;
   let continuationBody: Record<string, unknown> | null = null;
   const freeTaskArtifact = {
     ...artifact,
@@ -1262,7 +1288,35 @@ test('keeps free-practice defaults separate and preserves the current batch when
     reportAttempts += 1;
     return reportAttempts === 1 ? json(route, { message: 'temporary report outage' }, 503) : json(route, roundReport);
   });
-  await page.route('**/api/v1/agent/practice-rounds/81/settle', (route) => json(route, { schemaVersion: '1', artifactId: 'free-task-1', roundId: 81, decision: 'completed' }));
+  await page.route('**/api/v1/agent/practice-rounds/81/settle', (route) => {
+    practiceSettled = true;
+    return json(route, { schemaVersion: '1', artifactId: 'free-task-1', roundId: 81, decision: 'completed' });
+  });
+  await page.route((url) => url.pathname === '/api/v1/agent/journey/overview', (route) => {
+    if (practiceSettled) postSettlementOverviewCalls += 1;
+    return json(route, {
+      schemaVersion: '1', generatedAt: now,
+      goal: { examDate: '2027-06-01', weeklyGoalDays: 5, totalTargetScore: 255, subjects: [{ subject: 'math', targetScore: 85 }] },
+      progress: { subjects: [] }, nextDecision: null,
+      dailyPlan: {
+        policyVersion: 'agent-daily-plan-v2-supply-aware', date: '2026-09-15', queuedTasks: [], blockedTasks: [],
+        primaryTask: practiceSettled ? {
+          taskId: 'review:71', kind: 'mistake_review', subject: 'math', title: '本轮函数错题复盘', topicId: 67,
+          estimatedMinutes: 8, reasonCodes: ['MISTAKE_REVIEW_DUE'], action: 'open_weakness',
+          review: { reviewItemId: 71, patternType: 'concept_gap', dueAt: null, recurrenceCount: 3, consecutivePassCount: 0, requiredPassCount: 2 },
+          prescription: null, freePractice: null,
+          execution: { status: 'review_only', supplyStatus: 'limited', requestedCount: 3, availableCount: 1 }
+        } : null,
+        progress: { targetMinutes: 30, completedMinutes: 10, remainingMinutes: 20, answeredCount: 5, correctCount: 2, accuracy: 40, completedTaskCount: 1, successfulTaskCount: 0, status: 'in_progress' },
+        weeklyProgress: { targetMinutes: 150, completedMinutes: 10, remainingMinutes: 140, targetDays: 5, activeDays: 1, remainingStudyDays: 4, requiredTodayMinutes: 30, recommendedTodayMinutes: 20, sessionLimitMinutes: 30, capacityStatus: 'sufficient', status: 'behind' },
+        plannedMinutes: practiceSettled ? 8 : 0, deferredTaskCount: 0, scheduledVerificationCount: 0,
+        fallbackPracticeAvailability: { status: 'not_needed', subject: null, questionCount: null, candidates: [] },
+        source: 'rules_and_learning_evidence'
+      },
+      weaknesses: { stateSource: 'user_csca_topic_mastery_v1', subjects: [], reviewQueue: [] },
+      resources: { source: 'published_past_papers', subjectScope: ['math'], items: [] }
+    });
+  });
   await page.route('**/api/v1/agent/interventions/offer', (route) => json(route, {
     schemaVersion: '1', suppressedReason: null,
     item: {
@@ -1314,6 +1368,9 @@ test('keeps free-practice defaults separate and preserves the current batch when
     await expect(reportRail).toContainText('40%');
     await expect(reportRail).toContainText('函数与方程');
     await expect(reportRail.getByRole('button', { name: '继续下一批' })).toBeVisible();
+    await expect(reportRail).toContainText('已按最新证据更新');
+    await expect(reportRail).toContainText('本轮函数错题复盘');
+    await expect(reportRail.getByRole('button', { name: '开始更新后的下一项' })).toBeVisible();
     await expect(reportRail.getByRole('button', { name: /这轮有疑问/ })).toBeVisible();
   } else {
     await expect(reportRail).toHaveCount(0);
@@ -1326,6 +1383,7 @@ test('keeps free-practice defaults separate and preserves the current batch when
   await continueButton.click();
   await expect(page).toHaveURL(/agentRoundId=82/);
   expect(continuationBody).toMatchObject({ subject: 'math', questionCount: 10, questionLanguage: 'zh' });
+  expect(postSettlementOverviewCalls).toBeGreaterThan(0);
   await expect(page.locator('.agent-composer')).toHaveCount(0);
   expect(reportAttempts).toBeGreaterThanOrEqual(1);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);

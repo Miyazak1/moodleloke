@@ -68,7 +68,15 @@ export const SubmitAgentMessageInputSchema = z.strictObject({
 
 export const StartAgentPracticeInputSchema = z.strictObject({
   clientRequestId: z.string().trim().min(1).max(120),
-  questionLanguage: z.enum(['zh', 'en']).optional()
+  questionLanguage: z.enum(['zh', 'en']).optional(),
+  dailyPlanContext: z.strictObject({
+    taskId: z.string().trim().min(1).max(180),
+    planDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    policyVersion: z.string().trim().min(1).max(80),
+    taskKind: z.enum(['mistake_review', 'spaced_verification', 'prescription', 'free_practice']),
+    subject: z.enum(['math', 'physics', 'chemistry']),
+    entry: z.enum(['today_plan', 'refreshed_next'])
+  }).optional()
 });
 
 export const StartAgentFreePracticeInputSchema = z.strictObject({
@@ -80,7 +88,15 @@ export const StartAgentFreePracticeInputSchema = z.strictObject({
   practiceMode: z.enum(['mixed', 'single_topic']).default('mixed'),
   focusTopicId: z.number().int().positive().optional(),
   reviewItemId: z.number().int().positive().optional(),
-  patternType: z.string().trim().min(1).max(80).optional()
+  patternType: z.string().trim().min(1).max(80).optional(),
+  dailyPlanContext: z.strictObject({
+    taskId: z.string().trim().min(1).max(180),
+    planDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    policyVersion: z.string().trim().min(1).max(80),
+    taskKind: z.enum(['mistake_review', 'spaced_verification', 'prescription', 'free_practice']),
+    subject: z.enum(['math', 'physics', 'chemistry']),
+    entry: z.enum(['today_plan', 'refreshed_next'])
+  }).optional()
 }).superRefine((input, context) => {
   if (input.practiceMode === 'single_topic' && !input.focusTopicId) {
     context.addIssue({ code: z.ZodIssueCode.custom, path: ['focusTopicId'], message: '按知识点练习必须选择知识点。' });

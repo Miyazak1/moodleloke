@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { useI18n } from '../../i18n/useI18n';
-import type { AgentJourneyOverview } from '../../lib/api-agent';
+import type { AgentDailyPlanLaunchContext, AgentJourneyOverview } from '../../lib/api-agent';
 import { completeMyCscaWrongQuestionReview, getMyCscaWrongQuestions } from '../../lib/api-me';
 import type { CscaWrongQuestionItem, CscaWrongQuestionResponse } from '../../lib/api-types';
 import { Icon } from '../Icon';
@@ -13,6 +13,7 @@ export type WeaknessPracticeSelection = {
   focusTopicId?: number;
   reviewItemId?: number;
   patternType?: string;
+  dailyPlanContext?: AgentDailyPlanLaunchContext;
 };
 
 type WeaknessEvidenceFilter = {

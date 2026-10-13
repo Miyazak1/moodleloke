@@ -47,6 +47,7 @@ import {
   type AgentArtifact,
   type AgentConversation,
   type AgentConversationSummary,
+  type AgentDailyPlanLaunchContext,
   type AgentDailyPlanTask,
   type AgentInterventionDelivery,
   type AgentInterventionVerification,
@@ -478,6 +479,8 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
   const [journeyOverviewError, setJourneyOverviewError] = useState('');
   const [preferredQuestionLanguage, setPreferredQuestionLanguage] = useState<'zh' | 'en' | null>(null);
   const [journeyOverviewRevision, setJourneyOverviewRevision] = useState(0);
+  const [dailyPlanRefreshStatus, setDailyPlanRefreshStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
+  const journeyOverviewRequestRef = useRef(0);
   const [practiceQuestionContext, setPracticeQuestionContext] = useState<AgentPracticeQuestionContext | null>(null);
   const [practiceAssistanceEvents, setPracticeAssistanceEvents] = useState<AgentPracticeAssistanceEvent[]>([]);
   const [practiceAssistanceCommand, setPracticeAssistanceCommand] = useState<AgentPracticeAssistanceCommand | null>(null);
@@ -1053,6 +1056,24 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     return result;
   }, []);
 
+  const loadJourneyOverview = useCallback(async () => {
+    const requestId = journeyOverviewRequestRef.current + 1;
+    journeyOverviewRequestRef.current = requestId;
+    const result = await getAgentJourneyOverview(locale === 'en' ? 'en' : 'zh-CN');
+    if (journeyOverviewRequestRef.current === requestId) setJourneyOverview(result);
+    return result;
+  }, [locale]);
+
+  const refreshJourneyAfterTaskSettlement = useCallback(async () => {
+    setDailyPlanRefreshStatus('loading');
+    try {
+      await Promise.all([loadJourneyState().catch(() => null), loadJourneyOverview()]);
+      setDailyPlanRefreshStatus('ready');
+    } catch {
+      setDailyPlanRefreshStatus('error');
+    }
+  }, [loadJourneyOverview, loadJourneyState]);
+
   const loadConversation = useCallback(async (id: string) => {
     const item = await getAgentConversation(id);
     setConversation(item);
@@ -1332,12 +1353,16 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     let current = true;
     setIsJourneyOverviewLoading(true);
     setJourneyOverviewError('');
-    void getAgentJourneyOverview(locale === 'en' ? 'en' : 'zh-CN')
-      .then((result) => { if (current) setJourneyOverview(result); })
+    void loadJourneyOverview()
+      .then(() => undefined)
       .catch((loadError) => { if (current) setJourneyOverviewError(formatAgentUserError(loadError, locale, t('agent.journey.dataUnavailable', '暂时无法读取'))); })
       .finally(() => { if (current) setIsJourneyOverviewLoading(false); });
     return () => { current = false; };
-  }, [currentUser?.id, isResolvingAuth, journeyOverviewRevision, journeySection, locale, t]);
+  }, [currentUser?.id, isResolvingAuth, journeyOverviewRevision, journeySection, loadJourneyOverview, t]);
+
+  useEffect(() => {
+    setDailyPlanRefreshStatus('idle');
+  }, [learningWorkspace?.roundId, mockExamWorkspace?.attemptId]);
 
   useEffect(() => {
     if (isResolvingAuth || !currentUser || !conversation || isSending) return;
@@ -1366,13 +1391,13 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
         if (!current) return;
         setMockExamSettlement(result);
         setMockExamSettlementStatus('ready');
-        await loadJourneyState().catch(() => undefined);
+        void refreshJourneyAfterTaskSettlement();
       })
       .catch(() => {
         if (current) setMockExamSettlementStatus('unavailable');
       });
     return () => { current = false; };
-  }, [currentUser?.id, isResolvingAuth, loadJourneyState, mockExamSettlementRevision, mockExamWorkspace?.attemptId, mockExamWorkspace?.phase]);
+  }, [currentUser?.id, isResolvingAuth, mockExamSettlementRevision, mockExamWorkspace?.attemptId, mockExamWorkspace?.phase, refreshJourneyAfterTaskSettlement]);
 
   useEffect(() => {
     if (isResolvingAuth || !currentUser || !teachingDeliveryId) return;
@@ -1596,7 +1621,8 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
         practiceMode,
         ...(practiceMode === 'single_topic' && next.focusTopicId ? { focusTopicId: next.focusTopicId } : {}),
         ...(next.reviewItemId ? { reviewItemId: next.reviewItemId } : {}),
-        ...(next.patternType ? { patternType: next.patternType } : {})
+        ...(next.patternType ? { patternType: next.patternType } : {}),
+        ...(next.dailyPlanContext ? { dailyPlanContext: next.dailyPlanContext } : {})
       });
       await loadJourneyState().catch(() => null);
       openLearningWorkspace(launch);
@@ -1772,7 +1798,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     setJourneyOverviewRevision((current) => current + 1);
   }
 
-  async function startRecommendedDecision(prescriptionId: string) {
+  async function startRecommendedDecision(prescriptionId: string, dailyPlanContext?: AgentDailyPlanLaunchContext) {
     if (isStartingLearning || isStartingFreePractice || !currentUser) return;
     clearErrorNotice();
     setLearningEntryError('');
@@ -1780,7 +1806,8 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     try {
       const launch = await startAgentPrescription(prescriptionId, {
         clientRequestId: clientRequestId(),
-        questionLanguage
+        questionLanguage,
+        ...(dailyPlanContext ? { dailyPlanContext } : {})
       });
       openTaskWorkspace(launch);
       await loadJourneyState().catch(() => undefined);
@@ -1793,7 +1820,15 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     }
   }
 
-  function runDailyPlanTask(task: AgentDailyPlanTask) {
+  function runDailyPlanTask(task: AgentDailyPlanTask, entry: AgentDailyPlanLaunchContext['entry'] = 'today_plan') {
+    const dailyPlanContext = dailyPlan ? {
+      taskId: task.taskId,
+      planDate: dailyPlan.date,
+      policyVersion: dailyPlan.policyVersion,
+      taskKind: task.kind,
+      subject: task.subject,
+      entry
+    } satisfies AgentDailyPlanLaunchContext : undefined;
     if (task.action === 'open_weakness') {
       chooseJourneySection('weakness');
       return;
@@ -1804,16 +1839,17 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
         questionCount: 3,
         ...(task.topicId ? { focusTopicId: task.topicId } : {}),
         reviewItemId: task.review.reviewItemId,
-        patternType: task.review.patternType
+        patternType: task.review.patternType,
+        ...(dailyPlanContext ? { dailyPlanContext } : {})
       });
       return;
     }
     if (task.action === 'start_prescription' && task.prescription) {
-      void startRecommendedDecision(task.prescription.prescriptionId);
+      void startRecommendedDecision(task.prescription.prescriptionId, dailyPlanContext);
       return;
     }
     if (task.action === 'start_free_practice' && task.freePractice) {
-      void beginFreePractice({ subject: task.subject, questionCount: task.freePractice.questionCount });
+      void beginFreePractice({ subject: task.subject, questionCount: task.freePractice.questionCount, ...(dailyPlanContext ? { dailyPlanContext } : {}) });
     }
   }
 
@@ -1830,6 +1866,21 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     }
     if (next?.type === 'delayed_verification') return;
     void continueFreePracticeBatch();
+  }
+
+  function renderDailyPlanRefreshPanel() {
+    if (dailyPlanRefreshStatus === 'idle') return null;
+    if (dailyPlanRefreshStatus === 'loading') {
+      return <section className="agent-report-rail-plan-update" data-state="loading"><Icon name="lucide:loader-circle" /><div><small>{t('agent.dailyPlanRefresh.kicker', '今日计划')}</small><strong>{t('agent.dailyPlanRefresh.loading', '正在根据本轮结果重新编排')}</strong></div></section>;
+    }
+    if (dailyPlanRefreshStatus === 'error') {
+      return <section className="agent-report-rail-plan-update" data-state="error"><Icon name="lucide:cloud-alert" /><div><small>{t('agent.dailyPlanRefresh.kicker', '今日计划')}</small><strong>{t('agent.dailyPlanRefresh.failed', '本轮结果已保存，计划暂未刷新')}</strong><button type="button" onClick={() => void refreshJourneyAfterTaskSettlement()}><Icon name="lucide:refresh-cw" />{t('agent.dailyPlanRefresh.retry', '重新刷新')}</button></div></section>;
+    }
+    if (!dailyPrimaryTask) {
+      return <section className="agent-report-rail-plan-update" data-state="complete"><Icon name="lucide:badge-check" /><div><small>{t('agent.dailyPlanRefresh.updated', '已按最新证据更新')}</small><strong>{t('agent.dailyPlanRefresh.complete', '当前今日任务已完成')}</strong><button type="button" onClick={() => chooseJourneySection('settings')}><Icon name="lucide:calendar-range" />{t('agent.dailyPlanRefresh.viewPlan', '查看完整计划')}</button></div></section>;
+    }
+    const nextTitle = dailyPrimaryTask.title || `${subjectLabel(dailyPrimaryTask.subject, t)} · ${taskLabel(dailyPrimaryTask.kind === 'free_practice' ? 'free_practice' : dailyPrimaryTask.prescription?.taskType, t)}`;
+    return <section className="agent-report-rail-plan-update" data-state="ready"><Icon name="lucide:list-restart" /><div><small>{t('agent.dailyPlanRefresh.updated', '已按最新证据更新')}</small><strong>{nextTitle}</strong><span>{subjectLabel(dailyPrimaryTask.subject, t)} · {dailyPrimaryTask.estimatedMinutes} min</span><button type="button" disabled={isStartingFreePractice || isStartingLearning} onClick={() => runDailyPlanTask(dailyPrimaryTask, 'refreshed_next')}><Icon name={isStartingFreePractice || isStartingLearning ? 'lucide:loader-circle' : 'lucide:play'} />{isStartingFreePractice || isStartingLearning ? t('agent.learningEntry.preparing', '正在准备') : t('agent.dailyPlanRefresh.startNext', '开始更新后的下一项')}</button></div></section>;
   }
 
   function closeSettingsWorkspace() {
@@ -1910,6 +1961,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
   const dailyPlan = journeyOverview?.dailyPlan ?? null;
   const dailyPrimaryTask = dailyPlan?.primaryTask ?? null;
   const dailyQueuedTasks = dailyPlan?.queuedTasks ?? [];
+  const dailyBlockedTasks = dailyPlan?.blockedTasks ?? [];
   const dailyFallbackBlocked = Boolean(
     dailyPlan
     && !dailyPrimaryTask
@@ -2447,7 +2499,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
                         onOpenWeakness={() => chooseJourneySection('weakness')}
                         onSettlementLoaded={(result) => {
                           setPracticeSettlement(result);
-                          void loadJourneyState().catch(() => undefined);
+                          void refreshJourneyAfterTaskSettlement();
                         }}
                         renderFollowUp={intervention ? (report) => isInterventionRelevantToReport(intervention, report) ? (
                           <InterventionCard
@@ -2718,6 +2770,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
               </div> : null}
             </section> : null}
 
+            {renderDailyPlanRefreshPanel()}
             <button type="button" className="agent-report-rail-qa" onClick={() => chooseJourneySection('qa')}><Icon name="lucide:messages-square" /><span><strong>{t('agent.reportRail.askTitle', '这轮有疑问？')}</strong><small>{t('agent.reportRail.askBody', '去学科问答，自由询问数学、物理或化学知识。')}</small></span><Icon name="lucide:arrow-right" /></button>
           </aside>
         ) : journeySection === 'today' && mockExamWorkspace?.phase === 'report' ? (
@@ -2730,6 +2783,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
                 <div className="agent-report-rail-topics"><small>{t('agent.reportRail.focus', '优先巩固')}</small><div>{mockExamSettlement.learningReview.focusTopics.slice(0, 3).map((topic) => <span key={topic.title}>{topic.title}</span>)}</div></div>
               </> : <div className="agent-report-rail-loading"><Icon name="lucide:loader-circle" />{t('agent.mockExam.loadingReport', '正在整理模考结果')}</div>}
             </section>
+            {renderDailyPlanRefreshPanel()}
             <button type="button" className="agent-report-rail-qa" onClick={() => chooseJourneySection('qa')}><Icon name="lucide:messages-square" /><span><strong>{t('agent.reportRail.askTitle', '这轮有疑问？')}</strong><small>{t('agent.reportRail.askBody', '去学科问答，自由询问数学、物理或化学知识。')}</small></span><Icon name="lucide:arrow-right" /></button>
           </aside>
         ) : <aside className={journeySection === 'today' ? `agent-context-rail${effectiveLearningMode === 'free' ? ' is-free-practice' : ''}` : 'agent-context-rail is-journey-view'} aria-label={journeySection === 'weakness' ? t('agent.journey.weakness', '错题与薄弱点') : journeySection === 'resources' ? t('agent.journey.resources', '学习资料') : t('agent.context.aria', '当前学习上下文')}>
@@ -2861,11 +2915,12 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
                 <small>{dailyPlan?.progress.status === 'goal_met' ? t('agent.dailyPlan.goalMet', '今日时间目标已完成；下面是当前最值得继续做的任务。') : dailyPlan?.progress.remainingMinutes !== null ? t('agent.dailyPlan.timeRemaining', '今日建议还学习 {minutes} 分钟').replace('{minutes}', String(dailyPlan.progress.remainingMinutes)) : t('agent.dailyPlan.progressHint', '完成任务后，今日进度会自动更新。')}</small>
               </div>
               {dailyPlan?.weeklyProgress.status !== 'unset' ? <section className="agent-weekly-progress" data-status={dailyPlan?.weeklyProgress.status}><strong>{t('agent.dailyPlan.weekKicker', '本周节奏')}</strong><div>{dailyPlan?.weeklyProgress.targetMinutes ? <span>{t('agent.dailyPlan.weekMinutes', '时间 {done}/{target} 分钟').replace('{done}', String(dailyPlan.weeklyProgress.completedMinutes)).replace('{target}', String(dailyPlan.weeklyProgress.targetMinutes))}</span> : null}{dailyPlan?.weeklyProgress.targetDays ? <span>{t('agent.dailyPlan.weekDays', '活跃 {done}/{target} 天').replace('{done}', String(dailyPlan.weeklyProgress.activeDays)).replace('{target}', String(dailyPlan.weeklyProgress.targetDays))}</span> : null}</div><b>{dailyPlan?.weeklyProgress.status === 'goal_met' ? t('agent.dailyPlan.weekGoalMet', '本周目标已完成') : dailyPlan?.weeklyProgress.status === 'behind' ? t('agent.dailyPlan.weekBehind', '本周节奏需要加快') : dailyPlan?.weeklyProgress.status === 'not_started' ? t('agent.dailyPlan.weekNotStarted', '本周尚未开始') : t('agent.dailyPlan.weekOnTrack', '本周节奏正常')}</b>{dailyPlan.weeklyProgress.capacityStatus === 'limited' && dailyPlan.weeklyProgress.requiredTodayMinutes && dailyPlan.weeklyProgress.sessionLimitMinutes ? <small>{t('agent.dailyPlan.weekCapacityLimited', '按进度今天需 {required} 分钟，但单次上限为 {limit} 分钟；建议增加学习日').replace('{required}', String(dailyPlan.weeklyProgress.requiredTodayMinutes)).replace('{limit}', String(dailyPlan.weeklyProgress.sessionLimitMinutes))}</small> : dailyPlan.weeklyProgress.recommendedTodayMinutes && dailyPlan.weeklyProgress.remainingStudyDays ? <small>{t('agent.dailyPlan.weekTodayTarget', '按剩余 {days} 个学习日，今天建议 {minutes} 分钟').replace('{days}', String(dailyPlan.weeklyProgress.remainingStudyDays)).replace('{minutes}', String(dailyPlan.weeklyProgress.recommendedTodayMinutes))}</small> : null}</section> : null}
+              {dailyPlan?.adjustment && dailyPlan.adjustment.mode !== 'standard' ? <p className="agent-daily-adjustment" data-mode={dailyPlan.adjustment.mode}><Icon name={dailyPlan.adjustment.mode === 'reduced_load' ? 'lucide:gauge' : 'lucide:repeat-2'} />{dailyPlan.adjustment.mode === 'reduced_load' ? t('agent.dailyPlanAdjustment.reducedLoad', '近期有多项计划尚未完成，本轮先只安排 1 项；完成后再根据新进度继续编排。') : t('agent.dailyPlanAdjustment.reinforcement', '近期完成的训练效果仍不稳定，本轮先集中完成 1 项巩固任务，再评估下一步。')}</p> : null}
               <div className="agent-daily-primary"><span><Icon name={dailyPrimaryTask.kind === 'spaced_verification' ? 'lucide:calendar-check-2' : dailyPrimaryTask.kind === 'mistake_review' ? 'lucide:book-open-check' : dailyPrimaryTask.kind === 'free_practice' ? 'lucide:infinity' : 'lucide:target'} /></span><div><small>{dailyPrimaryTask.kind === 'spaced_verification' ? t('agent.dailyPlan.verificationDue', '间隔验证已到期') : dailyPrimaryTask.kind === 'mistake_review' ? t('agent.dailyPlan.reviewDue', '错题复盘优先') : dailyPrimaryTask.kind === 'free_practice' ? t('agent.dailyPlan.timeFallback', '补足今日学习时间') : t('agent.dailyPlan.recommended', '系统推荐任务')}</small><strong>{dailyPrimaryTask.title || `${subjectLabel(dailyPrimaryTask.subject, t)} · ${taskLabel(dailyPrimaryTask.kind === 'free_practice' ? 'free_practice' : dailyPrimaryTask.prescription?.taskType, t)}`}</strong></div></div>
-              <p>{dailyPrimaryTask.kind === 'spaced_verification' ? t('agent.dailyPlan.verificationBody', '用同知识点新题完成下一次独立验证，确认不是短时记忆。') : dailyPrimaryTask.kind === 'mistake_review' ? t('agent.dailyPlan.reviewBody', '先看原题、错因和正确思路，再进入独立验证。') : dailyPrimaryTask.kind === 'free_practice' ? t('agent.dailyPlan.timeFallbackBody', '当前没有更紧急的复盘或验证任务，按你的默认科目完成一组练习。') : t('agent.dailyPlan.recommendedBody', '这是当前目标下优先级最高、且现在可以执行的学习任务。')}</p>
-              <div className="agent-daily-primary-meta"><span><Icon name="lucide:clock-3" />{dailyPrimaryTask.estimatedMinutes} min</span>{dailyPrimaryTask.review ? <span>{t('agent.dailyPlan.verificationProgress', '验证进度')} {dailyPrimaryTask.review.consecutivePassCount}/{dailyPrimaryTask.review.requiredPassCount}</span> : dailyPrimaryTask.prescription?.questionCount ? <span>{dailyPrimaryTask.prescription.questionCount} {t('agent.freePractice.questions', '题')}</span> : dailyPrimaryTask.freePractice ? <span>{dailyPrimaryTask.freePractice.questionCount} {t('agent.freePractice.questions', '题')}</span> : null}</div>
+              <p>{dailyPrimaryTask.kind === 'spaced_verification' ? t('agent.dailyPlan.verificationBody', '用同知识点新题完成下一次独立验证，确认不是短时记忆。') : dailyPrimaryTask.kind === 'mistake_review' ? dailyPrimaryTask.execution?.status === 'review_only' ? t('agent.dailyPlanAvailability.reviewOnlyBody', '现在可以复盘原题；同知识点验证题暂时不足，你仍可自主选题练习。') : t('agent.dailyPlan.reviewBody', '先看原题、错因和正确思路，再进入独立验证。') : dailyPrimaryTask.kind === 'free_practice' ? t('agent.dailyPlan.timeFallbackBody', '当前没有更紧急的复盘或验证任务，按你的默认科目完成一组练习。') : t('agent.dailyPlan.recommendedBody', '这是当前目标下优先级最高、且现在可以执行的学习任务。')}</p>
+              <div className="agent-daily-primary-meta"><span><Icon name="lucide:clock-3" />{dailyPrimaryTask.estimatedMinutes} min</span>{dailyPrimaryTask.execution ? <span data-status={dailyPrimaryTask.execution.status}><Icon name={dailyPrimaryTask.execution.status === 'review_only' ? 'lucide:book-open-check' : 'lucide:circle-check'} />{dailyPrimaryTask.execution.status === 'review_only' ? t('agent.dailyPlanAvailability.reviewOnly', '仅可复盘') : t('agent.dailyPlanAvailability.ready', '可开始')}</span> : null}{dailyPrimaryTask.review ? <span>{t('agent.dailyPlan.verificationProgress', '验证进度')} {dailyPrimaryTask.review.consecutivePassCount}/{dailyPrimaryTask.review.requiredPassCount}</span> : dailyPrimaryTask.prescription?.questionCount ? <span>{dailyPrimaryTask.prescription.questionCount} {t('agent.freePractice.questions', '题')}</span> : dailyPrimaryTask.freePractice ? <span>{dailyPrimaryTask.freePractice.questionCount} {t('agent.freePractice.questions', '题')}</span> : null}</div>
               <div className="agent-daily-actions"><button type="button" disabled={isStartingFreePractice || isStartingLearning} onClick={() => runDailyPlanTask(dailyPrimaryTask)}><Icon name={isStartingFreePractice || isStartingLearning ? 'lucide:loader-circle' : 'lucide:play'} />{isStartingFreePractice || isStartingLearning ? t('agent.learningEntry.preparing', '正在准备') : dailyPrimaryTask.kind === 'spaced_verification' ? t('agent.spacedVerification.startDue', '开始到期验证') : dailyPrimaryTask.kind === 'mistake_review' ? t('agent.dailyPlan.openReview', '先复盘错题') : t('agent.learningEntry.start', '开始学习')}</button><button type="button" className="secondary" onClick={openSessionFreePractice}><Icon name="lucide:sliders-horizontal" />{t('agent.dailyPlan.choosePractice', '自主选题')}</button></div>
-              {dailyQueuedTasks.length || dailyPlan?.scheduledVerificationCount || dailyPlan?.deferredTaskCount ? <div className="agent-daily-queue"><strong>{t('agent.dailyPlan.next', '完成后')}</strong>{dailyQueuedTasks.map((task, index) => <div key={task.taskId}><b>{index + 2}</b><span>{task.title || `${subjectLabel(task.subject, t)} · ${taskLabel(task.kind === 'free_practice' ? 'free_practice' : task.prescription?.taskType, t)}`}</span><small>{task.estimatedMinutes} min</small></div>)}{dailyPlan?.deferredTaskCount ? <p><Icon name="lucide:clock-arrow-down" />{dailyPlan.deferredTaskCount} {t('agent.dailyPlan.deferred', '项任务暂不放入本轮，将在完成后重新安排')}</p> : null}{dailyPlan?.scheduledVerificationCount ? <p><Icon name="lucide:calendar-clock" />{dailyPlan.scheduledVerificationCount} {t('agent.dailyPlan.scheduled', '项间隔验证将在到期后自动加入')}</p> : null}</div> : null}
+              {dailyQueuedTasks.length || dailyPlan?.scheduledVerificationCount || dailyPlan?.deferredTaskCount ? <div className="agent-daily-queue"><strong>{t('agent.dailyPlan.next', '完成后')}</strong>{dailyQueuedTasks.map((task, index) => <div key={task.taskId}><b>{index + 2}</b><span>{task.title || `${subjectLabel(task.subject, t)} · ${taskLabel(task.kind === 'free_practice' ? 'free_practice' : task.prescription?.taskType, t)}`}</span><small>{task.estimatedMinutes} min</small></div>)}{dailyBlockedTasks.length ? <p className="agent-daily-auto-fallback"><Icon name="lucide:shuffle" />{t('agent.dailyPlanAvailability.autoFallback', '{count} 项任务因题源不足已自动后移，当前已切换到可完成任务。').replace('{count}', String(dailyBlockedTasks.length))}</p> : dailyPlan?.deferredTaskCount ? <p><Icon name="lucide:clock-arrow-down" />{dailyPlan.deferredTaskCount} {t('agent.dailyPlan.deferred', '项任务暂不放入本轮，将在完成后重新安排')}</p> : null}{dailyPlan?.scheduledVerificationCount ? <p><Icon name="lucide:calendar-clock" />{dailyPlan.scheduledVerificationCount} {t('agent.dailyPlan.scheduled', '项间隔验证将在到期后自动加入')}</p> : null}</div> : null}
               {learningEntryError ? <small role="alert">{learningEntryError}</small> : null}
             </section> : null}
             {!resumableWorkspace && dailyPlan && !dailyPrimaryTask && !dailyFallbackBlocked && dailyPlan.progress.completedTaskCount > 0 ? <section className="agent-learning-entry-card agent-daily-plan-card" data-state="completed">

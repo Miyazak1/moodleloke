@@ -297,6 +297,7 @@ export class AgentPracticeActionService {
           snapshot: {
             schemaVersion: '1',
             source: 'student_initiated',
+            ...(input.dailyPlanContext ? { dailyPlanContext: input.dailyPlanContext } : {}),
             task: { type: 'free_practice', practiceKind, practiceMode: input.practiceMode, subject: input.subject, questionCount: round.questions.length, ...(focusTopicId ? { topicIds: [focusTopicId] } : {}) },
             ...(requestedReview ? { review: { reviewItemId: requestedReview.id, patternType: requestedReview.patternType } } : {}),
             freePracticeJourneyId: journeyId,
@@ -697,7 +698,7 @@ export class AgentPracticeActionService {
         };
         await this.prisma.$transaction(async (tx) => {
           await tx.agentToolCall.update({ where: { id: call!.id }, data: { status: 'completed', output, errorCode: null, completedAt: new Date() } });
-          await tx.agentArtifact.update({ where: { id: artifact.id }, data: { status: 'started', snapshot: { ...snapshot, launch: output } as Prisma.InputJsonValue } });
+          await tx.agentArtifact.update({ where: { id: artifact.id }, data: { status: 'started', snapshot: { ...snapshot, ...(input.dailyPlanContext ? { dailyPlanContext: input.dailyPlanContext } : {}), launch: output } as Prisma.InputJsonValue } });
           await tx.learningPrescriptionOutcome.create({
             data: {
               prescriptionId, userId, decision: 'accepted', taskIndex: 0,
@@ -763,7 +764,7 @@ export class AgentPracticeActionService {
         });
         await tx.agentArtifact.update({
           where: { id: artifact.id },
-          data: { status: 'started', snapshot: { ...snapshot, launch: output } as Prisma.InputJsonValue }
+          data: { status: 'started', snapshot: { ...snapshot, ...(input.dailyPlanContext ? { dailyPlanContext: input.dailyPlanContext } : {}), launch: output } as Prisma.InputJsonValue }
         });
         await tx.learningPrescriptionOutcome.create({
           data: {
