@@ -30,6 +30,75 @@ async function mockPublicHome(page: Page) {
   await page.route((url) => url.pathname === '/api/v1/csca-special-practice/home-mini-mock', (route) => json(route, { message: 'Preview unavailable' }, 503));
 }
 
+test('keeps public SEO content visible until the application is ready', async ({ page }) => {
+  await mockPublicHome(page);
+  let releaseEntryModule: (() => void) | undefined;
+  const entryModuleReleased = new Promise<void>((resolve) => { releaseEntryModule = resolve; });
+  let markEntryRequested: (() => void) | undefined;
+  const entryRequested = new Promise<void>((resolve) => { markEntryRequested = resolve; });
+  await page.route('**/src/main.tsx*', async (route) => {
+    markEntryRequested?.();
+    await entryModuleReleased;
+    await route.continue();
+  });
+
+  await page.goto('/', { waitUntil: 'commit' });
+  await entryRequested;
+  await expect(page.locator('#root > main')).toBeVisible();
+  await expect(page.getByRole('heading', { name: '用真实作答找到下一步。' })).toBeVisible();
+
+  releaseEntryModule?.();
+  await expect(page.getByRole('heading', { name: '用真实作答找到下一步。' })).toBeVisible();
+});
+
+test('does not expose public SEO copy while a private route boots', async ({ page }) => {
+  let releaseEntryModule: (() => void) | undefined;
+  const entryModuleReleased = new Promise<void>((resolve) => { releaseEntryModule = resolve; });
+  let markEntryRequested: (() => void) | undefined;
+  const entryRequested = new Promise<void>((resolve) => { markEntryRequested = resolve; });
+  await page.route('**/src/main.tsx*', async (route) => {
+    markEntryRequested?.();
+    await entryModuleReleased;
+    await route.continue();
+  });
+
+  await page.goto('/agent', { waitUntil: 'commit' });
+  await entryRequested;
+  await expect(page.locator('html')).toHaveClass(/app-boot-private/);
+  await expect(page.locator('#root > main')).toBeHidden();
+  await expect(page.getByRole('heading', { name: '用真实作答找到下一步。' })).toBeHidden();
+  await expect.poll(() => page.locator('#root').evaluate((element) => getComputedStyle(element, '::before').content)).toContain('CS');
+
+  releaseEntryModule?.();
+  await expect(page.locator('html')).not.toHaveClass(/app-boot-pending/);
+});
+
+test('keeps the current public page visible while the next route chunk loads', async ({ page }) => {
+  await mockPublicHome(page);
+  let releaseAboutModule: (() => void) | undefined;
+  const aboutModuleReleased = new Promise<void>((resolve) => { releaseAboutModule = resolve; });
+  let markAboutRequested: (() => void) | undefined;
+  const aboutRequested = new Promise<void>((resolve) => { markAboutRequested = resolve; });
+  await page.route('**/src/pages/PublicAboutPage.tsx*', async (route) => {
+    markAboutRequested?.();
+    await aboutModuleReleased;
+    await route.continue();
+  });
+
+  await page.goto('/');
+  const homeHeading = page.getByRole('heading', { name: '用真实作答找到下一步。' });
+  await expect(homeHeading).toBeVisible();
+  await page.locator('.public-home-footer').getByRole('button', { name: '关于 CSCAPilot 与 Holalobe' }).click();
+  await aboutRequested;
+
+  await expect(page).toHaveURL(/\/about$/);
+  await expect(homeHeading).toBeVisible();
+  await expect(page.locator('.app-loading-state')).toHaveCount(0);
+
+  releaseAboutModule?.();
+  await expect(page.getByRole('heading', { name: '关于 CSCAPilot' })).toBeVisible();
+});
+
 test('renders the inherited public home and routes every student intent into Agent', async ({ page }) => {
   await mockPublicHome(page);
   await page.goto('/');

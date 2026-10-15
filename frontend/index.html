@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="app-boot-pending">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -24,15 +24,57 @@
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=optional" rel="stylesheet" />
+    <style>
+      html.app-boot-pending,
+      html.app-boot-pending body { margin: 0; min-height: 100%; background: #f6f8ff; color: #202337; }
+      html.app-boot-pending #root > main {
+        display: grid;
+        min-height: 100vh;
+        align-content: center;
+        gap: 14px;
+        width: min(100% - 40px, 1120px);
+        margin: 0 auto;
+        font-family: 'Inter', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+      html.app-boot-pending #root > main::before {
+        content: 'CSCAPilot';
+        color: #315dff;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: .08em;
+      }
+      html.app-boot-pending #root > main h1 { max-width: 760px; margin: 0; font-size: clamp(30px, 5vw, 54px); line-height: 1.08; }
+      html.app-boot-pending #root > main p { max-width: 760px; margin: 0; color: #5f6f7f; font-size: 15px; line-height: 1.8; }
+      html.app-boot-pending #root > main a { color: #315dff; font-weight: 700; text-decoration: none; }
+      html.app-boot-pending.app-boot-private #root { display: grid; min-height: 100vh; place-items: center; }
+      html.app-boot-pending.app-boot-private #root > main { display: none; }
+      html.app-boot-pending.app-boot-private #root::before {
+        content: 'CS';
+        display: grid;
+        width: 48px;
+        height: 48px;
+        place-items: center;
+        border-radius: 14px;
+        background: #315dff;
+        box-shadow: 0 14px 34px rgba(49, 93, 255, .2);
+        color: #fff;
+        font: 900 16px/1 'Inter', 'Segoe UI', sans-serif;
+      }
+    </style>
+    <script>
+      if (!['/', '/about', '/csca-prep'].includes(window.location.pathname.replace(/\/+$/, '') || '/')) {
+        document.documentElement.classList.add('app-boot-private');
+      }
+    </script>
     <title>CSCAPilot · CSCA 学习 Agent</title>
     <script type="application/ld+json" id="cscapilot-structured-data">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://www.cscapilot.com/#website","url":"https://www.cscapilot.com/","name":"CSCAPilot","publisher":{"@id":"https://www.cscapilot.com/#publisher"}},{"@type":"Organization","@id":"https://www.cscapilot.com/#publisher","name":"Holalobe","brand":{"@type":"Brand","name":"CSCAPilot"}},{"@type":"EducationalApplication","name":"CSCAPilot","applicationCategory":"EducationalApplication","operatingSystem":"Web","url":"https://www.cscapilot.com/","description":"CSCA learning and practice for mathematics, physics, and chemistry.","publisher":{"@id":"https://www.cscapilot.com/#publisher"}}]}</script>
   </head>
   <body>
     <div id="root">
       <main aria-label="CSCAPilot">
-        <h1>CSCAPilot · CSCA 学习 Agent</h1>
-        <p>面向 CSCA 数学、物理和化学备考，用真实作答连接快速诊断、科目训练、即时解析与错题复盘。</p>
+        <h1>用真实作答找到下一步。</h1>
+        <p>CSCAPilot 是面向 CSCA 数学、物理和化学备考的学习 Agent，用真实作答连接快速诊断、科目训练、即时解析与错题复盘。</p>
         <p><a href="/agent">进入学习 Agent</a> · <a href="/csca-prep">了解 CSCA</a></p>
       </main>
     </div>

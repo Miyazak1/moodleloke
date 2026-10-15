@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, startTransition, Suspense, useEffect, useState } from 'react';
 import { AppLoadingState } from './components/AppLoadingState';
 import { ErrorBanner } from './components/ErrorBanner';
 import { Icon } from './components/Icon';
@@ -17,13 +17,40 @@ import { resolveStandaloneHref, resolveStandaloneLocation, type StandaloneRoute 
 import { useAuthSession } from './lib/use-auth-session';
 import { useI18n } from './i18n/useI18n';
 
-const AgentPage = lazy(() => import('./pages/AgentPage').then((module) => ({ default: module.AgentPage })));
-const PublicHomePage = lazy(() => import('./pages/PublicHomePage').then((module) => ({ default: module.PublicHomePage })));
-const PublicAboutPage = lazy(() => import('./pages/PublicAboutPage').then((module) => ({ default: module.PublicAboutPage })));
-const CscaPrepPage = lazy(() => import('./pages/CscaPrepPage').then((module) => ({ default: module.CscaPrepPage })));
-const PublicAuthPage = lazy(() => import('./pages/PublicAuthPage').then((module) => ({ default: module.PublicAuthPage })));
-const PublicMePage = lazy(() => import('./pages/PublicMePage').then((module) => ({ default: module.PublicMePage })));
-const StudentOnboardingPage = lazy(() => import('./pages/StudentOnboardingPage').then((module) => ({ default: module.StudentOnboardingPage })));
+const loadAgentPage = () => import('./pages/AgentPage');
+const loadPublicHomePage = () => import('./pages/PublicHomePage');
+const loadPublicAboutPage = () => import('./pages/PublicAboutPage');
+const loadCscaPrepPage = () => import('./pages/CscaPrepPage');
+const loadPublicAuthPage = () => import('./pages/PublicAuthPage');
+const loadPublicMePage = () => import('./pages/PublicMePage');
+const loadStudentOnboardingPage = () => import('./pages/StudentOnboardingPage');
+
+const AgentPage = lazy(() => loadAgentPage().then((module) => ({ default: module.AgentPage })));
+const PublicHomePage = lazy(() => loadPublicHomePage().then((module) => ({ default: module.PublicHomePage })));
+const PublicAboutPage = lazy(() => loadPublicAboutPage().then((module) => ({ default: module.PublicAboutPage })));
+const CscaPrepPage = lazy(() => loadCscaPrepPage().then((module) => ({ default: module.CscaPrepPage })));
+const PublicAuthPage = lazy(() => loadPublicAuthPage().then((module) => ({ default: module.PublicAuthPage })));
+const PublicMePage = lazy(() => loadPublicMePage().then((module) => ({ default: module.PublicMePage })));
+const StudentOnboardingPage = lazy(() => loadStudentOnboardingPage().then((module) => ({ default: module.StudentOnboardingPage })));
+
+function preloadStandaloneRoute(route: StandaloneRoute) {
+  const loader = route === 'agent'
+    ? loadAgentPage
+    : route === 'home'
+      ? loadPublicHomePage
+      : route === 'about'
+        ? loadPublicAboutPage
+        : route === 'csca-prep'
+          ? loadCscaPrepPage
+          : route === 'auth'
+            ? loadPublicAuthPage
+            : route === 'me'
+              ? loadPublicMePage
+              : route === 'onboarding'
+                ? loadStudentOnboardingPage
+                : null;
+  if (loader) void loader().catch(() => undefined);
+}
 
 function readStandaloneRoute(): StandaloneRoute {
   return resolveStandaloneLocation(window.location.pathname, window.location.search, window.location.hash).route;
@@ -51,7 +78,8 @@ export default function StandaloneAgentApp() {
     const syncRoute = () => {
       const resolution = resolveStandaloneLocation(window.location.pathname, window.location.search, window.location.hash);
       if (resolution.shouldCanonicalize) window.history.replaceState({}, '', resolution.href);
-      setRoute(resolution.route);
+      preloadStandaloneRoute(resolution.route);
+      startTransition(() => setRoute(resolution.route));
     };
     syncRoute();
     const handlePopState = () => syncRoute();
@@ -108,9 +136,10 @@ export default function StandaloneAgentApp() {
     if (from && target && from !== target && (from === 'home' || from === 'about' || from === 'csca_prep' || from === 'auth')) {
       trackPublicEvent({ eventType: 'public_cta_click', route: from, locale, target });
     }
+    preloadStandaloneRoute(resolution.route);
     window.history.pushState({}, '', resolution.href);
     window.dispatchEvent(new Event('moodlelike:navigation'));
-    setRoute(resolution.route);
+    startTransition(() => setRoute(resolution.route));
   }
 
   function completeAuth(user: User, redirectTo?: string, isRegistration = false) {
@@ -180,7 +209,7 @@ export default function StandaloneAgentApp() {
           </div>
         </header>
       ) : null}
-      {(route !== 'home' && route !== 'about' && route !== 'csca-prep' && route !== 'me' && (!isAgent || !currentUser)) ? <div className="standalone-language-bar"><LanguageSelector compact /></div> : null}
+      {(route !== 'home' && route !== 'about' && route !== 'csca-prep' && route !== 'me' && (!isAgent || (!isResolvingAuth && !currentUser))) ? <div className="standalone-language-bar"><LanguageSelector compact /></div> : null}
       <main className={mainClassName}>
         <ErrorBanner message={error} />
         <Suspense fallback={<AppLoadingState variant="page" />}>
@@ -208,13 +237,15 @@ export default function StandaloneAgentApp() {
               onNavigate={navigate}
             />
           )}
-          {route === 'agent' && (
-            <AgentPage
-              currentUser={currentUser}
-              isResolvingAuth={isResolvingAuth}
-              host={agentHost}
-            />
-          )}
+          {route === 'agent' && (isResolvingAuth
+            ? <AppLoadingState variant="auth" />
+            : (
+              <AgentPage
+                currentUser={currentUser}
+                isResolvingAuth={false}
+                host={agentHost}
+              />
+            ))}
           {route === 'auth' && (
             <PublicAuthPage
               initialMode={readInitialAuthMode()}
