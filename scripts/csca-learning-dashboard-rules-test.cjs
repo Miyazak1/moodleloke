@@ -2018,8 +2018,8 @@ async function testCorrectEvidenceImprovesAndResolvesWrongPatterns() {
   assertEqual(updates.length, 2, 'Correct evidence should update active and improving patterns for the same topic.');
   assertEqual(updates[0].data.status, 'improving', 'First correct evidence should move an active pattern to improving.');
   assertEqual(updates[0].data.metadata.correctEvidenceCount, 1, 'First correct evidence should be recorded.');
-  assertEqual(updates[1].data.status, 'resolved', 'Second correct evidence should resolve an improving pattern.');
-  assertEqual(updates[1].data.nextReviewAt, null, 'Resolved pattern should leave the active review queue.');
+  assertEqual(updates[1].data.status, 'improving', 'Ordinary correct evidence must not replace an independent verification.');
+  assert(updates[1].data.nextReviewAt instanceof Date, 'An improving pattern must remain scheduled until independently verified.');
 }
 
 async function testCorrectEvidenceDoesNotVerifyReviewedPatterns() {
@@ -2059,7 +2059,7 @@ async function testCorrectEvidenceDoesNotVerifyReviewedPatterns() {
 
 async function testWrongPatternVerificationPassesAndFailsExplicitly() {
   const updates = [];
-  const pattern = {
+  let pattern = {
     id: 51,
     userId: 909,
     subject: 'math',
@@ -2076,7 +2076,8 @@ async function testWrongPatternVerificationPassesAndFailsExplicitly() {
       findFirst: async ({ where }) => where.id === 51 && where.userId === 909 ? pattern : null,
       update: async ({ where, data }) => {
         updates.push({ where, data });
-        return { ...pattern, id: where.id, ...data };
+        pattern = { ...pattern, id: where.id, ...data };
+        return pattern;
       }
     }
   }));
@@ -2095,11 +2096,29 @@ async function testWrongPatternVerificationPassesAndFailsExplicitly() {
     overallTotal: 5,
     occurredAt: new Date('2026-06-08T11:00:00.000Z')
   });
-  assertEqual(passed.verificationStatus, 'verified_repaired', 'Passing verification should mark the wrong pattern repaired.');
-  assertEqual(updates[0].data.status, 'resolved', 'Passing verification should resolve the pattern.');
-  assertEqual(updates[0].data.nextReviewAt, null, 'Passing verification should clear the next review date.');
+  assertEqual(passed.verificationStatus, 'pending_verification', 'The first passing verification should schedule a separated confirmation.');
+  assertEqual(updates[0].data.status, 'improving', 'The first passing verification should keep the pattern improving.');
+  assert(updates[0].data.nextReviewAt instanceof Date, 'The first passing verification should schedule the next review date.');
   assertEqual(updates[0].data.metadata.lastVerificationTargetAccuracy, 100, 'Passing verification should record target accuracy.');
-  assert(updates[0].data.metadata.verificationCompletedAt, 'Passing verification should write completion time.');
+  assertEqual(updates[0].data.metadata.verificationCompletedAt, null, 'One passing verification must not claim stable repair.');
+
+  const confirmed = await service.recordWrongPatternVerification({
+    userId: 909,
+    subject: 'math',
+    patternId: 51,
+    roundId: 90,
+    topicId: 9,
+    patternType: 'visual_interpretation',
+    passed: true,
+    targetCorrectCount: 3,
+    targetTotal: 3,
+    overallCorrectCount: 5,
+    overallTotal: 5,
+    occurredAt: new Date('2026-06-12T11:00:00.000Z')
+  });
+  assertEqual(confirmed.verificationStatus, 'verified_repaired', 'A separated second pass should mark the wrong pattern repaired.');
+  assertEqual(updates[1].data.status, 'resolved', 'A separated second pass should resolve the pattern.');
+  assertEqual(updates[1].data.nextReviewAt, null, 'Resolved verification should clear the next review date.');
 
   const failed = await service.recordWrongPatternVerification({
     userId: 909,
@@ -2116,10 +2135,10 @@ async function testWrongPatternVerificationPassesAndFailsExplicitly() {
     occurredAt: new Date('2026-06-09T11:00:00.000Z')
   });
   assertEqual(failed.verificationStatus, 'pending_verification', 'Failing verification should keep the pattern pending verification.');
-  assertEqual(updates[1].data.status, 'improving', 'Failing verification should return the pattern to improving.');
-  assert(updates[1].data.nextReviewAt instanceof Date, 'Failing verification should schedule the next review.');
-  assertEqual(updates[1].data.metadata.verificationCompletedAt, null, 'Failing verification should clear completion state.');
-  assert(updates[1].data.metadata.verificationFailedAt, 'Failing verification should record failure time.');
+  assertEqual(updates[2].data.status, 'improving', 'Failing verification should return the pattern to improving.');
+  assert(updates[2].data.nextReviewAt instanceof Date, 'Failing verification should schedule the next review.');
+  assertEqual(updates[2].data.metadata.verificationCompletedAt, null, 'Failing verification should clear completion state.');
+  assert(updates[2].data.metadata.verificationFailedAt, 'Failing verification should record failure time.');
 }
 
 async function testWrongPatternReviewQueueAndCompletion() {
@@ -2158,12 +2177,22 @@ async function testWrongPatternReviewQueueAndCompletion() {
   assertEqual(queue.items[0].verificationRequired, true, 'Review queue should expose pending verification state.');
 
   const result = await service.completeWrongPatternReview(909, 31);
-  assertEqual(result.status, 'improving', 'Completing a review should move the pattern to improving.');
+  assertEqual(result.status, 'active', 'Completing a review should keep the first independent verification immediately available.');
   assertEqual(result.reviewCount, 2, 'Completing a review should increment metadata review count.');
   assertEqual(result.verificationRequired, true, 'Completing a review should require a later repair verification.');
   assert(result.verificationHref.includes('verify=31'), 'Completing a review should return a verification training href.');
   assert(result.verificationHref.includes('topicId=9'), 'Verification training href should preserve the reviewed topic.');
   assert(updates[0].data.nextReviewAt instanceof Date, 'Completing a review should schedule the next review.');
+
+  await service.completeWrongPatternReview(909, 31, {
+    dailyPlanReviewCompletion: {
+      taskId: 'review:31', planDate: '2026-06-08', policyVersion: 'agent-daily-plan-v3-feedback-aware',
+      taskKind: 'mistake_review', subject: 'math', entry: 'today_plan', questionId: 101
+    }
+  });
+  assertEqual(updates[1].data.metadata.dailyPlanReviewCompletion.taskId, 'review:31', 'Daily-plan review completion must retain its task identity.');
+  assertEqual(updates[1].data.metadata.dailyPlanReviewCompletion.questionId, 101, 'Daily-plan review completion must retain its evidence question.');
+  assertEqual(updates[1].data.metadata.dailyPlanReviewCompletions.length, 1, 'Daily-plan review history must remain available for recent execution metrics.');
 }
 
 async function testMockTrendReturnsSubjectBackflow() {

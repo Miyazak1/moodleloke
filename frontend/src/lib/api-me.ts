@@ -63,6 +63,14 @@ export function completeMyCscaWrongQuestionReview(payload: {
   patternType: string;
   questionId: number;
   sourceType: string;
+  dailyPlanContext?: {
+    taskId: string;
+    planDate: string;
+    policyVersion: string;
+    taskKind: 'mistake_review';
+    subject: 'math' | 'physics' | 'chemistry';
+    entry: 'today_plan' | 'refreshed_next';
+  };
 }) {
   return authRequest<{
     id: number;

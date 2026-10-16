@@ -34,6 +34,28 @@ const READINESS_HIGH_DIFFICULTY_DISTRIBUTION_SAMPLE_MIN = 8;
 
 type LearningDashboardLanguage = 'zh' | 'en' | 'vi';
 
+type DailyPlanReviewContext = {
+  taskId: string;
+  planDate: string;
+  policyVersion: string;
+  taskKind: 'mistake_review';
+  subject: CscaLearningSubject;
+  entry: 'today_plan' | 'refreshed_next';
+};
+
+function dailyPlanReviewContext(value: unknown, subject: CscaLearningSubject): DailyPlanReviewContext | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  const context = value as Record<string, unknown>;
+  const taskId = typeof context.taskId === 'string' ? context.taskId.trim() : '';
+  const planDate = typeof context.planDate === 'string' ? context.planDate : '';
+  const policyVersion = typeof context.policyVersion === 'string' ? context.policyVersion.trim() : '';
+  const entry = context.entry === 'refreshed_next' ? 'refreshed_next' : context.entry === 'today_plan' ? 'today_plan' : null;
+  if (!taskId || taskId.length > 180 || !/^\d{4}-\d{2}-\d{2}$/.test(planDate)
+    || !policyVersion || policyVersion.length > 80 || context.taskKind !== 'mistake_review'
+    || context.subject !== subject || !entry) return null;
+  return { taskId, planDate, policyVersion, taskKind: 'mistake_review', subject, entry };
+}
+
 const DASHBOARD_LOCALIZED_COPY: Record<LearningDashboardLanguage, {
   subjects: Record<CscaLearningSubject, string>;
   currentWeakSubject: string;
@@ -1504,7 +1526,9 @@ export class CscaLearningService {
     };
   }
 
-  async completeWrongPatternReview(userId: number, patternId: number) {
+  async completeWrongPatternReview(userId: number, patternId: number, options?: {
+    dailyPlanReviewCompletion?: DailyPlanReviewContext & { questionId: number | null };
+  }) {
     const pattern = await this.prisma.cscaWrongPattern.findFirst({
       where: { id: patternId, userId, status: { in: ['active', 'improving'] } }
     });
@@ -1514,15 +1538,36 @@ export class CscaLearningService {
     const now = new Date();
     const metadata = jsonRecord(pattern.metadata);
     const reviewCount = Math.max(0, Number(metadata.reviewCount ?? 0) || 0) + 1;
+    const planCompletion = options?.dailyPlanReviewCompletion ? {
+      ...options.dailyPlanReviewCompletion,
+      completedAt: now.toISOString()
+    } : null;
+    const priorPlanCompletions = Array.isArray(metadata.dailyPlanReviewCompletions)
+      ? metadata.dailyPlanReviewCompletions.filter((item) => item && typeof item === 'object' && !Array.isArray(item))
+      : [];
+    const planCompletions = planCompletion
+      ? [planCompletion, ...priorPlanCompletions.filter((item) => {
+          const prior = item as Record<string, unknown>;
+          return prior.taskId !== planCompletion.taskId || prior.planDate !== planCompletion.planDate;
+        })].slice(0, 14)
+      : priorPlanCompletions;
     const updated = await this.prisma.cscaWrongPattern.update({
       where: { id: pattern.id },
       data: {
-        status: 'improving',
+        // Completing the explanation/review phase must leave the first
+        // independent verification immediately startable. Only a completed
+        // verification moves the pattern to `improving` and schedules the
+        // later spaced check.
+        status: 'active',
         nextReviewAt: addLocalDays(now, 5),
         metadata: {
           ...metadata,
           reviewCount,
-          lastReviewCompletedAt: now.toISOString()
+          lastReviewCompletedAt: now.toISOString(),
+          ...(planCompletion ? {
+            dailyPlanReviewCompletion: planCompletion,
+            dailyPlanReviewCompletions: planCompletions
+          } : {})
         }
       }
     });
@@ -1544,6 +1589,7 @@ export class CscaLearningService {
     patternType?: unknown;
     questionId?: unknown;
     sourceType?: unknown;
+    dailyPlanContext?: unknown;
   }) {
     const subject = validSubject(String(input.subject ?? ''));
     if (!subject) throw new BadRequestException('错题科目不正确。');
@@ -1551,6 +1597,7 @@ export class CscaLearningService {
     const topicIdValue = input.topicId === null || input.topicId === undefined || input.topicId === '' ? null : Number(input.topicId);
     const topicId = Number.isInteger(topicIdValue) && Number(topicIdValue) > 0 ? Number(topicIdValue) : null;
     const questionId = Number(input.questionId);
+    const planContext = dailyPlanReviewContext(input.dailyPlanContext, subject);
     const now = new Date();
     const existing = await this.prisma.cscaWrongPattern.findFirst({
       where: {
@@ -1579,7 +1626,12 @@ export class CscaLearningService {
         }
       }
     });
-    return this.completeWrongPatternReview(userId, pattern.id);
+    return this.completeWrongPatternReview(userId, pattern.id, planContext ? {
+      dailyPlanReviewCompletion: {
+        ...planContext,
+        questionId: Number.isInteger(questionId) && questionId > 0 ? questionId : null
+      }
+    } : undefined);
   }
 
   private async subjectMasteryAverage(userId: number, subject: CscaLearningSubject) {

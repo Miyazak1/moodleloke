@@ -14,7 +14,7 @@ import {
 } from '../components/agent/AgentLearningCards';
 import { AgentLearningSettingsView } from '../components/agent/AgentLearningSettingsView';
 import { AgentLearningTools } from '../components/agent/AgentLearningTools';
-import { AgentWeaknessWorkspace, type WeaknessPracticeSelection } from '../components/agent/AgentWeaknessWorkspace';
+import { AgentWeaknessWorkspace, type DailyPlanReviewHandoff, type WeaknessPracticeSelection } from '../components/agent/AgentWeaknessWorkspace';
 import { AgentAdaptiveResultMessage, AgentMockExamResultMessage } from '../components/agent/AgentStructuredReportMessage';
 import { useI18n } from '../i18n/useI18n';
 import { agentDisabledRedirectUrl, isAgentWebEnabled } from '../lib/agent-feature';
@@ -482,6 +482,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
   const [preferredQuestionLanguage, setPreferredQuestionLanguage] = useState<'zh' | 'en' | null>(null);
   const [journeyOverviewRevision, setJourneyOverviewRevision] = useState(0);
   const [dailyPlanRefreshStatus, setDailyPlanRefreshStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
+  const [dailyPlanReviewHandoff, setDailyPlanReviewHandoff] = useState<DailyPlanReviewHandoff | null>(null);
   const journeyOverviewRequestRef = useRef(0);
   const [practiceQuestionContext, setPracticeQuestionContext] = useState<AgentPracticeQuestionContext | null>(null);
   const [practiceAssistanceEvents, setPracticeAssistanceEvents] = useState<AgentPracticeAssistanceEvent[]>([]);
@@ -1832,6 +1833,16 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
       entry
     } satisfies AgentDailyPlanLaunchContext : undefined;
     if (task.action === 'open_weakness') {
+      if (task.review && dailyPlanContext) {
+        setDailyPlanReviewHandoff({
+          reviewItemId: task.review.reviewItemId,
+          subject: task.subject,
+          topicId: task.topicId,
+          patternType: task.review.patternType,
+          title: task.title || subjectLabel(task.subject, t),
+          context: { ...dailyPlanContext, taskKind: 'mistake_review' }
+        });
+      }
       chooseJourneySection('weakness');
       return;
     }
@@ -2837,6 +2848,8 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
               onRetry={() => setJourneyOverviewRevision((current) => current + 1)}
               onGoPractice={() => chooseJourneySection('today')}
               onStartPractice={beginFreePractice}
+              dailyPlanReview={dailyPlanReviewHandoff}
+              onReviewCompleted={() => setJourneyOverviewRevision((current) => current + 1)}
             />
           ) : journeySection === 'resources' ? (
             pastPaperWorkspace ? <section className="agent-resource-detail" aria-label={t('agent.pastPaper.workspaceAria', '真题资料详情')}>

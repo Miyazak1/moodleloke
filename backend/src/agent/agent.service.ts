@@ -262,7 +262,7 @@ export class AgentService {
       }) ?? Promise.resolve([]),
       this.prisma.cscaWrongPattern?.findMany({
         where: { userId, subject: { in: [...subjects] }, status: { in: ['active', 'improving'] } },
-        select: { subject: true, topicId: true }
+        select: { subject: true, topicId: true, metadata: true }
       }) ?? Promise.resolve([]),
       this.prisma.learningStateProjectionCheckpoint?.findMany({
         where: { userId, subjectCode: { in: [...subjects] }, projectorVersion: LEARNING_STATE_PROJECTOR_VERSION },
@@ -334,7 +334,7 @@ export class AgentService {
         return [String(metadata.artifactId ?? ''), metadata] as const;
       })
       .filter(([artifactId]) => Boolean(artifactId)));
-    const dailyPlanExecutions = dailyPlanArtifacts.flatMap((item) => {
+    const artifactPlanExecutions = dailyPlanArtifacts.flatMap((item) => {
       const snapshot = recordValue(item.snapshot);
       const context = recordValue(snapshot.dailyPlanContext);
       const taskId = typeof context.taskId === 'string' ? context.taskId : '';
@@ -351,8 +351,34 @@ export class AgentService {
         ? settlement.targetAccuracy
         : typeof prescribedOutcome?.targetAccuracy === 'number' ? prescribedOutcome.targetAccuracy : 0;
       const positive = completed && (settlement.verification === true || prescribedOutcome?.verification === true || targetAccuracy >= 80);
-      return [{ executionKey: `${planDate}:${taskId}:${item.id}`, planDate, taskKind, subject, completed, positive, entry }];
+      return [{ executionKey: `${planDate}:${taskId}`, planDate, taskKind, subject, completed, positive, entry }];
     });
+    const reviewPlanExecutions = activePatterns.flatMap((item) => {
+      const metadata = recordValue(item.metadata);
+      const completions = Array.isArray(metadata.dailyPlanReviewCompletions)
+        ? metadata.dailyPlanReviewCompletions
+        : metadata.dailyPlanReviewCompletion ? [metadata.dailyPlanReviewCompletion] : [];
+      return completions.flatMap((value) => {
+        const completion = recordValue(value);
+        const taskId = typeof completion.taskId === 'string' ? completion.taskId : '';
+        const planDate = typeof completion.planDate === 'string' ? completion.planDate : '';
+        const entry = completion.entry === 'refreshed_next' ? 'refreshed_next' as const : completion.entry === 'today_plan' ? 'today_plan' as const : null;
+        const subject = completion.subject === 'math' || completion.subject === 'physics' || completion.subject === 'chemistry' ? completion.subject : null;
+        if (!taskId || !planDate || !entry || !subject || completion.taskKind !== 'mistake_review') return [];
+        return [{ executionKey: `${planDate}:${taskId}`, planDate, taskKind: 'mistake_review' as const, subject, completed: true, positive: false, entry }];
+      });
+    });
+    const dailyPlanExecutionMap = new Map<string, (typeof artifactPlanExecutions)[number]>();
+    for (const execution of [...reviewPlanExecutions, ...artifactPlanExecutions]) {
+      const current = dailyPlanExecutionMap.get(execution.executionKey);
+      dailyPlanExecutionMap.set(execution.executionKey, current ? {
+        ...current,
+        completed: current.completed || execution.completed,
+        positive: current.positive || execution.positive,
+        entry: current.entry === 'refreshed_next' || execution.entry === 'refreshed_next' ? 'refreshed_next' : 'today_plan'
+      } : execution);
+    }
+    const dailyPlanExecutions = [...dailyPlanExecutionMap.values()];
     const recentExecutionStartDate = shanghaiLocalDate(new Date(generatedAt.getTime() - 6 * DAY_MS));
     const recentDailyPlanExecutions = dailyPlanExecutions.filter((item) => item.planDate >= recentExecutionStartDate);
     const recentTaskPerformance = new Map<string, {

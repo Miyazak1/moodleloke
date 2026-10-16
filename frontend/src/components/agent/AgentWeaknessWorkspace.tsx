@@ -26,6 +26,15 @@ type WeaknessEvidenceFilter = {
   reviewItemId?: number;
 };
 
+export type DailyPlanReviewHandoff = {
+  reviewItemId: number;
+  subject: 'math' | 'physics' | 'chemistry';
+  topicId: number | null;
+  patternType: string;
+  title: string;
+  context: AgentDailyPlanLaunchContext & { taskKind: 'mistake_review' };
+};
+
 function subjectLabel(value: unknown, t: (key: string, fallback?: string) => string) {
   if (value === 'math') return t('agent.subject.math', '数学');
   if (value === 'physics') return t('agent.subject.physics', '物理');
@@ -48,13 +57,15 @@ function formatReviewDate(date: Date, locale: string) {
   return new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(date);
 }
 
-export function AgentWeaknessWorkspace({ overview, loading, error, onGoPractice, onStartPractice, onRetry }: {
+export function AgentWeaknessWorkspace({ overview, loading, error, dailyPlanReview, onGoPractice, onStartPractice, onReviewCompleted, onRetry }: {
   overview: AgentJourneyOverview | null;
   loading: boolean;
   error: string;
   onRetry: () => void;
   onGoPractice: () => void;
   onStartPractice: (selection: WeaknessPracticeSelection) => Promise<boolean>;
+  onReviewCompleted: () => void;
+  dailyPlanReview: DailyPlanReviewHandoff | null;
 }) {
   const { t, locale } = useI18n();
   const [wrongQuestions, setWrongQuestions] = useState<CscaWrongQuestionResponse | null>(null);
@@ -79,6 +90,19 @@ export function AgentWeaknessWorkspace({ overview, loading, error, onGoPractice,
     }
     return [...byTarget.values()];
   }, [overview?.weaknesses?.reviewQueue]);
+
+  useEffect(() => {
+    if (!dailyPlanReview) return;
+    setEvidenceFilter({
+      key: `review:${dailyPlanReview.reviewItemId}`,
+      label: dailyPlanReview.title,
+      subject: dailyPlanReview.subject,
+      ...(dailyPlanReview.topicId ? { topicId: dailyPlanReview.topicId } : {}),
+      topicTitle: dailyPlanReview.title,
+      patternType: dailyPlanReview.patternType,
+      reviewItemId: dailyPlanReview.reviewItemId
+    });
+  }, [dailyPlanReview]);
 
   useEffect(() => {
     let current = true;
@@ -114,6 +138,12 @@ export function AgentWeaknessWorkspace({ overview, loading, error, onGoPractice,
     setStartingQuestionKey(item.itemKey);
     setQuestionActionError((current) => ({ ...current, [item.itemKey]: '' }));
     try {
+      const planContext = dailyPlanReview
+        && dailyPlanReview.subject === item.subject
+        && dailyPlanReview.patternType === item.patternType
+        && (!dailyPlanReview.topicId || dailyPlanReview.topicId === item.topicId)
+        ? dailyPlanReview.context
+        : undefined;
       let review = preparedReviews[item.itemKey]
         ?? (item.reviewPattern?.verificationStatus === 'pending_verification'
           ? { id: item.reviewPattern.id, patternType: item.reviewPattern.patternType }
@@ -124,17 +154,20 @@ export function AgentWeaknessWorkspace({ overview, loading, error, onGoPractice,
           topicId: item.topicId,
           patternType: item.patternType,
           questionId: item.questionId,
-          sourceType: item.sourceType
+          sourceType: item.sourceType,
+          ...(planContext ? { dailyPlanContext: planContext } : {})
         });
         review = { id: completed.id, patternType: item.patternType };
         setPreparedReviews((current) => ({ ...current, [item.itemKey]: review! }));
+        onReviewCompleted();
       }
       const started = await onStartPractice({
         subject: item.subject as 'math' | 'physics' | 'chemistry',
         questionCount: 3,
         ...(item.topicId ? { focusTopicId: item.topicId } : {}),
         reviewItemId: review.id,
-        patternType: review.patternType
+        patternType: review.patternType,
+        ...(planContext ? { dailyPlanContext: planContext } : {})
       });
       if (!started) setQuestionActionError((current) => ({ ...current, [item.itemKey]: t('agent.weaknessEvidence.startFailed', '复盘记录已保存，但验证题暂时没有创建成功。可直接重试，薄弱点绑定不会丢失。') }));
     } catch (actionError) {

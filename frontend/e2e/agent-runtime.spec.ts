@@ -665,6 +665,22 @@ test('reviews a concrete mistake and launches an independently verified targeted
     schemaVersion: '1', generatedAt: '2026-09-16T08:00:00.000Z',
     goal: { examDate: '2027-06-01', weeklyGoalDays: 5, totalTargetScore: 255, subjects: [{ subject: 'chemistry', targetScore: 85 }] },
     progress: { subjects: [{ subject: 'physics', totalTopicCount: 10, evidencedTopicCount: 4, strongTopicCount: 1, developingTopicCount: 2, needsAttentionTopicCount: 1, insufficientEvidenceTopicCount: 6, answerEvidenceCount: 12 }] },
+    dailyPlan: {
+      policyVersion: 'agent-daily-plan-v3-feedback-aware', date: '2026-09-16', queuedTasks: [], blockedTasks: [],
+      primaryTask: {
+        taskId: 'review:71', kind: 'mistake_review', subject: 'physics', title: '惯性判断', topicId: 47,
+        estimatedMinutes: 12, reasonCodes: ['MISTAKE_REVIEW_DUE'], action: 'open_weakness',
+        review: { reviewItemId: 71, patternType: 'concept_confusion', dueAt: '2026-09-16T08:00:00.000Z', recurrenceCount: 3, consecutivePassCount: 0, requiredPassCount: 2 },
+        prescription: null, freePractice: null,
+        execution: { status: 'ready', supplyStatus: 'sufficient', requestedCount: 3, availableCount: 3 }
+      },
+      adjustment: { mode: 'standard', taskLimit: 3, reasonCode: null, evidence: { startedCount: 0, completedCount: 0, positiveOutcomeCount: 0, completionRate: null, positiveOutcomeRate: null } },
+      progress: { targetMinutes: 20, completedMinutes: 0, remainingMinutes: 20, answeredCount: 0, correctCount: 0, accuracy: null, completedTaskCount: 0, successfulTaskCount: 0, status: 'not_started' },
+      weeklyProgress: { targetMinutes: null, completedMinutes: 0, remainingMinutes: null, targetDays: null, activeDays: 0, remainingStudyDays: null, requiredTodayMinutes: null, recommendedTodayMinutes: null, sessionLimitMinutes: null, capacityStatus: 'unset', status: 'unset' },
+      plannedMinutes: 12, deferredTaskCount: 0, scheduledVerificationCount: 0,
+      fallbackPracticeAvailability: { status: 'not_needed', subject: null, questionCount: null, candidates: [] },
+      source: 'rules_and_learning_evidence'
+    },
     weaknesses: {
       stateSource: 'user_csca_topic_mastery_v1',
       subjects: [{ subject: 'physics', evidenceCount: 5, topics: [{ topicId: 47, code: 'mechanics-inertia', title: '惯性', score: .32, confidence: .8, status: 'needs_attention', attemptCount: 5, correctCount: 2, lastPracticedAt: '2026-09-15T08:00:00.000Z', updatedAt: '2026-09-15T08:00:00.000Z' }] }],
@@ -724,7 +740,7 @@ test('reviews a concrete mistake and launches an independently verified targeted
   await page.route('**/api/v1/csca-special-practice/adaptive/rounds/91**', (route) => json(route, roundDetail));
 
   await page.goto('/agent');
-  await page.getByRole('button', { name: '错题与薄弱点', exact: true }).click();
+  await page.locator('.agent-daily-plan-card').getByRole('button', { name: /错题复盘/ }).click();
   await page.getByRole('button', { name: '重试读取错题', exact: true }).click();
   await expect.poll(() => wrongQuestionLoads).toBe(2);
   await expect(page.locator('.agent-review-queue > button')).toHaveCount(1);
@@ -740,9 +756,18 @@ test('reviews a concrete mistake and launches an independently verified targeted
   await expect(page.getByLabel('具体错题证据')).toContainText('先完成错因复盘，再独立完成 3 道同知识点新题');
   await page.getByRole('button', { name: '已复盘，开始独立验证', exact: true }).click();
   await expect.poll(() => reviewCompleteBody).not.toBeNull();
-  expect(reviewCompleteBody).toMatchObject({ subject: 'physics', topicId: 47, patternType: 'concept_confusion', questionId: 401, sourceType: 'adaptive_round' });
+  expect(reviewCompleteBody).toMatchObject({
+    subject: 'physics', topicId: 47, patternType: 'concept_confusion', questionId: 401, sourceType: 'adaptive_round',
+    dailyPlanContext: {
+      taskId: 'review:71', planDate: '2026-09-16', policyVersion: 'agent-daily-plan-v3-feedback-aware',
+      taskKind: 'mistake_review', subject: 'physics', entry: 'today_plan'
+    }
+  });
   await expect.poll(() => startBodies.length).toBe(1);
-  expect(startBodies[0]).toMatchObject({ subject: 'physics', questionCount: 3, focusTopicId: 47, reviewItemId: 71, patternType: 'concept_confusion' });
+  expect(startBodies[0]).toMatchObject({
+    subject: 'physics', questionCount: 3, focusTopicId: 47, reviewItemId: 71, patternType: 'concept_confusion',
+    dailyPlanContext: { taskId: 'review:71', taskKind: 'mistake_review', entry: 'today_plan' }
+  });
   expect(startBodies[0]).not.toHaveProperty('conversationId');
   await expect(page.getByLabel('具体错题证据').getByRole('alert')).toContainText('复盘记录已保存');
   await expect(page.getByRole('button', { name: '继续普通练习', exact: true })).toBeVisible();
