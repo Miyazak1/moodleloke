@@ -368,16 +368,17 @@ async function installSharedMocks(page: Page) {
   });
 }
 
-test('desktop subject dropdown can click items without nav pointer interception', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name === 'mobile', 'Desktop header navigation is covered by the desktop project.');
+test('legacy subject route opens the matching Agent practice entry', async ({ page }) => {
+  const backendStyleToken = makeBackendStyleAccessToken();
+  await page.addInitScript((token) => {
+    window.localStorage.setItem('cscalite.accessToken', token);
+  }, backendStyleToken);
   await installSharedMocks(page);
   await page.goto('/csca-subjects/physics');
 
-  await page.getByRole('button', { name: /科目学习|Subjects/ }).click();
-  await page.getByRole('menuitem', { name: /化学|Chemistry/ }).click();
-
-  await expect(page).toHaveURL(/\/csca-subjects\/chemistry$/);
-  await expect(page.getByRole('heading', { name: /CSCA (化学|Chemistry)/ })).toBeVisible();
+  await expect(page).toHaveURL(/\/agent\?mode=free&subject=physics$/);
+  await expect(page.locator('.agent-page')).toBeVisible();
+  await expect(page.getByRole('navigation', { name: /学习旅程|Learning journey/ })).toBeVisible();
 });
 
 test('admin account menu stays clickable after auth resolution', async ({ page }) => {
@@ -390,7 +391,7 @@ test('admin account menu stays clickable after auth resolution', async ({ page }
   await page.getByRole('menuitem', { name: /后台管理|Dashboard/ }).click();
 
   await expect(page).toHaveURL(/\/admin\/audit$/);
-  await expect(page.locator('body')).toContainText(/后台运营检查点|Review backend status/);
+  await expect(page.locator('body')).toContainText(/CSCA 运营总览|CSCA operations overview/);
 });
 
 test('backend-style auth token keeps student routes signed in', async ({ page }) => {
@@ -406,7 +407,8 @@ test('backend-style auth token keeps student routes signed in', async ({ page })
   await expect(page.locator('body')).not.toContainText('登录');
 
   await page.goto('/csca-subjects/math');
-  await expect(page.getByRole('heading', { name: /CSCA (数学|Math)/ })).toBeVisible();
+  await expect(page).toHaveURL(/\/agent\?mode=free&subject=math$/);
+  await expect(page.locator('.agent-page')).toBeVisible();
   await expect(page.locator('body')).not.toContainText('登录后保存进度');
   await expect(page.locator('body')).not.toContainText('Login saves progress');
 
@@ -433,21 +435,17 @@ test('rapid public navigation keeps shell stable and avoids error pages', async 
     pageErrors.push(error.message);
   });
 
-  await page.goto('/');
-  const nav = page.getByLabel(/主导航|Primary navigation/);
   for (const name of [
     /^(CSCA 准备|CSCA Prep)$/,
-    /^(科目学习|Subjects)$/,
-    /^(在线模考|Online Mock)(\s+NEW|\s+新)?$/,
-    /^(真题|Past Papers)(\s+FREE|\s+免费)?$/,
-    /^(咨询|Consulting)$/,
-    /^(首页|Home)$/
+    /^(做题训练|Practice)$/,
+    /^(错题复盘|Mistake Review)$/,
+    /^(真题资料|Past Papers)$/
   ]) {
+    await page.goto('/');
+    const nav = page.getByLabel(/主导航|Primary navigation/);
     const button = nav.getByRole('button', { name });
     await expect(button).toBeVisible();
-    await button.dispatchEvent('click');
-    await expect(page.locator('.site-header')).toBeVisible();
-    await expect(page.locator('.site-footer')).toBeVisible();
+    await button.click();
     await expect(page.locator('main')).not.toBeEmpty();
     await expect(page.locator('body')).not.toContainText('404');
   }

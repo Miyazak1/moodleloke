@@ -1,0 +1,609 @@
+.me-settings-field input,
+.me-settings-field select,
+.me-wrong-filters select {
+  border-color: var(--account-border);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.me-settings-field input:focus,
+.me-settings-field select:focus,
+.me-wrong-filters select:focus {
+  border-color: var(--account-accent);
+  box-shadow: var(--account-focus);
+}
+
+.me-settings-section .me-settings-panel {
+  gap: 14px;
+  padding: 18px 0 20px;
+  border-top: 1px solid var(--account-border);
+}
+
+.me-settings-section .me-settings-panel.account-panel {
+  border-top: 0;
+  padding-top: 4px;
+}
+
+.me-shortlist-empty {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  max-width: none;
+  min-height: 150px;
+  margin-top: 6px;
+  padding: 24px;
+  border: 1px dashed var(--account-border-strong);
+  border-radius: 8px;
+  background: var(--account-surface);
+}
+
+.me-shortlist-empty > div {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.me-shortlist-empty button {
+  min-height: 42px;
+  min-width: 126px;
+  padding: 10px 16px;
+  border: 1px solid var(--account-accent);
+  border-radius: 8px;
+  background: var(--account-accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.me-orders-section .me-order-list {
+  gap: 12px;
+}
+
+.me-order-list .me-order-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  min-height: 92px;
+  padding: 16px 18px;
+  border: 1px solid var(--account-border);
+  border-radius: 8px;
+  background: var(--account-surface);
+}
+
+.me-order-main {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  min-width: 0;
+}
+
+.me-order-main strong {
+  margin: 0 0 4px;
+}
+
+.me-order-main p {
+  margin: 0;
+}
+
+.me-order-amount {
+  display: grid;
+  justify-items: end;
+  min-width: 120px;
+}
+
+.me-order-amount b {
+  color: var(--account-accent-strong);
+  font-size: 16px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.me-orders-empty {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  max-width: none;
+  min-height: 132px;
+  margin-top: 6px;
+  padding: 24px;
+  border: 1px dashed var(--account-border-strong);
+  border-radius: 8px;
+  background: var(--account-surface);
+}
+
+.me-orders-empty > div {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.me-orders-empty button {
+  min-height: 42px;
+  min-width: 126px;
+  padding: 10px 16px;
+  border: 1px solid var(--account-accent);
+  border-radius: 8px;
+  background: var(--account-accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.me-settings-panel-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.me-settings-panel-head div {
+  display: grid;
+  gap: 4px;
+}
+
+.me-settings-panel-head span {
+  color: var(--account-accent-strong);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.me-settings-panel-head strong {
+  color: var(--account-ink);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.me-settings-panel-head p {
+  max-width: 560px;
+  margin: 0;
+  color: var(--account-muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.me-settings-language-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 72px;
+  margin-top: 18px;
+  padding: 12px 14px;
+  border: 1px solid var(--account-border);
+  border-radius: 12px;
+  background: var(--account-surface-soft);
+}
+
+.me-settings-language-row > span {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.me-settings-language-row > span > svg {
+  width: 18px;
+  flex: 0 0 18px;
+  color: var(--account-accent);
+}
+
+.me-settings-language-row > span > span {
+  display: grid;
+  gap: 3px;
+}
+
+.me-settings-language-row strong,
+.me-settings-language-row small {
+  display: block;
+}
+
+.me-settings-language-row strong {
+  color: var(--account-ink);
+  font-size: 14px;
+}
+
+.me-settings-language-row small {
+  color: var(--account-muted);
+  font-size: 12px;
+}
+
+.me-settings-language-row .language-selector-trigger {
+  min-width: 150px;
+}
+
+@media (max-width: 640px) {
+  .me-settings-language-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .me-settings-language-row .language-selector,
+  .me-settings-language-row .language-selector-trigger {
+    width: 100%;
+  }
+}
+
+.me-settings-section .me-settings-grid {
+  gap: 14px 22px;
+}
+
+.me-settings-section .organization-settings-grid {
+  align-items: start;
+}
+
+.me-settings-section .me-settings-row,
+.me-settings-section .me-settings-field,
+.me-settings-section .me-settings-actions {
+  padding: 0;
+  border-top: 0;
+}
+
+.me-settings-section .me-settings-row,
+.me-settings-section .me-settings-field {
+  gap: 7px;
+}
+
+.me-settings-section .me-settings-row span,
+.me-settings-section .me-settings-field span {
+  color: var(--account-accent-strong);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.me-settings-section .me-settings-row strong {
+  color: var(--account-ink);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.me-settings-section .me-settings-row p,
+.me-settings-section .me-settings-field small,
+.me-settings-section .me-password-toggle small {
+  color: var(--account-muted);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.me-settings-section .me-settings-field input,
+.me-settings-section .me-settings-field select {
+  color: var(--account-ink);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.me-settings-section .me-settings-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.me-settings-section .me-settings-invite-box {
+  display: block;
+  min-width: 0;
+}
+
+.me-settings-section .me-settings-actions.organization-actions {
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  padding-top: 2px;
+}
+
+.me-settings-section .me-settings-actions.organization-actions .secondary {
+  border-color: var(--account-border-strong);
+  background: var(--account-surface);
+  color: var(--account-accent-strong);
+}
+
+.me-settings-section .me-settings-actions.split {
+  justify-content: space-between;
+}
+
+.me-settings-section .profile-panel .me-settings-actions,
+.me-settings-section .account-panel .me-settings-actions {
+  padding-top: 4px;
+}
+
+.me-settings-section .me-settings-actions button {
+  min-width: 126px;
+}
+
+.me-settings-section .me-settings-feedback {
+  grid-column: 1 / -1;
+}
+
+.me-settings-section .me-settings-field select:disabled {
+  cursor: not-allowed;
+  background-color: var(--account-subtle);
+  color: var(--account-muted);
+  opacity: 1;
+}
+
+.me-settings-section .me-settings-actions button,
+.me-settings-section .me-section-head .ghost,
+.me-settings-section .me-password-toggle b {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.me-settings-section .me-password-panel {
+  padding: 0;
+  border-top: 1px solid var(--account-border);
+}
+
+.me-settings-section .me-password-toggle {
+  padding: 18px 0;
+}
+
+.me-settings-section .me-password-toggle button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 40px;
+  min-width: 136px;
+  padding: 9px 14px;
+  border: 1px solid var(--account-border-strong);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--account-accent-strong);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.me-settings-section .me-password-toggle button:disabled {
+  cursor: not-allowed;
+  opacity: .65;
+}
+
+.google-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background:
+    conic-gradient(from -40deg, #4285f4 0 25%, #34a853 0 50%, #fbbc05 0 75%, #ea4335 0 100%);
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.google-mark span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  color: #4285f4;
+}
+
+.me-password-toggle {
+  border-radius: 8px;
+}
+
+.me-password-toggle:hover {
+  background: var(--account-subtle);
+}
+
+.me-wrong-practice-hero {
+  grid-template-columns: minmax(0, 1fr) minmax(220px, .42fr) auto;
+  padding: 16px;
+}
+
+.me-wrong-bank {
+  padding: 16px;
+  background: var(--account-muted-surface);
+}
+
+.me-wrong-review-pack-list button {
+  min-height: 108px;
+  border-radius: var(--account-radius);
+  box-shadow: none;
+}
+
+.me-wrong-review-pack-list button.active,
+.me-wrong-review-pack-list button.due.active {
+  border-color: var(--account-accent);
+  background: #e9efff;
+}
+
+.me-wrong-review-pack-list button.due {
+  border-color: var(--account-border-strong);
+}
+
+.me-wrong-filters {
+  padding: 12px;
+  border: 1px solid var(--account-border);
+  border-radius: var(--account-radius);
+  background: #fff;
+}
+
+.me-wrong-filters label:has(input[type="checkbox"]) {
+  min-height: 38px;
+  grid-template-columns: auto auto;
+  align-items: center;
+  align-self: end;
+  justify-content: start;
+  padding: 8px 10px;
+  border: 1px solid var(--account-border);
+  border-radius: 8px;
+}
+
+.me-wrong-list article {
+  background: #fff;
+}
+
+.me-wrong-list article.expanded {
+  border-color: var(--account-border-strong);
+}
+
+.me-wrong-options p.correct {
+  border-color: rgba(15, 118, 110, .28);
+  background: #f2fbf8;
+}
+
+.me-wrong-options p.wrong {
+  border-color: rgba(185, 54, 32, .24);
+  background: #fff7f5;
+}
+
+.me-wrong-ai-grid article,
+.me-wrong-detail section {
+  background: var(--account-subtle);
+}
+
+.me-loading-skeleton .me-skeleton-line,
+.me-loading-skeleton .me-skeleton-pill,
+.me-loading-skeleton .me-skeleton-button,
+.me-skeleton-line,
+.me-skeleton-pill,
+.me-skeleton-button {
+  background: #e8eef3;
+}
+
+.me-skeleton-pill,
+.me-skeleton-button {
+  border-radius: 8px;
+}
+
+@media (max-width: 980px) {
+  .me-learning-profile {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .me-profile-metrics,
+  .me-summary-grid,
+  .me-summary-strip,
+  .me-summary-rail,
+  .me-learning-grid,
+  .me-learning-subject-grid,
+  .me-readiness-dimensions,
+  .me-wrong-pattern-grid,
+  .me-wrong-review-pack-list,
+  .me-settings-grid,
+  .me-school-card-grid,
+  .me-wrong-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .me-overview-command-bar,
+  .me-wrong-practice-hero,
+  .me-readiness-main {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .me-learning-profile {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "avatar"
+      "title"
+      "email"
+      "status"
+      "metrics";
+  }
+
+  .me-profile-metrics,
+  .me-summary-grid,
+  .me-summary-strip,
+  .me-summary-rail,
+  .me-learning-grid,
+  .me-learning-subject-grid,
+  .me-readiness-dimensions,
+  .me-wrong-pattern-grid,
+  .me-wrong-review-pack-list,
+  .me-settings-grid,
+  .me-school-card-grid,
+  .me-wrong-filters,
+  .me-password-fields,
+  .me-wrong-ai-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .me-section-nav {
+    width: 100%;
+  }
+
+  .me-section-nav button {
+    flex: 1 0 auto;
+  }
+
+  .me-admin-callout,
+  .me-email-callout,
+  .me-ai-credit-card,
+  .me-ai-credit-strip,
+  .me-next-panel,
+  .me-section-head,
+  .me-practice-list article,
+  .me-wrong-list article,
+  .me-order-list article {
+    grid-template-columns: 1fr;
+  }
+
+  .me-settings-panel-head {
+    display: grid;
+    align-items: start;
+  }
+
+  .me-shortlist-empty {
+    grid-template-columns: 1fr;
+    align-items: start;
+    min-height: 0;
+  }
+
+  .me-shortlist-empty button,
+  .me-orders-empty button {
+    width: 100%;
+  }
+
+  .me-order-list .me-order-card,
+  .me-order-main,
+  .me-orders-empty {
+    grid-template-columns: 1fr;
+  }
+
+  .me-order-amount {
+    justify-items: start;
+    min-width: 0;
+  }
+
+  .me-settings-section .me-settings-actions {
+    justify-content: stretch;
+    flex-wrap: wrap;
+  }
+
+  .me-settings-section .me-settings-actions button {
+    flex: 1 1 180px;
+    width: 100%;
+  }
+
+  .me-settings-section .me-password-toggle button {
+    width: 100%;
+  }
+}

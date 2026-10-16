@@ -1,0 +1,222 @@
+/* Agent learning settings, free-practice controls, and daily-plan responsive rules. */
+.agent-settings-workspace { display: grid; gap: 16px; color: #172033; }
+.agent-settings-workspace > nav {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px;
+  padding: 5px; border: 1px solid #dce8e4; border-radius: 16px; background: rgba(255, 255, 255, .9);
+}
+.agent-settings-workspace > nav button {
+  display: flex; align-items: center; justify-content: center; gap: 7px; min-height: 40px; padding: 8px 10px;
+  border: 0; border-radius: 11px; background: transparent; color: #65736f; font: inherit; font-size: 13px; font-weight: 800; cursor: pointer;
+}
+.agent-settings-workspace > nav button.active { background: linear-gradient(135deg, #eef3ff, #e9fbf6); color: #2859f5; box-shadow: inset 0 0 0 1px #c7d5ff; }
+.agent-settings-workspace > section,
+.agent-settings-workspace > form {
+  display: grid; gap: 17px; padding: 20px; border: 1px solid #dbe6e2; border-radius: 20px;
+  background: rgba(255, 255, 255, .96); box-shadow: 0 16px 34px rgba(44, 66, 60, .06);
+}
+.agent-settings-workspace header h3 { margin: 5px 0 6px; font-size: 21px; line-height: 1.2; }
+.agent-settings-workspace header p,
+.agent-settings-workspace footer small { margin: 0; color: #6a7a76; font-size: 13px; line-height: 1.6; }
+.agent-settings-group { display: grid; gap: 10px; padding-top: 14px; border-top: 1px solid #e7efec; }
+.agent-settings-group h4 { margin: 0; font-size: 14px; }
+.agent-settings-workspace .student-profile-fields,
+.agent-settings-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.agent-settings-workspace .student-profile-fields > label,
+.agent-settings-field,
+.agent-settings-fields label { display: grid; gap: 6px; color: #41504d; font-size: 13px; font-weight: 750; }
+.agent-settings-workspace input,
+.agent-settings-workspace select {
+  width: 100%; min-height: 42px; padding: 0 11px; border: 1px solid #cadbd6; border-radius: 11px;
+  background: #fbfdfc; color: #172033; font: inherit; outline: none;
+}
+.agent-settings-workspace input:focus,
+.agent-settings-workspace select:focus { border-color: #4d72ff; box-shadow: 0 0 0 3px rgba(77, 114, 255, .11); }
+.agent-settings-workspace .student-profile-fields small { color: #87948f; font-size: 12px; font-weight: 650; }
+.agent-settings-subjects,
+.agent-settings-days { margin: 0; padding: 0; border: 0; }
+.agent-settings-subjects legend,
+.agent-settings-days legend { margin-bottom: 9px; color: #41504d; font-size: 13px; font-weight: 800; }
+.agent-settings-subjects { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.agent-settings-subjects legend { grid-column: 1 / -1; }
+.agent-settings-subjects > div { display: grid; gap: 8px; padding: 10px; border: 1px solid #dbe5e2; border-radius: 14px; background: #fafcfb; }
+.agent-settings-subjects > div.selected { border-color: #9fb2ff; background: #f2f5ff; }
+.agent-settings-subjects label { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.agent-settings-subjects label input { width: 15px; min-height: 15px; padding: 0; }
+.agent-settings-subjects > div > input { min-height: 36px; }
+.agent-settings-days > div { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.agent-settings-days button {
+  min-height: 36px; border: 1px solid #d6e2de; border-radius: 10px; background: #fbfdfc;
+  color: #66746f; font: inherit; font-size: 13px; font-weight: 800; cursor: pointer;
+}
+.agent-settings-days button.selected { border-color: #1bc5a4; background: #e9faf6; color: #087967; }
+.agent-settings-note,
+.agent-settings-status {
+  display: flex; align-items: flex-start; gap: 8px; margin: 0; padding: 11px 12px; border: 1px solid #cce8df;
+  border-radius: 12px; background: #effaf7; color: #42605a; font-size: 13px; line-height: 1.55;
+}
+.agent-settings-status { border-color: #c9d6ff; background: #f1f4ff; color: #3151b7; }
+
+.agent-learning-mode {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 18px;
+  padding: 5px;
+  border: 1px solid #dce6e2;
+  border-radius: 16px;
+  background: #f5faf8;
+}
+
+.agent-learning-mode > button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: #53645f;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.agent-learning-mode > button.active {
+  border-color: #bad0ff;
+  color: #183a97;
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(39, 83, 178, .08);
+}
+
+.agent-learning-mode button > span { display: grid; gap: 2px; min-width: 0; }
+.agent-learning-mode button strong { font-size: 14px; }
+.agent-learning-mode button small { overflow: hidden; color: #7b8985; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.agent-settings-learning-mode { margin: 0; }
+.agent-settings-free-defaults { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.agent-settings-free-defaults fieldset { display: grid; gap: 8px; min-width: 0; margin: 0; padding: 12px; border: 1px solid #dce7e3; border-radius: 14px; background: #f9fcfb; }
+.agent-settings-free-defaults legend { padding: 0 4px; color: #41504d; font-size: 13px; font-weight: 800; }
+.agent-settings-free-defaults fieldset > div { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.agent-settings-free-defaults button { display: inline-flex; min-width: 0; min-height: 36px; align-items: center; justify-content: center; gap: 5px; padding: 6px; border: 1px solid #d5e2de; border-radius: 10px; background: #fff; color: #53645f; font: inherit; font-size: 13px; font-weight: 800; cursor: pointer; }
+.agent-settings-free-defaults button.selected { border-color: #20c7a5; background: #e9fbf6; color: #08745f; }
+.agent-settings-free-defaults button svg { width: 14px; }
+.agent-settings-free-scope { display: flex; grid-column: 1 / -1; align-items: flex-start; gap: 7px; margin: -2px 0 0; padding: 10px 12px; border-radius: 10px; background: #f1f5ff; color: #52627b; font-size: 12px; line-height: 1.55; }
+.agent-settings-free-scope svg { width: 15px; flex: 0 0 auto; margin-top: 1px; color: var(--agent-blue); }
+
+.agent-free-practice-card {
+  display: grid;
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid #d6e5df;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #fff 15%, #f1fbf8 100%);
+}
+
+.agent-free-practice-card fieldset { display: grid; gap: 9px; margin: 0; padding: 0; border: 0; }
+.agent-free-practice-card legend { margin-bottom: 8px; color: #44534f; font-size: 13px; font-weight: 800; }
+.agent-free-practice-card fieldset > div { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.agent-free-practice-card fieldset:first-child > div { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.agent-free-practice-card fieldset button {
+  min-height: 38px;
+  border: 1px solid #d5e2de;
+  border-radius: 11px;
+  color: #44534f;
+  background: rgba(255, 255, 255, .82);
+  font-weight: 750;
+}
+.agent-free-practice-card fieldset button.active { border-color: #20c7a5; color: #08745f; background: #e9fbf6; }
+.agent-free-practice-topic-picker { display: grid; gap: 7px; }
+.agent-free-practice-topic-picker > span { color: #44534f; font-size: 13px; font-weight: 800; }
+.agent-free-practice-topic-picker select { width: 100%; min-height: 44px; padding: 0 38px 0 12px; border: 1px solid #cdded8; border-radius: 11px; background: #fff; color: #27352f; font: inherit; font-size: 13px; font-weight: 750; }
+.agent-free-practice-topic-picker small { color: #6f7e79; font-size: 12px; line-height: 1.45; }
+.agent-free-practice-topic-picker small[role="alert"] { color: #a53a2c; }
+.agent-free-practice-start {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  border: 0;
+  border-radius: 12px;
+  color: #fff;
+  background: #315efb;
+  box-shadow: 0 10px 22px rgba(49, 94, 251, .2);
+  font-weight: 850;
+}
+.agent-free-practice-start:disabled { cursor: wait; opacity: .65; }
+.agent-free-practice-card > p { display: flex; gap: 7px; margin: 0; color: #6f7e79; font-size: 13px; line-height: 1.55; }
+
+.agent-free-practice-continuation { display: grid; width: 100%; gap: 14px; }
+.agent-free-practice-continuation-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; }
+.agent-free-practice-continuation-head > div:first-child { display: grid; gap: 4px; }
+.agent-free-practice-continuation-head strong { color: #17213c; font-size: 18px; }
+.agent-free-practice-continuation-head small { color: #6f7e79; line-height: 1.45; }
+.agent-free-practice-continuation-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.agent-free-practice-continuation-actions button,
+.agent-free-practice-adjust button {
+  display: inline-flex; min-height: 38px; align-items: center; justify-content: center; gap: 7px; padding: 0 13px;
+  border: 1px solid #315efb; border-radius: 11px; color: #fff; background: #315efb; font: inherit; font-size: 13px; font-weight: 850; cursor: pointer;
+}
+.agent-free-practice-continuation-actions button.secondary { border-color: #b8c8ff; color: #2549c6; background: #fff; }
+.agent-free-practice-continuation-actions button.ghost { border-color: #d8e2df; color: #5c6c67; background: #f8fbfa; }
+.agent-free-practice-continuation-actions button:disabled,
+.agent-free-practice-adjust button:disabled { cursor: wait; opacity: .58; }
+.agent-free-practice-adjust { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) auto; gap: 12px; padding: 14px; border: 1px solid #d7e5e1; border-radius: 14px; background: #f7fbfa; }
+.agent-free-practice-adjust fieldset { display: grid; gap: 7px; min-width: 0; margin: 0; padding: 0; border: 0; }
+.agent-free-practice-adjust legend { margin-bottom: 5px; color: #5e6e69; font-size: 12px; font-weight: 850; }
+.agent-free-practice-adjust fieldset > div { display: flex; gap: 6px; }
+.agent-free-practice-adjust fieldset button { min-width: 58px; min-height: 34px; padding: 0 9px; border-color: #d4e0dc; color: #53645f; background: #fff; }
+.agent-free-practice-adjust fieldset button.active { border-color: #20c7a5; color: #08745f; background: #e9fbf6; }
+.agent-free-practice-adjust > button.confirm { align-self: end; }
+
+@media (max-width: 720px) {
+  .agent-learning-mode { grid-template-columns: 1fr; }
+  .agent-learning-mode button small { white-space: normal; }
+  .agent-settings-free-defaults { grid-template-columns: 1fr; }
+  .agent-last-practice-summary > div { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .agent-resume-metrics { grid-template-columns: 1fr; }
+  .agent-free-practice-card fieldset > div,
+  .agent-free-practice-card fieldset:first-child > div { grid-template-columns: 1fr; }
+  .agent-free-practice-continuation-head { align-items: stretch; flex-direction: column; }
+  .agent-free-practice-continuation-actions { justify-content: stretch; }
+  .agent-free-practice-continuation-actions button { flex: 1 1 auto; }
+  .agent-free-practice-adjust { grid-template-columns: 1fr; }
+}
+.agent-settings-workspace > section > footer,
+.agent-settings-workspace > form > footer { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding-top: 14px; border-top: 1px solid #e7efec; }
+.agent-settings-workspace > section > footer button,
+.agent-settings-workspace > form > footer button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 40px; padding: 0 15px;
+  border: 0; border-radius: 11px; background: #3562ff; color: #fff; font: inherit; font-size: 13px; font-weight: 850;
+  cursor: pointer; box-shadow: 0 10px 22px rgba(53, 98, 255, .18);
+}
+.agent-settings-workspace > section > footer button:disabled,
+.agent-settings-workspace > form > footer button:disabled { cursor: not-allowed; opacity: .55; }
+.agent-settings-state { display: flex; align-items: center; justify-content: center; gap: 9px; min-height: 260px; color: #60716c; }
+
+@media (max-width: 760px) {
+  .agent-settings-workspace > nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .agent-live-decision-card > footer { align-items: stretch; flex-direction: column; }
+  .agent-live-decision-card > footer > div { justify-content: stretch; }
+  .agent-live-decision-card > footer button { flex: 1 1 100%; justify-content: center; }
+  .agent-quality-status { grid-template-columns: 40px minmax(0, 1fr); }
+  .agent-quality-status > em { grid-column: 2; }
+  .agent-quality-metrics { grid-template-columns: 1fr; }
+  .agent-quality-validation > header { flex-direction: column; }
+  .agent-quality-validation dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .agent-quality-alerts article { grid-template-columns: 22px minmax(0, 1fr); }
+  .agent-quality-alerts article > button, .agent-quality-alerts article > span { grid-column: 2; justify-self: start; }
+  .agent-settings-workspace .student-profile-fields,
+  .agent-settings-fields,
+  .agent-settings-subjects { grid-template-columns: 1fr; }
+  .agent-settings-subjects legend { grid-column: auto; }
+  .agent-settings-workspace > section > footer,
+  .agent-settings-workspace > form > footer { align-items: stretch; flex-direction: column; }
+}
+
+@media (max-width: 720px) {
+  .agent-weekly-progress { grid-template-columns: 1fr; gap: 5px; }
+  .agent-learning-entry-card > .agent-daily-actions { align-items: stretch; flex-direction: column; }
+  .agent-daily-actions > button,
+  .agent-daily-actions > button.secondary { width: 100%; min-width: 0; }
+  .agent-wrong-action-fallback { align-items: stretch; flex-direction: column; }
+}

@@ -9,6 +9,7 @@ import {
 import { TeachingAssetRenderer } from '../components/agent/TeachingAssetRegistry';
 import type { AgentTeachingAsset } from '../lib/api-agent';
 import '../styles/agent.css';
+import '../styles/agent-teaching-embed.css';
 
 type Props = { currentUser: User | null; onGoToAuth: () => void };
 type Subject = 'math' | 'physics' | 'chemistry';

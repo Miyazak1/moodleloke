@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { AdminPageShell } from '../components/AdminPageShell';
+import { useConfirmDialog } from '../components/ConfirmDialogProvider';
 import {
   AdminActionBar,
   AdminPanel,
@@ -95,6 +96,7 @@ function appendOrganizationStatus(current: string, next: string) {
 }
 
 export function AdminOrganizationsPage({ currentUser, onGoToAuth, onBackAudit, onGoToUsers, scope = 'platform' }: AdminOrganizationsPageProps) {
+  const confirmAction = useConfirmDialog();
   const isPlatformScope = scope === 'platform';
   const isAdmin = currentUser?.role === 'admin';
   const hasPageAccess = isPlatformScope ? isAdmin : Boolean(currentUser);
@@ -793,7 +795,7 @@ export function AdminOrganizationsPage({ currentUser, onGoToAuth, onBackAudit, o
     const visibleMemberIds = new Set(filteredMembers.map((member) => member.id));
     const members = selected.members.filter((member) => selectedMemberIds.includes(member.id) && visibleMemberIds.has(member.id));
     if (members.length === 0) return setStatus(orgStatus('selectMembersFirst', '请先选择要调整的成员。'));
-    if (!window.confirm(orgConfirm('bulkUpdateMembers', '确认批量更新当前筛选范围内的 {count} 名成员？', { count: members.length }))) return;
+    if (!await confirmAction({ title: '批量更新成员？', body: orgConfirm('bulkUpdateMembers', '确认批量更新当前筛选范围内的 {count} 名成员？', { count: members.length }) })) return;
     beginAction('bulk-update-members');
     setStatus(orgStatus('bulkUpdateMembers', '正在批量更新成员...'));
     const startedAt = Date.now();
@@ -858,7 +860,7 @@ export function AdminOrganizationsPage({ currentUser, onGoToAuth, onBackAudit, o
 
   async function retryFailedBulkMemberResults() {
     if (!selected || failedBulkMemberResults.length === 0) return;
-    if (!window.confirm(orgConfirm('retryFailedMembers', '确认重试上一次批量操作中的 {count} 个失败项？', { count: failedBulkMemberResults.length }))) return;
+    if (!await confirmAction({ title: '重试失败项？', body: orgConfirm('retryFailedMembers', '确认重试上一次批量操作中的 {count} 个失败项？', { count: failedBulkMemberResults.length }) })) return;
     beginAction('retry-bulk-members');
     setStatus(orgStatus('retryingFailedMembers', '正在重试失败成员...'));
     const startedAt = Date.now();

@@ -4,6 +4,7 @@ import {
   AdminPanelHeader
 } from '../AdminWorkbench';
 import { MathContent } from '../../MathContent';
+import { useConfirmDialog } from '../../ConfirmDialogProvider';
 import type { AdminAIQuestioningQuestionLedgerItem } from '../../../lib/api-types';
 import { questionOptionsFromUnknown, recordFrom } from './questionData';
 import {
@@ -85,6 +86,7 @@ function PublishedQuestionCard({
   onArchiveQuestion,
   onDeleteGeneratedQuestion
 }: PublishedQuestionCardProps) {
+  const confirmAction = useConfirmDialog();
   const options = questionOptionsFromUnknown(question.options);
   const agentEvidence = candidateAgentEvidence(question);
   const reviewExplanation = candidateReviewExplanation(question, agentEvidence);
@@ -295,8 +297,8 @@ function PublishedQuestionCard({
           <button
             type="button"
             className={deleteBusy ? 'ghost-button admin-action-loading' : 'ghost-button'}
-            onClick={() => {
-              const confirmed = window.confirm(`确定删除已入库 AI 题 Q${question.id} 吗？这会删除 AI 题、生成任务、曝光记录，以及关联的训练题/模考候选映射；不会删除大纲、真题画像或手工题。`);
+            onClick={async () => {
+              const confirmed = await confirmAction({ title: `删除已入库 AI 题 Q${question.id}？`, body: '这会删除 AI 题、生成任务、曝光记录，以及关联的训练题/模考候选映射；不会删除大纲、真题画像或手工题。', tone: 'danger' });
               if (!confirmed) return;
               void runAction(deleteActionId, `删除已入库 AI 题 Q${question.id}`, () => onDeleteGeneratedQuestion(question.id));
             }}

@@ -1,0 +1,795 @@
+/* CSCAPilot student homepage: Calm Science Lab. */
+.home-page {
+  --home-ink: #1c2034;
+  --home-soft-ink: #2a3148;
+  --home-muted: #5d6f86;
+  --home-faint: #8b9aad;
+  --home-blue: #315dff;
+  --home-blue-dark: #2448d8;
+  --home-blue-soft: #e9efff;
+  --home-mint: #13c7a3;
+  --home-mint-dark: #087c66;
+  --home-mint-soft: #dcfbf2;
+  --home-lime: #b9f84f;
+  --home-lime-soft: #f0ffd3;
+  --home-coral: #ff715e;
+  --home-coral-soft: #ffe9e4;
+  --home-yellow: #ffd84e;
+  --home-surface: rgba(255, 255, 255, .74);
+  --home-surface-solid: #ffffff;
+  --home-line: rgba(57, 95, 130, .16);
+  --home-line-strong: rgba(49, 93, 255, .26);
+  --home-shadow: 0 30px 80px rgba(34, 55, 100, .12);
+  --home-radius: 8px;
+  --home-width: min(1580px, calc(100vw - 64px));
+  position: relative;
+  display: grid;
+  gap: 0;
+  overflow: clip;
+  color: var(--home-ink);
+  background:
+    linear-gradient(90deg, rgba(49, 93, 255, .052) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .052) 1px, transparent 1px),
+    linear-gradient(135deg, #fbfff9 0, #f6fbf6 42%, #eef8f7 100%);
+  background-size: 42px 42px, 42px 42px, auto;
+}
+
+/* Lightweight science-lab showcase: SVG previews only, no WebGL on the home route. */
+.home-science-lab-section {
+  position: relative;
+  padding-top: 54px;
+}
+
+.home-science-lab-section::before {
+  position: absolute;
+  inset: 18px -32px 8px;
+  z-index: -1;
+  border: 1px solid rgba(49, 93, 255, .08);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 12% 20%, rgba(183, 239, 67, .13), transparent 24%),
+    radial-gradient(circle at 88% 78%, rgba(49, 93, 255, .1), transparent 27%),
+    rgba(255, 255, 255, .42);
+  content: "";
+}
+
+.home-science-lab-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.home-science-lab-card {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  overflow: hidden;
+  flex-direction: column;
+  border: 1px solid rgba(62, 91, 111, .14);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .9);
+  color: #202337;
+  box-shadow: 0 16px 40px rgba(32, 52, 75, .075);
+  text-decoration: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.home-science-lab-card:hover,
+.home-science-lab-card:focus-visible {
+  border-color: rgba(49, 93, 255, .28);
+  box-shadow: 0 22px 48px rgba(32, 52, 75, .13);
+  transform: translateY(-4px);
+}
+
+.home-science-lab-card:focus-visible {
+  outline: 3px solid rgba(49, 93, 255, .18);
+  outline-offset: 3px;
+}
+
+.home-science-lab-preview {
+  position: relative;
+  display: block;
+  height: 218px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(62, 91, 111, .09);
+  background:
+    linear-gradient(90deg, rgba(49, 93, 255, .045) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .045) 1px, transparent 1px),
+    linear-gradient(145deg, #f8fbff, #f1fbf7);
+  background-size: 28px 28px, 28px 28px, auto;
+}
+
+.home-science-lab-card.physics .home-science-lab-preview {
+  background:
+    linear-gradient(90deg, rgba(19, 199, 163, .05) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(19, 199, 163, .05) 1px, transparent 1px),
+    linear-gradient(145deg, #f5fcfa, #eef8ff);
+  background-size: 28px 28px, 28px 28px, auto;
+}
+
+.home-science-lab-card.chem .home-science-lab-preview {
+  background:
+    linear-gradient(90deg, rgba(255, 113, 94, .045) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 113, 94, .045) 1px, transparent 1px),
+    linear-gradient(145deg, #fff9f6, #f5f7ff);
+  background-size: 28px 28px, 28px 28px, auto;
+}
+
+.home-science-lab-preview > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 14px 18px rgba(32, 52, 75, .1));
+}
+
+.home-science-lab-index,
+.home-science-lab-live {
+  position: absolute;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, .84);
+  background: rgba(255, 255, 255, .78);
+  color: #53636c;
+  font-size: 11px;
+  font-weight: 950;
+  backdrop-filter: blur(10px);
+}
+
+.home-science-lab-index {
+  top: 14px;
+  left: 14px;
+  width: 34px;
+  height: 30px;
+  justify-content: center;
+  border-radius: 9px;
+  color: #315dff;
+}
+
+.home-science-lab-live {
+  right: 14px;
+  bottom: 12px;
+  gap: 6px;
+  min-height: 28px;
+  padding: 5px 9px;
+  border-radius: 999px;
+}
+
+.home-science-lab-live i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #13c7a3;
+  box-shadow: 0 0 0 4px rgba(19, 199, 163, .12);
+}
+
+.home-science-lab-copy {
+  display: flex;
+  flex: 1;
+  padding: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.home-science-lab-copy > small {
+  margin-bottom: 8px;
+  color: #315dff;
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+}
+
+.home-science-lab-card.physics .home-science-lab-copy > small { color: #087c66; }
+.home-science-lab-card.chem .home-science-lab-copy > small { color: #c64e41; }
+
+.home-science-lab-copy > strong {
+  font-size: 21px;
+  line-height: 1.2;
+}
+
+.home-science-lab-copy > span {
+  margin-top: 10px;
+  color: #5e6d72;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.home-science-lab-copy > b {
+  display: inline-flex;
+  margin-top: auto;
+  padding-top: 18px;
+  align-items: center;
+  gap: 7px;
+  color: #315dff;
+  font-size: 13px;
+}
+
+.home-science-lab-copy > b svg {
+  width: 15px;
+  height: 15px;
+  transition: transform 180ms ease;
+}
+
+.home-science-lab-card:hover .home-science-lab-copy > b svg { transform: translate(2px, -2px); }
+
+.home-science-lab-performance {
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+  margin: 18px auto 0;
+  align-items: center;
+  gap: 7px;
+  color: #708078;
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.home-science-lab-performance svg { width: 15px; height: 15px; color: #087c66; }
+
+.home-science-lab-preview .lab-grid-line {
+  fill: none;
+  stroke: rgba(69, 98, 122, .14);
+  stroke-width: 1;
+}
+
+.home-science-lab-preview .lab-solid-edge {
+  fill: none;
+  stroke: rgba(36, 72, 216, .72);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.2;
+}
+
+.home-science-lab-preview .lab-math-solid,
+.home-science-lab-preview .lab-physics-block,
+.home-science-lab-preview .lab-molecule {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: homeLabFloat 4.8s ease-in-out infinite;
+}
+
+.home-science-lab-preview .lab-force-arrow {
+  fill: none;
+  stroke: #315dff;
+  stroke-linecap: round;
+  stroke-width: 6;
+}
+
+.home-science-lab-preview .lab-motion-trace {
+  fill: none;
+  stroke: rgba(19, 199, 163, .52);
+  stroke-dasharray: 8 8;
+  stroke-width: 3;
+}
+
+.home-science-lab-preview .lab-formula {
+  fill: #2448d8;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.home-science-lab-preview .lab-pulse {
+  fill: #315dff;
+  animation: homeLabPulse 2.2s ease-in-out infinite;
+}
+
+.home-science-lab-preview .lab-pulse.physics { fill: #13c7a3; }
+
+.home-science-lab-preview .lab-chem-orbit {
+  fill: none;
+  stroke: rgba(255, 113, 94, .28);
+  stroke-dasharray: 7 8;
+  stroke-width: 2;
+}
+
+.home-science-lab-preview .lab-chem-orbit.alt { stroke: rgba(49, 93, 255, .2); }
+.home-science-lab-preview .lab-bond { stroke: #667389; stroke-linecap: round; stroke-width: 12; }
+.home-science-lab-preview .lab-molecule text { fill: #fff; font-size: 17px; font-weight: 950; text-anchor: middle; }
+
+.home-science-lab-preview .lab-electron {
+  fill: #315dff;
+  filter: drop-shadow(0 0 7px rgba(49, 93, 255, .55));
+  animation: homeLabElectron 5.2s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.home-science-lab-preview .lab-electron.two { animation-delay: -2.6s; }
+
+@keyframes homeLabFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-7px) rotate(.6deg); }
+}
+
+@keyframes homeLabPulse {
+  0%, 100% { opacity: .55; transform: scale(.85); }
+  50% { opacity: 1; transform: scale(1.25); }
+}
+
+@keyframes homeLabElectron {
+  0% { transform: translate(-4px, -2px); }
+  50% { transform: translate(10px, 8px); }
+  100% { transform: translate(-4px, -2px); }
+}
+
+@media (max-width: 900px) {
+  .home-science-lab-grid { grid-template-columns: 1fr; }
+  .home-science-lab-card { display: grid; grid-template-columns: minmax(250px, .9fr) minmax(0, 1.1fr); }
+  .home-science-lab-preview { height: 100%; min-height: 230px; border-right: 1px solid rgba(62, 91, 111, .09); border-bottom: 0; }
+}
+
+@media (max-width: 620px) {
+  .home-science-lab-section { padding-top: 42px; }
+  .home-science-lab-section::before { inset-inline: -12px; border-radius: 20px; }
+  .home-science-lab-grid { gap: 13px; margin-top: 22px; }
+  .home-science-lab-card { display: flex; }
+  .home-science-lab-preview { height: 196px; min-height: 0; border-right: 0; border-bottom: 1px solid rgba(62, 91, 111, .09); }
+  .home-science-lab-copy { padding: 17px; }
+  .home-science-lab-copy > strong { font-size: 19px; }
+  .home-science-lab-copy > b { padding-top: 14px; }
+  .home-science-lab-performance { align-items: flex-start; text-align: left; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-science-lab-preview .lab-math-solid,
+  .home-science-lab-preview .lab-physics-block,
+  .home-science-lab-preview .lab-molecule,
+  .home-science-lab-preview .lab-pulse,
+  .home-science-lab-preview .lab-electron {
+    animation: none;
+  }
+}
+
+.home-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(116deg, transparent 0 18%, rgba(183, 239, 67, .18) 18.1% 21.4%, transparent 21.5% 100%),
+    linear-gradient(152deg, transparent 0 68%, rgba(255, 113, 94, .14) 68.1% 71.2%, transparent 71.3% 100%);
+}
+
+.home-page::after {
+  content: none;
+}
+
+.home-page > * {
+  position: relative;
+  z-index: 1;
+}
+
+.home-container {
+  width: var(--home-width);
+  margin-inline: auto;
+}
+
+.home-page [data-animate] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity .7s cubic-bezier(.2, .8, .2, 1),
+    transform .7s cubic-bezier(.2, .8, .2, 1);
+  transition-delay: var(--delay, 0ms);
+}
+
+.home-page [data-animate="slide-right"] {
+  transform: translateX(-34px);
+}
+
+.home-page [data-animate="slide-left"] {
+  transform: translateX(34px);
+}
+
+.home-page [data-animate="pop"] {
+  transform: translateY(20px) scale(.96);
+}
+
+.home-page .is-visible {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+.home-button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.home-button {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 15px;
+  border: 1px solid var(--home-line-strong);
+  border-radius: var(--home-radius);
+  background: rgba(255, 255, 255, .86);
+  color: var(--home-ink);
+  font-size: 14px;
+  font-weight: 860;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    background-color .18s ease,
+    box-shadow .18s ease;
+}
+
+.home-button svg {
+  width: 18px;
+  height: 18px;
+  color: currentColor;
+  stroke: currentColor;
+}
+
+.home-button:hover {
+  transform: translateY(-2px);
+  border-color: rgba(49, 93, 255, .34);
+  box-shadow: 0 12px 24px rgba(32, 45, 65, .08);
+}
+
+.home-button.primary {
+  border-color: rgba(49, 93, 255, .82);
+  background: var(--home-blue);
+  color: #fff;
+}
+
+.home-button.primary svg {
+  color: #fff;
+}
+
+.home-button.primary:hover {
+  background: var(--home-blue-dark);
+}
+
+.home-button.lime {
+  border-color: rgba(183, 239, 67, .5);
+  background: var(--home-lime);
+  color: #213000;
+}
+
+.home-csca-intro {
+  position: relative;
+  display: grid;
+  min-height: calc(100vh - 74px);
+  align-items: center;
+  padding: 78px 0 66px;
+}
+
+.home-csca-intro::before {
+  position: absolute;
+  top: 8%;
+  right: 3%;
+  width: min(42vw, 640px);
+  height: min(42vw, 640px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(183, 248, 79, .16), rgba(19, 199, 163, .05) 48%, transparent 70%);
+  content: "";
+  pointer-events: none;
+}
+
+.home-csca-intro-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(440px, .88fr) minmax(620px, 1.12fr);
+  gap: clamp(42px, 6vw, 94px);
+  align-items: center;
+}
+
+.home-csca-intro-copy h1 {
+  max-width: 780px;
+  margin: 20px 0 22px;
+  color: var(--home-ink);
+  font-size: clamp(38px, 4.1vw, 66px);
+  font-weight: 950;
+  line-height: 1.1;
+  letter-spacing: -.035em;
+  text-wrap: balance;
+}
+
+.home-csca-intro-copy h1 > span {
+  display: block;
+}
+
+.home-csca-intro-copy .home-button-row {
+  margin-top: 32px;
+}
+
+.home-csca-source-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 22px 0 0;
+  color: var(--home-muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.home-csca-source-note svg {
+  flex: 0 0 auto;
+  color: var(--home-mint-dark);
+}
+
+.home-csca-source-note a {
+  color: var(--home-blue);
+  font-weight: 850;
+  text-decoration: none;
+}
+
+.home-csca-source-note a:hover {
+  text-decoration: underline;
+}
+
+.home-csca-facts {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(49, 93, 255, .18);
+  border-radius: 22px;
+  background:
+    linear-gradient(90deg, rgba(49, 93, 255, .055) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .055) 1px, transparent 1px),
+    rgba(255, 255, 255, .86);
+  background-size: 32px 32px, 32px 32px, auto;
+  box-shadow: var(--home-shadow);
+}
+
+.home-csca-facts::after {
+  position: absolute;
+  top: -34px;
+  right: -26px;
+  width: 150px;
+  height: 150px;
+  border: 24px solid rgba(183, 248, 79, .22);
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+
+.home-csca-next-window {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 7px;
+  padding: 30px 32px 26px;
+  border-bottom: 1px solid var(--home-line);
+}
+
+.home-csca-next-window > span,
+.home-csca-fact-grid small,
+.home-csca-subject-line > p {
+  color: var(--home-blue);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.home-csca-next-window strong {
+  color: var(--home-ink);
+  font-size: clamp(28px, 2.4vw, 40px);
+  line-height: 1.1;
+}
+
+.home-csca-next-window small {
+  max-width: 500px;
+  color: var(--home-muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.home-csca-fact-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--home-line);
+}
+
+.home-csca-fact-grid > div {
+  display: grid;
+  min-width: 0;
+  min-height: 112px;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 23px 25px;
+  background: rgba(255, 255, 255, .9);
+}
+
+.home-csca-fact-grid svg {
+  width: 22px;
+  height: 22px;
+  padding: 7px;
+  border-radius: 10px;
+  background: var(--home-blue-soft);
+  box-sizing: content-box;
+  color: var(--home-blue);
+}
+
+.home-csca-fact-grid span {
+  display: grid;
+  gap: 7px;
+}
+
+.home-csca-fact-grid strong {
+  color: var(--home-soft-ink);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.home-csca-subject-line {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 14px;
+  padding: 25px 32px 30px;
+}
+
+.home-csca-subject-line > p {
+  margin: 0;
+}
+
+.home-csca-subject-line > div {
+  display: grid;
+  grid-template-columns: .82fr 1.25fr 1.2fr;
+  gap: 10px;
+}
+
+.home-csca-subject-line span {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 13px;
+  border: 1px solid var(--home-line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .76);
+  color: var(--home-soft-ink);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.home-csca-subject-line b {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--home-blue-soft);
+  color: var(--home-blue);
+  font-size: 14px;
+}
+
+.home-csca-subject-line .chinese b {
+  background: var(--home-lime-soft);
+  color: #486d05;
+}
+
+.home-csca-subject-line .science b {
+  background: var(--home-mint-soft);
+  color: var(--home-mint-dark);
+}
+
+.home-csca-intro {
+  display: block;
+  min-height: auto;
+  padding: 92px 0 74px;
+}
+
+.home-csca-intro::before {
+  top: 0;
+  right: 50%;
+  width: min(72vw, 1050px);
+  height: 520px;
+  translate: 50% 0;
+  background: radial-gradient(ellipse, rgba(183, 248, 79, .13), rgba(19, 199, 163, .04) 48%, transparent 72%);
+}
+
+.home-csca-intro-head {
+  position: relative;
+  z-index: 1;
+  max-width: 940px;
+  margin: 0 auto 48px;
+  text-align: center;
+}
+
+.home-csca-intro-head h1 {
+  margin: 20px 0 20px;
+  color: var(--home-ink);
+  font-size: clamp(42px, 5vw, 72px);
+  font-weight: 950;
+  line-height: 1.08;
+  letter-spacing: -.04em;
+  text-wrap: balance;
+}
+
+.home-csca-intro-head h1 > span {
+  display: block;
+}
+
+.home-csca-intro-head .home-accent-line {
+  display: inline;
+  background: linear-gradient(90deg, var(--home-blue), #4c6bff 58%, var(--home-mint-dark));
+  background-clip: text;
+  color: transparent;
+  -webkit-background-clip: text;
+}
+
+.home-csca-intro-head > p {
+  max-width: 760px;
+  margin: 0 auto;
+  color: var(--home-muted);
+  font-size: clamp(16px, 1.4vw, 19px);
+  line-height: 1.8;
+}
+
+.home-csca-explainer {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  padding: 14px;
+  border: 1px solid rgba(49, 93, 255, .16);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, .78);
+  box-shadow: 0 30px 90px rgba(54, 83, 106, .13);
+  backdrop-filter: blur(18px);
+}
+
+.home-csca-lead-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.42fr) minmax(330px, .58fr);
+  gap: 14px;
+}
+
+.home-csca-definition {
+  display: grid;
+  align-content: center;
+  min-height: 310px;
+  padding: clamp(32px, 4vw, 54px);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(183, 248, 79, .2), transparent 28%),
+    linear-gradient(135deg, #111a38, #203a9f 72%, #2851e6);
+  color: #fff;
+}
+
+.home-csca-definition > span,
+.home-csca-subject-board > header span {
+  color: #b7f84f;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.home-csca-definition h2 {
+  max-width: 760px;
+  margin: 13px 0 15px;
+  font-size: clamp(28px, 3vw, 45px);
+  font-weight: 950;
+  line-height: 1.16;
+  letter-spacing: -.03em;
+  text-wrap: balance;
+}
+
+.home-csca-definition > p {
+  max-width: 760px;
+  margin: 0;
+  color: rgba(255, 255, 255, .78);
+  font-size: 15px;
+  line-height: 1.75;
+}

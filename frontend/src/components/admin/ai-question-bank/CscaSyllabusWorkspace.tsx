@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Icon } from '../../Icon';
+import { useConfirmDialog } from '../../ConfirmDialogProvider';
 import { MathContent } from '../../MathContent';
 import { MetricCard } from '../../UiPrimitives';
 import { useI18n } from '../../../i18n/useI18n';
@@ -303,6 +304,7 @@ export function CscaSyllabusWorkspace({
   onSubjectChange,
   onDataChanged
 }: Props) {
+  const confirmAction = useConfirmDialog();
   const { locale } = useI18n();
   const copy = locale === 'en' ? COPY.en : COPY.zh;
   const [localSubject, setLocalSubject] = useState('');
@@ -454,7 +456,7 @@ export function CscaSyllabusWorkspace({
       ? preview
       : imports.find((item) => item.id === importId && isPreview(item.previewSummary))?.previewSummary as AdminAIQuestioningSyllabusJsonImportPreview | undefined;
     const migrationsForImport = previewForImport ? syllabusImportMigrationRows(previewForImport) : [];
-    if (migrationsForImport.length && !window.confirm(fillTemplate(copy.migrationConfirm, { count: migrationsForImport.length }))) return;
+    if (migrationsForImport.length && !await confirmAction({ title: copy.migrationTitle, body: fillTemplate(copy.migrationConfirm, { count: migrationsForImport.length }) })) return;
     await run(`apply-${importId}`, async () => {
       const result = await applyAdminAIQuestioningSyllabusJsonImport(importId, { missingTopicAction });
       setPreview(result.preview);
@@ -529,7 +531,7 @@ export function CscaSyllabusWorkspace({
   async function bulkReviewQuestions(action: 'review' | 'reject' | 'archive') {
     if (selectedVisibleReviewQuestionIds.length === 0) return;
     const label = action === 'review' ? copy.bulkReview : action === 'reject' ? copy.bulkReject : copy.bulkArchive;
-    if (!window.confirm(fillTemplate(copy.bulkConfirm, { action: label, count: selectedVisibleReviewQuestionIds.length }))) return;
+    if (!await confirmAction({ title: label, body: fillTemplate(copy.bulkConfirm, { action: label, count: selectedVisibleReviewQuestionIds.length }), tone: action === 'review' ? 'neutral' : 'danger' })) return;
     await run(`bulk-question-${action}`, async () => {
       const result = await bulkAdminAIQuestioningQuestions({
         action,

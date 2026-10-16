@@ -5,7 +5,7 @@ import { AdminStatsStrip, AdminWorkflowSteps } from '../components/admin/AdminWo
 import { MathContent } from '../components/MathContent';
 import { AdminFormField, GhostButton, InlineActions, StatusPill } from '../components/UiPrimitives';
 import { useI18n } from '../i18n/useI18n';
-import { adminText, selectAdminCopy, usesLatinAdminCopy } from '../lib/admin-locale';
+import { adminText, selectAdminCopy, usesLatinAdminCopy, type AdminCopy } from '../lib/admin-locale';
 import {
   archiveAdminSpecialPracticeQuestion,
   archiveAdminSpecialPracticeTopic,
@@ -311,7 +311,7 @@ const ADMIN_SPECIAL_COPY = {
   }
 } as const;
 
-type AdminSpecialCopy = (typeof ADMIN_SPECIAL_COPY)[keyof typeof ADMIN_SPECIAL_COPY];
+type AdminSpecialCopy = AdminCopy<typeof ADMIN_SPECIAL_COPY.en>;
 
 function fillSpecialTemplate(template: string, values: Record<string, string | number>) {
   return Object.entries(values).reduce((text, [key, value]) => text.replace(`{${key}}`, String(value)), template);

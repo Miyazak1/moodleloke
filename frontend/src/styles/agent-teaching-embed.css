@@ -1,0 +1,59 @@
+/* Existing subject visualizers can be embedded as the interactive body of a reviewed Agent micro-lesson. */
+.agent-micro-existing-visualizer {
+  container-type: inline-size;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(49, 93, 255, .14);
+  border-radius: 18px;
+  background: #f8fcfb;
+}
+
+.agent-micro-existing-visualizer .special-visualizer-page {
+  width: 100% !important;
+  min-height: 0;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: transparent;
+}
+
+.agent-micro-existing-visualizer :where(.special-visualizer-hero, .special-visualizer-support, .special-back-link) {
+  display: none !important;
+}
+
+.agent-micro-existing-visualizer .special-visualizer-card {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.agent-micro-existing-visualizer .special-visualizer-page > section:not(.special-visualizer-hero):not(.special-visualizer-support),
+.agent-micro-existing-visualizer .special-visualizer-layout {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: 12px;
+  padding: 12px;
+  overflow: hidden;
+}
+
+.agent-micro-existing-visualizer .special-visualizer-page > section > *,
+.agent-micro-existing-visualizer .special-visualizer-layout > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.agent-micro-existing-visualizer :where(svg, canvas) {
+  max-width: 100%;
+}
+
+.agent-micro-visualizer-loading {
+  padding: 40px 24px;
+  color: var(--agent-muted, #61706a);
+  text-align: center;
+}

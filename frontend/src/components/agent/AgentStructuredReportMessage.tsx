@@ -119,6 +119,7 @@ export function AgentAdaptiveResultMessage({
   if (error) return <ReportState status="error" title={t('agent.report.loadFailedTitle', '学习结果还没有载入')} body={error} actionLabel={t('agent.report.retryLoad', '重试加载')} onAction={() => setLoadRevision((current) => current + 1)} />;
   if (!report) return <ReportState status="loading" title={t('agent.report.loading', '正在整理本轮学习结果')} body={t('agent.report.loadingBody', '完成后会在学习工作台显示结果、学习证据和下一步。')} />;
 
+  const reportSession = report.session;
   const summary = report.summary;
   const decision = report.learningDecision;
   const primaryWeakTopic = report.weakTopics[0]?.title
@@ -162,12 +163,12 @@ export function AgentAdaptiveResultMessage({
     setError('');
     try {
       const session = await createAdaptivePracticeSession({
-        subject: report.session.subject,
+        subject: reportSession.subject,
         mode: 'practice',
-        questionLanguage: report.session.questionLanguage
+        questionLanguage: reportSession.questionLanguage
       });
       const next = await createAdaptivePracticeRound(session.id);
-      onNavigate(`${routes.cscaSubjects}/${report.session.subject}/practice/rounds/${next.round.id}`);
+      onNavigate(`${routes.cscaSubjects}/${reportSession.subject}/practice/rounds/${next.round.id}`);
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : t('agent.report.continueFailed', '下一轮暂时无法开始。'));
     } finally {

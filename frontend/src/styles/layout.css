@@ -672,6 +672,8 @@
 .confirm-dialog {
   display: grid;
   width: min(460px, 100%);
+  max-height: min(720px, calc(100dvh - 48px));
+  overflow-y: auto;
   gap: 12px;
   padding: 24px;
   border: 1px solid rgba(229, 231, 235, .9);
@@ -691,6 +693,18 @@
   margin: 0;
   color: var(--ink-700);
   line-height: 1.7;
+  white-space: pre-line;
+}
+
+.confirm-dialog-verification {
+  display: grid;
+  gap: 8px;
+  color: var(--ink-700);
+  font-size: 14px;
+}
+
+.confirm-dialog-verification input {
+  width: 100%;
 }
 
 .confirm-dialog .danger-action {

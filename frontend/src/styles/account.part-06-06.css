@@ -1,0 +1,795 @@
+.me-page .me-review-queue-panel .me-record-head {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 18px;
+}
+
+.me-page .me-review-queue-panel .me-record-head dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(62px, auto));
+  gap: 10px;
+  min-width: 160px;
+  margin: 0;
+}
+
+.me-page .me-review-queue-panel .me-record-head dl div {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(220, 251, 242, .42);
+  text-align: center;
+}
+
+.me-page .me-review-queue-panel .me-record-head dt {
+  color: #087c66;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.me-page .me-review-queue-panel .me-record-head dd {
+  margin: 4px 0 0;
+  color: var(--me-text);
+  font-size: 20px;
+  font-weight: 950;
+}
+
+.me-page .me-review-queue-list {
+  display: grid;
+  gap: 0;
+}
+
+.me-page .me-review-queue-list section {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  min-height: 78px;
+  padding: 14px 0;
+}
+
+.me-page .me-review-queue-list section > div:first-child {
+  display: grid;
+  gap: 4px;
+}
+
+.me-page .me-review-queue-list span {
+  color: #087c66;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.me-page .me-review-queue-list strong {
+  color: var(--me-text);
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.me-page .me-review-queue-list p {
+  margin: 0;
+  color: var(--me-muted);
+  font-size: 13px;
+}
+
+.me-page .me-review-queue-list section > div:last-child {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(86px, max-content));
+  gap: 8px;
+}
+
+.me-page .me-review-queue-list section > div:last-child button {
+  justify-content: center;
+  min-width: 86px;
+  white-space: nowrap;
+}
+
+.me-page .me-ai-insight-panel {
+  gap: 18px;
+}
+
+.me-page .me-ai-insight-panel ul {
+  gap: 8px;
+}
+
+.me-page .me-ai-insight-panel li {
+  padding: 10px 12px;
+  border: 1px solid rgba(19, 199, 163, .08);
+  background: rgba(220, 251, 242, .46);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.me-page .me-compact-learning-stats {
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, .75fr);
+  gap: 30px;
+  align-items: start;
+  padding-top: 18px;
+}
+
+.me-page .me-compact-learning-stats section {
+  display: grid;
+  gap: 12px;
+}
+
+.me-page .me-compact-learning-stats section > div {
+  display: grid;
+  gap: 10px;
+}
+
+.me-page .me-compact-learning-stats p {
+  grid-template-columns: 52px minmax(140px, 1fr) max-content;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.me-page .me-compact-learning-stats strong {
+  font-size: 19px;
+}
+
+.me-page .me-compact-learning-stats section:last-child p {
+  display: block;
+  max-width: 38em;
+  color: var(--me-muted);
+  line-height: 1.65;
+}
+
+.me-page .me-record-preview {
+  padding: 26px;
+}
+
+.me-page .me-record-preview .me-record-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(21, 143, 122, .14);
+}
+
+.me-page .me-record-columns {
+  gap: 26px;
+  padding-top: 4px;
+}
+
+.me-page .me-record-columns section {
+  display: grid;
+  align-content: start;
+  gap: 0;
+  min-width: 0;
+}
+
+.me-page .me-record-columns h4 {
+  margin: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(21, 143, 122, .16);
+  color: var(--me-text);
+  font-size: 14px;
+}
+
+.me-page .me-record-columns button {
+  min-height: 66px;
+  max-height: 76px;
+  padding: 12px 10px;
+  border-top: 1px solid rgba(21, 143, 122, .1);
+  background: transparent;
+  text-align: left;
+}
+
+.me-page .me-record-columns h4 + button {
+  border-top: 0;
+}
+
+.me-page .me-record-columns button:hover:not(:disabled) {
+  border-color: rgba(21, 143, 122, .18);
+  background: rgba(248, 253, 250, .58);
+}
+
+.me-page .me-record-columns button strong {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--me-text);
+  font-size: 14px;
+  line-height: 1.35;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
+
+.me-page .me-record-columns button span {
+  display: block;
+  overflow: hidden;
+  margin-top: 4px;
+  color: var(--me-muted);
+  font-size: 12px;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 1180px) {
+  .me-page .me-readiness-dimensions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .me-page .me-learning-dashboard-restored,
+  .me-page .me-record-preview {
+    padding: 18px;
+  }
+
+  .me-page .me-readiness-panel,
+  .me-page .me-review-queue-panel .me-record-head,
+  .me-page .me-review-queue-list section,
+  .me-page .me-compact-learning-stats,
+  .me-page .me-record-preview .me-record-head {
+    grid-template-columns: 1fr;
+  }
+
+  .me-page .me-readiness-panel .me-readiness-score,
+  .me-page .me-readiness-panel > div:nth-child(2),
+  .me-page .me-readiness-panel > button {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .me-page .me-review-queue-list section > div:last-child {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .me-page .me-review-queue-list section > div:last-child button,
+  .me-page .me-readiness-panel > button {
+    width: 100%;
+  }
+
+  .me-page .me-compact-learning-stats p {
+    grid-template-columns: 52px minmax(90px, 1fr);
+  }
+
+  .me-page .me-compact-learning-stats em {
+    grid-column: 2;
+  }
+}
+
+/* Learning activity segmented control. */
+.me-page .me-learning-tabs {
+  display: inline-flex;
+  align-items: center;
+  justify-self: end;
+  max-width: 100%;
+  gap: 3px;
+  padding: 4px;
+  border: 1px solid rgba(49, 93, 255, .18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .78);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .9),
+    0 8px 18px rgba(32, 35, 55, .055);
+}
+
+.me-page .me-learning-tabs button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-width: 42px;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #315dff;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.15;
+  white-space: nowrap;
+  box-shadow: none;
+}
+
+.me-page .me-learning-tabs button:hover:not(:disabled) {
+  border: 0;
+  background: rgba(233, 239, 255, .7);
+}
+
+.me-page .me-learning-tabs button.active,
+.me-page .me-learning-tabs button[aria-selected="true"] {
+  background: #315dff;
+  color: #fff;
+  box-shadow: 0 7px 14px rgba(49, 93, 255, .2);
+}
+
+.me-page .me-learning-tabs button:focus-visible {
+  outline: 2px solid rgba(49, 93, 255, .32);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .me-page .me-learning-card-head.with-tabs {
+    grid-template-columns: 1fr;
+  }
+
+  .me-page .me-learning-tabs {
+    justify-self: start;
+    flex-wrap: wrap;
+    border-radius: 14px;
+  }
+
+  .me-page .me-learning-tabs button {
+    min-width: 48px;
+  }
+}
+.me-page .me-student-profile-editor {
+  display: grid;
+  gap: 18px;
+  margin-top: 28px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(57, 95, 130, .14);
+}
+
+@media (max-width: 640px) {
+  .site-main-public > .brand-page.me-page {
+    width: min(100%, calc(100vw - 20px));
+    padding-top: 16px;
+  }
+
+  .me-page .me-profile-overview-page .me-account-hero-bare,
+  .me-page .me-profile-overview-page .me-account-activity .me-learning-card {
+    padding: 18px 16px;
+    border-radius: 12px;
+  }
+}
+
+.me-page .me-student-profile-editor h3 {
+  margin: 4px 0 6px;
+  color: var(--me-text, #202337);
+  font-size: clamp(22px, 2.4vw, 28px);
+}
+
+.me-page .me-student-profile-intro > p:last-child {
+  margin: 0;
+  color: var(--me-muted, #687b75);
+  line-height: 1.6;
+}
+
+.me-page .me-student-profile-groups {
+  display: grid;
+  gap: 14px;
+}
+
+.me-page .me-student-profile-group {
+  display: grid;
+  gap: 18px;
+  padding: 20px;
+  border: 1px solid rgba(19, 199, 163, .2);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .72);
+}
+
+.me-page .me-student-profile-group > header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(19, 199, 163, .14);
+}
+
+.me-page .me-student-profile-group-icon {
+  display: inline-grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  place-items: center;
+  border: 1px solid rgba(49, 93, 255, .16);
+  border-radius: 10px;
+  background: rgba(233, 239, 255, .78);
+  color: #315dff;
+}
+
+.me-page .me-student-profile-group-icon svg {
+  width: 19px;
+  height: 19px;
+}
+
+.me-page .me-student-profile-group h4 {
+  margin: 0;
+  color: var(--me-text, #202337);
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.me-page .me-student-profile-group header p {
+  margin: 3px 0 0;
+  color: var(--me-muted, #687b75);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.me-page .me-student-profile-editor .student-profile-fields {
+  gap: 16px 24px;
+}
+
+.me-page .me-student-profile-editor .student-profile-fields > label > span {
+  display: flex;
+  min-height: 18px;
+  align-items: center;
+  gap: 7px;
+  color: #315dff;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.me-page .me-student-profile-editor .student-profile-fields label small {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(104, 123, 117, .09);
+  color: #71807b;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.me-page .me-student-profile-editor .student-profile-fields input,
+.me-page .me-student-profile-editor .student-profile-fields select {
+  min-height: 44px;
+  border-color: rgba(19, 199, 163, .24);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.me-page .me-student-profile-editor .student-profile-fields input:focus,
+.me-page .me-student-profile-editor .student-profile-fields select:focus {
+  outline: none;
+  border-color: rgba(49, 93, 255, .42);
+  box-shadow: 0 0 0 4px rgba(49, 93, 255, .1);
+}
+
+.me-page .me-student-profile-editor .student-profile-subjects legend {
+  margin-bottom: 0;
+  color: #315dff;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.me-page .me-student-profile-editor .student-profile-subjects span {
+  min-height: 40px;
+  gap: 7px;
+  padding: 8px 14px;
+  border-color: rgba(19, 199, 163, .24);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.me-page .me-student-profile-editor .student-profile-subjects span svg {
+  width: 17px;
+  height: 17px;
+}
+
+.me-page .me-student-profile-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 17px 18px;
+  border: 1px solid rgba(19, 199, 163, .18);
+  border-radius: 12px;
+  background: rgba(239, 252, 248, .58);
+}
+
+.me-page .me-student-profile-actions p {
+  margin: 0;
+  color: var(--me-muted, #687b75);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.me-page .me-student-profile-actions button {
+  display: inline-flex;
+  min-height: 40px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 15px;
+  border: 1px solid #315dff;
+  border-radius: 8px;
+  background: #315dff;
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.me-page .me-student-profile-actions button:disabled {
+  cursor: wait;
+  opacity: .65;
+}
+
+@media (max-width: 720px) {
+  .me-page .me-student-profile-group {
+    padding: 16px;
+  }
+
+  .me-page .me-student-profile-editor .student-profile-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .me-page .me-student-profile-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .me-page .me-student-profile-actions button {
+    width: 100%;
+  }
+}
+
+/* Personal settings workspace: separate account data from Agent decision inputs. */
+.me-page .me-settings-page {
+  padding: 28px 30px 30px;
+}
+
+.me-page .me-settings-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 0;
+  margin-top: 24px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.me-page .me-settings-sidebar {
+  display: grid;
+  min-width: 0;
+  gap: 12px;
+  padding: 0 0 20px;
+  border-right: 0;
+  border-bottom: 1px solid rgba(57, 95, 130, .13);
+  background: transparent;
+}
+
+.me-page .me-settings-sidebar-head {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 3px 7px 16px;
+}
+
+.me-page .me-settings-sidebar-head > span {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  place-items: center;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #315dff, #13c7a3);
+  color: #fff;
+}
+
+.me-page .me-settings-sidebar-head strong,
+.me-page .me-settings-sidebar-head small {
+  display: block;
+}
+
+.me-page .me-settings-sidebar-head strong {
+  color: var(--me-text, #202337);
+  font-size: 14px;
+}
+
+.me-page .me-settings-sidebar-head small {
+  margin-top: 2px;
+  color: var(--me-muted, #687b75);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.me-page .me-settings-sidebar nav {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.me-page .me-settings-sidebar nav button {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  min-height: 56px;
+  padding: 9px 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #51645e;
+  text-align: left;
+  cursor: pointer;
+}
+
+.me-page .me-settings-sidebar nav button:hover,
+.me-page .me-settings-sidebar nav button.active {
+  border-color: transparent;
+  background: transparent;
+  color: var(--me-text, #202337);
+}
+
+.me-page .me-settings-sidebar nav button.active {
+  box-shadow: none;
+  font-weight: 900;
+}
+
+.me-page .me-settings-sidebar nav button > svg {
+  width: 18px;
+  height: 18px;
+}
+
+.me-page .me-settings-sidebar nav button span,
+.me-page .me-settings-sidebar nav button strong,
+.me-page .me-settings-sidebar nav button small {
+  display: block;
+  min-width: 0;
+}
+
+.me-page .me-settings-sidebar nav button strong {
+  color: inherit;
+  font-size: 13px;
+}
+
+.me-page .me-settings-sidebar nav button small {
+  margin-top: 2px;
+  overflow: hidden;
+  color: #82908c;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.me-page .me-settings-sidebar nav button em {
+  display: none;
+  padding: 2px 5px;
+  border-radius: 999px;
+  background: rgba(19, 199, 163, .11);
+  color: #09866f;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.me-page .me-settings-privacy-note {
+  display: flex;
+  gap: 8px;
+  margin-top: 0;
+  padding: 0 8px;
+  color: #657873;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.me-page .me-settings-privacy-note svg {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+  color: #13a98c;
+}
+
+.me-page .me-settings-panel {
+  min-width: 0;
+  padding: 26px 0 0;
+}
+
+.me-page .me-settings-page .me-settings-panel {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  background-image: none;
+  box-shadow: none;
+}
+
+.me-page .me-settings-inline-status {
+  margin: 0 0 20px;
+  padding: 10px 12px;
+  border: 1px solid rgba(49, 93, 255, .16);
+  border-radius: 8px;
+  background: rgba(241, 245, 255, .62);
+  color: #405675;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.me-page .me-settings-panel > section,
+.me-page .me-settings-panel > form {
+  display: grid;
+  gap: 22px;
+  margin: 0;
+}
+
+.me-page .me-settings-panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding-bottom: 19px;
+  border-bottom: 1px solid rgba(57, 95, 130, .13);
+}
+
+.me-page .me-settings-panel-head h3 {
+  margin: 4px 0 5px;
+  color: var(--me-text, #202337);
+  font-size: clamp(22px, 2.2vw, 28px);
+}
+
+.me-page .me-settings-panel-head > div > p:last-child {
+  max-width: 680px;
+  margin: 0;
+  color: var(--me-muted, #687b75);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.me-page .me-agent-read-badge {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 9px;
+  border: 1px solid rgba(19, 199, 163, .23);
+  border-radius: 999px;
+  background: rgba(231, 252, 247, .76);
+  color: #087e69;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.me-page .me-agent-read-badge svg {
+  width: 14px;
+  height: 14px;
+}
+
+.me-page .me-settings-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 20px;
+}
+
+.me-page .me-settings-form-grid.single {
+  grid-template-columns: minmax(240px, 420px);
+}
+
+.me-page .me-settings-form-grid label,
+.me-page .me-goal-subjects > div > label:last-child {
+  display: grid;
+  gap: 7px;
+}
+
+.me-page .me-settings-form-grid label > span,
+.me-page .me-goal-subjects label > span {
+  color: #52645f;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.me-page .me-settings-form-grid input,
+.me-page .me-goal-subjects input,
+.me-page .me-invite-row input {
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid rgba(57, 95, 130, .2);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--me-text, #202337);
+  font: inherit;
+}
+
+.me-page .me-settings-form-grid input:focus,
+.me-page .me-goal-subjects input:focus,
+.me-page .me-invite-row input:focus {
+  outline: none;
+  border-color: rgba(49, 93, 255, .48);
+  box-shadow: 0 0 0 3px rgba(49, 93, 255, .09);
+}

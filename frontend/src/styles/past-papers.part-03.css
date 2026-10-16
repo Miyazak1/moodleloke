@@ -1,0 +1,262 @@
+@media (max-width: 620px) {
+  .site-main-public > .brand-page.past-paper-refresh {
+    width: min(100% - 28px, 720px);
+    padding-top: 22px;
+    padding-bottom: 56px;
+  }
+
+  .brand-page.past-paper-refresh .mock-product-hero {
+    padding: 26px 22px;
+    border-radius: 18px;
+  }
+
+  .brand-page.past-paper-refresh .mock-product-filter {
+    width: 100%;
+  }
+
+  .brand-page.past-paper-refresh .mock-product-filter button {
+    flex: 1 1 calc(50% - 8px);
+    padding-inline: 10px;
+  }
+
+  .brand-page.past-paper-refresh .mock-product-trust {
+    display: grid;
+    gap: 10px;
+  }
+
+  .brand-page.past-paper-refresh .mock-product-card {
+    grid-template-columns: 58px minmax(0, 1fr);
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .brand-page.past-paper-refresh .mock-product-cover {
+    width: 58px;
+    height: 72px;
+    padding: 8px;
+  }
+
+  .brand-page.past-paper-refresh .mock-product-cover b {
+    top: 8px;
+    left: 8px;
+    font-size: 20px;
+  }
+
+  .brand-page.past-paper-refresh .mock-product-cover em {
+    font-size: 9px;
+  }
+
+  .brand-page.past-paper-refresh .mock-product-main p {
+    display: none;
+  }
+
+  .brand-page.past-paper-refresh .mock-product-tags {
+    margin-top: 3px;
+  }
+
+  .brand-page.past-paper-refresh .mock-product-tags span:nth-child(n + 3) {
+    display: none;
+  }
+
+  .brand-page.past-paper-detail-refresh .mock-download-shell {
+    padding: 18px;
+    border-radius: 17px;
+  }
+
+  .brand-page.past-paper-detail-refresh .mock-download-head,
+  .brand-page.past-paper-detail-refresh .mock-bundle-detail-head {
+    grid-template-columns: 58px minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .brand-page.past-paper-detail-refresh .mock-download-head .mock-product-cover {
+    width: 58px;
+    height: 72px;
+  }
+
+  .brand-page.past-paper-detail-refresh .mock-download-head h1 {
+    font-size: 27px;
+  }
+
+  .brand-page.past-paper-detail-refresh .mock-download-head > div > p {
+    grid-column: 1 / -1;
+  }
+
+  .brand-page.past-paper-detail-refresh .mock-bundle-summary {
+    grid-column: 1 / -1;
+  }
+
+  .brand-page.past-paper-detail-refresh .past-paper-file-heading {
+    align-items: start;
+  }
+
+  .brand-page.past-paper-detail-refresh .mock-download-grid article,
+  .brand-page.past-paper-detail-refresh .mock-bundle-file-grid .mock-bundle-file {
+    grid-template-columns: 40px minmax(0, 1fr);
+  }
+
+  .brand-page.past-paper-detail-refresh .mock-download-grid button {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .brand-page.past-paper-detail-refresh .mock-bundle-item {
+    grid-template-columns: 1fr;
+    padding: 15px;
+  }
+
+  .brand-page.past-paper-detail-refresh .mock-bundle-item-head {
+    grid-template-columns: 48px minmax(0, 1fr);
+  }
+
+  .brand-page.past-paper-detail-refresh .mock-bundle-item-index {
+    width: 48px;
+    height: 58px;
+  }
+
+  .brand-page.past-paper-detail-refresh .mock-bundle-item-stats {
+    justify-content: flex-start;
+  }
+}
+
+/* Keep bundle indexes vertical even when the shared item-heading span rule loads later. */
+.brand-page.mock-exam-page.past-paper-detail-refresh .mock-bundle-item-head > .mock-bundle-item-index {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 3px;
+  box-sizing: border-box;
+}
+
+.brand-page.mock-exam-page.past-paper-detail-refresh .mock-bundle-item-head > .mock-bundle-item-index b,
+.brand-page.mock-exam-page.past-paper-detail-refresh .mock-bundle-item-head > .mock-bundle-item-index small {
+  display: block;
+  margin: 0;
+  color: inherit;
+  text-align: center;
+}
+
+.brand-page.mock-exam-page.past-paper-detail-refresh .mock-bundle-item-head > .mock-bundle-item-index small {
+  max-width: 48px;
+  overflow: hidden;
+  font-size: 9px;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.brand-page.mock-exam-page.past-paper-refresh .mock-product-cover.tone-chemistry {
+  border-color: rgba(119, 165, 0, .2);
+  background: linear-gradient(145deg, #f7ffe8, #eaf8cf);
+  color: #557600;
+  box-shadow: none;
+}
+
+.brand-page.mock-exam-page.past-paper-detail-refresh .mock-bundle-item-index.tone-chemistry {
+  border-color: rgba(119, 165, 0, .2);
+  background: #f0ffd3;
+  color: #557600;
+  box-shadow: none;
+}
+
+/* The shared mock-exam bundle loads after this page in production. Keep the library layout authoritative. */
+.brand-page.mock-exam-page.past-paper-refresh .mock-product-trust {
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.brand-page.mock-exam-page.past-paper-refresh .mock-product-list {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+.brand-page.mock-exam-page.past-paper-refresh .mock-product-card {
+  grid-template-columns: 76px minmax(0, 1fr) minmax(230px, 260px);
+  grid-template-rows: auto auto;
+  gap: 12px 20px;
+  min-height: 0;
+}
+
+.brand-page.mock-exam-page.past-paper-refresh .mock-product-card .past-paper-card-cover {
+  grid-column: 1;
+  grid-row: 1 / 3;
+}
+
+.brand-page.mock-exam-page.past-paper-refresh .mock-product-card .mock-product-main {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  min-width: 0;
+}
+
+.brand-page.mock-exam-page.past-paper-refresh .mock-product-card .mock-product-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.brand-page.mock-exam-page.past-paper-refresh .mock-product-card .mock-product-tags span {
+  width: auto;
+  max-width: 100%;
+  margin: 0;
+  white-space: normal;
+}
+
+.brand-page.mock-exam-page.past-paper-refresh .mock-product-card .mock-product-specs {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: end;
+  min-width: 0;
+}
+
+.brand-page.mock-exam-page.past-paper-refresh .mock-product-card .mock-product-buy {
+  grid-column: 3;
+  grid-row: 2;
+  align-self: start;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.brand-page.mock-exam-page.past-paper-refresh .mock-product-card .mock-product-buy button {
+  position: static;
+  width: 100%;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .brand-page.mock-exam-page.past-paper-refresh .mock-product-card {
+    grid-template-columns: 72px minmax(0, 1fr);
+  }
+
+  .brand-page.mock-exam-page.past-paper-refresh .mock-product-card .past-paper-card-cover {
+    grid-row: 1;
+  }
+
+  .brand-page.mock-exam-page.past-paper-refresh .mock-product-card .mock-product-main {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .brand-page.mock-exam-page.past-paper-refresh .mock-product-card .mock-product-specs {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .brand-page.mock-exam-page.past-paper-refresh .mock-product-card .mock-product-buy {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+}
+
+@media (max-width: 620px) {
+  .brand-page.mock-exam-page.past-paper-refresh .mock-product-trust {
+    display: grid;
+    gap: 10px;
+  }
+
+  .brand-page.mock-exam-page.past-paper-refresh .mock-product-card {
+    grid-template-columns: 58px minmax(0, 1fr);
+  }
+}

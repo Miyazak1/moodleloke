@@ -1,0 +1,373 @@
+.brand-page.admin-work-page .admin-code-chip {
+  display: block;
+  max-width: 100%;
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid rgba(49, 93, 255, .16);
+  border-radius: 8px;
+  background: rgba(248, 250, 252, .9);
+  color: #244765;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.brand-page.admin-work-page .admin-review-guidance {
+  align-items: start;
+  gap: 6px;
+}
+
+.brand-page.admin-work-page .admin-review-guidance strong,
+.brand-page.admin-work-page .admin-review-guidance small,
+.brand-page.admin-work-page .admin-review-guidance em,
+.brand-page.admin-work-page .admin-review-guidance code {
+  min-width: 0;
+}
+
+.brand-page.admin-work-page .admin-review-guidance strong {
+  color: #102033;
+  font-weight: 900;
+}
+
+.brand-page.admin-work-page .admin-review-guidance small {
+  color: #5d7692;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.brand-page.admin-work-page .admin-review-guidance em {
+  width: fit-content;
+  padding: 3px 8px;
+  border: 1px solid rgba(8, 128, 118, .18);
+  border-radius: 999px;
+  background: rgba(231, 249, 243, .82);
+  color: #0f8175;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 850;
+}
+
+.brand-page.admin-work-page .admin-review-guidance code {
+  width: fit-content;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: rgba(49, 93, 255, .08);
+  color: #315dff;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 11px;
+}
+
+.brand-page.admin-work-page .admin-review-recommendation {
+  display: grid;
+  gap: 5px;
+  margin: 10px 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(49, 93, 255, .14);
+  border-radius: 8px;
+  background: rgba(248, 250, 252, .82);
+}
+
+.brand-page.admin-work-page .admin-review-recommendation b {
+  color: #102033;
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.brand-page.admin-work-page .admin-review-recommendation span {
+  color: #48647f;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.brand-page.admin-work-page .admin-review-recommendation small {
+  width: fit-content;
+  max-width: 100%;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .74);
+  color: #315dff;
+  font-size: 12px;
+  font-weight: 850;
+  overflow-wrap: anywhere;
+}
+
+.brand-page.admin-work-page .admin-review-recommendation.danger {
+  border-color: rgba(185, 74, 50, .24);
+  background: rgba(255, 243, 239, .86);
+}
+
+.brand-page.admin-work-page .admin-review-recommendation.danger small {
+  color: #a13f2b;
+}
+
+.brand-page.admin-work-page .admin-review-recommendation.warning {
+  border-color: rgba(202, 132, 24, .26);
+  background: rgba(255, 249, 232, .88);
+}
+
+.brand-page.admin-work-page .admin-review-recommendation.warning small {
+  color: #9a650f;
+}
+
+.brand-page.admin-work-page .admin-review-recommendation.info {
+  border-color: rgba(49, 93, 255, .2);
+  background: rgba(240, 247, 255, .86);
+}
+
+.brand-page.admin-work-page .admin-review-recommendation.ok {
+  border-color: rgba(8, 128, 118, .2);
+  background: rgba(231, 249, 243, .86);
+}
+
+.brand-page.admin-work-page .admin-review-recommendation.ok small {
+  color: #0f8175;
+}
+
+.brand-page.admin-work-page .admin-quality-filter-chips span,
+.brand-page.admin-work-page .admin-quality-filter-chips button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 6px 10px;
+  border: 1px solid rgba(8, 128, 118, .2);
+  border-radius: 999px;
+  background: #fff;
+  color: #0f8175;
+  font-weight: 800;
+}
+
+.brand-page.admin-work-page .admin-quality-filter-chips button {
+  cursor: pointer;
+}
+
+.brand-page.admin-work-page .admin-quality-action-groups {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.2fr) repeat(5, minmax(118px, 1fr));
+  gap: 10px;
+  margin: 12px 0;
+  padding: 12px;
+  border: 1px solid rgba(47, 95, 137, .16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .84);
+}
+
+.brand-page.admin-work-page .admin-quality-action-groups > div,
+.brand-page.admin-work-page .admin-quality-action-groups > button {
+  min-height: 74px;
+  border: 1px solid rgba(47, 95, 137, .16);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.brand-page.admin-work-page .admin-quality-action-groups > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px;
+}
+
+.brand-page.admin-work-page .admin-quality-action-groups > div strong {
+  color: var(--public-ink, var(--ink-900));
+  font-size: 15px;
+}
+
+.brand-page.admin-work-page .admin-quality-action-groups > div span {
+  color: var(--public-muted, var(--ink-700));
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.brand-page.admin-work-page .admin-quality-action-groups > button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 5px;
+  padding: 10px 12px;
+  color: var(--public-ink, var(--ink-900));
+  cursor: pointer;
+}
+
+.brand-page.admin-work-page .admin-quality-action-groups > button:disabled {
+  cursor: not-allowed;
+  opacity: .48;
+}
+
+.brand-page.admin-work-page .admin-quality-action-groups > button strong {
+  color: #0f8175;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.brand-page.admin-work-page .admin-quality-action-groups > button[data-tone="warning"] strong {
+  color: #b76a00;
+}
+
+.brand-page.admin-work-page .admin-quality-action-groups > button[data-tone="danger"] strong {
+  color: #b94a3a;
+}
+
+.brand-page.admin-work-page .admin-quality-action-groups > button span {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.brand-page.admin-work-page .admin-quality-action-groups > button small {
+  color: var(--public-muted, var(--ink-700));
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.brand-page.admin-work-page .admin-quality-follow-up {
+  width: fit-content;
+  max-width: 100%;
+  padding: 7px 10px;
+  border: 1px solid rgba(183, 106, 0, .22);
+  border-radius: 8px;
+  background: rgba(255, 250, 241, .84);
+  color: #805000;
+  font-weight: 800;
+}
+
+.brand-page.admin-work-page .admin-source-import-actions {
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-page.admin-work-page .admin-hidden-file-input {
+  position: absolute;
+  inset: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.brand-page.admin-work-page .admin-inline-status {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border: 1px solid rgba(47, 95, 137, .16);
+  border-radius: 8px;
+  background: rgba(246, 250, 253, .92);
+  color: var(--public-ink, var(--ink-900));
+}
+
+.brand-page.admin-work-page .admin-inline-status strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.brand-page.admin-work-page .admin-inline-status ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--public-muted, var(--ink-700));
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.brand-page.admin-work-page .admin-inline-status.success {
+  border-color: rgba(8, 128, 118, .2);
+  background: rgba(231, 249, 243, .82);
+}
+
+.brand-page.admin-work-page .admin-inline-status.success strong {
+  color: #0f8175;
+}
+
+.brand-page.admin-work-page .admin-inline-status.warning {
+  border-color: rgba(202, 132, 24, .28);
+  background: rgba(255, 249, 232, .88);
+}
+
+.brand-page.admin-work-page .admin-inline-status.warning strong {
+  color: #9a650f;
+}
+
+.brand-page.admin-work-page .admin-inline-status.error {
+  border-color: rgba(185, 74, 50, .24);
+  background: rgba(255, 243, 239, .88);
+}
+
+.brand-page.admin-work-page .admin-inline-status.error strong {
+  color: #a13f2b;
+}
+
+@media (max-width: 1180px) {
+  .brand-page.admin-work-page .admin-candidate-queue-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-page.admin-work-page .admin-quality-action-groups {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .brand-page.admin-work-page .admin-quality-action-groups > div {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .brand-page.admin-work-page .admin-candidate-queue-panel {
+    margin-inline: 18px;
+  }
+
+  .brand-page.admin-work-page .admin-candidate-filter-chips {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-page.admin-work-page .admin-published-question-list {
+    margin-inline: 18px;
+  }
+
+  .brand-page.admin-work-page .admin-published-question-head,
+  .brand-page.admin-work-page .admin-published-question-foot {
+    flex-direction: column;
+  }
+
+  .brand-page.admin-work-page .admin-published-question-head > span,
+  .brand-page.admin-work-page .admin-published-question-foot .c-admin-action-bar {
+    width: 100%;
+    max-width: none;
+    justify-content: flex-start;
+  }
+
+  .brand-page.admin-work-page .admin-quality-action-groups {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-page.admin-work-page .process-list > .process-row.admin-syllabus-update-row,
+  .brand-page.admin-work-page .process-list .admin-syllabus-update-row {
+    padding: 44px 14px 14px !important;
+  }
+
+  .brand-page.admin-work-page .process-list > .process-row.admin-governance-row,
+  .brand-page.admin-work-page .process-list > .process-row.admin-data-row,
+  .brand-page.admin-work-page .process-list > .process-row.admin-provider-blocker-row,
+  .brand-page.admin-work-page .process-list > .process-row.admin-syllabus-update-row,
+  .brand-page.admin-work-page .process-list > .process-row.admin-misconception-row,
+  .brand-page.admin-work-page .process-list > .process-row.admin-ai-review-row,
+  .brand-page.admin-work-page .admin-governance-row,
+  .brand-page.admin-work-page .admin-data-row,
+  .brand-page.admin-work-page .admin-provider-blocker-row,
+  .brand-page.admin-work-page .admin-syllabus-update-row,
+  .brand-page.admin-work-page .admin-misconception-row,
+  .brand-page.admin-work-page .admin-ai-review-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .brand-page.admin-work-page .process-list.admin-observability-summary > .process-row.admin-provider-blocker-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .brand-page.admin-work-page .admin-governance-row .admin-ai-review-actions,
+  .brand-page.admin-work-page .admin-data-row .admin-ai-review-actions,
+  .brand-page.admin-work-page .admin-misconception-row .admin-ai-review-actions,
+  .brand-page.admin-work-page .admin-ai-review-row .admin-ai-review-actions {
+    grid-column: auto !important;
+    width: 100%;
+    justify-self: stretch;
+  }
+}

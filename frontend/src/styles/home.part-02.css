@@ -1,0 +1,793 @@
+.home-csca-impact-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 26px;
+}
+
+.home-csca-impact-tags span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 11px;
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .09);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.home-csca-impact-tags svg {
+  width: 15px;
+  height: 15px;
+  color: #b7f84f;
+}
+
+.home-csca-lead-grid .home-csca-next-window {
+  display: grid;
+  min-height: 310px;
+  align-content: center;
+  gap: 9px;
+  padding: 34px;
+  border: 0;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 94% 8%, transparent 0 44px, rgba(83, 128, 0, .12) 45px 60px, transparent 61px),
+    linear-gradient(145deg, #f3ffe3, #e4fad8 58%, #dcf7ef);
+}
+
+.home-csca-lead-grid .home-csca-next-window > span {
+  color: #477100;
+}
+
+.home-csca-lead-grid .home-csca-next-window strong {
+  font-size: clamp(34px, 3.2vw, 52px);
+}
+
+.home-csca-months {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 22px;
+}
+
+.home-csca-months b {
+  display: grid;
+  min-width: 42px;
+  height: 36px;
+  place-items: center;
+  padding: 0 9px;
+  border: 1px solid rgba(72, 112, 0, .18);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .58);
+  color: #5f762e;
+  font-size: 12px;
+}
+
+.home-csca-months b.active {
+  border-color: var(--home-blue);
+  background: var(--home-blue);
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(49, 93, 255, .22);
+}
+
+.home-csca-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin: 14px 0;
+  overflow: hidden;
+  border: 1px solid var(--home-line);
+  border-radius: 18px;
+  background: var(--home-line);
+}
+
+.home-csca-summary-grid article {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  padding: 27px 25px;
+  background: rgba(255, 255, 255, .94);
+}
+
+.home-csca-summary-grid article > svg {
+  width: 22px;
+  height: 22px;
+  padding: 9px;
+  border-radius: 12px;
+  background: var(--home-blue-soft);
+  color: var(--home-blue);
+  box-sizing: content-box;
+}
+
+.home-csca-summary-grid article > span {
+  display: grid;
+  gap: 6px;
+}
+
+.home-csca-summary-grid small,
+.home-csca-logistics-facts small {
+  color: var(--home-blue);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.home-csca-summary-grid strong {
+  color: var(--home-ink);
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.home-csca-summary-grid p {
+  margin: 0;
+  color: var(--home-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.home-csca-subject-board {
+  padding: clamp(26px, 3vw, 40px);
+  border: 1px solid var(--home-line);
+  border-radius: 20px;
+  background:
+    linear-gradient(90deg, rgba(49, 93, 255, .045) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .045) 1px, transparent 1px),
+    rgba(248, 252, 255, .9);
+  background-size: 32px 32px, 32px 32px, auto;
+}
+
+.home-csca-subject-board > header {
+  display: grid;
+  grid-template-columns: minmax(260px, .7fr) minmax(340px, 1.3fr);
+  gap: 40px;
+  align-items: end;
+  margin-bottom: 26px;
+}
+
+.home-csca-subject-board > header span {
+  color: var(--home-blue);
+}
+
+.home-csca-subject-board h2 {
+  margin: 8px 0 0;
+  color: var(--home-ink);
+  font-size: clamp(27px, 2.7vw, 40px);
+  line-height: 1.15;
+  letter-spacing: -.025em;
+}
+
+.home-csca-subject-board > header p {
+  margin: 0;
+  color: var(--home-muted);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.home-csca-subject-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.home-csca-subject-grid article {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  gap: 15px;
+  align-items: center;
+  padding: 20px;
+  border: 1px solid var(--home-line);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, .94);
+}
+
+.home-csca-subject-grid article > b {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  border-radius: 13px;
+  background: var(--home-blue-soft);
+  color: var(--home-blue);
+  font-size: 20px;
+}
+
+.home-csca-subject-grid article > span {
+  display: grid;
+  gap: 3px;
+}
+
+.home-csca-subject-grid small {
+  color: var(--home-blue);
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.home-csca-subject-grid strong {
+  color: var(--home-ink);
+  font-size: 18px;
+}
+
+.home-csca-subject-grid p,
+.home-csca-subject-grid em {
+  margin: 0;
+  color: var(--home-muted);
+  font-size: 12px;
+  font-style: normal;
+  line-height: 1.5;
+}
+
+.home-csca-subject-grid em {
+  padding: 7px 9px;
+  border-radius: 8px;
+  background: #f3f7fb;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.home-csca-subject-grid .chinese > b {
+  background: var(--home-lime-soft);
+  color: #527900;
+}
+
+.home-csca-subject-grid .physics > b,
+.home-csca-subject-grid .chemistry > b {
+  background: var(--home-mint-soft);
+  color: var(--home-mint-dark);
+}
+
+.home-csca-logistics {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(360px, .8fr);
+  gap: 18px;
+  align-items: center;
+  padding: 26px 16px 12px;
+}
+
+.home-csca-logistics-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.home-csca-logistics-facts > span {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: 28px 1fr;
+  column-gap: 8px;
+  align-items: center;
+}
+
+.home-csca-logistics-facts svg {
+  grid-row: span 2;
+  width: 20px;
+  height: 20px;
+  color: var(--home-mint-dark);
+}
+
+.home-csca-logistics-facts strong {
+  color: var(--home-soft-ink);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.home-csca-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 9px;
+}
+
+.home-csca-actions .home-button {
+  padding: 13px 15px;
+  font-size: 12px;
+}
+
+.home-csca-actions .home-csca-source-note {
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 3px;
+  text-align: right;
+}
+
+/* Keep the explainer in the same open, lightweight visual language as the home page. */
+.home-csca-explainer {
+  overflow: visible;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.home-csca-definition {
+  min-height: 0;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 34px clamp(28px, 4vw, 58px);
+  border: 1px solid var(--home-line-strong);
+  border-radius: 12px;
+  background:
+    linear-gradient(90deg, rgba(49, 93, 255, .04) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .04) 1px, transparent 1px),
+    rgba(255, 255, 255, .82);
+  background-size: 30px 30px, 30px 30px, auto;
+  box-shadow: 0 18px 50px rgba(47, 77, 110, .08);
+  color: var(--home-ink);
+  text-align: center;
+}
+
+.home-csca-definition > span {
+  color: var(--home-blue);
+}
+
+.home-csca-definition h2 {
+  max-width: 900px;
+  margin-inline: auto;
+  color: var(--home-ink);
+  font-size: clamp(28px, 3vw, 42px);
+}
+
+.home-csca-definition > p {
+  max-width: 820px;
+  margin-inline: auto;
+  color: var(--home-muted);
+}
+
+.home-csca-impact-tags {
+  justify-content: center;
+  margin-top: 22px;
+}
+
+.home-csca-impact-tags span {
+  border-color: rgba(49, 93, 255, .14);
+  background: var(--home-blue-soft);
+  color: var(--home-soft-ink);
+}
+
+.home-csca-impact-tags span:nth-child(2) {
+  border-color: rgba(77, 122, 0, .14);
+  background: var(--home-lime-soft);
+}
+
+.home-csca-impact-tags span:nth-child(3) {
+  border-color: rgba(8, 124, 102, .14);
+  background: var(--home-mint-soft);
+}
+
+.home-csca-impact-tags svg {
+  color: var(--home-blue);
+}
+
+.home-csca-summary-grid {
+  gap: 16px;
+  margin: 20px 0 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.home-csca-summary-grid article {
+  border: 1px solid var(--home-line);
+  border-radius: 12px;
+  box-shadow: 0 14px 36px rgba(47, 77, 110, .055);
+}
+
+.home-csca-summary-grid article:nth-child(2) > svg {
+  background: var(--home-lime-soft);
+  color: #527900;
+}
+
+.home-csca-summary-grid article:nth-child(3) > svg {
+  background: var(--home-mint-soft);
+  color: var(--home-mint-dark);
+}
+
+.home-csca-subject-board {
+  margin-top: 22px;
+  padding: 38px 28px;
+  border-radius: 12px;
+  box-shadow: 0 16px 44px rgba(47, 77, 110, .055);
+}
+
+.home-csca-subject-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.home-csca-subject-grid article {
+  position: relative;
+  grid-template-columns: 46px minmax(0, 1fr);
+  align-content: start;
+  border-radius: 10px;
+  box-shadow: 0 10px 28px rgba(47, 77, 110, .045);
+}
+
+.home-csca-subject-grid article::before {
+  position: absolute;
+  top: -1px;
+  right: 16px;
+  left: 16px;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: var(--home-blue);
+  content: "";
+}
+
+.home-csca-subject-grid article.chinese::before {
+  background: var(--home-lime);
+}
+
+.home-csca-subject-grid article.science::before {
+  background: var(--home-mint);
+}
+
+.home-csca-subject-grid article.science > b {
+  background: var(--home-mint-soft);
+  color: var(--home-mint-dark);
+}
+
+.home-csca-subject-grid em {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-top: 7px;
+}
+
+.home-csca-logistics {
+  grid-template-columns: minmax(310px, .8fr) minmax(330px, 1fr) minmax(390px, 1.1fr);
+  gap: 24px;
+  margin-top: 18px;
+  padding: 22px 24px;
+  border: 1px solid var(--home-line-strong);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .76);
+  box-shadow: 0 14px 36px rgba(47, 77, 110, .05);
+}
+
+.home-csca-logistics .home-csca-next-window {
+  min-height: 0;
+  padding: 0 24px 0 0;
+  border: 0;
+  border-right: 1px solid var(--home-line);
+  border-radius: 0;
+  background: transparent;
+}
+
+.home-csca-logistics .home-csca-next-window strong {
+  font-size: 30px;
+}
+
+.home-csca-logistics .home-csca-next-window small {
+  font-size: 11px;
+}
+
+.home-csca-logistics .home-csca-months {
+  margin-top: 12px;
+}
+
+.home-csca-logistics .home-csca-months b {
+  min-width: 34px;
+  height: 29px;
+  border-radius: 7px;
+  font-size: 10px;
+}
+
+.home-csca-logistics-facts {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.home-csca-definition {
+  max-width: 980px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.home-csca-definition h2 {
+  font-size: clamp(27px, 2.6vw, 38px);
+}
+
+.home-csca-main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(330px, .72fr);
+  gap: 20px;
+  align-items: stretch;
+  margin-top: 42px;
+}
+
+.home-csca-main-grid .home-csca-subject-board {
+  margin: 0;
+}
+
+.home-csca-main-grid .home-csca-subject-board > header {
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.home-csca-main-grid .home-csca-subject-board > header p {
+  max-width: 760px;
+}
+
+.home-csca-main-grid .home-csca-subject-grid {
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.home-csca-main-grid .home-csca-subject-grid article {
+  grid-template-columns: 34px 46px minmax(0, 1fr) auto;
+  gap: 14px;
+  padding: 21px 22px;
+}
+
+.home-csca-main-grid .home-csca-subject-grid article::before {
+  display: none;
+}
+
+.home-csca-main-grid .home-csca-subject-grid article:not(:last-child)::after {
+  position: absolute;
+  bottom: -15px;
+  left: 93px;
+  z-index: 2;
+  width: 2px;
+  height: 15px;
+  background: linear-gradient(var(--home-blue), var(--home-mint));
+  content: "";
+}
+
+.home-csca-subject-grid article > i {
+  color: var(--home-faint);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 950;
+  letter-spacing: .06em;
+}
+
+.home-csca-main-grid .home-csca-subject-grid em {
+  grid-column: auto;
+  justify-self: end;
+  margin-top: 0;
+  text-align: right;
+}
+
+.home-csca-schedule-panel {
+  display: grid;
+  align-content: start;
+  padding: 28px;
+  border: 1px solid var(--home-line-strong);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(183, 248, 79, .2), transparent 30%),
+    rgba(255, 255, 255, .82);
+  box-shadow: 0 16px 44px rgba(47, 77, 110, .055);
+}
+
+.home-csca-schedule-panel .home-csca-next-window {
+  min-height: 0;
+  padding: 0 0 24px;
+  border: 0;
+  border-bottom: 1px solid var(--home-line);
+  border-radius: 0;
+  background: transparent;
+}
+
+.home-csca-schedule-panel .home-csca-next-window strong {
+  font-size: clamp(34px, 3vw, 46px);
+}
+
+.home-csca-schedule-panel .home-csca-next-window small {
+  font-size: 12px;
+}
+
+.home-csca-schedule-panel .home-csca-months {
+  margin-top: 17px;
+}
+
+.home-csca-schedule-panel .home-csca-logistics-facts {
+  grid-template-columns: 1fr;
+  gap: 18px;
+  padding: 23px 0;
+  border-bottom: 1px solid var(--home-line);
+}
+
+.home-csca-schedule-panel .home-csca-logistics-facts > span {
+  grid-template-columns: 32px 1fr;
+}
+
+.home-csca-schedule-panel .home-csca-actions {
+  display: grid;
+  justify-content: stretch;
+  padding-top: 22px;
+}
+
+.home-csca-schedule-panel .home-button {
+  width: 100%;
+}
+
+.home-csca-schedule-panel .home-csca-source-note {
+  justify-content: flex-start;
+  width: 100%;
+  margin-top: 6px;
+  text-align: left;
+}
+
+.home-csca-main-grid + .home-csca-summary-grid {
+  margin-top: 20px;
+}
+
+.home-csca-main-grid + .home-csca-summary-grid article {
+  padding-block: 21px;
+}
+
+.home-csca-bridge {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  color: var(--home-muted);
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.home-csca-bridge i {
+  height: 1px;
+  flex: 1;
+  background: linear-gradient(90deg, var(--home-line-strong), transparent);
+}
+
+.home-hero {
+  position: relative;
+  min-height: calc(100vh - 74px);
+  display: grid;
+  align-items: center;
+  padding: 88px 0 82px;
+}
+
+.home-hero.home-hero-prep {
+  min-height: auto;
+  padding: 76px 0 86px;
+}
+
+.home-hero-prep .home-hero-stage {
+  min-height: 610px;
+}
+
+.home-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(430px, .82fr) minmax(680px, 1.18fr);
+  gap: clamp(36px, 5vw, 86px);
+  align-items: center;
+}
+
+.home-hero-copy {
+  min-width: 0;
+}
+
+.home-eyebrow,
+.home-section-kicker,
+.home-footer-launch-badge {
+  display: inline-flex;
+  width: max-content;
+  max-width: 100%;
+  min-height: 32px;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  border: 1px solid rgba(49, 93, 255, .18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .74);
+  color: var(--home-blue);
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.2;
+  box-shadow: 0 12px 34px rgba(49, 93, 255, .06);
+}
+
+.home-eyebrow::before,
+.home-footer-launch-badge::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--home-lime);
+  box-shadow: 0 0 0 5px rgba(183, 239, 67, .2);
+  transform: rotate(45deg);
+}
+
+.home-hero h1 {
+  max-width: 720px;
+  margin: 20px 0 22px;
+  color: var(--home-ink);
+  font-size: clamp(34px, 3.75vw, 58px);
+  font-weight: 950;
+  line-height: 1.12;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+.home-hero h1 span {
+  display: block;
+}
+
+.home-headline-mark,
+.home-accent-line {
+  position: relative;
+  display: inline-block;
+  padding-inline: .08em;
+  z-index: 0;
+}
+
+.home-headline-mark::after,
+.home-accent-line::after {
+  content: "";
+  position: absolute;
+  left: -.03em;
+  right: -.04em;
+  bottom: .08em;
+  z-index: -1;
+  height: .18em;
+  transform: skewX(-12deg);
+  background: var(--home-lime);
+}
+
+.home-accent-line {
+  color: var(--home-blue);
+}
+
+.home-lead {
+  max-width: 660px;
+  margin: 0;
+  color: var(--home-muted);
+  font-size: 16px;
+  line-height: 1.88;
+}
+
+.home-hero .home-button-row {
+  margin-top: 34px;
+}
+
+.home-micro-proof {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  max-width: 690px;
+  margin-top: 34px;
+  padding-top: 0;
+}
+
+.home-micro-proof span {
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  min-height: 74px;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid var(--home-line-strong);
+  border-radius: 0;
+  background: transparent;
+  color: var(--home-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.home-micro-proof b {
+  color: var(--home-ink);
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.home-hero-stage {
+  position: relative;
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  min-height: 700px;
+}

@@ -662,6 +662,17 @@ export function AdminContentPage({
     setFeedback(null);
   }
 
+  function applyCscaHomePreset(key: string) {
+    const preset = CSCA_HOME_BLOCK_PRESETS[key];
+    if (!preset) return;
+    updateItem(key, (item) => ({
+      ...item,
+      title: preset.title,
+      subtitle: preset.subtitle,
+      body: { ...preset.body }
+    }));
+  }
+
   function restoreItem(key: string) {
     const saved = savedItems.find((item) => item.key === key);
     if (!saved) return;

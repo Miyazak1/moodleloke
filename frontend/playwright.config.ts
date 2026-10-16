@@ -5,6 +5,20 @@ const e2eHost = process.env.E2E_HOST || '127.0.0.1';
 const e2eBaseUrl = process.env.E2E_BASE_URL || `http://${e2eHost}:${e2ePort}`;
 const shouldReuseExistingServer = process.env.E2E_REUSE_SERVER !== 'false';
 
+// Some development environments inject a global HTTP proxy. Keep local E2E
+// traffic direct so Playwright and its web-server readiness probe use the same
+// Vite process instead of accidentally routing localhost through that proxy.
+const localNoProxyHosts = new Set(
+  [process.env.NO_PROXY, process.env.no_proxy, '127.0.0.1', 'localhost', e2eHost]
+    .filter(Boolean)
+    .flatMap((value) => String(value).split(','))
+    .map((value) => value.trim())
+    .filter(Boolean)
+);
+const localNoProxy = Array.from(localNoProxyHosts).join(',');
+process.env.NO_PROXY = localNoProxy;
+process.env.no_proxy = localNoProxy;
+
 export default defineConfig({
   testDir: './e2e',
   timeout: 30000,

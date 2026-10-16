@@ -1,0 +1,742 @@
+.brand-page.mock-exam-page .mock-bundle-item-stats span {
+  display: grid;
+  gap: 4px;
+  min-height: 72px;
+  align-content: center;
+  padding: 10px;
+  border-radius: 8px;
+  background: rgba(233, 239, 255, .44);
+  color: #5f6f69;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.brand-page.mock-exam-page .mock-bundle-item-stats b {
+  color: #202337;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.brand-page.mock-exam-page .mock-bundle-file-grid {
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.brand-page.mock-exam-page .mock-bundle-file-grid .mock-bundle-file {
+  grid-template-columns: 44px minmax(0, 1fr);
+  align-items: start;
+  min-width: 0;
+  padding: 14px;
+  border-radius: 10px;
+  background: rgba(248, 255, 253, .9);
+}
+
+.brand-page.mock-exam-page .mock-bundle-file-grid strong {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.brand-page.mock-exam-page .mock-bundle-file-grid span {
+  overflow-wrap: anywhere;
+}
+
+.brand-page.mock-exam-page .mock-bundle-file-grid button {
+  width: fit-content;
+  min-width: 112px;
+  justify-self: end;
+  border-radius: 8px;
+}
+
+@media (max-width: 980px) {
+  .brand-page.mock-exam-page .mock-bundle-detail-head,
+  .brand-page.mock-exam-page .mock-bundle-item {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-page.mock-exam-page .mock-bundle-summary dl {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .site-main-public > .brand-page.mock-bundle-detail-page {
+    width: min(100% - 28px, 720px);
+  }
+
+  .brand-page.mock-exam-page .mock-bundle-detail-shell {
+    padding: 18px;
+  }
+
+  .brand-page.mock-exam-page .mock-bundle-detail-head,
+  .brand-page.mock-exam-page .mock-bundle-item-head {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-page.mock-exam-page .mock-bundle-summary dl,
+  .brand-page.mock-exam-page .mock-bundle-item-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-page.mock-exam-page .mock-bundle-file-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-page.mock-exam-page .mock-bundle-file-grid button {
+    width: 100%;
+    justify-self: stretch;
+  }
+}
+
+.brand-page.mock-exam-page.mock-bundle-detail-page .mock-download-shell.mock-bundle-detail-shell {
+  gap: 26px;
+  padding: 30px;
+}
+
+.brand-page.mock-exam-page.mock-bundle-detail-page .mock-download-head.mock-bundle-detail-head {
+  grid-template-columns: 96px minmax(0, 1fr) minmax(240px, 300px);
+  align-items: center;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(57, 95, 130, .14);
+}
+
+.brand-page.mock-exam-page.mock-bundle-detail-page .mock-bundle-summary {
+  width: auto;
+  min-width: 0;
+}
+
+.brand-page.mock-exam-page.mock-bundle-detail-page .mock-bundle-file-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+@media (max-width: 980px) {
+  .brand-page.mock-exam-page.mock-bundle-detail-page .mock-download-head.mock-bundle-detail-head {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .brand-page.mock-exam-page.mock-bundle-detail-page .mock-download-shell.mock-bundle-detail-shell {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 620px) {
+  .site-main-public > .brand-page.past-paper-page {
+    width: min(100% - 28px, 720px);
+  }
+}
+
+/* 2026-09-11 public library refresh: align past papers with the CSCAPilot public shell. */
+.site-main-public > .brand-page.past-paper-refresh {
+  width: min(1240px, calc(100vw - 56px));
+  max-width: 1240px;
+  gap: 24px;
+  padding-top: 34px;
+  padding-bottom: 80px;
+}
+
+.brand-page.past-paper-refresh .mock-product-hero {
+  min-height: 0;
+  padding: clamp(30px, 4vw, 48px);
+  border: 1px solid rgba(49, 93, 255, .14);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 88% 20%, rgba(19, 199, 163, .12), transparent 26%),
+    linear-gradient(120deg, rgba(255, 255, 255, .94), rgba(247, 255, 251, .88));
+  box-shadow: 0 24px 64px rgba(34, 55, 100, .07);
+}
+
+.brand-page.past-paper-refresh .mock-product-hero::after {
+  right: 7%;
+  bottom: -170px;
+  width: 420px;
+  height: 300px;
+  border-color: rgba(49, 93, 255, .1);
+  border-radius: 50%;
+  transform: none;
+  background: transparent;
+}
+
+.brand-page.past-paper-refresh .mock-product-hero h1 {
+  max-width: 16ch;
+  font-size: clamp(36px, 4vw, 54px);
+  letter-spacing: -.035em;
+}
+
+.brand-page.past-paper-refresh .mock-status-panel {
+  border-color: rgba(19, 199, 163, .2);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .76);
+  box-shadow: none;
+}
+
+.brand-page.past-paper-refresh .mock-status-panel strong {
+  color: #315dff;
+}
+
+.brand-page.past-paper-refresh .mock-product-filter {
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 6px;
+  width: fit-content;
+  max-width: 100%;
+  border: 1px solid rgba(57, 95, 130, .14);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .74);
+  box-shadow: 0 12px 32px rgba(34, 55, 100, .045);
+}
+
+.brand-page.past-paper-refresh .mock-product-filter button {
+  min-height: 42px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.brand-page.past-paper-refresh .mock-product-filter button.active {
+  background: #315dff;
+  color: #fff;
+  box-shadow: 0 9px 20px rgba(49, 93, 255, .18);
+}
+
+.brand-page.past-paper-refresh .mock-product-filter button.active:hover,
+.brand-page.past-paper-refresh .mock-product-filter button.active:focus-visible {
+  background: #2448d8;
+}
+
+.brand-page.past-paper-refresh .mock-product-trust {
+  justify-content: flex-start;
+  gap: 24px;
+  padding: 0 2px;
+  border: 0;
+  background: transparent;
+}
+
+.brand-page.past-paper-refresh .mock-product-trust span {
+  min-height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #5f6f69;
+  font-size: 13px;
+}
+
+.brand-page.past-paper-refresh .mock-product-trust svg {
+  width: 17px;
+  height: 17px;
+  color: #087c66;
+}
+
+.brand-page.past-paper-refresh .mock-paper-resource-section {
+  gap: 16px;
+}
+
+.brand-page.past-paper-refresh .mock-section-head {
+  padding: 0 2px;
+}
+
+.brand-page.past-paper-refresh .mock-section-head h2 {
+  font-size: clamp(26px, 3vw, 34px);
+  letter-spacing: -.025em;
+}
+
+.brand-page.past-paper-refresh .mock-section-head > span {
+  border: 0;
+  background: transparent;
+  color: #64727a;
+  box-shadow: none;
+}
+
+.brand-page.past-paper-refresh .mock-product-list {
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.brand-page.past-paper-refresh .mock-product-card {
+  grid-template-columns: 76px minmax(0, 1fr) minmax(230px, auto);
+  grid-template-rows: auto auto;
+  gap: 12px 20px;
+  min-height: 0;
+  padding: 20px;
+  border-color: rgba(57, 95, 130, .14);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .82);
+  box-shadow: 0 14px 36px rgba(34, 55, 100, .045);
+}
+
+.brand-page.past-paper-refresh .mock-product-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(49, 93, 255, .24);
+  box-shadow: 0 20px 44px rgba(34, 55, 100, .08);
+}
+
+.brand-page.past-paper-refresh .past-paper-card-cover {
+  grid-column: 1;
+  grid-row: 1 / 3;
+}
+
+.brand-page.past-paper-refresh .mock-product-cover {
+  position: relative;
+  width: 76px;
+  height: 92px;
+  align-content: end;
+  padding: 11px;
+  overflow: hidden;
+  border: 1px solid rgba(49, 93, 255, .14);
+  border-radius: 13px;
+  background: linear-gradient(145deg, #eef2ff, #dfe8ff);
+  color: #315dff;
+  box-shadow: none;
+}
+
+.brand-page.past-paper-refresh .mock-product-cover::before {
+  content: "";
+  position: absolute;
+  top: -20px;
+  right: -18px;
+  width: 52px;
+  height: 52px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: .14;
+}
+
+.brand-page.past-paper-refresh .mock-product-cover.tone-physics {
+  border-color: rgba(19, 199, 163, .2);
+  background: linear-gradient(145deg, #eafff9, #d8f9ef);
+  color: #087c66;
+  box-shadow: none;
+}
+
+.brand-page.past-paper-refresh .mock-product-cover.tone-chemistry {
+  border-color: rgba(119, 165, 0, .2);
+  background: linear-gradient(145deg, #f7ffe8, #eaf8cf);
+  color: #557600;
+  box-shadow: none;
+}
+
+.brand-page.past-paper-refresh .mock-product-cover.tone-mixed,
+.brand-page.past-paper-refresh .mock-product-cover.tone-bundle {
+  border-color: rgba(49, 93, 255, .16);
+  background: linear-gradient(145deg, #eef2ff 5%, #dcfbf2 64%, #f0ffd3);
+  color: #315dff;
+  box-shadow: none;
+}
+
+.brand-page.past-paper-refresh .mock-product-cover b {
+  position: absolute;
+  top: 10px;
+  left: 11px;
+  font-size: 24px;
+  letter-spacing: -.04em;
+}
+
+.brand-page.past-paper-refresh .mock-product-cover small {
+  font-size: 9px;
+  letter-spacing: .08em;
+  opacity: .72;
+}
+
+.brand-page.past-paper-refresh .mock-product-cover em {
+  font-size: 11px;
+  color: inherit;
+}
+
+.brand-page.past-paper-refresh .mock-product-main {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  gap: 8px;
+  align-content: center;
+  min-width: 0;
+}
+
+.brand-page.past-paper-refresh .past-paper-card-eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  color: #64727a;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.brand-page.past-paper-refresh .past-paper-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #315dff;
+  font-weight: 900;
+}
+
+.brand-page.past-paper-refresh .past-paper-type-badge svg {
+  width: 14px;
+  height: 14px;
+}
+
+.brand-page.past-paper-refresh .mock-product-title-row h3 {
+  font-size: clamp(18px, 2vw, 22px);
+  letter-spacing: -.015em;
+}
+
+.brand-page.past-paper-refresh .mock-product-main p {
+  max-width: 62ch;
+  -webkit-line-clamp: 2;
+}
+
+.brand-page.past-paper-refresh .mock-product-tags {
+  gap: 6px;
+}
+
+.brand-page.past-paper-refresh .mock-product-tags span {
+  padding: 4px 8px;
+  border: 1px solid rgba(19, 199, 163, .14);
+  border-radius: 999px;
+  background: rgba(220, 251, 242, .58);
+  font-size: 11px;
+}
+
+.brand-page.past-paper-refresh .mock-product-specs {
+  grid-column: 3;
+  grid-row: 1;
+  grid-template-columns: repeat(3, minmax(66px, 1fr));
+  align-self: end;
+  gap: 6px;
+}
+
+.brand-page.past-paper-refresh .mock-product-specs span {
+  min-height: 52px;
+  padding: 6px;
+  border-radius: 10px;
+  background: rgba(233, 239, 255, .45);
+}
+
+.brand-page.past-paper-refresh .mock-product-buy {
+  grid-column: 3;
+  grid-row: 2;
+  align-self: start;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.brand-page.past-paper-refresh .mock-product-buy button {
+  width: 100%;
+  min-height: 42px;
+  border-radius: 10px;
+  background: #315dff;
+  box-shadow: 0 12px 24px rgba(49, 93, 255, .16);
+}
+
+.brand-page.past-paper-refresh .mock-product-buy button:hover,
+.brand-page.past-paper-refresh .mock-product-buy button:focus-visible {
+  background: #2448d8;
+}
+
+.brand-page.past-paper-refresh .mock-product-buy button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.brand-page.past-paper-detail-refresh {
+  gap: 18px;
+}
+
+.brand-page.past-paper-detail-refresh .mock-download-back {
+  min-height: 40px;
+  padding-inline: 14px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, .76);
+}
+
+.brand-page.past-paper-detail-refresh .mock-download-shell {
+  gap: 22px;
+  padding: clamp(22px, 3vw, 34px);
+  border-color: rgba(57, 95, 130, .14);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, .84);
+  box-shadow: 0 24px 60px rgba(34, 55, 100, .07);
+  backdrop-filter: blur(10px);
+}
+
+.brand-page.past-paper-detail-refresh .mock-download-head {
+  grid-template-columns: 82px minmax(0, 1fr);
+  gap: 20px;
+  padding: 0;
+  border: 0;
+}
+
+.brand-page.past-paper-detail-refresh .mock-download-head .mock-product-cover {
+  width: 82px;
+  height: 102px;
+}
+
+.brand-page.past-paper-detail-refresh .mock-download-head h1 {
+  max-width: 26ch;
+  margin-top: 7px;
+  color: #202337;
+  font-size: clamp(30px, 4vw, 44px);
+  letter-spacing: -.035em;
+}
+
+.brand-page.past-paper-detail-refresh .mock-download-head p {
+  max-width: 68ch;
+  margin-top: 8px;
+}
+
+.brand-page.past-paper-detail-refresh .past-paper-detail-divider {
+  height: 1px;
+  background: rgba(57, 95, 130, .13);
+}
+
+.brand-page.past-paper-detail-refresh .past-paper-file-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.brand-page.past-paper-detail-refresh .past-paper-file-heading span {
+  color: #315dff;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.brand-page.past-paper-detail-refresh .past-paper-file-heading h2 {
+  margin: 4px 0 0;
+  color: #202337;
+  font-size: 22px;
+}
+
+.brand-page.past-paper-detail-refresh .past-paper-file-heading small {
+  color: #64727a;
+  font-weight: 800;
+}
+
+.brand-page.past-paper-detail-refresh .mock-download-grid {
+  grid-template-columns: 1fr;
+  gap: 9px;
+}
+
+.brand-page.past-paper-detail-refresh .mock-download-grid article {
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  min-height: 76px;
+  padding: 12px 14px;
+  border-color: rgba(57, 95, 130, .14);
+  border-radius: 13px;
+  background: rgba(248, 255, 253, .68);
+}
+
+.brand-page.past-paper-detail-refresh .mock-download-grid article > svg {
+  width: 21px;
+  height: 21px;
+  padding: 9px;
+  border-radius: 11px;
+  background: #dcfbf2;
+}
+
+.brand-page.past-paper-detail-refresh .mock-download-grid button {
+  grid-column: 3;
+  min-width: 122px;
+  min-height: 40px;
+  border-radius: 10px;
+  background: #315dff;
+  box-shadow: 0 10px 20px rgba(49, 93, 255, .14);
+}
+
+.brand-page.past-paper-detail-refresh .mock-download-grid button:hover,
+.brand-page.past-paper-detail-refresh .mock-download-grid button:focus-visible {
+  background: #2448d8;
+}
+
+.brand-page.past-paper-detail-refresh .mock-download-grid button:disabled {
+  cursor: wait;
+  opacity: .7;
+  transform: none;
+}
+
+.brand-page.past-paper-detail-refresh .mock-download-grid button:disabled svg {
+  animation: past-paper-spin .8s linear infinite;
+}
+
+.brand-page.past-paper-detail-refresh .mock-download-note {
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(220, 251, 242, .42);
+}
+
+.brand-page.past-paper-detail-refresh .mock-download-note svg {
+  flex: 0 0 auto;
+  color: #087c66;
+}
+
+.brand-page.past-paper-detail-refresh .mock-download-note p {
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.brand-page.past-paper-detail-refresh .past-paper-download-error {
+  margin: -8px 0 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(210, 54, 54, .18);
+  border-radius: 10px;
+  background: #fff3f2;
+  color: #a62828;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.brand-page.past-paper-detail-refresh .mock-bundle-detail-head {
+  grid-template-columns: 82px minmax(0, 1fr);
+}
+
+.brand-page.past-paper-detail-refresh .mock-bundle-summary {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  align-self: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.brand-page.past-paper-detail-refresh .mock-bundle-summary span,
+.brand-page.past-paper-detail-refresh .mock-bundle-item-stats span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #64727a;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.brand-page.past-paper-detail-refresh .mock-bundle-summary svg,
+.brand-page.past-paper-detail-refresh .mock-bundle-item-stats svg {
+  width: 15px;
+  height: 15px;
+  color: #087c66;
+}
+
+.brand-page.past-paper-detail-refresh .mock-bundle-summary b {
+  margin-left: 2px;
+  color: #202337;
+  font-size: 14px;
+}
+
+.brand-page.past-paper-detail-refresh .mock-bundle-item-list {
+  gap: 12px;
+}
+
+.brand-page.past-paper-detail-refresh .mock-bundle-item {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px 20px;
+  padding: 18px;
+  border-radius: 16px;
+  box-shadow: none;
+}
+
+.brand-page.past-paper-detail-refresh .mock-bundle-item-head {
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 14px;
+}
+
+.brand-page.past-paper-detail-refresh .mock-bundle-item-index {
+  width: 58px;
+  height: 68px;
+  border: 1px solid rgba(49, 93, 255, .14);
+  border-radius: 11px;
+  background: #eef2ff;
+  color: #315dff;
+  box-shadow: none;
+}
+
+.brand-page.past-paper-detail-refresh .mock-bundle-item-index.tone-physics {
+  border-color: rgba(19, 199, 163, .2);
+  background: #dcfbf2;
+  color: #087c66;
+}
+
+.brand-page.past-paper-detail-refresh .mock-bundle-item-index.tone-chemistry {
+  border-color: rgba(119, 165, 0, .2);
+  background: #f0ffd3;
+  color: #557600;
+}
+
+.brand-page.past-paper-detail-refresh .mock-bundle-item-index b {
+  font-size: 23px;
+}
+
+.brand-page.past-paper-detail-refresh .mock-bundle-item-head h3 {
+  font-size: 20px;
+}
+
+.brand-page.past-paper-detail-refresh .mock-bundle-item-head p {
+  margin-top: 6px;
+  line-height: 1.55;
+}
+
+.brand-page.past-paper-detail-refresh .mock-bundle-item-stats {
+  display: flex;
+  grid-template-columns: none;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px 14px;
+  width: auto;
+  padding-top: 4px;
+}
+
+.brand-page.past-paper-detail-refresh .mock-bundle-item-stats span {
+  min-height: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.brand-page.past-paper-detail-refresh .mock-bundle-file-grid {
+  grid-column: 1 / -1;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.brand-page.past-paper-detail-refresh .mock-bundle-file-grid .mock-bundle-file {
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: center;
+  padding: 11px 12px;
+  border-radius: 11px;
+}
+
+@keyframes past-paper-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 900px) {
+  .brand-page.past-paper-refresh .mock-product-card {
+    grid-template-columns: 72px minmax(0, 1fr);
+  }
+
+  .brand-page.past-paper-refresh .past-paper-card-cover {
+    grid-row: 1;
+  }
+
+  .brand-page.past-paper-refresh .mock-product-main {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .brand-page.past-paper-refresh .mock-product-specs {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .brand-page.past-paper-refresh .mock-product-buy {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+}

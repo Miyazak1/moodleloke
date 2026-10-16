@@ -1,12 +1,19 @@
-export type Locale = 'zh-CN' | 'en' | 'th' | 'vi' | 'ko' | 'id' | 'fr' | 'de' | 'ru';
+/** Locales that are fully supported by the current UI and may be selected. */
+export type Locale = 'zh-CN' | 'en' | 'vi';
 
-export type LocaleOption = {
-  code: Locale;
+/** Locales shown in the roadmap, but not yet safe to activate in the UI. */
+export type PlannedLocale = 'th' | 'ko' | 'id' | 'fr' | 'de' | 'ru';
+
+type LocaleOptionBase = {
   shortCode: string;
   label: string;
   nativeName: string;
-  enabled: boolean;
 };
+
+export type LocaleOption = LocaleOptionBase & (
+  | { code: Locale; enabled: true }
+  | { code: PlannedLocale; enabled: false }
+);
 
 export const DEFAULT_LOCALE: Locale = 'zh-CN';
 export const LOCALE_STORAGE_KEY = 'moodlelike.locale';
@@ -27,7 +34,7 @@ export const SUPPORTED_LOCALES: LocaleOption[] = [
 ];
 
 export function isLocale(value: string | null | undefined): value is Locale {
-  return Boolean(value && SUPPORTED_LOCALES.some((locale) => locale.code === value));
+  return Boolean(value && SUPPORTED_LOCALES.some((locale) => locale.enabled && locale.code === value));
 }
 
 export function getLocaleOption(locale: Locale) {
@@ -36,10 +43,10 @@ export function getLocaleOption(locale: Locale) {
 
 export function normalizeLocale(value: string | null | undefined): Locale | null {
   if (!value) return null;
-  const exact = SUPPORTED_LOCALES.find((item) => item.code.toLowerCase() === value.toLowerCase());
-  if (exact) return exact.code;
+  const exact = SUPPORTED_LOCALES.find((item) => item.enabled && item.code.toLowerCase() === value.toLowerCase());
+  if (exact?.enabled) return exact.code;
   const language = value.split('-')[0]?.toLowerCase();
   if (language === 'zh') return 'zh-CN';
-  const languageMatch = SUPPORTED_LOCALES.find((item) => item.code.split('-')[0].toLowerCase() === language);
-  return languageMatch?.code ?? null;
+  const languageMatch = SUPPORTED_LOCALES.find((item) => item.enabled && item.code.split('-')[0].toLowerCase() === language);
+  return languageMatch?.enabled ? languageMatch.code : null;
 }

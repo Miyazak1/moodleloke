@@ -98,7 +98,9 @@ export function deleteAdminResourceBundleItem(bundleId: number, itemId: number) 
   });
 }
 
-export function createAdminPastPaper(payload: Partial<AdminPastPaper> & { slug: string; title: string; subject: string }) {
+type AdminPastPaperWrite = Omit<Partial<AdminPastPaper>, 'sourceDocumentId'> & { sourceDocumentId?: number | null };
+
+export function createAdminPastPaper(payload: AdminPastPaperWrite & { slug: string; title: string; subject: string }) {
   return requestJson<AdminPastPaper>('/api/v1/admin/past-papers', {
     method: 'POST',
     body: JSON.stringify(payload),
@@ -106,7 +108,7 @@ export function createAdminPastPaper(payload: Partial<AdminPastPaper> & { slug: 
   });
 }
 
-export function updateAdminPastPaper(id: number, payload: Partial<AdminPastPaper> & { expectedVersion?: number }) {
+export function updateAdminPastPaper(id: number, payload: AdminPastPaperWrite & { expectedVersion?: number }) {
   return requestJson<AdminPastPaper>(`/api/v1/admin/past-papers/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(payload),

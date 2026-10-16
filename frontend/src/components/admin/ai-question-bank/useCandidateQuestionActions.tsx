@@ -10,6 +10,7 @@ import {
   updateAdminAIQuestioningQuestion
 } from '../../../lib/api-admin';
 import { CandidateQuestionEditor } from './CandidateQuestionEditor';
+import { useConfirmDialog } from '../../ConfirmDialogProvider';
 import { questionOptionsFromUnknown } from './questionData';
 import { candidateAgentEvidence } from './questionEvidence';
 import type { AdminRunAction, QuestionEditDraft } from './types';
@@ -55,6 +56,7 @@ export function useCandidateQuestionActions({
   isActionBusy,
   onRefresh
 }: UseCandidateQuestionActionsParams) {
+  const confirmAction = useConfirmDialog();
   const [editingQuestionId, setEditingQuestionId] = useState<number | null>(null);
   const [questionEditDrafts, setQuestionEditDrafts] = useState<Record<number, QuestionEditDraft>>({});
   const [questionDetails, setQuestionDetails] = useState<Record<number, AdminAIQuestioningQuestion>>({});
@@ -193,8 +195,8 @@ export function useCandidateQuestionActions({
     return runAction(actionId, `归档 Q${question.id}`, () => archiveAdminAIQuestioningQuestion(question.id), { refresh: onRefresh });
   }
 
-  function deleteGenerated(question: AdminAIQuestioningQuestion, actionId: string) {
-    const confirmed = window.confirm(`确定删除 AI 生成题 Q${question.id} 吗？这会同时删除它的生成任务、曝光记录，以及已入库 AI 专项题映射；不会删除大纲、真题画像或手工题。`);
+  async function deleteGenerated(question: AdminAIQuestioningQuestion, actionId: string) {
+    const confirmed = await confirmAction({ title: `删除 AI 生成题 Q${question.id}？`, body: '这会同时删除它的生成任务、曝光记录，以及已入库 AI 专项题映射；不会删除大纲、真题画像或手工题。', tone: 'danger' });
     if (!confirmed) return Promise.resolve();
     return runAction(actionId, `删除生成题 Q${question.id}`, () => deleteAdminAIQuestioningGeneratedQuestion(question.id), { refresh: onRefresh });
   }

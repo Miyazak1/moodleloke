@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, type ReactNode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { AppLoadingState } from './components/AppLoadingState';
+import { ConfirmDialogProvider } from './components/ConfirmDialogProvider';
 import { I18nProvider } from './i18n/I18nProvider';
 import './styles.css';
 
@@ -16,7 +17,7 @@ function AppProviders({ children }: { children: ReactNode }) {
     <React.StrictMode>
       <I18nProvider>
         <BootReady />
-        {children}
+        <ConfirmDialogProvider>{children}</ConfirmDialogProvider>
       </I18nProvider>
     </React.StrictMode>
   );

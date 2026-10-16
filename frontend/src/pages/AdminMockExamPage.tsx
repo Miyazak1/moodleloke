@@ -5,7 +5,7 @@ import { AdminStatsStrip, AdminWorkflowSteps } from '../components/admin/AdminWo
 import { MathContent } from '../components/MathContent';
 import { AdminFormField, GhostButton, InlineActions, StatusPill } from '../components/UiPrimitives';
 import { useI18n } from '../i18n/useI18n';
-import { adminText, selectAdminCopy, usesLatinAdminCopy } from '../lib/admin-locale';
+import { adminText, selectAdminCopy, usesLatinAdminCopy, type AdminCopy } from '../lib/admin-locale';
 import {
   archiveAdminMockExamPaper,
   archiveAdminMockExamQuestion,
@@ -203,7 +203,7 @@ const ADMIN_MOCK_COPY = {
   }
 } as const;
 
-type AdminMockCopy = (typeof ADMIN_MOCK_COPY)[keyof typeof ADMIN_MOCK_COPY];
+type AdminMockCopy = AdminCopy<typeof ADMIN_MOCK_COPY.en>;
 
 function createSampleImport(locale: string) {
   const isEnglish = usesLatinAdminCopy(locale);

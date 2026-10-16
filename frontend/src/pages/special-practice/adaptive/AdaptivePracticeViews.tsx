@@ -3,6 +3,7 @@ import '../../../styles/special-practice.css';
 import { Icon } from '../../../components/Icon';
 import { MathContent } from '../../../components/MathContent';
 import { GhostButton } from '../../../components/UiPrimitives';
+import { useConfirmDialog } from '../../../components/ConfirmDialogProvider';
 import {
   checkAdaptivePracticeAnswer,
   completeAdaptiveConceptCard,
@@ -1194,6 +1195,7 @@ export function AdaptiveRoundView({
   onOpenAgentHelp?: () => void;
   onRoundUnavailable?: () => void;
 }) {
+  const confirmAction = useConfirmDialog();
   const [detail, setDetail] = useState<AdaptiveRoundDetail | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [timeSpent, setTimeSpent] = useState<Record<string, number>>({});
@@ -1625,7 +1627,11 @@ export function AdaptiveRoundView({
     if (!detail || isExiting) return;
     const params = typeof window === 'undefined' ? null : new URLSearchParams(window.location.search);
     const artifactId = params?.get('agentArtifactId');
-    if (artifactId && !window.confirm(adaptiveText(locale, '退出会将这项 Agent 任务标记为已放弃，确定退出吗？', 'Exit and mark this Agent task as abandoned?', 'Thoát và đánh dấu nhiệm vụ Agent này là đã bỏ?'))) return;
+    if (artifactId && !await confirmAction({
+      title: adaptiveText(locale, '退出当前任务？', 'Exit the current task?', 'Thoát nhiệm vụ hiện tại?'),
+      body: adaptiveText(locale, '退出会将这项 Agent 任务标记为已放弃。', 'This Agent task will be marked as abandoned.', 'Nhiệm vụ Agent này sẽ được đánh dấu là đã bỏ.'),
+      tone: 'danger'
+    })) return;
     setIsExiting(true);
     try {
       if (artifactId) {

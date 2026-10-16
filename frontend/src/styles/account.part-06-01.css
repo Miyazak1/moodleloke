@@ -1,0 +1,799 @@
+/* 2026-09-02 Calm Science Lab refresh for public account surfaces. */
+.brand-auth-page,
+.me-page {
+  --account-blue: #315dff;
+  --account-blue-soft: #e9efff;
+  --account-mint: #13c7a3;
+  --account-mint-soft: #dcfbf2;
+  --account-mint-dark: #087c66;
+  --account-lime: #b7ef43;
+  --account-lime-soft: #f0ffd3;
+  --account-coral: #ff715e;
+  --account-coral-soft: #ffe9e4;
+}
+
+.brand-auth-page .auth-form,
+.brand-auth-page .auth-aside,
+.me-profile-card,
+.me-admin-callout,
+.me-email-callout,
+.me-ai-credit-card,
+.me-next-panel,
+.me-section-card,
+.me-settings-panel,
+.me-learning-card,
+.me-readiness-card,
+.me-empty-card,
+.me-wrong-practice-hero {
+  border: 1px solid var(--public-line);
+  border-radius: 12px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .96), rgba(248, 253, 251, .86)),
+    linear-gradient(90deg, rgba(49, 93, 255, .036) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .036) 1px, transparent 1px);
+  background-size: auto, 32px 32px, 32px 32px;
+  box-shadow: 0 18px 46px rgba(32, 35, 55, .07);
+}
+
+.brand-auth-page .auth-layout {
+  gap: 20px;
+}
+
+.brand-auth-page .auth-tabs {
+  border-radius: 10px;
+  background: rgba(233, 239, 255, .72);
+}
+
+.brand-auth-page .auth-tabs button {
+  border-radius: 8px;
+  color: var(--account-blue);
+}
+
+.brand-auth-page .auth-tabs button.active {
+  background: var(--account-blue);
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(49, 93, 255, .18);
+}
+
+.brand-auth-page .auth-form label span,
+.brand-auth-page .auth-aside .page-kicker,
+.me-page .page-kicker {
+  color: var(--account-blue);
+  letter-spacing: 0;
+}
+
+.brand-auth-page .auth-form input,
+.me-settings-section .me-settings-field input,
+.me-settings-section .me-settings-field select {
+  border-color: var(--public-line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .9);
+}
+
+.brand-auth-page .auth-form input:focus,
+.me-settings-section .me-settings-field input:focus,
+.me-settings-section .me-settings-field select:focus {
+  border-color: rgba(49, 93, 255, .42);
+  box-shadow: 0 0 0 4px rgba(49, 93, 255, .1);
+}
+
+.brand-auth-page .google-auth-button,
+.me-page button,
+.me-review-action {
+  border-radius: 8px;
+}
+
+.brand-auth-page .auth-aside {
+  overflow: hidden;
+  position: relative;
+  align-content: start;
+}
+
+.brand-auth-page .auth-aside::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background:
+    linear-gradient(116deg, transparent 0 18%, rgba(183, 239, 67, .22) 18.1% 22.6%, transparent 22.7% 100%),
+    linear-gradient(152deg, transparent 0 70%, rgba(255, 113, 94, .12) 70.1% 73.2%, transparent 73.3% 100%);
+}
+
+.brand-auth-page .auth-aside-copy,
+.brand-auth-page .auth-progress-lab {
+  position: relative;
+}
+
+.brand-auth-page .auth-progress-lab {
+  z-index: 1;
+  display: grid;
+  gap: 10px;
+  margin-top: 22px;
+  padding: 16px;
+  border: 1px solid rgba(49, 93, 255, .16);
+  border-radius: 12px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .86), rgba(220, 251, 242, .58)),
+    linear-gradient(90deg, rgba(49, 93, 255, .05) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .05) 1px, transparent 1px);
+  background-size: auto, 28px 28px, 28px 28px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9);
+}
+
+.brand-auth-page .auth-progress-lab span {
+  --row-color: var(--account-blue);
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  min-height: 42px;
+  padding: 8px 10px;
+  border: 1px solid rgba(49, 93, 255, .12);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .76);
+  color: var(--ink-900);
+  font-weight: 900;
+}
+
+.brand-auth-page .auth-progress-lab span:nth-child(2) {
+  --row-color: var(--account-mint);
+}
+
+.brand-auth-page .auth-progress-lab span:nth-child(3) {
+  --row-color: var(--account-coral);
+}
+
+.brand-auth-page .auth-progress-lab b {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--row-color) 16%, white);
+  color: var(--row-color);
+  font-size: 13px;
+}
+
+.brand-auth-page .auth-progress-lab em {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  align-items: center;
+  min-height: 32px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: var(--account-lime-soft);
+  color: #4f6f08;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 950;
+}
+
+.brand-auth-page .auth-error,
+.me-settings-feedback.danger,
+.admin-inline-danger {
+  border-color: rgba(255, 113, 94, .26);
+  background: var(--account-coral-soft);
+  color: #a43a2f;
+}
+
+.brand-auth-page .auth-success,
+.me-settings-feedback:not(.danger),
+.me-email-callout {
+  border-color: rgba(19, 199, 163, .28);
+  background: linear-gradient(135deg, rgba(220, 251, 242, .72), rgba(255, 255, 255, .92));
+  color: var(--account-mint-dark);
+}
+
+.brand-auth-page .auth-verification-step {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  padding: 16px;
+  border: 1px solid rgba(19, 199, 163, .22);
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(220, 251, 242, .68), rgba(255, 255, 255, .86));
+}
+
+.brand-auth-page .auth-form-verification {
+  align-self: start;
+}
+
+.brand-auth-page .auth-verification-icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--account-mint-dark);
+  font-size: 22px;
+  box-shadow: 0 8px 20px rgba(8, 124, 102, .1);
+}
+
+.brand-auth-page .auth-verification-step small,
+.brand-auth-page .auth-verification-step strong {
+  display: block;
+}
+
+.brand-auth-page .auth-verification-step small {
+  margin-bottom: 3px;
+  color: #67747d;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.brand-auth-page .auth-verification-step strong {
+  overflow-wrap: anywhere;
+  color: var(--ink-900);
+  font-size: 15px;
+}
+
+.brand-auth-page .auth-verification-step p {
+  margin: 8px 0 0;
+  color: #53636c;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.me-workbench-hero,
+.me-login-hero {
+  padding-block: 26px 4px;
+}
+
+.me-learning-profile h1,
+.me-login-hero h1,
+.me-workbench-hero h1 {
+  font-size: clamp(30px, 2.65vw, 42px);
+  line-height: 1.14;
+  text-wrap: balance;
+}
+
+.me-avatar {
+  background: linear-gradient(135deg, var(--account-blue), #3da8ff);
+  box-shadow: 0 14px 28px rgba(49, 93, 255, .18);
+}
+
+.me-profile-status span,
+.me-login-benefits span,
+.me-wrong-dashboard-badges span,
+.me-wrong-detail .me-wrong-tags span,
+.me-review-verify-note {
+  border-color: rgba(19, 199, 163, .24);
+  background: var(--account-mint-soft);
+  color: var(--account-mint-dark);
+}
+
+.me-summary-grid button.active,
+.me-summary-strip button.active,
+.me-review-action.primary,
+.me-mock-start,
+.me-settings-section .me-settings-actions button:not(.secondary),
+.me-empty-card button {
+  border-color: var(--account-blue);
+  background: var(--account-blue);
+  color: #fff;
+  box-shadow: 0 12px 24px rgba(49, 93, 255, .18);
+}
+
+.me-summary-grid button,
+.me-summary-strip button,
+.me-settings-section .me-settings-actions button.secondary,
+.me-password-toggle button,
+.me-review-action {
+  border-color: var(--public-line);
+  background: rgba(255, 255, 255, .88);
+  color: var(--account-blue);
+}
+
+.me-learning-subject-grid button:nth-child(3n + 1) {
+  --subject-accent: var(--account-blue);
+  --subject-soft: var(--account-blue-soft);
+}
+
+.me-learning-subject-grid button:nth-child(3n + 2) {
+  --subject-accent: var(--account-mint);
+  --subject-soft: var(--account-mint-soft);
+}
+
+.me-learning-subject-grid button:nth-child(3n) {
+  --subject-accent: var(--account-coral);
+  --subject-soft: var(--account-coral-soft);
+}
+
+.me-learning-subject-grid button {
+  border-radius: 12px;
+  border-color: color-mix(in srgb, var(--subject-accent) 24%, white);
+  background: linear-gradient(135deg, var(--subject-soft), rgba(255, 255, 255, .9));
+}
+
+.me-readiness-score,
+.me-ai-credit-balance {
+  border-color: rgba(49, 93, 255, .16);
+  background: radial-gradient(circle at 50% 42%, #fff 0 34%, rgba(233, 239, 255, .86) 35% 100%);
+  color: var(--account-blue);
+}
+
+.me-readiness-bar i,
+.me-mastery-bar span,
+.me-learning-trend .glow,
+.me-calendar-heatmap .level-3,
+.me-calendar-heatmap .level-4,
+.me-aggregate-heatmap .level-3,
+.me-aggregate-heatmap .level-4 {
+  background: linear-gradient(90deg, var(--account-blue), var(--account-mint));
+}
+
+@media (max-width: 640px) {
+  .me-learning-profile h1,
+  .me-login-hero h1,
+  .me-workbench-hero h1 {
+    font-size: clamp(28px, 8vw, 34px);
+  }
+}
+
+/* 2026-09-03 account workbench polish: align /me with subject-learning width and finish settings panels. */
+.site-main-public > .brand-page.me-page {
+  width: min(1180px, calc(100vw - 56px));
+  gap: clamp(20px, 2.4vw, 32px);
+  padding-top: clamp(30px, 4vw, 54px);
+}
+
+.me-page {
+  --account-card: rgba(255, 255, 255, .9);
+  --account-card-strong: rgba(255, 255, 255, .96);
+  --account-hairline: #bfd6cc;
+  --account-panel-shadow: 0 22px 54px rgba(32, 35, 55, .075);
+  background: transparent;
+}
+
+.me-page.brand-work-page {
+  background: transparent;
+}
+
+.me-page .page-hero {
+  border-bottom: 0;
+}
+
+.me-page .me-workbench-hero {
+  padding: 0;
+}
+
+.me-page .me-learning-profile,
+.me-page .me-email-callout,
+.me-page .me-admin-callout,
+.me-page .me-ai-credit-card,
+.me-page .me-section-card,
+.me-page .me-settings-section {
+  border: 1px solid var(--account-border);
+  border-radius: 14px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .96), rgba(248, 253, 251, .88)),
+    linear-gradient(90deg, rgba(49, 93, 255, .035) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .035) 1px, transparent 1px);
+  background-size: auto, 32px 32px, 32px 32px;
+  box-shadow: var(--account-panel-shadow);
+}
+
+.me-page .me-learning-profile {
+  padding: 20px;
+}
+
+.me-page .me-section-card,
+.me-page .me-settings-section {
+  gap: 22px;
+  padding: 24px;
+  border-top: 1px solid var(--account-border);
+  scroll-margin-top: 144px;
+}
+
+.me-page .me-section-head {
+  align-items: center;
+  gap: 18px;
+  min-height: 48px;
+  padding: 0 0 18px;
+  border-bottom: 1px solid rgba(49, 93, 255, .13);
+}
+
+.me-page .me-section-head h2 {
+  margin-top: 5px;
+  font-size: clamp(22px, 1.7vw, 28px);
+  line-height: 1.18;
+}
+
+.me-page .me-section-head .ghost {
+  align-self: center;
+  min-width: 118px;
+}
+
+.me-page .me-settings-section .me-settings-panel {
+  --panel-accent: var(--account-accent);
+  position: relative;
+  overflow: hidden;
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid color-mix(in srgb, var(--panel-accent) 18%, var(--account-hairline));
+  border-radius: 12px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--panel-accent) 5%, white), rgba(255, 255, 255, .95)),
+    linear-gradient(90deg, rgba(49, 93, 255, .024) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .024) 1px, transparent 1px);
+  background-size: auto, 28px 28px, 28px 28px;
+  box-shadow: 0 14px 34px rgba(32, 35, 55, .045);
+}
+
+.me-page .me-settings-section .me-settings-panel::before {
+  content: none;
+  display: none;
+}
+
+.me-page .me-settings-section .account-panel {
+  --panel-accent: var(--account-blue);
+}
+
+.me-page .me-settings-section .profile-panel {
+  --panel-accent: var(--account-mint);
+}
+
+.me-page .me-settings-section .organization-panel {
+  --panel-accent: var(--account-lime);
+}
+
+.me-page .me-settings-section .security-panel {
+  --panel-accent: var(--account-coral);
+}
+
+.me-page .me-settings-panel-head {
+  position: relative;
+  z-index: 1;
+  align-items: start;
+}
+
+.me-page .me-settings-panel-head span,
+.me-page .me-settings-row span,
+.me-page .me-settings-field span {
+  color: color-mix(in srgb, var(--panel-accent, var(--account-accent)) 82%, #202337);
+  font-weight: 900;
+}
+
+.me-page .me-settings-panel-head strong {
+  font-size: 18px;
+}
+
+.me-page .me-settings-panel-head p {
+  max-width: min(680px, 100%);
+  font-size: 14px;
+}
+
+.me-page .me-settings-section .me-settings-grid {
+  position: relative;
+  z-index: 1;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.me-page .me-settings-section .me-settings-row,
+.me-page .me-settings-section .me-settings-field {
+  min-height: 96px;
+  padding: 14px;
+  border: 1px solid rgba(191, 214, 204, .72);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .82);
+}
+
+.me-page .me-settings-section .account-panel .me-settings-row {
+  grid-column: span 4;
+}
+
+.me-page .me-settings-section .account-panel .me-settings-field {
+  grid-column: span 8;
+}
+
+.me-page .me-settings-section .profile-panel .me-settings-field {
+  grid-column: span 4;
+}
+
+.me-page .me-settings-section .organization-panel .me-settings-field,
+.me-page .me-settings-section .organization-panel .me-settings-invite-box {
+  grid-column: span 5;
+}
+
+.me-page .me-settings-section .organization-panel .me-settings-actions {
+  grid-column: span 2;
+  align-self: stretch;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: end;
+}
+
+.me-page .me-settings-section .account-panel .me-settings-actions,
+.me-page .me-settings-section .profile-panel .me-settings-actions {
+  grid-column: 1 / -1;
+}
+
+.me-page .me-settings-section .me-settings-actions {
+  position: relative;
+  z-index: 1;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.me-page .me-settings-section .me-settings-actions button,
+.me-page .me-settings-section .me-password-toggle b,
+.me-page .me-settings-section .me-password-toggle button {
+  min-height: 42px;
+  border-radius: 8px;
+  font-weight: 900;
+}
+
+.me-page .me-settings-section .me-settings-actions button:not(.secondary),
+.me-page .me-settings-section .me-password-toggle b {
+  border-color: var(--account-blue);
+  background: var(--account-blue);
+  color: #fff;
+  box-shadow: 0 12px 24px rgba(49, 93, 255, .16);
+}
+
+.me-page .me-settings-section .me-settings-actions button.secondary,
+.me-page .me-settings-section .me-password-toggle button {
+  border-color: rgba(49, 93, 255, .2);
+  background: rgba(255, 255, 255, .88);
+  color: var(--account-blue);
+}
+
+.me-page .me-settings-section .me-settings-field input,
+.me-page .me-settings-section .me-settings-field select {
+  min-height: 42px;
+  border-color: rgba(191, 214, 204, .9);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .96), rgba(248, 253, 251, .9));
+  color: var(--account-ink);
+  font-weight: 650;
+}
+
+.me-page .me-settings-section .me-settings-field select {
+  background:
+    linear-gradient(45deg, transparent 50%, var(--account-muted) 50%) calc(100% - 19px) 50% / 6px 6px no-repeat,
+    linear-gradient(135deg, var(--account-muted) 50%, transparent 50%) calc(100% - 13px) 50% / 6px 6px no-repeat,
+    linear-gradient(135deg, rgba(255, 255, 255, .96), rgba(248, 253, 251, .9));
+}
+
+.me-page .me-settings-section .me-settings-field input:focus,
+.me-page .me-settings-section .me-settings-field select:focus {
+  border-color: var(--account-blue);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(49, 93, 255, .1);
+}
+
+.me-page .me-settings-section .me-settings-feedback {
+  position: relative;
+  z-index: 1;
+  grid-column: 1 / -1;
+  padding: 12px 14px;
+  border: 1px solid rgba(19, 199, 163, .22);
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(220, 251, 242, .72), rgba(255, 255, 255, .92));
+}
+
+.me-page .me-settings-section .me-settings-feedback.danger {
+  border-color: rgba(255, 113, 94, .24);
+  background: var(--account-coral-soft);
+}
+
+.me-page .me-settings-section .security-panel {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+
+.me-page .me-settings-section .security-panel .me-settings-panel-head,
+.me-page .me-settings-section .security-panel .me-settings-feedback {
+  grid-column: 1 / -1;
+}
+
+.me-page .me-settings-section .security-panel .me-password-panel {
+  position: relative;
+  z-index: 1;
+  min-height: 112px;
+  padding: 14px;
+  border: 1px solid rgba(191, 214, 204, .72);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .82);
+}
+
+.me-page .me-settings-section .me-password-toggle {
+  gap: 14px;
+  padding: 0;
+}
+
+.me-page .me-settings-section .me-password-toggle:hover {
+  background: transparent;
+}
+
+.me-page .me-settings-section .me-password-toggle strong {
+  font-size: 17px;
+}
+
+.me-page .me-settings-section .me-password-fields {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding-top: 14px;
+}
+
+.me-page .me-settings-section .me-password-fields .me-settings-field {
+  min-height: 0;
+}
+
+.me-page .me-settings-section .me-password-fields .me-settings-actions {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 980px) {
+  .site-main-public > .brand-page.me-page {
+    width: min(100%, calc(100vw - 32px));
+  }
+
+  .me-page .me-settings-section .account-panel .me-settings-row,
+  .me-page .me-settings-section .account-panel .me-settings-field,
+  .me-page .me-settings-section .profile-panel .me-settings-field,
+  .me-page .me-settings-section .organization-panel .me-settings-field,
+  .me-page .me-settings-section .organization-panel .me-settings-invite-box,
+  .me-page .me-settings-section .organization-panel .me-settings-actions,
+  .me-page .me-settings-section .security-panel .me-password-panel {
+    grid-column: 1 / -1;
+  }
+
+  .me-page .me-settings-section .security-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .me-page .me-settings-section .organization-panel .me-settings-actions {
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 640px) {
+  .site-main-public > .brand-page.me-page {
+    width: min(100%, calc(100vw - 24px));
+  }
+
+  .me-page .me-section-card,
+  .me-page .me-settings-section {
+    padding: 16px;
+  }
+
+  .me-page .me-settings-section .me-settings-panel {
+    padding: 16px;
+  }
+
+  .me-page .me-section-head,
+  .me-page .me-settings-panel-head,
+  .me-page .me-settings-section .me-password-toggle {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .me-page .me-section-head .ghost,
+  .me-page .me-settings-section .organization-panel .me-settings-actions,
+  .me-page .me-settings-section .me-settings-actions,
+  .me-page .me-settings-section .me-settings-actions button,
+  .me-page .me-settings-section .me-password-toggle b,
+  .me-page .me-settings-section .me-password-toggle button {
+    width: 100%;
+  }
+
+  .me-page .me-settings-section .organization-panel .me-settings-actions {
+    flex-direction: column;
+  }
+}
+
+/* 2026-09-03 practice + mistake review pass: replace flat legacy lists with subject-aware study surfaces. */
+.me-page .me-review-hub,
+.me-page #me-practice.me-section-card {
+  --review-blue: var(--account-blue);
+  --review-mint: var(--account-mint);
+  --review-lime: var(--account-lime);
+  --review-coral: var(--account-coral);
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(49, 93, 255, .18);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .97), rgba(244, 252, 250, .9)),
+    linear-gradient(90deg, rgba(49, 93, 255, .03) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .03) 1px, transparent 1px);
+  background-size: auto, 30px 30px, 30px 30px;
+}
+
+.me-page .me-review-hub::before,
+.me-page #me-practice.me-section-card::before {
+  content: none;
+  display: none;
+}
+
+.me-page .me-review-hub > *,
+.me-page #me-practice.me-section-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.me-page .me-review-hub-head {
+  align-items: center;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(49, 93, 255, .12);
+}
+
+.me-page .me-review-hub-head strong {
+  font-size: clamp(22px, 1.75vw, 28px);
+  line-height: 1.12;
+}
+
+.me-page .me-review-hub-head p {
+  max-width: 760px;
+  color: var(--account-muted);
+  font-weight: 700;
+}
+
+.me-page .me-review-hub-actions button,
+.me-page .me-review-action,
+.me-page .me-review-queue-actions button {
+  min-height: 40px;
+  border-radius: 8px;
+  border-color: rgba(49, 93, 255, .18);
+  background: rgba(255, 255, 255, .92);
+  color: var(--account-blue);
+  box-shadow: 0 10px 24px rgba(32, 35, 55, .05);
+}
+
+.me-page .me-review-hub-actions button:first-child,
+.me-page .me-review-action.primary,
+.me-page .me-review-queue-actions button:last-child {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--account-blue), var(--account-mint));
+  color: #fff;
+  box-shadow: 0 16px 30px rgba(49, 93, 255, .18);
+}
+
+.me-page .me-review-hub-actions button:hover,
+.me-page .me-review-action:hover,
+.me-page .me-review-queue-actions button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(19, 199, 163, .32);
+  background: var(--account-mint-soft);
+  color: var(--account-mint-dark);
+}
+
+.me-page .me-review-action.primary:hover,
+.me-page .me-review-queue-actions button:last-child:hover,
+.me-page .me-review-hub-actions button:first-child:hover {
+  background: linear-gradient(135deg, #254cf4, #10b997);
+  color: #fff;
+}
+
+.me-page .me-review-hub-stats {
+  gap: 12px;
+}
+
+.me-page .me-review-hub-stats div {
+  min-height: 82px;
+  padding: 16px;
+  border-radius: 10px;
+  border-color: rgba(49, 93, 255, .16);
+  background:
+    linear-gradient(135deg, rgba(233, 239, 255, .78), rgba(255, 255, 255, .94));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .86);
+}
+
+.me-page .me-review-hub-stats div:nth-child(2) {
+  border-color: rgba(19, 199, 163, .18);
+  background: linear-gradient(135deg, rgba(220, 251, 242, .76), rgba(255, 255, 255, .94));
+}
+
+.me-page .me-review-hub-stats div:nth-child(3) {
+  border-color: rgba(183, 239, 67, .34);
+  background: linear-gradient(135deg, rgba(240, 255, 211, .78), rgba(255, 255, 255, .94));
+}
+
+.me-page .me-review-hub-stats strong {
+  color: var(--account-blue);
+  font-size: 30px;
+}

@@ -1,0 +1,734 @@
+@keyframes homeVectorResolve {
+  0%,
+  100% {
+    stroke-dashoffset: 74;
+    opacity: .38;
+  }
+  45%,
+  70% {
+    stroke-dashoffset: 0;
+    opacity: .9;
+  }
+}
+
+@keyframes homeTraceFlow {
+  to {
+    stroke-dashoffset: -160;
+  }
+}
+
+@keyframes homeBondPulse {
+  0%,
+  100% {
+    opacity: .18;
+    transform: scale(.86);
+  }
+  50% {
+    opacity: .62;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes homePathSweep {
+  0% {
+    opacity: 0;
+    transform: translateX(-115%);
+  }
+  18%,
+  62% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(115%);
+  }
+}
+
+@keyframes homeSubjectSignSweep {
+  0% {
+    transform: translateX(-20%) rotate(18deg);
+  }
+  100% {
+    transform: translateX(260%) rotate(18deg);
+  }
+}
+
+@keyframes homeRouteCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes homeRouteSheen {
+  from {
+    transform: translateX(-72%);
+  }
+
+  to {
+    transform: translateX(72%);
+  }
+}
+
+@keyframes homeExamSurfaceSweep {
+  0% {
+    background-position:
+      top left,
+      -120% 0;
+    opacity: .52;
+  }
+  100% {
+    background-position:
+      top left,
+      180% 0;
+    opacity: .78;
+  }
+}
+
+@keyframes homeChoiceIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes homeRailCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes homeWaveMove {
+  0%,
+  100% {
+    transform: translateX(-8px);
+  }
+  50% {
+    transform: translateX(12px);
+  }
+}
+
+@keyframes homeForceBreathe {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes homeSpinOrbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes homeFooterFloat {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-page *,
+  .home-page *::before,
+  .home-page *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+@media (max-width: 1180px) {
+  .home-page {
+    --home-width: min(100%, calc(100vw - 40px));
+  }
+
+  .home-csca-intro-grid,
+  .home-hero-grid,
+  .home-section-head,
+  .home-practice-board {
+    grid-template-columns: 1fr;
+  }
+
+  .home-csca-intro-copy {
+    max-width: 820px;
+  }
+
+  .home-csca-facts {
+    width: 100%;
+    max-width: 920px;
+  }
+
+  .home-csca-lead-grid,
+  .home-csca-subject-board > header,
+  .home-csca-logistics,
+  .home-csca-main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-csca-schedule-panel {
+    grid-template-columns: minmax(0, .8fr) minmax(0, .9fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: center;
+  }
+
+  .home-csca-schedule-panel .home-csca-next-window {
+    padding: 0 24px 0 0;
+    border-right: 1px solid var(--home-line);
+    border-bottom: 0;
+  }
+
+  .home-csca-schedule-panel .home-csca-logistics-facts {
+    padding: 0 24px 0 0;
+    border-right: 1px solid var(--home-line);
+    border-bottom: 0;
+  }
+
+  .home-csca-schedule-panel .home-csca-actions {
+    padding-top: 0;
+  }
+
+  .home-csca-definition,
+  .home-csca-lead-grid .home-csca-next-window {
+    min-height: 0;
+  }
+
+  .home-csca-actions,
+  .home-csca-actions .home-csca-source-note {
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .home-csca-logistics .home-csca-next-window {
+    padding: 0 0 22px;
+    border-right: 0;
+    border-bottom: 1px solid var(--home-line);
+  }
+
+  .home-hero-copy {
+    max-width: 820px;
+  }
+
+  .home-hero h1 {
+    max-width: 13ch;
+  }
+
+  .home-hero-stage {
+    max-width: 880px;
+    width: 100%;
+    min-height: 650px;
+  }
+
+  .home-route-wrap {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .home-route-card.major,
+  .home-route-card.tall {
+    min-height: 250px;
+    grid-row: span 1;
+  }
+
+  .home-lane {
+    grid-template-columns: 188px minmax(0, 1fr);
+  }
+
+  .home-lane-mini {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+
+  .home-path-canvas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .home-path-canvas::before {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .home-page {
+    --home-width: min(100%, calc(100vw - 28px));
+  }
+
+  .home-page [data-animate="slide-right"],
+  .home-page [data-animate="slide-left"] {
+    transform: translateY(18px);
+  }
+
+  .home-csca-intro {
+    min-height: auto;
+    padding: 48px 0 54px;
+  }
+
+  .home-csca-intro-head {
+    margin-bottom: 32px;
+  }
+
+  .home-csca-intro-head h1 {
+    font-size: clamp(30px, 8.7vw, 36px);
+  }
+
+  .home-csca-intro-head h1 > span:first-child {
+    white-space: nowrap;
+  }
+
+  .home-csca-intro-head .home-accent-line::after {
+    display: none;
+  }
+
+  .home-csca-intro-head > p {
+    font-size: 15px;
+  }
+
+  .home-csca-explainer {
+    padding: 0;
+    border-radius: 0;
+  }
+
+  .home-csca-intro-grid {
+    gap: 38px;
+  }
+
+  .home-csca-intro-copy h1 {
+    margin-top: 16px;
+    font-size: clamp(34px, 10.6vw, 48px);
+  }
+
+  .home-csca-source-note {
+    align-items: flex-start;
+  }
+
+  .home-csca-facts {
+    border-radius: 18px;
+  }
+
+  .home-csca-definition {
+    padding: 0;
+  }
+
+  .home-csca-definition h2 {
+    font-size: 29px;
+  }
+
+  .home-csca-lead-grid .home-csca-next-window {
+    padding: 28px 22px;
+  }
+
+  .home-csca-summary-grid,
+  .home-csca-subject-grid,
+  .home-csca-logistics-facts {
+    grid-template-columns: 1fr;
+  }
+
+  .home-csca-summary-grid {
+    gap: 1px;
+  }
+
+  .home-csca-summary-grid article {
+    padding: 22px 18px;
+  }
+
+  .home-csca-subject-board {
+    padding: 26px 16px;
+  }
+
+  .home-csca-subject-board > header {
+    gap: 15px;
+  }
+
+  .home-csca-main-grid .home-csca-subject-grid article {
+    grid-template-columns: 28px 42px minmax(0, 1fr);
+    padding: 18px 14px;
+  }
+
+  .home-csca-subject-grid article > b {
+    width: 42px;
+    height: 42px;
+  }
+
+  .home-csca-main-grid .home-csca-subject-grid em {
+    grid-column: 3;
+    justify-self: start;
+    white-space: normal;
+  }
+
+  .home-csca-main-grid .home-csca-subject-grid article:not(:last-child)::after {
+    left: 76px;
+  }
+
+  .home-csca-schedule-panel {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 22px 18px;
+  }
+
+  .home-csca-schedule-panel .home-csca-next-window {
+    padding: 0 0 22px;
+    border-right: 0;
+    border-bottom: 1px solid var(--home-line);
+  }
+
+  .home-csca-schedule-panel .home-csca-logistics-facts {
+    padding: 22px 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--home-line);
+  }
+
+  .home-csca-schedule-panel .home-csca-actions {
+    padding-top: 20px;
+  }
+
+  .home-csca-logistics {
+    padding: 24px 10px 10px;
+  }
+
+  .home-csca-logistics-facts {
+    gap: 18px;
+  }
+
+  .home-csca-next-window {
+    padding: 24px 20px 22px;
+  }
+
+  .home-csca-fact-grid,
+  .home-csca-subject-line > div {
+    grid-template-columns: 1fr;
+  }
+
+  .home-csca-fact-grid > div {
+    min-height: 0;
+    padding: 19px 20px;
+  }
+
+  .home-csca-subject-line {
+    padding: 22px 20px 24px;
+  }
+
+  .home-csca-bridge {
+    align-items: flex-start;
+  }
+
+  .home-csca-bridge i {
+    margin-top: 9px;
+  }
+
+  .home-hero,
+  .home-hero.home-hero-prep {
+    padding-top: 44px;
+  }
+
+  .home-hero h1 {
+    font-size: clamp(32px, 9.6vw, 44px);
+  }
+
+  .home-button,
+  .home-footer-cta .home-button {
+    width: 100%;
+  }
+
+  .home-micro-proof,
+  .home-route-wrap,
+  .home-subject-switcher,
+  .home-choices,
+  .home-question-body,
+  .home-path-canvas {
+    grid-template-columns: 1fr;
+  }
+
+  .home-kinetic-canvas {
+    inset: 0 0 154px;
+    min-height: 0;
+    transform: none;
+  }
+
+  .home-subject-visual {
+    inset: 96px 14px 190px;
+  }
+
+  .home-subject-switcher {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+  }
+
+  .home-hero-stage {
+    width: 100%;
+    max-width: 100%;
+    min-height: 0;
+  }
+
+  .home-floating-note.note-a,
+  .home-floating-note.note-b,
+  .home-sim-panel {
+    left: 16px;
+    right: 16px;
+    width: auto;
+  }
+
+  .home-sim-panel {
+    top: auto;
+    bottom: 22px;
+    transform: none;
+  }
+
+  .home-kinetic-canvas {
+    position: relative;
+    inset: auto;
+    height: 560px;
+    min-height: 0;
+    transform: none;
+  }
+
+  .home-floating-note.note-a {
+    left: auto;
+    right: 14px;
+    top: 14px;
+    bottom: auto;
+    width: 168px;
+  }
+
+  .home-floating-note.note-b {
+    display: none;
+  }
+
+  .home-section {
+    padding: 72px 0;
+  }
+
+  .home-section-head h2,
+  .home-footer-cta h2 {
+    font-size: clamp(24px, 7vw, 34px);
+  }
+
+  .home-workflow-tabs {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .home-workflow-tab {
+    flex: 1 0 max-content;
+  }
+
+  .home-question-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .home-lane {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    padding: 38px 0;
+  }
+
+  .home-lane-sign {
+    width: min(164px, 68vw);
+  }
+
+  .home-lane-mini {
+    grid-column: auto;
+    justify-content: flex-start;
+  }
+
+  .home-footer-cta {
+    padding-bottom: 84px;
+  }
+
+  .home-footer-cta-inner {
+    min-height: 460px;
+    padding-top: 54px;
+  }
+
+  .home-footer-floater.card {
+    display: none;
+  }
+
+  .home-footer-floater.one {
+    left: 2%;
+    top: 20%;
+  }
+
+  .home-footer-floater.two {
+    right: 3%;
+    top: 18%;
+  }
+}
+
+/* CSCAPilot public shell: keep the inherited CSCALITE home visual while exposing only CSCA training entry points. */
+.public-home-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: color-mix(in srgb, #fff 92%, transparent);
+  backdrop-filter: blur(18px);
+}
+
+.public-home-footer {
+  border-top: 1px solid rgba(49, 93, 255, .12);
+  background:
+    linear-gradient(90deg, rgba(49, 93, 255, .035) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .035) 1px, transparent 1px),
+    #f7faf8;
+  background-size: 32px 32px, 32px 32px, auto;
+}
+
+.public-home-footer-inner,
+.public-home-footer-note {
+  width: min(1580px, calc(100vw - 64px));
+  margin-inline: auto;
+}
+
+.public-home-footer-inner {
+  display: grid;
+  min-height: 220px;
+  padding-block: 38px;
+  align-items: start;
+  grid-template-columns: minmax(260px, 1.35fr) repeat(3, minmax(150px, .75fr));
+  gap: clamp(28px, 4vw, 72px);
+}
+
+.public-home-footer-brand {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 13px;
+  padding-right: clamp(0px, 3vw, 46px);
+}
+
+.public-home-footer-brand > span:last-child {
+  display: grid;
+  gap: 5px;
+}
+
+.public-home-footer-brand strong {
+  color: #20283a;
+  font-size: 20px;
+}
+
+.public-home-footer-brand small,
+.public-home-footer-note {
+  color: #5e6b7d;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.public-home-footer-column {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: 11px;
+}
+
+.public-home-footer-column > strong {
+  margin-bottom: 3px;
+  color: #778397;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.public-home-footer-column button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #263247;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.55;
+  cursor: pointer;
+}
+
+.public-home-footer-column button svg {
+  width: 14px;
+  height: 14px;
+}
+
+.public-home-footer-column button:hover,
+.public-home-footer-column button:focus-visible {
+  color: #315dff;
+}
+
+.public-home-footer-column small,
+.public-home-footer-column > span {
+  color: #68758a;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.public-home-footer-product small {
+  max-width: 21ch;
+}
+
+.public-home-footer-note {
+  display: flex;
+  min-height: 52px;
+  padding-block: 14px;
+  border-top: 1px solid rgba(49, 93, 255, .1);
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.public-home-footer-ai {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #33425a;
+  font-weight: 750;
+}
+
+.public-home-footer-ai svg {
+  width: 15px;
+  height: 15px;
+  color: #315dff;
+}
+
+@media (max-width: 1180px) {
+  .public-home-footer-inner,
+  .public-home-footer-note { width: min(100%, calc(100vw - 40px)); }
+  .public-home-footer-inner { grid-template-columns: minmax(240px, 1.2fr) repeat(3, minmax(130px, .75fr)); gap: 28px; }
+}
+
+@media (max-width: 760px) {
+  .public-home-header .site-nav { display: none; }
+  .public-home-header .site-header-inner { padding-inline: 14px; }
+  .public-home-header .site-brand strong { font-size: 13px; }
+  .public-home-footer-inner,
+  .public-home-footer-note { width: min(100%, calc(100vw - 28px)); }
+  .public-home-footer-inner { min-height: 0; padding-block: 28px; align-items: flex-start; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 20px; }
+  .public-home-footer-brand { grid-column: 1 / -1; padding-right: 0; }
+  .public-home-footer-note { align-items: flex-start; flex-direction: column; gap: 4px; }
+}
+
+@media (max-width: 480px) {
+  .public-home-footer-inner { grid-template-columns: 1fr; }
+  .public-home-footer-brand { grid-column: auto; }
+}

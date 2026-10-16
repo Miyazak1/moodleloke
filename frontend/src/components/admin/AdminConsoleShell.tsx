@@ -145,7 +145,8 @@ export function AdminConsoleShell({
   const accountTopbarLabel = isOrganizationMode ? orgShellText('loginAccount', '登录账号') : copy.account;
   const statusLabel = isOrganizationMode ? orgShellText('status', '状态') : copy.status;
 
-  const adminGroups = [
+  type ConsoleNavGroup = { label: string; badge?: string; items: Array<{ key: AdminSectionKey; label: string; onClick: () => void }> };
+  const adminGroups: ConsoleNavGroup[] = [
     {
       label: copy.overviewGroup,
       items: [
@@ -182,15 +183,15 @@ export function AdminConsoleShell({
         { key: 'aiQuestionBank', label: copy.aiQuestionBank, onClick: () => navigateTo(routes.adminAIQuestionBank, locale) }
       ]
     }
-  ] as Array<{ label: string; badge?: string; items: Array<{ key: AdminSectionKey; label: string; onClick: () => void }> }>;
-  const organizationGroups = [
+  ];
+  const organizationGroups: ConsoleNavGroup[] = [
     {
       label: orgShellText('workspaceGroup', '机构工作区'),
       items: [
         { key: 'organizations' as const, label: orgShellText('teamNav', '机构团队'), onClick: onGoToOrganizations ?? (() => navigateTo(routes.organization, locale)) }
       ]
     }
-  ] as Array<{ label: string; items: Array<{ key: AdminSectionKey; label: string; onClick: () => void }> }>;
+  ];
   const openAuthoringWorkspace = (workspace: 'questions' | 'teaching-assets') => {
     const url = new URL(window.location.href);
     url.pathname = '/authoring.html';
@@ -198,7 +199,7 @@ export function AdminConsoleShell({
     window.history.pushState({}, '', url);
     window.dispatchEvent(new PopStateEvent('popstate'));
   };
-  const authoringGroups = [{
+  const authoringGroups: ConsoleNavGroup[] = [{
     label: '内容生产',
     items: [
       { key: 'aiQuestionBank' as const, label: '题目生产与审核', onClick: () => openAuthoringWorkspace('questions') },

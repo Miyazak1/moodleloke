@@ -1,0 +1,799 @@
+.me-page .me-review-hub-stats div:nth-child(2) strong {
+  color: var(--account-mint-dark);
+}
+
+.me-page .me-review-hub-stats div:nth-child(3) strong {
+  color: #5f7f08;
+}
+
+.me-page .me-review-queue-list {
+  gap: 12px;
+}
+
+.me-page .me-review-queue-list article,
+.me-page .me-wrong-pattern-grid article,
+.me-page .me-practice-list article,
+.me-page .me-wrong-list article {
+  --row-accent: var(--account-blue);
+  --row-soft: var(--account-blue-soft);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--row-accent) 18%, var(--account-hairline));
+  border-radius: 10px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--row-soft) 72%, white), rgba(255, 255, 255, .96));
+  box-shadow: 0 12px 28px rgba(32, 35, 55, .045);
+}
+
+.me-page .me-review-queue-list article::before,
+.me-page .me-wrong-pattern-grid article::before,
+.me-page .me-practice-list article::before,
+.me-page .me-wrong-list article::before {
+  content: none;
+  display: none;
+}
+
+.me-page .subject-math {
+  --row-accent: var(--account-blue);
+  --row-soft: var(--account-blue-soft);
+}
+
+.me-page .subject-physics {
+  --row-accent: var(--account-mint);
+  --row-soft: var(--account-mint-soft);
+}
+
+.me-page .subject-chemistry {
+  --row-accent: var(--account-coral);
+  --row-soft: var(--account-coral-soft);
+}
+
+.me-page .me-review-queue-list article {
+  min-height: 108px;
+  padding: 18px 18px 18px 22px;
+}
+
+.me-page .me-review-queue-list span,
+.me-page .me-wrong-pattern-grid span,
+.me-page .me-wrong-summary > span {
+  color: color-mix(in srgb, var(--row-accent, var(--account-blue)) 78%, #111827);
+  font-weight: 950;
+}
+
+.me-page .me-review-queue-list strong,
+.me-page .me-wrong-pattern-grid strong,
+.me-page .me-practice-list strong,
+.me-page .me-wrong-summary > strong {
+  color: var(--account-ink);
+}
+
+.me-page .me-review-verify-note,
+.me-page .me-wrong-summary > em {
+  border: 1px solid color-mix(in srgb, var(--row-accent, var(--account-mint)) 24%, white);
+  background: color-mix(in srgb, var(--row-soft, var(--account-mint-soft)) 84%, white);
+  color: color-mix(in srgb, var(--row-accent, var(--account-mint)) 76%, #202337);
+}
+
+.me-page .me-section-head {
+  border-bottom-color: rgba(49, 93, 255, .12);
+}
+
+.me-page #me-practice .me-section-head h2 {
+  font-size: clamp(22px, 1.7vw, 28px);
+}
+
+.me-page #me-practice .me-section-head .inline-actions {
+  gap: 10px;
+}
+
+.me-page #me-practice .me-section-head .ghost,
+.me-page .me-wrong-actions .ghost,
+.me-page .me-wrong-empty .ghost,
+.me-page .me-wrong-filters .ghost {
+  min-height: 40px;
+  border-radius: 8px;
+  border-color: rgba(49, 93, 255, .18);
+  background: rgba(255, 255, 255, .92);
+  color: var(--account-blue);
+  box-shadow: 0 8px 18px rgba(32, 35, 55, .04);
+}
+
+.me-page #me-practice .me-section-head .ghost:hover,
+.me-page .me-wrong-actions .ghost:hover,
+.me-page .me-wrong-empty .ghost:hover,
+.me-page .me-wrong-filters .ghost:hover {
+  background: var(--account-blue-soft);
+  border-color: rgba(49, 93, 255, .34);
+}
+
+.me-page .me-wrong-practice-hero {
+  align-items: center;
+  gap: 18px;
+  padding: 22px;
+  border-color: rgba(19, 199, 163, .24);
+  border-radius: 12px;
+  background:
+    linear-gradient(135deg, rgba(220, 251, 242, .72), rgba(233, 239, 255, .54) 58%, rgba(255, 255, 255, .94)),
+    linear-gradient(90deg, rgba(49, 93, 255, .035) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .035) 1px, transparent 1px);
+  background-size: auto, 28px 28px, 28px 28px;
+}
+
+.me-page .me-wrong-practice-hero h3 {
+  font-size: clamp(18px, 1.5vw, 23px);
+}
+
+.me-page .me-wrong-practice-hero p {
+  max-width: 720px;
+}
+
+.me-page .me-wrong-practice-hero dl {
+  gap: 10px;
+}
+
+.me-page .me-wrong-practice-hero dl div {
+  min-width: 92px;
+  min-height: 76px;
+  padding: 13px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .88);
+}
+
+.me-page .me-wrong-practice-hero dl div:nth-child(2) {
+  background: var(--account-lime-soft);
+}
+
+.me-page .me-wrong-practice-hero dl div:nth-child(3) {
+  background: var(--account-blue-soft);
+}
+
+.me-page .me-wrong-practice-hero button {
+  min-height: 44px;
+  border-radius: 8px;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--account-blue), var(--account-mint));
+  color: #fff;
+  box-shadow: 0 16px 30px rgba(49, 93, 255, .18);
+}
+
+.me-page .me-subsection-head {
+  padding-top: 8px;
+  border-top: 1px solid rgba(49, 93, 255, .1);
+}
+
+.me-page .me-subsection-head strong {
+  font-size: 18px;
+}
+
+.me-page .me-practice-list {
+  gap: 10px;
+}
+
+.me-page .me-practice-list article {
+  min-height: 72px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  padding: 14px 14px 14px 18px;
+}
+
+.me-page .me-practice-list span {
+  position: relative;
+  border-color: color-mix(in srgb, var(--row-accent, var(--account-blue)) 26%, white);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--row-soft, var(--account-blue-soft)) 88%, white);
+  color: color-mix(in srgb, var(--row-accent, var(--account-blue)) 82%, #202337);
+}
+
+.me-page .me-practice-list p {
+  color: var(--account-muted);
+}
+
+.me-page .me-practice-list .ghost {
+  min-height: 38px;
+  border-radius: 8px;
+  border-color: rgba(49, 93, 255, .18);
+  background: rgba(255, 255, 255, .92);
+  color: var(--account-blue);
+}
+
+.me-page .me-wrong-bank {
+  margin-top: 8px;
+  padding: 20px;
+  border-color: rgba(19, 199, 163, .24);
+  border-radius: 12px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .96), rgba(220, 251, 242, .42)),
+    linear-gradient(90deg, rgba(49, 93, 255, .03) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(49, 93, 255, .03) 1px, transparent 1px);
+  background-size: auto, 28px 28px, 28px 28px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .86);
+}
+
+.me-page .me-wrong-review-packs {
+  gap: 14px;
+}
+
+.me-page .me-wrong-review-pack-list button {
+  min-height: 104px;
+  border-radius: 10px;
+  border-color: rgba(49, 93, 255, .16);
+  background: linear-gradient(135deg, rgba(233, 239, 255, .62), rgba(255, 255, 255, .96));
+}
+
+.me-page .me-wrong-review-pack-list button.due {
+  border-color: rgba(183, 239, 67, .42);
+  background: linear-gradient(135deg, rgba(240, 255, 211, .8), rgba(255, 255, 255, .96));
+}
+
+.me-page .me-wrong-review-pack-list button.active,
+.me-page .me-wrong-review-pack-list button.due.active {
+  border-color: rgba(49, 93, 255, .5);
+  background:
+    linear-gradient(135deg, rgba(233, 239, 255, .95), rgba(220, 251, 242, .72));
+  box-shadow: 0 16px 30px rgba(49, 93, 255, .12);
+}
+
+.me-page .me-wrong-review-pack-list span {
+  color: var(--account-blue);
+}
+
+.me-page .me-wrong-filters {
+  align-items: stretch;
+  padding: 14px;
+  border: 1px solid rgba(49, 93, 255, .12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .78);
+}
+
+.me-page .me-wrong-filters label span {
+  color: var(--account-blue);
+}
+
+.me-page .me-wrong-filters select {
+  min-height: 42px;
+  border-radius: 8px;
+  border-color: rgba(191, 214, 204, .9);
+  background: rgba(255, 255, 255, .94);
+}
+
+.me-page .me-wrong-filters label:has(input[type="checkbox"]) {
+  justify-content: end;
+  min-height: 42px;
+  padding: 9px 11px;
+  border: 1px solid rgba(183, 239, 67, .38);
+  border-radius: 8px;
+  background: var(--account-lime-soft);
+}
+
+.me-page .me-wrong-list {
+  gap: 10px;
+}
+
+.me-page .me-wrong-list article {
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 18px;
+  row-gap: 14px;
+  align-items: start;
+  padding: 16px 18px;
+}
+
+.me-page .me-wrong-list article.expanded {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--row-soft) 78%, white), rgba(255, 255, 255, .98));
+}
+
+.me-page .me-wrong-summary {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+}
+
+.me-page .me-wrong-summary > span,
+.me-page .me-wrong-summary > p,
+.me-page .me-wrong-summary > em {
+  margin: 0;
+}
+
+.me-page .me-wrong-actions {
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding-top: 0;
+}
+
+.me-page .me-wrong-detail {
+  grid-column: 1 / -1;
+  width: 100%;
+  gap: 16px;
+  padding-top: 16px;
+  border-top-color: rgba(49, 93, 255, .1);
+}
+
+.me-page .me-wrong-detail section {
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.me-page .me-wrong-detail h4 {
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.me-page .me-wrong-summary > em {
+  border-radius: 8px;
+}
+
+.me-page .me-wrong-options p,
+.me-page .me-wrong-ai-grid article {
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .88);
+}
+
+.me-page .me-wrong-options {
+  gap: 8px;
+}
+
+.me-page .me-wrong-options p {
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  min-height: 42px;
+  padding: 9px 12px;
+}
+
+.me-page .me-wrong-options b {
+  display: grid;
+  width: 22px;
+  place-items: center;
+}
+
+.me-page .me-wrong-options em {
+  justify-self: end;
+}
+
+.me-page .me-wrong-options p.correct {
+  border-color: rgba(19, 199, 163, .28);
+  background: var(--account-mint-soft);
+}
+
+.me-page .me-wrong-options p.wrong {
+  border-color: rgba(255, 113, 94, .28);
+  background: var(--account-coral-soft);
+}
+
+.me-page .me-wrong-tags span {
+  border-radius: 8px;
+  background: var(--account-blue-soft);
+  color: var(--account-blue);
+}
+
+@media (max-width: 980px) {
+  .me-page .me-review-hub-head,
+  .me-page .me-review-queue-list article,
+  .me-page .me-wrong-pattern-grid article,
+  .me-page .me-wrong-practice-hero,
+  .me-page .me-practice-list article,
+  .me-page .me-wrong-list article {
+    grid-template-columns: 1fr;
+  }
+
+  .me-page .me-review-hub-actions,
+  .me-page .me-review-queue-actions,
+  .me-page .me-wrong-actions {
+    justify-content: flex-start;
+  }
+
+  .me-page .me-wrong-practice-hero dl {
+    width: 100%;
+  }
+}
+
+/* Final /me presentation pass: keep the account workspace open and current-palette only. */
+.me-page {
+  --account-subtle: #f6fbf6;
+  --account-muted-surface: #fbfff9;
+  --account-border: rgba(19, 199, 163, .2);
+  --account-border-strong: rgba(49, 93, 255, .34);
+}
+
+.me-page .me-section-nav-wrap {
+  margin: 0 0 16px;
+  padding: 0;
+  border-bottom: 0;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+.me-page .me-section-nav {
+  width: fit-content;
+  gap: 3px;
+  padding: 5px;
+  border: 1px solid rgba(19, 199, 163, .2);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .9);
+  box-shadow: 0 14px 32px rgba(32, 35, 55, .055);
+}
+
+.me-page .me-section-nav button {
+  min-height: 38px;
+  padding: 8px 13px;
+  border-radius: 8px;
+  color: #202337;
+}
+
+.me-page .me-section-nav button small {
+  border: 1px solid rgba(19, 199, 163, .18);
+  background: #dcfbf2;
+  color: #087c66;
+}
+
+.me-page .me-section-nav button:hover {
+  background: #f0ffd3;
+  color: #202337;
+}
+
+.me-page .me-section-nav button.active {
+  background: #315dff;
+  color: #fff;
+  box-shadow: 0 12px 24px rgba(49, 93, 255, .18);
+}
+
+.me-page .me-section-nav button.active small {
+  border-color: rgba(255, 255, 255, .24);
+  background: rgba(255, 255, 255, .18);
+  color: #fff;
+}
+
+.me-page .me-learning-profile {
+  width: 100%;
+  margin-inline: auto;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "avatar"
+    "title"
+    "email"
+    "status"
+    "metrics";
+  justify-items: center;
+  align-items: center;
+  gap: 8px;
+  padding: 26px 30px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  text-align: center;
+}
+
+.me-page .me-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  font-size: 20px;
+}
+
+.me-page .me-learning-profile h1 {
+  font-size: clamp(24px, 1.9vw, 32px);
+  line-height: 1.16;
+}
+
+.me-page .me-profile-status {
+  justify-content: center;
+}
+
+.me-page .me-profile-metrics {
+  width: min(720px, 100%);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 10px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.me-page .me-profile-metrics div {
+  min-height: auto;
+  padding: 0 4px;
+  justify-items: center;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  text-align: center;
+}
+
+.me-page .me-profile-metrics strong {
+  color: #315dff;
+  font-size: 18px;
+  line-height: 1.1;
+}
+
+.me-page .me-profile-metrics span {
+  color: #087c66;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.me-page .me-content-panel {
+  gap: 24px;
+}
+
+.me-page .me-account-activity {
+  display: grid;
+  width: 100%;
+  margin: -4px auto 2px;
+  gap: 14px;
+}
+
+.me-page .me-account-activity .me-learning-grid {
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.me-page .me-account-activity .me-learning-card {
+  padding: 14px 16px;
+  border-color: rgba(19, 199, 163, .2);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .96), rgba(251, 255, 249, .9));
+  box-shadow: 0 16px 38px rgba(32, 35, 55, .05);
+}
+
+.me-page .me-account-activity .me-learning-card-head {
+  gap: 2px;
+}
+
+.me-page .me-account-activity .me-learning-card-head strong {
+  font-size: 13px;
+}
+
+.me-page .me-account-activity .me-learning-card-head p {
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.me-page .me-account-activity .me-calendar-heatmap {
+  --calendar-gap: 4px;
+}
+
+.me-page .me-section-card,
+.me-page .me-settings-section {
+  padding: 28px 32px 32px;
+  border-color: rgba(19, 199, 163, .2);
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .98), rgba(251, 255, 249, .92));
+  box-shadow: 0 18px 44px rgba(32, 35, 55, .06);
+}
+
+.me-page .me-section-head {
+  padding-bottom: 20px;
+  border-bottom-color: rgba(19, 199, 163, .18);
+}
+
+.me-page .me-section-head h2 {
+  font-size: clamp(24px, 1.9vw, 32px);
+}
+
+.me-page .me-empty-card {
+  gap: 18px;
+  padding: 20px;
+  border: 1px solid rgba(19, 199, 163, .18);
+  border-radius: 12px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .96), rgba(246, 251, 246, .86));
+  box-shadow: 0 14px 34px rgba(32, 35, 55, .045);
+}
+
+.me-page .me-learning-profile {
+  padding: 18px 0 12px;
+}
+
+.me-page .me-profile-metrics {
+  width: min(560px, 100%);
+  gap: 18px;
+  margin-top: 8px;
+}
+
+.me-page .me-profile-metrics strong {
+  font-size: 16px;
+}
+
+.me-page .me-readiness-bar,
+.me-page .me-wrong-trend-bar {
+  background: rgba(220, 251, 242, .48);
+}
+
+.me-page .me-review-queue-list article,
+.me-page .me-wrong-pattern-grid article,
+.me-page .me-practice-list article,
+.me-page .me-wrong-list article {
+  border-color: rgba(57, 95, 130, .16);
+  border-left-width: 1px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .96), rgba(251, 255, 249, .9));
+  box-shadow: 0 10px 24px rgba(32, 35, 55, .04);
+}
+
+.me-page .me-readiness-milestone {
+  border-color: rgba(19, 199, 163, .2);
+  background: rgba(255, 255, 255, .68);
+  box-shadow: none;
+}
+
+.me-page .me-readiness-footer > div,
+.me-page .me-readiness-outcome {
+  border-color: rgba(57, 95, 130, .16);
+  background: rgba(255, 255, 255, .68);
+}
+
+@media (max-width: 980px) {
+  .me-page .me-learning-profile {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .me-page .me-learning-profile,
+  .me-page .me-section-card,
+  .me-page .me-settings-section {
+    padding: 18px;
+  }
+
+  .me-page .me-profile-metrics {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Current /me page shell: account, activity, records, and study statistics. */
+.me-page .me-account-hero-bare {
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  gap: 8px;
+  padding: 30px 0 18px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  text-align: center;
+}
+
+.me-page .me-account-avatar {
+  display: grid;
+  width: 56px;
+  height: 56px;
+  place-items: center;
+  border-radius: 50%;
+}
+
+.me-page .me-account-hero-bare h1 {
+  margin: 0;
+  color: var(--account-ink);
+  font-size: clamp(24px, 2vw, 32px);
+  line-height: 1.12;
+}
+
+.me-page .me-account-hero-bare p {
+  margin: 0;
+}
+
+.me-page .me-account-badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.me-page .me-account-badges span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 4px 9px;
+  border: 1px solid rgba(19, 199, 163, .24);
+  border-radius: 7px;
+  background: rgba(220, 251, 242, .72);
+  color: #087c66;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.me-page .me-metric-row-compact {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(92px, 1fr));
+  gap: clamp(18px, 5vw, 80px);
+  width: min(720px, 100%);
+  margin: 16px auto 0;
+}
+
+.me-page .me-metric-row-compact div {
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+  min-width: 0;
+}
+
+.me-page .me-metric-row-compact dt {
+  order: 2;
+  color: #087c66;
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.me-page .me-metric-row-compact dd {
+  order: 1;
+  margin: 0;
+  color: #315dff;
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1.08;
+}
+
+.me-page .me-status-message {
+  width: min(920px, 100%);
+  margin: 0 auto;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 113, 94, .22);
+  border-radius: 8px;
+  background: #fff7f5;
+  color: #9d3f30;
+  font-weight: 750;
+}
+
+.me-page .me-email-verification-warning {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: min(920px, 100%);
+  margin: var(--me-flow-gap) auto 0;
+  padding: 10px 14px;
+  border: 1px solid rgba(217, 145, 0, .28);
+  border-radius: 8px;
+  background: #fff9e8;
+  color: #7a5200;
+  font-weight: 750;
+}
+
+.me-page .me-email-verification-warning p {
+  margin: 0;
+}
+
+.me-page .me-email-verification-warning button {
+  flex: 0 0 auto;
+}
+
+.me-page .me-learning-activity {
+  display: grid;
+  gap: 14px;
+  padding: 18px 20px;
+  border: 1px solid rgba(19, 199, 163, .2);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .56);
+  box-shadow: none;
+}
+
+.me-page .me-activity-toggle {
+  display: inline-flex;
+  gap: 3px;
+  align-items: center;
+  justify-self: end;
+  padding: 4px;
+  border: 1px solid rgba(49, 93, 255, .16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .84);
+}
+
+.me-page .me-activity-toggle button {
+  min-height: 28px;
+  padding: 5px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--account-muted);
+  font-size: 12px;
+}
+
+.me-page .me-activity-toggle button.active {
+  background: #fff;
+  color: #087c66;
+  box-shadow: 0 8px 18px rgba(32, 35, 55, .06);
+}

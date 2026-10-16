@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AdminPageShell } from '../components/AdminPageShell';
+import { useConfirmDialog } from '../components/ConfirmDialogProvider';
 import { CscaSyllabusWorkspace } from '../components/admin/ai-question-bank/CscaSyllabusWorkspace';
 import {
   CoverageWorkPanel,
@@ -135,6 +136,7 @@ export function AdminAIQuestionBankPage({
   onGoToAiOperations,
   onGoToAuth
 }: AdminAIQuestionBankPageProps) {
+  const confirmAction = useConfirmDialog();
   const [subject, setSubject] = useState('');
   const [sourceReferenceSubject, setSourceReferenceSubject] = useState('');
   const [status, setStatus] = useState('');
@@ -508,7 +510,7 @@ export function AdminAIQuestionBankPage({
         if (runResult.status === 'fulfilled') {
           const latestRun = runResult.value.latest;
           const latestRunIsActive = latestRun?.status === 'running' || latestRun?.status === 'planned';
-          const latestRunAdvanced = Boolean(latestRun) && (
+          const latestRunAdvanced = latestRun != null && (
             !subjectProductionRun
             || latestRun.id !== subjectProductionRun.id
             || latestRun.publishedTotal !== subjectProductionRun.publishedTotal
@@ -809,9 +811,14 @@ export function AdminAIQuestionBankPage({
       });
       const previewText = `将影响：未入库异常候选 ${preview.deleted.candidateQuestions} 道、已入库 AI 题 ${preview.deleted.approvedAiQuestions} 道、正式训练题 ${preview.deleted.publishedPracticeQuestions} 道、生成任务 ${preview.deleted.aiGenerationJobs} 个、曝光记录 ${preview.deleted.questionExposures} 条。`;
       if (includeApprovedAssets) {
-        const confirmText = window.prompt(`危险操作：将清理 ${topicScope} 的 AI 候选、生成任务和已入库 AI 训练题。\n${previewText}\n请输入确认文本：${expectedConfirmText}`);
-        if (confirmText !== expectedConfirmText) return '已取消清理。';
-      } else if (!window.confirm(`确定清理 ${topicScope} 科目训练线未入库异常 AI 候选和生成任务吗？\n${previewText}\n已入库训练题、已拒绝和已归档记录会保留。`)) {
+        const confirmed = await confirmAction({
+          title: `危险操作：清理 ${topicScope} 的全部 AI 训练资产？`,
+          body: previewText,
+          tone: 'danger',
+          requiredText: expectedConfirmText
+        });
+        if (!confirmed) return '已取消清理。';
+      } else if (!await confirmAction({ title: '确认清理异常生成结果？', body: `将清理 ${topicScope} 科目训练线未入库异常 AI 候选和生成任务。\n${previewText}\n已入库训练题、已拒绝和已归档记录会保留。`, tone: 'danger' })) {
         return '已取消清理。';
       }
       const result = await cleanupAdminAIQuestioningSubjectPracticeScope({
@@ -912,10 +919,10 @@ export function AdminAIQuestionBankPage({
     return `已清理：生成任务 ${result.deleted.mockGenerationJobs} 个、草稿卷 ${result.deleted.draftPapers} 套、草稿题 ${result.deleted.draftQuestions} 道、AI 候选 ${result.deleted.candidateQuestions} 道、AI 生成任务 ${result.deleted.aiGenerationJobs} 个。`;
   }
 
-  function cleanupMockExamGenerationJob(jobId: number) {
+  async function cleanupMockExamGenerationJob(jobId: number) {
     const blueprintId = mockBlueprintDetail?.blueprint.id;
     if (!blueprintId) return;
-    if (!window.confirm(`确定清理在线模考生成任务 #${jobId} 吗？会删除该任务关联的 AI 候选题、AI job、AI 蓝图和未发布草稿卷。`)) return;
+    if (!await confirmAction({ title: `清理生成任务 #${jobId}？`, body: '会删除该任务关联的 AI 候选题、AI job、AI 蓝图和未发布草稿卷。', tone: 'danger' })) return;
     void runAction(`mock-cleanup-job-${jobId}`, `清理在线模考生成任务 #${jobId}`, async () => {
       const result = await cleanupAdminMockExamGenerationJob(jobId, { force: true });
       setMockBlueprintDetail(await getAdminMockExamBlueprint(blueprintId));
@@ -924,10 +931,10 @@ export function AdminAIQuestionBankPage({
     }, { refresh: false });
   }
 
-  function cleanupAllMockExamGenerationJobs() {
+  async function cleanupAllMockExamGenerationJobs() {
     const blueprintId = mockBlueprintDetail?.blueprint.id;
     if (!blueprintId) return;
-    if (!window.confirm('确定清理当前蓝图下全部在线模考 AI 生成结果吗？会删除所有关联 AI 候选题、AI job、AI 蓝图和未发布草稿卷，便于重新生成整套 48 题。')) return;
+    if (!await confirmAction({ title: '清理当前蓝图的全部生成结果？', body: '会删除所有关联 AI 候选题、AI job、AI 蓝图和未发布草稿卷，便于重新生成整套 48 题。', tone: 'danger' })) return;
     void runAction('mock-cleanup-all-jobs', '清理当前蓝图全部在线模考生成结果', async () => {
       const result = await cleanupAdminMockExamBlueprintGenerationJobs(blueprintId, { force: true });
       setMockBlueprintDetail(await getAdminMockExamBlueprint(blueprintId));

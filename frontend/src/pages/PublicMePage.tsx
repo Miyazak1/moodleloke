@@ -740,6 +740,10 @@ export function PublicMePage({
         studyAvailability: current?.studyAvailability ?? {
           availabilityVersion: 'unset', timezone: 'Asia/Shanghai', weeklyMinutesGoal: null,
           preferredStudyDays: [], defaultSessionMinutes: null, source: 'unset', effectiveAt: null
+        },
+        learningPreference: current?.learningPreference ?? {
+          preferenceVersion: 'unset', defaultLearningMode: 'recommended', defaultFreePracticeSubject: 'math',
+          defaultFreePracticeCount: 5, source: 'default', updatedAt: null
         }
       }));
       setStudentProfileDraft((current) => ({
@@ -762,7 +766,11 @@ export function PublicMePage({
       setAgentLearningSettings((current) => ({
         currentScoringPolicyVersion: current?.currentScoringPolicyVersion ?? 'csca-score-unverified-v1',
         scoreGoal: current?.scoreGoal ?? { status: 'unset', goal: null },
-        studyAvailability
+        studyAvailability,
+        learningPreference: current?.learningPreference ?? {
+          preferenceVersion: 'unset', defaultLearningMode: 'recommended', defaultFreePracticeSubject: 'math',
+          defaultFreePracticeCount: 5, source: 'default', updatedAt: null
+        }
       }));
       setStatus(t('me.status.agentScheduleUpdated', '学习时间已更新，后续方案会使用新的时间容量。'));
     } catch {

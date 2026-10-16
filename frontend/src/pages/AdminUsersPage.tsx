@@ -4,7 +4,7 @@ import { AdminStatsStrip } from '../components/admin/AdminWorkbench';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { AdminFormField, GhostButton, InlineActions, StatusPill } from '../components/UiPrimitives';
 import { useI18n } from '../i18n/useI18n';
-import { adminText, selectAdminCopy, usesLatinAdminCopy } from '../lib/admin-locale';
+import { adminText, selectAdminCopy, usesLatinAdminCopy, type AdminCopy } from '../lib/admin-locale';
 import { createAdminUser, getAdminUsers, grantAdminAdaptiveAIUnits, setAdminUserStatus, type AdminUser, type User } from '../lib/api';
 
 type UserStatusAction = 'disable' | 'restore';
@@ -179,7 +179,7 @@ const ADMIN_USERS_COPY = {
   }
 } as const;
 
-type AdminUsersCopy = (typeof ADMIN_USERS_COPY)[keyof typeof ADMIN_USERS_COPY];
+type AdminUsersCopy = AdminCopy<typeof ADMIN_USERS_COPY.en>;
 
 function fillAdminUserTemplate(template: string, values: Record<string, string | number>) {
   return Object.entries(values).reduce((text, [key, value]) => text.replace(`{${key}}`, String(value)), template);

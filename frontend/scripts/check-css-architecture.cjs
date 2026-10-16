@@ -16,27 +16,6 @@ const allowedGlobalImports = new Set([
   './public-shell.css'
 ]);
 
-const legacyLargeFiles = new Set([
-  'account.css',
-  'account.part',
-  'admin-work.css',
-  'admin-work.part',
-  'home.css',
-  'home.part',
-  'mock-exam.css',
-  'mock-exam.part',
-  'school.css',
-  'school.part',
-  'scholarships.css',
-  'scholarships.part',
-  'special-practice.css',
-  'special-practice.part',
-  'study-china.css',
-  'study-china.part',
-  'subject-learning.css',
-  'subject-learning.part'
-]);
-
 const warnLineLimit = 1000;
 const failLineLimit = 2000;
 
@@ -107,15 +86,11 @@ function listCssFiles(dir) {
 const cssFiles = listCssFiles(stylesDir).filter((file) => path.relative(stylesDir, file) !== 'index.css');
 for (const filePath of cssFiles) {
   const file = path.relative(stylesDir, filePath).replace(/\\/g, '/');
-  const topLevelName = file.split('/')[0];
-  const partFamily = file.replace(/\.part-\d+\.css$/, '.part');
   const lineCount = readLines(filePath).length;
-  const isLegacy = legacyLargeFiles.has(file) || legacyLargeFiles.has(topLevelName) || legacyLargeFiles.has(partFamily);
-  if (lineCount > failLineLimit && !isLegacy) {
+  if (lineCount > failLineLimit) {
     failures.push(`${file} has ${lineCount} lines; split it before adding more page scope.`);
   } else if (lineCount > warnLineLimit) {
-    const prefix = isLegacy ? 'legacy large CSS' : 'large CSS';
-    warnings.push(`${prefix}: ${file} has ${lineCount} lines.`);
+    warnings.push(`large CSS: ${file} has ${lineCount} lines.`);
   }
 }
 

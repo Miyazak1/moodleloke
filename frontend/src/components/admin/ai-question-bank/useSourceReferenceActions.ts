@@ -1,4 +1,5 @@
 import type { Dispatch, SetStateAction } from 'react';
+import { useConfirmDialog } from '../../ConfirmDialogProvider';
 import {
   activateAdminAIQuestioningExamSeriesProfile,
   activateAdminAIQuestioningGenerationProfile,
@@ -64,6 +65,7 @@ export function useSourceReferenceActions({
   onRefresh,
   runAction
 }: UseSourceReferenceActionsParams) {
+  const confirmAction = useConfirmDialog();
   function versionGovernanceSummaryText(result: { updated?: number; summary?: Record<string, number>; error?: string }) {
     if (result.error) return `版本治理未完成：${result.error}`;
     const summary = Object.entries(result.summary ?? {})
@@ -394,7 +396,7 @@ export function useSourceReferenceActions({
       setError('源卷 ID 无效，无法删除。');
       return;
     }
-    const confirmed = window.confirm(`确认删除这份真题源卷吗？\n\n${documentTitle ?? `源卷 #${documentId}`}\n\n删除后会同步归档相关单卷画像、连续趋势画像和当前出题画像；如果同学科同大纲还有剩余 active 真题源卷，系统会自动重建画像。`);
+    const confirmed = await confirmAction({ title: '删除这份真题源卷？', body: `${documentTitle ?? `源卷 #${documentId}`}\n\n删除后会同步归档相关单卷画像、连续趋势画像和当前出题画像；如果同学科同大纲还有剩余 active 真题源卷，系统会自动重建画像。`, tone: 'danger' });
     if (!confirmed) return;
     await runAction(`source-document-delete-${documentId}`, `删除源卷 #${documentId}`, async () => {
       const result = await deleteAdminAIQuestioningSourceDocument(documentId);
@@ -427,18 +429,19 @@ export function useSourceReferenceActions({
         sourceType: 'past_paper',
         dryRun: true
       });
-      const selected = preview.selected ?? {};
+      const selected: Partial<AdminAIQuestioningSourceDocumentCleanupResult> = preview.selected ?? {};
       const sourceDocuments = selected.sourceDocuments ?? 0;
       if (sourceDocuments <= 0) return '当前学科没有可清理的真题源文档。';
-      const confirmed = window.confirm(
-        `确认清理 ${subject} 的全部 past_paper 真题源吗？\n\n` +
-        `将删除源卷：${sourceDocuments} 份\n` +
+      const confirmed = await confirmAction({
+        title: `清理 ${subject} 的全部真题源？`,
+        body: `将删除源卷：${sourceDocuments} 份\n` +
         `将删除源题：${selected.sourceQuestions ?? 0} 道\n` +
         `将归档单卷画像：${selected.styleProfiles ?? 0} 个\n` +
         `将归档连续趋势画像：${selected.examSeriesProfiles ?? 0} 个\n` +
         `将归档当前出题画像：${selected.generationProfiles ?? 0} 个\n\n` +
-        '正式题库不会被删除；如果清理后还有剩余 active 真题源卷，系统会自动重建画像，否则需要重新上传真题。'
-      );
+        '正式题库不会被删除；如果清理后还有剩余 active 真题源卷，系统会自动重建画像，否则需要重新上传真题。',
+        tone: 'danger'
+      });
       if (!confirmed) return '已取消清理真题源。';
       const result = await cleanupAdminAIQuestioningSourceDocuments({
         subject,

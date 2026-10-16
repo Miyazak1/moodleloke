@@ -353,7 +353,7 @@ export function PublicAuthPage({
         setSuccess(copy.resetSuccess);
         return;
       }
-      onGoToMe(result.user, redirectTo, step === 'register');
+      onGoToMe(result.user, redirectTo, false);
     } catch (nextError) {
       if (step === 'login' || step === 'register') {
         trackPublicEvent({ eventType: 'auth_completed', route: 'auth', locale, method: 'email', mode: step, result: 'failure', reason: 'api_error', component: 'auth' });

@@ -36,6 +36,11 @@ export default function AuthoringApp() {
   return <Suspense fallback={<main className="authoring-access">正在加载内容生产工作区…</main>}>
     {workspace === 'teaching-assets'
       ? <AdminTeachingAssetsPage currentUser={currentUser} onGoToAuth={() => setShowAuth(true)} />
-      : <AdminAIQuestionBankPage currentUser={currentUser} onGoToAuth={() => setShowAuth(true)} />}
+      : <AdminAIQuestionBankPage
+          currentUser={currentUser}
+          onBackAudit={() => window.location.assign('/admin/audit')}
+          onGoToAiOperations={() => window.location.assign('/admin/ai-operations')}
+          onGoToAuth={() => setShowAuth(true)}
+        />}
   </Suspense>;
 }

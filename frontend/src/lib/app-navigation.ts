@@ -149,12 +149,12 @@ export function safeAdminReturnPath(value: string | null | undefined) {
   return `${url.pathname}${url.search}${url.hash}`;
 }
 
-export function buildAdminAuthRedirectUrl(redirectTo = routes.adminAudit) {
+export function buildAdminAuthRedirectUrl(redirectTo: string = routes.adminAudit) {
   const safeReturnTo = safeAdminReturnPath(redirectTo) ?? routes.adminAudit;
   return `${routes.auth}?redirect=${encodeURIComponent(safeReturnTo)}`;
 }
 
-export function safeReturnPath(value: string | null | undefined, fallback = routes.me) {
+export function safeReturnPath(value: string | null | undefined, fallback: string = routes.me) {
   return safeStandaloneReturnPath(value, fallback);
 }
 

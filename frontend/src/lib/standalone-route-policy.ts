@@ -120,7 +120,7 @@ export function resolveStandaloneHref(value: string, origin = POLICY_ORIGIN) {
   return resolveStandaloneLocation(url.pathname, url.search, url.hash);
 }
 
-export function safeStandaloneReturnPath(value: string | null | undefined, fallback = ROUTE_PATHS.agent) {
+export function safeStandaloneReturnPath(value: string | null | undefined, fallback: string = ROUTE_PATHS.agent) {
   const raw = String(value ?? '').trim();
   const safeFallback = (() => {
     const resolved = resolveStandaloneHref(fallback);

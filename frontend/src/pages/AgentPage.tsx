@@ -88,6 +88,8 @@ import { readMigratedLocalStorage, removeMigratedLocalStorage, writeMigratedLoca
 import { ApiError } from '../lib/request';
 import type { AgentHostBridge } from '../lib/agent-host-bridge';
 import '../styles/agent.css';
+import '../styles/agent-learning-controls.css';
+import '../styles/agent-teaching-embed.css';
 import '../styles/agent-motion.css';
 import '../styles/content-typography.css';
 
@@ -837,7 +839,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     practiceAssistanceBusy,
     practiceAssistanceEvents.length,
     practiceQaConversation?.messages.length,
-    practiceTeachingEvent?.id,
+    practiceTeachingEvent?.asset.id,
     learningWorkspace?.phase,
     learningWorkspace?.roundId,
     mockExamWorkspace?.phase,
@@ -953,7 +955,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
   }, [syncMockExamWorkspaceUrl]);
 
   const openTaskWorkspace = useCallback((launch: AgentTaskLaunch) => {
-    if (launch.workspace.kind === 'mock_exam') openMockExamWorkspace(launch);
+    if ('attemptId' in launch) openMockExamWorkspace(launch);
     else openLearningWorkspace(launch);
   }, [openLearningWorkspace, openMockExamWorkspace]);
 
@@ -2127,10 +2129,16 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
       setFreePracticeCount(defaultFreePracticeCount);
       return;
     }
+    const planSnapshot = startablePlanArtifact.snapshot;
+    if (!planSnapshot) {
+      setLearningEntryError(t('agent.learningEntry.stalePlan', '当前学习计划已失效，请刷新后重试。'));
+      await loadJourneyState().catch(() => undefined);
+      return;
+    }
     setIsStartingLearning(true);
     try {
-      const task = startablePlanArtifact.snapshot.task && typeof startablePlanArtifact.snapshot.task === 'object'
-        ? startablePlanArtifact.snapshot.task as Record<string, unknown>
+      const task = planSnapshot.task && typeof planSnapshot.task === 'object'
+        ? planSnapshot.task as Record<string, unknown>
         : {};
       const start = task.type === 'mock_exam' ? startAgentMockExam : startAgentPractice;
       const launch = await start(startablePlanArtifact.id, {
@@ -2439,11 +2447,11 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
                         )}
                         {!!message.content.evidenceCandidates?.length && (
                           <div className="agent-evidence-list">
-                            {message.content.evidenceCandidates.map((candidate) => <EvidenceCandidateCard key={candidate.id} candidate={candidate} onChanged={() => loadConversation(message.conversationId)} />)}
+                            {message.content.evidenceCandidates.map((candidate) => <EvidenceCandidateCard key={candidate.id} candidate={candidate} onChanged={async () => { await loadConversation(message.conversationId); }} />)}
                           </div>
                         )}
                         {!message.content.evidenceCandidates?.length && message.content.evidenceCandidate && (
-                          <EvidenceCandidateCard candidate={message.content.evidenceCandidate} onChanged={() => loadConversation(message.conversationId)} />
+                          <EvidenceCandidateCard candidate={message.content.evidenceCandidate} onChanged={async () => { await loadConversation(message.conversationId); }} />
                         )}
                         {!!message.attachments?.length && (
                           <div className="agent-message-attachments">
@@ -2906,7 +2914,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
               <p>{resumableWorkspace ? resumableBody : t('agent.context.body', '根据你的目标、真实作答和当前题源安排下一步。')}</p></div>
               <span className={isSending ? 'agent-live-status running agent-workbench-status' : 'agent-live-status agent-workbench-status'} role="status" aria-live="polite"><i />{isSending ? runStatus : t('agent.status.ready', '学习数据已连接')}</span>
             </section>
-            {!resumableWorkspace && dailyPrimaryTask ? <section className="agent-learning-entry-card agent-daily-plan-card" data-state={dailyPrimaryTask.kind}>
+            {!resumableWorkspace && dailyPlan && dailyPrimaryTask ? <section className="agent-learning-entry-card agent-daily-plan-card" data-state={dailyPrimaryTask.kind}>
               <header><span className="agent-kicker">{t('agent.dailyPlan.kicker', '今日首选任务')}</span><small>{t('agent.dailyPlan.rule', '由目标、到期任务和真实学习证据排序')}</small></header>
               <div className="agent-daily-progress" data-status={dailyPlan?.progress.status}>
                 <div><span><b>{dailyPlan?.progress.answeredCount ?? 0}</b>{t('agent.dailyPlan.answeredToday', '今日已答')}</span><span><b>{dailyPlan?.progress.accuracy === null ? '—' : `${dailyPlan?.progress.accuracy}%`}</b>{t('agent.dailyPlan.accuracyToday', '今日正确率')}</span><span><b>{dailyPlan?.progress.completedMinutes ?? 0}{dailyPlan?.progress.targetMinutes ? `/${dailyPlan.progress.targetMinutes}` : ''}</b>{t('agent.dailyPlan.minutesToday', '学习分钟')}</span></div>

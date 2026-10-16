@@ -167,7 +167,17 @@ const ICON_PATHS: Record<string, string[]> = {
   'lucide:presentation': ['M2 3h20', 'M4 3v13h16V3', 'M8 21l4-5 4 5', 'm8 11 3-3 2 2 3-3'],
   'lucide:sliders-horizontal': ['M21 4h-7', 'M10 4H3', 'M21 12h-9', 'M8 12H3', 'M21 20h-5', 'M12 20H3', 'M14 2v4', 'M12 10v4', 'M16 18v4'],
   'lucide:square': ['M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2'],
-  'lucide:undo-2': ['M9 14 4 9l5-5', 'M4 9h10.5a5.5 5.5 0 0 1 0 11H11']
+  'lucide:undo-2': ['M9 14 4 9l5-5', 'M4 9h10.5a5.5 5.5 0 0 1 0 11H11'],
+  'lucide:bot-message-square': ['M12 2v2', 'M8 4h8', 'M5 8h14a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3h-8l-4 3v-3H5a3 3 0 0 1-3-3v-5a3 3 0 0 1 3-3', 'M9 13h.01', 'M15 13h.01'],
+  'lucide:calendar-check-2': ['M8 2v4', 'M16 2v4', 'M3 10h18', 'M5 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2', 'm8 15 2 2 4-5'],
+  'lucide:clock-arrow-down': ['M12 22a10 10 0 1 1 8.8-5.2', 'M12 6v6l3 2', 'M19 12v7', 'm16 16 3 3 3-3'],
+  'lucide:cloud-alert': ['M17.5 19H7a5 5 0 1 1 1-9.9A6 6 0 0 1 19.5 11', 'M18 14v3', 'M18 20h.01'],
+  'lucide:database-zap': ['M4 6c0 2.2 3.6 4 8 4s8-1.8 8-4-3.6-4-8-4-8 1.8-8 4', 'M4 6v6c0 2.2 3.6 4 8 4', 'M4 12v6c0 2.2 3.6 4 8 4', 'm17 12-3 5h3l-2 5 5-7h-3z'],
+  'lucide:list-restart': ['M8 6h12', 'M8 12h8', 'M8 18h5', 'M3 5v5h5', 'M3 10a8 8 0 0 1 13-5'],
+  'lucide:log-in': ['M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4', 'm10 17 5-5-5-5', 'M15 12H3'],
+  'lucide:pause-circle': ['M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20', 'M9 9v6', 'M15 9v6'],
+  'lucide:play-circle': ['M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20', 'm10 8 6 4-6 4z'],
+  'lucide:repeat-2': ['m17 2 4 4-4 4', 'M3 11V9a3 3 0 0 1 3-3h15', 'm7 22-4-4 4-4', 'M21 13v2a3 3 0 0 1-3 3H3']
 };
 
 function normalizeColor(color: string) {

@@ -97,7 +97,7 @@ export function patchAdaptivePracticeRound(roundId: string | number, payload: { 
   });
 }
 
-export function checkAdaptivePracticeAnswer(roundId: string | number, payload: { questionId: number; selected: string; language?: string; questionLanguage?: string }) {
+export function checkAdaptivePracticeAnswer(roundId: string | number, payload: { questionId: number; questionSource?: 'special_practice' | 'csca_question'; selected: string; language?: string; questionLanguage?: string }) {
   return requestJson<AdaptivePracticeCheckResult>(`/api/v1/csca-special-practice/adaptive/rounds/${encodeURIComponent(String(roundId))}/check`, {
     method: 'POST',
     body: JSON.stringify(payload),

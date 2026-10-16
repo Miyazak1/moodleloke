@@ -1,0 +1,297 @@
+.me-page .me-settings-form-grid input[readonly] {
+  background: rgba(244, 247, 246, .85);
+  color: #687873;
+}
+
+.me-page .me-settings-summary-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.me-page .me-settings-summary-row > div,
+.me-page .me-organization-current {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(19, 199, 163, .17);
+  border-radius: 10px;
+  background: rgba(242, 252, 248, .62);
+}
+
+.me-page .me-settings-summary-row svg,
+.me-page .me-organization-current > svg {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  color: #0b987f;
+}
+
+.me-page .me-settings-summary-row strong,
+.me-page .me-settings-summary-row small,
+.me-page .me-organization-current strong,
+.me-page .me-organization-current small,
+.me-page .me-organization-current span {
+  display: block;
+}
+
+.me-page .me-settings-summary-row strong,
+.me-page .me-organization-current strong {
+  color: var(--me-text, #202337);
+  font-size: 13px;
+}
+
+.me-page .me-settings-summary-row small,
+.me-page .me-organization-current small,
+.me-page .me-organization-current span {
+  margin-top: 2px;
+  color: #74847f;
+  font-size: 11px;
+}
+
+.me-page .me-settings-subsection {
+  padding: 18px;
+  border: 1px solid rgba(57, 95, 130, .14);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, .72);
+}
+
+.me-page .me-settings-subsection h4,
+.me-page .me-goal-subjects legend,
+.me-page .me-study-days legend {
+  margin: 0;
+  color: var(--me-text, #202337);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.me-page .me-settings-subsection > p {
+  margin: 4px 0 16px;
+  color: var(--me-muted, #687b75);
+  font-size: 12px;
+}
+
+.me-page .me-settings-subsection .student-profile-fields {
+  gap: 15px 20px;
+}
+
+.me-page .me-settings-subsection .student-profile-fields > label > span {
+  color: #52645f;
+  font-size: 12px;
+}
+
+.me-page .me-settings-subsection .student-profile-fields input,
+.me-page .me-settings-subsection .student-profile-fields select {
+  min-height: 42px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.me-page .me-goal-subjects,
+.me-page .me-study-days {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.me-page .me-goal-subjects > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 140px;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid rgba(57, 95, 130, .14);
+  border-radius: 10px;
+  background: rgba(250, 252, 251, .72);
+}
+
+.me-page .me-goal-subjects > div.selected {
+  border-color: rgba(19, 199, 163, .3);
+  background: rgba(239, 252, 248, .66);
+}
+
+.me-page .me-goal-subject-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.me-page .me-goal-subject-toggle input {
+  width: 17px;
+  min-height: 17px;
+}
+
+.me-page .me-goal-subject-toggle svg {
+  width: 18px;
+  height: 18px;
+  color: #0b987f;
+}
+
+.me-page .me-goal-subjects input[type='number'] {
+  width: 100%;
+}
+
+.me-page .me-study-days > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.me-page .me-study-days button {
+  min-width: 54px;
+  min-height: 38px;
+  padding: 7px 11px;
+  border: 1px solid rgba(57, 95, 130, .18);
+  border-radius: 8px;
+  background: #fff;
+  color: #566863;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.me-page .me-study-days button.selected {
+  border-color: #13b997;
+  background: rgba(19, 199, 163, .11);
+  color: #087d68;
+}
+
+.me-page .me-settings-info {
+  display: flex;
+  gap: 9px;
+  padding: 11px 13px;
+  border-radius: 9px;
+  background: rgba(233, 239, 255, .65);
+  color: #536983;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.me-page .me-settings-info svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  color: #315dff;
+}
+
+.me-page .me-settings-panel-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(57, 95, 130, .13);
+}
+
+.me-page .me-settings-panel-actions > span {
+  color: var(--me-muted, #687b75);
+  font-size: 11px;
+}
+
+.me-page .me-settings-panel-actions button,
+.me-page .me-invite-row button,
+.me-page .me-settings-panel-head button {
+  display: inline-flex;
+  min-height: 39px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 8px 13px;
+  border: 1px solid #315dff;
+  border-radius: 8px;
+  background: #315dff;
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.me-page .me-settings-panel-actions button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.me-page .me-settings-panel-actions button:disabled,
+.me-page .me-invite-row button:disabled {
+  cursor: wait;
+  opacity: .58;
+}
+
+.me-page .me-settings-panel-actions .danger-quiet {
+  border-color: rgba(211, 80, 63, .25);
+  background: rgba(255, 243, 240, .85);
+  color: #a44436;
+}
+
+.me-page .me-settings-panel-head button.ghost {
+  border-color: rgba(49, 93, 255, .24);
+  background: #fff;
+  color: #315dff;
+}
+
+.me-page .me-invite-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+@media (max-width: 900px) {
+  .me-page .me-settings-sidebar nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .me-page .me-settings-page {
+    padding: 20px 16px;
+  }
+
+  .me-page .me-settings-sidebar {
+    padding-bottom: 16px;
+  }
+
+  .me-page .me-settings-sidebar nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .me-page .me-settings-sidebar nav button {
+    min-width: 0;
+  }
+
+  .me-page .me-settings-privacy-note {
+    display: none;
+  }
+
+  .me-page .me-settings-panel {
+    padding: 20px 0 0;
+  }
+
+  .me-page .me-settings-panel-head,
+  .me-page .me-settings-panel-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .me-page .me-settings-form-grid,
+  .me-page .me-settings-summary-row,
+  .me-page .me-goal-subjects > div,
+  .me-page .me-invite-row {
+    grid-template-columns: 1fr;
+  }
+
+  .me-page .me-settings-panel-actions button,
+  .me-page .me-invite-row button {
+    width: 100%;
+  }
+
+  .me-page .me-activity-visual-scroll .me-calendar-heatmap {
+    width: 680px;
+    min-width: 680px;
+  }
+}

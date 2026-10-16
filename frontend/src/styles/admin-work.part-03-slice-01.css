@@ -1,0 +1,272 @@
+.cms-workbench,
+.school-workbench,
+.mock-admin-workbench,
+.admin-users-workbench {
+  width: 100%;
+}
+
+
+@media (max-width: 980px) {
+  .site-main-public > .brand-page.admin-work-page {
+    width: min(100% - 28px, 760px);
+  }
+
+  .admin-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-audit-overview-kpis {
+    padding: 12px;
+  }
+
+  .brand-page.admin-work-page .process-list:not(.admin-ai-questioning-panel) > .admin-section-head,
+  .brand-page.admin-work-page .process-list:not(.admin-ai-questioning-panel) > .admin-kpi-grid {
+    padding-inline: 20px;
+  }
+
+  .brand-page.admin-work-page .process-list:not(.admin-ai-questioning-panel) > p:not(.admin-inline-success):not(.admin-empty-state) {
+    margin-inline: 20px;
+  }
+
+  .brand-page.admin-work-page .admin-empty-state {
+    margin-inline: 20px;
+  }
+
+  .brand-page.admin-work-page .process-list > .admin-inline-success {
+    margin-inline: 20px;
+  }
+
+  .brand-page.admin-work-page .admin-ai-questioning-panel > .admin-kpi-grid,
+  .brand-page.admin-work-page .admin-organization-panel > .admin-filter-grid,
+  .brand-page.admin-work-page .admin-organization-panel > .admin-kpi-grid {
+    margin-inline: 14px;
+  }
+
+  .admin-filter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-observability-filter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-inline: 20px;
+  }
+
+  .admin-observability-filter-grid .admin-filter-actions {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    justify-content: stretch;
+    padding-left: 0;
+  }
+
+  .admin-provider-blocker-row {
+    grid-template-columns: 42px minmax(0, 1fr);
+  }
+
+  .admin-provider-blocker-row b {
+    grid-column: 2;
+    justify-self: start;
+    text-align: left;
+  }
+
+  .admin-page-jump-nav {
+    top: 8px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .admin-compact-section > .admin-section-head {
+    align-items: start;
+  }
+
+  .admin-compact-section > .admin-section-head > span {
+    max-width: 260px;
+  }
+
+  .admin-organization-form,
+  .admin-organization-form-compact {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-inline: 18px;
+  }
+
+  .admin-organization-form-provider {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-organization-form .admin-filter-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+
+  .admin-organization-row {
+    grid-template-columns: 42px minmax(0, 1fr);
+    margin-inline: 18px;
+  }
+
+  .admin-organization-row .admin-action-button {
+    grid-column: 1 / -1;
+    width: fit-content;
+  }
+
+  .admin-ai-questioning-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-inline: 18px;
+  }
+
+  .admin-ai-secondary-metrics {
+    margin-inline: 18px;
+  }
+
+  .admin-ai-questioning-kpis-secondary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-inline: 12px;
+  }
+
+  .admin-ai-questioning-actions {
+    grid-template-columns: 1fr;
+    margin-inline: 18px;
+  }
+
+  .admin-ai-action-group > div {
+    align-items: stretch;
+  }
+
+  .admin-ai-questioning-workflow,
+  .admin-syllabus-update-row {
+    margin-inline: 18px;
+  }
+
+  .admin-ai-questioning-panel > .admin-section-head:not(:first-child),
+  .admin-ai-subsection-head {
+    margin-inline: 18px;
+  }
+
+  .admin-ai-workflow-task {
+    grid-template-columns: 42px minmax(0, 1fr);
+  }
+
+  .admin-ai-workflow-task .admin-ai-review-actions {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+
+  .admin-syllabus-update-row {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-syllabus-update-row .admin-ai-review-actions {
+    justify-content: flex-start;
+    margin-top: 12px;
+  }
+
+  .admin-syllabus-update-row .admin-concept-card-editor {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-syllabus-update-row .admin-concept-card-editor label:nth-child(2) {
+    grid-row: auto;
+  }
+
+  .admin-governance-row {
+    grid-template-columns: 42px minmax(0, 1fr);
+    margin-inline: 18px;
+    padding: 14px;
+  }
+
+  .admin-governance-row .admin-ai-review-actions {
+    grid-column: 2;
+    justify-content: flex-start;
+    max-width: none;
+  }
+
+  .admin-question-evidence-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-data-row {
+    grid-template-columns: 42px minmax(0, 1fr);
+    margin-inline: 18px;
+    padding: 14px;
+  }
+
+  .admin-audit-event-diff {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-data-row b,
+  .admin-data-row .admin-evidence-download-button {
+    grid-column: 2;
+    justify-self: start;
+    text-align: left;
+  }
+
+  .admin-filter-actions {
+    justify-content: flex-start;
+  }
+
+  .brand-page.admin-work-page .admin-shell,
+  .brand-page.admin-work-page .admin-work-grid.two,
+  .brand-page.admin-work-page .admin-work-grid.three,
+  .cms-workbench,
+  .school-workbench,
+  .mock-admin-workbench {
+    grid-template-columns: 1fr;
+  }
+
+  .cms-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-page.admin-work-page .admin-list-panel,
+  .cms-sidebar,
+  .school-directory,
+  .mock-admin-sidebar {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+  }
+
+  .brand-page.admin-work-page > .admin-module-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-trend-chart-body {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-trend-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .admin-misconception-row {
+    grid-template-columns: 42px minmax(0, 1fr);
+    margin-inline: 18px;
+  }
+
+  .admin-misconception-row .admin-ai-review-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    max-width: none;
+  }
+
+  .admin-ai-review-row {
+    grid-template-columns: 42px minmax(0, 1fr);
+    margin-inline: 18px;
+  }
+
+  .admin-ai-review-row b {
+    grid-column: 2;
+    justify-self: start;
+    text-align: left;
+  }
+
+  .school-summary-grid,
+  .admin-workbench-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .admin-users-filter-panel {
+    grid-template-columns: 1fr 1fr;
+  }
+}

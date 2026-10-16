@@ -20,7 +20,7 @@ const PAGE_PREFIX = 'cscapilot.pageView.';
 function telemetryEnabled() {
   if (typeof window === 'undefined' || import.meta.env.DEV) return false;
   if ((import.meta.env.VITE_PUBLIC_TELEMETRY_ENABLED as string | undefined)?.trim() === 'false') return false;
-  return navigator.doNotTrack !== '1' && window.doNotTrack !== '1';
+  return navigator.doNotTrack !== '1';
 }
 
 function visitId() {
