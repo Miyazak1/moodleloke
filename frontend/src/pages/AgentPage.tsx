@@ -249,7 +249,7 @@ function assessmentLabel(value: unknown, t: (key: string, fallback?: string) => 
   return t('agent.analysis.notAssessable', '暂不能判断');
 }
 
-type AgentTaskLaunch = AgentPracticeLaunch | AgentMockExamLaunch;
+type AgentTaskLaunch = AgentPracticeLaunch | AgentMockExamLaunch | AgentInterventionVerification;
 
 function isActivelyResumableWorkspace(workspace: AgentJourneyResumeWorkspace | null | undefined): workspace is AgentJourneyResumeWorkspace {
   if (!workspace) return false;
@@ -457,6 +457,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     const saved = readMigratedLocalStorage(AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY, LEGACY_AGENT_FREE_PRACTICE_SUBJECT_STORAGE_KEY);
     return saved === 'physics' || saved === 'chemistry' ? saved : 'math';
   });
+  const [freePracticeDifficulty, setFreePracticeDifficulty] = useState<'auto' | 'basic' | 'medium' | 'hard'>('auto');
   const [freePracticeCount, setFreePracticeCount] = useState(() => {
     if (typeof window === 'undefined') return 5;
     const saved = Number(readMigratedLocalStorage(AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY, LEGACY_AGENT_FREE_PRACTICE_COUNT_STORAGE_KEY));
@@ -955,11 +956,6 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     syncMockExamWorkspaceUrl(workspace);
   }, [syncMockExamWorkspaceUrl]);
 
-  const openTaskWorkspace = useCallback((launch: AgentTaskLaunch) => {
-    if ('attemptId' in launch) openMockExamWorkspace(launch);
-    else openLearningWorkspace(launch);
-  }, [openLearningWorkspace, openMockExamWorkspace]);
-
   const openVerificationWorkspace = useCallback((item: AgentInterventionVerification, path: string, conversationId: string) => {
     const roundMatch = path.match(/\/practice\/rounds\/(\d+)/);
     if (!roundMatch) return;
@@ -973,6 +969,23 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     setTeachingDeliveryId(null);
     syncWorkspaceUrl(workspace);
   }, [syncWorkspaceUrl]);
+
+  const openTaskWorkspace = useCallback((launch: AgentTaskLaunch) => {
+    if ('attemptId' in launch) {
+      openMockExamWorkspace(launch);
+      return;
+    }
+    if ('deliveryId' in launch) {
+      if (!launch.route) return;
+      const verificationUrl = new URL(launch.route, window.location.origin);
+      const contextId = verificationUrl.searchParams.get('agentContextId') ?? conversation?.id ?? '';
+      if (!contextId) return;
+      setInterventionVerification(launch);
+      openVerificationWorkspace(launch, launch.route, contextId);
+      return;
+    }
+    openLearningWorkspace(launch);
+  }, [conversation?.id, openLearningWorkspace, openMockExamWorkspace, openVerificationWorkspace]);
 
   const openPastPaperWorkspace = useCallback((slug: string, contextId?: string, questionId?: number) => {
     setJourneySection('resources');
@@ -1581,6 +1594,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
       subject: freePracticeSubject,
       questionCount: freePracticeCount,
       practiceMode: freePracticeMode,
+      ...(freePracticeSubject === 'math' && freePracticeDifficulty !== 'auto' ? { difficulty: freePracticeDifficulty } : {}),
       ...(freePracticeMode === 'single_topic' && freePracticeTopicId ? { focusTopicId: freePracticeTopicId } : {})
     };
   }
@@ -1620,6 +1634,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
       const launch = await startAgentFreePractice({
         clientRequestId: clientRequestId(),
         subject: next.subject, questionCount: next.questionCount,
+        ...(next.subject === 'math' && next.difficulty ? { difficulty: next.difficulty } : {}),
         questionLanguage,
         practiceMode,
         ...(practiceMode === 'single_topic' && next.focusTopicId ? { focusTopicId: next.focusTopicId } : {}),
@@ -1680,6 +1695,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
       await settleAgentPractice(learningWorkspace.roundId);
       const launch = await continueAgentFreePractice(learningWorkspace.artifactId, {
         clientRequestId: clientRequestId(), subject: next.subject, questionCount: next.questionCount,
+        ...(next.subject === 'math' && next.difficulty ? { difficulty: next.difficulty } : {}),
         questionLanguage,
         practiceMode: next.practiceMode ?? (next.focusTopicId ? 'single_topic' : 'mixed'),
         ...(next.focusTopicId ? { focusTopicId: next.focusTopicId } : {})
@@ -2913,6 +2929,15 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
                 <legend id="agent-free-practice-count-label">{t('agent.freePractice.batch', '本批题量')}</legend>
                 <div role="radiogroup" aria-labelledby="agent-free-practice-count-label">{[3, 5, 10].map((count) => <button key={count} type="button" role="radio" className={freePracticeCount === count ? 'active' : ''} aria-checked={freePracticeCount === count} onClick={() => setFreePracticeCount(count)}>{count} {t('agent.freePractice.questions', '题')}</button>)}</div>
               </fieldset>
+              {freePracticeSubject === 'math' && <label className="agent-free-practice-topic-picker">
+                <span>{t('agent.freePractice.difficulty', '题目难度')}</span>
+                <select aria-label={t('agent.freePractice.difficulty', '题目难度')} value={freePracticeDifficulty} onChange={event => setFreePracticeDifficulty(event.target.value as typeof freePracticeDifficulty)}>
+                  <option value="auto">{t('agent.freePractice.autoDifficulty', '系统适配')}</option>
+                  <option value="basic">{t('agent.freePractice.basicDifficulty', '基础')}</option>
+                  <option value="medium">{t('agent.freePractice.mediumDifficulty', '中等')}</option>
+                  <option value="hard">{t('agent.freePractice.hardDifficulty', '困难')}</option>
+                </select>
+              </label>}
               <button type="button" className="agent-free-practice-start" disabled={isStartingFreePractice || isStartingLearning || (freePracticeMode === 'single_topic' && (!freePracticeTopicId || freePracticeTopicsLoading))} onClick={() => void startConfiguredFreePractice()}>
                 <Icon name={isStartingFreePractice || isStartingLearning ? 'lucide:loader-circle' : 'lucide:play'} />{isStartingFreePractice || isStartingLearning ? t('agent.freePractice.starting', '正在准备题目') : resumableWorkspace?.kind === 'adaptive_round' ? t('agent.freePractice.replaceAndStart', '结束上次未完成练习并开始') : t('agent.freePractice.start', '开始练习')}
               </button>

@@ -1,3 +1,4 @@
+export type StudentQuestionFigure = { schemaVersion: "student-question-figure-v1"; kind: string; phase: "question" | "review"; caption: string; alt: string; mime: "image/svg+xml" | "image/png" | "image/jpeg"; data: string };
 export type User = {
   id: string;
   email: string;
@@ -2577,6 +2578,7 @@ export type AdaptiveRound = {
 };
 
 export type AdaptiveQuestion = SpecialPracticeQuestion & {
+  figure?: StudentQuestionFigure | null;
   topicId: number;
   topicCode: string;
   topicTitle: string;
@@ -3553,7 +3555,7 @@ export type QuestionEnginePluginStatus = {
       sidecarEndpointConfigured: boolean;
       nonceStoreConfigured: boolean;
       transportImplemented: true;
-      sidecarActivationSupported: true;
+      sidecarActivationSupported: boolean;
       sidecarActivationEnabled: boolean;
       workerCapabilities: Array<'question.generate' | 'question.review' | 'question.topic-map'>;
       acceptedWorkerVersions: string[];
@@ -3582,7 +3584,8 @@ export type QuestionEnginePluginStatus = {
       version: string;
       apiVersion: '1';
       capabilities: Array<'question.generate' | 'question.review' | 'question.topic-map'>;
-      executionBoundary: 'in-process-adapter';
+      subjects?: string[];
+      executionBoundary: 'in-process-adapter' | 'isolated-worker';
       activationMode: 'configuration-restart';
     };
     selected: boolean;

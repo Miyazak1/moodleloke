@@ -153,54 +153,21 @@ for (const marker of ['question-engine-task-v1', 'timingSafeEqual', 'payloadSha2
   assert.match(taskProtocol, new RegExp(marker), `signed question-engine task protocol must include ${marker}`);
 }
 assert.match(taskProtocol, /worker_version_not_accepted/, 'signed result protocol must reject Worker versions outside the host compatibility window');
-const sidecarProviderE2e = read('backend/scripts/question-engine-sidecar-provider-e2e-test.cjs');
-for (const marker of ['question.generate', 'question.review', 'reviewBlindAnswer', 'question.topic-map', 'sk-local-contract-only']) {
-  assert.match(sidecarProviderE2e, new RegExp(marker.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `sidecar fake-provider E2E must include ${marker}`);
-}
-const sidecarTransport = read('backend/src/question-engine-plugin/question-engine-sidecar-transport.service.ts');
-for (const marker of ['idempotency-key', 'AbortController', 'question_engine_sidecar_circuit_open', 'verifyQuestionEngineTaskResultEnvelope']) {
-  assert.match(sidecarTransport, new RegExp(marker), `sidecar transport must include ${marker}`);
-}
-const nonceStore = read('backend/src/question-engine-plugin/question-engine-nonce-store.service.ts');
-for (const marker of ["'SET'", "'NX'", "'PX'", 'question_engine_nonce_store_not_configured']) {
-  assert.match(nonceStore, new RegExp(marker), `shared nonce store must include ${marker}`);
-}
-const worker = read('backend/src/question-engine-worker/main.ts');
-for (const marker of ['verifyQuestionEngineTaskEnvelope', 'getCompletedResult', 'cacheCompletedResult', 'capability_not_wired', 'task_replayed_or_in_progress']) {
-  assert.match(worker, new RegExp(marker), `sidecar worker must include ${marker}`);
-}
-const workerCapabilityHandler = read('backend/src/question-engine-worker/capability-handler.ts');
-for (const marker of ['QuestionGeneratorProviderService', 'QuestionReviewerProviderService', 'QuestionTopicMapperProviderService', 'question.generate', 'question.review', 'question.topic-map']) {
-  assert.match(workerCapabilityHandler, new RegExp(marker.replace('.', '\\.')), `worker capability handler must include ${marker}`);
-}
-for (const relativePath of [
-  'backend/src/ai-questioning/question-generator-provider.service.ts',
-  'backend/src/ai-questioning/question-reviewer-provider.service.ts',
-  'backend/src/ai-questioning/question-topic-mapper-provider.service.ts'
-]) {
-  assert.match(read(relativePath), /executeSidecarCapability/, `${relativePath} must route enabled sidecar calls through the transport boundary`);
-}
-assert.match(productionCompose, /question-engine-worker:/, 'production Compose must declare the optional question-engine worker');
-assert.match(productionCompose, /profiles: \["question-engine"\]/, 'question-engine worker must remain behind an explicit Compose profile');
-assert.match(packageJson.scripts['ci:contracts'], /test:question-engine-task-protocol/, 'CI must verify the signed question-engine task protocol');
-assert.match(packageJson.scripts['ci:contracts'], /test:question-engine-sidecar-provider-e2e/, 'CI must verify the sidecar fake-provider end-to-end contract');
-assert.match(packageJson.scripts['ci:contracts'], /question-engine-sidecar-rehearsal-test/, 'CI must verify sidecar rollout rehearsal planning and health probes');
-assert.match(packageJson.scripts['ci:contracts'], /question-engine-sidecar-evidence-test/, 'CI must verify redacted sidecar rehearsal evidence');
-assert.match(packageJson.scripts['ci:contracts'], /test:question-engine-runtime-observability/, 'CI must verify Worker runtime health and circuit readiness');
-const workerHealth = read('backend/src/question-engine-plugin/question-engine-worker-health.service.ts');
-for (const marker of ['worker_protocol_mismatch', 'worker_version_not_accepted', 'worker_capability_missing', 'worker_health_timeout']) {
-  assert.match(workerHealth, new RegExp(marker), `Worker runtime health must detect ${marker}`);
-}
-const sidecarRehearsal = read('scripts/question-engine-sidecar-rehearsal.cjs');
-for (const marker of ['productionHostModeMustRemain', 'open-compatibility-window', 'upgrade-worker', 'close-compatibility-window', 'rollback']) {
-  assert.match(sidecarRehearsal, new RegExp(marker), `sidecar rollout rehearsal must include ${marker}`);
-}
-const sidecarEvidence = read('scripts/question-engine-sidecar-evidence.cjs');
-for (const marker of ['question-engine-sidecar-rehearsal-evidence-v1', 'storesEndpointsOrSecrets', 'sourceDigests', 'runtime_circuit_closed']) {
-  assert.match(sidecarEvidence, new RegExp(marker), `sidecar rehearsal evidence must include ${marker}`);
-}
-assert.match(packageJson.scripts['ci:contracts'], /test:question-engine-sidecar-transport/, 'CI must verify the sidecar transport and shared nonce claim');
-assert.match(packageJson.scripts['ci:contracts'], /test:question-engine-worker/, 'CI must verify the isolated question-engine worker protocol');
-assert.match(packageJson.scripts['ci:contracts'], /test:question-engine-provider-routing/, 'CI must verify all Provider entry points route through the sidecar boundary');
+const pluginModule = read('backend/src/question-engine-plugin/question-engine-plugin.module.ts');
+assert.match(pluginModule, /VerifiedMath143Adapter/);
+assert.doesNotMatch(pluginModule, /BuiltinAIQuestioningAdapter|QuestionEngineSidecarTransportService/);
+const registry = read('backend/src/question-engine-plugin/question-engine-plugin-registry.service.ts');
+assert.match(registry, /plugins: \[this.math.runtimeStatus/);
+assert.match(registry, /allowsProductionCapability[^\n]+return false/);
+assert.match(registry, /legacy_question_engine_retired/);
+const supplier = read('backend/src/question-engine-plugin/verified-question-supply.service.ts');
+for (const marker of ['VerifiedMathSupplyDemandSchema', 'verifiedQuestionGenerationTask', 'leaseOwner', 'updateMany', 'publication.publish']) assert.ok(supplier.includes(marker), marker);
+const publisher = read('backend/src/question-engine-plugin/verified-question-publication.service.ts');
+for (const marker of ['assertVerifiedMath', 'evaluateQuestionCandidateWriteGate', 'verified-math-publication-v1', 'ordinary_practice_only', 'FOR UPDATE']) assert.ok(publisher.includes(marker), marker);
+assert.ok(publisher.indexOf('evaluateQuestionCandidateWriteGate({') < publisher.indexOf('tx.cscaQuestion.create('), 'formal publication must use the common write gate before persistence');
+assert.match(read('backend/src/ai-questioning/question-generator-provider.service.ts'), /throw new Error\(['"]legacy_question_engine_retired['"]\)/);
+assert.match(read('backend/src/ai-questioning/ai-questioning-scheduler.service.ts'), /private isEnabled\(\) \{[\s\S]*?return false/);
+assert.match(packageJson.scripts['ci:contracts'], /verified-math-plugin-test/);
+assert.doesNotMatch(packageJson.scripts['ci:contracts'], /sidecar-provider-e2e|sidecar-rehearsal-test/);
 
 console.log('CSCALite Agent host integration contract passed.');

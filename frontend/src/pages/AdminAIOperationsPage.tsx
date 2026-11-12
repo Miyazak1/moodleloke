@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { AdminPageShell } from '../components/AdminPageShell';
+import { FormalQuestionEnginesPanel } from '../components/admin/FormalQuestionEnginesPanel';
 import {
   AdminActionBar,
   AdminPanel,
@@ -49,6 +50,7 @@ import { ApiError } from '../lib/request';
 import { useI18n } from '../i18n/useI18n';
 import { EMPTY_GENERATION_QUEUE } from '../components/admin/ai-question-bank/questionBankDefaults';
 import { QuestionSupplyFulfillmentPanel } from '../components/admin/QuestionSupplyFulfillmentPanel';
+import { InterventionPilotObservabilityPanel } from '../components/admin/InterventionPilotObservabilityPanel';
 
 type AdminAIOperationsPageProps = {
   currentUser: User | null;
@@ -746,6 +748,7 @@ export function AdminAIOperationsPage({
       onGoToOrganizations={onGoToOrganizations}
       onGoToUsers={onGoToUsers}
     >
+      {isAdmin && activeTab === 'generation' && <FormalQuestionEnginesPanel />}
       {isAdmin && isLoading && (
         <section className="admin-feedback">
           <strong>{copy.loading}</strong>
@@ -776,78 +779,13 @@ export function AdminAIOperationsPage({
             onChange={setActiveTab}
           />
 
-          {activeTab === 'generation' && (
-          <QuestionSupplyFulfillmentPanel locale={locale} />
+
+
+          {activeTab === 'observability' && (
+          <InterventionPilotObservabilityPanel locale={locale} />
           )}
 
-          {activeTab === 'generation' && (
-          <AdminPanel className="admin-ai-operations-actions">
-            <AdminPanelHeader
-              kicker={copy.actions}
-              title={copy.queue}
-              actions={(
-                <AdminActionBar>
-                <button
-                  type="button"
-                  className={isLoading ? 'ghost-button admin-action-loading' : 'ghost-button'}
-                  onClick={() => setRefreshNonce((value) => value + 1)}
-                  disabled={isLoading}
-                >
-                  {copy.refresh}
-                </button>
-                <button
-                  type="button"
-                  className={isActionBusy('ensure-coverage') ? 'admin-action-loading' : undefined}
-                  onClick={() => void runOperation('ensure-coverage', copy.ensureCoverage, () => ensureAdminAIQuestioningBlueprintCoverage({ limit: 30 }))}
-                  disabled={generationActionsBusy}
-                >
-                  {copy.ensureCoverage}
-                </button>
-                <button
-                  type="button"
-                  className={isActionBusy('enqueue-jobs') ? 'admin-action-loading' : undefined}
-                  onClick={() => void runOperation('enqueue-jobs', copy.enqueueJobs, () => enqueueAdminAIQuestioningGenerationJobs({ limit: 20 }))}
-                  disabled={generationActionsBusy}
-                >
-                  {copy.enqueueJobs}
-                </button>
-                <button
-                  type="button"
-                  className={isActionBusy('process-queue') ? 'admin-action-loading' : undefined}
-                  onClick={() => void runOperation('process-queue', copy.processQueue, async () => formatGenerationQueueResult(copy.processQueue, await processAdminAIQuestioningGenerationJobs({ limit: 20, retryFailed: false })))}
-                  disabled={generationActionsBusy || data.queue.summary.queued === 0}
-                >
-                  {copy.processQueue}
-                </button>
-                <button
-                  type="button"
-                  className={isActionBusy('retry-failed') ? 'admin-action-loading' : undefined}
-                  onClick={() => void runOperation('retry-failed', copy.retryFailed, async () => formatGenerationQueueResult(copy.retryFailed, await bulkAdminAIQuestioningGenerationJobs({ action: 'retry_failed', limit: 20 })))}
-                  disabled={generationActionsBusy || data.queue.summary.failed === 0}
-                >
-                  {copy.retryFailed}
-                </button>
-                <button
-                  type="button"
-                  className={isActionBusy('archive-failed') ? 'ghost-button admin-action-loading' : 'ghost-button'}
-                  onClick={() => void runOperation('archive-failed', copy.archiveFailed, async () => formatGenerationQueueResult(copy.archiveFailed, await bulkAdminAIQuestioningGenerationJobs({ action: 'archive_failed', limit: 20 })))}
-                  disabled={generationActionsBusy || data.queue.summary.failed === 0}
-                >
-                  {copy.archiveFailed}
-                </button>
-                <button
-                  type="button"
-                  className={isActionBusy('pregeneration') ? 'admin-action-loading' : undefined}
-                  onClick={() => void runOperation('pregeneration', copy.runPregeneration, () => runAdminAIQuestioningPregeneration({ limit: 10, perTopic: 1, retryFailed: true }))}
-                  disabled={generationActionsBusy}
-                >
-                  {copy.runPregeneration}
-                </button>
-                </AdminActionBar>
-              )}
-            />
-          </AdminPanel>
-          )}
+
 
           {activeTab === 'overview' && (
           <AdminPanel>
@@ -925,7 +863,7 @@ export function AdminAIOperationsPage({
           </section>
           )}
 
-          {(activeTab === 'overview' || activeTab === 'provider' || activeTab === 'generation') && (
+          {(activeTab === 'overview' || activeTab === 'provider' || false /* retired generation controls */) && (
           <section className="admin-work-grid two admin-ai-operations-grid">
             {(activeTab === 'overview' || activeTab === 'provider') && (
             <AdminPanel as="article">
@@ -939,7 +877,7 @@ export function AdminAIOperationsPage({
             </AdminPanel>
             )}
 
-            {(activeTab === 'overview' || activeTab === 'generation') && (
+            {(activeTab === 'overview' || false /* retired generation controls */) && (
             <AdminPanel as="article">
               <AdminPanelHeader kicker={copy.queue} title={data.queue.status} />
               <div className="metric-grid four">
@@ -949,18 +887,7 @@ export function AdminAIOperationsPage({
                 <div><span>{copy.stale}</span><strong>{data.queue.summary.staleRunning}</strong></div>
               </div>
               <p className="form-hint">{copy.recommendedAction}: {data.queue.recommendedAction}</p>
-              {activeTab === 'generation' && (
-                <div className="admin-list compact">
-                  <div>
-                    <strong>{copy.blockedJobs}</strong>
-                    <span>{data.queue.blockedJobs.slice(0, 8).map((id) => `#${id}`).join(', ') || '-'}</span>
-                  </div>
-                  <div>
-                    <strong>{copy.staleJobs}</strong>
-                    <span>{data.queue.staleRunningJobs.slice(0, 8).map((id) => `#${id}`).join(', ') || '-'}</span>
-                  </div>
-                </div>
-              )}
+
             </AdminPanel>
             )}
           </section>
@@ -1351,92 +1278,9 @@ export function AdminAIOperationsPage({
           </section>
           )}
 
-          {activeTab === 'generation' && (
-          <section className="admin-work-grid two admin-ai-operations-grid">
-            <AdminPanel as="article">
-              <AdminPanelHeader kicker={copy.queue} title={copy.failureBreakdown} />
-              <div className="admin-list compact">
-                {data.queue.byFailureCategory.slice(0, 8).map((item) => (
-                  <div key={item.key || 'unknown'}>
-                    <strong>{item.key || '-'}</strong>
-                    <span>{formatNumber(item.count)}</span>
-                  </div>
-                ))}
-                {data.queue.byFailureCategory.length === 0 && <p className="form-hint">-</p>}
-              </div>
-            </AdminPanel>
-            <AdminPanel as="article">
-              <AdminPanelHeader kicker={copy.queue} title={copy.providerFailureBreakdown} />
-              <div className="admin-list compact">
-                {data.queue.byProviderFailureCategory.slice(0, 8).map((item) => (
-                  <div key={item.key || 'unknown'}>
-                    <strong>{item.key || '-'}</strong>
-                    <span>{formatNumber(item.count)}</span>
-                  </div>
-                ))}
-                {data.queue.byProviderFailureCategory.length === 0 && <p className="form-hint">-</p>}
-              </div>
-            </AdminPanel>
-          </section>
-          )}
 
-          {activeTab === 'generation' && (
-          <AdminPanel>
-            <AdminPanelHeader kicker={copy.queue} title={copy.recentJobs} />
-            <AdminTableScroll>
-              <table className="admin-data-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Status</th>
-                    <th>Subject</th>
-                    <th>Topic</th>
-                    <th>Blueprint</th>
-                    <th>Failure</th>
-                    <th>Updated</th>
-                    <th>{copy.actions}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.queue.recent.map((job) => (
-                    <tr key={job.id}>
-                      <td>#{job.id}</td>
-                      <td>{job.status}</td>
-                      <td>{job.subject}</td>
-                      <td>
-                        {job.topicTitle || `#${job.topicId}`}
-                        <p>#{job.topicId}</p>
-                      </td>
-                      <td>{job.blueprintId}</td>
-                      <td>
-                        {job.governance.failureCategory || '-'}
-                        <p>{job.governance.providerFailureCategory || '-'}</p>
-                        <p>{job.error || '-'}</p>
-                        <p>{job.governance.attemptCount}/{job.governance.maxAttempts} attempts{job.governance.lastFailedAt ? ` · ${new Date(job.governance.lastFailedAt).toLocaleString(locale === 'en' ? 'en-US' : 'zh-CN')}` : ''}</p>
-                      </td>
-                      <td>{new Date(job.updatedAt).toLocaleString(locale === 'en' ? 'en-US' : 'zh-CN')}</td>
-                      <td>
-                        <button
-                          type="button"
-                          className={isActionBusy(`retry-job-${job.id}`) ? 'ghost-button admin-action-loading' : 'ghost-button'}
-                          onClick={() => void runOperation(`retry-job-${job.id}`, `${copy.retryJob} #${job.id}`, () => retryAdminAIQuestioningGenerationJob(job.id))}
-                          disabled={generationActionsBusy || job.status === 'running'}
-                        >
-                          {copy.retryJob}
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                  {data.queue.recent.length === 0 && (
-                    <tr>
-                      <td colSpan={8}>{copy.noRecentFailures}</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </AdminTableScroll>
-          </AdminPanel>
-          )}
+
+
         </>
       )}
     </AdminPageShell>

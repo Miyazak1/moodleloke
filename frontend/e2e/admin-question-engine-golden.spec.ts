@@ -22,16 +22,16 @@ const disabledStatus = {
   schemaVersion: '1',
   host: {
     apiVersion: '1',
-    selectedPluginId: 'moodlelike-ai-questioning',
+    selectedPluginId: 'verified-math-1.43',
     fallbackMode: 'verified-bank-only',
     fallbackAvailable: true,
     arbitraryRuntimeCodeLoading: false,
-    enforcedCapabilities: ['question.generate', 'question.review', 'question.topic-map'],
+    enforcedCapabilities: ['question.generate'],
     taskProtocol: {
       version: 'question-engine-task-v1', executionMode: 'in-process', signingConfigured: false,
       sidecarEndpointConfigured: false, nonceStoreConfigured: true,
-      transportImplemented: true, sidecarActivationSupported: true,
-      sidecarActivationEnabled: false, workerCapabilities: [], acceptedWorkerVersions: ['1.0.0']
+      transportImplemented: true, sidecarActivationSupported: false,
+      sidecarActivationEnabled: false, workerCapabilities: [], acceptedWorkerVersions: ['1.43.0']
     }
   },
   runtime: {
@@ -43,12 +43,12 @@ const disabledStatus = {
   },
   plugins: [{
     descriptor: {
-      id: 'moodlelike-ai-questioning',
-      displayName: 'Moodlelike AI Questioning',
-      version: '1.0.0',
+      id: 'verified-math-1.43',
+      displayName: 'Verified Mathematics',
+      version: '1.43.0',
       apiVersion: '1',
-      capabilities: ['question.generate', 'question.review', 'question.topic-map'],
-      executionBoundary: 'in-process-adapter',
+      capabilities: ['question.generate'],
+      subjects: ['math'], executionBoundary: 'isolated-worker',
       activationMode: 'configuration-restart'
     },
     selected: true,
@@ -59,11 +59,9 @@ const disabledStatus = {
     productionRunnerEnabled: false,
     generationWritesEnabled: false,
     status: 'disabled',
-    blockers: ['plugin_host_disabled', 'external_provider_not_selected', 'provider_key_missing', 'question_generate_disabled', 'production_runner_disabled'],
+    blockers: ['plugin_host_disabled'],
     capabilityStates: [
-      { capability: 'question.generate', enabled: false, provider: 'rule-fallback', model: 'deepseek-v4-flash', providerConfigured: false, executionEnabled: false, status: 'disabled', blockers: ['plugin_host_disabled', 'question_generate_disabled'] },
-      { capability: 'question.review', enabled: false, provider: 'rule-fallback', model: 'deepseek-v4-flash', providerConfigured: false, executionEnabled: false, status: 'disabled', blockers: ['plugin_host_disabled', 'question_review_disabled'] },
-      { capability: 'question.topic-map', enabled: false, provider: 'rule-fallback', model: 'deepseek-v4-flash', providerConfigured: false, executionEnabled: false, status: 'disabled', blockers: ['plugin_host_disabled', 'question_topic_map_disabled'] }
+      { capability: 'question.generate', enabled: false, provider: 'rule-fallback', model: 'deepseek-v4-flash', providerConfigured: false, executionEnabled: false, status: 'disabled', blockers: ['plugin_host_disabled', 'question_generate_disabled'] }
     ]
   }]
 };
@@ -76,13 +74,13 @@ test('shows a fail-safe disabled question-engine plugin without generation actio
   await expect(page.getByRole('heading', { name: '题目引擎接入状态' })).toBeVisible();
   await expect(page.getByText('已核验题库', { exact: true })).toBeVisible();
   await expect(page.getByText('生成写入')).toBeVisible();
-  await expect(page.getByText('Moodlelike AI Questioning · v1.0.0')).toBeVisible();
+  await expect(page.getByText('Verified Mathematics · v1.43.0')).toBeVisible();
   const disabledReasons = page.getByText(/plugin_host_disabled/);
-  await expect(disabledReasons).toHaveCount(3);
+  await expect(disabledReasons).toHaveCount(1);
   await expect(disabledReasons.first()).toBeVisible();
-  await expect(page.getByText('question.generate', { exact: true })).toBeVisible();
-  await expect(page.getByText('question.review', { exact: true })).toBeVisible();
-  await expect(page.getByText('question.topic-map', { exact: true })).toBeVisible();
+  await expect(page.getByText('question.generate', { exact: true }).last()).toBeVisible();
+  await expect(page.getByText('question.review', { exact: true })).toHaveCount(0);
+  await expect(page.getByText('question.topic-map', { exact: true })).toHaveCount(0);
   await expect(page.getByText(/question-engine-task-v1/)).toBeVisible();
   await expect(page.getByText('执行模式：in-process')).toBeVisible();
   await expect(page.getByRole('button', { name: /生成|启用|安装/ })).toHaveCount(0);

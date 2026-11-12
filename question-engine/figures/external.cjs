@@ -1,0 +1,20 @@
+'use strict';
+// Public text only. No answer key, source artifact or Math Lab admission is read.
+const {binding,hash,display}=require('./binding.cjs');
+const {createHmac,timingSafeEqual}=require('node:crypto');
+const reviewed=require('./external-reviewed.json').rows;
+const {render}=require('../diagrams/render.cjs');
+const number='([-−–]?\\d+(?:\\.\\d+)?)';
+const pair='\\(?\\$?'+number+'\\s*,\\s*'+number+'\\$?\\)?';
+function parse(q){const text=q.prompt.replace(/[−–]/g,'-');let match;
+  if((match=new RegExp('^What is the slope of the line that passes through the points '+pair+' and '+pair+'\\?$','i').exec(text)))return {version:'external-public-points-v1',binding:binding(q),phase:'review',relation:'slope_two_points',points:[[+match[1],+match[2]],[+match[3],+match[4]]],drawSegment:true};
+  if((match=new RegExp('^On a Cartesian coordinate plane, points \\$?'+pair+'\\$? and \\$?'+pair+'\\$? are opposite vertices of a square\\. What is the area of the square\\?$','i').exec(text)))return {version:'external-public-points-v1',binding:binding(q),phase:'question',relation:'given_opposite_vertices_only',points:[[+match[1],+match[2]],[+match[3],+match[4]]],drawSegment:false};
+  return null;
+}
+function localizedFactsAgree(q,facts){const locales=q.localizations??q.generationMetadata?.localizations??{};for(const lang of ['zh','en']){const prompt=locales[lang]?.prompt;if(prompt&&prompt!==q.prompt){const other=parse({...q,prompt});if(!other||other.relation!==facts.relation||hash(other.points)!==hash(facts.points))return false;}}return true;}
+function approveExternalFacts(q,{sourceRef,reviewer},key){const facts=parse(q);if(!facts||!localizedFactsAgree(q,facts)||!key||!sourceRef||!reviewer)throw Error('EXTERNAL_FIGURE_FACT_REVIEW_REQUIRED');const body={schemaVersion:'host-external-figure-facts-v1',facts,sourceRef,reviewer};return {...body,signature:createHmac('sha256',key).update(hash(body)).digest('hex')};}
+function extract(q,key=process.env.AUTH_SECRET){const facts=parse(q);if(!facts||!localizedFactsAgree(q,facts))return null;const entry=reviewed.find(r=>r.binding===facts.binding&&r.version===q.version&&r.sourceType===q.sourceType&&r.sourceIdentity===q.generationMetadata?.externalImport?.sourceIdentity);if(entry)return facts;const record=q.generationMetadata?.externalFigureProof;if(!record||record.schemaVersion!=='host-external-figure-facts-v1'||!key)return null;const body={schemaVersion:record.schemaVersion,facts:record.facts,sourceRef:record.sourceRef,reviewer:record.reviewer};const expected=createHmac('sha256',key).update(hash(body)).digest('hex');if(typeof record.signature!=='string'||record.signature.length!==expected.length||!timingSafeEqual(Buffer.from(expected),Buffer.from(record.signature))||hash(facts)!==hash(record.facts))return null;return facts;}
+function renderExternal(q,phase,language){const proof=extract(q);if(!proof||phase==='question'&&proof.phase==='review')return null;if(proof.points.flat().some(x=>!Number.isFinite(x)||Math.abs(x)>10000)||hash(proof.points[0])===hash(proof.points[1]))return null;const world={points:{P:proof.points[0],Q:proof.points[1]},segments:proof.drawSegment?[['P','Q','highlight']]:[],faces:[],circles:[],rings:[],lines:[],labels:['P','Q'],anchors:[],axes:true};const caption=language==='en'?'Given points P and Q (schematic; use the question values)':'题给的点 P 与 Q（示意图，计算以题目数据为准）';return {display:display(render(world,caption),caption,phase),proof:{...proof,source:'external_public_text',notMathLabArtifact:true}};}
+// Strict dependency markers, not ordinary use of the words graph/figure/graphite.
+function requiresFigure(q){return q.generationMetadata?.questionFigure?.role==='required'||q.generationMetadata?.figureRequirement==='required'||/根据(?:下|右|左|此)图|如图所示.*(?:求|判断)|(?:from|using|according to) (?:the )?(?:graph|diagram) (?:shown|below)|(?:graph|diagram) (?:shown below|below shows)|refer to (?:the )?(?:following )?(?:figure|diagram)/i.test(q.prompt);}
+module.exports={extract,parse,approveExternalFacts,renderExternal,requiresFigure};

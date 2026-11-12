@@ -10,7 +10,8 @@ const coreExact = new Set([
   'demo:seed', 'agent:build', 'audit:product-boundaries', 'audit:command-surface', 'audit:compatibility-operations',
   'teaching-assets:seed',
   'audit:prisma-retention', 'audit:environment-contract', 'security:audit-dependencies',
-  'release:check', 'ci:contracts', 'ci:golden'
+  'release:check', 'ci:contracts', 'ci:golden',
+  'activation:test', 'public-site:verify', 'public-telemetry:test'
 ]);
 const corePrefixes = ['local:', 'test:', 'data:', 'question-engine:'];
 const platformPrefixes = [
@@ -26,6 +27,7 @@ const legacyPrefixes = ['backend:dev', 'db:', 'verify:'];
 
 function classify(name) {
   if (coreExact.has(name) || corePrefixes.some((prefix) => name.startsWith(prefix))) return 'product-core';
+  if (name === 'external-oer:quarantine') return 'platform-contracts';
   if (name.startsWith('csca-ai-questioning:')) return 'question-production';
   if (platformPrefixes.some((prefix) => name.startsWith(prefix))) return 'platform-contracts';
   if (legacyExact.has(name) || legacyPrefixes.some((prefix) => name.startsWith(prefix))) return 'compatibility-operations';

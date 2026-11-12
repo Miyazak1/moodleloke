@@ -1,3 +1,4 @@
+import { isFigureReadyForPractice, questionFigure } from './question-figure.policy';
 import { Injectable } from '@nestjs/common';
 import {
   subjectPracticeCurrentPolicyBlockReasons
@@ -6,6 +7,7 @@ import { isStudentConsumableAiVersionStatus } from '../ai-questioning/question-v
 import { PrismaService } from '../prisma/prisma.service';
 import { ADAPTIVE_EXPOSURE_SOURCE, AdaptivePlannedQuestion, AdaptivePlannedTopic, IndependentVerificationQuestion } from './csca-adaptive.types';
 import { isIndependentVerificationQuestion, isStandardStudentChoiceQuestion } from './student-question-eligibility';
+import { MATH_ENGINE_SOURCE, isReadyMathEngineQuestion } from './math-engine-question.policy';
 
 type CandidateQuestion = {
   id: number;
@@ -149,7 +151,7 @@ export class AdaptiveQuestionProviderService {
         topic: { status: 'published' }
       },
       select: {
-        id: true, version: true, designedDifficulty: true, empiricalDifficulty: true,
+        id: true, version: true, prompt: true, explanation: true, designedDifficulty: true, empiricalDifficulty: true,
         difficultyConfidence: true, qualityMetric: { select: { needsReview: true } },
         sourceType: true, questionType: true, options: true, correctAnswer: true,
         knowledgeTags: true, generationMetadata: true, reviewMetadata: true,
@@ -162,7 +164,7 @@ export class AdaptiveQuestionProviderService {
     const excludedSignatures = new Set(constraints.excludedTransferSignatures ?? []);
     const allowed = candidates.filter((item) => {
       if (item.qualityMetric?.needsReview || excludedRefs.includes(`csca_question:${item.id}:v${item.version}`)) return false;
-      if (!isIndependentVerificationQuestion(item)) return false;
+      if (!isIndependentVerificationQuestion(item) || !isFigureReadyForPractice(item)) return false;
       const signature = trustedQuestionTransferSignature(item);
       return !constraints.requireDifferentTransferSignature || Boolean(signature && !excludedSignatures.has(signature));
     });
@@ -191,7 +193,8 @@ export class AdaptiveQuestionProviderService {
       }));
   }
 
-  async pickQuestions(userId: number, plannedTopics: AdaptivePlannedTopic[], limit: number): Promise<AdaptivePlannedQuestion[]> {
+  async pickQuestions(userId: number, plannedTopics: AdaptivePlannedTopic[], limit: number, difficulty?: 'basic' | 'medium' | 'hard', options: { unseenOnly?: boolean; excludeGenerated?: boolean } = {}): Promise<AdaptivePlannedQuestion[]> {
+    const matchesDifficulty = (value: string) => !difficulty || (/难|提高|挑战|hard/.test(value) ? 'hard' : /中|medium/.test(value) ? 'medium' : 'basic') === difficulty;
     const topicIds = plannedTopics.map((topic) => topic.topicId);
     const directQuestions = await this.prisma.cscaQuestion.findMany({
       where: {
@@ -203,18 +206,21 @@ export class AdaptiveQuestionProviderService {
       },
       select: {
         id: true,
+        version: true,
         sourceType: true,
         topicId: true,
         questionType: true,
         options: true,
         correctAnswer: true,
+        prompt: true,
+        explanation: true,
         designedDifficulty: true,
         empiricalDifficulty: true,
         difficultyConfidence: true,
         generationMetadata: true,
         reviewMetadata: true,
         syllabusVersion: true,
-        topic: { select: { code: true, title: true, syllabusVersion: true } }
+        topic: { select: { code: true, title: true, subject: true, syllabusVersion: true } }
       }
     });
     const mappings = await this.prisma.cscaTopicMapping.findMany({
@@ -247,10 +253,19 @@ export class AdaptiveQuestionProviderService {
     }
     const questions = await this.prisma.specialPracticeQuestion.findMany({
       where: { id: { in: questionIds }, status: 'published' },
-      select: { id: true, difficulty: true }
+      select: { id: true, difficulty: true, version: true, prompt: true, options: true, correctAnswer: true, explanation: true, localizations: true }
     });
+    const figureHolds = directQuestions.filter(question => !isFigureReadyForPractice(question));
+    if (figureHolds.length) await this.prisma.cscaAdaptiveInventoryEvent.createMany({ data: figureHolds.map(question => ({
+      userId, subject: question.topic.subject, topicId: question.topicId, questionId: question.id,
+      eventType: 'required_figure_unavailable', questionType: question.questionType,
+      metadata: { questionSource: 'csca_question', questionVersion: question.version, reason: questionFigure(question).reason ?? 'figure_unverified' }
+    })) });
     const directCurrentQuestions = directQuestions.filter((question) => (
       question.syllabusVersion === question.topic.syllabusVersion &&
+      isFigureReadyForPractice(question) &&
+      (question.sourceType !== MATH_ENGINE_SOURCE || isReadyMathEngineQuestion(question)) &&
+      (!options.excludeGenerated || ![MATH_ENGINE_SOURCE, 'math_reading_pilot'].includes(question.sourceType)) &&
       !isOnlineMockExamQuestion(question.generationMetadata, question.reviewMetadata) &&
       (question.sourceType !== 'external_oer' || isStandardStudentChoiceQuestion(question))
     ));
@@ -290,6 +305,12 @@ export class AdaptiveQuestionProviderService {
         continue;
       }
       const activeAiRow = subjectPracticeAiRows.find((row) => isFormalSubjectPracticeAiRow(row, mapping.topicId, mapping.topic.syllabusVersion));
+      const figureCandidate = { ...question, sourceType: activeAiRow ? 'ai' : 'special_practice', sourceQuestionId: activeAiRow?.sourceQuestionId ?? null, generationMetadata: activeAiRow?.generationMetadata };
+      if (!isFigureReadyForPractice(figureCandidate)) {
+        await this.prisma.cscaAdaptiveInventoryEvent.create({ data: { userId, subject: mapping.topic.subject, topicId: mapping.topicId, questionId: question.id,
+          eventType: 'required_figure_unavailable', metadata: { questionSource: 'special_practice', questionVersion: question.version, reason: questionFigure(figureCandidate).reason ?? 'figure_unverified' } } });
+        continue;
+      }
       const items = candidatesByTopic.get(mapping.topicId) ?? [];
       items.push({
         id: question.id,
@@ -312,7 +333,9 @@ export class AdaptiveQuestionProviderService {
     for (const plannedTopic of plannedTopics) {
       const preferredQuestionIds = new Set(plannedTopic.preferredQuestionIds ?? []);
       const candidates = (candidatesByTopic.get(plannedTopic.topicId) ?? [])
+        .filter(candidate => matchesDifficulty(candidate.difficulty))
         .filter((candidate) => !selectedIds.has(candidate.id))
+        .filter(candidate => !options.unseenOnly || !exposureMap.has(`${ADAPTIVE_EXPOSURE_SOURCE}:${candidate.source}:${candidate.id}`))
         .sort((a, b) => {
           const aPreferred = a.source === 'csca_question' && preferredQuestionIds.has(a.id) ? 0 : 1;
           const bPreferred = b.source === 'csca_question' && preferredQuestionIds.has(b.id) ? 0 : 1;
@@ -346,7 +369,9 @@ export class AdaptiveQuestionProviderService {
     if (selected.length >= limit) return selected;
 
     const fallbackCandidates = Array.from(candidatesByTopic.values()).flat()
+      .filter(candidate => matchesDifficulty(candidate.difficulty))
       .filter((candidate) => !selectedIds.has(candidate.id))
+      .filter(candidate => !options.unseenOnly || !exposureMap.has(`${ADAPTIVE_EXPOSURE_SOURCE}:${candidate.source}:${candidate.id}`))
       .sort((a, b) => {
         const aExposure = exposureMap.get(`${ADAPTIVE_EXPOSURE_SOURCE}:${a.source}:${a.id}`)?.seenCount
           ?? (a.source === 'special_practice' ? exposureMap.get(`${ADAPTIVE_EXPOSURE_SOURCE}:${a.id}`)?.seenCount : undefined)

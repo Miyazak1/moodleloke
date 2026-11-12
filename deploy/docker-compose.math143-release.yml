@@ -1,0 +1,24 @@
+# Opt-in overlay for an EXISTING deployment. Does not create/rename its resources.
+# Keep the existing project name, base Compose file, environment and volume bindings.
+# Supply immutable image IDs/digests; build/push/deploy is never automatic here.
+services:
+  backend:
+    image: ${MATH143_RELEASE_BACKEND_IMAGE:?reviewed backend digest required}
+    environment:
+      QUESTION_ENGINE_PLUGIN_ENABLED: ${MATH143_GENERATION_ENABLED:-false}
+      QUESTION_ENGINE_PLUGIN_ID: verified-math-1.43
+      QUESTION_ENGINE_EXECUTION_MODE: in-process
+      MOODLELIKE_MATH_ENGINE_ENABLED: ${MATH143_GENERATION_ENABLED:-false}
+      MOODLELIKE_READING_PILOTS_ENABLED: "false"
+      CSCA_AI_QUESTION_GENERATION_ENABLED: "false"
+      CSCA_AI_QUESTION_REVIEW_ENABLED: "false"
+      CSCA_AI_TOPIC_MAPPING_ENABLED: "false"
+      CSCA_AI_QUESTIONING_SCHEDULER_ENABLED: "false"
+      CSCA_SUBJECT_PRACTICE_PRODUCTION_ENABLED: "false"
+      CSCA_SUBJECT_PRACTICE_PREDICTIVE_REPLENISHMENT_ENABLED: "false"
+  frontend:
+    image: ${MATH143_RELEASE_FRONTEND_IMAGE:?reviewed frontend digest required}
+  migrate:
+    image: ${MATH143_RELEASE_MIGRATE_IMAGE:?matching migration digest required}
+    # Upgrade schema only. Do not rerun historical bank/demo/import seeders.
+    command: [node, scripts/prisma-cli.cjs, migrate, deploy]

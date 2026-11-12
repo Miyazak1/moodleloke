@@ -2,7 +2,7 @@
 
 ## Product identity
 
-Student, account and administration surfaces use the Moodlelike product name. Authentication email copy, attachment-analysis system prompts and Demo evidence use the same identity. Internal CSCA subject terminology remains a domain concept and is not treated as a product brand.
+Student, account and administration surfaces retain the deployed public brand **CSCAPilot**, including authentication email copy. Moodlelike is the repository, container-resource and browser-storage namespace; changing these technical identifiers does not rename the public site. Internal CSCA subject terminology remains a domain concept and is not treated as a product brand.
 
 ## Storage migration
 

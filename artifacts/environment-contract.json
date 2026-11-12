@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1",
-  "generatedAt": "2026-09-28T12:29:42.090Z",
-  "reachableFilesScanned": 401,
-  "runtimeVariableCount": 176,
+  "generatedAt": "2026-11-12T11:27:53.601Z",
+  "reachableFilesScanned": 541,
+  "runtimeVariableCount": 163,
   "requiredProduction": [
     "MOODLELIKE_ENV",
     "DATABASE_URL",
@@ -56,7 +56,8 @@
     "SUBJECT_PRACTICE_OBSERVATION_GLOBAL_COOLDOWN_MINUTES",
     "SUBJECT_PRACTICE_OBSERVATION_NETWORK_PROBE_TIMEOUT_MS",
     "SUBJECT_PRACTICE_QUESTION_PLAN_CELL_ALLOWLIST_FLAG",
-    "UPLOADS_DIR"
+    "UPLOADS_DIR",
+    "VITE_PUBLIC_TELEMETRY_ENABLED"
   ],
   "unsafeExampleValues": [],
   "variables": [
@@ -123,8 +124,7 @@
         "backend/src/ai-questioning/question-generator-provider.service.ts",
         "backend/src/ai-questioning/question-reviewer-provider.service.ts",
         "backend/src/ai-questioning/question-topic-mapper-provider.service.ts",
-        "backend/src/csca-special-practice/ai-coach-provider.service.ts",
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts"
+        "backend/src/csca-special-practice/ai-coach-provider.service.ts"
       ]
     },
     {
@@ -325,8 +325,7 @@
       "documentedDevelopment": true,
       "documentedProduction": true,
       "sources": [
-        "backend/src/ai-gateway/ai-gateway-config.service.ts",
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts"
+        "backend/src/ai-gateway/ai-gateway-config.service.ts"
       ]
     },
     {
@@ -386,8 +385,7 @@
         "backend/src/ai-questioning/question-generator-provider.service.ts",
         "backend/src/ai-questioning/question-reviewer-provider.service.ts",
         "backend/src/ai-questioning/question-topic-mapper-provider.service.ts",
-        "backend/src/csca-special-practice/ai-coach-provider.service.ts",
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts"
+        "backend/src/csca-special-practice/ai-coach-provider.service.ts"
       ]
     },
     {
@@ -408,8 +406,7 @@
         "backend/src/ai-questioning/question-generator-provider.service.ts",
         "backend/src/ai-questioning/question-reviewer-provider.service.ts",
         "backend/src/ai-questioning/question-topic-mapper-provider.service.ts",
-        "backend/src/csca-special-practice/ai-coach-provider.service.ts",
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts"
+        "backend/src/csca-special-practice/ai-coach-provider.service.ts"
       ]
     },
     {
@@ -445,8 +442,7 @@
       "documentedDevelopment": true,
       "documentedProduction": true,
       "sources": [
-        "backend/src/ai-gateway/ai-gateway-config.service.ts",
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts"
+        "backend/src/ai-gateway/ai-gateway-config.service.ts"
       ]
     },
     {
@@ -466,9 +462,7 @@
       "documentedProduction": true,
       "sources": [
         "backend/src/ai-questioning/question-generator-provider.service.ts",
-        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts",
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts",
-        "backend/src/question-engine-plugin/question-engine-plugin-registry.service.ts"
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts"
       ]
     },
     {
@@ -478,8 +472,7 @@
       "documentedProduction": true,
       "sources": [
         "backend/src/ai-gateway/ai-gateway-config.service.ts",
-        "backend/src/ai-questioning/question-generator-provider.service.ts",
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts"
+        "backend/src/ai-questioning/question-generator-provider.service.ts"
       ]
     },
     {
@@ -498,8 +491,7 @@
       "documentedDevelopment": true,
       "documentedProduction": true,
       "sources": [
-        "backend/src/ai-questioning/question-generator-provider.service.ts",
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts"
+        "backend/src/ai-questioning/question-generator-provider.service.ts"
       ]
     },
     {
@@ -535,8 +527,7 @@
       "documentedDevelopment": true,
       "documentedProduction": true,
       "sources": [
-        "backend/src/ai-gateway/ai-gateway-config.service.ts",
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts"
+        "backend/src/ai-gateway/ai-gateway-config.service.ts"
       ]
     },
     {
@@ -555,9 +546,7 @@
       "documentedProduction": true,
       "sources": [
         "backend/src/ai-questioning/question-reviewer-provider.service.ts",
-        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts",
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts",
-        "backend/src/question-engine-plugin/question-engine-plugin-registry.service.ts"
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts"
       ]
     },
     {
@@ -568,8 +557,7 @@
       "sources": [
         "backend/src/ai-gateway/ai-gateway-config.service.ts",
         "backend/src/ai-questioning/question-reviewer-provider.service.ts",
-        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts",
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts"
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts"
       ]
     },
     {
@@ -588,8 +576,7 @@
       "documentedProduction": true,
       "sources": [
         "backend/src/ai-questioning/question-reviewer-provider.service.ts",
-        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts",
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts"
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts"
       ]
     },
     {
@@ -638,17 +625,6 @@
       ]
     },
     {
-      "key": "CSCA_AI_QUESTIONING_SCHEDULER_ENABLED",
-      "category": "runtime-config",
-      "documentedDevelopment": true,
-      "documentedProduction": true,
-      "sources": [
-        "backend/src/ai-questioning/ai-questioning-scheduler.service.ts",
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts",
-        "backend/src/question-engine-plugin/question-engine-plugin-registry.service.ts"
-      ]
-    },
-    {
       "key": "CSCA_AI_QUESTIONING_SCHEDULER_INTERVAL_MINUTES",
       "category": "runtime-config",
       "documentedDevelopment": true,
@@ -685,28 +661,10 @@
       ]
     },
     {
-      "key": "CSCA_AI_QUESTIONING_SCHEDULER_RUN_ON_STARTUP",
-      "category": "runtime-config",
-      "documentedDevelopment": true,
-      "documentedProduction": true,
-      "sources": [
-        "backend/src/ai-questioning/ai-questioning-scheduler.service.ts"
-      ]
-    },
-    {
       "key": "CSCA_AI_QUESTIONING_TASK_RECOVER_LIMIT",
       "category": "runtime-config",
       "documentedDevelopment": false,
       "documentedProduction": false,
-      "sources": [
-        "backend/src/ai-questioning/ai-questioning-scheduler.service.ts"
-      ]
-    },
-    {
-      "key": "CSCA_AI_QUESTIONING_TASK_RECOVERY_DISABLED",
-      "category": "runtime-config",
-      "documentedDevelopment": true,
-      "documentedProduction": true,
       "sources": [
         "backend/src/ai-questioning/ai-questioning-scheduler.service.ts"
       ]
@@ -762,8 +720,7 @@
       "documentedDevelopment": true,
       "documentedProduction": true,
       "sources": [
-        "backend/src/ai-gateway/ai-gateway-config.service.ts",
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts"
+        "backend/src/ai-gateway/ai-gateway-config.service.ts"
       ]
     },
     {
@@ -781,9 +738,7 @@
       "documentedDevelopment": true,
       "documentedProduction": true,
       "sources": [
-        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts",
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts",
-        "backend/src/question-engine-plugin/question-engine-plugin-registry.service.ts"
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts"
       ]
     },
     {
@@ -793,8 +748,7 @@
       "documentedProduction": true,
       "sources": [
         "backend/src/ai-gateway/ai-gateway-config.service.ts",
-        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts",
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts"
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts"
       ]
     },
     {
@@ -812,8 +766,7 @@
       "documentedDevelopment": true,
       "documentedProduction": true,
       "sources": [
-        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts",
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts"
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts"
       ]
     },
     {
@@ -1073,16 +1026,6 @@
       ]
     },
     {
-      "key": "CSCA_SUBJECT_PRACTICE_PRODUCTION_ENABLED",
-      "category": "runtime-config",
-      "documentedDevelopment": true,
-      "documentedProduction": true,
-      "sources": [
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts",
-        "backend/src/question-engine-plugin/question-engine-plugin-registry.service.ts"
-      ]
-    },
-    {
       "key": "CSCALITE_SPECIAL_PRACTICE_STUDENT_SESSIONS_ENABLED",
       "category": "runtime-config",
       "documentedDevelopment": true,
@@ -1106,7 +1049,6 @@
       "documentedDevelopment": true,
       "documentedProduction": true,
       "sources": [
-        "backend/src/ai-questioning/ai-questioning-scheduler.service.ts",
         "backend/src/csca-mock-exam/csca-mock-exam.service.ts",
         "backend/src/csca-special-practice/csca-special-practice.service.ts",
         "backend/src/health/health.controller.ts",
@@ -1119,8 +1061,7 @@
       "documentedDevelopment": true,
       "documentedProduction": true,
       "sources": [
-        "backend/src/ai-gateway/ai-gateway-config.service.ts",
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts"
+        "backend/src/ai-gateway/ai-gateway-config.service.ts"
       ]
     },
     {
@@ -1130,8 +1071,7 @@
       "documentedProduction": true,
       "sources": [
         "backend/src/ai-gateway/ai-gateway-config.service.ts",
-        "backend/src/ai-questioning/ai-questioning.service.ts",
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts"
+        "backend/src/ai-questioning/ai-questioning.service.ts"
       ]
     },
     {
@@ -1153,8 +1093,7 @@
         "backend/src/ai-gateway/ai-gateway-config.service.ts",
         "backend/src/ai-questioning/question-generator-provider.service.ts",
         "backend/src/ai-questioning/question-reviewer-provider.service.ts",
-        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts",
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts"
+        "backend/src/ai-questioning/question-topic-mapper-provider.service.ts"
       ]
     },
     {
@@ -1187,8 +1126,7 @@
         "backend/src/ai-questioning/question-generator-provider.service.ts",
         "backend/src/ai-questioning/question-reviewer-provider.service.ts",
         "backend/src/ai-questioning/question-topic-mapper-provider.service.ts",
-        "backend/src/csca-special-practice/ai-coach-provider.service.ts",
-        "backend/src/question-engine-plugin/builtin-ai-questioning.adapter.ts"
+        "backend/src/csca-special-practice/ai-coach-provider.service.ts"
       ]
     },
     {
@@ -1245,6 +1183,7 @@
       "documentedDevelopment": false,
       "documentedProduction": false,
       "sources": [
+        "frontend/src/lib/public-telemetry.ts",
         "frontend/src/lib/request.ts",
         "frontend/src/pages/special-practice/adaptive/AdaptivePracticeViews.tsx"
       ]
@@ -1311,6 +1250,16 @@
       "documentedProduction": true,
       "sources": [
         "backend/src/common/runtime-environment.ts"
+      ]
+    },
+    {
+      "key": "MOODLELIKE_MATH_ENGINE_ENABLED",
+      "category": "runtime-config",
+      "documentedDevelopment": true,
+      "documentedProduction": true,
+      "sources": [
+        "backend/src/question-engine-plugin/question-engine-plugin-registry.service.ts",
+        "backend/src/question-engine-plugin/verified-math143.adapter.ts"
       ]
     },
     {
@@ -1398,17 +1347,6 @@
       ]
     },
     {
-      "key": "QUESTION_ENGINE_EXECUTION_MODE",
-      "category": "runtime-config",
-      "documentedDevelopment": true,
-      "documentedProduction": true,
-      "sources": [
-        "backend/src/question-engine-plugin/question-engine-plugin-registry.service.ts",
-        "backend/src/question-engine-plugin/question-engine-sidecar-transport.service.ts",
-        "backend/src/question-engine-plugin/question-engine-worker-health.service.ts"
-      ]
-    },
-    {
       "key": "QUESTION_ENGINE_PLUGIN_ENABLED",
       "category": "runtime-config",
       "documentedDevelopment": true,
@@ -1424,98 +1362,6 @@
       "documentedProduction": true,
       "sources": [
         "backend/src/question-engine-plugin/question-engine-plugin-registry.service.ts"
-      ]
-    },
-    {
-      "key": "QUESTION_ENGINE_SIDECAR_ACTIVATION_ENABLED",
-      "category": "runtime-config",
-      "documentedDevelopment": true,
-      "documentedProduction": true,
-      "sources": [
-        "backend/src/question-engine-plugin/question-engine-plugin-registry.service.ts",
-        "backend/src/question-engine-plugin/question-engine-worker-health.service.ts"
-      ]
-    },
-    {
-      "key": "QUESTION_ENGINE_SIDECAR_CIRCUIT_FAILURE_THRESHOLD",
-      "category": "runtime-config",
-      "documentedDevelopment": true,
-      "documentedProduction": true,
-      "sources": [
-        "backend/src/question-engine-plugin/question-engine-sidecar-transport.service.ts"
-      ]
-    },
-    {
-      "key": "QUESTION_ENGINE_SIDECAR_CIRCUIT_RESET_MS",
-      "category": "runtime-config",
-      "documentedDevelopment": true,
-      "documentedProduction": true,
-      "sources": [
-        "backend/src/question-engine-plugin/question-engine-sidecar-transport.service.ts"
-      ]
-    },
-    {
-      "key": "QUESTION_ENGINE_SIDECAR_TIMEOUT_MS",
-      "category": "runtime-config",
-      "documentedDevelopment": true,
-      "documentedProduction": true,
-      "sources": [
-        "backend/src/question-engine-plugin/question-engine-sidecar-transport.service.ts"
-      ]
-    },
-    {
-      "key": "QUESTION_ENGINE_SIDECAR_URL",
-      "category": "runtime-config",
-      "documentedDevelopment": true,
-      "documentedProduction": true,
-      "sources": [
-        "backend/src/question-engine-plugin/question-engine-plugin-registry.service.ts",
-        "backend/src/question-engine-plugin/question-engine-sidecar-transport.service.ts"
-      ]
-    },
-    {
-      "key": "QUESTION_ENGINE_TASK_HMAC_SECRET",
-      "category": "secret",
-      "documentedDevelopment": true,
-      "documentedProduction": true,
-      "sources": [
-        "backend/src/question-engine-plugin/question-engine-sidecar-transport.service.ts"
-      ]
-    },
-    {
-      "key": "QUESTION_ENGINE_TASK_KEY_ID",
-      "category": "runtime-config",
-      "documentedDevelopment": true,
-      "documentedProduction": true,
-      "sources": [
-        "backend/src/question-engine-plugin/question-engine-sidecar-transport.service.ts"
-      ]
-    },
-    {
-      "key": "QUESTION_ENGINE_WORKER_CAPABILITIES",
-      "category": "runtime-config",
-      "documentedDevelopment": true,
-      "documentedProduction": true,
-      "sources": [
-        "backend/src/question-engine-plugin/question-engine-plugin-registry.service.ts"
-      ]
-    },
-    {
-      "key": "QUESTION_ENGINE_WORKER_HEALTH_CACHE_MS",
-      "category": "runtime-config",
-      "documentedDevelopment": true,
-      "documentedProduction": true,
-      "sources": [
-        "backend/src/question-engine-plugin/question-engine-worker-health.service.ts"
-      ]
-    },
-    {
-      "key": "QUESTION_ENGINE_WORKER_HEALTH_TIMEOUT_MS",
-      "category": "runtime-config",
-      "documentedDevelopment": true,
-      "documentedProduction": true,
-      "sources": [
-        "backend/src/question-engine-plugin/question-engine-worker-health.service.ts"
       ]
     },
     {
@@ -1714,6 +1560,15 @@
       "documentedProduction": true,
       "sources": [
         "frontend/src/lib/request.ts"
+      ]
+    },
+    {
+      "key": "VITE_PUBLIC_TELEMETRY_ENABLED",
+      "category": "frontend-public",
+      "documentedDevelopment": false,
+      "documentedProduction": false,
+      "sources": [
+        "frontend/src/lib/public-telemetry.ts"
       ]
     },
     {

@@ -7,6 +7,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { AdaptiveReplenishmentService } from './adaptive-replenishment.service';
 import { AIQuestioningService, buildAIQuestioningOperationalReadiness, buildAIQuestioningOperationalReadinessAuditSnapshot } from './ai-questioning.service';
 import { QuestionQualityService } from './question-quality.service';
+import { RetiredGenerationRoutesGuard } from '../question-engine-plugin/retired-generation-routes.guard';
 
 function summarizeAuditResult(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== 'object') return { result: value ?? null };
@@ -165,6 +166,7 @@ function mapOperationalReadinessAuditEvent(
 
 @Controller()
 @UseGuards(RequiredAdminGuard)
+@UseGuards(RetiredGenerationRoutesGuard)
 export class AIQuestioningController {
   private readonly logger = new Logger(AIQuestioningController.name);
 

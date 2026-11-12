@@ -26,8 +26,8 @@ function assertIncludes(source, snippets, label) {
 }
 
 const shell = read('src/components/admin/AdminConsoleShell.tsx');
-const appRouteRenderer = read('src/components/AppRouteRenderer.tsx');
-const aiOperations = read('src/pages/AdminAIOperationsPage.tsx');
+const adminApp = read('src/AdminApp.tsx');
+const aiOperations = `${read('src/pages/AdminAIOperationsPage.tsx')}\n${read('src/components/admin/InterventionPilotObservabilityPanel.tsx')}`;
 const questionBank = `${read('src/pages/AdminAIQuestionBankPage.tsx')}\n${readTree('src/components/admin/ai-question-bank')}`;
 const cscaSyllabus = read('src/components/admin/ai-question-bank/CscaSyllabusWorkspace.tsx');
 const organizations = read('src/pages/AdminOrganizationsPage.tsx');
@@ -35,7 +35,12 @@ const audit = read('src/pages/AdminAuditPage.tsx');
 const adminConsoleCss = read('src/styles/admin-console.css');
 const adminComponentsCss = read('src/styles/admin-components.css');
 const adminWorkAggregatorCss = read('src/styles/admin-work.css');
-const adminWorkCss = read('src/styles/admin-work.part-02.css');
+const adminWorkCss = [
+  'src/styles/admin-work.part-02.css',
+  'src/styles/admin-work.part-02-slice-01.css',
+  'src/styles/admin-work.part-02-slice-02.css',
+  'src/styles/admin-work.part-02-slice-03.css'
+].map(read).join('\n');
 const adminWorkbench = read('src/components/admin/AdminWorkbench.tsx');
 const adminConsoleE2e = read('e2e/admin-console-parity.spec.ts');
 const docs = read('../docs/admin-console-feature-parity-and-style-audit-2026-06-15.md');
@@ -44,16 +49,16 @@ assertIncludes(shell, [
   'brand-page brand-work-page admin-work-page',
   'c-admin-shell',
   'c-admin-shell__nav-button c-admin-control',
-  "aiOperations: 'AI 运维'",
+  "aiOperations: '题目引擎'",
   "aiQuestionBank: 'AI 题库'",
   "aiQuestionBank', label: copy.aiQuestionBank",
   'routes.adminAIQuestionBank'
 ], 'AdminConsoleShell');
 
-assertIncludes(appRouteRenderer, [
-  'route === routes.adminAIQuestionBank',
+assertIncludes(adminApp, [
+  'path === routes.adminAIQuestionBank',
   'AdminAIQuestionBankPage'
-], 'AppRouteRenderer');
+], 'AdminApp');
 
 assertIncludes(aiOperations, [
   'getAdminAdaptiveAIObservability',
@@ -77,6 +82,9 @@ assertIncludes(aiOperations, [
   'byProviderFailureCategory',
   'blockedJobs',
   'staleRunningJobs',
+  'QuestionSupplyFulfillmentPanel',
+  'InterventionPilotObservabilityPanel',
+  'gateRecommendationCounts',
   'job.topicTitle',
   'job.topicId',
   'LLM 使用量'
@@ -216,7 +224,7 @@ assertIncludes(adminWorkCss, [
 
 assertIncludes(adminConsoleE2e, [
   'AI operations keeps LLM usage, readiness, and generation queue panels',
-  'AI question bank keeps candidate review, charts, quality calibration, and remediation surfaces',
+  'AI question bank keeps inventory, charts, quality calibration, and remediation surfaces',
   'CSCA syllabus remains under AI questioning and keeps import governance workflows',
   "page.goto('/admin/ai-question-bank')",
   "name: '进入共用准备'",

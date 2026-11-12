@@ -46,6 +46,7 @@ function recordFrom(value: unknown): Record<string, unknown> {
  * review instead of inferring trust from `approved` alone.
  */
 export function isIndependentVerificationQuestion(question: IndependentVerificationQuestionCandidate) {
+  if (['verified_math_engine', 'math_reading_pilot'].includes(question.sourceType ?? '')) return false;
   if (!isStandardStudentChoiceQuestion(question)) return false;
   if (question.sourceType !== 'external_oer') return true;
   const externalReview = recordFrom(recordFrom(question.reviewMetadata).externalImport);

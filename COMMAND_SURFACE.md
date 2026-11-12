@@ -6,7 +6,7 @@ The standalone repository inherited a large operational command set alongside th
 
 `npm run audit:command-surface` classifies every root package command, checks direct script-file references, verifies root-to-root `npm run` calls, rejects unexpected duplicate commands and writes a deterministic inventory to `artifacts/command-surface.json`.
 
-The accepted inventory contains 331 commands: 42 product-core, 202 question-production, 41 platform-contract and 46 compatibility-operation entries. Nothing is unclassified. The large question-production surface remains intentional for now; it is governed separately from the everyday student application rather than being mistaken for dead code.
+The accepted inventory contains 332 commands: 43 product-core, 201 question-production, 42 platform-contract and 46 compatibility-operation entries. Nothing is unclassified. Retained question-production commands are research, historical validation and local tooling; only the verified mathematics 1.43 plugin is registered for student generation. Retired production entry snapshots remain under `legacy/question-production/`.
 
 ## Categories
 

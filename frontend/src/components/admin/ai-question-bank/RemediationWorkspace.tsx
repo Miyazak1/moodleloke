@@ -53,9 +53,7 @@ function MisconceptionGovernancePanel({
                 <button type="button" className={cardBusy ? 'admin-action-loading' : undefined} onClick={() => void runAction(`misconception-card-${item.misconceptionId}`, `创建概念卡 #${item.misconceptionId}`, () => onCreateConceptCard(item.misconceptionId))} disabled={cardBusy}>
                   {cardBusy ? '创建中' : '创建概念卡'}
                 </button>
-                <button type="button" className={variantBusy ? 'ghost-button admin-action-loading' : 'ghost-button'} onClick={() => void runAction(`misconception-variant-${item.misconceptionId}`, `生成变式 #${item.misconceptionId}`, () => onCreateVariant(item.misconceptionId))} disabled={variantBusy}>
-                  {variantBusy ? '生成中' : '生成变式'}
-                </button>
+                <span className="form-hint">旧变式生成已停用</span>
               </div>
             </div>
           );

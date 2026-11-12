@@ -1,0 +1,6 @@
+{
+  "question-engine:portable-test": "npm run question-engine:build && node question-engine/test/portable-runtime.test.cjs",
+  "question-engine:catalog": "node question-engine/bin/question-engine.cjs catalog",
+  "question-engine:readiness": "node question-engine/bin/question-engine.cjs readiness",
+  "csca-ai-questioning:subject-production-current-policy-refresh": "node scripts/csca-subject-practice-production-current-policy-refresh.cjs"
+}

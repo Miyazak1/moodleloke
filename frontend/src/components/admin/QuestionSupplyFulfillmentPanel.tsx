@@ -3,12 +3,14 @@ import {
   getAdminQuestionSupplyFulfillmentPlans,
   getAdminQuestionSupplyAcceptanceReport,
   getAdminQuestionSupplyOperationsHealth,
+  getAdminQuestionSupplyCoverage,
   exportAdminQuestionSupplyEvidence,
   runAdminQuestionSupplyFulfillment,
   type AdminQuestionSupplyAcceptanceReport,
   type AdminQuestionSupplyEvaluation,
   type AdminQuestionSupplyFulfillmentPlan,
   type AdminQuestionSupplyOperationsHealth,
+  type AdminQuestionSupplyCoverage,
   type AdminQuestionSupplySchedulerStatus
 } from '../../lib/api-admin';
 import { ApiError } from '../../lib/request';
@@ -49,6 +51,16 @@ function healthAlertLabel(code: string, zh: boolean) {
   return labels[code]?.[zh ? 0 : 1] ?? code;
 }
 
+function coverageGapLabel(code: string, zh: boolean) {
+  const labels: Record<string, [string, string]> = {
+    PRACTICE_BATCH_INSUFFICIENT: ['练习题不足', 'Practice batch insufficient'],
+    VERIFICATION_BATCH_INSUFFICIENT: ['独立验证题不足', 'Verification batch insufficient'],
+    EXPLANATION_COVERAGE_INSUFFICIENT: ['讲解覆盖不足', 'Explanation coverage insufficient'],
+    TEACHING_CONTENT_MISSING: ['缺少教学内容', 'Teaching content missing']
+  };
+  return labels[code]?.[zh ? 0 : 1] ?? code;
+}
+
 export function QuestionSupplyFulfillmentPanel({ locale }: Props) {
   const zh = locale !== 'en';
   const [items, setItems] = useState<AdminQuestionSupplyFulfillmentPlan[]>([]);
@@ -56,6 +68,7 @@ export function QuestionSupplyFulfillmentPanel({ locale }: Props) {
   const [report, setReport] = useState<AdminQuestionSupplyAcceptanceReport | null>(null);
   const [scheduler, setScheduler] = useState<AdminQuestionSupplySchedulerStatus | null>(null);
   const [health, setHealth] = useState<AdminQuestionSupplyOperationsHealth | null>(null);
+  const [coverage, setCoverage] = useState<AdminQuestionSupplyCoverage | null>(null);
   const [loading, setLoading] = useState(true);
   const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -65,16 +78,18 @@ export function QuestionSupplyFulfillmentPanel({ locale }: Props) {
     setLoading(true);
     setError(null);
     try {
-      const [plans, nextReport, nextHealth] = await Promise.all([
+      const [plans, nextReport, nextHealth, nextCoverage] = await Promise.all([
         getAdminQuestionSupplyFulfillmentPlans(50),
         getAdminQuestionSupplyAcceptanceReport(30),
-        getAdminQuestionSupplyOperationsHealth()
+        getAdminQuestionSupplyOperationsHealth(),
+        getAdminQuestionSupplyCoverage()
       ]);
       setItems(plans.items);
       setEvaluation(nextReport.overall);
       setReport(nextReport);
       setScheduler(nextHealth.scheduler);
       setHealth(nextHealth);
+      setCoverage(nextCoverage);
     } catch (nextError) {
       setError(compactError(nextError));
     } finally {
@@ -172,6 +187,41 @@ export function QuestionSupplyFulfillmentPanel({ locale }: Props) {
               ))}
             </div>
           )}
+        </>
+      )}
+
+      {coverage && (
+        <>
+          <div className="metric-grid four">
+            <div><span>{zh ? '已发布知识点' : 'Published topics'}</span><strong>{coverage.summary.topicCount}</strong></div>
+            <div><span>{zh ? '练习可执行' : 'Practice ready'}</span><strong>{coverage.summary.practiceReadyTopicCount}</strong></div>
+            <div><span>{zh ? '验证可执行' : 'Verification ready'}</span><strong>{coverage.summary.verificationReadyTopicCount}</strong></div>
+            <div><span>{zh ? '完整闭环可用' : 'Loop ready'}</span><strong>{coverage.summary.fullyReadyTopicCount}</strong></div>
+          </div>
+          <p className="form-hint">
+            {zh ? '闭环门槛' : 'Loop thresholds'}: {zh ? '练习' : 'practice'} {coverage.thresholds.practiceBatchSize}
+            {' · '}{zh ? '独立验证' : 'verification'} {coverage.thresholds.verificationBatchSize}
+            {' · '}{zh ? '受阻知识点' : 'blocked topics'} {coverage.summary.blockedTopicCount}
+          </p>
+          <div className="admin-list compact">
+            {coverage.subjects.map((subject) => (
+              <div key={subject.subject}>
+                <strong>{subject.subject} · {zh ? '闭环可用' : 'loop ready'} {subject.fullyReadyTopicCount}/{subject.topicCount}</strong>
+                <span>{zh ? '练习/验证可用' : 'practice/verification ready'}: {subject.practiceReadyTopicCount}/{subject.verificationReadyTopicCount}</span>
+              </div>
+            ))}
+            {coverage.topics.filter((topic) => topic.gaps.length > 0).slice(0, 12).map((topic) => (
+              <div key={topic.topicId}>
+                <strong>{topic.code} · {topic.title}</strong>
+                <span>
+                  {zh ? '练习' : 'practice'} {topic.practice.availableCount}/{topic.practice.requiredCount}
+                  {' · '}{zh ? '验证' : 'verification'} {topic.verification.availableCount}/{topic.verification.requiredCount}
+                  {' · '}{zh ? '讲解' : 'explained'} {topic.content.explainedQuestionCount}
+                </span>
+                <span>{topic.gaps.map((gap) => coverageGapLabel(gap, zh)).join(' · ')}</span>
+              </div>
+            ))}
+          </div>
         </>
       )}
 

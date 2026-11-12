@@ -18,9 +18,10 @@ import { CscaSpecialPracticeService } from './csca-special-practice.service';
 import { MasteryEngineService } from './mastery-engine.service';
 import { PlannerAssistantService } from './planner-assistant.service';
 import { TrainingEventService } from './training-event.service';
+import { QuestionEnginePluginModule } from '../question-engine-plugin/question-engine-plugin.module';
 
 @Module({
-  imports: [PrismaModule, AuthModule, CscaLearningModule, AIQuestioningModule, AiGatewayModule, LearningIntelligenceFoundationModule],
+  imports: [PrismaModule, AuthModule, CscaLearningModule, AIQuestioningModule, AiGatewayModule, LearningIntelligenceFoundationModule, QuestionEnginePluginModule],
   controllers: [CscaSpecialPracticeController],
   providers: [
     CscaSpecialPracticeService,

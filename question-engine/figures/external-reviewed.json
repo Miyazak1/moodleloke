@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "external-public-figure-review-v1",
+  "scope": "two locally audited historical export records only; not a full-bank approval",
+  "rows": [
+    {
+      "sourceIdentity": "98094bb804bb89ae11b9752f2e79a06f42091fe6b869787419a92ba093c50a48",
+      "version": 1,
+      "sourceType": "external_oer",
+      "binding": "f7c13c803ccc619d1b9426ae823b9d8b10f23cff31d487a6fb0e579b8cca9f91",
+      "relation": "slope_two_points",
+      "historicalId": "1077",
+      "sourceFileSha256": "f328a9822980e4894a35443310d7d4befd9e8419819d2aa6b205db3036e83555",
+      "license": "MIT"
+    },
+    {
+      "sourceIdentity": "be47416cff87087b31edfced85b7367435ec6a0703add15ea75bc6421a523cf5",
+      "version": 1,
+      "sourceType": "external_oer",
+      "binding": "6af7ef70ce4bbb58d81558dba79dd18d9ab7b4ce29604866fa8b568a8857dcdc",
+      "relation": "given_opposite_vertices_only",
+      "historicalId": "3882",
+      "sourceFileSha256": "f328a9822980e4894a35443310d7d4befd9e8419819d2aa6b205db3036e83555",
+      "license": "MIT"
+    }
+  ]
+}

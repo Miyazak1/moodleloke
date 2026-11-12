@@ -1,0 +1,47 @@
+      {activeTab === 'overview' && (
+        <QuestionBankOverviewSummary {...questionBankOverviewSummaryProps} />
+      )}
+      {activeTab === 'subject-practice' && (
+        <SubjectPracticeProductionPanel
+          subject={subject}
+          autoProductionSetting={subjectAutoProductionSetting}
+          run={subjectProductionRun}
+          inventory={adaptiveInventory}
+          predictiveResult={adaptivePredictiveResult}
+          isInventoryLoading={isAdaptiveInventoryLoading}
+          isAutoProductionSettingLoading={isSubjectAutoProductionSettingLoading}
+          isBusy={isSubjectAutoProductionSettingLoading || isSubjectProductionLoading || isAdaptiveInventoryLoading || isActionBusy('subject-auto-production-setting') || isActionBusy('subject-production-create') || isActionBusy('subject-production-process') || isActionBusy('subject-production-process-until-complete') || isActionBusy('subject-production-refresh') || isActionBusy('subject-predictive-refresh') || isActionBusy('subject-predictive-run')}
+          onToggleAutoProduction={toggleSubjectAutoProduction}
+          onCreateRun={createSubjectProductionRun}
+          onProcessRun={processSubjectProductionRun}
+          onProcessUntilComplete={processSubjectProductionRunUntilComplete}
+          onRefresh={refreshSubjectProductionRun}
+          onRefreshInventory={refreshAdaptiveReplenishmentInventory}
+          onRunPredictiveReplenishment={runSubjectPredictiveReplenishment}
+        />
+      )}
+      {activeTab === 'subject-practice' && (
+        <CoverageWorkPanel {...coverageWorkPanelProps} />
+      )}
+      {activeTab === 'online-mock' && (
+        <MockExamProductionPanel
+          subject={subject}
+          papers={mockExamPapers}
+          selectedPaperId={selectedMockPaperId}
+          blueprintDetail={mockBlueprintDetail}
+          isLoading={isMockExamProductionLoading}
+          busyAction={mockExamBusyAction}
+          actionFeedback={feedback}
+          actionError={error}
+          onSelectPaper={selectMockPaper}
+          onReload={refreshMockExamProduction}
+          onCreateBlueprint={createMockExamBlueprint}
+          onLoadBlueprint={loadMockExamBlueprint}
+          onConfirmBlueprint={confirmMockExamBlueprint}
+          onCreateGenerationJob={createMockExamGenerationJob}
+          onProcessGenerationJob={processMockExamGenerationJob}
+          onAssembleDraft={assembleMockExamDraft}
+          onCleanupGenerationJob={cleanupMockExamGenerationJob}
+          onCleanupAllGenerationJobs={cleanupAllMockExamGenerationJobs}
+        />
+      )}

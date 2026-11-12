@@ -1,0 +1,47 @@
+/* Shared reading surface for actual practice and submitted-question review. */
+.special-question-card { min-width: 0; }
+.special-question-card .special-question-head { align-items: start; }
+.special-question-card .special-question-head > div { min-width: 0; }
+.special-question-card .special-question-timer { align-self: start; white-space: nowrap; }
+.special-question-card > .student-question-prompt {
+  min-width: 0; margin: 0; color: var(--agent-ink, #182c3b);
+  font-size: clamp(17px, 1.25vw, 20px); font-weight: 500; line-height: 1.85;
+  overflow-wrap: anywhere; text-wrap: pretty;
+}
+.special-question-card .special-answer-options { min-width: 0; gap: 10px; }
+.special-question-card .special-answer-options > button {
+  min-width: 0; min-height: 54px; align-items: center;
+  grid-template-columns: 30px minmax(0, 1fr); font-size: 16px; line-height: 1.65;
+}
+.special-question-card .special-answer-options > button > span { min-width: 0; overflow-wrap: anywhere; }
+.special-question-card .special-answer-options > button > em { grid-column: 2; justify-self: start; font-style: normal; }
+.special-question-card .special-answer-options > button:focus-visible { outline: 3px solid #315dff; outline-offset: 3px; }
+.special-question-card .special-answer-options > button:disabled { opacity: 1; cursor: default; }
+.special-question-card .math-content-inline,
+.agent-report-question-list .math-content-inline,
+.special-review-list .math-content-inline {
+  max-width: none; overflow: visible; vertical-align: middle; padding-block: .18em;
+}
+.special-question-card > .student-question-prompt,
+.special-question-card .special-answer-options > button > span,
+.agent-report-question-list article > div,
+.special-review-list article { overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; padding-bottom: .25em; }
+.special-question-card .math-content .katex { font-weight: 400; }
+.agent-structured-report .agent-report-question-list { max-height: none; overflow: visible; }
+.agent-report-question-list article { align-items: start; padding-block: 20px; }
+.agent-report-question-list article > div > strong { font-weight: 550; line-height: 1.85; }
+.agent-report-question-list article > div > p { line-height: 1.8; }
+.agent-report-question-list article > div > small { color: #405364; }
+.special-question-card svg:not(.katex svg), .agent-report-question-list article > span > svg { flex-shrink: 0; }
+@media (max-width: 600px) {
+  .agent-page .agent-workspace.is-task-active .agent-task-rail { width: 100%; }
+  .agent-page .agent-task-rail-body > .special-practice-page { padding: 12px 10px; }
+  .agent-page .agent-task-rail .special-question-card { padding: 16px 12px; gap: 16px; border-radius: 12px; }
+  .agent-page .agent-task-rail .special-taking-status { flex-wrap: wrap; overflow: visible; gap: 6px; }
+  .agent-task-rail .special-taking-status > :is(strong, span, button, details) { flex: 0 0 auto; white-space: nowrap; }
+  .agent-page .special-question-nav-head { min-width: 0; width: 100%; flex-wrap: wrap; gap: 6px; }
+  .agent-page .special-question-nav-head > :is(strong, span) { white-space: normal; }
+  .special-question-card > .student-question-prompt { font-size: 17px; line-height: 1.85; }
+  .agent-task-rail .special-answer-options > button { padding: 12px 10px; gap: 10px; }
+  .agent-report-question-list article { grid-template-columns: 24px minmax(0, 1fr); padding: 16px 10px; gap: 8px; }
+}

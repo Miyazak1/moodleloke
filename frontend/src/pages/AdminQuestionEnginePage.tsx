@@ -16,14 +16,14 @@ const COPY = {
     kicker: '自动出题插件',
     title: '题目引擎接入状态',
     guestTitle: '题目引擎后台',
-    body: '通过稳定适配器接入自动出题系统。插件关闭、配置错误或升级时，学生端继续只使用已核验题库。',
+    body: '数学 1.43 是唯一正式出题插件。数学、物理、化学原有题库和做题功能继续保留；物理、化学暂未接入正式出题系统。',
     guestBody: '请先登录管理员账号后继续。',
     host: '插件宿主',
     api: '契约版本',
     fallback: '学生回退',
     writes: '生成写入',
     registered: '已注册插件',
-    adapterBody: '当前采用受控适配器，不加载任意运行时代码；更新适配器后重启服务即可切换。',
+    adapterBody: '数学生成经过冻结包校验、独立 Oracle、入库与发布门禁后用于普通练习。',
     selected: '当前选中',
     notSelected: '未选中',
     enabled: '已启用',
@@ -210,11 +210,7 @@ export function AdminQuestionEnginePage({ currentUser, onGoToAudit, onGoToConten
                     <p>{copy.executionMode}：{status.host.taskProtocol.executionMode}</p>
                   </div>
                   <div>
-                    <strong>{copy.signing}</strong>
-                    <p>{status.host.taskProtocol.signingConfigured ? copy.configured : copy.notConfigured}</p>
-                    <p>{copy.transport}：{status.host.taskProtocol.transportImplemented ? copy.configured : copy.notConfigured}</p>
-                    <p>{copy.nonceStore}：{status.host.taskProtocol.nonceStoreConfigured ? copy.configured : copy.notConfigured}</p>
-                    <p>{copy.activation}：{status.host.taskProtocol.sidecarActivationEnabled ? copy.enabled : copy.disabled}</p>
+                    <strong>{plugin.descriptor.executionBoundary}</strong>
                     <p>{copy.workerCapabilities}：{status.host.taskProtocol.workerCapabilities.join(' · ') || copy.noBlockers}</p>
                     <p>{copy.acceptedWorkerVersions}：{status.host.taskProtocol.acceptedWorkerVersions.join(' · ') || copy.notConfigured}</p>
                   </div>

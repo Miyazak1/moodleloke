@@ -64,14 +64,11 @@ Generated from the reachable Agent runtime. Values are never included.
 | CSCA_AI_QUESTION_REVIEWER_AGENT | runtime-config | no | no |
 | CSCA_AI_QUESTION_REVIEWER_PROMPT_VERSION | runtime-config | no | no |
 | CSCA_AI_QUESTIONING_SCHEDULER_BACKFILL_LIMIT | runtime-config | yes | yes |
-| CSCA_AI_QUESTIONING_SCHEDULER_ENABLED | runtime-config | yes | yes |
 | CSCA_AI_QUESTIONING_SCHEDULER_INTERVAL_MINUTES | runtime-config | yes | yes |
 | CSCA_AI_QUESTIONING_SCHEDULER_PER_TOPIC | runtime-config | yes | yes |
 | CSCA_AI_QUESTIONING_SCHEDULER_PROCESS_LIMIT | runtime-config | yes | yes |
 | CSCA_AI_QUESTIONING_SCHEDULER_RETRY_FAILED | runtime-config | yes | yes |
-| CSCA_AI_QUESTIONING_SCHEDULER_RUN_ON_STARTUP | runtime-config | yes | yes |
 | CSCA_AI_QUESTIONING_TASK_RECOVER_LIMIT | runtime-config | no | no |
-| CSCA_AI_QUESTIONING_TASK_RECOVERY_DISABLED | runtime-config | yes | yes |
 | CSCA_AI_ROLLOUT_MIN_AVERAGE_RATING | runtime-config | yes | yes |
 | CSCA_AI_ROLLOUT_PERCENT | runtime-config | yes | yes |
 | CSCA_AI_TEMPERATURE | runtime-config | yes | yes |
@@ -111,7 +108,6 @@ Generated from the reachable Agent runtime. Values are never included.
 | CSCA_SUBJECT_PRACTICE_PRO_ESCALATION_ENABLED | runtime-config | no | no |
 | CSCA_SUBJECT_PRACTICE_PRO_MODEL | runtime-config | no | no |
 | CSCA_SUBJECT_PRACTICE_PRO_REVIEW_MODEL | runtime-config | no | no |
-| CSCA_SUBJECT_PRACTICE_PRODUCTION_ENABLED | runtime-config | yes | yes |
 | CSCALITE_SPECIAL_PRACTICE_STUDENT_SESSIONS_ENABLED | runtime-config | yes | yes |
 | CSP_MODE | runtime-config | yes | yes |
 | DATABASE_URL | runtime-config | yes | yes |
@@ -135,6 +131,7 @@ Generated from the reachable Agent runtime. Values are never included.
 | GUMROAD_PRODUCT_URL | runtime-config | no | yes |
 | JWT_SECRET | secret | yes | yes |
 | MOODLELIKE_ENV | runtime-config | yes | yes |
+| MOODLELIKE_MATH_ENGINE_ENABLED | runtime-config | yes | yes |
 | NODE_ENV | runtime-config | no | yes |
 | OPS_HEALTH_DETAILS_ENABLED | runtime-config | yes | yes |
 | OPS_METRICS_ENABLED | runtime-config | yes | yes |
@@ -144,19 +141,8 @@ Generated from the reachable Agent runtime. Values are never included.
 | PAYMENT_CALLBACK_SECRET | secret | yes | yes |
 | PUBLIC_API_ORIGIN | runtime-config | yes | yes |
 | PUBLIC_APP_ORIGIN | runtime-config | yes | yes |
-| QUESTION_ENGINE_EXECUTION_MODE | runtime-config | yes | yes |
 | QUESTION_ENGINE_PLUGIN_ENABLED | runtime-config | yes | yes |
 | QUESTION_ENGINE_PLUGIN_ID | runtime-config | yes | yes |
-| QUESTION_ENGINE_SIDECAR_ACTIVATION_ENABLED | runtime-config | yes | yes |
-| QUESTION_ENGINE_SIDECAR_CIRCUIT_FAILURE_THRESHOLD | runtime-config | yes | yes |
-| QUESTION_ENGINE_SIDECAR_CIRCUIT_RESET_MS | runtime-config | yes | yes |
-| QUESTION_ENGINE_SIDECAR_TIMEOUT_MS | runtime-config | yes | yes |
-| QUESTION_ENGINE_SIDECAR_URL | runtime-config | yes | yes |
-| QUESTION_ENGINE_TASK_HMAC_SECRET | secret | yes | yes |
-| QUESTION_ENGINE_TASK_KEY_ID | runtime-config | yes | yes |
-| QUESTION_ENGINE_WORKER_CAPABILITIES | runtime-config | yes | yes |
-| QUESTION_ENGINE_WORKER_HEALTH_CACHE_MS | runtime-config | yes | yes |
-| QUESTION_ENGINE_WORKER_HEALTH_TIMEOUT_MS | runtime-config | yes | yes |
 | RATE_LIMIT_REDIS_TIMEOUT_MS | runtime-config | no | yes |
 | RATE_LIMIT_REDIS_URL | runtime-config | no | yes |
 | RATE_LIMIT_STORE | runtime-config | no | yes |
@@ -179,6 +165,7 @@ Generated from the reachable Agent runtime. Values are never included.
 | VITE_API_BASE_URL | frontend-public | yes | no |
 | VITE_AUTH_CSRF_COOKIE_NAME | frontend-public | yes | yes |
 | VITE_AUTH_CSRF_HEADER_NAME | frontend-public | yes | yes |
+| VITE_PUBLIC_TELEMETRY_ENABLED | frontend-public | no | no |
 | VITE_SHOW_AI_GENERATED_QUESTION_BADGE | frontend-public | yes | no |
 
 Undocumented variables use code defaults and remain compatibility debt; they are not automatically required.

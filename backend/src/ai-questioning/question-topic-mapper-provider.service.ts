@@ -200,7 +200,7 @@ export class QuestionTopicMapperProviderService {
 
   async suggest(question: TopicMapperQuestion, topics: TopicMapperTopic[]): Promise<TopicMapperResult> {
     const allowedCodes = new Set(topics.map((topic) => topic.code));
-    if (this.pluginRegistry && !this.pluginRegistry.allowsProductionCapability('question.topic-map')) {
+    if (!this.pluginRegistry || !this.pluginRegistry.allowsProductionCapability('question.topic-map')) {
       return {
         suggestions: [],
         rawOutput: null,

@@ -7,6 +7,7 @@ type MathContentProps = {
   text: string;
   className?: string;
   displayInlineMath?: boolean;
+  formatPlainMath?: boolean;
 };
 
 const MATH_TOKEN_PATTERN = /(\$\$[\s\S]+?\$\$|\$[^$\n]+?\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\))/g;
@@ -73,12 +74,25 @@ function stripOuterBareMathPunctuation(source: string) {
   return { prefix, body, suffix };
 }
 
-function renderPlainText(text: string, key: string) {
+function renderPlainText(text: string, key: string, formatPlainMath = false) {
   const lines = text.split('\n');
   return lines.flatMap<ReactNode>((line, index) => {
     const itemKey = `${key}-text-${index}`;
-    if (index === 0) return [<span key={itemKey}>{line}</span>];
-    return [<br key={`${itemKey}-br`} />, <span key={itemKey}>{line}</span>];
+    if (!formatPlainMath) return index === 0 ? [<span key={itemKey}>{line}</span>] : [<br key={`${itemKey}-br`} />, <span key={itemKey}>{line}</span>];
+    // Legacy public questions also store coordinates, fractions and powers as
+    // ASCII. Typeset only explicit notation, preserving every numeric value.
+    const powers = /\b[A-Z]\s*=\s*\((?:[+-]?(?:\d+(?:\.\d+)?|[a-z]),\s*){1,2}[+-]?(?:\d+(?:\.\d+)?|[a-z])\)|([A-Za-z0-9)])\^(?:\{([+-]?\d+)\}|\(([+-]?\d+(?:\/\d+)?)\)|([+-]?\d+))|(?<![\w/.:])([+-]?\d+)\/(\d+)(?![\d/.])/g;
+    const nodes: ReactNode[] = []; let start = 0; let match: RegExpExecArray | null;
+    while ((match = powers.exec(line))) {
+      nodes.push(line.slice(start, match.index));
+      if (match[5]) nodes.push(formulaNode(`\\displaystyle\\frac{${match[5]}}{${match[6]}}`, `${itemKey}-${match.index}`));
+      else if (match[1]) nodes.push(match[1], <sup key={`${itemKey}-${match.index}`}>{match[2] ?? match[3] ?? match[4]}</sup>);
+      else nodes.push(<span className="math-content-coordinate" key={`${itemKey}-${match.index}`}>{match[0]}</span>);
+      start = match.index + match[0].length;
+    }
+    nodes.push(line.slice(start));
+    if (index === 0) return [<span key={itemKey}>{nodes}</span>];
+    return [<br key={`${itemKey}-br`} />, <span key={itemKey}>{nodes}</span>];
   });
 }
 
@@ -123,8 +137,8 @@ function latexCommandSpanEnd(input: string, start: number, commandEnd: number) {
   return Math.max(cursor, start + 1);
 }
 
-function renderBareLatexText(text: string, key: string) {
-  if (!BARE_LATEX_COMMAND_PATTERN.test(text)) return renderPlainText(text, key);
+function renderBareLatexText(text: string, key: string, formatPlainMath = false) {
+  if (!BARE_LATEX_COMMAND_PATTERN.test(text)) return renderPlainText(text, key, formatPlainMath);
 
   const nodes: ReactNode[] = [];
   let cursor = 0;
@@ -132,20 +146,20 @@ function renderBareLatexText(text: string, key: string) {
   BARE_LATEX_COMMAND_SPAN_PATTERN.lastIndex = 0;
   while ((match = BARE_LATEX_COMMAND_SPAN_PATTERN.exec(text))) {
     const start = match.index;
-    if (start > cursor) nodes.push(...renderPlainText(text.slice(cursor, start), `${key}-plain-${nodes.length}`));
+    if (start > cursor) nodes.push(...renderPlainText(text.slice(cursor, start), `${key}-plain-${nodes.length}`, formatPlainMath));
     const end = latexCommandSpanEnd(text, start, start + match[0].length);
     const { prefix, body, suffix } = stripOuterBareMathPunctuation(text.slice(start, end));
     if (body.trim()) {
-      nodes.push(...renderPlainText(prefix, `${key}-prefix-${nodes.length}`));
+      nodes.push(...renderPlainText(prefix, `${key}-prefix-${nodes.length}`, formatPlainMath));
       nodes.push(formulaNode(body, `${key}-bare-math-${nodes.length}`));
-      nodes.push(...renderPlainText(suffix, `${key}-suffix-${nodes.length}`));
+      nodes.push(...renderPlainText(suffix, `${key}-suffix-${nodes.length}`, formatPlainMath));
     } else {
-      nodes.push(...renderPlainText(text.slice(start, end), `${key}-empty-${nodes.length}`));
+      nodes.push(...renderPlainText(text.slice(start, end), `${key}-empty-${nodes.length}`, formatPlainMath));
     }
     cursor = end;
     BARE_LATEX_COMMAND_SPAN_PATTERN.lastIndex = end;
   }
-  if (cursor < text.length) nodes.push(...renderPlainText(text.slice(cursor), `${key}-tail`));
+  if (cursor < text.length) nodes.push(...renderPlainText(text.slice(cursor), `${key}-tail`, formatPlainMath));
   return nodes;
 }
 
@@ -185,7 +199,7 @@ function renderLegacyToken(token: string, key: string) {
   return <span key={key}>{token}</span>;
 }
 
-function renderLegacyText(text: string) {
+function renderLegacyText(text: string, formatPlainMath = false) {
   const parts = text.split(LEGACY_TOKEN_PATTERN).filter((part) => part.length > 0);
   return parts.flatMap<ReactNode>((part, index) => {
     if (LEGACY_TOKEN_PATTERN.test(part)) {
@@ -193,11 +207,11 @@ function renderLegacyText(text: string) {
       return [renderLegacyToken(part, `legacy-${index}`)];
     }
     LEGACY_TOKEN_PATTERN.lastIndex = 0;
-    return renderBareLatexText(part, `legacy-${index}`);
+    return renderBareLatexText(part, `legacy-${index}`, formatPlainMath);
   });
 }
 
-export function MathContent({ text, className, displayInlineMath = false }: MathContentProps) {
+export function MathContent({ text, className, displayInlineMath = false, formatPlainMath = false }: MathContentProps) {
   const normalizedText = normalizeDisplayText(text);
   const hasLatex = MATH_TOKEN_PATTERN.test(normalizedText);
   MATH_TOKEN_PATTERN.lastIndex = 0;
@@ -205,13 +219,13 @@ export function MathContent({ text, className, displayInlineMath = false }: Math
 
   return (
     <span className={['math-content', className].filter(Boolean).join(' ')}>
-      {!hasLatex ? renderLegacyText(normalizedText) : parts.map((part, index) => {
+      {!hasLatex ? renderLegacyText(normalizedText, formatPlainMath) : parts.map((part, index) => {
         const isDollarBlock = part.startsWith('$$') && part.endsWith('$$');
         const isBracketBlock = part.startsWith('\\[') && part.endsWith('\\]');
         const isBlock = isDollarBlock || isBracketBlock;
         const isParenInline = part.startsWith('\\(') && part.endsWith('\\)');
         const isInline = isParenInline || (!isBlock && part.startsWith('$') && part.endsWith('$'));
-        if (!isBlock && !isInline) return renderBareLatexText(part, `part-${index}`);
+        if (!isBlock && !isInline) return renderBareLatexText(part, `part-${index}`, formatPlainMath);
 
         const source = isDollarBlock || isBracketBlock || isParenInline ? part.slice(2, -2).trim() : part.slice(1, -1).trim();
         return formulaNode(source, `math-${index}`, isBlock || displayInlineMath);

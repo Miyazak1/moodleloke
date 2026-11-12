@@ -20,13 +20,13 @@ function filesUnder(relativeDirectory) {
 
 const frontendFiles = filesUnder('frontend/src');
 const visibleBrandFiles = [
-  ...frontendFiles,
-  'backend/src/agent/agent-attachment-analysis.service.ts',
-  'backend/src/common/ops-metrics.ts',
-  'scripts/agent-demo-release-gate.cjs'
+  'frontend/index.html',
+  'frontend/src/components/AppLoadingState.tsx',
+  'frontend/src/components/admin/AdminConsoleShell.tsx',
+  'frontend/src/lib/public-metadata.ts'
 ];
 for (const relativePath of visibleBrandFiles) {
-  expect(!/cscapilot/i.test(read(relativePath)), `Former visible product brand remains: ${relativePath}`);
+  expect(/CSCAPilot/.test(read(relativePath)), `Deployed public brand is missing: ${relativePath}`);
 }
 
 const allowedLegacyStorageFiles = new Set([

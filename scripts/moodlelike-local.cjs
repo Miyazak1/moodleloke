@@ -43,7 +43,12 @@ const runtimeEnv = {
   CSCA_LEARNING_INTERVENTION_VERIFICATION_ENABLED: 'true',
   CSCA_AGENT_PRACTICE_WRITE_ENABLED: 'true',
   CSCA_AGENT_TEACHING_ASSET_ENABLED: 'true',
+  MOODLELIKE_MATH_ENGINE_ENABLED: 'true',
+  QUESTION_ENGINE_PLUGIN_ENABLED: 'true',
+  QUESTION_ENGINE_PLUGIN_ID: 'verified-math-1.43',
   CSCA_AI_QUESTION_GENERATION_ENABLED: 'false',
+  CSCA_AI_QUESTION_REVIEW_ENABLED: 'false',
+  CSCA_AI_TOPIC_MAPPING_ENABLED: 'false',
   CSCA_AI_QUESTIONING_SCHEDULER_ENABLED: 'false',
   CSCA_SUBJECT_PRACTICE_PRODUCTION_ENABLED: 'false',
   CSCA_SUBJECT_PRACTICE_PREDICTIVE_REPLENISHMENT_ENABLED: 'false'
@@ -109,6 +114,7 @@ function setup() {
   if (runtimeEnv.NODE_ENV === 'production' || runtimeEnv.MOODLELIKE_ENV === 'production' || runtimeEnv.CSC_ENV === 'production') fail('Local setup is disabled in production mode.');
   doctor();
   ensureDependencies();
+  run('installing frozen mathematics generation engine', process.execPath, ['question-engine/math-v143/install.cjs']);
   run('starting isolated PostgreSQL and Redis', dockerCommand, ['compose', 'up', '-d', '--wait', 'postgres', 'redis']);
   run('applying committed database migrations', npmCommand, ['run', 'db:migrate']);
   run('building stable backend runtime', npmCommand, ['run', 'backend:build']);

@@ -128,6 +128,7 @@ model User {
   teachingAssetExposures                   TeachingAssetExposure[]
   teachingInteractionEvents                TeachingInteractionEvent[]
   agentPastPaperAttempts                   AgentPastPaperAttempt[]
+  dailyLearningTaskExecutions              DailyLearningTaskExecution[]
 
   @@index([role], map: "idx_users_role")
   @@map("users")
@@ -3701,6 +3702,61 @@ model AgentArtifact {
   @@index([userId, type, createdAt], map: "idx_agent_artifacts_user_type_created")
   @@index([domainEntityType, domainEntityId], map: "idx_agent_artifacts_domain_entity")
   @@map("agent_artifacts")
+}
+
+model DailyLearningTaskExecution {
+  id               String    @id @default(cuid())
+  userId           Int       @map("user_id")
+  planDate         String    @map("plan_date") @db.VarChar(10)
+  taskId           String    @map("task_id") @db.VarChar(180)
+  policyVersion    String    @map("policy_version") @db.VarChar(80)
+  taskKind         String    @map("task_kind") @db.VarChar(40)
+  subject          String    @db.VarChar(24)
+  entry            String    @db.VarChar(32)
+  status           String    @default("started") @db.VarChar(24)
+  topicId          Int?      @map("topic_id")
+  artifactId       String?   @map("artifact_id") @db.VarChar(120)
+  reviewItemId     Int?      @map("review_item_id")
+  roundId          Int?      @map("round_id")
+  sourceEntityType String?   @map("source_entity_type") @db.VarChar(60)
+  sourceEntityId   String?   @map("source_entity_id") @db.VarChar(120)
+  positiveOutcome  Boolean?  @map("positive_outcome")
+  context          Json?
+  outcome          Json?
+  startedAt        DateTime  @default(now()) @map("started_at")
+  completedAt      DateTime? @map("completed_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, planDate, taskId], map: "uq_daily_learning_task_execution_user_date_task")
+  @@index([userId, planDate, status], map: "idx_daily_learning_task_execution_user_date_status")
+  @@index([userId, taskKind, subject, completedAt], map: "idx_daily_learning_task_execution_quality")
+  @@index([artifactId], map: "idx_daily_learning_task_execution_artifact")
+  @@index([reviewItemId], map: "idx_daily_learning_task_execution_review")
+  @@index([userId, sourceEntityType, sourceEntityId], map: "idx_daily_learning_task_execution_source")
+  @@map("daily_learning_task_executions")
+}
+
+model VerifiedQuestionGenerationTask {
+  id           String    @id @default(cuid())
+  requestKey   String    @unique @map("request_key") @db.VarChar(64)
+  userId       Int?      @map("user_id")
+  pluginId     String    @map("plugin_id") @db.VarChar(80)
+  input        Json
+  state        String    @default("queued") @db.VarChar(24)
+  questionIds  Json      @default("[]") @map("question_ids")
+  leaseOwner   String?   @map("lease_owner") @db.VarChar(80)
+  leaseUntil   DateTime? @map("lease_until")
+  attemptCount Int       @default(0) @map("attempt_count")
+  errorCode    String?   @map("error_code") @db.VarChar(120)
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  @@index([state, leaseUntil], map: "idx_verified_generation_state_lease")
+  @@index([userId, createdAt], map: "idx_verified_generation_user_time")
+  @@map("verified_question_generation_tasks")
 }
 
 model AgentOutbox {

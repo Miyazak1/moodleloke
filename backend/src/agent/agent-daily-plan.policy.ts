@@ -26,6 +26,8 @@ export type DailyPrescriptionCandidate = {
     subject: Subject;
     topicIds: number[];
     questionCount?: number;
+    interventionVerificationId?: string;
+    interventionVerificationPhase?: 'retention' | 'transfer';
   };
 };
 
@@ -126,6 +128,8 @@ export type AgentDailyPlanTask = {
     topicIds: number[];
     questionCount: number | null;
     confidence: DailyPrescriptionCandidate['confidence'];
+    interventionVerificationId: string | null;
+    interventionVerificationPhase: 'retention' | 'transfer' | null;
   };
   freePractice: null | {
     questionCount: 3 | 5 | 10;
@@ -320,7 +324,9 @@ export function buildAgentDailyPlan(input: {
           taskType: prescriptionTask.type,
           topicIds: prescriptionTask.topicIds,
           questionCount: prescriptionTask.questionCount ?? null,
-          confidence: input.prescription.confidence
+          confidence: input.prescription.confidence,
+          interventionVerificationId: prescriptionTask.interventionVerificationId ?? null,
+          interventionVerificationPhase: prescriptionTask.interventionVerificationPhase ?? null
         },
         freePractice: null,
         execution: taskExecution(input.taskSupply?.prescription)

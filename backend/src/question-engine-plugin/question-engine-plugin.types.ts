@@ -11,7 +11,8 @@ export type QuestionEnginePluginDescriptor = {
   version: string;
   apiVersion: typeof QUESTION_ENGINE_PLUGIN_API_VERSION;
   capabilities: QuestionEngineCapability[];
-  executionBoundary: 'in-process-adapter';
+  subjects?: string[];
+  executionBoundary: 'in-process-adapter' | 'isolated-worker';
   activationMode: 'configuration-restart';
 };
 
@@ -56,7 +57,7 @@ export type QuestionEnginePluginRegistryStatus = {
       sidecarEndpointConfigured: boolean;
       nonceStoreConfigured: boolean;
       transportImplemented: true;
-      sidecarActivationSupported: true;
+      sidecarActivationSupported: boolean;
       sidecarActivationEnabled: boolean;
       workerCapabilities: QuestionEngineCapability[];
       acceptedWorkerVersions: string[];

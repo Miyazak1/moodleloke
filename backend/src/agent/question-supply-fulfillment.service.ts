@@ -188,23 +188,24 @@ export class QuestionSupplyFulfillmentService {
       try {
         const demand = QuestionSupplyDemandV1Schema.parse(candidate.demandSnapshot);
         const response = await this.adapter.dispatch(demand);
+        const dispatchState = response.status === 'shadow_recorded' ? 'shadow_dispatched' : response.status === 'queued' ? 'dispatched' : 'unsupported';
         await this.prisma.$transaction(async (tx) => {
           const updated = await tx.questionSupplyFulfillmentPlan.updateMany({
             where: { id: candidate.id, status: 'leased', leaseOwner: workerId },
             data: {
-              status: 'shadow_dispatched', adapterVersion: response.adapterVersion,
+              status: dispatchState, adapterVersion: response.adapterVersion,
               dispatchedAt: new Date(), leaseOwner: null, leaseUntil: null, lastErrorCode: null
             }
           });
           if (updated.count !== 1) throw new Error('QUESTION_SUPPLY_FULFILLMENT_LEASE_LOST');
           await tx.questionSupplyFulfillmentEvent.create({
             data: {
-              planId: candidate.id, action: 'shadow_dispatched', fromStatus: 'leased', toStatus: 'shadow_dispatched',
+              planId: candidate.id, action: dispatchState, fromStatus: 'leased', toStatus: dispatchState,
               metadata: { adapterVersion: response.adapterVersion, generationInvoked: response.generationInvoked }
             }
           });
         });
-        results.push({ planId: candidate.id, status: 'shadow_dispatched' });
+        results.push({ planId: candidate.id, status: dispatchState });
       } catch (error) {
         const errorCode = error instanceof Error ? error.message.slice(0, 80) : 'QUESTION_SUPPLY_FULFILLMENT_FAILED';
         const delaySeconds = Math.min(3600, 2 ** Math.min(candidate.attemptCount + 1, 10));

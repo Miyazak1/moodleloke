@@ -5,6 +5,8 @@ import { CscaAdaptiveService } from '../csca-special-practice/csca-adaptive.serv
 import { IndependentVerificationQuestion } from '../csca-special-practice/csca-adaptive.types';
 import { AdaptiveQuestionProviderService } from '../csca-special-practice/adaptive-question-provider.service';
 import { LearningIntelligenceFeatureFlagsService } from '../learning-intelligence/learning-intelligence-feature-flags.service';
+import { DailyLearningTaskContextSchema } from '../learning-intelligence/execution/daily-learning-task-execution.contract';
+import { DailyLearningTaskExecutionService } from '../learning-intelligence/execution/daily-learning-task-execution.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { QuestionSupplyRequestService } from './question-supply-request.service';
 import { TeachingAssetRoutingOutcomeService } from './teaching-asset-routing-outcome.service';
@@ -32,7 +34,8 @@ const OfferSchema = z.object({
 }).strict();
 const StartSchema = z.object({
   clientRequestId: z.string().trim().min(8).max(120),
-  questionLanguage: z.enum(['zh', 'en']).default('zh')
+  questionLanguage: z.enum(['zh', 'en']).default('zh'),
+  dailyPlanContext: DailyLearningTaskContextSchema.optional()
 }).strict();
 
 function jsonObject(value: unknown): Record<string, any> {
@@ -61,7 +64,8 @@ export class AgentInterventionVerificationService {
     private readonly questions: AdaptiveQuestionProviderService,
     private readonly adaptive: CscaAdaptiveService,
     @Optional() private readonly supplyRequests?: QuestionSupplyRequestService,
-    @Optional() private readonly routingOutcomes?: TeachingAssetRoutingOutcomeService
+    @Optional() private readonly routingOutcomes?: TeachingAssetRoutingOutcomeService,
+    @Optional() private readonly dailyTaskExecutions?: DailyLearningTaskExecutionService
   ) {}
 
   private async assertNoActiveMock(userId: number) {
@@ -340,8 +344,23 @@ export class AgentInterventionVerificationService {
     await this.assertNoActiveMock(userId);
     let verification = await this.prisma.learningInterventionVerification.findFirst({ where: { id: verificationId, userId }, include: this.includeContext() });
     if (!verification) throw new NotFoundException('干预验证任务不存在。');
-    if (verification.startRequestId === input.clientRequestId && verification.status === 'started' && verification.roundId) return this.serialize(verification);
-    if (verification.status === 'started' && verification.roundId) return this.serialize(verification);
+    if (verification.status === 'scheduled' && verification.dueAt.getTime() <= Date.now()) {
+      verification = await this.materializeScheduled(verification, verification.conversationId ?? undefined);
+    }
+    const recordDailyStart = (item: { id: string; topicId: number; roundId: number | null }) => this.dailyTaskExecutions?.started(userId, input.dailyPlanContext, {
+      topicId: item.topicId,
+      roundId: item.roundId,
+      sourceEntityType: 'learning_intervention_verification',
+      sourceEntityId: item.id
+    }).catch(() => undefined);
+    if (verification.startRequestId === input.clientRequestId && verification.status === 'started' && verification.roundId) {
+      await recordDailyStart(verification);
+      return this.serialize(verification);
+    }
+    if (verification.status === 'started' && verification.roundId) {
+      await recordDailyStart(verification);
+      return this.serialize(verification);
+    }
     if (verification.status === 'starting') {
       const recoveredRound = await this.prisma.cscaAdaptiveRound.findFirst({
         where: { session: { userId }, plannerSnapshot: { path: ['focus', 'verificationId'], equals: verification.id } }, select: { id: true }
@@ -351,6 +370,7 @@ export class AgentInterventionVerificationService {
           where: { id: verification.id, userId, status: 'starting', roundId: null }, data: { status: 'started', roundId: recoveredRound.id, startedAt: new Date() }
         });
         verification = await this.prisma.learningInterventionVerification.findFirstOrThrow({ where: { id: verification.id, userId }, include: this.includeContext() });
+        await recordDailyStart(verification);
         return this.serialize(verification);
       }
       if (verification.updatedAt && verification.updatedAt.getTime() < Date.now() - 2 * 60 * 1000) {
@@ -405,6 +425,7 @@ export class AgentInterventionVerificationService {
       throw error;
     }
     verification = await this.prisma.learningInterventionVerification.findFirstOrThrow({ where: { id: verification.id, userId }, include: this.includeContext() });
+    await recordDailyStart(verification);
     return this.serialize(verification);
   }
 
@@ -428,7 +449,22 @@ export class AgentInterventionVerificationService {
     if (!this.flags.isEnabled('interventionVerification')) throw new ServiceUnavailableException('干预验证暂未开放。');
     const verification = await this.prisma.learningInterventionVerification.findFirst({ where: { id: verificationId, userId }, include: this.includeContext() });
     if (!verification) throw new NotFoundException('干预验证任务不存在。');
-    if (verification.outcome) return this.serialize(verification);
+    if (verification.outcome) {
+      await this.dailyTaskExecutions?.completedBySource(userId, 'learning_intervention_verification', verification.id, {
+        positiveOutcome: verification.outcome.result === 'passed',
+        topicId: verification.topicId,
+        roundId: verification.roundId,
+        outcome: {
+          phase: phaseOf(verification.phase),
+          result: verification.outcome.result,
+          correctCount: verification.outcome.correctCount,
+          totalCount: verification.outcome.totalCount,
+          accuracy: verification.outcome.accuracy,
+          independent: verification.outcome.independent
+        }
+      }).catch(() => undefined);
+      return this.serialize(verification);
+    }
     if (!verification.roundId || verification.status !== 'started') throw new ConflictException('干预验证尚未开始。');
     const round = await this.prisma.cscaAdaptiveRound.findFirst({
       where: { id: verification.roundId, session: { userId } }, include: { items: { orderBy: { position: 'asc' } } }
@@ -498,6 +534,19 @@ export class AgentInterventionVerificationService {
       return saved;
     });
     await this.routingOutcomes?.evaluateAndPersist(verification.subjectCode).catch(() => undefined);
+    await this.dailyTaskExecutions?.completedBySource(userId, 'learning_intervention_verification', verification.id, {
+      positiveOutcome: outcome.result === 'passed',
+      topicId: verification.topicId,
+      roundId: verification.roundId,
+      outcome: {
+        phase,
+        result: outcome.result,
+        correctCount: outcome.correctCount,
+        totalCount: outcome.totalCount,
+        accuracy: outcome.accuracy,
+        independent: outcome.independent
+      }
+    }).catch(() => undefined);
     const refreshed = await this.prisma.learningInterventionVerification.findFirstOrThrow({ where: { id: verification.id, userId }, include: this.includeContext() });
     return this.serialize({ ...refreshed, status: 'completed', outcome });
   }

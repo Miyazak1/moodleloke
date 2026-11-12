@@ -38,8 +38,8 @@ expect(frontendImage.includes('moodlelike_csrf') && request.includes('moodlelike
 for (const former of ['cscalite_refresh', 'cscalite_csrf', 'cscalite_oauth_state', 'www.cscapilot.com', '/cscalite?schema=']) {
   expect(!productionExample.includes(former), `Production example retains former deployment identity: ${former}`);
 }
-expect(!authService.includes('CSCAPilot'), 'Authentication email copy must use the Moodlelike product identity.');
-expect(!/CSCAPilot|cscalite\.local|cscalite_(?:refresh|csrf|oauth_state)/i.test(activeIdentitySurfaces), 'Active authentication/session surfaces retain a former product identity.');
+expect(authService.includes("const PUBLIC_BRAND_NAME = 'CSCAPilot'"), 'Authentication email copy must retain the deployed CSCAPilot public brand.');
+expect(!/cscalite\.local|cscalite_(?:refresh|csrf|oauth_state)/i.test(activeIdentitySurfaces), 'Active authentication/session defaults retain a former storage/deployment identity.');
 expect(read('DEPLOYMENT_IDENTITY.md').includes('Changing a Compose volume name does not migrate data.'), 'Deployment identity documentation must preserve the data-cutover warning.');
 
 console.log('Moodlelike deployment identity contract passed.');

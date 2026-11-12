@@ -2,6 +2,8 @@
 
 ## Current defaults
 
+The public site and authentication email brand remain **CSCAPilot** at cscapilot.com. The Moodlelike identifiers below name technical resources; they do not require a public rebrand or a change to the existing domain proxy.
+
 Moodlelike owns its deployment identity independently of the former platform:
 
 - backend images: `moodlelike-backend:migrate` and `moodlelike-backend:prod`;

@@ -11,6 +11,12 @@ test-results/
 backend/.tmp/
 backend/uploads/
 .local/
+/tmp/
+/output/
+
+# Upstream diagram handoff includes internal holdout reports. Runtime modules
+# are reviewed under question-engine/diagrams; retain the handoff locally only.
+/artifacts/math-lab/math-lab-1.43-diagrams-complete.zip
 
 # Local database recovery and source-data workbench. These may contain real data
 # exports and must never be included in a release commit.

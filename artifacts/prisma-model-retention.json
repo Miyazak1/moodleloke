@@ -1,12 +1,12 @@
 {
   "schemaVersion": "1",
-  "generatedAt": "2026-09-28T12:29:41.618Z",
+  "generatedAt": "2026-11-12T11:27:52.886Z",
   "policy": "copy-all-first-prune-later",
   "counts": {
-    "runtime-keep": 114,
+    "runtime-keep": 117,
     "legacy-archive-candidate": 8,
     "manual-review": 2,
-    "future-platform-keep": 23
+    "future-platform-keep": 22
   },
   "models": [
     {
@@ -14,7 +14,7 @@
       "table": "users",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 52,
+      "prismaAccessorMentions": 54,
       "typeMentions": 18
     },
     {
@@ -22,7 +22,7 @@
       "table": "student_profiles",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 11,
+      "prismaAccessorMentions": 12,
       "typeMentions": 0
     },
     {
@@ -199,15 +199,15 @@
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
       "prismaAccessorMentions": 21,
-      "typeMentions": 2
+      "typeMentions": 3
     },
     {
       "model": "SpecialPracticeQuestion",
       "table": "special_practice_questions",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 23,
-      "typeMentions": 2
+      "prismaAccessorMentions": 25,
+      "typeMentions": 3
     },
     {
       "model": "SpecialPracticeSession",
@@ -222,7 +222,7 @@
       "table": "csca_exam_topics",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 27,
+      "prismaAccessorMentions": 34,
       "typeMentions": 2
     },
     {
@@ -302,7 +302,7 @@
       "table": "csca_adaptive_rounds",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 25,
+      "prismaAccessorMentions": 27,
       "typeMentions": 0
     },
     {
@@ -318,7 +318,7 @@
       "table": "csca_question_exposures",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 7,
+      "prismaAccessorMentions": 8,
       "typeMentions": 0
     },
     {
@@ -334,7 +334,7 @@
       "table": "csca_questions",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 31,
+      "prismaAccessorMentions": 36,
       "typeMentions": 2
     },
     {
@@ -350,7 +350,7 @@
       "table": "csca_concept_cards",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 5,
+      "prismaAccessorMentions": 6,
       "typeMentions": 0
     },
     {
@@ -374,7 +374,7 @@
       "table": "teaching_asset_topics",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 4,
+      "prismaAccessorMentions": 5,
       "typeMentions": 0
     },
     {
@@ -550,7 +550,7 @@
       "table": "csca_training_events",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 24,
+      "prismaAccessorMentions": 29,
       "typeMentions": 0
     },
     {
@@ -588,9 +588,9 @@
     {
       "model": "CscaAdaptiveInventoryEvent",
       "table": "csca_adaptive_inventory_events",
-      "disposition": "future-platform-keep",
-      "rationale": "Reserved for Agent learning, authoring, assessment, or future teaching platform capability.",
-      "prismaAccessorMentions": 0,
+      "disposition": "runtime-keep",
+      "rationale": "Referenced by the reachable backend runtime.",
+      "prismaAccessorMentions": 2,
       "typeMentions": 0
     },
     {
@@ -598,7 +598,7 @@
       "table": "csca_learning_daily_snapshots",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 6,
+      "prismaAccessorMentions": 8,
       "typeMentions": 0
     },
     {
@@ -630,7 +630,7 @@
       "table": "csca_wrong_patterns",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 29,
+      "prismaAccessorMentions": 30,
       "typeMentions": 0
     },
     {
@@ -862,7 +862,7 @@
       "table": "learning_interventions",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 3,
+      "prismaAccessorMentions": 4,
       "typeMentions": 0
     },
     {
@@ -1166,7 +1166,7 @@
       "table": "agent_tool_calls",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 61,
+      "prismaAccessorMentions": 62,
       "typeMentions": 0
     },
     {
@@ -1174,7 +1174,23 @@
       "table": "agent_artifacts",
       "disposition": "runtime-keep",
       "rationale": "Referenced by the reachable backend runtime.",
-      "prismaAccessorMentions": 29,
+      "prismaAccessorMentions": 30,
+      "typeMentions": 0
+    },
+    {
+      "model": "DailyLearningTaskExecution",
+      "table": "daily_learning_task_executions",
+      "disposition": "runtime-keep",
+      "rationale": "Referenced by the reachable backend runtime.",
+      "prismaAccessorMentions": 10,
+      "typeMentions": 0
+    },
+    {
+      "model": "VerifiedQuestionGenerationTask",
+      "table": "verified_question_generation_tasks",
+      "disposition": "runtime-keep",
+      "rationale": "Referenced by the reachable backend runtime.",
+      "prismaAccessorMentions": 8,
       "typeMentions": 0
     },
     {

@@ -23,18 +23,7 @@ export class AIQuestioningSchedulerService implements OnModuleInit, OnModuleDest
   constructor(private readonly aiQuestioningService: AIQuestioningService) {}
 
   onModuleInit() {
-    if (!process.env.DATABASE_URL) {
-      this.logger.log('AI questioning scheduler skipped because DATABASE_URL is not configured.');
-      return;
-    }
-    if (!enabled(process.env.CSCA_AI_QUESTIONING_TASK_RECOVERY_DISABLED)) {
-      void this.recoverQueuedTasks('startup');
-    }
-    if (!this.isEnabled()) return;
-    this.scheduleNext();
-    if (enabled(process.env.CSCA_AI_QUESTIONING_SCHEDULER_RUN_ON_STARTUP)) {
-      void this.runCycle('startup');
-    }
+    this.logger.log('Legacy question production and startup recovery are retired.');
   }
 
   onModuleDestroy() {
@@ -45,7 +34,7 @@ export class AIQuestioningSchedulerService implements OnModuleInit, OnModuleDest
   }
 
   private isEnabled() {
-    return enabled(process.env.CSCA_AI_QUESTIONING_SCHEDULER_ENABLED);
+    return false; // Retired engines must not be reactivated by legacy deployment flags.
   }
 
   private async recoverQueuedTasks(trigger: 'scheduled' | 'startup') {

@@ -45,12 +45,22 @@ export const QuestionSupplyDemandV1Schema = z.object({
 
 export type QuestionSupplyDemandV1 = z.infer<typeof QuestionSupplyDemandV1Schema>;
 
+export const VerifiedMathSupplyDemandSchema = z.object({
+  schemaVersion: z.literal('question-supply-plugin-v2'), requestKey: z.string().min(1).max(240),
+  source: z.literal('student_free_practice'), subjectCode: z.literal('math'), topicId: z.number().int().positive(),
+  topicCode: z.string().min(1).max(140), difficulty: z.enum(['basic', 'medium', 'hard']),
+  requestedCount: z.number().int().min(1).max(10), userId: z.number().int().positive().optional(),
+  excludedIds: z.array(z.number().int().positive()).max(100).default([]), sourcePolicy: z.literal('reviewed_published_only')
+}).strict();
+export type VerifiedMathSupplyDemand = z.infer<typeof VerifiedMathSupplyDemandSchema>;
+
 export type QuestionSupplyDispatchResult = {
   status: 'shadow_recorded';
   adapterVersion: typeof QUESTION_SUPPLY_SHADOW_ADAPTER_VERSION;
   externalRequestId: null;
   generationInvoked: false;
-};
+} | { status: 'queued'; adapterVersion: 'verified-math-1.43'; externalRequestId: string; generationInvoked: true }
+  | { status: 'unsupported'; adapterVersion: 'verified-math-1.43'; externalRequestId: null; generationInvoked: false; reason: string };
 
 export const QUESTION_SUPPLY_PRODUCTION_ADAPTER = Symbol('QUESTION_SUPPLY_PRODUCTION_ADAPTER');
 
@@ -62,7 +72,7 @@ export interface QuestionCatalogReadPort {
 }
 
 export interface QuestionSupplyDemandPort {
-  dispatch(demand: QuestionSupplyDemandV1): Promise<QuestionSupplyDispatchResult>;
+  dispatch(demand: QuestionSupplyDemandV1 | VerifiedMathSupplyDemand): Promise<QuestionSupplyDispatchResult>;
 }
 
 /** @deprecated Use QuestionSupplyDemandPort. Kept as an internal symbol-compatible alias during extraction. */

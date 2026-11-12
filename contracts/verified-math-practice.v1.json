@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "verified-math-practice-v1",
+  "engineVersion": "1.43.0",
+  "enabledFlag": "MOODLELIKE_MATH_ENGINE_ENABLED",
+  "purpose": "student_initiated_math_practice",
+  "sourceType": "verified_math_engine",
+  "qualification": "machine_verified_ordinary_practice",
+  "requiredChecks": [
+    "frozen_release_integrity",
+    "beforeStore",
+    "independent_oracle",
+    "teaching_admission",
+    "host_topic_binding",
+    "mathematical_identity_history",
+    "atomic_persistence",
+    "common_candidate_write_gate",
+    "active_task_lease",
+    "ordinary_practice_publication",
+    "published_bank_reread"
+  ],
+  "providerCalls": 0,
+  "studentCalibrated": false,
+  "independentMeasurementAllowed": false,
+  "browserMayRunGenerator": false,
+  "browserMayReceiveAnswerBeforeAttempt": false,
+  "providerProductionPluginEnabled": false,
+  "pluginId": "verified-math-1.43",
+  "supplyContract": "question-supply-plugin-v2",
+  "publicationPolicy": "verified-math-publication-v1"
+}

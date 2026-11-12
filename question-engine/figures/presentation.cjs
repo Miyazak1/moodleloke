@@ -1,0 +1,13 @@
+'use strict';
+const {binding,display,original,hash}=require('./binding.cjs');
+const {renderExternal,requiresFigure}=require('./external.cjs');
+function mathFigure(q,phase,language){const m=q.generationMetadata;if(!m?.questionArtifact||!m.sourceCandidate||!m.sourceVerification)return null;const {runtimeDirectory}=require('../math-v143/install.cjs'),path=require('path');const load=name=>require(path.join(runtimeDirectory,'src',name));const config=load('config.cjs').batchConfig({cells:[m.cellId],scopes:{[m.cellId]:[m.scopeId]},count:1,seed:m.seed},1);const r={passed:true,candidate:m.sourceCandidate,gate:m.sourceVerification.gate,admission:m.sourceVerification.admission,pedagogy:m.sourceVerification.pedagogy,plan:m.questionPlan,questionArtifact:m.questionArtifact,generationSource:m.generationSource,contentHash:m.sourceContentHash,fingerprint:m.sourceFingerprint,mathIdentity:m.questionArtifact.identity,providerCalls:0,costUsd:0};const checked=require('../diagrams/adapter.cjs').prepareLocalFigure({cell_id:m.cellId,scope_id:m.scopeId,seed:m.seed,config},r)(phase,language);return checked.state==='ready'?display(checked.display.svg,checked.display.caption,phase):null;}
+function present(q,phase='question',language='zh',{signingKey=process.env.AUTH_SECRET}={}){if(!['question','review'].includes(phase)||!['zh','en'].includes(language))throw Error('INVALID_FIGURE_PHASE');
+  const required=requiresFigure(q);const source=original(q,phase,signingKey);if(source?.display)return {state:'ready',display:source.display};if(source?.blocked)return {state:'hold',reason:source.reason};
+  try{if(q.sourceType==='verified_math_engine'){const m=q.generationMetadata;const a=m?.practiceAdmission;const pub=q.reviewMetadata?.publication;const bound=hash([q.prompt,q.options,q.correctAnswer,q.explanation,q.localizations??m?.localizations??null]);if(a?.contentHash!==bound||a?.state!=='ready'||pub?.state!=='published'||pub?.pluginId!=='verified-math-1.43')return {state:'original_only',reason:'host_math_publication_invalid'};const image=mathFigure(q,phase,language);return image?{state:'ready',display:image}:{state:'original_only',reason:'native_scope_has_no_figure_for_phase'};}
+    if(q.sourceType==='math_reading_pilot'){return require('./reading-pilots.cjs').present(q,phase,language);}
+    const drawn=renderExternal(q,phase,language);if(drawn)return {state:'ready',display:drawn.display};
+  }catch{return {state:required?'hold':'original_only',reason:'figure_evidence_unverified'};}
+  return {state:required?'hold':'original_only',reason:required?'required_original_figure_missing':'no_verified_figure_rule'};
+}
+module.exports={present,mathFigure,isReadyForPractice:q=>!requiresFigure(q)&&q.sourceType!=='math_reading_pilot'||present(q).state!=='hold'};

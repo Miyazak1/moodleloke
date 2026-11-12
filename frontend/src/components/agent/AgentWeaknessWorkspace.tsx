@@ -7,6 +7,7 @@ import { Icon } from '../Icon';
 import { MathContent } from '../MathContent';
 
 export type WeaknessPracticeSelection = {
+  difficulty?: 'basic' | 'medium' | 'hard';
   subject: 'math' | 'physics' | 'chemistry';
   questionCount: number;
   practiceMode?: 'mixed' | 'single_topic';

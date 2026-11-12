@@ -1,0 +1,6 @@
+# LOCAL rehearsal rollback: same images and database, generation disabled.
+services:
+  backend:
+    environment:
+      QUESTION_ENGINE_PLUGIN_ENABLED: "false"
+      MOODLELIKE_MATH_ENGINE_ENABLED: "false"

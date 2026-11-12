@@ -18,6 +18,126 @@ const {
 } = require('../dist/backend/src/agent/agent.types');
 const { decideWrongPatternVerification } = require('../dist/backend/src/csca-learning/wrong-pattern-verification.policy');
 const { buildAgentDailyPlan, resolveDailyPlanAdjustment } = require('../dist/backend/src/agent/agent-daily-plan.policy');
+const { transitionDailyLearningTaskExecution } = require('../dist/backend/src/learning-intelligence/execution/daily-learning-task-execution.contract');
+const { buildQuestionSupplyCoverage } = require('../dist/backend/src/agent/question-supply-coverage.service');
+const { evaluateInterventionPilotGate } = require('../dist/backend/src/agent/intervention-pilot-observability.service');
+
+function pilotGateInput(overrides = {}) {
+  return {
+    learners: 12,
+    deliveryCount: 12,
+    deliveryCompleted: 10,
+    deliveryCompletionRate: 10 / 12,
+    verificationCount: 30,
+    contentUnavailable: 0,
+    verificationSupplyUnavailable: 0,
+    phases: [
+      { phase: 'immediate', passed: 7, failed: 1, passRate: 7 / 8 },
+      { phase: 'retention', passed: 4, failed: 1, passRate: 4 / 5 },
+      { phase: 'transfer', passed: 4, failed: 1, passRate: 4 / 5 }
+    ],
+    stability: { stable: 4, notStable: 1, inconclusive: 0 },
+    ...overrides
+  };
+}
+
+function testInterventionPilotGateSeparatesEvidenceResourcesAndQuality() {
+  const qualified = evaluateInterventionPilotGate(pilotGateInput());
+  assert.equal(qualified.qualified, true);
+  assert.equal(qualified.recommendation, 'expand_candidate');
+  assert.equal(qualified.automaticActivation, false);
+
+  const sampleLimited = evaluateInterventionPilotGate(pilotGateInput({ learners: 3, deliveryCompleted: 3 }));
+  assert.equal(sampleLimited.recommendation, 'collect_evidence');
+  assert.ok(sampleLimited.reasonGroups.sample.includes('MINIMUM_LEARNERS_NOT_MET'));
+
+  const resourceBlocked = evaluateInterventionPilotGate(pilotGateInput({ verificationSupplyUnavailable: 2 }));
+  assert.equal(resourceBlocked.recommendation, 'repair_resources');
+  assert.deepEqual(resourceBlocked.reasonGroups.resources, ['VERIFICATION_SUPPLY_UNAVAILABLE_RATE_ABOVE_CEILING']);
+
+  const qualityBlocked = evaluateInterventionPilotGate(pilotGateInput({
+    phases: [
+      { phase: 'immediate', passed: 3, failed: 5, passRate: 3 / 8 },
+      { phase: 'retention', passed: 4, failed: 1, passRate: 4 / 5 },
+      { phase: 'transfer', passed: 4, failed: 1, passRate: 4 / 5 }
+    ]
+  }));
+  assert.equal(qualityBlocked.recommendation, 'pause_quality');
+  assert.ok(qualityBlocked.reasonGroups.quality.includes('IMMEDIATE_PASS_RATE_BELOW_FLOOR'));
+}
+
+function testDailyTaskExecutionCannotRegressAfterCompletion() {
+  const startedAt = new Date('2026-10-16T01:00:00.000Z');
+  const completedAt = new Date('2026-10-16T01:12:00.000Z');
+  const started = transitionDailyLearningTaskExecution(null, { type: 'started' }, startedAt);
+  assert.deepEqual(started, { status: 'started', startedAt, completedAt: null, positiveOutcome: null });
+  const completed = transitionDailyLearningTaskExecution(started, { type: 'completed', positiveOutcome: true }, completedAt);
+  assert.deepEqual(completed, { status: 'completed', startedAt, completedAt, positiveOutcome: true });
+  assert.deepEqual(
+    transitionDailyLearningTaskExecution(completed, { type: 'started' }, new Date('2026-10-16T02:00:00.000Z')),
+    completed,
+    'a retry must not move a completed daily task back to started'
+  );
+}
+
+function testQuestionSupplyCoverageExposesExecutableGaps() {
+  const options = ['A', 'B', 'C', 'D'].map((id) => ({ id, text: id }));
+  const question = (id, overrides = {}) => ({
+    id, topicId: 1, status: 'approved', sourceType: 'official', sourceQuestionId: null, version: 1,
+    designedDifficulty: 'standard', empiricalDifficulty: null, difficultyConfidence: null,
+    questionType: 'single-choice', explanation: 'explanation', options, correctAnswer: 'A',
+    knowledgeTags: ['function'], generationMetadata: {}, reviewMetadata: {}, qualityMetric: null,
+    blueprint: { skill: `skill-${id}` }, ...overrides
+  });
+  const report = buildQuestionSupplyCoverage({
+    topics: [
+      { id: 1, subject: 'math', module: 'functions', code: 'M-FUNC-001', title: '函数' },
+      { id: 2, subject: 'physics', module: 'mechanics', code: 'P-MECH-001', title: '力学' }
+    ],
+    questions: [question(1), question(2), question(3), question(4), question(5)],
+    conceptCardTopicIds: [1],
+    teachingAssetTopicIds: [1],
+    generatedAt: new Date('2026-10-16T00:00:00.000Z')
+  });
+  assert.equal(report.summary.practiceReadyTopicCount, 1);
+  assert.equal(report.summary.verificationReadyTopicCount, 1);
+  assert.equal(report.topics[0].gaps.length, 0);
+  assert.deepEqual(report.topics[1].gaps, [
+    'PRACTICE_BATCH_INSUFFICIENT',
+    'VERIFICATION_BATCH_INSUFFICIENT',
+    'EXPLANATION_COVERAGE_INSUFFICIENT',
+    'TEACHING_CONTENT_MISSING'
+  ]);
+}
+
+function testDailyPlanCarriesInterventionVerificationIdentity() {
+  const plan = buildAgentDailyPlan({
+    now: new Date('2026-10-16T08:00:00.000Z'),
+    localDate: '2026-10-16',
+    reviewQueue: [],
+    prescription: {
+      prescriptionId: 'rx-verification',
+      reasonCodes: ['INTERVENTION_RETENTION_DUE'],
+      confidence: 'high',
+      estimatedMinutes: 10,
+      primaryTask: {
+        type: 'intervention_verification',
+        subject: 'math',
+        topicIds: [17],
+        questionCount: 3,
+        interventionVerificationId: 'verification-retention',
+        interventionVerificationPhase: 'retention'
+      }
+    },
+    taskSupply: {
+      prescription: { status: 'sufficient', requestedCount: 3, availableCount: 3 }
+    }
+  });
+  assert.equal(plan.primaryTask.action, 'start_prescription');
+  assert.equal(plan.primaryTask.prescription.taskType, 'intervention_verification');
+  assert.equal(plan.primaryTask.prescription.interventionVerificationId, 'verification-retention');
+  assert.equal(plan.primaryTask.prescription.interventionVerificationPhase, 'retention');
+}
 
 function testDailyPlanPrioritizesDueLearningWork() {
   const now = new Date('2026-10-12T08:00:00.000Z');
@@ -668,6 +788,56 @@ async function testDueInterventionVerificationDoesNotDependOnQuestionSupply() {
   assert.equal(tools.called.includes('get_question_supply_status'), false,
     'staged verification is already materialized and must remain isolated from question supply');
   assert.match(prisma.state.messages[0].content.text, /到期验证卡会显示在方案下方/);
+}
+
+async function testInterventionVerificationPrescriptionUsesDedicatedLauncher() {
+  const observed = [];
+  const prisma = {
+    learningDecisionCurrent: {
+      async findFirst() {
+        return {
+          prescription: {
+            validUntil: new Date('2099-01-01T00:00:00.000Z'),
+            tasks: [{
+              type: 'intervention_verification', subject: 'math', topicIds: [10], priority: 1,
+              interventionVerificationId: 'verification-retention'
+            }]
+          }
+        };
+      }
+    }
+  };
+  const launcher = {
+    async start(userId, verificationId, input) {
+      observed.push({ userId, verificationId, input });
+      return { schemaVersion: '2', id: verificationId, deliveryId: 'delivery-1', route: '/practice/rounds/99?agentContextId=conv-1' };
+    }
+  };
+  const service = new AgentPracticeActionService(
+    prisma,
+    {},
+    { isWebEnabled: () => true, isPracticeWriteEnabled: () => true },
+    {},
+    {},
+    undefined,
+    undefined,
+    undefined,
+    launcher
+  );
+  const context = {
+    taskId: 'prescription:rx-verification', planDate: '2026-10-16',
+    policyVersion: 'agent-daily-plan-v3-feedback-aware', taskKind: 'prescription',
+    subject: 'math', entry: 'today_plan'
+  };
+  const result = await service.startPrescription(7, 'rx-verification', {
+    clientRequestId: 'client-verification', questionLanguage: 'zh', dailyPlanContext: context
+  });
+  assert.equal(result.id, 'verification-retention');
+  assert.deepEqual(observed, [{
+    userId: 7,
+    verificationId: 'verification-retention',
+    input: { clientRequestId: 'client-verification', questionLanguage: 'zh', dailyPlanContext: context }
+  }]);
 }
 
 async function testSupplyShortageCreatesOnlyAnOperationalRequest() {
@@ -1612,6 +1782,10 @@ async function testEventReplayIsUserScopedAndResumesAfterCursor() {
 }
 
 async function main() {
+  testInterventionPilotGateSeparatesEvidenceResourcesAndQuality();
+  testDailyTaskExecutionCannotRegressAfterCompletion();
+  testQuestionSupplyCoverageExposesExecutableGaps();
+  testDailyPlanCarriesInterventionVerificationIdentity();
   testDailyPlanPrioritizesDueLearningWork();
   testDailyPlanRespectsAvailableTime();
   testDailyPlanCalibratesWorkloadFromRecentExecution();
@@ -1628,6 +1802,7 @@ async function main() {
   await testMockExamContinuationRejectsUnownedContext();
   await testReviewPrescriptionBindsConcreteWrongPattern();
   await testDueInterventionVerificationDoesNotDependOnQuestionSupply();
+  await testInterventionVerificationPrescriptionUsesDedicatedLauncher();
   await testSupplyShortageCreatesOnlyAnOperationalRequest();
   await testGroundedReadRoutesUseOnlyServerCapabilities();
   await testGroundedReadRoutesHaveHonestEmptyStates();

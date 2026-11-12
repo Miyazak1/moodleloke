@@ -385,7 +385,7 @@ export class QuestionReviewerProviderService {
 
   async reviewBlindAnswer(candidate: GeneratedQuestionCandidate, context: ReviewContext = {}): Promise<BlindAnswerReviewEvidence> {
     if (!blindReviewEnabled()) return emptyBlindEvidence(context, 'disabled');
-    if (this.pluginRegistry && !this.pluginRegistry.allowsProductionCapability('question.review')) {
+    if (!this.pluginRegistry || !this.pluginRegistry.allowsProductionCapability('question.review')) {
       return emptyBlindEvidence(context, 'disabled');
     }
     if (this.pluginRegistry?.usesSidecar()) {
@@ -458,7 +458,7 @@ export class QuestionReviewerProviderService {
   }
 
   async review(candidate: GeneratedQuestionCandidate, context: ReviewContext = {}): Promise<ProviderReview> {
-    if (this.pluginRegistry && !this.pluginRegistry.allowsProductionCapability('question.review')) {
+    if (!this.pluginRegistry || !this.pluginRegistry.allowsProductionCapability('question.review')) {
       return {
         issues: [],
         dimensions: [],

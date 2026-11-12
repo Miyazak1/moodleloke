@@ -507,6 +507,8 @@ export type AgentDailyPlanTask = {
     topicIds: number[];
     questionCount: number | null;
     confidence: 'low' | 'medium' | 'high';
+    interventionVerificationId: string | null;
+    interventionVerificationPhase: 'retention' | 'transfer' | null;
   };
   freePractice: null | {
     questionCount: 3 | 5 | 10;
@@ -1134,7 +1136,7 @@ export function offerAgentInterventionVerification(input: { clientRequestId: str
 
 export function startAgentInterventionVerification(
   verificationId: string,
-  input: { clientRequestId: string; questionLanguage: 'zh' | 'en' }
+  input: { clientRequestId: string; questionLanguage: 'zh' | 'en'; dailyPlanContext?: AgentDailyPlanLaunchContext }
 ) {
   return requestJson<AgentInterventionVerification>(`/api/v1/agent/intervention-verifications/${encodeURIComponent(verificationId)}/start`, {
     method: 'POST', withAuth: true, body: JSON.stringify(input)
@@ -1162,7 +1164,7 @@ export function startAgentPrescription(
   prescriptionId: string,
   input: { clientRequestId: string; questionLanguage?: 'zh' | 'en'; dailyPlanContext?: AgentDailyPlanLaunchContext }
 ) {
-  return requestJson<AgentPracticeLaunch | AgentMockExamLaunch>(`/api/v1/agent/journey/prescriptions/${encodeURIComponent(prescriptionId)}/start`, {
+  return requestJson<AgentPracticeLaunch | AgentMockExamLaunch | AgentInterventionVerification>(`/api/v1/agent/journey/prescriptions/${encodeURIComponent(prescriptionId)}/start`, {
     method: 'POST',
     withAuth: true,
     body: JSON.stringify(input)
@@ -1170,6 +1172,7 @@ export function startAgentPrescription(
 }
 
 export function startAgentFreePractice(input: {
+  difficulty?: 'basic' | 'medium' | 'hard';
   clientRequestId: string;
   conversationId?: string;
   subject: 'math' | 'physics' | 'chemistry';
@@ -1334,6 +1337,7 @@ export function settleAgentPractice(roundId: string | number) {
 }
 
 export function continueAgentFreePractice(artifactId: string, input: {
+  difficulty?: 'basic' | 'medium' | 'hard';
   clientRequestId: string;
   subject: 'math' | 'physics' | 'chemistry';
   questionCount: number;

@@ -1,0 +1,86 @@
+# LOCAL ONLY. The rehearsal script supplies fresh credentials and immutable image IDs.
+# No .env loading, source bind mounts, external networks, or production resources.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: moodlelike_math143_rehearsal
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${MATH143_REHEARSAL_DB_PASSWORD:?local password required}
+    volumes:
+      - rehearsal-db:/var/lib/postgresql/data
+    networks: [offline]
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -h 127.0.0.1 -U postgres -d moodlelike_math143_rehearsal]
+      interval: 2s
+      timeout: 3s
+      retries: 40
+  redis:
+    image: redis:7-alpine
+    networks: [offline]
+  migrate:
+    image: ${MATH143_REHEARSAL_MIGRATE_IMAGE:?local image required}
+    command: [node, scripts/prisma-cli.cjs, migrate, deploy]
+    environment:
+      DATABASE_URL: postgresql://postgres:${MATH143_REHEARSAL_DB_PASSWORD}@db:5432/moodlelike_math143_rehearsal?schema=public
+    networks: [offline]
+    depends_on:
+      db:
+        condition: service_healthy
+  backend:
+    image: ${MATH143_REHEARSAL_BACKEND_IMAGE:?local image required}
+    environment:
+      NODE_ENV: production
+      MOODLELIKE_ENV: production
+      PORT: "3000"
+      DATABASE_URL: postgresql://postgres:${MATH143_REHEARSAL_DB_PASSWORD}@db:5432/moodlelike_math143_rehearsal?schema=public
+      AUTH_SECRET: ${MATH143_REHEARSAL_AUTH_SECRET:?local secret required}
+      PAYMENT_CALLBACK_SECRET: ${MATH143_REHEARSAL_PAYMENT_SECRET:?local secret required}
+      OPS_READY_TOKEN: ${MATH143_REHEARSAL_READY_TOKEN:?local token required}
+      ADMIN_BOOTSTRAP_EMAIL: admin@example.test
+      CORS_ORIGINS: http://127.0.0.1:18091
+      AUTH_COOKIE_SECURE: "false"
+      AUTH_REFRESH_COOKIE_ENABLED: "true"
+      MOODLELIKE_HOST_INTEGRATION_MODE: standalone
+      MOODLELIKE_HOST_CONTRACT_VERSION: cscalite-agent-host-v1
+      AGENT_WEB_ENABLED: "true"
+      CSCA_AGENT_PRACTICE_WRITE_ENABLED: "true"
+      CSCA_AGENT_FOUNDATION_ENABLED: "true"
+      CSCA_LEARNING_EVIDENCE_WRITE_ENABLED: "true"
+      CSCA_LEARNING_SHADOW_PROJECTION_ENABLED: "true"
+      QUESTION_ENGINE_PLUGIN_ENABLED: "true"
+      QUESTION_ENGINE_PLUGIN_ID: verified-math-1.43
+      MOODLELIKE_MATH_ENGINE_ENABLED: "true"
+      CSCA_AI_QUESTION_GENERATION_ENABLED: "false"
+      CSCA_AI_QUESTION_REVIEW_ENABLED: "false"
+      CSCA_AI_TOPIC_MAPPING_ENABLED: "false"
+      CSCA_AI_QUESTIONING_SCHEDULER_ENABLED: "false"
+      CSCA_SUBJECT_PRACTICE_PRODUCTION_ENABLED: "false"
+      CSCA_SUBJECT_PRACTICE_PREDICTIVE_REPLENISHMENT_ENABLED: "false"
+      RATE_LIMIT_STORE: redis
+      RATE_LIMIT_REDIS_URL: redis://redis:6379
+      # Deliberately fake, unused chat configuration. No real Provider credentials.
+      # The internal network prevents Provider/SMTP calls in this rehearsal.
+      AI_GATEWAY_ENABLED: "true"
+      AI_DEFAULT_PROVIDER: deepseek
+      DEEPSEEK_PERSONAL_DEFAULT_MODEL: deepseek-flash
+      DEEPSEEK_PERSONAL_API_KEYS: rehearsal-unused-offline-credential
+    networks: [offline]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_started
+  frontend:
+    image: ${MATH143_REHEARSAL_FRONTEND_IMAGE:?local image required}
+    ports: ["127.0.0.1:18091:80"]
+    # Docker Desktop does not publish ports on an internal-only network.
+    # Only Nginx joins this edge bridge; backend/database remain offline.
+    networks: [offline, local-edge]
+    depends_on: [backend]
+networks:
+  offline:
+    internal: true
+  local-edge: {}
+volumes:
+  rehearsal-db:

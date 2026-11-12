@@ -40,75 +40,23 @@ function evaluateQuestionEngine(env, options = {}) {
   const checks = [];
   const add = (id, condition, message) => checks.push({ id, status: condition ? 'pass' : 'block', message });
   const hostEnabled = bool(env.QUESTION_ENGINE_PLUGIN_ENABLED);
-  const generationRequested = bool(env.CSCA_AI_QUESTION_GENERATION_ENABLED)
-    || bool(env.CSCA_SUBJECT_PRACTICE_PRODUCTION_ENABLED)
-    || bool(env.CSCA_AI_QUESTIONING_SCHEDULER_ENABLED);
-  const reviewRequested = bool(env.CSCA_AI_QUESTION_REVIEW_ENABLED);
-  const topicRequested = env.CSCA_AI_TOPIC_MAPPING_ENABLED === undefined
-    ? generationRequested || reviewRequested
-    : bool(env.CSCA_AI_TOPIC_MAPPING_ENABLED);
-  const requiredCapabilities = [
-    generationRequested ? 'question.generate' : null,
-    reviewRequested ? 'question.review' : null,
-    topicRequested ? 'question.topic-map' : null
-  ].filter(Boolean);
-  const activationRequested = hostEnabled || requiredCapabilities.length > 0;
-  const executionMode = String(env.QUESTION_ENGINE_EXECUTION_MODE || 'in-process').trim();
-
-  if (expectedMode === 'inactive') {
-    add('question_engine_inactive', !activationRequested, 'Student runtime must keep the automatic-question plugin and production capabilities disabled.');
-  } else {
-    add('question_engine_execution_mode', ['in-process', 'sidecar'].includes(executionMode), 'Question-engine execution mode must be in-process or sidecar.');
-    add('question_engine_host_enabled', hostEnabled, 'Question-engine production requires QUESTION_ENGINE_PLUGIN_ENABLED=true.');
-    add('question_engine_plugin_selected', env.QUESTION_ENGINE_PLUGIN_ID === 'moodlelike-ai-questioning', 'Select the registered moodlelike-ai-questioning adapter.');
-    add('question_engine_capability_selected', requiredCapabilities.length > 0, 'Enable at least one explicit question-engine capability.');
-
-    const capabilityConfig = {
-      'question.generate': {
-        provider: firstValue(env.AI_DEFAULT_PROVIDER, env.CSCA_AI_QUESTION_GENERATION_PROVIDER, env.CSCA_AI_PROVIDER, 'rule-fallback'),
-        model: firstValue(env.CSCA_AI_QUESTION_GENERATION_MODEL, env.DEEPSEEK_BACKGROUND_DEFAULT_MODEL, env.DEEPSEEK_DEFAULT_MODEL, env.CSCA_AI_MODEL),
-        keys: firstValue(env.CSCA_AI_QUESTION_GENERATION_API_KEY, env.CSCA_AI_API_KEY, env.DEEPSEEK_BACKGROUND_API_KEYS, env.DEEPSEEK_API_KEYS)
-      },
-      'question.review': {
-        provider: firstValue(env.AI_DEFAULT_PROVIDER, env.CSCA_AI_QUESTION_REVIEW_PROVIDER, env.CSCA_AI_PROVIDER, 'rule-fallback'),
-        model: firstValue(env.CSCA_AI_QUESTION_REVIEW_MODEL, env.DEEPSEEK_BACKGROUND_DEFAULT_MODEL, env.DEEPSEEK_DEFAULT_MODEL, env.CSCA_AI_MODEL),
-        keys: firstValue(env.CSCA_AI_QUESTION_REVIEW_API_KEY, env.CSCA_AI_API_KEY, env.DEEPSEEK_BACKGROUND_API_KEYS, env.DEEPSEEK_API_KEYS)
-      },
-      'question.topic-map': {
-        provider: firstValue(env.AI_DEFAULT_PROVIDER, env.CSCA_AI_TOPIC_MAPPING_PROVIDER, env.CSCA_AI_QUESTION_REVIEW_PROVIDER, env.CSCA_AI_PROVIDER, 'rule-fallback'),
-        model: firstValue(env.CSCA_AI_TOPIC_MAPPING_MODEL, env.CSCA_AI_QUESTION_REVIEW_MODEL, env.DEEPSEEK_BACKGROUND_DEFAULT_MODEL, env.DEEPSEEK_DEFAULT_MODEL, env.CSCA_AI_MODEL),
-        keys: firstValue(env.CSCA_AI_TOPIC_MAPPING_API_KEY, env.CSCA_AI_QUESTION_REVIEW_API_KEY, env.CSCA_AI_API_KEY, env.DEEPSEEK_BACKGROUND_API_KEYS, env.DEEPSEEK_API_KEYS)
-      }
-    };
-    for (const capability of requiredCapabilities) {
-      const config = capabilityConfig[capability];
-      const id = capability.replace(/[^a-z0-9]+/gi, '_');
-      add(`${id}_provider`, ['deepseek', 'openai', 'openai-compatible'].includes(config.provider), `${capability} requires a supported external provider.`);
-      add(`${id}_model`, Boolean(config.model), `${capability} requires a model.`);
-      add(`${id}_key`, configured(config.keys), `${capability} requires a non-placeholder server-side provider key.`);
-    }
-    if (generationRequested) {
-      add('question_generate_runner', bool(env.CSCA_SUBJECT_PRACTICE_PRODUCTION_ENABLED) || bool(env.CSCA_AI_QUESTIONING_SCHEDULER_ENABLED), 'question.generate requires an explicit production runner.');
-    }
-    if (executionMode === 'sidecar') {
-      add('question_engine_sidecar_endpoint', configured(env.QUESTION_ENGINE_SIDECAR_URL), 'Sidecar mode requires QUESTION_ENGINE_SIDECAR_URL.');
-      add('question_engine_task_secret', configured(env.QUESTION_ENGINE_TASK_HMAC_SECRET) && String(env.QUESTION_ENGINE_TASK_HMAC_SECRET).length >= 32, 'Sidecar mode requires a non-placeholder task HMAC secret of at least 32 characters.');
-      add('question_engine_task_key_id', /^[a-z0-9._-]{1,64}$/i.test(String(env.QUESTION_ENGINE_TASK_KEY_ID || '').trim()), 'Sidecar mode requires a stable task signing key id.');
-      add('question_engine_nonce_store', configured(env.QUESTION_ENGINE_NONCE_REDIS_URL || env.REDIS_URL), 'Sidecar mode requires a shared Redis nonce store.');
-      add('question_engine_sidecar_activation', bool(env.QUESTION_ENGINE_SIDECAR_ACTIVATION_ENABLED), 'Sidecar mode requires explicit QUESTION_ENGINE_SIDECAR_ACTIVATION_ENABLED=true.');
-      const acceptedWorkerVersions = String(env.QUESTION_ENGINE_ACCEPTED_WORKER_VERSIONS || '').split(',').map((value) => value.trim()).filter(Boolean);
-      add('question_engine_worker_version_policy', acceptedWorkerVersions.length > 0 && acceptedWorkerVersions.every((value) => /^[a-z0-9._+-]{1,64}$/i.test(value)), 'Sidecar mode requires at least one accepted Worker version.');
-      const workerCapabilities = new Set(String(env.QUESTION_ENGINE_WORKER_CAPABILITIES || '').split(',').map((value) => value.trim()).filter(Boolean));
-      for (const capability of requiredCapabilities) {
-        add(`question_engine_worker_${capability.replace(/[^a-z0-9]+/gi, '_')}`, workerCapabilities.has(capability), `Worker must explicitly advertise ${capability}.`);
-      }
-    }
+  const mathEnabled = bool(env.MOODLELIKE_MATH_ENGINE_ENABLED);
+  const legacyFlags = ['CSCA_AI_QUESTION_GENERATION_ENABLED', 'CSCA_AI_QUESTION_REVIEW_ENABLED', 'CSCA_AI_TOPIC_MAPPING_ENABLED',
+    'CSCA_SUBJECT_PRACTICE_PRODUCTION_ENABLED', 'CSCA_AI_QUESTIONING_SCHEDULER_ENABLED', 'CSCA_SUBJECT_PRACTICE_PREDICTIVE_REPLENISHMENT_ENABLED'];
+  const legacyRequested = legacyFlags.some(key => bool(env[key]));
+  const activationRequested = hostEnabled || mathEnabled || legacyRequested;
+  add('legacy_question_engines_retired', !legacyRequested, 'Retired generation, review, mapping and scheduler flags must stay disabled.');
+  if (hostEnabled || mathEnabled || expectedMode === 'production') {
+    add('question_engine_host_enabled', hostEnabled, 'Enable the formal plugin host explicitly.');
+    add('question_engine_plugin_selected', env.QUESTION_ENGINE_PLUGIN_ID === 'verified-math-1.43', 'Only verified-math-1.43 is a formal production plugin.');
+    add('verified_math_enabled', mathEnabled, 'Enable MOODLELIKE_MATH_ENGINE_ENABLED explicitly.');
+    add('question_engine_execution_mode', !env.QUESTION_ENGINE_EXECUTION_MODE || env.QUESTION_ENGINE_EXECUTION_MODE === 'in-process', 'The host dispatches locally to the isolated frozen worker. Legacy sidecar routing is retired.');
   }
-  const blockers = checks.filter((item) => item.status === 'block');
+  const blockers = checks.filter(item => item.status === 'block');
   return {
     schemaVersion: 'question-engine-production-preflight-v1', expectedMode,
-    status: blockers.length ? 'blocked' : expectedMode === 'inactive' ? 'inactive' : 'ready',
-    activationRequested, requiredCapabilities, checks, blockerCount: blockers.length
+    status: blockers.length ? 'blocked' : hostEnabled && mathEnabled ? 'ready' : 'inactive',
+    activationRequested, requiredCapabilities: hostEnabled || mathEnabled ? ['question.generate'] : [], checks, blockerCount: blockers.length
   };
 }
 
@@ -217,6 +165,9 @@ function questionEngineWorkerHealthUrl(env, explicitUrl = '') {
 }
 
 async function probeQuestionEngineWorker(env, options = {}) {
+  if (env.QUESTION_ENGINE_PLUGIN_ID === 'verified-math-1.43') {
+    return { status: 'not_applicable', latencyMs: 0, reason: 'formal_math_uses_local_isolated_worker_not_legacy_sidecar' };
+  }
   const startedAt = Date.now();
   const timeoutMs = Math.max(500, Math.min(15000, Number(options.timeoutMs || env.QUESTION_ENGINE_WORKER_HEALTH_TIMEOUT_MS || 3000)));
   let healthUrl;
@@ -275,38 +226,15 @@ function selfTest() {
   const blocked = evaluate({ MOODLELIKE_HOST_INTEGRATION_MODE: 'cscalite' });
   assert.equal(blocked.status, 'blocked');
   assert.ok(blocked.blockerCount >= 8);
-  const questionEngineReady = evaluateQuestionEngine({
-    QUESTION_ENGINE_PLUGIN_ENABLED: 'true', QUESTION_ENGINE_PLUGIN_ID: 'moodlelike-ai-questioning',
-    CSCA_AI_QUESTION_GENERATION_ENABLED: 'true', CSCA_AI_QUESTION_REVIEW_ENABLED: 'true', CSCA_AI_TOPIC_MAPPING_ENABLED: 'true',
-    CSCA_SUBJECT_PRACTICE_PRODUCTION_ENABLED: 'true', AI_DEFAULT_PROVIDER: 'deepseek',
-    DEEPSEEK_BACKGROUND_DEFAULT_MODEL: 'deepseek-flash', DEEPSEEK_BACKGROUND_API_KEYS: 'sk-test'
-  }, { expectedMode: 'production' });
-  assert.equal(questionEngineReady.status, 'ready');
-  assert.deepEqual(questionEngineReady.requiredCapabilities, ['question.generate', 'question.review', 'question.topic-map']);
-  const questionEngineBlocked = evaluateQuestionEngine({
-    QUESTION_ENGINE_PLUGIN_ENABLED: 'true', QUESTION_ENGINE_PLUGIN_ID: 'unknown', CSCA_AI_QUESTION_GENERATION_ENABLED: 'true'
-  }, { expectedMode: 'production' });
-  assert.equal(questionEngineBlocked.status, 'blocked');
-  assert.ok(questionEngineBlocked.blockerCount >= 4);
-  const sidecarBlocked = evaluateQuestionEngine({
-    QUESTION_ENGINE_PLUGIN_ENABLED: 'true', QUESTION_ENGINE_PLUGIN_ID: 'moodlelike-ai-questioning',
-    QUESTION_ENGINE_EXECUTION_MODE: 'sidecar', QUESTION_ENGINE_SIDECAR_URL: 'http://question-engine-worker:3100',
-    QUESTION_ENGINE_TASK_HMAC_SECRET: 'x'.repeat(40), QUESTION_ENGINE_TASK_KEY_ID: 'primary-v1', REDIS_URL: 'redis://redis:6379',
-    CSCA_AI_QUESTION_REVIEW_ENABLED: 'true', AI_DEFAULT_PROVIDER: 'deepseek',
-    DEEPSEEK_BACKGROUND_DEFAULT_MODEL: 'deepseek-flash', DEEPSEEK_BACKGROUND_API_KEYS: 'sk-test'
-  }, { expectedMode: 'production' });
-  assert.equal(sidecarBlocked.status, 'blocked');
-  assert.ok(sidecarBlocked.checks.some((item) => item.id === 'question_engine_sidecar_activation' && item.status === 'block'));
-  const sidecarReady = evaluateQuestionEngine({
-    QUESTION_ENGINE_PLUGIN_ENABLED: 'true', QUESTION_ENGINE_PLUGIN_ID: 'moodlelike-ai-questioning',
-    QUESTION_ENGINE_EXECUTION_MODE: 'sidecar', QUESTION_ENGINE_SIDECAR_URL: 'http://question-engine-worker:3100/v1/tasks/execute',
-    QUESTION_ENGINE_TASK_HMAC_SECRET: 'x'.repeat(40), QUESTION_ENGINE_TASK_KEY_ID: 'primary-v1', REDIS_URL: 'redis://redis:6379',
-    QUESTION_ENGINE_SIDECAR_ACTIVATION_ENABLED: 'true', QUESTION_ENGINE_WORKER_CAPABILITIES: 'question.review,question.topic-map',
-    QUESTION_ENGINE_ACCEPTED_WORKER_VERSIONS: '1.0.0',
-    CSCA_AI_QUESTION_REVIEW_ENABLED: 'true', AI_DEFAULT_PROVIDER: 'deepseek',
-    DEEPSEEK_BACKGROUND_DEFAULT_MODEL: 'deepseek-flash', DEEPSEEK_BACKGROUND_API_KEYS: 'sk-test'
-  }, { expectedMode: 'production' });
-  assert.equal(sidecarReady.status, 'ready');
+  const formal = { QUESTION_ENGINE_PLUGIN_ENABLED: 'true', QUESTION_ENGINE_PLUGIN_ID: 'verified-math-1.43', MOODLELIKE_MATH_ENGINE_ENABLED: 'true' };
+  assert.equal(evaluateQuestionEngine(formal).status, 'ready');
+  assert.equal(evaluateQuestionEngine(formal, { expectedMode: 'production' }).status, 'ready');
+  assert.deepEqual(evaluateQuestionEngine(formal).requiredCapabilities, ['question.generate']);
+  assert.equal(evaluateQuestionEngine({}).status, 'inactive');
+  assert.equal(evaluateQuestionEngine({ ...formal, QUESTION_ENGINE_PLUGIN_ID: 'moodlelike-ai-questioning' }).status, 'blocked');
+  assert.equal(evaluateQuestionEngine({ ...formal, CSCA_AI_QUESTION_GENERATION_ENABLED: 'true' }).status, 'blocked');
+  assert.equal(evaluateQuestionEngine({ ...formal, QUESTION_ENGINE_EXECUTION_MODE: 'sidecar' }).status, 'blocked');
+  assert.equal(evaluateQuestionEngine({ MOODLELIKE_MATH_ENGINE_ENABLED: 'true' }).status, 'blocked');
   console.log('Moodlelike integration preflight self-test passed.');
 }
 

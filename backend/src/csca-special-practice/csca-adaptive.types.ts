@@ -16,6 +16,7 @@ export type AdaptiveRoundPatchPayload = {
 };
 
 export type AdaptiveRoundCreatePayload = {
+  difficulty?: 'basic' | 'medium' | 'hard';
   questionCount?: number;
   focusTopicId?: number;
   topicMode?: 'mixed' | 'single_topic';

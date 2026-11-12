@@ -1,0 +1,126 @@
+{
+  "schemaVersion": "local-question-figure-coverage-v1",
+  "checkedAt": "2026-11-12T08:37:25.816Z",
+  "remoteDataAccess": false,
+  "scope": {
+    "currentDatabase": "loopback Docker moodlelike-postgres/moodlelike, READ ONLY",
+    "historicalExports": "local 2026-09-29 CSV snapshots, not current bank or online inventory",
+    "allQuestionsSemanticallyReviewed": false
+  },
+  "currentBank": {
+    "questionSources": [
+      {
+        "source_type": "agent_local_demo",
+        "subject": "math",
+        "status": "approved",
+        "count": 1
+      },
+      {
+        "source_type": "agent_local_demo_practice",
+        "subject": "chemistry",
+        "status": "approved",
+        "count": 6
+      },
+      {
+        "source_type": "agent_local_demo_practice",
+        "subject": "math",
+        "status": "approved",
+        "count": 12
+      },
+      {
+        "source_type": "agent_local_demo_practice",
+        "subject": "physics",
+        "status": "approved",
+        "count": 6
+      }
+    ],
+    "specialPracticeQuestions": 0,
+    "mockExamQuestions": 0,
+    "sourceDocuments": 0,
+    "sourceQuestions": 0,
+    "pastPaperFileRecords": 1
+  },
+  "historical": {
+    "files": [
+      {
+        "file": ".local\\external-oer-migrations\\20260929T021800Z\\questions.csv",
+        "sha256": "f328a9822980e4894a35443310d7d4befd9e8419819d2aa6b205db3036e83555",
+        "duplicateOf": null
+      },
+      {
+        "file": ".local\\external-oer-migrations\\20260929T021820Z\\questions.csv",
+        "sha256": "f328a9822980e4894a35443310d7d4befd9e8419819d2aa6b205db3036e83555",
+        "duplicateOf": ".local\\external-oer-migrations\\20260929T021800Z\\questions.csv"
+      }
+    ],
+    "uniqueRows": 2874,
+    "sourceTypes": {
+      "external_oer": 2874
+    },
+    "subjects": {
+      "chemistry": 984,
+      "math": 906,
+      "physics": 984
+    },
+    "datasets": {
+      "TIGER-Lab/MMLU-Pro": 2554,
+      "cais/mmlu": 320
+    },
+    "fourOptionEligible": 346,
+    "nonstandardUnchanged": 2528,
+    "originalImageBindings": 0,
+    "embeddedImageReferences": 0,
+    "keywordCandidates": 43,
+    "verifiedRedraw": 2,
+    "verifiedRedrawStudentEligible": 1,
+    "verifiedRows": [
+      {
+        "historicalId": "1077",
+        "version": 1,
+        "sourceType": "external_oer",
+        "dataset": "cais/mmlu",
+        "sourceIdentity": "98094bb804bb89ae11b9752f2e79a06f42091fe6b869787419a92ba093c50a48",
+        "standardStudentChoice": true,
+        "keywordCandidate": false,
+        "requiresFigureMarker": false,
+        "verifiedRedraw": {
+          "relation": "slope_two_points",
+          "phase": "review"
+        },
+        "originalImageBinding": false,
+        "embeddedImage": false
+      },
+      {
+        "historicalId": "3882",
+        "version": 1,
+        "sourceType": "external_oer",
+        "dataset": "TIGER-Lab/MMLU-Pro",
+        "sourceIdentity": "be47416cff87087b31edfced85b7367435ec6a0703add15ea75bc6421a523cf5",
+        "standardStudentChoice": false,
+        "keywordCandidate": false,
+        "requiresFigureMarker": false,
+        "verifiedRedraw": {
+          "relation": "given_opposite_vertices_only",
+          "phase": "question"
+        },
+        "originalImageBinding": false,
+        "embeddedImage": false
+      }
+    ],
+    "strictRequiredImageMarkers": 0,
+    "otherRowsNotSemanticallyClassified": 2872
+  },
+  "conclusions": [
+    "Two strict public-condition rules are verified, not a full-bank illustration claim.",
+    "No reusable original question image is available in these snapshots; whole-paper file records do not establish question/version binding.",
+    "Keyword matches are candidates for manual review, not counts of missing or necessary figures.",
+    "Synthetic original/missing/mismatch fixtures and local reading pilots are excluded from external-bank coverage.",
+    "Ten-option sources retain their existing eligibility restrictions; no options or source provenance are rewritten."
+  ],
+  "native": {
+    "version": "1.43.0",
+    "questionScopes": 32,
+    "reviewOnlyScopes": 1,
+    "upstreamArchiveSha256": "48ea6def723eec29957de583b6371492477f88f27365906627b0ff7224b32574"
+  }
+}

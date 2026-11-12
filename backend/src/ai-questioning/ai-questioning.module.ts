@@ -15,10 +15,12 @@ import { QuestionReviewerProviderService } from './question-reviewer-provider.se
 import { QuestionReviewerService } from './question-reviewer.service';
 import { QuestionTopicMapperProviderService } from './question-topic-mapper-provider.service';
 import { QuestionValidatorService } from './question-validator.service';
+import { RetiredGenerationRoutesGuard } from '../question-engine-plugin/retired-generation-routes.guard';
 
 @Module({
   imports: [PrismaModule, AuthModule, AiGatewayModule, QuestionEnginePluginModule],
   controllers: [AIQuestioningController],
+  // Legacy controller remains for bank reads and curation; its production routes are retired.
   providers: [AIQuestioningService, AdaptiveReplenishmentService, AIQuestioningSchedulerService, QuestionGeneratorProviderService, QuestionGeneratorService, QuestionPromptBuilderService, QuestionQualityService, QuestionReviewerProviderService, QuestionReviewerService, QuestionTopicMapperProviderService, QuestionValidatorService],
   exports: [AIQuestioningService, QuestionQualityService, QuestionValidatorService]
 })

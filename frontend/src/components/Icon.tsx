@@ -5,6 +5,7 @@ type IconProps = {
 };
 
 const ICON_PATHS: Record<string, string[]> = {
+  'lucide:zoom-in': ['M21 21l-4.3-4.3', 'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16', 'M8 11h6', 'M11 8v6'],
   'lucide:arrow-down': ['M12 5v14', 'm19 12-7 7-7-7'],
   'lucide:calendar-range': ['M8 2v4', 'M16 2v4', 'M3 10h18', 'M5 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2', 'M7 15h4', 'M14 15h3', 'M7 18h2', 'M12 18h5'],
   'lucide:circle-check-big': ['M21.8 10A10 10 0 1 1 17 3.3', 'm9 11 3 3L22 4'],

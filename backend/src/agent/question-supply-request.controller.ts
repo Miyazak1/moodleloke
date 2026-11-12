@@ -7,6 +7,7 @@ import { QuestionSupplyFulfillmentService } from './question-supply-fulfillment.
 import { QuestionSupplyEvaluationService } from './question-supply-evaluation.service';
 import { QuestionSupplyShadowSchedulerService } from './question-supply-shadow-scheduler.service';
 import { QuestionSupplyOperationsHealthService } from './question-supply-operations-health.service';
+import { QuestionSupplyCoverageService } from './question-supply-coverage.service';
 
 @Controller('api/v1/admin/question-supply-requests')
 @UseGuards(RequiredAdminGuard)
@@ -16,12 +17,18 @@ export class QuestionSupplyRequestController {
     private readonly fulfillment: QuestionSupplyFulfillmentService,
     private readonly evaluation: QuestionSupplyEvaluationService,
     private readonly scheduler: QuestionSupplyShadowSchedulerService,
-    private readonly operationsHealth: QuestionSupplyOperationsHealthService
+    private readonly operationsHealth: QuestionSupplyOperationsHealthService,
+    private readonly coverage: QuestionSupplyCoverageService
   ) {}
 
   @Get()
   list(@Query() query: Record<string, unknown>) {
     return this.requests.list(query);
+  }
+
+  @Get('coverage')
+  getCoverage(@Query('subject') subject?: string) {
+    return this.coverage.getCoverage(subject);
   }
 
   @Post(':id/actions')

@@ -1,3 +1,5 @@
+import { QuestionFigure } from '../../../components/QuestionFigure';
+import '../../../styles/student-question.css';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import '../../../styles/special-practice.css';
 import { Icon } from '../../../components/Icon';
@@ -1925,10 +1927,11 @@ export function AdaptiveRoundView({
               {SHOW_AI_GENERATED_QUESTION_BADGE && currentQuestion.generatedQuestion?.badgeLabel && (
                 <span className="adaptive-generated-question-badge">{currentQuestion.generatedQuestion.badgeLabel}</span>
               )}
-              <h1><MathContent text={currentQuestion.prompt} /></h1>
             </div>
             <span className="special-question-timer">{formatSeconds(currentSeconds)}</span>
           </div>
+          <h1 className="student-question-prompt"><MathContent text={currentQuestion.prompt} formatPlainMath /></h1>
+          <QuestionFigure figure={currentQuestion.figure} />
           <div className="special-answer-options">
             {currentQuestion.options.map((option) => {
               const isSelected = selectedAnswer === option.id;
@@ -1943,7 +1946,7 @@ export function AdaptiveRoundView({
                   disabled={isPaused || isFinishing || Boolean(currentCheck) || isCheckingCurrentAnswer}
                 >
                   <b>{option.id}</b>
-                  <span><MathContent text={option.text} /></span>
+                  <span><MathContent text={option.text} formatPlainMath /></span>
                   {isRight && <em>{copy.correct}</em>}
                   {isWrong && <em>{copy.yourAnswer}</em>}
                   {isCheckingCurrentAnswer && isSelected && <em>{adaptiveText(locale, '判题中...', 'Checking...', 'Đang chấm...')}</em>}
@@ -2764,12 +2767,13 @@ export function AdaptiveRoundReportView({ roundId, onNavigate, onAgentInterventi
             <article key={item.id} className={item.isCorrect ? 'correct' : 'wrong'}>
               <header>
                 <span>{item.position ?? item.orderNumber}</span>
-                <strong><MathContent text={item.prompt} /></strong>
+                <strong><MathContent text={item.prompt} formatPlainMath /></strong>
                 <div className="special-review-meta">
                   <em>{item.isCorrect ? adaptiveText(locale, '正确', 'Correct', 'Đúng') : item.isUnanswered ? adaptiveText(locale, `未作答 / 正确 ${item.correctAnswer}`, `Unanswered / Correct ${item.correctAnswer}`, `Chưa trả lời / Đúng ${item.correctAnswer}`) : adaptiveText(locale, `你的答案 ${item.selectedAnswer} / 正确 ${item.correctAnswer}`, `Your answer ${item.selectedAnswer} / Correct ${item.correctAnswer}`, `Đáp án của bạn ${item.selectedAnswer} / Đúng ${item.correctAnswer}`)}</em>
                   <small>{adaptiveTopicLabel(item, locale)}</small>
                 </div>
               </header>
+              <QuestionFigure figure={item.figure} />
               <section className="special-review-explanation">
                 <h3>{copy.explanation}</h3>
                 <ExplanationText text={item.explanation} />

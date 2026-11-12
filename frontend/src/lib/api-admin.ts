@@ -280,6 +280,95 @@ export function getAdminQuestionSupplyOperationsHealth() {
   );
 }
 
+export type AdminQuestionSupplyCoverage = {
+  schemaVersion: '1';
+  generatedAt: string;
+  thresholds: { practiceBatchSize: number; verificationBatchSize: number };
+  summary: {
+    topicCount: number;
+    practiceReadyTopicCount: number;
+    verificationReadyTopicCount: number;
+    fullyReadyTopicCount: number;
+    blockedTopicCount: number;
+  };
+  subjects: Array<{
+    subject: 'math' | 'physics' | 'chemistry';
+    topicCount: number;
+    practiceReadyTopicCount: number;
+    verificationReadyTopicCount: number;
+    fullyReadyTopicCount: number;
+    blockedTopicCount: number;
+  }>;
+  topics: Array<{
+    topicId: number;
+    subject: 'math' | 'physics' | 'chemistry';
+    module: string | null;
+    code: string;
+    title: string;
+    practice: { availableCount: number; requiredCount: number; ready: boolean };
+    verification: { availableCount: number; requiredCount: number; transferFamilyCount: number; ready: boolean };
+    content: { explainedQuestionCount: number; hasConceptCard: boolean; hasTeachingAsset: boolean };
+    distribution: { difficulty: Record<string, number>; questionTypes: Record<string, number> };
+    gaps: string[];
+  }>;
+};
+
+export function getAdminQuestionSupplyCoverage(subject?: 'math' | 'physics' | 'chemistry') {
+  return authRequest<AdminQuestionSupplyCoverage>(
+    `/api/v1/admin/question-supply-requests/coverage${toQueryString({ subject })}`
+  );
+}
+
+export type AdminInterventionPilotObservability = {
+  schemaVersion: '1';
+  window: { days: number; since: string; generatedAt: string };
+  filters: { subject: 'math' | 'physics' | 'chemistry' | null; topicCode: string | null };
+  summary: {
+    topicCount: number; learnerCount: number; statusCounts: Record<string, number>; gateRecommendationCounts: Record<string, number>;
+    proposed: number; deliveryCompleted: number; verificationCompleted: number;
+    verificationPassed: number; stable: number; contentUnavailable: number;
+    supplyUnavailable: number; evidenceInsufficient: number;
+  };
+  gatePolicy: {
+    policyVersion: string; automaticActivation: false;
+    thresholds: Record<string, number>;
+  };
+  topics: Array<{
+    subject: 'math' | 'physics' | 'chemistry'; topicId: number; topicCode: string; topicTitle: string;
+    status: 'stable' | 'blocked' | 'collecting' | 'not_started'; learners: number;
+    funnel: {
+      proposed: number; deliveryOffered: number; deliveryStarted: number; deliveryCompleted: number;
+      verificationStarted: number; verificationCompleted: number; verificationPassed: number; stable: number;
+    };
+    rates: { deliveryStartRate: number | null; deliveryCompletionRate: number | null; verificationPassRate: number | null };
+    deliveryStatuses: Record<string, number>; verificationStatuses: Record<string, number>;
+    phases: Array<{
+      phase: 'immediate' | 'retention' | 'transfer'; scheduled: number; ready: number; started: number;
+      supplyUnavailable: number; completed: number; passed: number; failed: number; inconclusive: number; passRate: number | null;
+    }>;
+    stability: { stable: number; notStable: number; inconclusive: number; pending: number };
+    blockers: {
+      contentUnavailable: number; deliveryNotStarted: number; verificationSupplyUnavailable: number;
+      verificationNotStarted: number; failed: number; evidenceInsufficient: number;
+    };
+    gate: {
+      policyVersion: string; qualified: boolean;
+      recommendation: 'expand_candidate' | 'collect_evidence' | 'repair_resources' | 'pause_quality';
+      automaticActivation: false; reasonCodes: string[];
+      reasonGroups: { sample: string[]; resources: string[]; quality: string[] };
+      thresholds: Record<string, number>;
+    };
+  }>;
+};
+
+export function getAdminInterventionPilotObservability(params: {
+  days?: number; subject?: 'math' | 'physics' | 'chemistry'; topicCode?: string;
+} = {}) {
+  return authRequest<AdminInterventionPilotObservability>(
+    `/api/v1/admin/teaching-assets/intervention-pilot${toQueryString(params)}`
+  );
+}
+
 export function exportAdminQuestionSupplyEvidence(format: 'json' | 'csv', days = 30) {
   return authRequest<{
     schemaVersion: '1';

@@ -2,31 +2,42 @@
   "name": "@moodlelike/question-engine",
   "version": "0.1.0-alpha.3",
   "private": true,
-  "description": "Stable read-only boundary around CSCALite's verified question-generation engine.",
+  "description": "Frozen verified mathematics 1.43 runtime with host-managed student publication.",
   "type": "commonjs",
-  "main": "src/portable-index.cjs",
+  "main": "math-v143/runtime.cjs",
   "exports": {
-    ".": "./src/portable-index.cjs",
-    "./cscalite": "./src/index.cjs"
+    ".": "./math-v143/runtime.cjs",
+    "./experimental": "./src/portable-index.cjs",
+    "./legacy-cscalite": "./src/index.cjs",
+    "./figures": "./figures/presentation.cjs",
+    "./experimental/reading-pilots": "./figures/reading-pilots.cjs"
   },
   "bin": {
-    "cscalite-question-engine": "bin/portable-question-engine.cjs"
+    "verified-math-engine": "math-v143/cli.cjs"
   },
   "files": [
+    "math-v143",
     "adapters/portable-host.cjs",
     "bin/portable-question-engine.cjs",
     "dist/core",
     "src/portable-index.cjs",
     "src/portable-runtime.cjs",
-    "README.md"
+    "README.md",
+    "diagrams",
+    "figures"
   ],
   "scripts": {
+    "math:setup": "node math-v143/install.cjs",
+    "math:status": "node math-v143/cli.cjs status",
+    "math:test": "node --test math-v143/test.cjs",
+    "math:test:student": "node ../backend/scripts/math-engine-student-live-test.cjs",
     "build": "node ../backend/node_modules/typescript/bin/tsc -p tsconfig.json",
     "test": "node test/contracts.test.cjs",
     "test:portable": "node test/portable-runtime.test.cjs",
     "preview:portable": "node bin/portable-question-engine.cjs",
     "catalog": "node bin/question-engine.cjs catalog",
-    "readiness": "node bin/question-engine.cjs readiness"
+    "readiness": "node bin/question-engine.cjs readiness",
+    "figures:test": "node --test figures/test.cjs"
   },
   "engines": {
     "node": ">=22 <23"

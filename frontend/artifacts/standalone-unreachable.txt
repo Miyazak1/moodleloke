@@ -2,6 +2,7 @@ src/AuthoringApp.tsx
 src/components/AdminNavActions.tsx
 src/components/AdminRouteErrorBoundary.tsx
 src/components/admin/AdminAuditWorkspaceLinks.tsx
+src/components/admin/InterventionPilotObservabilityPanel.tsx
 src/components/admin/QuestionSupplyFulfillmentPanel.tsx
 src/lib/admin-audit-filters.ts
 src/lib/ai-questioning-readiness-exports.ts

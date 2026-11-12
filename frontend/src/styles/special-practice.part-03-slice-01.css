@@ -271,7 +271,7 @@
 }
 
 
-.special-answer-options button span {
+.special-answer-options button > span {
   line-height: 1.55;
 }
 

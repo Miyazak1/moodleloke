@@ -1,0 +1,208 @@
+  async generate(
+    blueprint: QuestionGenerationBlueprint,
+    fallback: GeneratedQuestionCandidate,
+    options: QuestionGeneratorProviderOptions = {}
+  ): Promise<GenerationProviderResult> {
+    throw new Error('legacy_question_engine_retired');
+    const prompt = this.promptBuilder.build(blueprint);
+    const generationTier = generationTierFromBlueprint(blueprint);
+    const selectedModel = questionGenerationModelForBlueprint(blueprint);
+    const reasoningPolicy = questionGenerationReasoningPolicyFor(blueprint, selectedModel);
+    const selectedMaxTokens = questionGenerationMaxTokensForBlueprint(blueprint, selectedModel);
+    const localShadowGeneration = localShadowGenerationFor(blueprint, options);
+    if (localShadowGeneration) {
+      const scenarioBlueprintShadowContext = recordFrom(options.gatewayMetadata?.scenarioBlueprintShadowContext);
+      const scenarioBlueprintShadowEvidence = scenarioBlueprintShadowContext
+        ? subjectPracticeScenarioBlueprintShadowEvidenceFor({
+          scenarioBlueprintShadowContext,
+          generationResult: localShadowGeneration
+        })
+        : null;
+      const scenarioEvidence = scenarioBlueprintShadowEvidence ?? subjectPracticeScenarioEvidenceFor({
+        questionPlan: questionPlanFromBlueprint(blueprint), candidate: localShadowGeneration.candidate
+      });
+      const scenarioConsistent = Boolean(localShadowGeneration.candidate && (
+        scenarioBlueprintShadowEvidence
+          ? scenarioBlueprintShadowEvidence.status === 'shadow_candidate_evidence_complete'
+          : scenarioEvidence.status === 'consistent'
+      ));
+      const promptMetadata = {
+        ...(recordFrom(prompt.metadata) ?? {}),
+        localShadowGeneration: {
+          routingVersion: SUBJECT_PRACTICE_LOCAL_GENERATOR_SHADOW_ROUTING_VERSION,
+          candidateSeedPolicyVersion: SUBJECT_PRACTICE_LOCAL_SHADOW_CANDIDATE_SEED_POLICY_VERSION,
+          candidateSeedBinding: assertSubjectPracticeLocalShadowCandidateSeedBinding(
+            options.gatewayMetadata?.observationCandidateSeedBinding
+          ),
+          generatorVersion: localShadowGeneration.generatorVersion,
+          status: localShadowGeneration.status,
+          seed: localShadowGeneration.seed,
+          scopeId: localShadowGeneration.scopeId,
+          scenarioRenderMode: 'scenarioRenderMode' in localShadowGeneration
+            ? localShadowGeneration.scenarioRenderMode
+            : 'controlled_catalog',
+          provisionalScenarioContractDigest: 'provisionalScenarioContractDigest' in localShadowGeneration
+            ? localShadowGeneration.provisionalScenarioContractDigest
+            : null,
+          providerCallCount: 0,
+          estimatedCostUsd: 0,
+          publicationSuppressed: true,
+          reasonCodes: scenarioConsistent
+            ? localShadowGeneration.reasonCodes
+            : [...localShadowGeneration.reasonCodes, 'local_shadow_scenario_contract_inconsistent'],
+          scenarioEvidence,
+          scenarioBlueprintShadowEvidence
+        }
+      };
+      if ((localShadowGeneration.status === 'generated_and_self_verified'
+        || localShadowGeneration.status === 'generated_and_triple_verified')
+        && localShadowGeneration.candidate
+        && scenarioConsistent) {
+        return {
+          candidate: localShadowGeneration.candidate,
+          rawOutput: localShadowGeneration.candidate,
+          normalizedOutput: localShadowGeneration.candidate,
+          promptMetadata,
+          agent: generatorAgent('local-deterministic', localShadowGeneration.generatorVersion),
+          provider: 'local-deterministic',
+          model: localShadowGeneration.generatorVersion,
+          status: 'success',
+          gatewayAttempts: []
+        };
+      }
+      return {
+        candidate: fallback,
+        rawOutput: null,
+        normalizedOutput: fallback,
+        promptMetadata,
+        agent: generatorAgent('local-deterministic', localShadowGeneration.generatorVersion),
+        provider: 'local-deterministic',
+        model: localShadowGeneration.generatorVersion,
+        status: 'local_generator_verification_failed',
+        error: (scenarioConsistent
+          ? localShadowGeneration.reasonCodes
+          : [...localShadowGeneration.reasonCodes, 'local_shadow_scenario_contract_inconsistent']
+        ).join(',') || 'Local shadow generator failed closed.',
+        gatewayAttempts: []
+      };
+    }
+    if (this.pluginRegistry && !this.pluginRegistry.allowsProductionCapability('question.generate')) {
+      return {
+        candidate: fallback,
+        rawOutput: fallback,
+        normalizedOutput: fallback,
+        promptMetadata: prompt.metadata,
+        agent: generatorAgent('rule-fallback', RULE_MODEL),
+        provider: 'rule-fallback',
+        model: RULE_MODEL,
+        status: 'generator_disabled',
+        error: 'question_engine_plugin_generation_gate_closed'
+      };
+    }
+    if (this.pluginRegistry?.usesSidecar()) {
+      return this.pluginRegistry.executeSidecarCapability<GenerationProviderResult>('question.generate', {
+        operation: 'generate', blueprint, fallback, options
+      });
+    }
+    if (!externalReady(this.gateway.hasConfiguredKey('question_generation', selectedModel))) {
+      return {
+        candidate: fallback,
+        rawOutput: fallback,
+        normalizedOutput: fallback,
+        promptMetadata: prompt.metadata,
+        agent: generatorAgent('rule-fallback', RULE_MODEL),
+        provider: 'rule-fallback',
+        model: RULE_MODEL,
+        status: 'generator_disabled'
+      };
+    }
+
+    const planTemplate = questionPlanTemplateFromBlueprint(blueprint);
+    const promptCharacterBudget = questionPromptCharacterBudgetForPlanTemplate(planTemplate);
+    const promptCharacterCount = providerPromptCharacterCount(prompt.messages);
+    if (promptCharacterBudget != null && promptCharacterCount > promptCharacterBudget) {
+      return {
+        candidate: fallback,
+        rawOutput: null,
+        normalizedOutput: fallback,
+        promptMetadata: prompt.metadata,
+        agent: generatorAgent('prompt-budget-gate', selectedModel),
+        provider: 'prompt-budget-gate',
+        model: selectedModel,
+        status: 'generator_prompt_budget_exceeded',
+        error: `generator_prompt_budget_exceeded: planTemplate=${planTemplate}; actualCharacters=${promptCharacterCount}; budgetCharacters=${promptCharacterBudget}`
+      };
+    }
+
+    const response = await this.gateway.complete({
+      taskType: 'question_generation',
+      sourceModule: 'question_generator',
+      messages: prompt.messages as AiGatewayMessage[],
+      modelHint: selectedModel || undefined,
+      responseFormat: 'json',
+      temperature: reasoningPolicy.temperature,
+      thinking: reasoningPolicy.thinking,
+      reasoningEffort: reasoningPolicy.reasoningEffort,
+      maxTokens: selectedMaxTokens,
+      maxProviderAttempts: options.maxProviderAttempts,
+      timeoutMs: timeoutMs(selectedModel),
+      metadata: {
+        blueprintId: blueprint.id,
+        subject: blueprint.subject,
+        topicId: blueprint.topicId,
+        questionType: blueprint.questionType,
+        generationTier: generationTier || 'standard',
+        reasoningPolicyVersion: reasoningPolicy.policyVersion,
+        thinkingMode: reasoningPolicy.thinking ?? 'provider_default',
+        reasoningEffort: reasoningPolicy.reasoningEffort ?? 'provider_default',
+        reasoningPolicyReason: reasoningPolicy.reason,
+        promptCharacterCount,
+        promptCharacterBudget,
+        outputTokenCeiling: selectedMaxTokens,
+        ...(options.gatewayMetadata ?? {})
+      }
+    });
+    if (response.status !== 'success') {
+      return {
+        candidate: fallback,
+        rawOutput: null,
+        normalizedOutput: fallback,
+        promptMetadata: prompt.metadata,
+        agent: generatorAgent(response.providerId, response.model),
+        provider: response.providerId,
+        model: response.model,
+        status: response.errorCode ?? response.status,
+        error: response.errorMessage ?? 'Generator provider failed.',
+        gatewayAttempts: compactGatewayAttempts(response.attempts)
+      };
+    }
+    const output = response.content.trim();
+    const parsed = parseGeneratedJson(output);
+    const candidateRecord = parsed ? unwrapGeneratedQuestionRecord(parsed) : null;
+    const normalized = candidateRecord ? this.normalizeFromRecord(blueprint, candidateRecord) : null;
+    if (!normalized) {
+      return {
+        candidate: fallback,
+        rawOutput: parsed ?? output,
+        normalizedOutput: fallback,
+        promptMetadata: prompt.metadata,
+        agent: generatorAgent(response.providerId, response.model),
+        provider: response.providerId,
+        model: response.model,
+        status: 'provider_schema_invalid',
+        error: 'Generator provider returned invalid question JSON.',
+        gatewayAttempts: compactGatewayAttempts(response.attempts)
+      };
+    }
+    return {
+      candidate: normalized,
+      rawOutput: parsed,
+      normalizedOutput: normalized,
+      promptMetadata: prompt.metadata,
+      agent: generatorAgent(response.providerId, response.model),
+      provider: response.providerId,
+      model: response.model,
+      status: 'success'
+    };
+  }
+}

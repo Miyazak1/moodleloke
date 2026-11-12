@@ -17,6 +17,7 @@ import { AgentPastPaperQuestionService } from './agent-past-paper-question.servi
 import { AgentPastPaperAssistanceService } from './agent-past-paper-assistance.service';
 import { AgentPastPaperAttemptService } from './agent-past-paper-attempt.service';
 import { AgentJourneyReadService } from './agent-journey-read.service';
+import { VerifiedQuestionSupplyService } from '../question-engine-plugin/verified-question-supply.service';
 
 function eventCursor(header: string | undefined, query: string | undefined): number {
   const value = query ?? header ?? '0';
@@ -41,8 +42,12 @@ export class AgentController {
     private readonly pastPaperQuestions: AgentPastPaperQuestionService,
     private readonly pastPaperAssistance: AgentPastPaperAssistanceService,
     private readonly pastPaperAttempts: AgentPastPaperAttemptService,
-    private readonly journeyRead: AgentJourneyReadService
+    private readonly journeyRead: AgentJourneyReadService,
+    private readonly questionSupply: VerifiedQuestionSupplyService
   ) {}
+
+  @Get('question-generation-tasks/:id')
+  questionGenerationStatus(@CurrentUser() user: PrismaUser, @Param('id') id: string) { return this.questionSupply.status(user.id, id); }
 
   @Post('conversations')
   createConversation(@CurrentUser() user: PrismaUser, @Body() body: unknown) {

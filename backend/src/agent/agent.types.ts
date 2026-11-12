@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { DailyLearningTaskContextSchema } from '../learning-intelligence/execution/daily-learning-task-execution.contract';
 
 export const AGENT_RUNTIME_SCHEMA_VERSION = '1' as const;
 
@@ -69,17 +70,11 @@ export const SubmitAgentMessageInputSchema = z.strictObject({
 export const StartAgentPracticeInputSchema = z.strictObject({
   clientRequestId: z.string().trim().min(1).max(120),
   questionLanguage: z.enum(['zh', 'en']).optional(),
-  dailyPlanContext: z.strictObject({
-    taskId: z.string().trim().min(1).max(180),
-    planDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-    policyVersion: z.string().trim().min(1).max(80),
-    taskKind: z.enum(['mistake_review', 'spaced_verification', 'prescription', 'free_practice']),
-    subject: z.enum(['math', 'physics', 'chemistry']),
-    entry: z.enum(['today_plan', 'refreshed_next'])
-  }).optional()
+  dailyPlanContext: DailyLearningTaskContextSchema.optional()
 });
 
 export const StartAgentFreePracticeInputSchema = z.strictObject({
+  difficulty: z.enum(['basic', 'medium', 'hard']).optional(),
   clientRequestId: z.string().trim().min(1).max(120),
   conversationId: z.string().trim().min(1).max(120).optional(),
   subject: z.enum(['math', 'physics', 'chemistry']),
@@ -89,14 +84,7 @@ export const StartAgentFreePracticeInputSchema = z.strictObject({
   focusTopicId: z.number().int().positive().optional(),
   reviewItemId: z.number().int().positive().optional(),
   patternType: z.string().trim().min(1).max(80).optional(),
-  dailyPlanContext: z.strictObject({
-    taskId: z.string().trim().min(1).max(180),
-    planDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-    policyVersion: z.string().trim().min(1).max(80),
-    taskKind: z.enum(['mistake_review', 'spaced_verification', 'prescription', 'free_practice']),
-    subject: z.enum(['math', 'physics', 'chemistry']),
-    entry: z.enum(['today_plan', 'refreshed_next'])
-  }).optional()
+  dailyPlanContext: DailyLearningTaskContextSchema.optional()
 }).superRefine((input, context) => {
   if (input.practiceMode === 'single_topic' && !input.focusTopicId) {
     context.addIssue({ code: z.ZodIssueCode.custom, path: ['focusTopicId'], message: '按知识点练习必须选择知识点。' });
@@ -107,6 +95,7 @@ export const StartAgentFreePracticeInputSchema = z.strictObject({
 });
 
 export const ContinueAgentFreePracticeInputSchema = z.strictObject({
+  difficulty: z.enum(['basic', 'medium', 'hard']).optional(),
   clientRequestId: z.string().trim().min(1).max(120),
   subject: z.enum(['math', 'physics', 'chemistry']),
   questionCount: z.number().int().min(1).max(10),

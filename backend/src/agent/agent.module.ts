@@ -22,16 +22,19 @@ import { QuestionSupplyRequestController } from './question-supply-request.contr
 import { QuestionSupplyRequestService } from './question-supply-request.service';
 import { QUESTION_SUPPLY_PRODUCTION_ADAPTER } from './question-supply-fulfillment.contract';
 import { QuestionSupplyFulfillmentService } from './question-supply-fulfillment.service';
-import { QuestionSupplyShadowAdapter } from './question-supply-shadow.adapter';
+import { QuestionEnginePluginModule } from '../question-engine-plugin/question-engine-plugin.module';
+import { VerifiedQuestionSupplyService } from '../question-engine-plugin/verified-question-supply.service';
 import { QuestionSupplyEvaluationService } from './question-supply-evaluation.service';
 import { QuestionSupplyShadowSchedulerService } from './question-supply-shadow-scheduler.service';
 import { QuestionSupplyOperationsHealthService } from './question-supply-operations-health.service';
+import { QuestionSupplyCoverageService } from './question-supply-coverage.service';
 import { AgentIntentRouterService } from './agent-intent-router.service';
 import { AgentGroundedResponseService } from './agent-grounded-response.service';
 import { AgentLearningAssistanceService } from './agent-learning-assistance.service';
 import { AgentTeachingAssetService } from './agent-teaching-asset.service';
 import { AdminTeachingAssetsController } from './admin-teaching-assets.controller';
 import { AdminTeachingAssetsService } from './admin-teaching-assets.service';
+import { InterventionPilotObservabilityService } from './intervention-pilot-observability.service';
 import { TeachingAssetRoutingOutcomeService } from './teaching-asset-routing-outcome.service';
 import { AgentPracticeQuestionContextService } from './agent-practice-question-context.service';
 import { AgentPastPaperQuestionService } from './agent-past-paper-question.service';
@@ -44,7 +47,7 @@ import { PastPapersModule } from '../past-papers/past-papers.module';
 import { AgentConversationLifecycleService } from './agent-conversation-lifecycle.service';
 
 @Module({
-  imports: [PrismaModule, AuthModule, LearningIntelligenceFoundationModule, CscaSpecialPracticeModule, CscaMockExamModule, PastPapersModule, AiGatewayModule],
+  imports: [PrismaModule, AuthModule, LearningIntelligenceFoundationModule, CscaSpecialPracticeModule, CscaMockExamModule, PastPapersModule, AiGatewayModule, QuestionEnginePluginModule],
   controllers: [AgentController, QuestionSupplyRequestController, AdminTeachingAssetsController],
   providers: [
     AgentRuntimeFeatureFlagsService,
@@ -59,12 +62,12 @@ import { AgentConversationLifecycleService } from './agent-conversation-lifecycl
     AgentInterventionDeliveryService,
     AgentInterventionVerificationService,
     QuestionSupplyRequestService,
-    QuestionSupplyShadowAdapter,
-    { provide: QUESTION_SUPPLY_PRODUCTION_ADAPTER, useExisting: QuestionSupplyShadowAdapter },
+    { provide: QUESTION_SUPPLY_PRODUCTION_ADAPTER, useExisting: VerifiedQuestionSupplyService },
     QuestionSupplyFulfillmentService,
     QuestionSupplyEvaluationService,
     QuestionSupplyShadowSchedulerService,
     QuestionSupplyOperationsHealthService,
+    QuestionSupplyCoverageService,
     AgentPracticeActionService,
     AgentPracticeQuestionContextService,
     AgentPastPaperQuestionService,
@@ -76,6 +79,7 @@ import { AgentConversationLifecycleService } from './agent-conversation-lifecycl
     AgentTeachingAssetService,
     TeachingAssetRoutingOutcomeService,
     AdminTeachingAssetsService,
+    InterventionPilotObservabilityService,
     AgentRunnerService,
     AgentRecoveryService,
     AgentConversationLifecycleService,

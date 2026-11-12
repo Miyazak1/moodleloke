@@ -1,4 +1,7 @@
-import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { questionFigure, isFigureReadyForPractice } from './question-figure.policy';
+import { BadRequestException, ConflictException, Inject, Injectable, NotFoundException, Optional } from '@nestjs/common';
+import { VerifiedQuestionSupplyService } from '../question-engine-plugin/verified-question-supply.service';
+import { MATH_ENGINE_SOURCE, isReadyMathEngineQuestion } from './math-engine-question.policy';
 import { Prisma } from '@prisma/client';
 import {
   subjectPracticeCurrentPolicyBlockReasons
@@ -210,6 +213,7 @@ function isInterventionVerification(value: unknown) {
 function generatedQuestionSourceLabel(value: unknown) {
   const record = recordFromUnknown(value);
   const sourceKind = cleanString(record.sourceKind ?? record.generationSource, 'syllabus');
+  if (sourceKind === 'verified_math_engine_1_43') return '数学生成题 · 已核验';
   if (sourceKind === 'syllabus_and_past_paper_profile') return 'AI生成题 · 大纲+真题画像';
   if (sourceKind === 'syllabus_and_past_paper') return 'AI生成题 · 大纲+真题';
   if (sourceKind === 'past_paper') return 'AI生成题 · 真题参考';
@@ -277,7 +281,7 @@ function generatedQuestionInfo(question: {
   blueprintId?: number | null;
   generationMetadata?: Prisma.JsonValue | unknown;
 }) {
-  if (question.sourceType !== 'ai') return null;
+  if (!['ai', MATH_ENGINE_SOURCE].includes(question.sourceType ?? '')) return null;
   const metadata = recordFromUnknown(question.generationMetadata);
   return {
     questionId: question.id,
@@ -291,6 +295,8 @@ function generatedQuestionInfo(question: {
 }
 
 function publicQuestion(question: {
+  version?: number;
+  reviewMetadata?: unknown;
   id: number;
   orderNumber: number;
   difficulty: string;
@@ -307,7 +313,7 @@ function publicQuestion(question: {
   sourceQuestionId?: number | null;
   blueprintId?: number | null;
   generationMetadata?: Prisma.JsonValue | unknown;
-}, topic: { id: number; code: string; title: string }, language = 'zh') {
+}, topic: { id: number; code: string; title: string }, language = 'zh', presentation: { phase?: 'question' | 'review'; allowExplanation?: boolean } = {}) {
   const localizedQuestion = localizedRecord<{
     difficulty?: unknown;
     prompt?: unknown;
@@ -334,7 +340,8 @@ function publicQuestion(question: {
     topicTitle,
     questionSource: question.questionSource || 'special_practice',
     generatedQuestion: generatedQuestionInfo(question),
-    ...(question.explanation !== undefined ? { explanation: fallbackExplanationText(cleanString(localizedQuestion?.explanation, question.explanation), question.correctAnswer, topicTitle, language) } : {}),
+    figure: questionFigure(question, presentation.phase ?? 'question', language).display ?? null,
+    ...(presentation.allowExplanation !== false && question.explanation !== undefined ? { explanation: fallbackExplanationText(cleanString(localizedQuestion?.explanation, question.explanation), question.correctAnswer, topicTitle, language) } : {}),
     ...(question.knowledgeTags !== undefined ? { knowledgeTags: localizedTags.length ? localizedTags : tagsFromJson(question.knowledgeTags) } : {})
   };
 }
@@ -351,7 +358,8 @@ export class CscaAdaptiveService {
     private readonly questionQualityService: QuestionQualityService,
     private readonly plannerAssistant: PlannerAssistantService,
     private readonly learningFeatureFlags: LearningIntelligenceFeatureFlagsService,
-    @Inject(LEARNING_EVIDENCE_WRITER) private readonly learningEvidenceWriter: LearningEvidenceWriter
+    @Inject(LEARNING_EVIDENCE_WRITER) private readonly learningEvidenceWriter: LearningEvidenceWriter,
+    @Optional() private readonly questionSupply?: VerifiedQuestionSupplyService
   ) {}
 
   async getOverview(userId?: number) {
@@ -482,11 +490,13 @@ export class CscaAdaptiveService {
     return Number(row?.questionCount ?? 0);
   }
 
-  async createSession(userId: number, input: Record<string, unknown> = {}) {
+  async createSession(userId: number, input: Record<string, unknown> = {}, options: { studentInitiatedPractice?: boolean } = {}) {
     const subject = assertAdaptiveSubject(input.subject);
     const hasDiagnostic = await this.hasCompletedDiagnostic(userId, subject);
     const requestedMode = cleanAdaptiveMode(input.mode);
-    const mode = hasDiagnostic ? (requestedMode === 'diagnostic' ? 'practice' : requestedMode) : 'diagnostic';
+    const generatedFreePractice = options.studentInitiatedPractice && subject === 'math'
+      && requestedMode === 'practice' && this.questionSupply?.isEnabled();
+    const mode = generatedFreePractice ? 'practice' : hasDiagnostic ? (requestedMode === 'diagnostic' ? 'practice' : requestedMode) : 'diagnostic';
     const questionLanguage = cleanAdaptiveQuestionLanguage(input.questionLanguage ?? input.language);
     const activeSession = await this.prisma.cscaAdaptiveSession.findFirst({
       where: { userId, subject, mode, status: 'active' },
@@ -526,6 +536,7 @@ export class CscaAdaptiveService {
   }
 
   async createRound(userId: number, sessionIdValue: string, input: AdaptiveRoundCreatePayload = {}) {
+    if (input.difficulty !== undefined && !['basic', 'medium', 'hard'].includes(input.difficulty)) throw new BadRequestException('题目难度无效。');
     const sessionId = parseId(sessionIdValue, '自适应训练 session 不存在。');
     const session = await this.prisma.cscaAdaptiveSession.findFirst({ where: { id: sessionId, userId } });
     if (!session) throw new NotFoundException('自适应训练 session 不存在。');
@@ -587,7 +598,7 @@ export class CscaAdaptiveService {
         : topicMode === 'single_topic'
           ? await this.planner.planSingleTopicRound(userId, session.subject as SpecialPracticeSubject, roundSize, focusTopicId!)
           : await this.planner.planRound(userId, session.subject as SpecialPracticeSubject, roundSize, focusTopicId);
-    const plan = isDiagnostic
+    const assistedPlan = isDiagnostic
       ? basePlan
       : await this.plannerAssistant.assist({
         userId,
@@ -595,7 +606,18 @@ export class CscaAdaptiveService {
         basePlan,
         language: this.sessionQuestionLanguage(session)
       });
-    const plannedQuestions = await this.questionProvider.pickQuestions(userId, plan.plannedTopics, roundSize);
+    const plan = input.difficulty && !isDiagnostic && !verification ? { ...assistedPlan, requestedDifficulty: input.difficulty,
+      plannedTopics: assistedPlan.plannedTopics.map(topic => ({ ...topic, targetDifficulty: input.difficulty === 'basic' ? '基础' : input.difficulty === 'medium' ? '中等' : '较难', targetDifficultyReason: 'student_selected_difficulty' })) } : assistedPlan;
+    const generatedSupply = !isDiagnostic && !verification && session.subject === 'math' && this.questionSupply?.isEnabled();
+    const options = generatedSupply ? { unseenOnly: true } : { excludeGenerated: isDiagnostic || Boolean(verification) };
+    let plannedQuestions = await this.questionProvider.pickQuestions(userId, plan.plannedTopics, roundSize, input.difficulty, options);
+    if (generatedSupply && plannedQuestions.length < roundSize) {
+      const cycle = await this.prisma.cscaAdaptiveRound.count({ where: { sessionId: session.id } });
+      await this.questionSupply!.preparePractice(userId, `adaptive:${session.id}:${cycle + 1}:${focusTopicId ?? 'mixed'}:${roundSize}:${input.difficulty ?? 'adaptive'}`,
+        plan.plannedTopics, roundSize - plannedQuestions.length, input.difficulty, plannedQuestions.map(question => question.questionId));
+      // Read back through the same published-inventory filter used for all student questions.
+      plannedQuestions = await this.questionProvider.pickQuestions(userId, plan.plannedTopics, roundSize, input.difficulty, options);
+    }
     if (plannedQuestions.length < roundSize) {
       await this.recordAdaptiveInventoryShortageEvents({
         userId,
@@ -618,8 +640,12 @@ export class CscaAdaptiveService {
       });
     }
 
-    const roundCount = await this.prisma.cscaAdaptiveRound.count({ where: { sessionId: session.id } });
-    const round = await this.prisma.cscaAdaptiveRound.create({
+    const allocation = await this.prisma.$transaction(async tx => {
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(2147001104::int, ${session.id}::int)`;
+    const existing = await tx.cscaAdaptiveRound.findFirst({ where: { sessionId: session.id, submittedAt: null }, orderBy: { id: 'desc' } });
+    if (existing) return { round: existing, created: false };
+    const roundCount = await tx.cscaAdaptiveRound.count({ where: { sessionId: session.id } });
+    const round = await tx.cscaAdaptiveRound.create({
       data: {
         sessionId: session.id,
         roundIndex: roundCount + 1,
@@ -637,13 +663,17 @@ export class CscaAdaptiveService {
     });
 
     for (const question of plannedQuestions) {
-      await this.prisma.cscaQuestionExposure.upsert({
+      await tx.cscaQuestionExposure.upsert({
         where: { userId_questionId_source: { userId, questionId: question.questionId, source: `${ADAPTIVE_EXPOSURE_SOURCE}:${question.questionSource}` } },
         create: { userId, questionId: question.questionId, source: `${ADAPTIVE_EXPOSURE_SOURCE}:${question.questionSource}` },
         update: { seenCount: { increment: 1 }, lastSeenAt: new Date() }
       });
     }
 
+    return { round, created: true };
+    });
+    const round = allocation.round;
+    if (!allocation.created) return this.getRound(userId, String(round.id));
     await this.trainingEvents.record({
       userId,
       subject: session.subject,
@@ -817,7 +847,7 @@ export class CscaAdaptiveService {
   async getRound(userId: number, idValue: string, languageValue?: string) {
     const id = parseId(idValue, '自适应训练轮次不存在。');
     const round = await this.findRound(userId, id);
-    const language = adaptiveLanguage(this.sessionQuestionLanguage(round.session) || languageValue);
+    const language = adaptiveLanguage(languageValue || this.sessionQuestionLanguage(round.session));
     const questionMap = await this.roundQuestionMap(round.items);
     const topicMap = await this.topicMap(round.items.map((item) => item.topicId));
     return {
@@ -827,8 +857,9 @@ export class CscaAdaptiveService {
         const question = questionMap.get(roundQuestionKey(item.questionSource, item.questionId));
         const topic = topicMap.get(item.topicId);
         if (!question || !topic) throw new NotFoundException('自适应训练题目不存在。');
+        if (!round.submittedAt && !isFigureReadyForPractice(question)) throw new ConflictException({ code: 'REQUIRED_QUESTION_FIGURE_UNAVAILABLE', message: '本题必需的图形缺失或版本不匹配，请重新准备练习。' });
         return {
-          ...publicQuestion(question, topic, language),
+          ...publicQuestion(question, topic, language, { phase: round.submittedAt ? 'review' : 'question', allowExplanation: Boolean(item.selectedAnswer || round.submittedAt) }),
           position: item.position,
           selectedAnswer: item.selectedAnswer,
           isCorrect: item.isCorrect,
@@ -902,6 +933,7 @@ export class CscaAdaptiveService {
     if (!question) throw new NotFoundException('题目不存在。');
     const topic = await this.prisma.cscaExamTopic.findFirst({ where: { id: item.topicId } });
     if (!topic) throw new NotFoundException('题目不存在。');
+    if (!round.submittedAt && !isFigureReadyForPractice(question)) throw new ConflictException('本题必需图形缺失或已变化，请重新准备练习。');
     const localizedQuestion = publicQuestion(question, topic, explanationLanguage);
     const isCorrect = selected === question.correctAnswer;
     await this.prisma.cscaAdaptiveRoundItem.update({
@@ -937,6 +969,7 @@ export class CscaAdaptiveService {
     const results = round.items.map((item) => {
       const question = questionMap.get(roundQuestionKey(item.questionSource, item.questionId));
       if (!question) throw new NotFoundException('题目不存在。');
+      if (!isFigureReadyForPractice(question)) throw new ConflictException('本题必需图形缺失或已变化，请重新准备练习。');
       const selected = answers[String(item.questionId)] ?? '';
       const isUnanswered = !selected;
       const isCorrect = !isUnanswered && selected === question.correctAnswer;
@@ -994,7 +1027,7 @@ export class CscaAdaptiveService {
             usedExplanation: result.item.usedExplanation,
             timeSpentSeconds: timeSpent[String(result.item.questionId)] ?? 0,
             difficulty: result.question.difficulty,
-            questionQualityConfidence: result.question.sourceType === 'ai' ? 0.7 : 0.95,
+            questionQualityConfidence: ['ai', MATH_ENGINE_SOURCE, 'math_reading_pilot'].includes(result.question.sourceType ?? '') ? 0.7 : 0.95,
             occurredAt: submittedAt,
             metadata: {
               roundMode: isInterventionVerification(round.plannerSnapshot) ? 'intervention_verification' : round.session.mode,
@@ -1151,8 +1184,9 @@ export class CscaAdaptiveService {
   async getReport(userId: number, idValue: string, languageValue?: string) {
     const id = parseId(idValue, '自适应训练轮次不存在。');
     const round = await this.findRound(userId, id);
+    if (!round.submittedAt) throw new BadRequestException('请先提交本轮训练，再查看交卷解析。');
     const sessionLanguage = this.sessionQuestionLanguage(round.session);
-    const questionLanguage = cleanAdaptiveQuestionLanguage(sessionLanguage || languageValue);
+    const questionLanguage = cleanAdaptiveQuestionLanguage(languageValue || sessionLanguage);
     const explanationLanguage = adaptiveLanguage(languageValue || sessionLanguage || questionLanguage);
     const questionMap = await this.roundQuestionMap(round.items);
     const topicMap = await this.topicMap(round.items.map((item) => item.topicId));
@@ -1193,7 +1227,7 @@ export class CscaAdaptiveService {
       const topic = topicMap.get(item.topicId);
       if (!question || !topic) throw new NotFoundException('题目不存在。');
       const isUnanswered = !item.selectedAnswer;
-      const localizedQuestion = publicQuestion(question, topic, questionLanguage);
+      const localizedQuestion = publicQuestion(question, topic, questionLanguage, { phase: 'review' });
       const localizedExplanation = publicQuestion(question, topic, explanationLanguage);
       return {
         ...localizedQuestion,
@@ -1614,6 +1648,7 @@ export class CscaAdaptiveService {
       sourceQuestionId?: number | null;
       blueprintId?: number | null;
       generationMetadata?: Prisma.JsonValue | null;
+      reviewMetadata?: Prisma.JsonValue | null;
     }>();
     for (const question of specialQuestions) {
       const sourceQuestion = aiSourceByPublishedId.get(question.id);
@@ -1627,6 +1662,7 @@ export class CscaAdaptiveService {
       });
     }
     for (const question of cscaQuestions) {
+      if (question.sourceType === MATH_ENGINE_SOURCE && !isReadyMathEngineQuestion(question)) continue;
       if (question.sourceType === 'ai' && (
         isOnlineMockExamGeneratedQuestion(question.generationMetadata, question.reviewMetadata)
         || isFallbackOrSmokeGeneratedQuestion(question.generationMetadata)
@@ -1654,7 +1690,8 @@ export class CscaAdaptiveService {
         sourceType: question.sourceType,
         sourceQuestionId: question.sourceQuestionId,
         blueprintId: question.blueprintId,
-        generationMetadata: question.generationMetadata
+        generationMetadata: question.generationMetadata,
+        reviewMetadata: question.reviewMetadata
       });
     }
     return map;

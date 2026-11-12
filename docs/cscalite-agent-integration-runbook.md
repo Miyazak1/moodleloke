@@ -7,7 +7,7 @@
 
 - CSCALite 继续拥有登录态、学生身份、主导航和发布流量控制。
 - Moodlelike 接管学生做题、判题、学习证据、错题复盘、独立验证和当前题 AI 问答。
-- 自动出题仍是隔离插件，只能向审核/发布流程提供候选题，不得在学生请求中即时生成并直接投放。
+- 未完成的 Provider 型出题、审核、题意映射及旧 Sidecar 接入已从正式注册中移除，旧出题入口与自动生产调度停用。唯一正式插件为 `verified-math-1.43`。学生数学自由练习可按 `contracts/verified-math-practice.v1.json` 启用冻结 1.43 引擎：零 Provider，完成原引擎复核、普通练习准入、去重和原子持久化后再进入现有轮次。此资格不用于诊断或独立效果测量；本地接入说明见 `question-engine/math-v143/README.md`。
 - 做题、报告、教学和真题工作区使用 `agentContextId`；只有独立“学科问答”使用可复用会话。
 - 机器可读契约位于 `contracts/cscalite-agent-host.v1.json`。
 

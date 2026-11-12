@@ -18,6 +18,20 @@ The generated demo credentials live under ignored `.local/` and are never printe
 
 `MOODLELIKE_ENV` is the canonical platform environment selector. Legacy `CSC_ENV` remains a safe fallback, and legacy `CSCA_*` feature flags remain internal domain compatibility contracts. Operators use the Moodlelike commands above and do not need to set them manually.
 
+## Verified mathematics generation
+
+Local setup installs the pinned 1.43 mathematics engine and local startup enables
+`MOODLELIKE_MATH_ENGINE_ENABLED=true`. Students use the existing `/agent` free
+practice entry, selecting math, a published knowledge point and difficulty. The
+engine supplies verified, persisted ordinary-practice questions to the same
+answer/check/report flow. There is no separate Math Lab website or database.
+An already-running backend must be restarted after this change; run local setup
+to apply migrations 0100 and 0101 before enabling the supplier.
+The local runner selects `verified-math-1.43` with the plugin host enabled; all
+legacy generation/review/mapping/production scheduler flags remain disabled. Engine checks and the
+isolated real-student acceptance command are described in
+`question-engine/math-v143/README.md`.
+
 ## Expected URLs
 
 - Student Agent: `http://localhost:5190/agent`

@@ -30,9 +30,9 @@ export function buildQuestionBankTabs(
   summary: QuestionBankSummary
 ): QuestionBankTabItem[] {
   return [
-    { key: 'overview', label: '流程总览', detail: `${summary.total} 题` },
-    { key: 'shared-prep', label: '共用准备', detail: `${data.coverage.summary.publishedTopicCount} 知识点 · ${data.styleProfiles.length} 画像` },
-    { key: 'subject-practice', label: '科目训练线', detail: `${data.coverage.summary.missingTopicCount} 缺口 · 自动入库` },
-    { key: 'online-mock', label: '在线模考线', detail: '整卷蓝图 · 自动装配' }
+    { key: 'overview', label: '题库概览', detail: `${summary.total} 题` },
+    { key: 'shared-prep', label: '大纲与题源', detail: `${data.coverage.summary.publishedTopicCount} 知识点` },
+    { key: 'subject-practice', label: '专项题库', detail: `${data.coverage.summary.missingTopicCount} 缺口` },
+    { key: 'online-mock', label: '模考题库', detail: '保留已有题目' }
   ];
 }

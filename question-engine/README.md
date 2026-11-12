@@ -1,3 +1,13 @@
+# Question Engine
+
+The only formal production plugin is **verified-math-1.43**, engine version 1.43.0.
+The package default export and CLI resolve to `math-v143`; see [integration and validation](math-v143/README.md).
+Physics and chemistry keep their existing question banks without a formal generator.
+
+The remaining material below documents historical extraction work. Those APIs are
+available only through explicit `./experimental` or `./legacy-cscalite` exports;
+they are not registered for student production.
+
 # CSCALite Question Engine
 
 This package is the extraction boundary around CSCALite's verified automatic-question system.

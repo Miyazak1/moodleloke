@@ -235,7 +235,7 @@ export class AgentService {
     const qualityWindowStart = new Date(generatedAt.getTime() - 30 * 86_400_000);
     const localDateStart = shanghaiLocalDateStart(generatedAt);
     const weekContext = shanghaiWeekContext(generatedAt);
-    const [paperGroups, topicCounts, prescriptions, prescriptionOutcomes, validations, activePatterns, checkpoints, latestEvidence, dailySnapshot, dailySettlements, dailyPlanArtifacts, weeklySnapshots, learningPreferenceProfile] = await Promise.all([
+    const [paperGroups, topicCounts, prescriptions, prescriptionOutcomes, validations, activePatterns, checkpoints, latestEvidence, dailySnapshot, dailySettlements, dailyPlanArtifacts, storedDailyTaskExecutions, weeklySnapshots, learningPreferenceProfile] = await Promise.all([
       Promise.all(subjects.map((subject) => this.pastPapers!.listPublic({
         subject,
         category: 'past-paper',
@@ -290,6 +290,11 @@ export class AgentService {
         select: { id: true, status: true, snapshot: true },
         orderBy: { createdAt: 'desc' }, take: 300
       }) ?? Promise.resolve([]),
+      this.prisma.dailyLearningTaskExecution?.findMany?.({
+        where: { userId, createdAt: { gte: qualityWindowStart } },
+        select: { planDate: true, taskId: true, taskKind: true, subject: true, entry: true, status: true, positiveOutcome: true },
+        orderBy: { createdAt: 'desc' }, take: 300
+      }) ?? Promise.resolve([]),
       this.prisma.cscaLearningDailySnapshot?.findMany?.({
         where: { userId, subject: 'all', localDate: { gte: weekContext.start, lte: localDateStart } },
         select: { practiceSeconds: true, mockSeconds: true, answeredCount: true, isStreakEligible: true }
@@ -300,16 +305,25 @@ export class AgentService {
       .filter((item, index, items) => items.findIndex((candidate) => candidate.id === item.id) === index)
       .slice(0, 12);
     const primaryTask = currentPrescription?.tasks.slice().sort((left, right) => left.priority - right.priority)[0] ?? null;
-    const baseSupply = primaryTask && ['diagnostic', 'review', 'targeted_practice', 'intervention_verification'].includes(primaryTask.type)
-      ? await this.learningRead.getQuestionSupplyStatus({
+    const baseSupply = primaryTask?.type === 'intervention_verification'
+      ? {
+          // The verification service owns eligibility, exclusions and delayed-phase
+          // materialization. A generic topic count can both over-count exposed items
+          // and incorrectly block an already scheduled verification.
+          status: 'not_required' as const,
+          requestedCount: primaryTask.questionCount ?? 3,
+          availableCount: null
+        }
+      : primaryTask && ['diagnostic', 'review', 'targeted_practice'].includes(primaryTask.type)
+        ? await this.learningRead.getQuestionSupplyStatus({
           subject: primaryTask.subject,
           // Diagnostic rounds are assembled across the published subject pool.
           // Applying the prescription's evidence-gap topic here made preflight
           // report zero even though the same round launcher could use the full pool.
           topicIds: primaryTask.type === 'diagnostic' ? [] : primaryTask.topicIds,
           requestedCount: primaryTask.questionCount ?? 5
-        }).catch(() => ({ status: 'unknown' as const, requestedCount: primaryTask.questionCount ?? 5, availableCount: null }))
-      : primaryTask ? { status: 'not_required' as const, requestedCount: 0, availableCount: null } : null;
+          }).catch(() => ({ status: 'unknown' as const, requestedCount: primaryTask.questionCount ?? 5, availableCount: null }))
+        : primaryTask ? { status: 'not_required' as const, requestedCount: 0, availableCount: null } : null;
     const contentTopicIds = primaryTask?.topicIds ?? [];
     const contentSupply = contentTopicIds.length ? await Promise.all([
       this.prisma.teachingAsset?.count({
@@ -368,8 +382,24 @@ export class AgentService {
         return [{ executionKey: `${planDate}:${taskId}`, planDate, taskKind: 'mistake_review' as const, subject, completed: true, positive: false, entry }];
       });
     });
+    const persistedPlanExecutions = storedDailyTaskExecutions.flatMap((item) => {
+      const taskKind = item.taskKind === 'mistake_review' || item.taskKind === 'spaced_verification'
+        || item.taskKind === 'prescription' || item.taskKind === 'free_practice' ? item.taskKind : null;
+      const subject = item.subject === 'math' || item.subject === 'physics' || item.subject === 'chemistry' ? item.subject : null;
+      const entry = item.entry === 'refreshed_next' ? 'refreshed_next' as const : item.entry === 'today_plan' ? 'today_plan' as const : null;
+      if (!taskKind || !subject || !entry) return [];
+      return [{
+        executionKey: `${item.planDate}:${item.taskId}`,
+        planDate: item.planDate,
+        taskKind,
+        subject,
+        completed: item.status === 'completed' || item.status === 'failed' || item.status === 'abandoned',
+        positive: item.positiveOutcome === true,
+        entry
+      }];
+    });
     const dailyPlanExecutionMap = new Map<string, (typeof artifactPlanExecutions)[number]>();
-    for (const execution of [...reviewPlanExecutions, ...artifactPlanExecutions]) {
+    for (const execution of [...reviewPlanExecutions, ...artifactPlanExecutions, ...persistedPlanExecutions]) {
       const current = dailyPlanExecutionMap.get(execution.executionKey);
       dailyPlanExecutionMap.set(execution.executionKey, current ? {
         ...current,
@@ -503,21 +533,32 @@ export class AgentService {
       learningPreferenceProfile?.metadata,
       subjects[0] ?? 'math'
     );
+    const localPlanDate = shanghaiLocalDate(generatedAt);
+    const completedTodayExecutions = dailyPlanExecutions.filter((item) => item.planDate === localPlanDate && item.completed);
+    const completedTodayPrescriptionIds = completedTodayExecutions.flatMap((item) => (
+      item.taskKind === 'prescription' && item.executionKey.startsWith(`${localPlanDate}:prescription:`)
+        ? [item.executionKey.slice(`${localPlanDate}:prescription:`.length)]
+        : []
+    ));
     const dailyPlanInput = {
       now: generatedAt,
-      localDate: shanghaiLocalDate(generatedAt),
+      localDate: localPlanDate,
       reviewQueue: dedupedReviewQueue,
-      completedPrescriptionIds: prescriptionOutcomes
-        .filter((item) => item.decision === 'completed')
-        .map((item) => item.prescriptionId),
+      completedPrescriptionIds: [...new Set([
+        ...prescriptionOutcomes.filter((item) => item.decision === 'completed').map((item) => item.prescriptionId),
+        ...completedTodayPrescriptionIds
+      ])],
       progress: {
         targetMinutes: adaptiveDailyTarget.recommendedTodayMinutes,
         answeredCount: dailySnapshot?.answeredCount ?? 0,
         correctCount: dailySnapshot?.correctCount ?? 0,
         practiceSeconds: dailySnapshot?.practiceSeconds ?? 0,
         mockSeconds: dailySnapshot?.mockSeconds ?? 0,
-        completedTaskCount: dailySettlements.length,
-        successfulTaskCount: dailySettlements.filter((item) => recordValue(item.output).decision === 'completed').length
+        completedTaskCount: Math.max(dailySettlements.length, completedTodayExecutions.length),
+        successfulTaskCount: Math.max(
+          dailySettlements.filter((item) => recordValue(item.output).decision === 'completed').length,
+          completedTodayExecutions.filter((item) => item.positive).length
+        )
       },
       weeklyProgress: {
         targetMinutes: studyAvailability.weeklyMinutesGoal,

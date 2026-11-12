@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "student-question-figure-v1",
+  "studentEntry": "existing Agent free practice and submitted question details",
+  "phases": ["question", "review"],
+  "phaseAuthority": "server persisted round.submittedAt; client phase parameters have no authority",
+  "displayFields": ["schemaVersion", "kind", "phase", "caption", "alt", "mime", "data"],
+  "mimeTypes": ["image/svg+xml", "image/png", "image/jpeg"],
+  "assetTransport": "inline base64 of an approved bounded image; no unverified remote image URLs",
+  "native": {
+    "engineVersion": "1.43.0",
+    "questionScopeCount": 32,
+    "reviewOnlyScopeCount": 1,
+    "reverification": ["host publication and content binding", "frozen beforeStore", "source artifact", "independent Oracle", "teaching admission", "exact fact contract and display timing"]
+  },
+  "external": {
+    "formalMathLabArtifactAllowed": false,
+    "answerMayBeUsedToReconstructFigure": false,
+    "originalBinding": "trusted review signature + actual source identity + question version + public content + image bytes + phase",
+    "redrawBinding": "strict public-text facts + audited source/version/content or trusted host fact-review signature",
+    "translationsMustAgree": true,
+    "unknownOptionalFigure": "original question without a figure",
+    "missingOrInvalidRequiredFigure": "hold from new student rounds; persist reason in existing inventory events; do not rewrite the original question"
+  },
+  "readingPilots": {
+    "sourceType": "math_reading_pilot",
+    "featureFlag": "MOODLELIKE_READING_PILOTS_ENABLED",
+    "defaultEnabled": false,
+    "formalPlugin": false,
+    "families": ["piecewise_range", "frequency_mean"],
+    "answerVerification": "independent parser of final SVG ticks, lines, endpoint fills, isolated points and bar dimensions",
+    "originalPlotBindingRequired": true,
+    "studentDifficultyCalibrated": false,
+    "independentMeasurementAllowed": false
+  },
+  "neverReturnToStudents": ["questionArtifact", "sourceCandidate", "sourceVerification", "answerBinding", "oracleValue", "signatures", "correctAnswer before attempt", "explanation before attempt"],
+  "providerCalls": 0
+}

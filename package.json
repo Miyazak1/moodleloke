@@ -206,9 +206,6 @@
     "csca-ai-questioning:architecture-html": "node scripts/generate-ai-questioning-architecture-html.cjs",
     "question-engine:build": "npm --prefix question-engine run build",
     "question-engine:test": "node question-engine/test/contracts.test.cjs",
-    "question-engine:portable-test": "npm run question-engine:build && node question-engine/test/portable-runtime.test.cjs",
-    "question-engine:catalog": "node question-engine/bin/question-engine.cjs catalog",
-    "question-engine:readiness": "node question-engine/bin/question-engine.cjs readiness",
     "csca-ai-questioning:math-diversity-soft-cap-smoke": "node scripts/csca-subject-practice-math-diversity-soft-cap-smoke.cjs",
     "csca-ai-questioning:math-diversity-observation-preflight": "node scripts/csca-subject-practice-diversity-observation-preflight.cjs",
     "csca-ai-questioning:math-diversity-observation-run": "node scripts/csca-subject-practice-math-diversity-observation-run.cjs",
@@ -233,7 +230,6 @@
     "csca-ai-questioning:observation-task-rules": "node scripts/csca-subject-practice-observation-task-rules-test.cjs",
     "csca-ai-questioning:subject-practice-current-policy-cleanup": "node scripts/csca-subject-practice-current-policy-cleanup.cjs",
     "csca-ai-questioning:subject-practice-policy-isolation-smoke": "node scripts/csca-subject-practice-current-policy-isolation-smoke.cjs",
-    "csca-ai-questioning:subject-production-current-policy-refresh": "node scripts/csca-subject-practice-production-current-policy-refresh.cjs",
     "csca-ai-questioning:reviewer-profile-replay": "node scripts/csca-subject-practice-reviewer-profile-replay.cjs",
     "csca-ai-questioning:subject-practice-next-action": "node scripts/csca-subject-practice-next-action.cjs",
     "csca-ai-questioning:subject-practice-action-queue-gate": "node scripts/csca-subject-practice-action-queue-gate.cjs",
@@ -337,7 +333,7 @@
     "audit:environment-contract": "node scripts/audit-standalone-environment.cjs",
     "security:audit-dependencies": "npm audit --prefix backend --audit-level=high && npm audit --prefix frontend --audit-level=high",
     "release:check": "node scripts/check-release-baseline.cjs",
-    "ci:contracts": "npm run agent:build && npm --prefix backend run test:auth-google-oauth && npm --prefix backend run test:agent-runtime && npm --prefix backend run test:question-engine-candidate-write-gate && npm --prefix backend run test:question-engine-task-protocol && npm --prefix backend run test:question-engine-sidecar-transport && npm --prefix backend run test:question-engine-worker && npm --prefix backend run test:question-engine-provider-routing && npm --prefix backend run test:question-engine-sidecar-provider-e2e && npm --prefix backend run test:question-engine-runtime-observability && node scripts/question-engine-sidecar-rehearsal-test.cjs && node scripts/question-engine-sidecar-evidence-test.cjs && npm --prefix frontend run test:minimal && npm --prefix frontend run test:agent-workspace-route && npm --prefix frontend run test:standalone-shell && npm run test:teaching-assets && npm run test:authoring-boundary && npm run test:ci-contract && npm run test:local-delivery && npm run test:repository-ownership && npm run test:live-golden-path-contract && node scripts/check-cscalite-agent-host-contract.cjs && node scripts/moodlelike-integration-preflight.cjs --self-test && npm run test:data-migration-policy && npm run test:data-preflight-policy && npm --prefix frontend run audit:standalone-reachability && npm run audit:product-boundaries && npm run audit:command-surface && npm run audit:compatibility-operations && npm run audit:prisma-retention && npm run audit:environment-contract && npm run release:check",
+    "ci:contracts": "npm run agent:build && npm --prefix backend run test:auth-google-oauth && npm --prefix backend run test:agent-runtime && npm --prefix backend run test:question-engine-candidate-write-gate && npm --prefix backend run test:question-engine-task-protocol && node backend/scripts/verified-math-plugin-test.cjs && npm --prefix question-engine run figures:test && npm --prefix frontend run test:minimal && npm --prefix frontend run test:agent-workspace-route && npm --prefix frontend run test:standalone-shell && npm run test:teaching-assets && npm run test:authoring-boundary && npm run test:ci-contract && npm run test:local-delivery && npm run test:repository-ownership && npm run test:live-golden-path-contract && node scripts/check-cscalite-agent-host-contract.cjs && node scripts/moodlelike-integration-preflight.cjs --self-test && npm run test:data-migration-policy && npm run test:data-preflight-policy && npm --prefix frontend run audit:standalone-reachability && npm run audit:product-boundaries && npm run audit:command-surface && npm run audit:compatibility-operations && npm run audit:prisma-retention && npm run audit:environment-contract && npm run release:check",
     "ci:golden": "npm --prefix frontend run test:e2e:golden"
   },
   "dependencies": {

@@ -76,7 +76,7 @@ Policy: copy all models during initial migration; prune only after relation, SQL
 | CscaStudentLearningCycle | csca_student_learning_cycles | future-platform-keep | Reserved for Agent learning, authoring, assessment, or future teaching platform capability. |
 | CscaAdaptiveUsageAggregate | csca_adaptive_usage_aggregates | future-platform-keep | Reserved for Agent learning, authoring, assessment, or future teaching platform capability. |
 | CscaAdaptiveInventorySnapshot | csca_adaptive_inventory_snapshots | future-platform-keep | Reserved for Agent learning, authoring, assessment, or future teaching platform capability. |
-| CscaAdaptiveInventoryEvent | csca_adaptive_inventory_events | future-platform-keep | Reserved for Agent learning, authoring, assessment, or future teaching platform capability. |
+| CscaAdaptiveInventoryEvent | csca_adaptive_inventory_events | runtime-keep | Referenced by the reachable backend runtime. |
 | CscaLearningDailySnapshot | csca_learning_daily_snapshots | runtime-keep | Referenced by the reachable backend runtime. |
 | CscaLearningStreak | csca_learning_streaks | runtime-keep | Referenced by the reachable backend runtime. |
 | CscaLearningInsight | csca_learning_insights | runtime-keep | Referenced by the reachable backend runtime. |
@@ -150,4 +150,6 @@ Policy: copy all models during initial migration; prune only after relation, SQL
 | AgentRun | agent_runs | runtime-keep | Referenced by the reachable backend runtime. |
 | AgentToolCall | agent_tool_calls | runtime-keep | Referenced by the reachable backend runtime. |
 | AgentArtifact | agent_artifacts | runtime-keep | Referenced by the reachable backend runtime. |
+| DailyLearningTaskExecution | daily_learning_task_executions | runtime-keep | Referenced by the reachable backend runtime. |
+| VerifiedQuestionGenerationTask | verified_question_generation_tasks | runtime-keep | Referenced by the reachable backend runtime. |
 | AgentOutbox | agent_outbox | runtime-keep | Referenced by the reachable backend runtime. |

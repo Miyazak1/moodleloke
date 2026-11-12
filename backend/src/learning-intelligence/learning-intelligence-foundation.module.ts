@@ -16,6 +16,7 @@ import { ScoreCalibrationGovernanceService } from './readiness/score-calibration
 import { ScorePredictionShadowService } from './readiness/score-prediction-shadow.service';
 import { ScorePredictionCalibrationDatasetService } from './calibration/score-prediction-calibration-dataset.service';
 import { PastPapersModule } from '../past-papers/past-papers.module';
+import { DailyLearningTaskExecutionService } from './execution/daily-learning-task-execution.service';
 
 @Module({
   imports: [PrismaModule, PastPapersModule],
@@ -26,6 +27,7 @@ import { PastPapersModule } from '../past-papers/past-papers.module';
     LearningCapabilityRegistryService,
     LearningEvidenceWriterService,
     LearningInterventionShadowService,
+    DailyLearningTaskExecutionService,
     { provide: LEARNING_EVIDENCE_WRITER, useExisting: LearningEvidenceWriterService },
     LearningStateProjectorService,
     LearningStateProjectionWorkerService,
@@ -50,7 +52,8 @@ import { PastPapersModule } from '../past-papers/past-papers.module';
     ScoreCalibrationGovernanceService,
     ScorePredictionShadowService,
     ScorePredictionCalibrationDatasetService,
-    LearningInterventionShadowService
+    LearningInterventionShadowService,
+    DailyLearningTaskExecutionService
   ]
 })
 export class LearningIntelligenceFoundationModule {}

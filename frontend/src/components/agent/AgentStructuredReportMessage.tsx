@@ -1,3 +1,5 @@
+import { QuestionFigure } from '../QuestionFigure';
+import '../../styles/student-question.css';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Icon } from '../Icon';
 import { MathContent } from '../MathContent';
@@ -297,9 +299,10 @@ export function AgentAdaptiveResultMessage({
                 <article key={item.id}>
                   <span className={item.isCorrect ? 'is-correct' : 'is-wrong'}>{item.isCorrect ? <Icon name="lucide:check" /> : item.position ?? item.orderNumber}</span>
                   <div>
-                    <strong><MathContent text={item.prompt} /></strong>
+                    <strong><MathContent text={item.prompt} formatPlainMath /></strong>
                     <small>{item.isUnanswered ? t('agent.report.unanswered', '未作答') : `${t('agent.report.yourAnswer', '你的答案')} ${item.selectedAnswer ?? '—'} · ${t('agent.report.correctAnswer', '正确答案')} ${item.correctAnswer}`}</small>
-                    <p><MathContent text={item.explanation} /></p>
+                    <QuestionFigure figure={item.figure} />
+                    <p><MathContent text={item.explanation} formatPlainMath /></p>
                   </div>
                 </article>
               ))}

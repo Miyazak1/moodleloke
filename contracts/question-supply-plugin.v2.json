@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "question-supply-plugin-v2",
+  "pluginId": "verified-math-1.43",
+  "subjectCode": "math",
+  "source": "student_free_practice",
+  "requiredFields": [
+    "requestKey",
+    "topicId",
+    "topicCode",
+    "difficulty",
+    "requestedCount",
+    "sourcePolicy"
+  ],
+  "difficulty": [
+    "basic",
+    "medium",
+    "hard"
+  ],
+  "sourcePolicy": "reviewed_published_only",
+  "taskStates": [
+    "queued",
+    "running",
+    "published",
+    "failed"
+  ],
+  "taskStatusOwnership": "requesting_user_only",
+  "unsupported": [
+    "question-supply-plugin-v1",
+    "physics",
+    "chemistry",
+    "independent_verification"
+  ],
+  "publicationScope": "ordinary_practice_only",
+  "legacyFallback": "existing_reviewed_banks"
+}

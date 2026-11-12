@@ -1,6 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, Optional } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { TrainingEventService } from '../csca-special-practice/training-event.service';
+import { DailyLearningTaskContextSchema, type DailyLearningTaskContext } from '../learning-intelligence/execution/daily-learning-task-execution.contract';
+import { DailyLearningTaskExecutionService } from '../learning-intelligence/execution/daily-learning-task-execution.service';
 import { decideWrongPatternVerification } from './wrong-pattern-verification.policy';
 import {
   CscaLearningSubject,
@@ -34,26 +36,12 @@ const READINESS_HIGH_DIFFICULTY_DISTRIBUTION_SAMPLE_MIN = 8;
 
 type LearningDashboardLanguage = 'zh' | 'en' | 'vi';
 
-type DailyPlanReviewContext = {
-  taskId: string;
-  planDate: string;
-  policyVersion: string;
-  taskKind: 'mistake_review';
-  subject: CscaLearningSubject;
-  entry: 'today_plan' | 'refreshed_next';
-};
+type DailyPlanReviewContext = DailyLearningTaskContext & { taskKind: 'mistake_review' };
 
 function dailyPlanReviewContext(value: unknown, subject: CscaLearningSubject): DailyPlanReviewContext | null {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
-  const context = value as Record<string, unknown>;
-  const taskId = typeof context.taskId === 'string' ? context.taskId.trim() : '';
-  const planDate = typeof context.planDate === 'string' ? context.planDate : '';
-  const policyVersion = typeof context.policyVersion === 'string' ? context.policyVersion.trim() : '';
-  const entry = context.entry === 'refreshed_next' ? 'refreshed_next' : context.entry === 'today_plan' ? 'today_plan' : null;
-  if (!taskId || taskId.length > 180 || !/^\d{4}-\d{2}-\d{2}$/.test(planDate)
-    || !policyVersion || policyVersion.length > 80 || context.taskKind !== 'mistake_review'
-    || context.subject !== subject || !entry) return null;
-  return { taskId, planDate, policyVersion, taskKind: 'mistake_review', subject, entry };
+  const parsed = DailyLearningTaskContextSchema.safeParse(value);
+  if (!parsed.success || parsed.data.taskKind !== 'mistake_review' || parsed.data.subject !== subject) return null;
+  return parsed.data as DailyPlanReviewContext;
 }
 
 const DASHBOARD_LOCALIZED_COPY: Record<LearningDashboardLanguage, {
@@ -935,7 +923,8 @@ function readinessDimensionSnapshot(value: unknown) {
 export class CscaLearningService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly trainingEvents?: TrainingEventService
+    private readonly trainingEvents?: TrainingEventService,
+    @Optional() private readonly dailyTaskExecutions?: DailyLearningTaskExecutionService
   ) {}
 
   async recordReadinessActionClick(userId: number, input: {
@@ -1573,6 +1562,16 @@ export class CscaLearningService {
     });
     const subject = validSubject(updated.subject);
     const verification = wrongPatternVerificationState({ metadata: updated.metadata, lastCorrectAt: updated.lastCorrectAt });
+    if (planCompletion) {
+      await this.dailyTaskExecutions?.completed(userId, planCompletion, {
+        positiveOutcome: false,
+        topicId: updated.topicId,
+        reviewItemId: updated.id,
+        sourceEntityType: 'csca_wrong_pattern',
+        sourceEntityId: String(updated.id),
+        outcome: { phase: 'review', reviewCount, questionId: planCompletion.questionId }
+      }).catch(() => undefined);
+    }
     return {
       id: updated.id,
       status: updated.status,

@@ -44,6 +44,15 @@
   overflow-wrap: anywhere;
 }
 
+.math-content-coordinate {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: bottom;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: thin;
+}
+
 .math-content-block {
   display: block;
   max-width: 100%;

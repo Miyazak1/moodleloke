@@ -4,6 +4,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  Optional,
   ServiceUnavailableException
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
@@ -12,14 +13,16 @@ import { getWrongPatternVerificationAvailability, WRONG_PATTERN_MINIMUM_TARGET_I
 import { CscaMockExamService } from '../csca-mock-exam/csca-mock-exam.service';
 import { LearningDecisionService } from '../learning-intelligence/decision/learning-decision.service';
 import { LearningStateProjectorService } from '../learning-intelligence/projection/learning-state-projector.service';
+import { DailyLearningTaskExecutionService } from '../learning-intelligence/execution/daily-learning-task-execution.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { AgentEventService } from './agent-event.service';
+import { AgentInterventionVerificationService } from './agent-intervention-verification.service';
 import { AgentRuntimeFeatureFlagsService } from './agent-runtime-feature-flags.service';
 import { AgentTaskActionInputSchema, ContinueAgentFreePracticeInputSchema, StartAgentFreePracticeInputSchema, StartAgentPracticeInputSchema } from './agent.types';
 
 const TOOL_VERSION = '1.0';
 const LEARNING_WORKSPACE_CONTAINER_TITLE = '__learning_workspace__';
-const SUPPORTED_TASKS = new Set(['diagnostic', 'review', 'targeted_practice', 'concept_learning', 'mock_exam']);
+const SUPPORTED_TASKS = new Set(['diagnostic', 'review', 'targeted_practice', 'concept_learning', 'mock_exam', 'intervention_verification']);
 const TERMINAL_DECISIONS = ['completed', 'failed', 'abandoned', 'superseded'];
 
 type PlanTask = {
@@ -62,7 +65,9 @@ export class AgentPracticeActionService {
     private readonly events: AgentEventService,
     private readonly mockExam: CscaMockExamService,
     private readonly projector?: LearningStateProjectorService,
-    private readonly decisions?: LearningDecisionService
+    private readonly decisions?: LearningDecisionService,
+    @Optional() private readonly dailyTaskExecutions?: DailyLearningTaskExecutionService,
+    @Optional() private readonly interventionVerifications?: AgentInterventionVerificationService
   ) {}
 
   async startPrescription(userId: number, prescriptionId: string, body: unknown) {
@@ -89,6 +94,18 @@ export class AgentPracticeActionService {
     }
     if (!['math', 'physics', 'chemistry'].includes(subject)) {
       throw new BadRequestException({ code: 'AGENT_TASK_SUBJECT_INVALID', message: '学习建议科目无效。' });
+    }
+    if (taskType === 'intervention_verification') {
+      const verificationId = typeof task.interventionVerificationId === 'string'
+        ? task.interventionVerificationId.trim()
+        : '';
+      if (!verificationId) {
+        throw new ConflictException({ code: 'AGENT_INTERVENTION_VERIFICATION_MISSING', message: '当前验证任务已经变化，请刷新最新建议。' });
+      }
+      if (!this.interventionVerifications) {
+        throw new ServiceUnavailableException({ code: 'AGENT_INTERVENTION_VERIFICATION_UNAVAILABLE', message: '验证任务暂时不可用。' });
+      }
+      return this.interventionVerifications.start(userId, verificationId, input);
     }
 
     let review: Record<string, unknown> | null = null;
@@ -264,7 +281,7 @@ export class AgentPracticeActionService {
         subject: input.subject,
         mode: 'practice',
         questionLanguage: input.questionLanguage
-      });
+      }, { studentInitiatedPractice: !requestedReview });
       const focusTopicId = requestedReview?.topicId ?? input.focusTopicId;
       const round = await this.adaptive.createRound(userId, String(session.id), requestedReview
         ? {
@@ -277,8 +294,8 @@ export class AgentPracticeActionService {
             }
           }
         : focusTopicId
-          ? { questionCount: input.questionCount, focusTopicId, topicMode: input.practiceMode }
-          : { questionCount: input.questionCount });
+          ? { questionCount: input.questionCount, focusTopicId, topicMode: input.practiceMode, ...(input.difficulty ? { difficulty: input.difficulty } : {}) }
+          : { questionCount: input.questionCount, ...(input.difficulty ? { difficulty: input.difficulty } : {}) });
       const practiceKind = requestedReview ? 'review' : focusTopicId ? 'targeted_practice' : 'free_practice';
       const title = input.questionLanguage === 'zh'
         ? `${input.subject === 'math' ? '数学' : input.subject === 'physics' ? '物理' : '化学'}${requestedReview ? '错题复习' : focusTopicId ? '薄弱点训练' : '自由练习'}`
@@ -298,7 +315,7 @@ export class AgentPracticeActionService {
             schemaVersion: '1',
             source: 'student_initiated',
             ...(input.dailyPlanContext ? { dailyPlanContext: input.dailyPlanContext } : {}),
-            task: { type: 'free_practice', practiceKind, practiceMode: input.practiceMode, subject: input.subject, questionCount: round.questions.length, ...(focusTopicId ? { topicIds: [focusTopicId] } : {}) },
+            task: { type: 'free_practice', practiceKind, practiceMode: input.practiceMode, subject: input.subject, questionCount: round.questions.length, ...(input.difficulty ? { difficulty: input.difficulty } : {}), ...(focusTopicId ? { topicIds: [focusTopicId] } : {}) },
             ...(requestedReview ? { review: { reviewItemId: requestedReview.id, patternType: requestedReview.patternType } } : {}),
             freePracticeJourneyId: journeyId,
             batchIndex: 1,
@@ -344,6 +361,14 @@ export class AgentPracticeActionService {
           data: { artifactId: artifact.id, sessionId: round.session.id, roundId: round.round.id, subject: input.subject, source: 'student_initiated', practiceKind, focusTopicId: focusTopicId ?? null, reviewItemId: requestedReview?.id ?? null }
         });
       });
+      await this.dailyTaskExecutions?.started(userId, input.dailyPlanContext, {
+        topicId: focusTopicId ?? null,
+        artifactId: artifact.id,
+        reviewItemId: requestedReview?.id ?? null,
+        roundId: round.round.id,
+        sourceEntityType: 'csca_adaptive_round',
+        sourceEntityId: String(round.round.id)
+      }).catch(() => undefined);
       return output;
     } catch (error) {
       await this.prisma.$transaction([
@@ -406,10 +431,11 @@ export class AgentPracticeActionService {
       return { run, call };
     });
     try {
-      const session = await this.adaptive.createSession(userId, { subject: input.subject, mode: 'practice', questionLanguage: input.questionLanguage });
+      const session = await this.adaptive.createSession(userId, { subject: input.subject, mode: 'practice', questionLanguage: input.questionLanguage }, { studentInitiatedPractice: true });
       const round = await this.adaptive.createRound(userId, String(session.id), {
         questionCount: input.questionCount,
         topicMode: input.practiceMode,
+        ...(input.difficulty ? { difficulty: input.difficulty } : {}),
         ...(input.focusTopicId ? { focusTopicId: input.focusTopicId } : {})
       });
       const batchIndex = positiveInteger(previousSnapshot.batchIndex) ? Number(previousSnapshot.batchIndex) + 1 : 2;
@@ -425,6 +451,7 @@ export class AgentPracticeActionService {
             type: 'free_practice',
             practiceKind: input.practiceMode === 'single_topic' ? 'targeted_practice' : 'free_practice',
             practiceMode: input.practiceMode,
+            ...(input.difficulty ? { difficulty: input.difficulty } : {}),
             subject: input.subject,
             questionCount: round.questions.length,
             ...(input.focusTopicId ? { topicIds: [input.focusTopicId] } : {})
@@ -712,6 +739,11 @@ export class AgentPracticeActionService {
             data: { artifactId: artifact.id, attemptId: attempt.id, subject, paperSlug, mode: launchMode }
           });
         });
+        await this.dailyTaskExecutions?.started(userId, input.dailyPlanContext, {
+          artifactId: artifact.id,
+          sourceEntityType: 'mock_exam_attempt',
+          sourceEntityId: String(attempt.id)
+        }).catch(() => undefined);
         return output;
       }
       const requestedMode = taskType === 'diagnostic' ? 'diagnostic' : 'practice';
@@ -785,6 +817,14 @@ export class AgentPracticeActionService {
           data: { artifactId: artifact.id, sessionId: round.session.id, roundId: round.round.id, subject }
         });
       });
+      await this.dailyTaskExecutions?.started(userId, input.dailyPlanContext, {
+        topicId: focusTopicId ?? null,
+        artifactId: artifact.id,
+        reviewItemId: verifiedReview?.id ?? null,
+        roundId: round.round.id,
+        sourceEntityType: 'csca_adaptive_round',
+        sourceEntityId: String(round.round.id)
+      }).catch(() => undefined);
       return output;
     } catch (error) {
       await this.prisma.agentToolCall.updateMany({
@@ -960,6 +1000,16 @@ export class AgentPracticeActionService {
         eventKey: `practice:${artifact.id}:settled`, eventType: 'practice.settled', data: output
       });
     });
+    await this.dailyTaskExecutions?.completed(userId, artifactSnapshot.dailyPlanContext, {
+      positiveOutcome: decision === 'completed' && targetAccuracy >= 0.8,
+      topicId: focusTopicId ?? null,
+      artifactId: artifact.id,
+      reviewItemId: reviewItemId ?? null,
+      roundId,
+      sourceEntityType: 'csca_adaptive_round',
+      sourceEntityId: String(roundId),
+      outcome: output
+    }).catch(() => undefined);
     return output;
   }
 
@@ -1004,6 +1054,13 @@ export class AgentPracticeActionService {
         learningReview: await this.buildMockExamLearningReview(userId, attemptId, attempt.paper.subject, legacyBase)
       };
       await this.prisma.agentToolCall.update({ where: { id: existingCall.id }, data: { output: upgradedOutput } });
+      await this.dailyTaskExecutions?.completed(userId, objectValue(artifact.snapshot).dailyPlanContext, {
+        positiveOutcome: false,
+        artifactId: artifact.id,
+        sourceEntityType: 'mock_exam_attempt',
+        sourceEntityId: String(attemptId),
+        outcome: upgradedOutput
+      }).catch(() => undefined);
       return upgradedOutput;
     }
     let call = existingCall;
@@ -1053,6 +1110,13 @@ export class AgentPracticeActionService {
         eventKey: `mock-exam:${artifact.id}:settled`, eventType: 'mock_exam.settled', data: output
       });
     });
+    await this.dailyTaskExecutions?.completed(userId, objectValue(artifact.snapshot).dailyPlanContext, {
+      positiveOutcome: false,
+      artifactId: artifact.id,
+      sourceEntityType: 'mock_exam_attempt',
+      sourceEntityId: String(attemptId),
+      outcome: output
+    }).catch(() => undefined);
     return output;
   }
 

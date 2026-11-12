@@ -1,0 +1,35 @@
+.student-question-figure {
+  box-sizing: border-box; margin: 0; padding: 16px; min-width: 0; width: 100%;
+  border: 1px solid #dce6eb; border-radius: 12px; background: #fff;
+}
+.student-question-figure > img {
+  display: block; width: 100%; max-width: 480px; height: auto; margin: 0 auto;
+  object-fit: contain; background: #fff;
+}
+.student-question-figure > figcaption {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 10px 16px; margin: 12px 0 0; padding-top: 12px; border-top: 1px solid #e9eef2;
+  font-size: 13px; line-height: 1.65; font-weight: 400; overflow-wrap: anywhere; color: #405364;
+}
+.student-question-figure > figcaption > span { flex: 1 1 180px; min-width: 0; }
+button.student-question-figure-action {
+  display: inline-flex; flex: 0 0 auto; min-height: 40px; align-items: center; justify-content: center;
+  gap: 7px; padding: 8px 12px; border: 1px solid #c8d7e5; border-radius: 8px;
+  background: #f5f8fc; color: #2448b5; box-shadow: none; font: inherit;
+  font-size: 13px; font-weight: 600; line-height: 1.4; cursor: pointer;
+}
+button.student-question-figure-action:hover { border-color: #315dff; background: #edf2ff; }
+button.student-question-figure-action:focus-visible { outline: 3px solid #315dff; outline-offset: 3px; }
+.student-question-figure-action > svg { width: 17px; height: 17px; flex: none; }
+.student-question-figure-zoom {
+  box-sizing: border-box; position: fixed; inset: 0; z-index: 1000;
+  background: #fff; padding: max(8px, env(safe-area-inset-top)) 8px max(16px, env(safe-area-inset-bottom));
+  overflow: auto; overscroll-behavior: contain; display: flex; flex-direction: column; align-items: center; gap: 16px;
+}
+.student-question-figure-zoom > button { position: sticky; top: 0; align-self: flex-end; z-index: 1; }
+.student-question-figure-zoom > img { display: block; width: 100%; max-width: 860px; height: auto; flex: 0 0 auto; }
+.student-question-figure-zoom > p { max-width: 720px; margin: 0; font-size: 15px; color: #405364; line-height: 1.7; }
+@media (max-width: 600px) {
+  .student-question-figure { padding: 8px; border-radius: 10px; }
+  .student-question-figure > figcaption { gap: 8px; padding-top: 10px; margin-top: 8px; }
+}

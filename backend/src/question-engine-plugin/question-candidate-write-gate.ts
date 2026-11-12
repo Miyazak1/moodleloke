@@ -3,10 +3,11 @@ import type { GeneratedQuestionCandidate, ReviewResult } from '../ai-questioning
 export const QUESTION_ENGINE_CANDIDATE_WRITE_GATE_VERSION = 'question-engine-candidate-write-gate-v1' as const;
 
 type GateInput = {
-  candidate: GeneratedQuestionCandidate;
+  candidate: Omit<GeneratedQuestionCandidate, 'sourceType' | 'blueprintId'> & { sourceType: string; blueprintId?: number };
   review: ReviewResult;
   generationMetadata: unknown;
   sourceSimilarity: unknown;
+  verifiedMathEvidence?: { pluginId: string; version: string; contentBound: boolean; beforeStorePassed: boolean; oraclePassed: boolean; teachingPassed: boolean };
 };
 
 export type QuestionCandidateWriteGateResult = {
@@ -36,14 +37,14 @@ function unique(values: string[]) {
   return [...new Set(values.filter(Boolean))];
 }
 
-function schemaBlockers(candidate: GeneratedQuestionCandidate) {
+function schemaBlockers(candidate: GateInput['candidate'], verifiedMath = false) {
   const blockers: string[] = [];
   const optionIds = Array.isArray(candidate.options) ? candidate.options.map((option) => clean(option?.id)) : [];
   const optionTexts = Array.isArray(candidate.options) ? candidate.options.map((option) => clean(option?.text)) : [];
   if (!['math', 'physics', 'chemistry'].includes(clean(candidate.subject).toLowerCase())) blockers.push('schema_subject_invalid');
   if (!Number.isInteger(candidate.topicId) || candidate.topicId <= 0) blockers.push('schema_topic_id_invalid');
-  if (!Number.isInteger(candidate.blueprintId) || candidate.blueprintId <= 0) blockers.push('schema_blueprint_id_invalid');
-  if (candidate.sourceType !== 'ai') blockers.push('schema_source_type_invalid');
+  if (!verifiedMath && (!Number.isInteger(candidate.blueprintId) || Number(candidate.blueprintId) <= 0)) blockers.push('schema_blueprint_id_invalid');
+  if (candidate.sourceType !== (verifiedMath ? 'verified_math_engine' : 'ai')) blockers.push('schema_source_type_invalid');
   if (!clean(candidate.prompt)) blockers.push('schema_prompt_missing');
   if (!clean(candidate.explanation)) blockers.push('schema_explanation_missing');
   if (!clean(candidate.questionType)) blockers.push('schema_question_type_missing');
@@ -106,7 +107,10 @@ export function evaluateQuestionCandidateWriteGate(input: GateInput): QuestionCa
   const generation = record(input.generationMetadata);
   const observation = clean(generation.workClass) === 'observation'
     && generation.suppressStudentPublication === true;
-  const schema = schemaBlockers(input.candidate);
+  const proof = input.verifiedMathEvidence;
+  const verifiedMath = input.candidate.sourceType === 'verified_math_engine' && proof?.pluginId === 'verified-math-1.43'
+    && proof.version === '1.43.0' && proof.contentBound === true && proof.beforeStorePassed === true && proof.oraclePassed === true && proof.teachingPassed === true;
+  const schema = schemaBlockers(input.candidate, verifiedMath);
   const sourceIsolation = sourceIsolationBlockers(input.generationMetadata);
   const duplicateRisk = duplicateBlockers(input.review, input.sourceSimilarity, input.generationMetadata);
   const quality = qualityBlockers(input.review);

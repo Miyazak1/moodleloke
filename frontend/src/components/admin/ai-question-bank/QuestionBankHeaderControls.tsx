@@ -73,8 +73,8 @@ export function QuestionBankHeaderControls({
         items={[
           { key: 'syllabus', label: '共用大纲基线', value: syllabusTopicCount, detail: '科目训练与在线模考共用' },
           { key: 'profile', label: '共用真题画像源', value: styleProfileCount, detail: `${sourceQuestionCount} 真题样本` },
-          { key: 'practice', label: '科目训练线', value: summary.topicWork, detail: `${missingTopicCount} 缺蓝图 · 专项题库入库` },
-          { key: 'mock', label: '在线模考线', value: summary.published, detail: '整卷蓝图 · 模考题库入库' },
+          { key: 'practice', label: '专项题库', value: summary.topicWork, detail: '保留已有题目' },
+          { key: 'mock', label: '模考题库', value: summary.published, detail: '保留已有题目' },
           { key: 'quality', label: '当前线质量', value: summary.qualityWork, detail: `${highSeverityQualityCount} 高风险` },
           { key: 'remediation', label: '科目错因补题', value: summary.remediationWork, detail: `${pendingVariantCandidateCount} 变式待审` },
           { key: 'total', label: '当前线台账', value: summary.total, detail: '按业务线过滤后的台账' }

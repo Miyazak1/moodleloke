@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AdminPageShell } from '../components/AdminPageShell';
+import { FormalQuestionEnginesPanel } from '../components/admin/FormalQuestionEnginesPanel';
 import { useConfirmDialog } from '../components/ConfirmDialogProvider';
 import { CscaSyllabusWorkspace } from '../components/admin/ai-question-bank/CscaSyllabusWorkspace';
 import {
@@ -1183,8 +1184,8 @@ export function AdminAIQuestionBankPage({
       current="aiQuestionBank"
       currentUser={currentUser}
       kicker="AI 出题 / 题库治理"
-      title="AI 生成题库"
-      body="按流程处理：先应用 CSCA 大纲作为范围基线，再导入真题 JSON 生成画像，按知识点和画像补蓝图与候选，审核发布到训练或模考，最后用质量治理、错因补题和台账追踪闭环。"
+      title="题库与正式出题插件"
+      body="三科现有题库与练习继续保留。数学 1.43 是唯一正式出题引擎；物理、化学出题尚未接入。"
       heroAside={(
         <div className="admin-work-hero-actions">
           <button type="button" onClick={onGoToAiOperations}>AI 运维</button>
@@ -1229,10 +1230,9 @@ export function AdminAIQuestionBankPage({
       />
 
       <QuestionBankHeaderControls {...questionBankHeaderControlsProps} />
+      {(activeTab === 'overview' || activeTab === 'subject-practice') && <FormalQuestionEnginesPanel />}
 
-      {activeTab === 'overview' && (
-        <QuestionBankOverviewSummary {...questionBankOverviewSummaryProps} />
-      )}
+
 
       {activeTab === 'shared-prep' && (
         <CscaSyllabusWorkspace
@@ -1247,29 +1247,9 @@ export function AdminAIQuestionBankPage({
         <SourceReferenceWorkspace {...sourceReferenceWorkspaceProps} />
       )}
 
-      {activeTab === 'subject-practice' && (
-        <SubjectPracticeProductionPanel
-          subject={subject}
-          autoProductionSetting={subjectAutoProductionSetting}
-          run={subjectProductionRun}
-          inventory={adaptiveInventory}
-          predictiveResult={adaptivePredictiveResult}
-          isInventoryLoading={isAdaptiveInventoryLoading}
-          isAutoProductionSettingLoading={isSubjectAutoProductionSettingLoading}
-          isBusy={isSubjectAutoProductionSettingLoading || isSubjectProductionLoading || isAdaptiveInventoryLoading || isActionBusy('subject-auto-production-setting') || isActionBusy('subject-production-create') || isActionBusy('subject-production-process') || isActionBusy('subject-production-process-until-complete') || isActionBusy('subject-production-refresh') || isActionBusy('subject-predictive-refresh') || isActionBusy('subject-predictive-run')}
-          onToggleAutoProduction={toggleSubjectAutoProduction}
-          onCreateRun={createSubjectProductionRun}
-          onProcessRun={processSubjectProductionRun}
-          onProcessUntilComplete={processSubjectProductionRunUntilComplete}
-          onRefresh={refreshSubjectProductionRun}
-          onRefreshInventory={refreshAdaptiveReplenishmentInventory}
-          onRunPredictiveReplenishment={runSubjectPredictiveReplenishment}
-        />
-      )}
 
-      {activeTab === 'subject-practice' && (
-        <CoverageWorkPanel {...coverageWorkPanelProps} />
-      )}
+
+
 
       {activeTab === 'subject-practice' && (
         <PublishedQuestionPanel {...publishedQuestionPanelProps} />
@@ -1287,28 +1267,7 @@ export function AdminAIQuestionBankPage({
         <LedgerPanel {...ledgerPanelProps} />
       )}
 
-      {activeTab === 'online-mock' && (
-        <MockExamProductionPanel
-          subject={subject}
-          papers={mockExamPapers}
-          selectedPaperId={selectedMockPaperId}
-          blueprintDetail={mockBlueprintDetail}
-          isLoading={isMockExamProductionLoading}
-          busyAction={mockExamBusyAction}
-          actionFeedback={feedback}
-          actionError={error}
-          onSelectPaper={selectMockPaper}
-          onReload={refreshMockExamProduction}
-          onCreateBlueprint={createMockExamBlueprint}
-          onLoadBlueprint={loadMockExamBlueprint}
-          onConfirmBlueprint={confirmMockExamBlueprint}
-          onCreateGenerationJob={createMockExamGenerationJob}
-          onProcessGenerationJob={processMockExamGenerationJob}
-          onAssembleDraft={assembleMockExamDraft}
-          onCleanupGenerationJob={cleanupMockExamGenerationJob}
-          onCleanupAllGenerationJobs={cleanupAllMockExamGenerationJobs}
-        />
-      )}
+
 
       {activeTab === 'online-mock' && (
         <PublishedQuestionPanel {...publishedQuestionPanelProps} />

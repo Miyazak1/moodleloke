@@ -1,6 +1,24 @@
 node_modules
 frontend/node_modules
 backend/node_modules
+**/node_modules
+.git
+.local
+.codex
+.agents
+tmp
+output
+Labs
+recovery
+dagang
+backend/uploads
+test-results
+**/*.dump
+**/*.log
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.production.example
 
 dist
 frontend/dist
