@@ -7,11 +7,16 @@ const { RetiredGenerationRoutesGuard } = require('../dist/backend/src/question-e
 const { QuestionGeneratorProviderService } = require('../dist/backend/src/ai-questioning/question-generator-provider.service.js');
 const { evaluateQuestionCandidateWriteGate } = require('../dist/backend/src/question-engine-plugin/question-candidate-write-gate.js');
 const { VerifiedMathSupplyDemandSchema } = require('../dist/backend/src/agent/question-supply-fulfillment.contract.js');
+const { verifiedMathEngineTopicCode } = require('../dist/backend/src/question-engine-plugin/verified-math-topic-binding.js');
 
 async function main() {
   Object.assign(process.env, { QUESTION_ENGINE_PLUGIN_ID: 'verified-math-1.43', QUESTION_ENGINE_PLUGIN_ENABLED: 'true', MOODLELIKE_MATH_ENGINE_ENABLED: 'true',
     CSCA_AI_QUESTION_GENERATION_ENABLED: 'true', CSCA_AI_QUESTION_REVIEW_ENABLED: 'true', CSCA_AI_QUESTIONING_SCHEDULER_ENABLED: 'true', QUESTION_ENGINE_EXECUTION_MODE: 'sidecar' });
   const adapter = new VerifiedMath143Adapter();
+  assert.equal(verifiedMathEngineTopicCode('math-solid-geometry'), 'M-GEO-002');
+  assert.equal(verifiedMathEngineTopicCode('M-GEO-002'), 'M-GEO-002');
+  assert.equal(verifiedMathEngineTopicCode('math-coordinate-geometry'), 'math-coordinate-geometry', 'do not broaden unreviewed topic scopes');
+  assert.equal(verifiedMathEngineTopicCode('unknown-topic'), 'unknown-topic');
   const registry = new QuestionEnginePluginRegistryService(adapter);
   assert.deepEqual(registry.getStatus().plugins.map(plugin => [plugin.descriptor.id, plugin.descriptor.version, plugin.descriptor.subjects]), [['verified-math-1.43', '1.43.0', ['math']]]);
   assert.equal(registry.isVerifiedMathEnabled(), true);

@@ -7,6 +7,7 @@ import { VerifiedMathSupplyDemandSchema, type VerifiedMathSupplyDemand, type Que
 import { QuestionEnginePluginRegistryService } from './question-engine-plugin-registry.service';
 import { VerifiedQuestionPublicationService } from './verified-question-publication.service';
 import { VERIFIED_MATH_PLUGIN_ID, type MathDifficulty } from './verified-math143.adapter';
+import { verifiedMathEngineTopicCode } from './verified-math-topic-binding';
 
 const json = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 @Injectable()
@@ -38,7 +39,7 @@ export class VerifiedQuestionSupplyService implements QuestionSupplyProductionAd
     for (let index = 0; index < count; index++) {
       const topic = topics[index % topics.length];
       const band = difficulty ?? (/难|提高|挑战|hard/.test(topic.targetDifficulty) ? 'hard' : /中|medium/.test(topic.targetDifficulty) ? 'medium' : 'basic');
-      if (!catalog.some(cell => cell.topicCode === topic.code && cell.difficulty === band)) continue;
+      if (!catalog.some(cell => cell.topicCode === verifiedMathEngineTopicCode(topic.code) && cell.difficulty === band)) continue;
       const dispatched = await this.dispatch({ schemaVersion: 'question-supply-plugin-v2', source: 'student_free_practice', subjectCode: 'math',
         requestKey: `${requestKey}:${index}`, topicId: topic.topicId, topicCode: topic.code, difficulty: band,
         requestedCount: 1, userId, excludedIds, sourcePolicy: 'reviewed_published_only' });
@@ -71,7 +72,7 @@ export class VerifiedQuestionSupplyService implements QuestionSupplyProductionAd
     if (!claim.count) throw new ServiceUnavailableException({ code: 'QUESTION_GENERATION_PENDING', taskId });
     const ids: number[] = Array.isArray(task.questionIds) ? task.questionIds.filter((id): id is number => typeof id === 'number') : [];
     try {
-      const cell = this.registry.mathCatalog().cells.find(item => item.id === `${input.topicCode}:${input.difficulty}`);
+      const cell = this.registry.mathCatalog().cells.find(item => item.id === `${verifiedMathEngineTopicCode(input.topicCode)}:${input.difficulty}`);
       if (!cell) throw Error('MATH_SCOPE_UNSUPPORTED');
       for (let index = ids.length; index < input.requestedCount; index++) {
         let accepted = false;

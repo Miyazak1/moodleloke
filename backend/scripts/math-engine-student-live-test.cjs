@@ -55,22 +55,24 @@ async function main() {
     return value;
   }
   try {
-    const topic = await prisma.cscaExamTopic.upsert({ where: { code: 'M-GEO-002' },
-      create: { code: 'M-GEO-002', subject: 'math', title: '空间几何', syllabusVersion: '2025', status: 'published' }, update: {} });
+    const topicCode = process.argv.includes('--legacy-topic') ? 'math-solid-geometry' : 'M-GEO-002';
+    const topic = await prisma.cscaExamTopic.upsert({ where: { code: topicCode },
+      create: { code: topicCode, subject: 'math', title: '空间几何', syllabusVersion: '2025', status: 'published' }, update: {} });
     const auth = await request('/api/v1/auth/register', 'POST', { email: 'math-engine-' + randomUUID() + '@example.test', password: 'Local-acceptance-password-123!' });
     token = auth.tokens.accessToken;
     const userId = Number(auth.user.id);
     await prisma.user.update({ where: { id: userId }, data: { emailVerifiedAt: new Date() } });
     const previouslyAvailable = await prisma.cscaQuestion.findMany({ where: { topicId: topic.id }, select: { id: true } });
     if (previouslyAvailable.length) await prisma.cscaQuestionExposure.createMany({ data: previouslyAvailable.map(question => ({ userId, questionId: question.id, source: 'adaptive_round:csca_question' })), skipDuplicates: true });
+    const batchSize = process.argv.includes('--legacy-topic') ? 5 : 1;
     const input = { clientRequestId: randomUUID(), subject: 'math', practiceMode: 'single_topic', focusTopicId: topic.id,
-      difficulty: 'hard', questionCount: 1, questionLanguage: 'zh' };
+      difficulty: 'hard', questionCount: batchSize, questionLanguage: 'zh' };
     const launch = await request('/api/v1/agent/free-practice/start', 'POST', input);
     const repeated = await request('/api/v1/agent/free-practice/start', 'POST', input);
     assert.equal(repeated.roundId, launch.roundId, 'start idempotency');
     const route = '/api/v1/csca-special-practice/adaptive/rounds/' + launch.roundId;
     const detail = await request(route);
-    assert.equal(detail.questions.length, 1);
+    assert.equal(detail.questions.length, batchSize);
     const question = detail.questions[0];
     for (const language of ['zh', 'en']) {
       const reread = await request(route + '?language=' + language);
@@ -88,6 +90,9 @@ async function main() {
     assert.equal(stored.generationMetadata.pluginId, 'verified-math-1.43');
     const generationTask = await prisma.verifiedQuestionGenerationTask.findUniqueOrThrow({ where: { id: stored.generationMetadata.generationTaskId } });
     assert.equal(generationTask.state, 'published');
+    assert.equal(generationTask.input.topicCode, topicCode);
+    assert.equal(stored.generationMetadata.hostTopicCode, topicCode);
+    assert.equal(stored.generationMetadata.cellId, 'M-GEO-002:hard');
     const publicTask = await request('/api/v1/agent/question-generation-tasks/' + generationTask.id);
     assert.equal(publicTask.publishedCount, 1);
     assert.equal(JSON.stringify(publicTask).includes('correctAnswer'), false);
@@ -109,6 +114,21 @@ async function main() {
     await request(route + '/submit', 'POST', {});
     const evidenceCount = await prisma.learningEvidenceEvent.count({ where: { userId, questionId: 'csca_question:' + question.id, sourceId: String(launch.roundId) } });
     assert.equal(evidenceCount, 1, 'learning evidence must be written once');
+    await request('/api/v1/agent/practice-rounds/' + launch.roundId + '/settle', 'POST');
+    const continuationInput = { ...input, clientRequestId: randomUUID() };
+    const continued = await request('/api/v1/agent/free-practice/' + launch.artifactId + '/continue', 'POST', continuationInput);
+    const continuedAgain = await request('/api/v1/agent/free-practice/' + launch.artifactId + '/continue', 'POST', continuationInput);
+    assert.equal(continuedAgain.roundId, continued.roundId);
+    const continuedDetail = await request('/api/v1/csca-special-practice/adaptive/rounds/' + continued.roundId);
+    assert.equal(continuedDetail.questions.length, batchSize);
+    const previousIds = new Set(detail.questions.map(item => item.id));
+    assert.ok(continuedDetail.questions.every(item => !previousIds.has(item.id)), 'all continuation questions must be unseen');
+    assert.notEqual(continuedDetail.questions[0].id, question.id, 'continuation must provide unseen inventory');
+    const continuedStored = await prisma.cscaQuestion.findUniqueOrThrow({ where: { id: continuedDetail.questions[0].id } });
+    assert.equal(continuedStored.topicId, topic.id);
+    assert.equal(continuedStored.generationMetadata.hostTopicCode, topicCode);
+    assert.equal(continuedStored.generationMetadata.cellId, 'M-GEO-002:hard');
+    console.log('VERIFIED_CONTINUATION_OK', topicCode);
     const independent = await app.get(AdaptiveQuestionProviderService).pickIndependentVerificationQuestions(userId, topic.id, 3);
     assert.ok(independent.every(item => item.questionId !== question.id), 'practice qualification must not become independent measurement');
     const supply = app.get(VerifiedQuestionSupplyService);

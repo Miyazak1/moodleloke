@@ -8,6 +8,7 @@ import { MATH_ENGINE_SOURCE, isReadyMathEngineQuestion, mathEngineContentHash } 
 import { evaluateQuestionCandidateWriteGate } from './question-candidate-write-gate';
 import { QuestionEnginePluginRegistryService } from './question-engine-plugin-registry.service';
 import { VERIFIED_MATH_PLUGIN_ID, type MathGenerationOutput, type MathDifficulty } from './verified-math143.adapter';
+import { verifiedMathEngineTopicCode } from './verified-math-topic-binding';
 
 const json = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 @Injectable()
@@ -23,7 +24,7 @@ export class VerifiedQuestionPublicationService {
         AND state = 'running' AND lease_owner = ${binding.leaseOwner} AND lease_until > CURRENT_TIMESTAMP FOR UPDATE`;
       if (!leases.length) throw new ServiceUnavailableException('MATH_PUBLICATION_LEASE_LOST');
       const topic = await tx.cscaExamTopic.findFirst({ where: { id: binding.topicId, code: binding.topicCode, subject: 'math', status: 'published' } });
-      if (!topic || r.questionArtifact.cellId !== `${topic.code}:${binding.difficulty}`) throw new ServiceUnavailableException('MATH_PUBLICATION_TOPIC_REJECTED');
+      if (!topic || r.questionArtifact.cellId !== `${verifiedMathEngineTopicCode(topic.code)}:${binding.difficulty}`) throw new ServiceUnavailableException('MATH_PUBLICATION_TOPIC_REJECTED');
       const scopeId = output.task.scopeId, identityHash = r.questionArtifact.identity.identityHash;
       await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${scopeId}), hashtext(${identityHash}))`;
       const existing = await tx.cscaQuestion.findFirst({ where: { sourceType: MATH_ENGINE_SOURCE, topicId: topic.id,
