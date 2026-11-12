@@ -54,6 +54,7 @@ export function AgentAdaptiveResultMessage({
   onStartTargeted,
   onContinue,
   onOpenPlan,
+  onConfigurePractice,
   onOpenWeakness,
   onSettlementLoaded
 }: {
@@ -66,6 +67,7 @@ export function AgentAdaptiveResultMessage({
   onStartTargeted?: (selection: { subject: 'math' | 'physics' | 'chemistry'; questionCount: number; focusTopicId?: number; reviewItemId?: number; patternType?: string }) => void;
   onContinue?: () => void;
   onOpenPlan?: () => void;
+  onConfigurePractice?: () => void;
   onOpenWeakness?: () => void;
   onSettlementLoaded?: (settlement: AgentTaskSettlement) => void;
 }) {
@@ -260,6 +262,7 @@ export function AgentAdaptiveResultMessage({
 
         {renderFollowUp ? <div className="agent-report-follow-up">{renderFollowUp(report)}</div> : null}
 
+        {onConfigurePractice ? <div className="agent-report-actions"><button type="button" onClick={onConfigurePractice}><Icon name="lucide:sliders-horizontal" />{t('agent.freePractice.configure', '自选知识点和难度')}</button></div> : null}
         <div className="agent-report-disclosures">
           <details open={detailsOpen} onToggle={(event) => setDetailsOpen(event.currentTarget.open)}>
             <summary><span><Icon name="lucide:scan-search" />{isDiagnostic ? t('agent.report.viewDiagnosticEvidence', '查看诊断依据') : t('agent.report.viewLearningEvidence', '查看学习依据')}</span><Icon name="lucide:chevron-down" /></summary>

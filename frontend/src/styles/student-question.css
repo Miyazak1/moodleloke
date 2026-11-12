@@ -1,4 +1,15 @@
 /* Shared reading surface for actual practice and submitted-question review. */
+.agent-practice-configure {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 40px;
+  padding: 9px 12px; border: 1px solid #c8d7e5; border-radius: 9px; background: #f4f7ff;
+  color: #2448b5; font: inherit; font-size: 13px; font-weight: 650; cursor: pointer;
+}
+.agent-practice-configure:focus-visible { outline: 3px solid #315dff; outline-offset: 2px; }
+.agent-practice-configure > svg { flex: none; width: 17px; height: 17px; }
+.agent-workbench-configure { grid-column: 1 / -1; justify-self: start; }
+.agent-practice-entry-banner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 16px; border: 1px solid #dce6eb; border-radius: 12px; background: #fff; }
+.agent-practice-entry-banner > div { display: grid; gap: 4px; min-width: 0; }
+.agent-practice-entry-banner span { color: #405364; font-size: 14px; line-height: 1.6; }
 .special-question-card { min-width: 0; }
 .special-question-card .special-question-head { align-items: start; }
 .special-question-card .special-question-head > div { min-width: 0; }
@@ -34,6 +45,7 @@
 .agent-report-question-list article > div > small { color: #405364; }
 .special-question-card svg:not(.katex svg), .agent-report-question-list article > span > svg { flex-shrink: 0; }
 @media (max-width: 600px) {
+  .agent-practice-entry-banner > div { flex: 1 1 100%; }
   .agent-page .agent-workspace.is-task-active .agent-task-rail { width: 100%; }
   .agent-page .agent-task-rail-body > .special-practice-page { padding: 12px 10px; }
   .agent-page .agent-task-rail .special-question-card { padding: 16px 12px; gap: 16px; border-radius: 12px; }

@@ -45,6 +45,7 @@ type AgentLearningSettingsViewProps = {
   onGeneratePlan: () => void;
   onOpenWeakness: () => void;
   onGoPractice: () => void;
+  onConfigureFreePractice?: () => void;
 };
 
 const SUBJECTS: Array<{ code: Subject; icon: string; zh: string; en: string }> = [
@@ -131,7 +132,8 @@ export function AgentLearningSettingsView({
   onDecisionVisible,
   onGeneratePlan,
   onOpenWeakness,
-  onGoPractice
+  onGoPractice,
+  onConfigureFreePractice
 }: AgentLearningSettingsViewProps) {
   const { locale, t } = useI18n();
   const [panel, setPanel] = useState<Panel>(() => {
@@ -340,6 +342,10 @@ export function AgentLearningSettingsView({
 
   return (
     <div className="agent-settings-workspace">
+      {onConfigureFreePractice ? <div className="agent-practice-entry-banner">
+        <div><strong>{t('agent.freePractice.titleShort', '自由练习')}</strong><span>{t('agent.freePractice.configureHint', '选择知识点、难度和题量，再开始新一轮练习。')}</span></div>
+        <button type="button" className="agent-practice-configure" onClick={onConfigureFreePractice}><Icon name="lucide:sliders-horizontal" />{t('agent.freePractice.configure', '自选知识点和难度')}</button>
+      </div> : null}
       <nav aria-label={t('me.settings.sections', '设置分类')}>
         {([
           ['plan', 'lucide:list-checks', t('agent.journey.plan', '学习计划')],

@@ -428,16 +428,17 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     if (requestedSection === 'weakness' || requestedSection === 'resources' || requestedSection === 'qa' || requestedSection === 'settings') return requestedSection;
     if (params.has('agentPastPaper')) return 'resources';
     if (params.has('agentRoundId') || params.has('agentMockExamAttemptId') || params.has('agentTeachingDeliveryId')) return 'today';
+    if (params.get('mode') === 'free') return 'today';
     const saved = readMigratedLocalStorage(AGENT_JOURNEY_SECTION_STORAGE_KEY, LEGACY_AGENT_JOURNEY_SECTION_STORAGE_KEY);
     if (saved === 'history' || saved === 'progress') return 'settings';
     return saved === 'weakness' || saved === 'resources' || saved === 'qa' || saved === 'settings' ? saved : 'today';
   });
   const [learningMode, setLearningMode] = useState<'recommended' | 'free'>(() => {
     if (typeof window === 'undefined') return 'recommended';
-    if (new URLSearchParams(window.location.search).get('mode') === 'free') return 'free';
     return readMigratedLocalStorage(AGENT_LEARNING_MODE_STORAGE_KEY, LEGACY_AGENT_LEARNING_MODE_STORAGE_KEY) === 'free' ? 'free' : 'recommended';
   });
-  const [sessionLearningModeOverride, setSessionLearningModeOverride] = useState<'free' | null>(null);
+  const [sessionLearningModeOverride, setSessionLearningModeOverride] = useState<'free' | null>(() =>
+    typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('mode') === 'free' ? 'free' : null);
   const [defaultFreePracticeSubject, setDefaultFreePracticeSubject] = useState<'math' | 'physics' | 'chemistry'>(() => {
     if (typeof window === 'undefined') return 'math';
     const requested = new URLSearchParams(window.location.search).get('subject');
@@ -1585,8 +1586,22 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
   }
 
   function openSessionFreePractice() {
+    // Preserve any unfinished task. A submitted report may be left without
+    // changing its stored answers, settlement or learning evidence.
+    if (learningWorkspace?.phase === 'practice' || mockExamWorkspace?.phase === 'taking' || teachingDeliveryId) {
+      chooseJourneySection('today');
+      return;
+    }
     setSessionLearningModeOverride('free');
-    chooseJourneySection('today');
+    setLearningWorkspace(null);
+    setMockExamWorkspace(null);
+    setAdaptiveReport(null);
+    setPracticeSettlement(null);
+    setIsAdjustingFreePractice(false);
+    updateFreePracticeMode('single_topic');
+    showJourneySection('today');
+    const params = new URLSearchParams({ mode: 'free', subject: freePracticeSubject });
+    window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
   }
 
   function configuredFreePracticeSelection(): WeaknessPracticeSelection {
@@ -2531,6 +2546,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
                         onStartTargeted={(selection) => void beginFreePractice(selection)}
                         onContinue={workspaceTaskType === 'free_practice' ? () => void continueFreePracticeBatch() : undefined}
                         onOpenPlan={() => chooseJourneySection('settings')}
+                        onConfigurePractice={workspaceTaskType === 'free_practice' ? openSessionFreePractice : undefined}
                         onOpenWeakness={() => chooseJourneySection('weakness')}
                         onSettlementLoaded={(result) => {
                           setPracticeSettlement(result);
@@ -2800,6 +2816,9 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
                 <label><small>{t('agent.freePractice.mode', '练习方式')}</small><span><button type="button" className={freePracticeMode === 'mixed' ? 'active' : ''} onClick={() => updateFreePracticeMode('mixed')}>{t('agent.freePractice.mixedMode', '混合练习')}</button><button type="button" className={freePracticeMode === 'single_topic' ? 'active' : ''} onClick={() => updateFreePracticeMode('single_topic')}>{t('agent.freePractice.topicMode', '按知识点练习')}</button></span></label>
                 <label><small>{t('agent.freePractice.subject', '科目')}</small><span>{(['math', 'physics', 'chemistry'] as const).map((subject) => <button key={subject} type="button" className={freePracticeSubject === subject ? 'active' : ''} onClick={() => setFreePracticeSubject(subject)}>{subjectLabel(subject, t)}</button>)}</span></label>
                 {freePracticeMode === 'single_topic' ? <label><small>{t('agent.freePractice.topic', '知识点')}</small><select value={freePracticeTopicId ?? ''} disabled={freePracticeTopicsLoading || !freePracticeTopics.length} onChange={(event) => selectFreePracticeTopic(Number(event.target.value))}><option value="" disabled>{t('agent.freePractice.selectTopic', '请选择知识点')}</option>{freePracticeTopics.map((topic) => <option key={topic.topicId} value={topic.topicId}>{topic.title}</option>)}</select></label> : null}
+                {freePracticeSubject === 'math' ? <label><small>{t('agent.freePractice.difficulty', '题目难度')}</small><select value={freePracticeDifficulty} onChange={(event) => setFreePracticeDifficulty(event.target.value as typeof freePracticeDifficulty)}>
+                  <option value="auto">{t('agent.freePractice.autoDifficulty', '系统适配')}</option><option value="basic">{t('agent.freePractice.basicDifficulty', '基础')}</option><option value="medium">{t('agent.freePractice.mediumDifficulty', '中等')}</option><option value="hard">{t('agent.freePractice.hardDifficulty', '困难')}</option>
+                </select></label> : null}
                 <label><small>{t('agent.freePractice.batch', '题量')}</small><span>{([3, 5, 10] as const).map((count) => <button key={count} type="button" className={freePracticeCount === count ? 'active' : ''} onClick={() => setFreePracticeCount(count)}>{count}</button>)}</span></label>
                 <button type="button" className="confirm" disabled={freePracticeContinuationBusy !== null || (freePracticeMode === 'single_topic' && !freePracticeTopicId)} onClick={() => void continueFreePracticeBatch(configuredFreePracticeSelection())}>{t('agent.freePractice.startAdjusted', '按新设置开始')}<Icon name="lucide:arrow-right" /></button>
               </div> : null}
@@ -2855,6 +2874,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
               onGeneratePlan={() => chooseJourneySection('today')}
               onOpenWeakness={() => chooseJourneySection('weakness')}
               onGoPractice={openSessionFreePractice}
+              onConfigureFreePractice={learningWorkspace?.phase !== 'practice' && mockExamWorkspace?.phase !== 'taking' && !teachingDeliveryId ? openSessionFreePractice : undefined}
             />
           </> : journeySection === 'weakness' ? (
             <AgentWeaknessWorkspace
@@ -2895,7 +2915,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
               <p>{t('agent.freePractice.body', '每次只取一个小批次，做完可以继续，也可以随时结束；作答仍进入同一学习证据。')}</p></div>
               <span className={isSending ? 'agent-live-status running agent-workbench-status' : 'agent-live-status agent-workbench-status'} role="status" aria-live="polite"><i />{isSending ? runStatus : t('agent.status.ready', '学习数据已连接')}</span>
               {sessionLearningModeOverride === 'free' && learningMode === 'recommended' ? (
-                <button type="button" className="agent-session-mode-reset" onClick={() => setSessionLearningModeOverride(null)}>
+                <button type="button" className="agent-session-mode-reset" onClick={() => { setSessionLearningModeOverride(null); replaceAgentJourneySectionRoute('today'); }}>
                   <Icon name="lucide:undo-2" />{t('agent.freePractice.backToRecommendation', '返回系统推荐')}
                 </button>
               ) : null}
@@ -2951,6 +2971,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
               <h2>{resumableWorkspace ? resumableHeading : t('agent.context.startHeading', '今天从这一项开始')}</h2>
               <p>{resumableWorkspace ? resumableBody : t('agent.context.body', '根据你的目标、真实作答和当前题源安排下一步。')}</p></div>
               <span className={isSending ? 'agent-live-status running agent-workbench-status' : 'agent-live-status agent-workbench-status'} role="status" aria-live="polite"><i />{isSending ? runStatus : t('agent.status.ready', '学习数据已连接')}</span>
+              {!resumableWorkspace ? <button type="button" className="agent-practice-configure agent-workbench-configure" onClick={openSessionFreePractice} disabled={isStartingFreePractice || isStartingLearning}><Icon name="lucide:sliders-horizontal" />{t('agent.freePractice.configure', '自选知识点和难度')}</button> : null}
             </section>
             {!resumableWorkspace && dailyPlan && dailyPrimaryTask ? <section className="agent-learning-entry-card agent-daily-plan-card" data-state={dailyPrimaryTask.kind}>
               <header><span className="agent-kicker">{t('agent.dailyPlan.kicker', '今日首选任务')}</span><small>{t('agent.dailyPlan.rule', '由目标、到期任务和真实学习证据排序')}</small></header>

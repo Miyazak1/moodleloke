@@ -498,6 +498,41 @@ test('does not present a submitted report as an interrupted learning task', asyn
   await expect(page).not.toHaveURL(/agentRoundId=/);
 });
 
+test('opens topic and difficulty selection from the default workbench before starting practice', async ({ page }) => {
+  await mockAgentWorkspace(page);
+  let starts = 0;
+  let input: Record<string, unknown> | null = null;
+  await page.route('**/api/v1/agent/free-practice/start', async route => {
+    starts += 1;
+    input = route.request().postDataJSON();
+    return json(route, { message: 'controlled unavailable supply' }, 503);
+  });
+  await page.goto('/agent');
+  await page.getByRole('button', { name: '自选知识点和难度', exact: true }).click();
+  const form = page.locator('.agent-free-practice-card');
+  await expect(form.getByLabel('题目难度', { exact: true })).toBeVisible();
+  await expect(form.getByLabel('选择知识点', { exact: false })).toBeEnabled();
+  expect(starts).toBe(0);
+  await form.getByLabel('选择知识点', { exact: false }).selectOption('11');
+  await form.getByLabel('题目难度', { exact: true }).selectOption('hard');
+  await form.getByRole('radio', { name: '3 题', exact: true }).click();
+  await form.getByRole('button', { name: '开始练习', exact: true }).click();
+  await expect.poll(() => input).toMatchObject({ subject: 'math', practiceMode: 'single_topic', focusTopicId: 11, difficulty: 'hard', questionCount: 3 });
+  expect(await page.evaluate(() => localStorage.getItem('moodlelike.agent.learningMode'))).not.toBe('free');
+});
+
+test('opens configurable practice from learning settings and preserves the explicit route on refresh', async ({ page }) => {
+  await mockAgentWorkspace(page);
+  await page.goto('/agent?agentSection=settings');
+  await page.locator('.agent-settings-workspace').getByRole('button', { name: '自选知识点和难度', exact: true }).click();
+  await expect(page.locator('.agent-free-practice-card').getByLabel('题目难度', { exact: true })).toBeVisible();
+  await expect(page).toHaveURL(/mode=free/);
+  await page.reload();
+  await expect(page.locator('.agent-free-practice-card').getByLabel('题目难度', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: '返回系统推荐', exact: true }).click();
+  await expect(page).not.toHaveURL(/mode=free/);
+});
+
 test('starts student-initiated free practice without turning it into a recommended plan', async ({ page }, testInfo) => {
   await mockAgentWorkspace(page);
   await page.addInitScript(() => window.localStorage.setItem('moodlelike.agent.learningMode', 'free'));
@@ -833,6 +868,10 @@ test('restores a verification report and shows the durable learning verdict', as
   await page.getByLabel('本轮学习报告').getByRole('button', { name: '回到错题与薄弱点', exact: true }).click();
   await expect(page.getByRole('heading', { name: '先处理最影响下一步的薄弱点' })).toBeVisible();
   await expect(page).toHaveURL(/agentSection=weakness/);
+  await page.goto(`/agent?agentContextId=${conversationId}&agentArtifactId=verification-task-1&agentRoundId=191&agentView=report&agentTaskType=free_practice&agentSubject=physics`);
+  await page.getByLabel('本轮学习报告').getByRole('button', { name: '自选知识点和难度', exact: true }).click();
+  await expect(page.locator('.agent-free-practice-card')).toBeVisible();
+  await expect(page).not.toHaveURL(/agentRoundId=/);
 });
 
 test('inherits the CSCALite personal center, language control, avatar, and organization settings', async ({ page }, testInfo) => {
