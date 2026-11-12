@@ -17,6 +17,7 @@ export class VerifiedQuestionPublicationService {
 
   async publish(output: MathGenerationOutput, binding: { topicId: number; topicCode: string; difficulty: MathDifficulty; userId?: number; excludedIds?: number[]; taskId: string; leaseOwner: string }) {
     this.registry.assertVerifiedMath(output);
+    const catalog = this.registry.mathCatalog().cells;
     const r = output.result, candidate = r.candidate;
     if (!isStandardStudentChoiceQuestion(candidate) || !r.questionArtifact.identity.identityHash) throw new ServiceUnavailableException('MATH_PUBLICATION_SCHEMA_REJECTED');
     return this.prisma.$transaction(async tx => {
@@ -24,7 +25,7 @@ export class VerifiedQuestionPublicationService {
         AND state = 'running' AND lease_owner = ${binding.leaseOwner} AND lease_until > CURRENT_TIMESTAMP FOR UPDATE`;
       if (!leases.length) throw new ServiceUnavailableException('MATH_PUBLICATION_LEASE_LOST');
       const topic = await tx.cscaExamTopic.findFirst({ where: { id: binding.topicId, code: binding.topicCode, subject: 'math', status: 'published' } });
-      if (!topic || !verifiedMathScopeMatches(topic.code, binding.difficulty, r.questionArtifact.cellId, output.task.scopeId, this.registry.mathCatalog().cells)) throw new ServiceUnavailableException('MATH_PUBLICATION_TOPIC_REJECTED');
+      if (!topic || !verifiedMathScopeMatches(topic.code, binding.difficulty, r.questionArtifact.cellId, output.task.scopeId, catalog)) throw new ServiceUnavailableException('MATH_PUBLICATION_TOPIC_REJECTED');
       const scopeId = output.task.scopeId, identityHash = r.questionArtifact.identity.identityHash;
       await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${scopeId}), hashtext(${identityHash}))`;
       const existing = await tx.cscaQuestion.findFirst({ where: { sourceType: MATH_ENGINE_SOURCE,

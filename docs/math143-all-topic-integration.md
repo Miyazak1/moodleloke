@@ -52,10 +52,15 @@ production modifications, or frozen bundle changes were made by that review.
   it retries a fresh instance instead of storing a second copy under an alias.
   Selection also excludes already exposed generated identities across aliases,
   including any copies created before this correction. No old rows are deleted.
-- Continuation uses the submitted artifact's topic, difficulty and batch size,
+- Continuation uses the persisted round plan and report's topic, difficulty and batch size,
   preserving them across refresh and ignoring unrelated stored defaults.
 - A successful continuation is opened even if the subsequent journey-summary
   refresh fails. Error messages retain supported shortage/scope distinctions.
+- Explicit generated-practice launches own their sessions, so a failed launch's
+  unsubmitted round cannot change the next selection's topic or difficulty. Old
+  rounds and answers remain intact; launch request idempotency remains in force.
+- Catalog integrity checks run before the publication transaction, keeping
+  frozen-file reads outside the locked database transaction.
 
 ## Acceptance commands
 

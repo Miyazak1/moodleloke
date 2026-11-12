@@ -140,6 +140,10 @@ async function main() {
     assert.equal(continuedStored.generationMetadata.hostTopicCode, topicCode);
     assert.equal(continuedStored.generationMetadata.cellId, 'M-GEO-002:hard');
     console.log('VERIFIED_CONTINUATION_OK', topicCode);
+    if (process.argv.includes('--alias-only')) {
+      console.log('ALIAS_ONLY_ACCEPTANCE_OK: historical alias exposure, verified generation and unseen continuation');
+      return;
+    }
     const independent = await app.get(AdaptiveQuestionProviderService).pickIndependentVerificationQuestions(userId, topic.id, 3);
     assert.ok(independent.every(item => item.questionId !== question.id), 'practice qualification must not become independent measurement');
     const supply = app.get(VerifiedQuestionSupplyService);

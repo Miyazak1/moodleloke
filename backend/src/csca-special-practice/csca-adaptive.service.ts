@@ -498,7 +498,10 @@ export class CscaAdaptiveService {
       && requestedMode === 'practice' && this.questionSupply?.isEnabled();
     const mode = generatedFreePractice ? 'practice' : hasDiagnostic ? (requestedMode === 'diagnostic' ? 'practice' : requestedMode) : 'diagnostic';
     const questionLanguage = cleanAdaptiveQuestionLanguage(input.questionLanguage ?? input.language);
-    const activeSession = await this.prisma.cscaAdaptiveSession.findFirst({
+    // Explicit generated-practice launches own their sessions. Reusing a
+    // global active session could return an orphaned round from a failed
+    // launch, with a different requested topic/difficulty on the next attempt.
+    const activeSession = generatedFreePractice ? null : await this.prisma.cscaAdaptiveSession.findFirst({
       where: { userId, subject, mode, status: 'active' },
       orderBy: [{ createdAt: 'desc' }, { id: 'desc' }]
     });

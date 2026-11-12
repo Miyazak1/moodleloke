@@ -53,7 +53,7 @@ const results = [];
 const outputFile = path.join(directory, 'run-' + Date.now() + '.json');
 const save = () => fs.writeFileSync(outputFile, JSON.stringify({ generatedAt: new Date().toISOString(), count, resumeFiles, results, providerCalls: 0, costUsd: 0 }, null, 2));
 async function main() {
-  const app = await NestFactory.create(AppModule, { logger: false });
+  const app = await NestFactory.create(AppModule, { logger: ['error'] });
   await app.listen(0, '127.0.0.1');
   const prisma = app.get(PrismaService);
   const catalog = app.get(QuestionEnginePluginRegistryService).mathCatalog().cells;
@@ -74,15 +74,45 @@ async function main() {
     const credentials = { email: 'math-matrix-' + randomUUID() + '@example.test', password: 'Matrix-acceptance-only-123!' };
     const auth = await request('/api/v1/auth/register', 'POST', credentials);
     token = auth.tokens.accessToken;
+    let authenticatedAt = Date.now();
     const userId = Number(auth.user.id);
     await prisma.user.update({ where: { id: userId }, data: { emailVerifiedAt: new Date() } });
+    if (process.argv.includes('--orphan-only')) {
+      const { CscaAdaptiveService } = require('../dist/backend/src/csca-special-practice/csca-adaptive.service.js');
+      const adaptive = app.get(CscaAdaptiveService);
+      const setTopic = await prisma.cscaExamTopic.findUniqueOrThrow({ where: { code: 'math-set' } });
+      const calcTopic = await prisma.cscaExamTopic.findUniqueOrThrow({ where: { code: 'M-CALC-001' } });
+      const orphan = await adaptive.createSession(userId, { subject: 'math', mode: 'practice', questionLanguage: 'zh' }, { studentInitiatedPractice: true });
+      const orphanRound = await adaptive.createRound(userId, String(orphan.id), { questionCount: 3, topicMode: 'single_topic', focusTopicId: setTopic.id, difficulty: 'basic' });
+      const input = { clientRequestId: randomUUID(), subject: 'math', practiceMode: 'single_topic', focusTopicId: calcTopic.id, difficulty: 'hard', questionCount: 3, questionLanguage: 'zh' };
+      const launch = await request('/api/v1/agent/free-practice/start', 'POST', input);
+      assert.notEqual(launch.sessionId, orphan.id, 'new explicit launch must not reuse an unbound old session');
+      assert.notEqual(launch.roundId, orphanRound.round.id);
+      const detail = await request('/api/v1/csca-special-practice/adaptive/rounds/' + launch.roundId);
+      assert.equal(detail.questions.length, 3);
+      for (const question of detail.questions) {
+        const stored = await prisma.cscaQuestion.findUniqueOrThrow({ where: { id: question.id } });
+        assert.equal(stored.topicId, calcTopic.id); assert.equal(stored.designedDifficulty, '较难');
+      }
+      const repeat = await request('/api/v1/agent/free-practice/start', 'POST', input);
+      assert.equal(repeat.roundId, launch.roundId);
+      assert.equal((await prisma.cscaAdaptiveRound.findUniqueOrThrow({ where: { id: orphanRound.round.id } })).submittedAt, null, 'old answers must remain intact');
+      fs.writeFileSync(path.join(directory, 'orphan-session-check.json'), JSON.stringify({ status: 'pass',
+        orphanRoundId: orphanRound.round.id, newRoundId: launch.roundId, selectedCode: 'M-CALC-001', difficulty: 'hard',
+        originalPreserved: true, launchIdempotent: true, providerCalls: 0 }, null, 2));
+      console.log('ORPHAN_SESSION_ISOLATION_OK: fresh topic/difficulty, idempotent launch, preserved old round');
+      return;
+    }
     for (const [code, title] of topics) {
       const topic = await prisma.cscaExamTopic.upsert({ where: { code }, create: { code, title, subject: 'math', status: 'published', syllabusVersion: '2025' }, update: {} });
       for (const difficulty of bands) {
         if (completed.has(code + ':' + difficulty)) continue;
         // Long matrices may outlive the 15-minute access token. Renew through
         // the ordinary login endpoint instead of weakening token validation.
-        token = (await request('/api/v1/auth/login', 'POST', credentials)).tokens.accessToken;
+        if (Date.now() - authenticatedAt > 8 * 60 * 1000) {
+          token = (await request('/api/v1/auth/login', 'POST', credentials)).tokens.accessToken;
+          authenticatedAt = Date.now();
+        }
         const started = Date.now();
         const row = { code, title, difficulty, count, state: 'running' };
         results.push(row); save();
@@ -147,6 +177,9 @@ async function main() {
         } catch (error) {
           Object.assign(row, { state: 'fail', error: error.message, durationMs: Date.now() - started });
           console.error('MATRIX_FAIL', code, difficulty, error.message);
+          // Keep a failed case from reusing its unsubmitted session in the
+          // next independent matrix case. Preserve all test rows for diagnosis.
+          await prisma.cscaAdaptiveSession.updateMany({ where: { userId, status: 'active' }, data: { status: 'completed' } });
         }
         save();
       }
