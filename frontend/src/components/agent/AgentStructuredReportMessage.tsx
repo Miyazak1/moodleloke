@@ -53,6 +53,7 @@ export function AgentAdaptiveResultMessage({
   onReportLoaded,
   onStartTargeted,
   onContinue,
+  isPreparingNext = false,
   onOpenPlan,
   onConfigurePractice,
   onOpenWeakness,
@@ -66,6 +67,7 @@ export function AgentAdaptiveResultMessage({
   onReportLoaded?: (report: AdaptiveRoundReport | null) => void;
   onStartTargeted?: (selection: { subject: 'math' | 'physics' | 'chemistry'; questionCount: number; focusTopicId?: number; reviewItemId?: number; patternType?: string }) => void;
   onContinue?: () => void;
+  isPreparingNext?: boolean;
   onOpenPlan?: () => void;
   onConfigurePractice?: () => void;
   onOpenWeakness?: () => void;
@@ -76,6 +78,7 @@ export function AgentAdaptiveResultMessage({
   const [error, setError] = useState('');
   const [loadRevision, setLoadRevision] = useState(0);
   const [isContinuing, setIsContinuing] = useState(false);
+  const preparationBusy = isContinuing || isPreparingNext;
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [questionsOpen, setQuestionsOpen] = useState(false);
   const [settlement, setSettlement] = useState<AgentTaskSettlement | null>(null);
@@ -186,6 +189,7 @@ export function AgentAdaptiveResultMessage({
   }
 
   function runDecisionAction() {
+    if (preparationBusy) return;
     const next = decision?.nextStep;
     if (!next || next.type === 'continue_practice' || next.type === 'broaden_coverage') {
       if (onContinue) onContinue();
@@ -248,21 +252,21 @@ export function AgentAdaptiveResultMessage({
         {customActions ?? (isVerification ? (
           <div className="agent-report-actions">
             {wrongItems.length ? <button type="button" onClick={openQuestionReview}><Icon name="lucide:book-open-check" />{t('agent.report.reviewFirst', '先看错题')}</button> : null}
-            {verificationResult?.verdict === 'repaired' && onContinue ? <button type="button" className="primary" onClick={onContinue}><Icon name="lucide:arrow-right" />{t('agent.reportVerification.expandCoverage', '继续扩大知识覆盖')}</button> : null}
+            {verificationResult?.verdict === 'repaired' && onContinue ? <button type="button" className="primary" disabled={preparationBusy} onClick={onContinue}><Icon name="lucide:arrow-right" />{t('agent.reportVerification.expandCoverage', '继续扩大知识覆盖')}</button> : null}
             {onOpenWeakness ? <button type="button" className={verificationResult?.verdict === 'repaired' ? '' : 'primary'} onClick={onOpenWeakness}><Icon name="lucide:history" />{verificationResult?.verdict === 'repaired' ? t('agent.reportVerification.viewWeakness', '查看薄弱点') : t('agent.reportVerification.backWeakness', '回到错题与薄弱点')}</button> : null}
           </div>
         ) : (
           <div className="agent-report-actions">
             {wrongItems.length ? <button type="button" onClick={openQuestionReview}><Icon name="lucide:book-open-check" />{significantMistakes ? t('agent.mistakeResponse.reviewButton', '复盘这 {count} 道错题').replace('{count}', String(summary.wrongCount)) : t('agent.report.reviewFirst', '先看错题')}</button> : null}
-            <button type="button" className="primary" disabled={isContinuing || decision?.nextStep.type === 'delayed_verification'} onClick={runDecisionAction}><Icon name={isContinuing ? 'lucide:loader-circle' : decision?.nextStep.type === 'delayed_verification' ? 'lucide:calendar-clock' : 'lucide:play'} />{isContinuing ? t('agent.report.preparing', '正在准备') : significantMistakes && (decision?.nextStep.type === 'review_mistakes' || decision?.nextStep.type === 'targeted_practice') ? t('agent.mistakeResponse.targetedButton', '复盘后练同知识点新题') : decision?.nextStep.label ?? t('agent.report.nextRound', '继续下一轮')}</button>
-            {onContinue && (decision?.nextStep.type === 'review_mistakes' || decision?.nextStep.type === 'targeted_practice') ? <button type="button" disabled={isContinuing} onClick={onContinue}><Icon name="lucide:arrow-right" />{t('agent.reportVerification.continueBatch', '继续下一批')}</button> : null}
+            <button type="button" className="primary" disabled={preparationBusy || decision?.nextStep.type === 'delayed_verification'} onClick={runDecisionAction}><Icon name={preparationBusy ? 'lucide:loader-circle' : decision?.nextStep.type === 'delayed_verification' ? 'lucide:calendar-clock' : 'lucide:play'} />{preparationBusy ? t('agent.report.preparing', '正在准备') : significantMistakes && (decision?.nextStep.type === 'review_mistakes' || decision?.nextStep.type === 'targeted_practice') ? t('agent.mistakeResponse.targetedButton', '复盘后练同知识点新题') : decision?.nextStep.label ?? t('agent.report.nextRound', '继续下一轮')}</button>
+            {onContinue && (decision?.nextStep.type === 'review_mistakes' || decision?.nextStep.type === 'targeted_practice') ? <button type="button" disabled={preparationBusy} onClick={onContinue}><Icon name={isPreparingNext ? 'lucide:loader-circle' : 'lucide:arrow-right'} />{isPreparingNext ? t('agent.freePractice.prepareNextTitle', '正在准备下一批练习') : t('agent.reportVerification.continueBatch', '继续下一批')}</button> : null}
             {onOpenPlan ? <button type="button" onClick={onOpenPlan}><Icon name="lucide:calendar-range" />{t('agent.reportVerification.viewPlan', '查看学习计划')}</button> : null}
           </div>
         ))}
 
         {renderFollowUp ? <div className="agent-report-follow-up">{renderFollowUp(report)}</div> : null}
 
-        {onConfigurePractice ? <div className="agent-report-actions"><button type="button" onClick={onConfigurePractice}><Icon name="lucide:sliders-horizontal" />{t('agent.freePractice.configure', '自选知识点和难度')}</button></div> : null}
+        {onConfigurePractice ? <div className="agent-report-actions"><button type="button" disabled={preparationBusy} onClick={onConfigurePractice}><Icon name="lucide:sliders-horizontal" />{t('agent.freePractice.configure', '自选知识点和难度')}</button></div> : null}
         <div className="agent-report-disclosures">
           <details open={detailsOpen} onToggle={(event) => setDetailsOpen(event.currentTarget.open)}>
             <summary><span><Icon name="lucide:scan-search" />{isDiagnostic ? t('agent.report.viewDiagnosticEvidence', '查看诊断依据') : t('agent.report.viewLearningEvidence', '查看学习依据')}</span><Icon name="lucide:chevron-down" /></summary>

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from 'react';
 import { Icon } from '../components/Icon';
+import { AgentPracticePreparation, type PracticePreparation } from '../components/agent/AgentPracticePreparation';
 import { MathContent } from '../components/MathContent';
 import { UserAvatar } from '../components/UserAvatar';
 import { AgentPastPaperWorkspace } from '../components/agent/AgentPastPaperWorkspace';
@@ -480,6 +481,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
   const [isStartingLearning, setIsStartingLearning] = useState(false);
   const [learningEntryError, setLearningEntryError] = useState('');
   const [freePracticeContinuationBusy, setFreePracticeContinuationBusy] = useState<'continue' | 'end' | null>(null);
+  const [practicePreparation, setPracticePreparation] = useState<PracticePreparation | null>(null);
   const [isAdjustingFreePractice, setIsAdjustingFreePractice] = useState(false);
   const [journeyState, setJourneyState] = useState<AgentJourneyState | null>(null);
   const [journeyOverview, setJourneyOverview] = useState<AgentJourneyOverview | null>(null);
@@ -1590,6 +1592,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
   }
 
   function openSessionFreePractice() {
+    if (isStartingFreePractice || freePracticeContinuationBusy) return;
     // Preserve any unfinished task. A submitted report may be left without
     // changing its stored answers, settlement or learning evidence.
     if (learningWorkspace?.phase === 'practice' || mockExamWorkspace?.phase === 'taking' || teachingDeliveryId) {
@@ -1660,7 +1663,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
   }
 
   async function beginFreePractice(selection?: WeaknessPracticeSelection): Promise<boolean> {
-    if (isStartingFreePractice || !currentUser) return false;
+    if (isStartingFreePractice || freePracticeContinuationBusy || !currentUser) return false;
     const next = selection ?? configuredFreePracticeSelection();
     const practiceMode = next.practiceMode ?? (next.focusTopicId ? 'single_topic' : 'mixed');
     setFreePracticeSubject(next.subject);
@@ -1672,6 +1675,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     }
     clearErrorNotice();
     setIsStartingFreePractice(true);
+    setPracticePreparation({ kind: 'start', phase: 'preparing', count: next.questionCount });
     try {
       const launch = await startAgentFreePractice({
         clientRequestId: clientRequestId(),
@@ -1684,8 +1688,9 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
         ...(next.patternType ? { patternType: next.patternType } : {}),
         ...(next.dailyPlanContext ? { dailyPlanContext: next.dailyPlanContext } : {})
       });
-      await loadJourneyState().catch(() => null);
+      setPracticePreparation(null);
       openLearningWorkspace(launch);
+      await loadJourneyState().catch(() => null);
       return true;
     } catch (nextError) {
       const failureMessage = formatAgentUserError(
@@ -1700,6 +1705,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
       return false;
     } finally {
       setIsStartingFreePractice(false);
+      setPracticePreparation(null);
     }
   }
 
@@ -1729,12 +1735,14 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
   }
 
   async function continueFreePracticeBatch(selection?: WeaknessPracticeSelection) {
-    if (!learningWorkspace?.artifactId || freePracticeContinuationBusy) return;
+    if (!learningWorkspace?.artifactId || freePracticeContinuationBusy || isStartingFreePractice) return;
     const next = selection ?? currentFreePracticeConfig();
     clearErrorNotice();
     setFreePracticeContinuationBusy('continue');
+    setPracticePreparation({ kind: 'continue', phase: 'settling', count: next.questionCount });
     try {
       await settleAgentPractice(learningWorkspace.roundId);
+      setPracticePreparation({ kind: 'continue', phase: 'preparing', count: next.questionCount });
       const launch = await continueAgentFreePractice(learningWorkspace.artifactId, {
         clientRequestId: clientRequestId(), subject: next.subject, questionCount: next.questionCount,
         ...(next.subject === 'math' && next.difficulty ? { difficulty: next.difficulty } : {}),
@@ -1743,6 +1751,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
         ...(next.focusTopicId ? { focusTopicId: next.focusTopicId } : {})
       });
       setIsAdjustingFreePractice(false);
+      setPracticePreparation(null);
       openLearningWorkspace(launch);
       await loadJourneyState().catch(() => undefined);
     } catch (nextError) {
@@ -1752,6 +1761,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
       );
     } finally {
       setFreePracticeContinuationBusy(null);
+      setPracticePreparation(null);
     }
   }
 
@@ -2295,6 +2305,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
 
   return (
     <div className="agent-page">
+      {practicePreparation ? <AgentPracticePreparation preparation={practicePreparation} /> : null}
       <div
         className={[
           hasTaskWorkspace ? 'agent-workspace is-task-active' : 'agent-workspace',
@@ -2572,6 +2583,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
                         onNavigate={(path) => void handleLearningWorkspaceNavigation(path)}
                         onStartTargeted={(selection) => void beginFreePractice(selection)}
                         onContinue={workspaceTaskType === 'free_practice' ? () => void continueFreePracticeBatch() : undefined}
+                        isPreparingNext={freePracticeContinuationBusy === 'continue' || isStartingFreePractice}
                         onOpenPlan={() => chooseJourneySection('settings')}
                         onConfigurePractice={workspaceTaskType === 'free_practice' ? openSessionFreePractice : undefined}
                         onOpenWeakness={() => chooseJourneySection('weakness')}

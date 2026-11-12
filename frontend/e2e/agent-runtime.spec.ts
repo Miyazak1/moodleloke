@@ -502,9 +502,12 @@ test('opens topic and difficulty selection from the default workbench before sta
   await mockAgentWorkspace(page);
   let starts = 0;
   let input: Record<string, unknown> | null = null;
+  let releaseStart!: () => void;
+  const startGate = new Promise<void>(resolve => { releaseStart = resolve; });
   await page.route('**/api/v1/agent/free-practice/start', async route => {
     starts += 1;
     input = route.request().postDataJSON();
+    await startGate;
     return json(route, { message: 'controlled unavailable supply' }, 503);
   });
   await page.goto('/agent');
@@ -517,7 +520,15 @@ test('opens topic and difficulty selection from the default workbench before sta
   await form.getByLabel('题目难度', { exact: true }).selectOption('hard');
   await form.getByRole('radio', { name: '3 题', exact: true }).click();
   await form.getByRole('button', { name: '开始练习', exact: true }).click();
+  await expect(page.locator('.agent-practice-preparation')).toContainText('正在准备本次练习');
+  await expect(page.locator('.agent-practice-preparation')).toContainText('本批 3 题');
+  await expect(page.locator('.agent-practice-preparation')).not.toContainText('%');
+  await expect(form.getByRole('button', { name: '正在准备题目', exact: true })).toBeDisabled();
   await expect.poll(() => input).toMatchObject({ subject: 'math', practiceMode: 'single_topic', focusTopicId: 11, difficulty: 'hard', questionCount: 3 });
+  expect(starts).toBe(1);
+  releaseStart();
+  await expect(page.locator('.agent-practice-preparation')).toHaveCount(0);
+  await expect(form.getByRole('button', { name: '开始练习', exact: true })).toBeEnabled();
   expect(await page.evaluate(() => localStorage.getItem('moodlelike.agent.learningMode'))).not.toBe('free');
 });
 
@@ -1357,6 +1368,8 @@ test('keeps free-practice defaults separate and preserves the current batch when
   let practiceSettled = false;
   let postSettlementOverviewCalls = 0;
   let continuationBody: Record<string, unknown> | null = null;
+  let releaseContinuation!: () => void;
+  const continuationGate = new Promise<void>(resolve => { releaseContinuation = resolve; });
   const freeTaskArtifact = {
     ...artifact,
     id: 'free-task-1',
@@ -1414,6 +1427,7 @@ test('keeps free-practice defaults separate and preserves the current batch when
   }));
   await page.route('**/api/v1/agent/free-practice/free-task-1/continue', async (route) => {
     continuationBody = await route.request().postDataJSON();
+    await continuationGate;
     return json(route, {
       schemaVersion: '1', artifactId: 'free-task-2', conversationId, sessionId: 52, roundId: 82,
       mode: 'practice', questionCount: 5, subject: 'math', questionLanguage: 'zh', toolName: 'continue_student_initiated_practice', taskType: 'free_practice',
@@ -1466,7 +1480,13 @@ test('keeps free-practice defaults separate and preserves the current batch when
     ? reportRail.getByRole('button', { name: '继续下一批', exact: true })
     : page.getByLabel('本轮学习报告').getByRole('button', { name: '继续下一批', exact: true });
   await continueButton.click();
+  await expect(page.locator('.agent-practice-preparation')).toContainText('正在准备下一批练习');
+  await expect(page.locator('.agent-practice-preparation')).toContainText('本轮作答和结果已保留');
+  await expect(page.getByLabel('本轮学习报告').getByRole('button', { name: '正在准备下一批练习', exact: true })).toBeDisabled();
+  await expect.poll(() => continuationBody).not.toBeNull();
+  releaseContinuation();
   await expect(page).toHaveURL(/agentRoundId=82/);
+  await expect(page.locator('.agent-practice-preparation')).toHaveCount(0);
   expect(continuationBody).toMatchObject({ subject: 'math', questionCount: 5, practiceMode: 'single_topic', focusTopicId: 11, difficulty: 'hard', questionLanguage: 'zh' });
   await expect.poll(() => postSettlementOverviewCalls).toBeGreaterThan(0);
   await expect(page.locator('.agent-composer')).toHaveCount(0);

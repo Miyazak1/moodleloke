@@ -1,4 +1,32 @@
 /* Shared reading surface for actual practice and submitted-question review. */
+.agent-practice-preparation {
+  position: fixed; z-index: 80; right: 24px; bottom: 24px; box-sizing: border-box;
+  width: min(390px, calc(100vw - 32px)); padding: 22px; border: 1px solid #cfdded;
+  border-radius: 20px; background: #fff; color: #182c3b;
+  box-shadow: 0 12px 50px #24496628; font: 14px/1.6 system-ui, sans-serif;
+}
+.agent-practice-preparation strong { display: block; font-size: 18px; }
+.agent-practice-preparation p { margin: 6px 0 14px; color: #526678; }
+.agent-practice-preparation small { display: block; margin-top: 10px; color: #526678; }
+.agent-preparation-art { height: 70px; width: 110px; position: relative; margin: 0 auto 14px; }
+.agent-preparation-paper { position: absolute; width: 58px; height: 64px; border: 1px solid #cfdded; border-radius: 10px; background: #f3f7ff; }
+.agent-preparation-paper.back { left: 12px; top: 3px; transform: rotate(-12deg); }
+.agent-preparation-paper.front { left: 32px; top: 0; padding: 10px; box-sizing: border-box; background: #fff; animation: agent-paper-float 2.6s ease-in-out infinite; }
+.agent-preparation-paper > svg { width: 20px; height: 20px; color: #315dff; }
+.agent-preparation-paper i { display: block; height: 3px; margin-top: 5px; border-radius: 3px; background: #dce7f5; }
+.agent-preparation-paper i:last-child { width: 65%; }
+.agent-preparation-orbit { position: absolute; right: 0; bottom: 0; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #dff8ef; color: #07866a; }
+.agent-preparation-orbit svg { width: 18px; height: 18px; animation: agent-preparation-spin 1.5s linear infinite; }
+.agent-preparation-track { height: 4px; border-radius: 4px; overflow: hidden; background: #e9eff7; }
+.agent-preparation-track i { display: block; width: 35%; height: 100%; border-radius: inherit; background: linear-gradient(90deg,#315dff,#11bf9b); animation: agent-preparation-sweep 1.8s ease-in-out infinite; }
+.agent-preparation-meta { display: flex; justify-content: space-between; gap: 8px; margin-top: 10px; font-size: 12px; color: #526678; }
+.agent-practice-preparation .agent-preparation-saved { display: flex; align-items: center; gap: 6px; color: #07866a; }
+.agent-preparation-saved svg { width: 15px; height: 15px; }
+@keyframes agent-paper-float { 50% { transform: translateY(-5px) rotate(3deg); } }
+@keyframes agent-preparation-spin { to { transform: rotate(360deg); } }
+@keyframes agent-preparation-sweep { from { transform: translateX(-110%); } to { transform: translateX(390%); } }
+@media (max-width: 600px) { .agent-practice-preparation { right: 16px; bottom: max(16px,env(safe-area-inset-bottom)); padding: 18px; } }
+@media (prefers-reduced-motion: reduce) { .agent-preparation-paper.front, .agent-preparation-orbit svg, .agent-preparation-track i { animation: none; } }
 .agent-practice-configure {
   display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 40px;
   padding: 9px 12px; border: 1px solid #c8d7e5; border-radius: 9px; background: #f4f7ff;
