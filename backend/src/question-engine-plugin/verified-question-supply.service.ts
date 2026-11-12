@@ -46,10 +46,12 @@ export class VerifiedQuestionSupplyService implements QuestionSupplyProductionAd
   async preparePractice(userId: number, requestKey: string, topics: AdaptivePlannedTopic[], count: number, difficulty?: MathDifficulty, excludedIds: number[] = []) {
     if (!this.isEnabled() || !topics.length) return;
     const catalog = this.registry.mathCatalog().cells;
+    const supported = topics.map(topic => ({ topic,
+      band: difficulty ?? (/难|提高|挑战|hard/.test(topic.targetDifficulty) ? 'hard' : /中|medium/.test(topic.targetDifficulty) ? 'medium' : 'basic') as MathDifficulty
+    })).filter(item => verifiedMathCellsForTopic(item.topic.code, item.band, catalog).length > 0);
+    if (!supported.length) return;
     for (let index = 0; index < count; index++) {
-      const topic = topics[index % topics.length];
-      const band = difficulty ?? (/难|提高|挑战|hard/.test(topic.targetDifficulty) ? 'hard' : /中|medium/.test(topic.targetDifficulty) ? 'medium' : 'basic');
-      if (!verifiedMathCellsForTopic(topic.code, band, catalog).length) continue;
+      const { topic, band } = supported[index % supported.length];
       const dispatched = await this.dispatch({ schemaVersion: 'question-supply-plugin-v2', source: 'student_free_practice', subjectCode: 'math',
         requestKey: `${requestKey}:${index}`, topicId: topic.topicId, topicCode: topic.code, difficulty: band,
         requestedCount: 1, userId, excludedIds, sourcePolicy: 'reviewed_published_only' });

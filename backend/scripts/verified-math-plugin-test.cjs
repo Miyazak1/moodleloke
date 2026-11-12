@@ -8,12 +8,23 @@ const { QuestionGeneratorProviderService } = require('../dist/backend/src/ai-que
 const { evaluateQuestionCandidateWriteGate } = require('../dist/backend/src/question-engine-plugin/question-candidate-write-gate.js');
 const { VerifiedMathSupplyDemandSchema } = require('../dist/backend/src/agent/question-supply-fulfillment.contract.js');
 const { verifiedMathCellsForTopic, verifiedMathScopeMatches, verifiedMathSeedLimit } = require('../dist/backend/src/question-engine-plugin/verified-math-topic-binding.js');
+const { VerifiedQuestionSupplyService } = require('../dist/backend/src/question-engine-plugin/verified-question-supply.service.js');
 
 async function main() {
   Object.assign(process.env, { QUESTION_ENGINE_PLUGIN_ID: 'verified-math-1.43', QUESTION_ENGINE_PLUGIN_ENABLED: 'true', MOODLELIKE_MATH_ENGINE_ENABLED: 'true',
     CSCA_AI_QUESTION_GENERATION_ENABLED: 'true', CSCA_AI_QUESTION_REVIEW_ENABLED: 'true', CSCA_AI_QUESTIONING_SCHEDULER_ENABLED: 'true', QUESTION_ENGINE_EXECUTION_MODE: 'sidecar' });
   const adapter = new VerifiedMath143Adapter();
   const catalog = adapter.catalog().cells;
+  const supply = new VerifiedQuestionSupplyService({}, { isVerifiedMathEnabled: () => true, mathCatalog: () => ({ cells: catalog }) }, {});
+  const demands = [];
+  supply.dispatch = async input => { demands.push(input); return { status: 'queued', externalRequestId: 'unit-task' }; };
+  supply.run = async () => [123];
+  await supply.preparePractice(1, 'mixed-with-bank-only-topic', [
+    { topicId: 20, code: 'math-coordinate-geometry', targetDifficulty: '基础' },
+    { topicId: 27, code: 'math-set', targetDifficulty: '基础' }
+  ], 3, 'basic');
+  assert.equal(demands.length, 3, 'bank-only topic must not consume a generated mixed-practice slot');
+  assert.ok(demands.every(input => input.topicCode === 'math-set'));
   assert.equal(verifiedMathSeedLimit({ id: 'finite', capacity: 20, samplingMode: 'finite-stock-index' }), 20);
   assert.equal(verifiedMathSeedLimit({ id: 'empty', capacity: 0, samplingMode: 'finite-stock-index' }), 0);
   assert.equal(verifiedMathSeedLimit({ id: 'parameter', capacity: 0, samplingMode: 'parameter-seed' }), 2147483647);

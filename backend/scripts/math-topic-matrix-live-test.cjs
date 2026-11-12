@@ -6,7 +6,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const database = process.env.MATH_ENGINE_ACCEPTANCE_DATABASE_URL;
 const url = new URL(database);
-assert.ok(['127.0.0.1', 'localhost'].includes(url.hostname) && url.pathname === '/moodlelike_math_engine_acceptance', 'Refusing non-acceptance DB');
+const localHost = ['127.0.0.1', 'localhost'].includes(url.hostname)
+  || (process.env.MATH_ENGINE_ACCEPTANCE_DOCKER === 'local' && url.hostname === 'host.docker.internal');
+assert.ok(localHost && url.pathname === '/moodlelike_math_engine_acceptance', 'Refusing non-acceptance DB');
 for (const key of Object.keys(process.env)) if (/KEY|TOKEN|SECRET|SMTP|DATABASE|REDIS|PROVIDER|^CSCA_|^AGENT_|^MOODLELIKE_|^CSC_ENV$/.test(key)) delete process.env[key];
 Object.assign(process.env, {
   NODE_ENV: 'test', MOODLELIKE_ENV: 'test', DATABASE_URL: database, AUTH_SECRET: 'math-topic-matrix-local-secret-only',

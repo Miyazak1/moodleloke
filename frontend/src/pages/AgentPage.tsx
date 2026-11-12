@@ -1622,7 +1622,18 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     const subject = learningWorkspace?.subject === 'math' || learningWorkspace?.subject === 'physics' || learningWorkspace?.subject === 'chemistry'
       ? learningWorkspace.subject
       : freePracticeSubject;
-    const artifact = conversation?.artifacts.find(item => item.id === learningWorkspace?.artifactId);
+    if (adaptiveReport && adaptiveReport.round.id === learningWorkspace?.roundId) {
+      const plan = adaptiveReport.round.plannerSnapshot as Record<string, unknown> | null;
+      const focus = plan?.focus as { topicId?: number } | undefined;
+      const singleTopic = plan?.strategy === 'student_selected_single_topic' || plan?.topicMode === 'single_topic';
+      const difficulty = plan?.requestedDifficulty;
+      return { subject, questionCount: adaptiveReport.summary.total,
+        practiceMode: singleTopic ? 'single_topic' : 'mixed',
+        ...(singleTopic && focus?.topicId ? { focusTopicId: focus.topicId } : {}),
+        ...(difficulty === 'basic' || difficulty === 'medium' || difficulty === 'hard' ? { difficulty } : {}) } as WeaknessPracticeSelection;
+    }
+    const artifact = journeyState?.plans.find(item => item.id === learningWorkspace?.artifactId)
+      ?? conversation?.artifacts.find(item => item.id === learningWorkspace?.artifactId);
     const task = artifact?.snapshot?.task as Record<string, unknown> | undefined;
     if (task?.type === 'free_practice') {
       const topicId = Array.isArray(task.topicIds) ? Number(task.topicIds[0]) : 0;

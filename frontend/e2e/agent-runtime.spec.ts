@@ -1337,7 +1337,7 @@ test('keeps free-practice defaults separate and preserves the current batch when
   const now = '2026-09-15T10:00:00.000Z';
   const roundReport = {
     session: { id: 51, userId: 42, subject: 'math', mode: 'diagnostic', status: 'completed', questionLanguage: 'zh', startedAt: now, completedAt: now, createdAt: now, updatedAt: now },
-    round: { id: 81, sessionId: 51, roundIndex: 1, status: 'completed', plannerSnapshot: { mode: 'diagnostic' }, answers: { '101': 'A' }, timeSpent: { '101': 16 }, currentQuestion: 1, correctCount: 0, wrongCount: 1, unansweredCount: 0, startedAt: now, submittedAt: now, version: 2 },
+    round: { id: 81, sessionId: 51, roundIndex: 1, status: 'completed', plannerSnapshot: { strategy: 'student_selected_single_topic', focus: { source: 'manual_single_topic', topicId: 11 }, requestedDifficulty: 'hard', roundSize: 5 }, answers: { '101': 'A' }, timeSpent: { '101': 16 }, currentQuestion: 1, correctCount: 0, wrongCount: 1, unansweredCount: 0, startedAt: now, submittedAt: now, version: 2 },
     summary: { correctCount: 2, wrongCount: 3, unansweredCount: 0, total: 5, accuracy: 40, totalSeconds: 16 },
     weakTopics: [{ topicId: 67, code: 'function', title: '函数与方程' }],
     diagnosticCoverage: { subject: 'math', coveredCount: 2, totalCount: 4, coverageRate: 50, confidenceReadyCount: 2, lowConfidenceCount: 2, coveredDimensions: [], insufficientDimensions: [] },
