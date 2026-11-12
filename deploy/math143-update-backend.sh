@@ -31,6 +31,28 @@ rollback() {
   echo "Backend rolled back. Saved configuration: $BACKUP" >&2
 }
 sed -i "s/^MATH143_RELEASE_BACKEND_IMAGE=.*/MATH143_RELEASE_BACKEND_IMAGE=$NEW/" "$REL/release.env"
+# Read the real topic inventory using the candidate image and the existing DB
+# connection, before replacing the running backend. No Nest bootstrap or writes.
+if ! rdc run --rm --no-deps -T --entrypoint node backend <<'NODE'
+const { PrismaClient } = require('/app/backend/node_modules/@prisma/client');
+const { VerifiedMath143Adapter } = require('/app/backend/dist/backend/src/question-engine-plugin/verified-math143.adapter.js');
+const { verifiedMathCellsForTopic } = require('/app/backend/dist/backend/src/question-engine-plugin/verified-math-topic-binding.js');
+const prisma = new PrismaClient();
+(async () => {
+  const topics = await prisma.cscaExamTopic.findMany({ where: { subject: 'math', status: 'published' }, select: { code: true } });
+  const catalog = new VerifiedMath143Adapter().catalog().cells;
+  const rows = topics.map(topic => ({ code: topic.code, difficulties: ['basic','medium','hard'].filter(band => verifiedMathCellsForTopic(topic.code, band, catalog).length) }));
+  const unexpected = rows.filter(row => row.difficulties.length !== 3 && row.code !== 'math-coordinate-geometry');
+  if (unexpected.length) throw Error('UNMAPPED_PRODUCTION_MATH_TOPICS: ' + unexpected.map(row => row.code).join(','));
+  console.log(JSON.stringify({ status: 'MATH_TOPIC_BINDINGS_OK', generatedTopics: rows.filter(row => row.difficulties.length === 3).length,
+    bankOnlyTopics: rows.filter(row => row.difficulties.length === 0).map(row => row.code) }));
+})().catch(error => { console.error(error.message); process.exitCode = 1; }).finally(() => prisma.$disconnect());
+NODE
+then
+  cp -p "$BACKUP" "$REL/release.env"
+  echo "Candidate topic audit failed; the running backend was not replaced." >&2
+  exit 1
+fi
 if ! rdc up -d --no-build --no-deps backend; then rollback; exit 1; fi
 READY=false
 for _ in $(seq 1 60); do

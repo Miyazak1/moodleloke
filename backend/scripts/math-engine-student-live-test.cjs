@@ -114,6 +114,17 @@ async function main() {
     await request(route + '/submit', 'POST', {});
     const evidenceCount = await prisma.learningEvidenceEvent.count({ where: { userId, questionId: 'csca_question:' + question.id, sourceId: String(launch.roundId) } });
     assert.equal(evidenceCount, 1, 'learning evidence must be written once');
+    // Simulate a historical copy under the other host alias. Existing copied
+    // records must not evade semantic exposure checks just because IDs differ.
+    const aliasCode = topicCode === 'M-GEO-002' ? 'math-solid-geometry' : 'M-GEO-002';
+    const alias = await prisma.cscaExamTopic.upsert({ where: { code: aliasCode }, create: { code: aliasCode, title: '立体几何', subject: 'math', status: 'published', syllabusVersion: topic.syllabusVersion }, update: {} });
+    let aliasCopy = await prisma.cscaQuestion.findFirst({ where: { topicId: alias.id,
+      generationMetadata: { path: ['mathIdentityHash'], equals: stored.generationMetadata.mathIdentityHash } } });
+    if (!aliasCopy) aliasCopy = await prisma.cscaQuestion.create({ data: { ...stored, id: undefined, topicId: alias.id,
+      generationMetadata: { ...stored.generationMetadata, hostTopicCode: aliasCode } } });
+    const aliasCandidates = await app.get(AdaptiveQuestionProviderService).pickQuestions(userId, [{ topicId: alias.id, code: aliasCode, title: alias.title, module: null, targetDifficulty: '较难', reason: 'alias_exposure_regression' }], 10000, 'hard', { unseenOnly: true });
+    assert.ok(aliasCandidates.every(item => item.questionId !== aliasCopy.id), 'historical alias copy must remain seen');
+    console.log('CROSS_ALIAS_EXPOSURE_OK');
     await request('/api/v1/agent/practice-rounds/' + launch.roundId + '/settle', 'POST');
     const continuationInput = { ...input, clientRequestId: randomUUID() };
     const continued = await request('/api/v1/agent/free-practice/' + launch.artifactId + '/continue', 'POST', continuationInput);

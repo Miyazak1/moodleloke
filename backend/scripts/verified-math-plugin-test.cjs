@@ -7,16 +7,32 @@ const { RetiredGenerationRoutesGuard } = require('../dist/backend/src/question-e
 const { QuestionGeneratorProviderService } = require('../dist/backend/src/ai-questioning/question-generator-provider.service.js');
 const { evaluateQuestionCandidateWriteGate } = require('../dist/backend/src/question-engine-plugin/question-candidate-write-gate.js');
 const { VerifiedMathSupplyDemandSchema } = require('../dist/backend/src/agent/question-supply-fulfillment.contract.js');
-const { verifiedMathEngineTopicCode } = require('../dist/backend/src/question-engine-plugin/verified-math-topic-binding.js');
+const { verifiedMathCellsForTopic, verifiedMathScopeMatches, verifiedMathSeedLimit } = require('../dist/backend/src/question-engine-plugin/verified-math-topic-binding.js');
 
 async function main() {
   Object.assign(process.env, { QUESTION_ENGINE_PLUGIN_ID: 'verified-math-1.43', QUESTION_ENGINE_PLUGIN_ENABLED: 'true', MOODLELIKE_MATH_ENGINE_ENABLED: 'true',
     CSCA_AI_QUESTION_GENERATION_ENABLED: 'true', CSCA_AI_QUESTION_REVIEW_ENABLED: 'true', CSCA_AI_QUESTIONING_SCHEDULER_ENABLED: 'true', QUESTION_ENGINE_EXECUTION_MODE: 'sidecar' });
   const adapter = new VerifiedMath143Adapter();
-  assert.equal(verifiedMathEngineTopicCode('math-solid-geometry'), 'M-GEO-002');
-  assert.equal(verifiedMathEngineTopicCode('M-GEO-002'), 'M-GEO-002');
-  assert.equal(verifiedMathEngineTopicCode('math-coordinate-geometry'), 'math-coordinate-geometry', 'do not broaden unreviewed topic scopes');
-  assert.equal(verifiedMathEngineTopicCode('unknown-topic'), 'unknown-topic');
+  const catalog = adapter.catalog().cells;
+  assert.equal(verifiedMathSeedLimit({ id: 'finite', capacity: 20, samplingMode: 'finite-stock-index' }), 20);
+  assert.equal(verifiedMathSeedLimit({ id: 'empty', capacity: 0, samplingMode: 'finite-stock-index' }), 0);
+  assert.equal(verifiedMathSeedLimit({ id: 'parameter', capacity: 0, samplingMode: 'parameter-seed' }), 2147483647);
+  for (const band of ['basic', 'medium', 'hard']) {
+    assert.equal(verifiedMathCellsForTopic('math-solid-geometry', band, catalog)[0].id, 'M-GEO-002:' + band);
+    assert.equal(verifiedMathCellsForTopic('M-GEO-002', band, catalog)[0].id, 'M-GEO-002:' + band);
+    assert.equal(verifiedMathCellsForTopic('math-coordinate-geometry', band, catalog).length, 0, 'do not substitute solid volumes for spatial coordinates');
+    assert.equal(verifiedMathCellsForTopic('unknown-topic', band, catalog).length, 0);
+    for (const [hostCode, prefix] of [['math-solid-vector', 'vector_'], ['math-complex', 'complex_']]) {
+      const cells = verifiedMathCellsForTopic(hostCode, band, catalog);
+      assert.equal(cells.length, 1);
+      assert.equal(cells[0].scopes.length, 2);
+      assert.ok(cells[0].scopes.every(scope => scope.id.split(':')[1].startsWith(prefix)));
+      for (const scope of catalog.find(cell => cell.id === 'M-ALG-001:' + band).scopes) {
+        assert.equal(verifiedMathScopeMatches(hostCode, band, 'M-ALG-001:' + band, scope.id, catalog), scope.id.split(':')[1].startsWith(prefix));
+      }
+    }
+    assert.deepEqual(verifiedMathCellsForTopic('math-probability', band, catalog).map(cell => cell.topicCode).sort(), ['M-PROB-001', 'M-STAT-001', 'M-STAT-002']);
+  }
   const registry = new QuestionEnginePluginRegistryService(adapter);
   assert.deepEqual(registry.getStatus().plugins.map(plugin => [plugin.descriptor.id, plugin.descriptor.version, plugin.descriptor.subjects]), [['verified-math-1.43', '1.43.0', ['math']]]);
   assert.equal(registry.isVerifiedMathEnabled(), true);

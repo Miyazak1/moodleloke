@@ -2789,6 +2789,7 @@ export type AdaptiveMasteryTopic = {
   topicId: number;
   subject: SpecialPracticeSubject;
   code: string;
+  questionGeneration?: { pluginId: string; available: boolean; difficulties: Array<'basic' | 'medium' | 'hard'>; reason: string | null };
   title: string;
   module: string | null;
   mastery: number;

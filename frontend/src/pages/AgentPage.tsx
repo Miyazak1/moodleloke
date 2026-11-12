@@ -174,7 +174,8 @@ function formatAgentUserError(error: unknown, locale: string, fallback: string) 
         unavailable: '这项学习内容暂时不可用，请返回后重新选择。',
         conflict: '学习状态已经更新，请刷新后重试。',
         limited: '操作过于频繁，请稍后再试。',
-        supply: '当前科目暂时没有可用题目，你的选择已保留。'
+        supply: '当前科目暂时没有可用题目，你的选择已保留。',
+        scope: '该知识点尚未纳入数学1.43正式出题范围，现有题库不足以组成所选批次。请选择其他知识点或减少题量。'
       }
     : locale === 'vi'
       ? {
@@ -185,7 +186,8 @@ function formatAgentUserError(error: unknown, locale: string, fallback: string) 
           unavailable: 'Nội dung học này tạm thời không khả dụng. Hãy quay lại và chọn lại.',
           conflict: 'Trạng thái học đã được cập nhật. Hãy tải lại rồi thử lại.',
           limited: 'Bạn thao tác quá nhanh. Hãy thử lại sau.',
-          supply: 'Hiện chưa có câu hỏi phù hợp cho môn này. Lựa chọn của bạn đã được giữ lại.'
+          supply: 'Hiện chưa có câu hỏi phù hợp cho môn này. Lựa chọn của bạn đã được giữ lại.',
+          scope: 'Chủ đề này chưa có trong bộ tạo Toán 1.43 và ngân hàng hiện tại không đủ câu hỏi. Hãy chọn chủ đề khác hoặc giảm số câu.'
         }
       : {
           network: 'The learning service cannot be reached right now. Check your connection and try again.',
@@ -195,13 +197,15 @@ function formatAgentUserError(error: unknown, locale: string, fallback: string) 
           unavailable: 'This learning content is temporarily unavailable. Go back and choose again.',
           conflict: 'Your learning state has changed. Refresh and try again.',
           limited: 'Too many attempts. Please try again shortly.',
-          supply: 'No questions are currently available for this subject. Your selection has been saved.'
+          supply: 'No questions are currently available for this subject. Your selection has been saved.',
+          scope: 'Math 1.43 does not yet generate this topic, and the existing bank cannot fill this batch. Choose another topic or fewer questions.'
         };
   if (isAgentConnectionError(error)) return copy.network;
   if (!(error instanceof ApiError)) return fallback;
   const code = String(error.code ?? '').toUpperCase();
   if (code === 'EMAIL_UNVERIFIED') return copy.verify;
   if (code === 'ADAPTIVE_PRACTICE_POOL_EXHAUSTED') return copy.supply;
+  if (code === 'MATH_ENGINE_TOPIC_UNSUPPORTED') return copy.scope;
   if (error.status === 401) return copy.session;
   if (error.status === 403) return copy.forbidden;
   if (error.status === 404) return copy.unavailable;
@@ -1618,6 +1622,15 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
     const subject = learningWorkspace?.subject === 'math' || learningWorkspace?.subject === 'physics' || learningWorkspace?.subject === 'chemistry'
       ? learningWorkspace.subject
       : freePracticeSubject;
+    const artifact = conversation?.artifacts.find(item => item.id === learningWorkspace?.artifactId);
+    const task = artifact?.snapshot?.task as Record<string, unknown> | undefined;
+    if (task?.type === 'free_practice') {
+      const topicId = Array.isArray(task.topicIds) ? Number(task.topicIds[0]) : 0;
+      const practiceMode = task.practiceMode === 'single_topic' || (topicId > 0 && task.practiceKind === 'targeted_practice') ? 'single_topic' : 'mixed';
+      const difficulty = task.difficulty === 'basic' || task.difficulty === 'medium' || task.difficulty === 'hard' ? task.difficulty : undefined;
+      return { subject, questionCount: Number(task.questionCount) > 0 ? Number(task.questionCount) : freePracticeCount,
+        practiceMode, ...(difficulty ? { difficulty } : {}), ...(practiceMode === 'single_topic' && topicId > 0 ? { focusTopicId: topicId } : {}) } as WeaknessPracticeSelection;
+    }
     return configuredFreePracticeSelection().subject === subject
       ? configuredFreePracticeSelection()
       : { ...configuredFreePracticeSelection(), subject };
@@ -1628,6 +1641,9 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
       const current = currentFreePracticeConfig();
       setFreePracticeSubject(current.subject);
       setFreePracticeCount(current.questionCount);
+      updateFreePracticeMode(current.practiceMode ?? 'mixed');
+      setFreePracticeTopicId(current.focusTopicId ?? null);
+      setFreePracticeDifficulty(current.difficulty ?? 'auto');
     }
     setIsAdjustingFreePractice((value) => !value);
   }
@@ -1716,11 +1732,11 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
         ...(next.focusTopicId ? { focusTopicId: next.focusTopicId } : {})
       });
       setIsAdjustingFreePractice(false);
-      await loadJourneyState();
       openLearningWorkspace(launch);
-    } catch {
+      await loadJourneyState().catch(() => undefined);
+    } catch (nextError) {
       showError(
-        t('agent.freePractice.continueRecoverable', '下一批尚未创建；本批结果已经保留。'),
+        formatAgentUserError(nextError, locale, t('agent.freePractice.continueRecoverable', '下一批尚未创建；本批结果已经保留。')),
         { kind: 'free-continue', label: t('agent.freePractice.retryContinue', '重试继续'), practiceSelection: next }
       );
     } finally {
@@ -2944,6 +2960,7 @@ export function AgentPage({ currentUser, isResolvingAuth, host }: AgentPageProps
                   {freePracticeTopics.map((topic) => <option key={topic.topicId} value={topic.topicId}>{topic.module ? `${topic.module} · ` : ''}{topic.title}</option>)}
                 </select>
                 {freePracticeTopicsError ? <small role="alert">{freePracticeTopicsError}</small> : <small>{t('agent.freePractice.topicOnlyHint', '本批所有题目只来自所选知识点。')}</small>}
+                {freePracticeTopics.find(topic => topic.topicId === freePracticeTopicId)?.questionGeneration?.reason === 'spatial_coordinate_scope_not_in_math143' ? <small role="status">{t('agent.freePractice.spatialCoordinateBankOnly', '空间直角坐标系目前使用现有题库，数学1.43尚未覆盖其正式出题；题库用尽后将提示缺题。')}</small> : null}
               </label> : null}
               <fieldset>
                 <legend id="agent-free-practice-count-label">{t('agent.freePractice.batch', '本批题量')}</legend>

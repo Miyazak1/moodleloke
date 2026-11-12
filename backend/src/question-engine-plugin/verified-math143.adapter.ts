@@ -7,7 +7,7 @@ import type { QuestionEnginePluginDescriptor, QuestionEnginePluginRuntimeStatus 
 
 export const VERIFIED_MATH_PLUGIN_ID = 'verified-math-1.43';
 export type MathDifficulty = 'basic' | 'medium' | 'hard';
-export type MathCell = { id: string; topicCode: string; difficulty: MathDifficulty; scopes: Array<{ id: string; capacity: number }> };
+export type MathCell = { id: string; topicCode: string; difficulty: MathDifficulty; scopes: Array<{ id: string; capacity: number; samplingMode?: 'finite-stock-index' | 'parameter-seed' }> };
 export type MathGenerationOutput = {
   applicationVersion: string; providerCalls: number; costUsd: number;
   task: { cellId: string; scopeId: string; seed: number; runtimeBundleHash: string };

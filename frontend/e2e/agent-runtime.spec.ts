@@ -533,6 +533,21 @@ test('opens configurable practice from learning settings and preserves the expli
   await expect(page).not.toHaveURL(/mode=free/);
 });
 
+test('opens configurable practice with an explicit bank-only spatial-coordinate notice', async ({ page }) => {
+  await mockAgentWorkspace(page);
+  await page.route('**/api/v1/csca-special-practice/adaptive/mastery**', route => json(route, { items: [{
+    topicId: 20, subject: 'math', code: 'math-coordinate-geometry', title: '空间直角坐标系', module: '几何与代数',
+    mastery: .5, confidence: .2, attemptCount: 0, correctCount: 0, lastPracticedAt: null,
+    questionGeneration: { pluginId: 'verified-math-1.43', available: false, difficulties: [], reason: 'spatial_coordinate_scope_not_in_math143' }
+  }] }));
+  await page.goto('/agent?mode=free&subject=math');
+  await page.getByRole('radio', { name: '按知识点练习', exact: true }).click();
+  const form = page.locator('.agent-free-practice-card');
+  await expect(form).toContainText('空间直角坐标系目前使用现有题库');
+  await expect(form.getByLabel('题目难度', { exact: true })).toBeVisible();
+  await expect(form.getByRole('button', { name: '开始练习', exact: true })).toBeEnabled();
+});
+
 test('starts student-initiated free practice without turning it into a recommended plan', async ({ page }, testInfo) => {
   await mockAgentWorkspace(page);
   await page.addInitScript(() => window.localStorage.setItem('moodlelike.agent.learningMode', 'free'));
@@ -1349,7 +1364,7 @@ test('keeps free-practice defaults separate and preserves the current batch when
     status: 'completed',
     snapshot: {
       schemaVersion: '1', source: 'student_initiated',
-      task: { type: 'free_practice', subject: 'math', questionCount: 5 },
+      task: { type: 'free_practice', subject: 'math', questionCount: 5, practiceMode: 'single_topic', topicIds: [11], difficulty: 'hard' },
       freePracticeJourneyId: 'free-task-1', batchIndex: 1, journeyStatus: 'active', roundId: 81
     }
   };
@@ -1452,8 +1467,8 @@ test('keeps free-practice defaults separate and preserves the current batch when
     : page.getByLabel('本轮学习报告').getByRole('button', { name: '继续下一批', exact: true });
   await continueButton.click();
   await expect(page).toHaveURL(/agentRoundId=82/);
-  expect(continuationBody).toMatchObject({ subject: 'math', questionCount: 10, questionLanguage: 'zh' });
-  expect(postSettlementOverviewCalls).toBeGreaterThan(0);
+  expect(continuationBody).toMatchObject({ subject: 'math', questionCount: 5, practiceMode: 'single_topic', focusTopicId: 11, difficulty: 'hard', questionLanguage: 'zh' });
+  await expect.poll(() => postSettlementOverviewCalls).toBeGreaterThan(0);
   await expect(page.locator('.agent-composer')).toHaveCount(0);
   expect(reportAttempts).toBeGreaterThanOrEqual(1);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);

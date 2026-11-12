@@ -628,9 +628,10 @@ export class CscaAdaptiveService {
         sessionId: session.id,
         reason: 'adaptive_round_not_enough_questions'
       });
+      const unsupportedMathTopic = generatedSupply && plan.plannedTopics.some(topic => !this.questionSupply!.topicAvailability(topic.code).available);
       throw new BadRequestException({
-        code: ADAPTIVE_PRACTICE_POOL_EXHAUSTED,
-        message: '这组练习你已经刷完啦。我们正在补充新的适配题，稍后再来会有更多题目。',
+        code: unsupportedMathTopic ? 'MATH_ENGINE_TOPIC_UNSUPPORTED' : ADAPTIVE_PRACTICE_POOL_EXHAUSTED,
+        message: unsupportedMathTopic ? '该知识点尚未纳入数学1.43正式出题范围，现有题库暂不足以组成所选批次。' : '这组练习你已经刷完啦。我们正在补充新的适配题，稍后再来会有更多题目。',
         shortage: {
           subject: session.subject,
           requested: roundSize,
@@ -1557,6 +1558,7 @@ export class CscaAdaptiveService {
       where: { userId, topicId: { in: topics.map((topic) => topic.id) } }
     });
     const map = new Map(rows.map((row) => [row.topicId, row]));
+    const generationAvailability = this.questionSupply?.topicAvailabilities(topics.filter(topic => topic.subject === 'math').map(topic => topic.code));
     return {
       items: topics.map((topic) => {
         const mastery = map.get(topic.id);
@@ -1566,6 +1568,7 @@ export class CscaAdaptiveService {
           code: topic.code,
           title: topic.title,
           module: topic.module,
+          ...(generationAvailability?.has(topic.code) ? { questionGeneration: generationAvailability.get(topic.code) } : {}),
           mastery: mastery?.mastery ?? 0.5,
           confidence: mastery?.confidence ?? 0.2,
           attemptCount: mastery?.attemptCount ?? 0,

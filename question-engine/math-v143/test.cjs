@@ -27,6 +27,10 @@ test('catalog binds all 36 cells and 141 exact scopes; API rejects arbitrary tas
   const { cells } = runtime.catalog();
   assert.equal(cells.length, 36); assert.equal(cells.reduce((sum, cell) => sum + cell.scopes.length, 0), 141);
   assert.equal(new Set(cells.map(cell => cell.topicCode)).size, 12);
+  const scopes = cells.flatMap(cell => cell.scopes);
+  assert.equal(scopes.filter(scope => scope.samplingMode === 'finite-stock-index').length, 60);
+  assert.equal(scopes.filter(scope => scope.samplingMode === 'parameter-seed').length, 81);
+  assert.ok(scopes.filter(scope => scope.samplingMode === 'parameter-seed').every(scope => scope.capacity === 0));
   assert.deepEqual(runtime.validateInput(cone), cone);
   for (const input of [{ ...cone, seed: -1 }, { ...cone, seed: 1.5 }, { ...cone, cellId: 'M-SET-001:basic' }, { ...cone, admissionVersion: null }, { ...cone, samplingVersion: 'legacy' }, { ...cone, seed: '1911' }]) {
     assert.throws(() => runtime.validateInput(input), /invalid/);

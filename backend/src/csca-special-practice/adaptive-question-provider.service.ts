@@ -7,7 +7,7 @@ import { isStudentConsumableAiVersionStatus } from '../ai-questioning/question-v
 import { PrismaService } from '../prisma/prisma.service';
 import { ADAPTIVE_EXPOSURE_SOURCE, AdaptivePlannedQuestion, AdaptivePlannedTopic, IndependentVerificationQuestion } from './csca-adaptive.types';
 import { isIndependentVerificationQuestion, isStandardStudentChoiceQuestion } from './student-question-eligibility';
-import { MATH_ENGINE_SOURCE, isReadyMathEngineQuestion } from './math-engine-question.policy';
+import { MATH_ENGINE_SOURCE, isReadyMathEngineQuestion, mathEngineIdentityKey } from './math-engine-question.policy';
 
 type CandidateQuestion = {
   id: number;
@@ -261,10 +261,19 @@ export class AdaptiveQuestionProviderService {
       eventType: 'required_figure_unavailable', questionType: question.questionType,
       metadata: { questionSource: 'csca_question', questionVersion: question.version, reason: questionFigure(question).reason ?? 'figure_unverified' }
     })) });
+    const seenMathIdentities = new Set<string>();
+    if (options.unseenOnly && directQuestions.some(question => question.sourceType === MATH_ENGINE_SOURCE)) {
+      const exposures = await this.prisma.cscaQuestionExposure.findMany({ where: { userId, source: `${ADAPTIVE_EXPOSURE_SOURCE}:csca_question` }, select: { questionId: true } });
+      if (exposures.length) {
+        const seen = await this.prisma.cscaQuestion.findMany({ where: { id: { in: exposures.map(row => row.questionId) }, sourceType: MATH_ENGINE_SOURCE }, select: { generationMetadata: true } });
+        for (const question of seen) { const key = mathEngineIdentityKey(question); if (key) seenMathIdentities.add(key); }
+      }
+    }
     const directCurrentQuestions = directQuestions.filter((question) => (
       question.syllabusVersion === question.topic.syllabusVersion &&
       isFigureReadyForPractice(question) &&
       (question.sourceType !== MATH_ENGINE_SOURCE || isReadyMathEngineQuestion(question)) &&
+      (question.sourceType !== MATH_ENGINE_SOURCE || !seenMathIdentities.has(mathEngineIdentityKey(question) ?? '')) &&
       (!options.excludeGenerated || ![MATH_ENGINE_SOURCE, 'math_reading_pilot'].includes(question.sourceType)) &&
       !isOnlineMockExamQuestion(question.generationMetadata, question.reviewMetadata) &&
       (question.sourceType !== 'external_oer' || isStandardStudentChoiceQuestion(question))

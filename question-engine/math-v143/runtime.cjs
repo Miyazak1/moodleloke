@@ -23,7 +23,10 @@ function catalog() {
   const { catalog: cells } = require(path.join(runtimeDirectory, 'src', 'lab-catalog-v2.cjs'));
   const stock = require(path.join(runtimeDirectory, 'src', 'capacity-v9.cjs'));
   return { ...status(), cells: cells.map(({ id, topicCode, title, difficulty, scopes }) => ({ id, topicCode, title, difficulty,
-    scopes: scopes.map(scope => ({ ...scope, capacity: stock.row(id, scope.id)?.entries.length ?? 0 })) })) };
+    scopes: scopes.map(scope => {
+      const row = stock.row(id, scope.id);
+      return { ...scope, capacity: row?.entries.length ?? 0, samplingMode: row ? 'finite-stock-index' : 'parameter-seed' };
+    }) })) };
 }
 
 function validateInput(input) {

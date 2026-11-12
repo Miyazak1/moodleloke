@@ -6,8 +6,8 @@ import type { AdaptivePlannedTopic } from '../csca-special-practice/csca-adaptiv
 import { VerifiedMathSupplyDemandSchema, type VerifiedMathSupplyDemand, type QuestionSupplyDemandV1, type QuestionSupplyDispatchResult, type QuestionSupplyProductionAdapter } from '../agent/question-supply-fulfillment.contract';
 import { QuestionEnginePluginRegistryService } from './question-engine-plugin-registry.service';
 import { VerifiedQuestionPublicationService } from './verified-question-publication.service';
-import { VERIFIED_MATH_PLUGIN_ID, type MathDifficulty } from './verified-math143.adapter';
-import { verifiedMathEngineTopicCode } from './verified-math-topic-binding';
+import { VERIFIED_MATH_PLUGIN_ID, type MathDifficulty, type MathCell } from './verified-math143.adapter';
+import { verifiedMathCellsForTopic, verifiedMathSeedLimit } from './verified-math-topic-binding';
 
 const json = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 @Injectable()
@@ -16,6 +16,16 @@ export class VerifiedQuestionSupplyService implements QuestionSupplyProductionAd
   constructor(private readonly prisma: PrismaService, private readonly registry: QuestionEnginePluginRegistryService,
     private readonly publication: VerifiedQuestionPublicationService) {}
   isEnabled() { return this.registry.isVerifiedMathEnabled(); }
+  topicAvailabilities(topicCodes: string[]) {
+    const catalog = this.isEnabled() ? this.registry.mathCatalog().cells : [];
+    return new Map(topicCodes.map(code => [code, this.topicAvailability(code, catalog)]));
+  }
+  topicAvailability(topicCode: string, knownCatalog?: MathCell[]) {
+    const catalog = knownCatalog ?? (this.isEnabled() ? this.registry.mathCatalog().cells : []);
+    const difficulties = (['basic', 'medium', 'hard'] as const).filter(band => verifiedMathCellsForTopic(topicCode, band, catalog).length > 0);
+    return { pluginId: VERIFIED_MATH_PLUGIN_ID, available: difficulties.length > 0, difficulties,
+      reason: difficulties.length ? null : topicCode === 'math-coordinate-geometry' ? 'spatial_coordinate_scope_not_in_math143' : 'math143_scope_unavailable' };
+  }
 
   async dispatch(value: QuestionSupplyDemandV1 | VerifiedMathSupplyDemand): Promise<QuestionSupplyDispatchResult> {
     const parsed = VerifiedMathSupplyDemandSchema.safeParse(value);
@@ -39,7 +49,7 @@ export class VerifiedQuestionSupplyService implements QuestionSupplyProductionAd
     for (let index = 0; index < count; index++) {
       const topic = topics[index % topics.length];
       const band = difficulty ?? (/难|提高|挑战|hard/.test(topic.targetDifficulty) ? 'hard' : /中|medium/.test(topic.targetDifficulty) ? 'medium' : 'basic');
-      if (!catalog.some(cell => cell.topicCode === verifiedMathEngineTopicCode(topic.code) && cell.difficulty === band)) continue;
+      if (!verifiedMathCellsForTopic(topic.code, band, catalog).length) continue;
       const dispatched = await this.dispatch({ schemaVersion: 'question-supply-plugin-v2', source: 'student_free_practice', subjectCode: 'math',
         requestKey: `${requestKey}:${index}`, topicId: topic.topicId, topicCode: topic.code, difficulty: band,
         requestedCount: 1, userId, excludedIds, sourcePolicy: 'reviewed_published_only' });
@@ -72,16 +82,21 @@ export class VerifiedQuestionSupplyService implements QuestionSupplyProductionAd
     if (!claim.count) throw new ServiceUnavailableException({ code: 'QUESTION_GENERATION_PENDING', taskId });
     const ids: number[] = Array.isArray(task.questionIds) ? task.questionIds.filter((id): id is number => typeof id === 'number') : [];
     try {
-      const cell = this.registry.mathCatalog().cells.find(item => item.id === `${verifiedMathEngineTopicCode(input.topicCode)}:${input.difficulty}`);
-      if (!cell) throw Error('MATH_SCOPE_UNSUPPORTED');
+      const cells = verifiedMathCellsForTopic(input.topicCode, input.difficulty, this.registry.mathCatalog().cells);
+      if (!cells.length) throw Error('MATH_SCOPE_UNSUPPORTED');
+      const scopes = cells.flatMap(cell => cell.scopes.filter(scope => verifiedMathSeedLimit(scope) > 0).map(scope => ({ cell, scope })));
+      if (!scopes.length) throw Error('MATH_SCOPE_CAPACITY_EXHAUSTED');
       for (let index = ids.length; index < input.requestedCount; index++) {
         let accepted = false;
-        for (let attempt = 0; attempt < 8 && !accepted; attempt++) {
+        const offset = randomInt(scopes.length);
+        for (let attempt = 0; attempt < Math.max(8, scopes.length * 2) && !accepted; attempt++) {
           const heartbeat = await this.prisma.verifiedQuestionGenerationTask.updateMany({ where: { id: taskId, state: 'running', leaseOwner: owner }, data: { leaseUntil: new Date(Date.now() + 180000) } });
           if (!heartbeat.count) throw Error('MATH_TASK_LEASE_LOST');
-          const scope = cell.scopes[(index + attempt + randomInt(cell.scopes.length)) % cell.scopes.length];
+          const { cell, scope } = scopes[(index + attempt + offset) % scopes.length];
           let output;
-          try { output = await this.registry.generateVerifiedMath({ cellId: cell.id, scopeId: scope.id, seed: randomInt(Math.max(1, scope.capacity)) }); }
+          // No finite stock row means a parameter-seeded native generator, not
+          // a one-question inventory. The frozen API accepts seeds up to 2^31-2.
+          try { output = await this.registry.generateVerifiedMath({ cellId: cell.id, scopeId: scope.id, seed: randomInt(verifiedMathSeedLimit(scope)) }); }
           catch { continue; }
           const question = await this.publication.publish(output, { topicId: input.topicId, topicCode: input.topicCode, difficulty: input.difficulty,
             userId: input.userId, excludedIds: [...input.excludedIds, ...ids], taskId, leaseOwner: owner });

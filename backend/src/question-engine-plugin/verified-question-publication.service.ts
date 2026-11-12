@@ -8,7 +8,7 @@ import { MATH_ENGINE_SOURCE, isReadyMathEngineQuestion, mathEngineContentHash } 
 import { evaluateQuestionCandidateWriteGate } from './question-candidate-write-gate';
 import { QuestionEnginePluginRegistryService } from './question-engine-plugin-registry.service';
 import { VERIFIED_MATH_PLUGIN_ID, type MathGenerationOutput, type MathDifficulty } from './verified-math143.adapter';
-import { verifiedMathEngineTopicCode } from './verified-math-topic-binding';
+import { verifiedMathScopeMatches } from './verified-math-topic-binding';
 
 const json = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 @Injectable()
@@ -24,14 +24,21 @@ export class VerifiedQuestionPublicationService {
         AND state = 'running' AND lease_owner = ${binding.leaseOwner} AND lease_until > CURRENT_TIMESTAMP FOR UPDATE`;
       if (!leases.length) throw new ServiceUnavailableException('MATH_PUBLICATION_LEASE_LOST');
       const topic = await tx.cscaExamTopic.findFirst({ where: { id: binding.topicId, code: binding.topicCode, subject: 'math', status: 'published' } });
-      if (!topic || r.questionArtifact.cellId !== `${verifiedMathEngineTopicCode(topic.code)}:${binding.difficulty}`) throw new ServiceUnavailableException('MATH_PUBLICATION_TOPIC_REJECTED');
+      if (!topic || !verifiedMathScopeMatches(topic.code, binding.difficulty, r.questionArtifact.cellId, output.task.scopeId, this.registry.mathCatalog().cells)) throw new ServiceUnavailableException('MATH_PUBLICATION_TOPIC_REJECTED');
       const scopeId = output.task.scopeId, identityHash = r.questionArtifact.identity.identityHash;
       await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${scopeId}), hashtext(${identityHash}))`;
-      const existing = await tx.cscaQuestion.findFirst({ where: { sourceType: MATH_ENGINE_SOURCE, topicId: topic.id,
+      const existing = await tx.cscaQuestion.findFirst({ where: { sourceType: MATH_ENGINE_SOURCE,
         AND: [{ generationMetadata: { path: ['mathIdentityHash'], equals: identityHash } }, { generationMetadata: { path: ['scopeId'], equals: scopeId } }] } });
       if (existing) {
+        // Alias topics must not create a second copy of the same engine instance.
+        // Keep the student's chosen host ID; retry with a fresh instance instead.
+        if (existing.topicId !== topic.id) return null;
         if (existing.status !== 'approved' || !isReadyMathEngineQuestion(existing) || binding.excludedIds?.includes(existing.id)) return null;
-        if (binding.userId && await tx.cscaQuestionExposure.findFirst({ where: { userId: binding.userId, questionId: existing.id, source: `${ADAPTIVE_EXPOSURE_SOURCE}:csca_question` } })) return null;
+        if (binding.userId) {
+          const copies = await tx.cscaQuestion.findMany({ where: { sourceType: MATH_ENGINE_SOURCE,
+            AND: [{ generationMetadata: { path: ['mathIdentityHash'], equals: identityHash } }, { generationMetadata: { path: ['scopeId'], equals: scopeId } }] }, select: { id: true } });
+          if (await tx.cscaQuestionExposure.findFirst({ where: { userId: binding.userId, questionId: { in: copies.map(copy => copy.id) }, source: `${ADAPTIVE_EXPOSURE_SOURCE}:csca_question` } })) return null;
+        }
         return existing;
       }
       if (await tx.cscaQuestion.findFirst({ where: { topicId: topic.id, prompt: candidate.prompt } })) return null;
