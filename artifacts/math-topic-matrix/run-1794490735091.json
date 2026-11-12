@@ -1,0 +1,32 @@
+{
+  "generatedAt": "2026-11-12T13:39:59.356Z",
+  "count": 3,
+  "resumeFiles": [
+    "accepted-before-image-matrix.json"
+  ],
+  "results": [
+    {
+      "code": "M-SEQ-001",
+      "title": "数列",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        217,
+        219
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 61155
+    },
+    {
+      "code": "M-SEQ-001",
+      "title": "数列",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "running"
+    }
+  ],
+  "providerCalls": 0,
+  "costUsd": 0
+}

@@ -1,0 +1,123 @@
+{
+  "generatedAt": "2026-11-12T13:36:47.366Z",
+  "count": 3,
+  "resumeFiles": [
+    "accepted-before-image-matrix.json"
+  ],
+  "results": [
+    {
+      "code": "math-function-basic",
+      "title": "基本初等函数",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        183,
+        185
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 47961
+    },
+    {
+      "code": "math-function-basic",
+      "title": "基本初等函数",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        187,
+        189
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 34428
+    },
+    {
+      "code": "math-sequence",
+      "title": "数列",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        191,
+        193
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 31635
+    },
+    {
+      "code": "math-sequence",
+      "title": "数列",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        195,
+        197
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 35566
+    },
+    {
+      "code": "math-sequence",
+      "title": "数列",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        199,
+        201
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 37277
+    },
+    {
+      "code": "math-function",
+      "title": "函数",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        203,
+        205
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 35560
+    },
+    {
+      "code": "math-function",
+      "title": "函数",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        208,
+        210
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 40512
+    },
+    {
+      "code": "math-function",
+      "title": "函数",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        212,
+        214
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 45284
+    }
+  ],
+  "providerCalls": 0,
+  "costUsd": 0
+}

@@ -1,0 +1,179 @@
+{
+  "generatedAt": "2026-11-12T13:50:16.508Z",
+  "count": 3,
+  "resumeFiles": [
+    "accepted-before-image-matrix.json"
+  ],
+  "results": [
+    {
+      "code": "math-calculus",
+      "title": "导数与微积分",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        225,
+        227
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 37697
+    },
+    {
+      "code": "math-calculus",
+      "title": "导数与微积分",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        229,
+        231
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 40514
+    },
+    {
+      "code": "math-calculus",
+      "title": "导数与微积分",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        233,
+        235
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 37083
+    },
+    {
+      "code": "math-probability",
+      "title": "概率与统计",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        237,
+        238
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 68888
+    },
+    {
+      "code": "math-probability",
+      "title": "概率与统计",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        239,
+        240
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 37568
+    },
+    {
+      "code": "math-probability",
+      "title": "概率与统计",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        241,
+        242
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 49521
+    },
+    {
+      "code": "math-inequality",
+      "title": "不等式",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        244,
+        246
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 50237
+    },
+    {
+      "code": "math-inequality",
+      "title": "不等式",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        247,
+        248
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 54981
+    },
+    {
+      "code": "math-inequality",
+      "title": "不等式",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        249,
+        250
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 43107
+    },
+    {
+      "code": "math-set",
+      "title": "集合",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        251,
+        252
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 33048
+    },
+    {
+      "code": "math-set",
+      "title": "集合",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        253,
+        254
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 33758
+    },
+    {
+      "code": "math-set",
+      "title": "集合",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        255,
+        256
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 31979
+    }
+  ],
+  "providerCalls": 0,
+  "costUsd": 0
+}

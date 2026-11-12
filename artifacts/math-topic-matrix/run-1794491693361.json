@@ -1,0 +1,165 @@
+{
+  "generatedAt": "2026-11-12T14:01:14.212Z",
+  "count": 3,
+  "resumeFiles": [
+    "accepted-before-final-standard.json"
+  ],
+  "results": [
+    {
+      "code": "M-ALG-001",
+      "title": "向量与复数",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        259,
+        260
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 31536
+    },
+    {
+      "code": "M-ALG-001",
+      "title": "向量与复数",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        261,
+        262
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 32267
+    },
+    {
+      "code": "M-PROB-001",
+      "title": "古典概型与概率计算",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        263,
+        264
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 37248
+    },
+    {
+      "code": "M-PROB-001",
+      "title": "古典概型与概率计算",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        265,
+        266
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 31909
+    },
+    {
+      "code": "M-PROB-001",
+      "title": "古典概型与概率计算",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        267,
+        268
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 34979
+    },
+    {
+      "code": "M-STAT-001",
+      "title": "数据的数字特征",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        269,
+        270
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 31019
+    },
+    {
+      "code": "M-STAT-001",
+      "title": "数据的数字特征",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        271,
+        272
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 32652
+    },
+    {
+      "code": "M-STAT-001",
+      "title": "数据的数字特征",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        273,
+        274
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 43198
+    },
+    {
+      "code": "M-STAT-002",
+      "title": "正态分布的基本概念",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        276,
+        277
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 33883
+    },
+    {
+      "code": "M-STAT-002",
+      "title": "正态分布的基本概念",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        279,
+        280
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 34751
+    },
+    {
+      "code": "M-STAT-002",
+      "title": "正态分布的基本概念",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        283,
+        284
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 34671
+    }
+  ],
+  "providerCalls": 0,
+  "costUsd": 0
+}

@@ -1,0 +1,155 @@
+{
+  "generatedAt": "2026-11-12T13:18:03.571Z",
+  "count": 3,
+  "results": [
+    {
+      "code": "math-plane-geometry",
+      "title": "平面解析几何",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        120,
+        122
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 45689
+    },
+    {
+      "code": "math-plane-geometry",
+      "title": "平面解析几何",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        124,
+        126
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 43124
+    },
+    {
+      "code": "math-plane-geometry",
+      "title": "平面解析几何",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        128,
+        130
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 42098
+    },
+    {
+      "code": "math-solid-vector",
+      "title": "向量",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        132,
+        134
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 44582
+    },
+    {
+      "code": "math-solid-vector",
+      "title": "向量",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        136,
+        138
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 52252
+    },
+    {
+      "code": "math-solid-vector",
+      "title": "向量",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        140,
+        142
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 45172
+    },
+    {
+      "code": "math-complex",
+      "title": "复数",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        144,
+        146
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 39596
+    },
+    {
+      "code": "math-complex",
+      "title": "复数",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        148,
+        150
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 41544
+    },
+    {
+      "code": "math-complex",
+      "title": "复数",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        152,
+        154
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 40568
+    },
+    {
+      "code": "math-solid-geometry",
+      "title": "立体几何",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        156,
+        158
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 54718
+    },
+    {
+      "code": "math-solid-geometry",
+      "title": "立体几何",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "running"
+    }
+  ],
+  "providerCalls": 0,
+  "costUsd": 0
+}

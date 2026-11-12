@@ -1,0 +1,123 @@
+{
+  "generatedAt": "2026-11-12T13:37:05.791Z",
+  "count": 3,
+  "resumeFiles": [
+    "accepted-before-image-matrix.json"
+  ],
+  "results": [
+    {
+      "code": "M-SEQ-001",
+      "title": "数列",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        184,
+        186
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 40812
+    },
+    {
+      "code": "M-SEQ-001",
+      "title": "数列",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        188,
+        190
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 33658
+    },
+    {
+      "code": "M-CALC-001",
+      "title": "导数与微积分初步",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        192,
+        194
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 31940
+    },
+    {
+      "code": "M-CALC-001",
+      "title": "导数与微积分初步",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        196,
+        198
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 37028
+    },
+    {
+      "code": "M-GEO-001",
+      "title": "平面解析几何",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        200,
+        202
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 36268
+    },
+    {
+      "code": "M-GEO-001",
+      "title": "平面解析几何",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        204,
+        207
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 36032
+    },
+    {
+      "code": "M-GEO-001",
+      "title": "平面解析几何",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        209,
+        211
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 45942
+    },
+    {
+      "code": "M-GEO-002",
+      "title": "空间几何",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        213,
+        215
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 51789
+    }
+  ],
+  "providerCalls": 0,
+  "costUsd": 0
+}

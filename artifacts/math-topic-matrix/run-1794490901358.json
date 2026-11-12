@@ -1,0 +1,147 @@
+{
+  "generatedAt": "2026-11-12T13:44:26.452Z",
+  "count": 3,
+  "resumeFiles": [
+    "accepted-before-image-matrix.json"
+  ],
+  "results": [
+    {
+      "code": "M-GEO-002",
+      "title": "空间几何",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        226,
+        228
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 48544
+    },
+    {
+      "code": "M-GEO-002",
+      "title": "空间几何",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        230,
+        232
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 38289
+    },
+    {
+      "code": "M-ALG-001",
+      "title": "向量与复数",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "fail",
+      "error": "/api/v1/agent/free-practice/cmwdlm2q2006qoxfulsy160wv/continue 500 {\"statusCode\":500,\"message\":\"Internal server error\"}",
+      "durationMs": 52563
+    },
+    {
+      "code": "M-ALG-001",
+      "title": "向量与复数",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "fail",
+      "error": "Expected values to be strictly equal:\n\n'基础' !== '中等'\n",
+      "durationMs": 3556
+    },
+    {
+      "code": "M-ALG-001",
+      "title": "向量与复数",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "fail",
+      "error": "Expected values to be strictly equal:\n\n'基础' !== '较难'\n",
+      "durationMs": 2745
+    },
+    {
+      "code": "M-PROB-001",
+      "title": "古典概型与概率计算",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "fail",
+      "error": "Expected values to be strictly equal:\n\n59 !== 61\n",
+      "durationMs": 1112
+    },
+    {
+      "code": "M-PROB-001",
+      "title": "古典概型与概率计算",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "fail",
+      "error": "Expected values to be strictly equal:\n\n59 !== 61\n",
+      "durationMs": 1061
+    },
+    {
+      "code": "M-PROB-001",
+      "title": "古典概型与概率计算",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "fail",
+      "error": "Expected values to be strictly equal:\n\n59 !== 61\n",
+      "durationMs": 1231
+    },
+    {
+      "code": "M-STAT-001",
+      "title": "数据的数字特征",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "fail",
+      "error": "Expected values to be strictly equal:\n\n59 !== 62\n",
+      "durationMs": 736
+    },
+    {
+      "code": "M-STAT-001",
+      "title": "数据的数字特征",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "fail",
+      "error": "Expected values to be strictly equal:\n\n59 !== 62\n",
+      "durationMs": 829
+    },
+    {
+      "code": "M-STAT-001",
+      "title": "数据的数字特征",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "fail",
+      "error": "Expected values to be strictly equal:\n\n59 !== 62\n",
+      "durationMs": 3348
+    },
+    {
+      "code": "M-STAT-002",
+      "title": "正态分布的基本概念",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "fail",
+      "error": "Expected values to be strictly equal:\n\n59 !== 63\n",
+      "durationMs": 4082
+    },
+    {
+      "code": "M-STAT-002",
+      "title": "正态分布的基本概念",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "fail",
+      "error": "Expected values to be strictly equal:\n\n59 !== 63\n",
+      "durationMs": 1390
+    },
+    {
+      "code": "M-STAT-002",
+      "title": "正态分布的基本概念",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "fail",
+      "error": "Expected values to be strictly equal:\n\n59 !== 63\n",
+      "durationMs": 1716
+    }
+  ],
+  "providerCalls": 0,
+  "costUsd": 0
+}

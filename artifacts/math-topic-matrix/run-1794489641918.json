@@ -1,0 +1,103 @@
+{
+  "generatedAt": "2026-11-12T13:24:14.975Z",
+  "count": 3,
+  "resumeFiles": [
+    "run-1794489026888.json",
+    "run-1794489047020.json"
+  ],
+  "results": [
+    {
+      "code": "math-solid-geometry",
+      "title": "立体几何",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        162,
+        164
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 41415
+    },
+    {
+      "code": "math-solid-geometry",
+      "title": "立体几何",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        166,
+        168
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 45578
+    },
+    {
+      "code": "math-coordinate-geometry",
+      "title": "空间直角坐标系",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "bank_only_pass",
+      "generationAvailable": false,
+      "rounds": [
+        169,
+        171
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 23362
+    },
+    {
+      "code": "math-coordinate-geometry",
+      "title": "空间直角坐标系",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "bank_only_pass",
+      "generationAvailable": false,
+      "rounds": [
+        172,
+        173
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 10553
+    },
+    {
+      "code": "math-coordinate-geometry",
+      "title": "空间直角坐标系",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "bank_only_pass",
+      "generationAvailable": false,
+      "rounds": [
+        174,
+        175
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 8293
+    },
+    {
+      "code": "math-function-basic",
+      "title": "基本初等函数",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        177,
+        179
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 77043
+    },
+    {
+      "code": "math-function-basic",
+      "title": "基本初等函数",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "running"
+    }
+  ],
+  "providerCalls": 0,
+  "costUsd": 0
+}

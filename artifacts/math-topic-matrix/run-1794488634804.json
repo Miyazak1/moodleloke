@@ -1,0 +1,28 @@
+{
+  "generatedAt": "2026-11-12T13:04:55.452Z",
+  "count": 3,
+  "results": [
+    {
+      "code": "math-plane-geometry",
+      "title": "平面解析几何",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "rounds": [
+        118,
+        119
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 48329
+    },
+    {
+      "code": "math-plane-geometry",
+      "title": "平面解析几何",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "running"
+    }
+  ],
+  "providerCalls": 0,
+  "costUsd": 0
+}

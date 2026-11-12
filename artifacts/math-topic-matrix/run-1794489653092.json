@@ -1,0 +1,61 @@
+{
+  "generatedAt": "2026-11-12T13:23:39.513Z",
+  "count": 3,
+  "resumeFiles": [
+    "run-1794489026888.json",
+    "run-1794489047020.json"
+  ],
+  "results": [
+    {
+      "code": "M-FUNC-002",
+      "title": "基本初等函数",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        163,
+        165
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 41934
+    },
+    {
+      "code": "M-FUNC-002",
+      "title": "基本初等函数",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        167,
+        170
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 56475
+    },
+    {
+      "code": "M-SEQ-001",
+      "title": "数列",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        176,
+        178
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 64433
+    },
+    {
+      "code": "M-SEQ-001",
+      "title": "数列",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "running"
+    }
+  ],
+  "providerCalls": 0,
+  "costUsd": 0
+}

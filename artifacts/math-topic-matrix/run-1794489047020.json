@@ -1,0 +1,155 @@
+{
+  "generatedAt": "2026-11-12T13:18:27.660Z",
+  "count": 3,
+  "results": [
+    {
+      "code": "M-SET-001",
+      "title": "集合的定义、运算及表示方法",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        121,
+        123
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 46278
+    },
+    {
+      "code": "M-SET-001",
+      "title": "集合的定义、运算及表示方法",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        125,
+        127
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 41911
+    },
+    {
+      "code": "M-SET-001",
+      "title": "集合的定义、运算及表示方法",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        129,
+        131
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 43015
+    },
+    {
+      "code": "M-INEQ-001",
+      "title": "不等式的基本性质与解法",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        133,
+        135
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 51763
+    },
+    {
+      "code": "M-INEQ-001",
+      "title": "不等式的基本性质与解法",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        137,
+        139
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 47228
+    },
+    {
+      "code": "M-INEQ-001",
+      "title": "不等式的基本性质与解法",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        141,
+        143
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 42883
+    },
+    {
+      "code": "M-FUNC-001",
+      "title": "函数的概念与性质",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        145,
+        147
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 40917
+    },
+    {
+      "code": "M-FUNC-001",
+      "title": "函数的概念与性质",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        149,
+        151
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 40941
+    },
+    {
+      "code": "M-FUNC-001",
+      "title": "函数的概念与性质",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        153,
+        155
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 43833
+    },
+    {
+      "code": "M-FUNC-002",
+      "title": "基本初等函数",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        157,
+        159
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 58816
+    },
+    {
+      "code": "M-FUNC-002",
+      "title": "基本初等函数",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "running"
+    }
+  ],
+  "providerCalls": 0,
+  "costUsd": 0
+}

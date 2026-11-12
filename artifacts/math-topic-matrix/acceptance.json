@@ -1,0 +1,1095 @@
+{
+  "generatedAt": "2026-11-12T14:02:27.046Z",
+  "summary": {
+    "expectedCases": 72,
+    "passed": 72,
+    "generatedPassed": 69,
+    "bankOnlyPassed": 3,
+    "answeredQuestions": 432,
+    "providerCalls": 0,
+    "costUsd": 0
+  },
+  "missing": [],
+  "cases": [
+    {
+      "code": "math-plane-geometry",
+      "title": "平面解析几何",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        120,
+        122
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 45689,
+      "sourceRun": "run-1794489026888.json"
+    },
+    {
+      "code": "math-plane-geometry",
+      "title": "平面解析几何",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        124,
+        126
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 43124,
+      "sourceRun": "run-1794489026888.json"
+    },
+    {
+      "code": "math-plane-geometry",
+      "title": "平面解析几何",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        128,
+        130
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 42098,
+      "sourceRun": "run-1794489026888.json"
+    },
+    {
+      "code": "math-solid-vector",
+      "title": "向量",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        132,
+        134
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 44582,
+      "sourceRun": "run-1794489026888.json"
+    },
+    {
+      "code": "math-solid-vector",
+      "title": "向量",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        136,
+        138
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 52252,
+      "sourceRun": "run-1794489026888.json"
+    },
+    {
+      "code": "math-solid-vector",
+      "title": "向量",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        140,
+        142
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 45172,
+      "sourceRun": "run-1794489026888.json"
+    },
+    {
+      "code": "math-complex",
+      "title": "复数",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        144,
+        146
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 39596,
+      "sourceRun": "run-1794489026888.json"
+    },
+    {
+      "code": "math-complex",
+      "title": "复数",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        148,
+        150
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 41544,
+      "sourceRun": "run-1794489026888.json"
+    },
+    {
+      "code": "math-complex",
+      "title": "复数",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        152,
+        154
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 40568,
+      "sourceRun": "run-1794489026888.json"
+    },
+    {
+      "code": "math-solid-geometry",
+      "title": "立体几何",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        156,
+        158
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 54718,
+      "sourceRun": "run-1794489026888.json"
+    },
+    {
+      "code": "math-solid-geometry",
+      "title": "立体几何",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        162,
+        164
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 41415,
+      "sourceRun": "run-1794489641918.json"
+    },
+    {
+      "code": "math-solid-geometry",
+      "title": "立体几何",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        166,
+        168
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 45578,
+      "sourceRun": "run-1794489641918.json"
+    },
+    {
+      "code": "math-coordinate-geometry",
+      "title": "空间直角坐标系",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "bank_only_pass",
+      "generationAvailable": false,
+      "rounds": [
+        169,
+        171
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 23362,
+      "sourceRun": "run-1794489641918.json"
+    },
+    {
+      "code": "math-coordinate-geometry",
+      "title": "空间直角坐标系",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "bank_only_pass",
+      "generationAvailable": false,
+      "rounds": [
+        172,
+        173
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 10553,
+      "sourceRun": "run-1794489641918.json"
+    },
+    {
+      "code": "math-coordinate-geometry",
+      "title": "空间直角坐标系",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "bank_only_pass",
+      "generationAvailable": false,
+      "rounds": [
+        174,
+        175
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 8293,
+      "sourceRun": "run-1794489641918.json"
+    },
+    {
+      "code": "math-function-basic",
+      "title": "基本初等函数",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        177,
+        179
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 77043,
+      "sourceRun": "run-1794489641918.json"
+    },
+    {
+      "code": "math-function-basic",
+      "title": "基本初等函数",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        216,
+        218
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 64611,
+      "sourceRun": "run-1794490721957.json"
+    },
+    {
+      "code": "math-function-basic",
+      "title": "基本初等函数",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        220,
+        222
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 39905,
+      "sourceRun": "run-1794490721957.json"
+    },
+    {
+      "code": "math-sequence",
+      "title": "数列",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        191,
+        193
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 31635,
+      "sourceRun": "run-1794490293133.json"
+    },
+    {
+      "code": "math-sequence",
+      "title": "数列",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        195,
+        197
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 35566,
+      "sourceRun": "run-1794490293133.json"
+    },
+    {
+      "code": "math-sequence",
+      "title": "数列",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        199,
+        201
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 37277,
+      "sourceRun": "run-1794490293133.json"
+    },
+    {
+      "code": "math-function",
+      "title": "函数",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        203,
+        205
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 35560,
+      "sourceRun": "run-1794490293133.json"
+    },
+    {
+      "code": "math-function",
+      "title": "函数",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        208,
+        210
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 40512,
+      "sourceRun": "run-1794490293133.json"
+    },
+    {
+      "code": "math-function",
+      "title": "函数",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        212,
+        214
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 45284,
+      "sourceRun": "run-1794490293133.json"
+    },
+    {
+      "code": "math-calculus",
+      "title": "导数与微积分",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        225,
+        227
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 37697,
+      "sourceRun": "run-1794490895286.json"
+    },
+    {
+      "code": "math-calculus",
+      "title": "导数与微积分",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        229,
+        231
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 40514,
+      "sourceRun": "run-1794490895286.json"
+    },
+    {
+      "code": "math-calculus",
+      "title": "导数与微积分",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        233,
+        235
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 37083,
+      "sourceRun": "run-1794490895286.json"
+    },
+    {
+      "code": "math-probability",
+      "title": "概率与统计",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        237,
+        238
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 68888,
+      "sourceRun": "run-1794490895286.json"
+    },
+    {
+      "code": "math-probability",
+      "title": "概率与统计",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        239,
+        240
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 37568,
+      "sourceRun": "run-1794490895286.json"
+    },
+    {
+      "code": "math-probability",
+      "title": "概率与统计",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        241,
+        242
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 49521,
+      "sourceRun": "run-1794490895286.json"
+    },
+    {
+      "code": "math-inequality",
+      "title": "不等式",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        244,
+        246
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 50237,
+      "sourceRun": "run-1794490895286.json"
+    },
+    {
+      "code": "math-inequality",
+      "title": "不等式",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        247,
+        248
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 54981,
+      "sourceRun": "run-1794490895286.json"
+    },
+    {
+      "code": "math-inequality",
+      "title": "不等式",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        249,
+        250
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 43107,
+      "sourceRun": "run-1794490895286.json"
+    },
+    {
+      "code": "math-set",
+      "title": "集合",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        251,
+        252
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 33048,
+      "sourceRun": "run-1794490895286.json"
+    },
+    {
+      "code": "math-set",
+      "title": "集合",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        253,
+        254
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 33758,
+      "sourceRun": "run-1794490895286.json"
+    },
+    {
+      "code": "math-set",
+      "title": "集合",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        255,
+        256
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 31979,
+      "sourceRun": "run-1794490895286.json"
+    },
+    {
+      "code": "M-ALG-001",
+      "title": "向量与复数",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        243,
+        245
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 48599,
+      "sourceRun": "run-1794491155114.json"
+    },
+    {
+      "code": "M-ALG-001",
+      "title": "向量与复数",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        259,
+        260
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 31536,
+      "sourceRun": "run-1794491693361.json"
+    },
+    {
+      "code": "M-ALG-001",
+      "title": "向量与复数",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        261,
+        262
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 32267,
+      "sourceRun": "run-1794491693361.json"
+    },
+    {
+      "code": "M-CALC-001",
+      "title": "导数与微积分初步",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        181,
+        182
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 37353,
+      "sourceRun": "run-1794489957422.json"
+    },
+    {
+      "code": "M-CALC-001",
+      "title": "导数与微积分初步",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        192,
+        194
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 31940,
+      "sourceRun": "run-1794490306387.json"
+    },
+    {
+      "code": "M-CALC-001",
+      "title": "导数与微积分初步",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        196,
+        198
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 37028,
+      "sourceRun": "run-1794490306387.json"
+    },
+    {
+      "code": "M-FUNC-001",
+      "title": "函数的概念与性质",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        145,
+        147
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 40917,
+      "sourceRun": "run-1794489047020.json"
+    },
+    {
+      "code": "M-FUNC-001",
+      "title": "函数的概念与性质",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        149,
+        151
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 40941,
+      "sourceRun": "run-1794489047020.json"
+    },
+    {
+      "code": "M-FUNC-001",
+      "title": "函数的概念与性质",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        153,
+        155
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 43833,
+      "sourceRun": "run-1794489047020.json"
+    },
+    {
+      "code": "M-FUNC-002",
+      "title": "基本初等函数",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        157,
+        159
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 58816,
+      "sourceRun": "run-1794489047020.json"
+    },
+    {
+      "code": "M-FUNC-002",
+      "title": "基本初等函数",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        163,
+        165
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 41934,
+      "sourceRun": "run-1794489653092.json"
+    },
+    {
+      "code": "M-FUNC-002",
+      "title": "基本初等函数",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        167,
+        170
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 56475,
+      "sourceRun": "run-1794489653092.json"
+    },
+    {
+      "code": "M-GEO-001",
+      "title": "平面解析几何",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        200,
+        202
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 36268,
+      "sourceRun": "run-1794490306387.json"
+    },
+    {
+      "code": "M-GEO-001",
+      "title": "平面解析几何",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        204,
+        207
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 36032,
+      "sourceRun": "run-1794490306387.json"
+    },
+    {
+      "code": "M-GEO-001",
+      "title": "平面解析几何",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        209,
+        211
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 45942,
+      "sourceRun": "run-1794490306387.json"
+    },
+    {
+      "code": "M-GEO-002",
+      "title": "空间几何",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        213,
+        215
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 51789,
+      "sourceRun": "run-1794490306387.json"
+    },
+    {
+      "code": "M-GEO-002",
+      "title": "空间几何",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        226,
+        228
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 48544,
+      "sourceRun": "run-1794490901358.json"
+    },
+    {
+      "code": "M-GEO-002",
+      "title": "空间几何",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        230,
+        232
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 38289,
+      "sourceRun": "run-1794490901358.json"
+    },
+    {
+      "code": "M-INEQ-001",
+      "title": "不等式的基本性质与解法",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        133,
+        135
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 51763,
+      "sourceRun": "run-1794489047020.json"
+    },
+    {
+      "code": "M-INEQ-001",
+      "title": "不等式的基本性质与解法",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        137,
+        139
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 47228,
+      "sourceRun": "run-1794489047020.json"
+    },
+    {
+      "code": "M-INEQ-001",
+      "title": "不等式的基本性质与解法",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        141,
+        143
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 42883,
+      "sourceRun": "run-1794489047020.json"
+    },
+    {
+      "code": "M-PROB-001",
+      "title": "古典概型与概率计算",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        263,
+        264
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 37248,
+      "sourceRun": "run-1794491693361.json"
+    },
+    {
+      "code": "M-PROB-001",
+      "title": "古典概型与概率计算",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        265,
+        266
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 31909,
+      "sourceRun": "run-1794491693361.json"
+    },
+    {
+      "code": "M-PROB-001",
+      "title": "古典概型与概率计算",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        267,
+        268
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 34979,
+      "sourceRun": "run-1794491693361.json"
+    },
+    {
+      "code": "M-SEQ-001",
+      "title": "数列",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        176,
+        178
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 64433,
+      "sourceRun": "run-1794489653092.json"
+    },
+    {
+      "code": "M-SEQ-001",
+      "title": "数列",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        217,
+        219
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 61155,
+      "sourceRun": "run-1794490735091.json"
+    },
+    {
+      "code": "M-SEQ-001",
+      "title": "数列",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        188,
+        190
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 33658,
+      "sourceRun": "run-1794490306387.json"
+    },
+    {
+      "code": "M-SET-001",
+      "title": "集合的定义、运算及表示方法",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        121,
+        123
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 46278,
+      "sourceRun": "run-1794489047020.json"
+    },
+    {
+      "code": "M-SET-001",
+      "title": "集合的定义、运算及表示方法",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        125,
+        127
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 41911,
+      "sourceRun": "run-1794489047020.json"
+    },
+    {
+      "code": "M-SET-001",
+      "title": "集合的定义、运算及表示方法",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        129,
+        131
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 43015,
+      "sourceRun": "run-1794489047020.json"
+    },
+    {
+      "code": "M-STAT-001",
+      "title": "数据的数字特征",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        269,
+        270
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 31019,
+      "sourceRun": "run-1794491693361.json"
+    },
+    {
+      "code": "M-STAT-001",
+      "title": "数据的数字特征",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        271,
+        272
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 32652,
+      "sourceRun": "run-1794491693361.json"
+    },
+    {
+      "code": "M-STAT-001",
+      "title": "数据的数字特征",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        273,
+        274
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 43198,
+      "sourceRun": "run-1794491693361.json"
+    },
+    {
+      "code": "M-STAT-002",
+      "title": "正态分布的基本概念",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        276,
+        277
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 33883,
+      "sourceRun": "run-1794491693361.json"
+    },
+    {
+      "code": "M-STAT-002",
+      "title": "正态分布的基本概念",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        279,
+        280
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 34751,
+      "sourceRun": "run-1794491693361.json"
+    },
+    {
+      "code": "M-STAT-002",
+      "title": "正态分布的基本概念",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        283,
+        284
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 34671,
+      "sourceRun": "run-1794491693361.json"
+    }
+  ]
+}

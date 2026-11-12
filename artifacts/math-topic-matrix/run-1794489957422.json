@@ -1,0 +1,23 @@
+{
+  "generatedAt": "2026-11-12T13:26:39.061Z",
+  "count": 3,
+  "resumeFiles": [],
+  "results": [
+    {
+      "code": "M-CALC-001",
+      "title": "导数与微积分初步",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        181,
+        182
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 37353
+    }
+  ],
+  "providerCalls": 0,
+  "costUsd": 0
+}

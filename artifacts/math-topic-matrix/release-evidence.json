@@ -1,0 +1,40 @@
+{
+  "applicationCodeCommit": "3f99af98d6e0f00a6f4d24ff8ada3d0d08995057",
+  "ci": {
+    "runId": 43232482091,
+    "conclusion": "success"
+  },
+  "productionImages": {
+    "backend": "sha256:0f1cc0921dbfff0eafc8e104dca69479f76569c06cb6b018fe1038cf34a78dab",
+    "frontend": "sha256:b37e386a7607cf125a08a3167fc1a996edfe6822d8e5899c1fdf1f4b0908f166"
+  },
+  "ui": {
+    "code": "math-complex",
+    "difficulty": "hard",
+    "count": 3,
+    "initialRound": 206,
+    "nextRound": 224,
+    "reportReloaded": true,
+    "documentOverflowAt320": false,
+    "documentOverflowAt390": false
+  },
+  "supplemental": {
+    "derivativeBasicTenThenTen": {
+      "state": "pass",
+      "sourceRun": "run-1794492047679.json"
+    },
+    "legacySolidFiveThenFive": {
+      "state": "pass",
+      "command": "node backend/scripts/math-engine-student-live-test.cjs --legacy-topic --alias-only"
+    },
+    "historicalAliasExposure": {
+      "state": "pass"
+    },
+    "orphanSessionIsolation": {
+      "state": "pass",
+      "source": "orphan-session-check.json"
+    }
+  },
+  "productionModified": false,
+  "testSiteModified": false
+}

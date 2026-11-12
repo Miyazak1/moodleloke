@@ -1,0 +1,23 @@
+{
+  "generatedAt": "2026-11-12T13:46:47.111Z",
+  "count": 3,
+  "resumeFiles": [],
+  "results": [
+    {
+      "code": "M-ALG-001",
+      "title": "向量与复数",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        243,
+        245
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 48599
+    }
+  ],
+  "providerCalls": 0,
+  "costUsd": 0
+}

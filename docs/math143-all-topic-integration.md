@@ -84,6 +84,42 @@ Reports are written to `artifacts/math-topic-matrix/`; incomplete or failed runs
 must not be counted as acceptance. `--codes=...`, `--bands=...`, `--count=5` or
 `--count=10` allow focused additional checks. No fixtures are shipped to production.
 
+## Completed acceptance (2026-11-12)
+
+`artifacts/math-topic-matrix/index.html` and `acceptance.json` contain the complete
+72-case result: **69 generated-practice passes and 3 spatial-coordinate bank-only
+passes**, 432 answered questions across initial and successor batches. These are
+checkpointed actual HTTP runs against the isolated local database, including
+Linux production-image runs. Individual source reports retain interrupted and
+failed attempts; the summary counts only completed passing cases.
+
+Additional checks passed:
+
+- Production image: derivative basic, 10 initial questions plus 10 unseen
+  successor questions, all checked/answered/submitted/settled.
+- Legacy solid-geometry code: 5-question generation and unseen continuation,
+  with a deliberately created historical alias copy excluded from seen inventory.
+- Production image: an existing unbound unfinished set round cannot replace a
+  new hard-calculus selection; old records remain unchanged, repeated start is
+  idempotent. See `orphan-session-check.json`.
+- Actual student UI: complex numbers / hard / three questions, answers and
+  submission, report reload, then continuation to three hard complex questions.
+  320 and 390 pixel document widths had no horizontal overflow; wide and narrow
+  screenshots are retained with the matrix.
+- Backend/frontend builds, frozen bundle/Oracle tests, plugin/seed/scope guards,
+  adaptive rule tests, frontend typecheck/i18n/minimal/route checks, and full
+  GitHub contracts/browser golden workflow passed for application code commit
+  `3f99af98d6e0f00a6f4d24ff8ada3d0d08995057` (run `43232482091`).
+
+One initial standard vector/complex continuation returned a transient 500;
+its error stack was not captured in that first run, so its original cause cannot
+be conclusively attributed. Subsequent tests exposed global active-session reuse
+as the cause of the *downstream* wrong-topic/difficulty results. That reuse has
+been fixed and tested explicitly; directory integrity work was also moved outside
+the publication transaction. Vector/complex basic and every affected successor
+case were rerun successfully. The 72-case result is functional acceptance, not an
+uptime or load-test guarantee. The spatial-coordinate generator gap remains open.
+
 ## Updating the existing deployment
 
 Use the reviewed Git commit and a clean checkout. Run both existing helpers,

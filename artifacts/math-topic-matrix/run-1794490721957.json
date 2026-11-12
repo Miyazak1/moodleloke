@@ -1,0 +1,46 @@
+{
+  "generatedAt": "2026-11-12T13:40:29.955Z",
+  "count": 3,
+  "resumeFiles": [
+    "accepted-before-image-matrix.json"
+  ],
+  "results": [
+    {
+      "code": "math-function-basic",
+      "title": "基本初等函数",
+      "difficulty": "medium",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        216,
+        218
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 64611
+    },
+    {
+      "code": "math-function-basic",
+      "title": "基本初等函数",
+      "difficulty": "hard",
+      "count": 3,
+      "state": "pass",
+      "generationAvailable": true,
+      "rounds": [
+        220,
+        222
+      ],
+      "distinctQuestions": 6,
+      "durationMs": 39905
+    },
+    {
+      "code": "math-sequence",
+      "title": "数列",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "running"
+    }
+  ],
+  "providerCalls": 0,
+  "costUsd": 0
+}

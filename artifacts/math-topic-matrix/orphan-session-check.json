@@ -1,0 +1,10 @@
+{
+  "status": "pass",
+  "orphanRoundId": 281,
+  "newRoundId": 282,
+  "selectedCode": "M-CALC-001",
+  "difficulty": "hard",
+  "originalPreserved": true,
+  "launchIdempotent": true,
+  "providerCalls": 0
+}

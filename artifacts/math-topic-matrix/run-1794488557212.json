@@ -1,0 +1,15 @@
+{
+  "generatedAt": "2026-11-12T13:02:45.090Z",
+  "count": 3,
+  "results": [
+    {
+      "code": "math-plane-geometry",
+      "title": "平面解析几何",
+      "difficulty": "basic",
+      "count": 3,
+      "state": "running"
+    }
+  ],
+  "providerCalls": 0,
+  "costUsd": 0
+}
